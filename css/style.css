@@ -127,15 +127,6 @@ svg { display: block; }
 .card-decoration { position: absolute; right: -45px; bottom: -60px; width: 180px; height: 180px; border: 1px solid color-mix(in srgb, var(--service-accent) 16%, white); border-radius: 50%; background: radial-gradient(circle, color-mix(in srgb, var(--service-accent) 8%, transparent), transparent 70%); box-shadow: 0 0 0 25px color-mix(in srgb, var(--service-accent) 3%, transparent); }
 .featured .card-decoration { width: 310px; height: 310px; right: -70px; bottom: -100px; box-shadow: 0 0 0 45px color-mix(in srgb, var(--service-accent) 3%, transparent), 0 0 0 90px color-mix(in srgb, var(--service-accent) 2%, transparent); }
 
-.guide-section { padding: 24px 0 100px; background: #fff; }
-.guide-card { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 24px; padding: 36px 40px; border: 1px solid var(--color-border); border-radius: 14px; background: #f8fafe; }
-.guide-icon { display: grid; width: 52px; height: 52px; place-items: center; border-radius: 12px; color: var(--color-primary); background: #e9effc; }
-.guide-icon svg { width: 25px; height: 25px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
-.guide-card .section-kicker { margin: 0 0 2px; font-size: 10px; }
-.guide-card h2 { margin: 0; font-size: 20px; letter-spacing: -.025em; }
-.guide-card div > p:last-child { max-width: 720px; margin: 6px 0 0; color: var(--color-text-muted); font-size: 13px; }
-.guide-card > a { display: flex; gap: 8px; padding: 10px 0; color: var(--color-primary); font-size: 13px; font-weight: 750; white-space: nowrap; }
-
 .site-footer { color: rgba(255,255,255,.76); background: var(--color-primary-dark); }
 .footer-grid { display: grid; grid-template-columns: 1fr auto; gap: 50px; padding-top: 54px; padding-bottom: 43px; }
 .footer-brand .brand-mark { background: #fff; box-shadow: none; }
@@ -189,24 +180,25 @@ svg { display: block; }
   .overview strong { font-size: 23px; line-height: 1.2; }
   .overview span { font-size: 10px; }
   .services-section { padding: 78px 0 70px; }
-  .section-intro h2 { font-size: 34px; }
+  .section-intro h2 { font-size: 34px; line-height: 1.24; }
+  .section-intro > p:last-child { color: #4f5b72; font-size: 15px; line-height: 1.75; }
   .service-group { padding-top: 64px; }
   .group-heading { display: block; }
   .group-heading > p { margin-top: 7px; }
   .service-grid, .career-grid, .campus-grid { grid-template-columns: 1fr; }
   .career-grid .featured { grid-column: auto; min-height: 310px; }
-  .service-card, .service-card.featured { min-height: 292px; padding: 27px; }
+  .service-card, .service-card.featured { min-height: 280px; padding: 27px; border-color: #d5deec; box-shadow: 0 10px 30px rgba(17, 36, 77, .08); }
   .featured .service-meta, .service-meta { top: 29px; right: 27px; }
   .featured h3, .service-card h3 { margin-top: 24px; font-size: 27px; }
-  .featured > p { font-size: 14px; }
-  .guide-section { padding-bottom: 75px; }
-  .guide-card { grid-template-columns: auto 1fr; gap: 16px; padding: 27px 24px; }
-  .guide-icon { align-self: start; width: 44px; height: 44px; }
-  .guide-card > a { grid-column: 2; }
-  .footer-grid { grid-template-columns: 1fr; gap: 34px; }
+  .service-card > p, .featured > p { color: #4e5a70; font-size: 15px; line-height: 1.65; }
+  .service-tags { margin-top: 16px; }
+  .service-tags span { padding: 5px 9px; color: #4f5b70; background: #f9fbfe; font-size: 11px; font-weight: 650; }
+  .card-link { font-size: 14px; }
+  .footer-grid { grid-template-columns: 1fr; gap: 25px; padding-top: 42px; padding-bottom: 30px; }
   .footer-links { grid-template-columns: 1fr; }
   .footer-links p { grid-column: auto; }
-  .footer-bottom { display: grid; gap: 8px; }
+  .footer-links a { padding-block: 3px; }
+  .footer-bottom { display: grid; gap: 8px; padding-top: 16px; padding-bottom: 20px; line-height: 1.65; }
 }
 
 @media (max-width: 389px) {
@@ -219,8 +211,6 @@ svg { display: block; }
   .service-card, .service-card.featured { padding: 24px; }
   .featured .service-meta, .service-meta { top: 27px; right: 24px; }
   .service-meta { font-size: 9px; }
-  .guide-card { display: block; }
-  .guide-icon { margin-bottom: 15px; }
 }
 
 @media (min-width: 1440px) {
