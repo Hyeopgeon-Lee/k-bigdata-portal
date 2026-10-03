@@ -24,7 +24,7 @@ job.name,job.english,job.overview,job.description,job.aliases,job.education,
 ...(job.relatedRoles||[]).map(role=>role.name)
 ].join(" ");
 export const docSearchText = doc => [doc.name,doc.english,doc.overview,doc.description,doc.category,doc.subcategory,doc.aliases,...doc.learn,...doc.useCases,...doc.related,...doc.tags].join(" ");
-export const certificationSearchText = cert => [cert.name,cert.english,cert.category,cert.institution,cert.overview,cert.description,cert.importance,cert.whatYouLearn,cert.education,cert.aliases,...cert.tags,...cert.fields,...cert.roles,...cert.careerUsage,...cert.studyOrder,...cert.nextStudy].join(" ");
+export const certificationSearchText = cert => [cert.name,cert.english,cert.category,cert.institution,cert.overview,cert.description,cert.importance,cert.whatYouLearn,cert.education,cert.aliases,cert.preparationGuide?.title,cert.preparationGuide?.target,cert.preparationGuide?.note,...(cert.preparationGuide?.steps||[]),...cert.tags,...cert.fields,...cert.roles,...cert.careerUsage,...cert.studyOrder,...cert.nextStudy].join(" ");
 export const searchIndex=[
 ...services.map(s=>({title:s.name,type:"학과 서비스",url:s.url,text:[s.name,s.englishName,s.description,...s.tags].join(" ")})),
 ...certifications.map(c=>({title:c.name,type:"IT 자격증",url:"certifications.html?id="+c.id,text:certificationSearchText(c)})),

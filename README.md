@@ -50,7 +50,7 @@ js/learning-ui.js           필터·상세·검색·랜덤·모바일 메뉴
 
 ## 자격증 추가 / 수정
 
-`js/certifications.js`에서 id, name, english, category, institution, priority, badges, overview, description, importance, tags, whatYouLearn, fields, roles, roleIds, primaryRoleIds, education, careerUsage, studyOrder, nextStudy, officialCheckItems, url, note, noteTitle, aliases, importanceSources를 관리합니다.
+`js/certifications.js`에서 id, name, english, category, institution, priority, badges, overview, description, importance, tags, whatYouLearn, fields, roles, roleIds, primaryRoleIds, education, careerUsage, studyOrder, nextStudy, officialCheckItems, url, note, noteTitle, aliases, importanceSources를 관리합니다. 선택적 preparationGuide({title,target,steps,note})는 학과 권장 취득 시기와 준비 계획이며 4개 자격증 상세에서 사용합니다. 공식 시험 일정·응시요건과 구분하며 새 연도에 공식 일정과 학과 안내를 다시 확인하세요.
 priority는 core/standard로 핵심 4개 영역과 카드 강조만 제어하며 점수·랭킹을 뜻하지 않습니다. certificationPaths는 진로별 안내, certificationGuidance는 공통 주의사항입니다.
 roleIds·primaryRoleIds는 기존 jobs id를 사용합니다. 직무 → 자격증 링크는 기존 직무 데이터의 certifications와 자격증 roleIds의 합집합으로 표시하며 반대 방향도 같은 관계를 사용합니다.
 시험 일정·비용·버전·시험시간·유효기간 같은 변경 가능한 값은 하드코딩하지 않습니다. 중요도는 취업 준비 안내이며 채용·실무 능력을 보장하지 않습니다.

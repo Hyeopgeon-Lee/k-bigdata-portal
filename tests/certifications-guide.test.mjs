@@ -36,4 +36,15 @@ for(const [term,id] of Object.entries(cases)){
  assert.ok(searchIndex.some(r=>r.url==='certifications.html?id='+id&&matches(r.text,term)),term+' portal');
 }
 assert.ok(readFileSync(new URL('../certifications.html',import.meta.url),'utf8').includes('content="noindex, nofollow"'));
-console.log('PASS: 12 stable IDs/URLs, 4 core badges, 23 search terms, fields and role links, no internal scores.');
+assert.deepEqual(certifications.filter(c=>c.preparationGuide).map(c=>c.id),['engineer','industrial','sqld','ncp']);
+for (const id of ['engineer','industrial']) {
+ const guide=certifications.find(c=>c.id===id).preparationGuide;
+ assert.ok(guide.target.includes('1학년') && guide.target.includes('제1회'));
+ assert.ok(guide.steps.some(text=>text.includes('학사')||text.includes('학위')));
+ assert.ok(guide.steps.some(text=>text.includes('4월')&&text.includes('겨울방학')));
+ assert.ok(guide.steps.some(text=>text.includes('7월')&&text.includes('학과 안내')));
+ assert.ok(!guide.target.includes('반드시 합격'));
+}
+assert.ok(certifications.find(c=>c.id==='sqld').preparationGuide.target.includes('1학년 1학기 데이터베이스'));
+assert.ok(certifications.find(c=>c.id==='ncp').preparationGuide.target.includes('리눅스·클라우드컴퓨팅'));
+console.log('PASS: 12 stable IDs/URLs, 4 core badges, 23 search terms, role links, 4 preparation guides, no internal scores.');
