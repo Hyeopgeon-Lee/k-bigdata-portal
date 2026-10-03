@@ -10,3 +10,25 @@ html{scroll-padding-top:100px}body{overflow-wrap:anywhere}.header-inner{position
 [hidden]{display:none!important}
 /* Service links must remain visible even before a scroll observer fires. */
 .service-card{opacity:1;transform:none}
+/* Career detail only: keep the portal palette and readable body size. */
+body[data-page=jobs] .detail-panel{font-size:16px}
+.job-section{margin-top:36px;scroll-margin-top:110px}
+.job-section h3{margin-top:0}.job-section li+li{margin-top:12px}
+.job-section ol{padding-left:24px}.job-section ol li{padding-left:5px}
+.job-two-column{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:32px}
+.job-info-card{min-width:0;padding:24px;border:1px solid var(--color-border);border-radius:14px;background:#f8fafe}
+.job-info-card h3,.job-info-card h4{margin:0 0 14px;line-height:1.5;font-size:19px}
+.job-info-card p{margin:0;line-height:1.85;color:#4e5a70}
+.job-info-card ul{margin:0;padding-left:20px}.job-info-card li+li{margin-top:10px}
+.job-projects{display:grid;gap:16px}
+.job-jump,.job-topic-links{display:flex;flex-wrap:wrap;gap:10px;margin:20px 0}
+.job-jump a,.job-topic-links a{display:inline-flex;align-items:center;min-height:44px;padding:9px 14px;border:1px solid #cdd7e8;border-radius:9px;background:#fff;color:#142d70;font-size:14px}
+.job-checklist{list-style:none;padding:0!important}
+.job-checklist label{display:flex;align-items:flex-start;gap:12px;font-weight:400;line-height:1.85;padding:12px;border:1px solid #dce3ef;border-radius:10px;cursor:pointer}
+.job-checklist input{flex:0 0 auto;width:20px;height:20px;margin-top:5px;accent-color:#142d70}
+.job-related p{margin:6px 0 18px}
+.job-section a:not(.button),.job-related a{text-decoration:underline;text-underline-offset:3px}
+.job-comparisons{margin-top:52px}.job-comparisons>h2{font-size:26px;line-height:1.4}
+.job-comparison-grid{display:grid;gap:18px}
+@media(max-width:900px){.job-two-column{grid-template-columns:1fr}}
+@media(max-width:767px){.job-info-card{padding:20px}.job-section{margin-top:30px}.job-checklist label{padding:12px}.job-jump{gap:8px}}

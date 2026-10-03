@@ -58,11 +58,17 @@ js/learning-ui.js           필터·상세·검색·랜덤·모바일 메뉴
 
 ## 직무 추가 / 수정
 
-`js/jobs.js`에서 id, name, overview, tags, tasks, education, idea, certifications, portfolio, category, english, aliases를 수정합니다.
+직무는 현재 7개와 기존 id를 유지합니다. `js/jobs.js`에서 id, name, english, overview(한 줄 정의), description(소개), tags, tasks, essentialSkills, plusSkills, recruitmentKeywords, education, studyOrder, projectIdeas, portfolio, readinessChecklist, interviewTopics, interviewCategories, certifications, relatedRoles, category, aliases를 수정합니다.
+projectIdeas는 {title, description}, relatedRoles는 {name, description, id?} 배열입니다. 기존 idea 필드는 호환 목적으로 유지합니다.
+jobComparisons와 jobGuidance도 같은 파일에서 관리합니다. 직무 데이터의 기술·키워드는 통합검색과 목록 내 검색에 함께 반영됩니다.
+체크리스트는 브라우저 메모리의 자체 점검 UI이며 저장·전송·판정을 하지 않습니다.
+interviewCategories는 현재 문제은행의 정확한 카테고리 이름을 사용합니다. 연결된 카테고리가 상세의 모든 면접 주제를 다루는 것은 아닙니다.
 certifications는 자격증 데이터의 id 배열입니다. 삭제한 자격증 id를 직무에서 참조하지 않도록 확인하세요.
 상세 URL은 `jobs.html?id=고유id`입니다. 직무와 학과 학습의 연계는 학습 안내이며 채용을 보장하지 않습니다.
 
 ## 공식문서 추가
+
+직무 가이드 회귀 검사는 저장소 root에서 `node tests/job-guide.test.mjs`로 실행합니다. 별도 설치·빌드 시스템은 필요하지 않습니다. 직무 필드, 23개 검색 키워드, 자격증·면접 연결, 기존 서비스 URL과 noindex를 검사합니다.
 
 `js/docs.js`에 id, name, category, overview, url, tags, aliases를 추가합니다.
 Programming, Backend, Database, Frontend, Cloud, DevOps, AI / Data 카테고리를 사용하며 공식 개발사·기관 문서만 연결합니다.
