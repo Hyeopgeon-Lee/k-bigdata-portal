@@ -23,11 +23,12 @@ job.name,job.english,job.overview,job.description,job.aliases,job.education,
 ...(job.recruitmentKeywords||[]),...(job.tasks||[]),...(job.interviewTopics||[]),
 ...(job.relatedRoles||[]).map(role=>role.name)
 ].join(" ");
+export const docSearchText = doc => [doc.name,doc.english,doc.overview,doc.description,doc.category,doc.subcategory,doc.aliases,...doc.learn,...doc.useCases,...doc.related,...doc.tags].join(" ");
 export const searchIndex=[
 ...services.map(s=>({title:s.name,type:"학과 서비스",url:s.url,text:[s.name,s.englishName,s.description,...s.tags].join(" ")})),
 ...certifications.map(c=>({title:c.name,type:"IT 자격증",url:"certifications.html?id="+c.id,text:[c.name,c.english,c.category,c.overview,...c.tags,...c.roles].join(" ")})),
 ...jobs.map(j=>({title:j.name,type:"IT 직무",url:"jobs.html?id="+j.id,text:jobSearchText(j)})),
-...docs.map(d=>({title:d.name+" 공식문서",type:"개발 공식문서",url:d.url,text:[d.name,d.overview,d.category,d.aliases].join(" ")})),
+...docs.map(d=>({title:d.name+" 공식문서",type:"개발 공식문서",url:"docs.html?id="+d.id,text:docSearchText(d)})),
 ...[...new Set(questions.map(q=>q.category))].map(category=>({title:category+" 기술면접 문제",type:"기술면접",url:"interview.html?category="+encodeURIComponent(category),text:category})),
 {title:"문제 발견부터 포트폴리오까지",type:"프로젝트 가이드",url:"project-guide.html#process",text:"프로젝트 문제 발견 사용자 데이터 API 기능 기술 스택 MVP GitHub README 테스트 배포 시연 포트폴리오"}
 ];

@@ -70,9 +70,13 @@ certifications는 자격증 데이터의 id 배열입니다. 삭제한 자격증
 
 직무 가이드 회귀 검사는 저장소 root에서 `node tests/job-guide.test.mjs`로 실행합니다. 별도 설치·빌드 시스템은 필요하지 않습니다. 직무 필드, 23개 검색 키워드, 자격증·면접 연결, 기존 서비스 URL과 noindex를 검사합니다.
 
-`js/docs.js`에 id, name, category, overview, url, tags, aliases를 추가합니다.
-Programming, Backend, Database, Frontend, Cloud, DevOps, AI / Data 카테고리를 사용하며 공식 개발사·기관 문서만 연결합니다.
-기술명과 한글 별칭은 aliases에 추가할 수 있습니다.
+`js/docs.js`의 docs 배열에 id, name, english, category, subcategory, overview, description, learn, useCases, related, tags, aliases, url, official, jobIds, interviewCategories, note를 정의합니다. 공식 개발사·기관 문서만 연결하고 official은 true로 유지합니다.
+8개 분야는 docCategories에서 관리합니다: Programming / Backend · Security · MSA / Database · Data Platform / Big Data · Streaming / Cloud Native / DevOps · CI/CD · Observability / AI · Computer Vision · LLM / Open API · External Services.
+기본 38개 기술과 기존 Vue.js·Flutter를 보존한 40개 목록입니다. pandas·scikit-learn은 제외했습니다. LLM 하위 영역은 subcategory로 구분합니다.
+상세 URL은 `docs.html?id=고유id`입니다. related는 등록된 기술명 배열이며 일치하는 기술은 내부 상세 링크로 연결됩니다. jobIds는 기존 직무 id, interviewCategories는 현재 문제은행의 정확한 카테고리 이름을 사용합니다.
+직무 상세의 기술 태그는 findDocForSkill로 일치하는 공식문서에 연결합니다. docFlows의 예시는 도구 간 역할 안내이며 필수 설치 순서가 아닙니다.
+목록과 통합검색은 설명·학습·활용·연관 기술·별칭까지 검색합니다. API 카드는 실제 API 호출이나 유료 서비스 가입을 추가하지 않습니다. 키·요금·할당량·약관은 제공기관에서 확인합니다.
+`node tests/docs-hub.test.mjs`와 `node tests/job-guide.test.mjs`로 데이터·검색·내부 연결·SEO 회귀 검사를 실행합니다.
 
 ## 기술면접 문제 추가
 
@@ -107,7 +111,7 @@ Pages 설정은 저장소 관리자 권한, DNS 설정은 도메인 관리자 �
 
 ## 검증 체크리스트
 
-- 모든 HTML의 noindex, nofollow 유지. 이 정책은 인증이나 보안 기능이 아닙니다.
+- `docs.html`만 index, follow와 canonical/OG 메타를 사용합니다. 나머지 HTML의 noindex, nofollow는 유지합니다. 이 정책은 인증이나 보안 기능이 아닙니다.
 - 기존 외부 서비스 주소, 포트폴리오, 학과 홈페이지·홍보 링크 유지.
 - 새 페이지 목록·필터·검색·상세·홈 복귀·모바일 메뉴·키보드 탐색 확인.
 - Kubernetes / 쿠버네티스 검색에서 CKA, 관련 직무, 문서, 면접 카테고리 확인.

@@ -30,7 +30,7 @@ assert.equal(matches('JavaScript', 'Java'), false);
 assert.equal(matches('Storage', 'RAG'), false);
 for (const page of ['index.html','jobs.html','certifications.html','docs.html','interview.html','project-guide.html']) {
   const html = readFileSync(new URL('../' + page, import.meta.url), 'utf8');
-  assert.ok(html.includes('content="noindex, nofollow"'));
+  assert.ok(html.includes(page === 'docs.html' ? 'content="index, follow"' : 'content="noindex, nofollow"'));
   for (const [, value] of html.matchAll(/(?:href|src)="([^"]+)"/g)) {
     if (/^(https?:|#)/.test(value)) continue;
     assert.ok(existsSync(new URL('../' + value.split(/[?#]/)[0], import.meta.url)), `${page}: ${value}`);
