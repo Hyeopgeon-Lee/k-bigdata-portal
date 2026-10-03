@@ -56,3 +56,23 @@ body[data-page=docs] .filters button{flex:0 0 auto;white-space:nowrap}
 body[data-page=docs] .detail-panel .notice h3{margin-top:0}
 .doc-flows[hidden]{display:none}
 @media(max-width:767px){.doc-flows,.doc-detail-grid{grid-template-columns:1fr}body[data-page=docs] .page-hero>p{font-size:16px}.doc-flow{padding:14px 18px}.doc-explore-heading{font-size:22px}}
+/* Certifications share the career guide's cards, typography and quiet emphasis. */
+.cert-paths>h2,.cert-core-section>h2{font-size:clamp(23px,3vw,30px);line-height:1.45;letter-spacing:-.03em}
+.cert-path-grid,.cert-core-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.cert-core-section{margin:40px 0 48px}.cert-path-grid .job-topic-links{margin-bottom:0}
+.cert-badges{display:flex;flex-wrap:wrap;gap:7px;margin:8px 0}
+.cert-priority-badge{color:#142d70;background:#e8effa;border:1px solid #c8d6ee;font-size:13px}
+.cert-card.cert-core{border-color:#a9bddc;border-top:3px solid #142d70;background:#fbfcff}
+.cert-card h3{font-size:23px;line-height:1.4;margin:16px 0 8px;letter-spacing:-.03em}
+.cert-card .tags span{font-size:13px}
+.cert-detail{font-size:16px}.cert-detail .cert-overview{font-size:18px;font-weight:650;color:#253b60}
+.cert-importance{padding:24px;background:#f8fafe;border:1px solid #dce3ef;border-radius:14px;margin-top:28px}
+.cert-importance.is-core{border-left:4px solid #142d70;background:#edf3fc}
+.cert-importance h3,.cert-note h3{margin-top:0}.cert-importance p{margin-bottom:0}
+.cert-source{margin-top:20px}.cert-source summary{cursor:pointer;color:#142d70;font-weight:700;min-height:44px;align-content:center}
+.cert-source a{text-decoration:underline;text-underline-offset:3px}
+.cert-study-order li{padding:8px 4px}
+body[data-page=certifications] .filters{flex-wrap:nowrap;overflow-x:auto;padding:6px 4px 14px}
+body[data-page=certifications] .filters button{white-space:nowrap;flex:0 0 auto}
+body[data-page=certifications] #list-controls{margin-top:32px}
+@media(max-width:767px){.cert-path-grid,.cert-core-grid{grid-template-columns:1fr}.cert-importance{padding:20px}.cert-detail .cert-overview{font-size:17px}}
