@@ -31,7 +31,8 @@ const groups = Object.values(categories).map((category) => {
   </section>`;
 }).join("");
 
-document.querySelector("#service-groups").innerHTML = groups;
+const serviceGroups = document.querySelector("#service-groups");
+if (serviceGroups) serviceGroups.innerHTML = groups;
 document.querySelector("#current-year").textContent = new Date().getFullYear();
 
 const heroIconMap = { ready: "clipboard", apply: "send", alumni: "users", room: "calendar", help: "wrench" };

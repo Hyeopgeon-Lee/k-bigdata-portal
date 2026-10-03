@@ -9,25 +9,15 @@
   <title>빅데이터소프트웨어공학과 통합 서비스 포털</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/learning.css">
 </head>
 <body>
   <a class="skip-link" href="#services">서비스 목록으로 건너뛰기</a>
-  <header class="site-header">
-    <div class="container header-inner">
-      <a class="brand" href="#top" aria-label="통합 서비스 포털 홈">
-        <span class="brand-mark" aria-hidden="true"><span></span></span>
-        <span class="brand-copy"><strong>빅데이터소프트웨어공학과</strong><small>통합 서비스 포털</small></span>
-      </a>
-      <nav class="main-nav" aria-label="주요 메뉴">
-        <a href="#services">전체 서비스</a>
-        <a href="#career">취업 · 진로</a>
-        <a href="#campus">학과 생활</a>
-        <a href="#project">프로젝트 · 성장</a>
-        <a class="nav-external" href="https://www.kopo.ac.kr/kangseo/content.do?menu=1547">학과 홈페이지 <span aria-hidden="true">↗</span></a>
-      </nav>
-      <a class="mobile-home" href="https://www.kopo.ac.kr/kangseo/content.do?menu=1547" aria-label="학과 홈페이지로 이동">학과 홈페이지 <span aria-hidden="true">↗</span></a>
-    </div>
-  </header>
+<header class="site-header"><div class="container header-inner">
+<a class="brand" href="index.html" aria-label="통합 서비스 포털 홈"><span class="brand-mark" aria-hidden="true"><span></span></span><span class="brand-copy"><strong>빅데이터소프트웨어공학과</strong><small>통합 서비스 포털</small></span></a>
+<button class="menu-toggle" type="button" aria-expanded="false" aria-controls="portal-nav">메뉴 <span aria-hidden="true">☰</span></button>
+<nav class="main-nav" id="portal-nav" aria-label="주요 메뉴"><a href="index.html#services">전체 서비스</a><a href="index.html#career">취업 · 진로</a><a href="index.html#learning">학습 · 역량</a><a href="index.html#project">프로젝트 · 성장</a><a href="index.html#campus">학과 생활</a><a href="https://www.kopo.ac.kr/kangseo/content.do?menu=1547">학과 홈페이지 ↗</a></nav>
+</div></header>
 
 
   <main id="top">
@@ -36,7 +26,7 @@
         <div class="hero-copy">
           <p class="eyebrow"><span></span>K-BIGDATA SERVICE PORTAL</p>
           <h1 id="hero-title">학과 서비스를<br><em>한 곳에서</em></h1>
-          <p class="hero-description">취업 준비와 학과 생활부터 졸업작품 아이디어 탐색까지,<br class="desktop-break"> 필요한 학과 서비스를 빠르게 이용할 수 있습니다.</p>
+          <p class="hero-description">취업 준비와 학과 생활부터 IT 직무, 자격증, 프로젝트 학습까지 필요한 서비스를 한 곳에서 이용할 수 있습니다.</p>
           <div class="hero-actions">
             <a class="button button-primary" href="#services">전체 서비스 보기 <span aria-hidden="true">↓</span></a>
             <a class="button button-secondary" href="https://www.kopo.ac.kr/kangseo/content.do?menu=1547">학과 홈페이지 <span aria-hidden="true">↗</span></a>
@@ -52,7 +42,7 @@
           </svg>
           <div class="hub-card">
             <span class="hub-symbol" aria-hidden="true"><i></i></span>
-            <strong>Service Hub</strong><small>7개 서비스 연결</small>
+            <strong>Service Hub</strong><small>학과 서비스 · 학습 · 취업</small>
           </div>
           <div class="orbit-card orbit-ready"><span data-hero-icon="ready"></span><strong>Career</strong><small>취업 준비 점검</small></div>
           <div class="orbit-card orbit-apply"><span data-hero-icon="apply"></span><strong>Apply</strong><small>입사지원 현황</small></div>
@@ -62,14 +52,15 @@
         </div>
       </div>
       <div class="container overview" aria-label="포털 개요">
-        <div><strong>7</strong><span>운영 서비스</span></div>
-        <div><strong>3</strong><span>서비스 카테고리</span></div>
-        <div><strong>24/7</strong><span>웹에서 바로 접근</span></div>
+        <div><strong>Career</strong><span>취업 · 진로</span></div>
+        <div><strong>Learning</strong><span>학습 · 역량</span></div>
+        <div><strong>Project</strong><span>프로젝트 · 성장</span></div>
         <p><span aria-hidden="true"></span>필요한 서비스를 선택하면 각 서비스로 바로 이동합니다.</p>
       </div>
     </section>
 
 
+<section class="portal-search container" aria-labelledby="search-heading"><h2 id="search-heading">포털 통합검색</h2><label for="portal-query">서비스·직무·자격증·공식문서 검색</label><input id="portal-query" type="search" placeholder="예: Kubernetes, 쿠버네티스, SQL" autocomplete="off"><p id="search-status" role="status"></p><ul id="search-results" class="search-results"></ul></section>
     <section class="services-section" id="services" aria-labelledby="services-title">
       <div class="container">
         <div class="section-intro">
@@ -90,5 +81,6 @@
     <div class="container footer-bottom"><p>본 포털은 빅데이터소프트웨어공학과에서 운영하는 서비스의 통합 진입 페이지입니다.</p><p>© <span id="current-year"></span> K-BigData Service Portal</p></div>
   </footer>
   <script type="module" src="js/app.js"></script>
+  <script type="module" src="js/learning-ui.js"></script>
 </body>
 </html>

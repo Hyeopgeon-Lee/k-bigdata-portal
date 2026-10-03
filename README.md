@@ -1,99 +1,117 @@
-# K-BigData Service Portal
+# K-BigData 통합 서비스 포털
 
+한국폴리텍대학 서울강서캠퍼스 빅데이터소프트웨어공학과의 학과 서비스·취업·학습·프로젝트 진입점입니다.
+Vanilla HTML/CSS/JavaScript 기반 GitHub Pages 정적 사이트이며 로그인·개인정보 저장·서버·상용 API를 추가하지 않습니다.
 
-한국폴리텍대학 서울강서캠퍼스 빅데이터소프트웨어공학과에서 운영하는 웹서비스를 한 곳에서 찾을 수 있는 정적 포털입니다. 포털은 인증이나 학생 데이터를 직접 다루지 않으며, 각 서비스로 이동하는 통합 진입점 역할을 합니다.
+운영 주소: https://portal.k-bigdata.kr/
 
+## 메뉴 구조
 
-- 운영 URL: <https://portal.k-bigdata.kr/>
-- 구현 방식: GitHub Pages, Vanilla HTML/CSS/JavaScript
-- 배포 브랜치/경로: `main` 브랜치의 저장소 루트
+- 취업 · 진로: 취업 준비 점검, 입사지원 현황, 졸업생 네트워크, IT 직무 가이드
+- 학습 · 역량: IT 자격증, 기술면접 문제은행, 개발 공식문서
+- 프로젝트 · 성장: 학과 포트폴리오, 졸업작품 주제 가이드
+- 학과 생활: 프로젝트실 예약, 학과 요청 · 신고
 
+외부 학과 서비스는 기존 운영 사이트로 연결하며 해당 서비스 저장소를 수정하지 않습니다.
 
-## 등록 서비스
-
-
-| 카테고리 | 서비스 | URL |
-| --- | --- | --- |
-| 취업 · 진로 | 취업 준비 점검 | <https://ready.k-bigdata.kr/> |
-| 취업 · 진로 | 입사지원 현황 | <https://apply.k-bigdata.kr/> |
-| 취업 · 진로 | 졸업생 네트워크 | <https://alumni.k-bigdata.kr/> |
-| 학과 생활 | 프로젝트실 예약 | <https://room.k-bigdata.kr/> |
-| 학과 생활 | 학과 요청 · 신고 | <https://help.k-bigdata.kr/> |
-| 프로젝트 · 성장 | 학과 포트폴리오 | <https://portfolio.k-bigdata.kr/> |
-| 프로젝트 · 성장 | 졸업작품 주제 가이드 | <https://portal.k-bigdata.kr/project-guide.html> |
-
-
-## 디렉터리 구조
-
+## 파일 구조
 
 ```text
-/
-├── index.html          # 페이지 구조와 Hero 일러스트
-├── project-guide.html  # 문제 해결형 졸업작품 주제 선정 가이드
-├── CNAME               # GitHub Pages 사용자 지정 도메인
-├── favicon.svg
-├── css/
-│   └── style.css       # 디자인 시스템과 반응형 스타일
-└── js/
-    ├── services.js     # 카테고리 및 서비스 데이터
-    └── app.js          # 카드 자동 그룹화·정렬·렌더링
+index.html                  메인 서비스 허브
+certifications.html         IT 자격증 목록 / ?id=cka 상세
+jobs.html                   IT 직무 목록 / ?id=data 상세
+interview.html              기술면접 학습 / ?category=Kubernetes
+docs.html                   개발 공식문서
+project-guide.html          문제 해결형 프로젝트 제작 가이드
+CNAME                       운영 도메인
+favicon.svg                 브랜드 아이콘
+css/style.css               기존 디자인 시스템
+css/learning.css            공통 정보 페이지 / 검색 / 모바일 메뉴
+js/services.js              서비스와 카테고리 데이터
+js/app.js                   기존 메인 카드와 Hero SVG 렌더링
+js/certifications.js        자격증 데이터
+js/jobs.js                  직무 데이터
+js/interview.js             기술면접 질문·답변
+js/docs.js                  공식문서 데이터
+js/search.js                통합검색 인덱스와 동의어
+js/learning-ui.js           필터·상세·검색·랜덤·모바일 메뉴
 ```
 
+이미지는 외부 의존성 없이 기존 CSS/SVG를 사용합니다. ES Modules를 사용하므로 파일을 직접 열기보다 HTTP 정적 서버로 확인하세요.
 
-## 서비스 추가·수정
+## 서비스 추가 / 수정
 
+1. `js/services.js`의 `categories`에 필요한 카테고리의 id, label, english, description을 정의합니다.
+2. `services` 배열에 고유 id, name, englishName, category, description, shortDescription, url, icon, accent, tags, featured, order를 추가합니다.
+3. 기존 SVG 키는 clipboard, send, users, calendar, wrench입니다. 신규 SVG는 `js/app.js`의 icons에 추가합니다.
+4. category는 등록된 카테고리 id와 일치해야 합니다. 외부 URL은 공식 운영 주소를 확인합니다.
 
-서비스 카드는 HTML에 직접 작성하지 않습니다. `js/services.js`의 `services` 배열에서 데이터만 관리합니다.
+카테고리별 메인 카드와 통합검색 서비스 항목은 자동 생성됩니다. 카테고리 자체를 변경할 때는 각 HTML의 공통 Navigation도 함께 수정하세요. 서비스 수를 화면에 하드코딩하지 않습니다.
 
+## 자격증 추가 / 수정
 
-### 새 서비스 추가
+`js/certifications.js`의 배열만 수정합니다. id, name, english, category, institution, overview, tags, roles, fields, education, url, note를 사용합니다.
+현재 등록 범위는 지정된 12개 자격증입니다. 운영자가 승인하지 않은 자격증을 임의로 추가하지 않습니다.
+명칭 체계가 바뀐 경우 학과 안내 명칭을 보존하고 note에 현재 시행기관 안내를 구분합니다.
+시험 일정·비용·응시 자격은 하드코딩하지 않고 공식 시행기관 버튼으로 안내합니다.
+상세 URL은 `certifications.html?id=고유id`입니다.
 
+## 직무 추가 / 수정
 
-1. `js/services.js`의 `services` 배열에 객체 하나를 추가합니다.
-2. `category`는 `career`, `campus`, `project`처럼 `categories`에 등록된 키를 사용합니다.
-3. `icon`은 현재 제공되는 `clipboard`, `send`, `users`, `calendar`, `wrench` 중 하나를 지정합니다. 새 아이콘이 필요하면 `js/app.js`의 `icons` 객체에 같은 키의 SVG를 추가합니다.
-4. `order`로 카테고리 안의 표시 순서를 정합니다.
-5. 커밋 후 배포 화면에서 카드와 링크를 확인합니다.
+`js/jobs.js`에서 id, name, overview, tags, tasks, education, idea, certifications, portfolio, category, english, aliases를 수정합니다.
+certifications는 자격증 데이터의 id 배열입니다. 삭제한 자격증 id를 직무에서 참조하지 않도록 확인하세요.
+상세 URL은 `jobs.html?id=고유id`입니다. 직무와 학과 학습의 연계는 학습 안내이며 채용을 보장하지 않습니다.
 
+## 공식문서 추가
 
-```js
-{
-  id: "project",
-  name: "학생 프로젝트 관리",
-  englishName: "Student Projects",
-  category: "campus",
-  description: "서비스의 전체 설명",
-  shortDescription: "카드에 표시할 한 줄 설명",
-  url: "https://example.k-bigdata.kr/",
-  icon: "clipboard",
-  accent: "blue",
-  tags: ["프로젝트", "협업"],
-  featured: false,
-  order: 6
-}
-```
+`js/docs.js`에 id, name, category, overview, url, tags, aliases를 추가합니다.
+Programming, Backend, Database, Frontend, Cloud, DevOps, AI / Data 카테고리를 사용하며 공식 개발사·기관 문서만 연결합니다.
+기술명과 한글 별칭은 aliases에 추가할 수 있습니다.
 
+## 기술면접 문제 추가
 
-기존 서비스를 수정할 때도 같은 객체의 이름, 설명, URL, 태그 또는 순서만 변경하면 됩니다. 렌더러가 카테고리별로 자동 그룹화하고 `order` 순서대로 표시합니다.
+`js/interview.js`에 id, category, difficulty, question, answer, keywords, extra를 추가합니다.
+답변은 면접에서 말할 수 있는 길이로 작성하고 예외·전제조건은 extra에 설명합니다.
+기초/중급 난이도는 학습 안내이며 공식 평가 기준이 아닙니다.
+카테고리는 데이터에서 자동 생성됩니다. 답변은 native details/summary로 펼칩니다.
+랜덤 1개/10개는 현재 필터·검색 결과에서 중복 없이 선택하며 대상이 부족하면 가능한 수만 표시합니다.
 
+## 통합검색
 
-## GitHub Pages 배포
+`js/search.js`가 각 데이터에서 인덱스를 생성합니다. 한글/영문·대소문자·주요 별칭을 고려합니다.
+새 동의어는 synonyms 배열에 추가합니다. 여러 검색어는 AND 조건입니다.
+검색어는 서버에 전송하거나 저장하지 않습니다.
 
+## GitHub Pages / Custom domain
 
-1. 저장소의 **Settings → Pages**로 이동합니다.
-2. **Build and deployment**의 Source를 **Deploy from a branch**로 선택합니다.
-3. Branch를 **main**, 폴더를 **/(root)**로 선택하고 저장합니다.
-4. 배포가 끝나면 `https://portal.k-bigdata.kr/`에서 확인합니다.
-
-
-별도 빌드 과정이나 패키지 설치는 필요하지 않습니다. 정적 파일을 GitHub Pages가 그대로 제공합니다.
-
-
-## CNAME과 도메인 운영
-
-
-루트 `CNAME` 파일은 아래 한 줄만 포함합니다.
-
+1. 저장소 Settings → Pages에서 Deploy from a branch, main, /(root)를 선택합니다.
+2. Custom domain을 `portal.k-bigdata.kr`로 지정합니다.
+3. root의 CNAME은 아래 한 줄을 유지합니다.
 
 ```text
 portal.k-bigdata.kr
+```
+
+4. DNS 관리 화면에서 portal CNAME을 `Hyeopgeon-Lee.github.io`로 연결합니다. 동일 호스트의 충돌하는 A/AAAA 레코드를 확인합니다.
+5. DNS 확인과 인증서 발급을 기다린 뒤 Enforce HTTPS를 확인합니다.
+6. 커밋 후 Actions의 pages build and deployment 성공과 최신 커밋 반영을 확인합니다.
+
+Pages 설정은 저장소 관리자 권한, DNS 설정은 도메인 관리자 권한이 필요합니다. CNAME 파일만으로 DNS가 설정되지는 않습니다.
+복구 시 GitHub에서 해당 변경 커밋을 revert하여 기록을 보존합니다.
+
+## 검증 체크리스트
+
+- 모든 HTML의 noindex, nofollow 유지. 이 정책은 인증이나 보안 기능이 아닙니다.
+- 기존 외부 서비스 주소, 포트폴리오, 학과 홈페이지·홍보 링크 유지.
+- 새 페이지 목록·필터·검색·상세·홈 복귀·모바일 메뉴·키보드 탐색 확인.
+- Kubernetes / 쿠버네티스 검색에서 CKA, 관련 직무, 문서, 면접 카테고리 확인.
+- 360×800, 390×844, 412×915, 768×1024, 1024×768, 1440×900, 1920×1080에서 가로 넘침·버튼·긴 제목·Footer 확인.
+- 랜덤 10문제 중복 없음, 현재 검색 결과에서만 선택되는지 확인.
+- Console 오류 및 내부 링크 404, 공식 외부 링크 확인.
+- reduced-motion에서 불필요한 움직임이 멈추는지 확인.
+
+## 공식 링크 확인 메모
+
+2026-10-03 기준 Q-Net, Oracle, NAVER Cloud, Linux Foundation, 개발 공식문서 및 학과 공식 홈페이지/홍보 페이지의 공식 출처를 확인했습니다.
+DataQ·KAIT·대한상공회의소는 공식 출처를 확인했으나 자동 수집 제한 또는 시간 초과가 있어 응시 전에 해당 기관 사이트의 최신 안내를 직접 확인하세요.
+OCP·OCJP는 제품/버전별 현행 체계와 구분하고, 워드프로세서 1급은 현재 단일등급 안내를 함께 표시합니다.

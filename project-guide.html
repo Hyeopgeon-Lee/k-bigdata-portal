@@ -20,15 +20,15 @@
     .checklist{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:76px}.checklist-card{padding:34px;border:1px solid var(--color-border);border-radius:14px;background:#f8fafe}.checklist-card h2{margin:0 0 20px;font-size:24px}.checklist-card ul{display:grid;gap:12px;margin:0;padding:0;list-style:none}.checklist-card li{position:relative;padding-left:27px;color:#47536a}.checklist-card li:before{content:'✓';position:absolute;left:0;color:#159b8b;font-weight:900}
     .guide-cta{display:flex;align-items:center;justify-content:space-between;gap:30px;margin-top:76px;padding:38px;border:1px solid #cfdcf3;border-radius:16px;background:linear-gradient(135deg,#f3f7ff,#fff)}.guide-cta h2{margin:0;font-size:25px}.guide-cta p{margin:7px 0 0;color:var(--color-text-muted)}
     @media(max-width:767px){.guide-hero{padding:62px 0 58px}.guide-hero h1{font-size:43px}.guide-lead{font-size:16px}.guide-body{padding:70px 0 80px}.principle{grid-template-columns:1fr;gap:12px;padding:26px}.principle strong{font-size:34px}.steps,.checklist{grid-template-columns:1fr}.step{min-height:0;padding:26px}.formula{padding:30px 24px}.formula blockquote{padding:18px;font-size:16px}.guide-cta{display:block;padding:28px 24px}.guide-cta .button{margin-top:22px}.main-nav{display:none}.mobile-home{display:block}}
-  </style>
+  </style><link rel="stylesheet" href="css/learning.css">
 </head>
 <body>
   <a class="skip-link" href="#guide-content">본문으로 건너뛰기</a>
-  <header class="site-header"><div class="container header-inner">
-    <a class="brand" href="index.html" aria-label="통합 서비스 포털 홈"><span class="brand-mark" aria-hidden="true"><span></span></span><span class="brand-copy"><strong>빅데이터소프트웨어공학과</strong><small>졸업작품 주제 가이드</small></span></a>
-    <nav class="main-nav" aria-label="주요 메뉴"><a href="#process">주제 선정 과정</a><a href="#template">주제 정의 양식</a><a href="https://portfolio.k-bigdata.kr/">학과 포트폴리오</a><a class="nav-external" href="index.html">서비스 포털로 <span aria-hidden="true">↗</span></a></nav>
-    <a class="mobile-home" href="index.html">포털로 <span aria-hidden="true">↗</span></a>
-  </div></header>
+<header class="site-header"><div class="container header-inner">
+<a class="brand" href="index.html" aria-label="통합 서비스 포털 홈"><span class="brand-mark" aria-hidden="true"><span></span></span><span class="brand-copy"><strong>빅데이터소프트웨어공학과</strong><small>통합 서비스 포털</small></span></a>
+<button class="menu-toggle" type="button" aria-expanded="false" aria-controls="portal-nav">메뉴 <span aria-hidden="true">☰</span></button>
+<nav class="main-nav" id="portal-nav" aria-label="주요 메뉴"><a href="index.html#services">전체 서비스</a><a href="index.html#career">취업 · 진로</a><a href="index.html#learning">학습 · 역량</a><a href="index.html#project">프로젝트 · 성장</a><a href="index.html#campus">학과 생활</a><a href="https://www.kopo.ac.kr/kangseo/content.do?menu=1547">학과 홈페이지 ↗</a></nav>
+</div></header>
   <main class="guide-main" id="guide-content">
     <section class="guide-hero"><div class="container guide-hero-inner">
       <p class="eyebrow"><span></span>PROJECT THEME GUIDE</p>
@@ -38,21 +38,14 @@
     </div></section>
     <div class="container guide-body">
       <section class="principle" aria-labelledby="principle-title"><strong>01</strong><div><p class="section-kicker">CORE PRINCIPLE</p><h2 id="principle-title">“무엇을 만들까?”보다 “어떤 문제를 해결할까?”</h2><p>기능이나 기술을 먼저 정하면 사용 이유가 약한 결과물이 되기 쉽습니다. 주변의 불편을 관찰하고, 누가 언제 어떤 어려움을 겪는지 확인한 뒤 해결 방법을 설계하세요.</p></div></section>
-      <section id="process" aria-labelledby="process-title"><div class="guide-section-head"><p class="section-kicker">6-STEP PROCESS</p><h2 id="process-title">문제 발견부터 검증까지</h2><p>거창한 아이디어보다 분명한 사용자와 검증 가능한 문제에서 시작합니다.</p></div>
-        <div class="steps">
-          <article class="step"><span class="step-number">01</span><h3>불편을 관찰하기</h3><p>학교, 직장, 지역사회와 일상에서 반복되는 불편과 낭비를 기록합니다.</p><ul><li>반복적으로 시간이 걸리는 일</li><li>수작업·메신저·엑셀에 의존하는 일</li></ul></article>
-          <article class="step"><span class="step-number">02</span><h3>사용자를 구체화하기</h3><p>‘모든 사람’이 아니라 실제로 문제를 겪는 사람과 상황을 구체적으로 정합니다.</p><ul><li>사용자는 누구인가?</li><li>언제, 어디서 문제가 발생하는가?</li></ul></article>
-          <article class="step"><span class="step-number">03</span><h3>기존 해결 방법 조사하기</h3><p>현재 쓰는 서비스와 업무 방식을 살펴보고, 해결되지 않은 빈틈을 찾습니다.</p><ul><li>기존 서비스의 한계</li><li>사용자가 포기하거나 우회하는 지점</li></ul></article>
-          <article class="step"><span class="step-number">04</span><h3>핵심 문제 한 문장으로 정의하기</h3><p>기능 목록이 아니라 누구의 어떤 문제를 왜 해결해야 하는지 작성합니다.</p><ul><li>문제의 원인과 영향</li><li>해결 후 달라질 행동</li></ul></article>
-          <article class="step"><span class="step-number">05</span><h3>작은 서비스로 구현하기</h3><p>가장 중요한 문제를 해결하는 최소 기능부터 만들고 실제 사용 흐름을 완성합니다.</p><ul><li>핵심 기능 1~3개 선정</li><li>처음부터 끝까지 동작하는 MVP</li></ul></article>
-          <article class="step"><span class="step-number">06</span><h3>사용자에게 검증하기</h3><p>실제 사용자에게 사용하게 하고 의견과 데이터를 바탕으로 개선합니다.</p><ul><li>문제가 실제로 줄었는가?</li><li>다시 사용할 의향이 있는가?</li></ul></article>
-        </div>
+      <section id="process" aria-labelledby="process-title"><div class="guide-section-head"><p class="section-kicker">PROJECT PROCESS</p><h2 id="process-title">문제 발견부터 포트폴리오까지</h2><p>거창한 아이디어보다 분명한 사용자와 검증 가능한 문제에서 시작합니다.</p></div>
+        <div class="steps"><article class="step"><span class="step-number">01</span><h3>문제 발견</h3><p>반복되는 불편을 관찰하고 현재 해결 방식의 한계를 기록합니다. 사용자에게 실제로 중요한 문제인지 근거를 모으세요.</p><ul><li>관찰 기록 · 기존 서비스 비교</li></ul></article><article class="step"><span class="step-number">02</span><h3>사용자 정의</h3><p>모든 사람이 아니라 누가 언제 어디서 문제를 겪는지 정하고 실제 사용자를 만나 확인합니다.</p><ul><li>사용자 인터뷰 · 핵심 문제 한 문장</li></ul></article><article class="step"><span class="step-number">03</span><h3>데이터/API 조사</h3><p>필요한 데이터의 출처·품질·이용 조건과 API 제한을 확인합니다. 개인정보 수집을 최소화하세요.</p><ul><li>출처 · 라이선스 · 호출 제한 · 대체 방안</li></ul></article><article class="step"><span class="step-number">04</span><h3>기능 정의</h3><p>사용자의 시작부터 완료까지 흐름을 그리고 해결에 꼭 필요한 기능을 우선순위로 정합니다.</p><ul><li>사용자 시나리오 · 완료 조건</li></ul></article><article class="step"><span class="step-number">05</span><h3>기술 스택 선택</h3><p>AI·LLM·클라우드를 먼저 정하지 말고 문제와 제약에 맞는 가장 단순한 기술을 선택합니다.</p><ul><li>선택 이유 · 팀 역량 · 운영 비용</li></ul></article><article class="step"><span class="step-number">06</span><h3>MVP 범위 설정</h3><p>핵심 기능 1~3개로 처음부터 끝까지 동작하는 작은 서비스를 만듭니다. 이번에 하지 않을 일도 명시합니다.</p><ul><li>핵심 흐름 · 범위 제외 · 일정</li></ul></article><article class="step"><span class="step-number">07</span><h3>GitHub Repository 관리</h3><p>Issue로 작업을 나누고 의미 있는 커밋과 코드 리뷰를 남깁니다. 비밀 값과 개인정보는 저장소에 넣지 않습니다.</p><ul><li>Issue · 브랜치 · Pull Request · .gitignore</li></ul></article><article class="step"><span class="step-number">08</span><h3>README 작성</h3><p>문제·사용자·핵심 기능·구성도·실행 방법과 팀의 기여를 기록합니다. 다른 사람이 재현할 수 있게 작성하세요.</p><ul><li>설치 · 환경 변수 예시 · 사용 화면</li></ul></article><article class="step"><span class="step-number">09</span><h3>테스트</h3><p>기능의 정상·오류 경로와 모바일·키보드 접근성을 확인합니다. 실제 사용자의 피드백으로 문제가 줄었는지 검증합니다.</p><ul><li>테스트 기록 · 오류 재현 · 전후 변화</li></ul></article><article class="step"><span class="step-number">10</span><h3>배포 또는 시연</h3><p>접속 가능한 환경이나 재현 가능한 시연을 준비하고 설정·권한·복구 절차를 확인합니다.</p><ul><li>데모 주소 · 시연 영상 · 운영 제한</li></ul></article><article class="step"><span class="step-number">11</span><h3>포트폴리오 정리</h3><p>문제와 해결 근거, 맡은 역할, 기술 선택의 이유와 개선점을 설명합니다. 결과뿐 아니라 판단 과정도 보여주세요.</p><ul><li>GitHub · 화면 · 테스트 결과 · 회고</li></ul></article></div>
       </section>
       <section class="formula" id="template" aria-labelledby="template-title"><p class="section-kicker">THEME FORMULA</p><h2 id="template-title">주제 정의 한 문장</h2><blockquote><strong>[사용자]</strong>가 <strong>[상황]</strong>에서 겪는 <strong>[문제]</strong>를 해결하기 위해, <strong>[핵심 기능]</strong>을 제공하는 서비스를 구현한다.</blockquote><p class="formula-example"><strong>예시</strong> — 프로젝트실을 이용하는 학생이 빈 공간과 예약 현황을 알기 어려운 문제를 해결하기 위해, 실시간 예약 및 사용 현황 서비스를 구현한다.</p></section>
       <section class="checklist" aria-label="주제 점검 기준"><div class="checklist-card"><h2>좋은 주제인지 점검하기</h2><ul><li>실제 사용자를 만날 수 있는가?</li><li>문제를 관찰하거나 근거로 설명할 수 있는가?</li><li>한 학기 안에 핵심 흐름을 구현할 수 있는가?</li><li>사용 전후의 변화를 확인할 수 있는가?</li></ul></div><div class="checklist-card"><h2>기술 선택 원칙</h2><ul><li>AI·빅데이터가 꼭 필요한 이유가 있는가?</li><li>기술 없이 더 단순하게 해결할 수는 없는가?</li><li>개인정보와 편향 문제를 고려했는가?</li><li>기술 설명보다 사용자 가치를 먼저 말할 수 있는가?</li></ul></div></section>
       <section class="guide-cta"><div><p class="section-kicker">EXPLORE & DEFINE</p><h2>선배들의 결과물에서 문제 해결 방식을 찾아보세요</h2><p>작품을 그대로 따라 하기보다 어떤 문제를 어떻게 정의하고 구현했는지 살펴보세요.</p></div><a class="button button-primary" href="https://portfolio.k-bigdata.kr/">학과 포트폴리오 보기 <span aria-hidden="true">↗</span></a></section>
     </div>
-  </main>
+  <section class="portal-search container" aria-labelledby="search-heading"><h2 id="search-heading">포털 통합검색</h2><label for="portal-query">서비스·직무·자격증·공식문서 검색</label><input id="portal-query" type="search" placeholder="예: Kubernetes, 쿠버네티스, SQL" autocomplete="off"><p id="search-status" role="status"></p><ul id="search-results" class="search-results"></ul></section></main>
   <footer class="site-footer"><div class="container footer-grid"><div class="footer-brand"><span class="brand-mark" aria-hidden="true"><span></span></span><div><strong>빅데이터소프트웨어공학과</strong><p>한국폴리텍대학 서울강서캠퍼스</p></div></div><div class="footer-links"><p>바로가기</p><a href="index.html">통합 서비스 포털</a><a href="https://portfolio.k-bigdata.kr/">학과 포트폴리오 ↗</a></div></div><div class="container footer-bottom"><p>문제 발견과 해결 과정을 중심으로 졸업작품을 설계하세요.</p><p>© 2026 K-BigData Service Portal</p></div></footer>
-</body>
+<script type="module" src="js/learning-ui.js"></script></body>
 </html>
