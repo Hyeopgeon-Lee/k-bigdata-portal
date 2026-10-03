@@ -76,3 +76,37 @@ body[data-page=certifications] .filters{flex-wrap:nowrap;overflow-x:auto;padding
 body[data-page=certifications] .filters button{white-space:nowrap;flex:0 0 auto}
 body[data-page=certifications] #list-controls{margin-top:32px}
 @media(max-width:767px){.cert-path-grid,.cert-core-grid{grid-template-columns:1fr}.cert-importance{padding:20px}.cert-detail .cert-overview{font-size:17px}}
+/* Interview practice: same portal palette, readable answers, no modal or stored results. */
+body[data-page=interview] .learning-content{max-width:1040px}
+body[data-page=interview] .interview-stats{display:inline-block;margin:14px 0 0;padding:10px 16px;background:#e8effa;border:1px solid #c8d6ee;border-radius:10px;color:#142d70;font-size:16px;font-weight:700}
+.interview-filter-heading{font-size:18px;margin:16px 0 10px}
+body[data-page=interview] .filters{flex-wrap:nowrap;overflow-x:auto;max-width:100%;padding:6px 4px 14px;margin-bottom:10px;scroll-padding:4px}
+body[data-page=interview] .filters button{flex:0 0 auto;white-space:nowrap;font-size:14px}
+body[data-page=interview] #list-controls{min-width:0;margin-bottom:24px}
+body[data-page=interview] .question{min-width:0;padding:28px}
+.question-meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.question-code{font-size:13px;font-weight:700;letter-spacing:.04em;color:#59647a;margin-right:4px}
+.question-role{font-size:14px;line-height:1.7;color:#59647a;margin:0 0 10px}
+.question-answer>summary{border-top:1px solid #dce3ef;margin-top:16px;padding:14px 0;font-size:16px}
+.answer-content{border-top:1px solid #e3e9f2;padding-top:12px}
+.question .answer-content h3{font-size:17px;line-height:1.5;margin:22px 0 8px}
+.question .answer-content p,.follow-ups li{font-size:16px;line-height:1.9;color:#4e5a70;overflow-wrap:anywhere}
+.question .short-answer{background:#f1f5fc;border-left:3px solid #142d70;padding:16px 18px;border-radius:0 10px 10px 0;color:#253b60;font-weight:500}
+.question .tags span{font-size:13px;overflow-wrap:anywhere}
+.follow-ups{padding-left:24px;margin:12px 0}.follow-ups li+li{margin-top:12px}
+.question-sources{margin-top:22px;border-top:1px solid #e3e9f2}
+.question-sources>summary{font-size:14px;font-weight:500}
+.question-sources li{margin:6px 0;line-height:1.8}.question-sources a,.interview-editorial a{text-decoration:underline;text-underline-offset:3px;color:#142d70}
+.question-permalink{display:inline-flex;align-items:center;min-height:44px;margin-top:12px;color:#142d70;font-size:14px}
+.practice-session,.practice-complete{min-width:0;padding:24px;border:1px solid #c8d6ee;border-radius:18px;background:#edf3fc}
+.practice-progress{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:center;color:#142d70}
+.practice-progress p{font-weight:700;margin:0}.practice-progress strong{padding:8px 12px;background:#fff;border-radius:8px;font-size:16px}
+.practice-complete h2{font-size:clamp(24px,4vw,32px)}.practice-complete p{line-height:1.85}
+body[data-page=interview] .practice-actions .button{font-size:15px;padding:12px 18px;min-height:48px}
+body[data-page=interview] .button:disabled{opacity:.55;cursor:not-allowed}
+.interview-editorial{margin-top:36px;padding:20px;border:1px solid #dce3ef;border-radius:14px;background:#fff}
+.interview-editorial>summary{min-height:44px;cursor:pointer;align-content:center;color:#142d70;font-weight:700;line-height:1.6}
+.interview-editorial p,.interview-editorial li{font-size:15px;line-height:1.85;color:#4e5a70}
+.question h2:focus-visible,.practice-complete h2:focus-visible{outline:3px solid #1ba7d4;outline-offset:5px;border-radius:4px}
+.question h2,.practice-complete h2{scroll-margin-top:110px}
+@media(max-width:767px){body[data-page=interview] .question{padding:20px}.practice-session,.practice-complete{padding:16px}.question .short-answer{padding:14px}.question-meta .badge{font-size:12px}.question-role{font-size:13px}.question .answer-content p,.follow-ups li{font-size:16px}}

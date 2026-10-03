@@ -2,6 +2,7 @@ import {certifications,certificationPaths,certificationGuidance} from "./certifi
 import {jobs,jobComparisons,jobGuidance} from "./jobs.js";
 import {docs,docCategories,docFlows,findDocForSkill} from "./docs.js";
 import {questions} from "./interview.js";
+import {initInterview} from "./interview-ui.js";
 import {matches,searchIndex,jobSearchText,docSearchText,certificationSearchText} from "./search.js";
 const esc=v=>String(v??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
 const list=items=>"<ul>"+items.map(v=>"<li>"+esc(v)+"</li>").join("")+"</ul>";
@@ -77,7 +78,9 @@ function renderJobDetail(job) {
 }
 
 const page=document.body.dataset.page;
-if(page){
+if(page==="interview"){
+  initInterview();
+}else if(page){
 const data={certifications,jobs,docs,interview:questions}[page];
 const params=new URLSearchParams(location.search),id=params.get("id");
 const selected=data.find(item=>item.id===id);

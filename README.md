@@ -31,7 +31,10 @@ js/services.js              서비스와 카테고리 데이터
 js/app.js                   기존 메인 카드와 Hero SVG 렌더링
 js/certifications.js        자격증 데이터
 js/jobs.js                  직무 데이터
-js/interview.js             기술면접 질문·답변
+js/interview.js             문제 데이터 공개 API / 검색 / 균형 랜덤 선택
+js/interview-ui.js          문제은행 전용 필터·답변·모의면접 UI
+data/interview-questions.js 기술면접 150문제 데이터
+data/interview-sources.js   공식 검수 문서와 출제 주제 참고 자료
 js/docs.js                  공식문서 데이터
 js/search.js                통합검색 인덱스와 동의어
 js/learning-ui.js           필터·상세·검색·랜덤·모바일 메뉴
@@ -84,11 +87,14 @@ certifications는 자격증 데이터의 id 배열입니다. 삭제한 자격증
 
 ## 기술면접 문제 추가
 
-`js/interview.js`에 id, category, difficulty, question, answer, keywords, extra를 추가합니다.
-답변은 면접에서 말할 수 있는 길이로 작성하고 예외·전제조건은 extra에 설명합니다.
-기초/중급 난이도는 학습 안내이며 공식 평가 기준이 아닙니다.
-카테고리는 데이터에서 자동 생성됩니다. 답변은 native details/summary로 펼칩니다.
-랜덤 1개/10개는 현재 필터·검색 결과에서 중복 없이 선택하며 대상이 부족하면 가능한 수만 표시합니다.
+`data/interview-questions.js`의 해당 addGroup 안에 q(id, subCategory, difficulty, question, shortAnswer, detailedAnswer, keywords, followUps, overrides)를 추가합니다. 파일 상단의 작성 안내를 확인하세요.
+고유 id는 영구 링크이므로 기존 q1~q28을 포함해 변경하지 않습니다. code는 분야별 표시 번호입니다. group은 10개 탐색 분야, category는 기존 jobs/docs의 연결 이름을 유지하는 호환 필드입니다.
+jobTags와 sourceIds는 그룹 기본값을 사용하며 필요한 문제만 overrides에서 재정의합니다. 직무 태그는 공통/백엔드/Java/데이터엔지니어/AI개발/클라우드/DevOps 중 선택합니다.
+shortAnswer는 말로 설명할 2~4문장, detailedAnswer는 전제·예외를 포함한 3~7문장, keywords는 3~6개, followUps는 1~3개를 권장합니다. 난이도는 기초/기본/심화이며 학습 안내이지 공식 평가가 아닙니다.
+`data/interview-sources.js`에 공식 문서 출처를 등록하고 개념·예외를 대조하세요. 면접 정리 저장소와 기업 글은 주제 선정 참고이며 답변을 복사하지 않습니다.
+답변은 처음에 닫힌 native details/summary로 표시합니다. 분야·직무·검색을 함께 적용하며 랜덤 10문제는 중복 없이 분야를 골고루 선택해 한 문제씩 진행합니다. 대상이 적으면 실제 개수만 연습합니다. 완료·재시작을 제공하지만 점수·학습 이력은 저장하지 않습니다.
+직접 링크는 `interview.html?id=고유id`, 기존 분야 링크는 `interview.html?category=Kubernetes`처럼 유지합니다. 직무 필터는 `?job=DevOps`, 검색은 `?q=JWT`를 지원합니다.
+`node tests/interview-bank.test.mjs`로 데이터·검색·500회 랜덤 선택·기존 연결·답변 초기 숨김을 검사합니다. 문제 수를 변경하면 테스트의 목표 개수도 의도에 맞게 갱신하세요. 브라우저 검수 기록은 `tests/interview-bank-qa.md`에 있습니다.
 
 ## 통합검색
 
