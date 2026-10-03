@@ -3,7 +3,7 @@
 ## 구현
 - 8개 분야, 40개 기술. 기존 13개에서 29개 추가, pandas·scikit-learn 2개 제거. Vue.js·Flutter 보존.
 - docs 상세의 학습·프로젝트·관련 기술·직무·면접 링크는 데이터에서 생성.
-- docs.html만 index, follow / canonical / Open Graph 적용. 다른 페이지 noindex 유지.
+- 초기 개편에서는 docs.html에 index, follow를 적용했으나 2026-10-04 학생 포털 개편에서 모든 HTML을 noindex, nofollow로 통일. canonical / Open Graph는 링크 공유 메타로 유지.
 
 ## 자동·브라우저 검사
 - node tests/docs-hub.test.mjs: 40개 데이터, 8개 분야, 14개 검색어, 연관 기술·직무·면접 참조, SEO 통과.

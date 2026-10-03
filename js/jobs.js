@@ -1,4 +1,14 @@
 // Department career guide. IDs are stable public URLs; technologies are preparation examples.
+export const jobGroups = [
+  {name:"핵심 진출 직무", ids:["native","devops","data","ai","cloud"], description:"학과의 클라우드 네이티브·DevOps·빅데이터·AI 교육과 연결되는 진로"},
+  {name:"연계 개발 직무", ids:["backend","frontend"], description:"서버와 사용자 화면 구현을 바탕으로 전문 분야로 확장하는 진로"}
+];
+// Interview tags differ from role titles; keep their navigation mapping in one place.
+export const interviewRoleLinks = {
+  "공통":"jobs.html", "백엔드":"jobs.html?id=backend", "Java":"jobs.html?id=backend",
+  "데이터엔지니어":"jobs.html?id=data", "AI개발":"jobs.html?id=ai",
+  "클라우드":"jobs.html?id=cloud", "DevOps":"jobs.html?id=devops"
+};
 export const jobs = [
   {
     "id": "backend",
@@ -937,5 +947,5 @@ export const jobComparisons = [
 export const jobGuidance = {
 skills: "필수 기술은 이 가이드에서 먼저 익힐 기초 역량이며 모든 기업의 공통 채용 요건은 아닙니다. 추가 기술은 실무 활용 예시입니다. 공고의 담당 업무·필수/우대 조건을 나누어 읽고 실제 요구 수준과 맞춰 준비하세요.",
 readiness: "스스로 준비를 점검하는 학습 기준입니다. 체크 수로 합격 여부를 판단하지 않으며 특정 기업 취업을 보장하지 않습니다. 각 항목을 직접 구현한 코드·테스트·설명으로 증명해 보세요.",
-interview: "아래 링크는 현재 문제은행의 관련 기초 카테고리입니다. JPA·Vue·LLM·RAG 등 모든 주제를 다루지는 않으므로 공식문서와 본인 프로젝트의 설계·실패 사례도 함께 준비하세요."
+interview: "아래 링크는 현재 문제은행의 관련 학습 분야입니다. 각 기술의 모든 개념을 다루거나 특정 기업의 출제를 보장하지 않으므로 공식문서와 본인 프로젝트의 설계·실패 사례도 함께 준비하세요."
 };

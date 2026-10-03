@@ -3,13 +3,13 @@ export const categories = {
     "id": "career",
     "label": "취업 · 진로",
     "english": "CAREER",
-    "description": "취업 준비부터 실제 입사지원과 졸업생 네트워크까지"
+    "description": "목표 직무를 찾고 취업 준비 점검·입사지원·동문 연결로 이어가세요"
   },
   "learning": {
     "id": "learning",
     "label": "학습 · 역량",
     "english": "LEARNING",
-    "description": "자격증·기술면접·공식문서로 개발 역량을 쌓으세요"
+    "description": "자격증·기술면접·공식 Reference와 기술 흐름을 함께 학습하세요"
   },
   "project": {
     "id": "project",
@@ -168,7 +168,7 @@ export const services = [
     "shortDescription": "실제 IT 직무의 역할과 필요한 기술을 이해하세요.",
     "description": "실제 IT 직무의 역할과 필요한 기술을 이해하세요.",
     "icon": "users",
-    "order": 8,
+    "order": 0,
     "url": "jobs.html",
     "accent": "blue",
     "tags": [],
@@ -207,13 +207,42 @@ export const services = [
     "name": "개발 공식문서",
     "englishName": "Developer Docs",
     "category": "learning",
-    "shortDescription": "개발에 필요한 공식문서를 빠르게 찾아보세요.",
-    "description": "개발에 필요한 공식문서를 빠르게 찾아보세요.",
+    "shortDescription": "정확한 기술 사용법과 공식 Reference를 확인하세요.",
+    "description": "정확한 기술 사용법과 공식 Reference를 확인하세요.",
     "icon": "clipboard",
     "order": 11,
     "url": "docs.html",
     "accent": "blue",
     "tags": [],
     "featured": false
+  },
+  {
+    "id": "tech-blog", "name": "기술 블로그", "englishName": "TECH BLOG",
+    "category": "learning", "url": "https://prof.k-bigdata.kr/blog/",
+    "description": "AI·클라우드·DevOps·빅데이터 등 최신 IT 기술과 실무 흐름을 학습하세요.",
+    "shortDescription": "AI·클라우드·DevOps·빅데이터 등 최신 IT 기술과 실무 흐름을 학습하세요.",
+    "source": "이협건 교수 기술 블로그", "aliases": "Kubernetes 쿠버네티스 K8s 데브옵스 클라우드 기술 변화 블로그",
+    "icon": "book", "accent": "blue", "tags": ["AI", "Cloud Native", "DevOps", "Big Data"],
+    "featured": false, "order": 12
   }
+];
+
+export const serviceKind = service => service.id === "tech-blog" ? "EXTERNAL" : /^https:\/\//.test(service.url) ? "SERVICE" : "GUIDE";
+export const isExternal = url => /^https:\/\//.test(url);
+export const studentJourney = [
+  {id:"jobs", title:"직무 탐색", description:"어떤 일을 하고 무엇을 준비할지 찾기"},
+  {id:"docs", title:"기술 학습", description:"공식 Reference와 실무 흐름 함께 읽기", companion:"tech-blog"},
+  {id:"certifications", title:"자격증 준비", description:"목표 직무에 맞는 자격과 학습 계획"},
+  {id:"project-guide", title:"프로젝트", description:"사용자 문제를 발견하고 구현·검증하기", companion:"portfolio"},
+  {id:"interview", title:"기술면접", description:"자신의 말로 설명하고 꼬리질문 연습하기"},
+  {id:"ready", title:"취업 준비 점검", description:"GitHub·포트폴리오·이력서 확인하기"},
+  {id:"apply", title:"입사지원", description:"실제 지원 기업과 진행 상황 관리하기"},
+  {id:"alumni", title:"졸업생 네트워크", description:"선배의 경험과 채용 정보 나누기"}
+];
+export const footerLinks = [
+  {name:"학과 공식 홈페이지", url:"https://www.kopo.ac.kr/kangseo/content.do?menu=1547"},
+  {name:"학과 홍보 홈페이지", url:"https://ai.k-bigdata.kr/"},
+  {name:"교수 기술 블로그", url:"https://prof.k-bigdata.kr/blog/"},
+  {name:"학과 포트폴리오", url:"https://portfolio.k-bigdata.kr/"},
+  {name:"프로젝트 작품전시회", url:"https://contest.k-bigdata.kr/"}
 ];

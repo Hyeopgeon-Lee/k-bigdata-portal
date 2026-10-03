@@ -1,6 +1,7 @@
 import {questions, interviewGroups, interviewJobTags, questionSearchText, matchesInterviewCategory,
   selectRandomQuestions, interviewSources, interviewEditorialSources, interviewReviewDate} from "./interview.js";
 import {matches} from "./search.js";
+import {interviewRoleLinks} from "./jobs.js";
 
 const esc = value => String(value ?? "").replace(/[&<>'"]/g, c => ({"&":"&amp;", "<":"&lt;", ">":"&gt;", "'":"&#39;", '"':"&quot;"}[c]));
 const tags = values => '<div class="tags">' + values.map(value => '<span>' + esc(value) + '</span>').join("") + '</div>';
@@ -9,7 +10,7 @@ const external = source => '<a href="' + esc(source.url) + '" target="_blank" re
 export function renderInterviewQuestion(item, practice = false) {
   const sources = item.sourceIds.map(id => interviewSources[id]).filter(Boolean);
   return '<article class="question" data-question-id="' + esc(item.id) + '"><div class="question-meta"><span class="question-code">' + esc(item.code) + '</span><span class="badge">' + esc(item.group) + '</span><span class="badge">' + esc(item.difficulty) + '</span></div>' +
-    '<h2' + (practice ? ' tabindex="-1" id="practice-question-heading"' : '') + '>' + esc(item.question) + '</h2><p class="question-role">관련 직무 · ' + esc(item.jobTags.join(" · ")) + '</p>' +
+    '<h2' + (practice ? ' tabindex="-1" id="practice-question-heading"' : '') + '>' + esc(item.question) + '</h2><p class="question-role">관련 직무 · ' + item.jobTags.map(tag=>'<a href="'+esc(interviewRoleLinks[tag])+'">'+esc(tag)+'<span class="sr-only"> 직무 가이드</span></a>').join(" · ") + '</p>' +
     '<details class="question-answer"><summary><span class="answer-toggle">답변 보기</span><span class="sr-only"> · ' + esc(item.code) + '</span></summary><div class="answer-content"><h3>핵심 답변</h3><p class="short-answer">' + esc(item.shortAnswer) + '</p><h3>상세 설명</h3><p>' + esc(item.detailedAnswer) + '</p><h3>핵심 키워드</h3>' + tags(item.keywords) +
     '<h3>면접관이 이어서 물어볼 수 있는 질문</h3><ol class="follow-ups">' + item.followUps.map(text => '<li>' + esc(text) + '</li>').join("") + '</ol>' +
     '<details class="question-sources"><summary>개념 확인용 공식 문서</summary><ul>' + sources.map(source => '<li>' + external(source) + '</li>').join("") + '</ul></details></div></details>' +

@@ -24,8 +24,8 @@ for(const [term,id] of Object.entries(cases)){
  assert.ok(searchIndex.some(r=>r.url==='docs.html?id='+id&&matches(r.text,term)),term+' portal');
 }
 const html=readFileSync(new URL('../docs.html',import.meta.url),'utf8');
-assert.ok(html.includes('content="index, follow"'));
-assert.ok(!html.includes('noindex'));
+assert.ok(html.includes('content="noindex, nofollow"'));
+assert.ok(!html.includes('content="index, follow"'));
 assert.ok(html.includes('rel="canonical" href="https://portal.k-bigdata.kr/docs.html"'));
 assert.ok(html.includes('property="og:url"'));
 console.log('PASS: 40 technologies, 8 groups, 14 local/portal search terms, related/job/interview references, SEO.');

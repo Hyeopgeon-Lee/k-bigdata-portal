@@ -1,6 +1,7 @@
-import { categories, services } from "./services.js";
+import { categories, services, serviceKind, isExternal, studentJourney } from "./services.js";
 
 const icons = {
+  book: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h7l2 2 2-2h7v16h-7l-2 2-2-2H3ZM12 6v16M6 9h3M15 9h3M6 13h3M15 13h3"/></svg>',
   clipboard: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M9 12l2 2 4-5M9 18h6"/></svg>',
   send: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>',
   users: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
@@ -11,15 +12,18 @@ const icons = {
 const escapeHTML = (value) => String(value).replace(/[&<>'"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[char]));
 
 function serviceCard(service, index) {
+  const external = isExternal(service.url);
   const tags = service.tags.slice(0, service.featured ? 5 : 4).map((tag) => `<span>${escapeHTML(tag)}</span>`).join("");
-  return `<a class="service-card accent-${escapeHTML(service.accent)} ${service.featured ? "featured" : ""}" href="${escapeHTML(service.url)}" aria-label="${escapeHTML(service.name)} 서비스로 이동" style="--delay:${index * 70}ms">
+  return `<a class="service-card accent-${escapeHTML(service.accent)}" href="${escapeHTML(service.url)}" ${external ? 'target="_blank" rel="noopener noreferrer"' : ''} aria-label="${escapeHTML(service.name)} ${external ? '외부 사이트, 새 창' : '안내로 이동'}" style="--delay:${index * 70}ms">
     <span class="card-decoration" aria-hidden="true"></span>
     <span class="service-icon">${icons[service.icon] || icons.clipboard}</span>
+    <span class="service-kind">${serviceKind(service)}</span>
     <span class="service-meta">${escapeHTML(service.englishName)}</span>
     <h3>${escapeHTML(service.name)}</h3>
     <p>${escapeHTML(service.shortDescription)}</p>
+    ${service.source ? `<small class="service-source">${escapeHTML(service.source)}</small>` : ''}
     <span class="service-tags">${tags}</span>
-    <span class="card-link">서비스 바로가기 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    <span class="card-link">${external ? '사이트 열기' : '가이드 시작하기'} <span aria-hidden="true">${external ? '↗' : '→'}</span></span>
   </a>`;
 }
 
@@ -27,7 +31,7 @@ const groups = Object.values(categories).map((category) => {
   const categoryServices = services.filter((service) => service.category === category.id).sort((a, b) => a.order - b.order);
   return `<section class="service-group" id="${escapeHTML(category.id)}" aria-labelledby="${escapeHTML(category.id)}-title">
     <div class="group-heading"><div><p>${escapeHTML(category.english)}</p><h2 id="${escapeHTML(category.id)}-title">${escapeHTML(category.label)}</h2></div><p>${escapeHTML(category.description)}</p></div>
-    <div class="service-grid ${category.id === "career" ? "career-grid" : "campus-grid"}">${categoryServices.map(serviceCard).join("")}</div>
+    <div class="service-grid portal-card-grid">${categoryServices.map(serviceCard).join("")}</div>
   </section>`;
 }).join("");
 
@@ -35,8 +39,15 @@ const serviceGroups = document.querySelector("#service-groups");
 if (serviceGroups) serviceGroups.innerHTML = groups;
 document.querySelector("#current-year").textContent = new Date().getFullYear();
 
-const heroIconMap = { ready: "clipboard", apply: "send", alumni: "users", room: "calendar", help: "wrench" };
+const heroIconMap = { career: "users", learning: "book", project: "send", campus: "calendar" };
 document.querySelectorAll("[data-hero-icon]").forEach((element) => { element.innerHTML = icons[heroIconMap[element.dataset.heroIcon]]; });
+
+const journeyRoot = document.querySelector('#student-journey');
+if (journeyRoot) journeyRoot.innerHTML = studentJourney.map((step,index) => {
+  const service = services.find(s => s.id === step.id), companion = services.find(s => s.id === step.companion);
+  const link = (s,label) => `<a href="${escapeHTML(s.url)}" ${isExternal(s.url) ? 'target="_blank" rel="noopener noreferrer"' : ''}>${escapeHTML(label)} ${isExternal(s.url) ? '↗<span class="sr-only"> 외부 사이트, 새 창</span>' : '→'}</a>`;
+  return `<li><span class="journey-number" aria-hidden="true">${String(index+1).padStart(2,'0')}</span><h3>${escapeHTML(step.title)}</h3><p>${escapeHTML(step.description)}</p>${link(service,service.name)}${companion ? link(companion,companion.name) : ''}</li>`;
+}).join('');
 
 const observer = "IntersectionObserver" in window ? new IntersectionObserver((entries) => {
   entries.forEach((entry) => { if (entry.isIntersecting) { entry.target.classList.add("is-visible"); observer.unobserve(entry.target); } });

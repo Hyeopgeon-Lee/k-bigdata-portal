@@ -24,9 +24,9 @@
     <section class="hero" aria-labelledby="hero-title">
       <div class="container hero-grid">
         <div class="hero-copy">
-          <p class="eyebrow"><span></span>K-BIGDATA SERVICE PORTAL</p>
-          <h1 id="hero-title">학과 서비스를<br><em>한 곳에서</em></h1>
-          <p class="hero-description">취업 준비와 학과 생활부터 IT 직무, 자격증, 프로젝트 학습까지 필요한 서비스를 한 곳에서 이용할 수 있습니다.</p>
+          <p class="eyebrow"><span></span>K-BIGDATA STUDENT PORTAL</p>
+          <h1 id="hero-title">학습부터 프로젝트,<br>취업 준비까지<br><em>한 곳에서</em></h1>
+          <p class="hero-description">IT 직무 탐색, 기술 학습, 자격증, 프로젝트, 기술면접, 취업 준비와 학과 서비스를 하나의 포털에서 이용하세요.</p>
           <div class="hero-actions">
             <a class="button button-primary" href="#services">전체 서비스 보기 <span aria-hidden="true">↓</span></a>
             <a class="button button-secondary" href="https://www.kopo.ac.kr/kangseo/content.do?menu=1547">학과 홈페이지 <span aria-hidden="true">↗</span></a>
@@ -34,39 +34,33 @@
         </div>
 
 
-        <div class="hero-visual" aria-label="학과의 대표 서비스가 하나의 포털로 연결되는 모습" role="img">
+        <div class="hero-visual portal-map" aria-label="학생 포털의 취업·진로, 학습·역량, 프로젝트·성장, 학과 생활 네 영역">
           <svg class="network-lines" viewBox="0 0 600 480" aria-hidden="true">
             <defs><linearGradient id="lineGradient" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#5379f6"/><stop offset="1" stop-color="#39c6e8"/></linearGradient></defs>
-            <path d="M300 238L142 105M300 238L465 100M300 238L500 280M300 238L390 410M300 238L105 350"/>
+            <path d="M300 238L110 100M300 238L490 100M300 238L110 380M300 238L490 380"/>
             <circle cx="300" cy="238" r="128"/>
           </svg>
           <div class="hub-card">
             <span class="hub-symbol" aria-hidden="true"><i></i></span>
-            <strong>Service Hub</strong><small>학과 서비스 · 학습 · 취업</small>
+            <strong>K-BigData</strong><small>Student Portal</small>
           </div>
-          <div class="orbit-card orbit-ready"><span data-hero-icon="ready"></span><strong>Career</strong><small>취업 준비 점검</small></div>
-          <div class="orbit-card orbit-apply"><span data-hero-icon="apply"></span><strong>Apply</strong><small>입사지원 현황</small></div>
-          <div class="orbit-card orbit-alumni"><span data-hero-icon="alumni"></span><strong>Alumni</strong><small>졸업생 네트워크</small></div>
-          <div class="orbit-card orbit-room"><span data-hero-icon="room"></span><strong>Room</strong><small>프로젝트실 예약</small></div>
-          <div class="orbit-card orbit-help"><span data-hero-icon="help"></span><strong>Help</strong><small>학과 요청 · 신고</small></div>
+          <a class="orbit-card orbit-career" href="#career"><span data-hero-icon="career" aria-hidden="true"></span><strong>CAREER</strong><small>취업 · 진로</small></a>
+          <a class="orbit-card orbit-learning" href="#learning"><span data-hero-icon="learning" aria-hidden="true"></span><strong>LEARNING</strong><small>학습 · 역량</small></a>
+          <a class="orbit-card orbit-project" href="#project"><span data-hero-icon="project" aria-hidden="true"></span><strong>PROJECT</strong><small>프로젝트 · 성장</small></a>
+          <a class="orbit-card orbit-campus" href="#campus"><span data-hero-icon="campus" aria-hidden="true"></span><strong>CAMPUS</strong><small>학과 생활</small></a>
         </div>
       </div>
-      <div class="container overview" aria-label="포털 개요">
-        <div><strong>Career</strong><span>취업 · 진로</span></div>
-        <div><strong>Learning</strong><span>학습 · 역량</span></div>
-        <div><strong>Project</strong><span>프로젝트 · 성장</span></div>
-        <p><span aria-hidden="true"></span>필요한 서비스를 선택하면 각 서비스로 바로 이동합니다.</p>
-      </div>
     </section>
+    <section class="journey-section container" aria-labelledby="journey-title"><p class="section-kicker">YOUR NEXT STEP</p><h2 id="journey-title">목표 직무부터 첫 입사지원까지</h2><p class="journey-lead">현재 필요한 단계부터 시작하세요. 기술을 배우고, 프로젝트로 증명하고, 취업 준비로 연결합니다.</p><ol id="student-journey" class="student-journey"></ol></section>
 
 
-<section class="portal-search container" aria-labelledby="search-heading"><h2 id="search-heading">포털 통합검색</h2><label for="portal-query">서비스·직무·자격증·공식문서 검색</label><input id="portal-query" type="search" placeholder="예: Kubernetes, 쿠버네티스, SQL" autocomplete="off"><p id="search-status" role="status"></p><ul id="search-results" class="search-results"></ul></section>
+<section class="portal-search container" aria-labelledby="search-heading"><h2 id="search-heading">포털 통합검색</h2><label for="portal-query">서비스·직무·자격증·공식문서·면접·기술블로그 검색</label><input id="portal-query" type="search" placeholder="예: Kubernetes, 쿠버네티스, SQL" autocomplete="off"><p id="search-status" role="status"></p><ul id="search-results" class="search-results"></ul></section>
     <section class="services-section" id="services" aria-labelledby="services-title">
       <div class="container">
         <div class="section-intro">
           <p class="section-kicker">SERVICES</p>
-          <h2 id="services-title">필요한 서비스를 바로 시작하세요</h2>
-          <p>서비스 목적을 확인하고, 원하는 카드 어디든 눌러 이동할 수 있습니다.</p>
+          <h2 id="services-title">네 영역에서 필요한 도구를 찾으세요</h2>
+          <p>GUIDE는 포털 학습 안내, SERVICE는 운영 서비스, EXTERNAL은 외부 학습 사이트입니다. 내부는 →, 외부는 ↗로 구분합니다.</p>
         </div>
         <div id="service-groups" aria-live="polite"></div>
         <noscript><p class="noscript">서비스 목록을 표시하려면 JavaScript를 활성화해 주세요.</p></noscript>
@@ -76,9 +70,9 @@
   <footer class="site-footer">
     <div class="container footer-grid">
       <div class="footer-brand"><span class="brand-mark" aria-hidden="true"><span></span></span><div><strong>빅데이터소프트웨어공학과</strong><p>한국폴리텍대학 서울강서캠퍼스</p></div></div>
-      <div class="footer-links"><p>바로가기</p><a href="https://www.kopo.ac.kr/kangseo/content.do?menu=1547">학과 홈페이지 ↗</a><a href="https://ai.k-bigdata.kr/">학과 홍보 페이지 ↗</a><a href="https://portfolio.k-bigdata.kr/">학과 포트폴리오 ↗</a><a href="project-guide.html">졸업작품 주제 가이드</a></div>
+      <nav class="footer-links" aria-label="학과 대표 사이트"><p>학과 대표 사이트</p><noscript><a href="https://www.kopo.ac.kr/kangseo/content.do?menu=1547" rel="noopener noreferrer">학과 공식 홈페이지 ↗</a></noscript></nav>
     </div>
-    <div class="container footer-bottom"><p>본 포털은 빅데이터소프트웨어공학과에서 운영하는 서비스의 통합 진입 페이지입니다.</p><p>© <span id="current-year"></span> K-BigData Service Portal</p></div>
+    <div class="container footer-bottom"><p>학생용 학습·프로젝트·취업 통합 포털입니다.</p><p>© <span id="current-year"></span> K-BigData Service Portal</p></div>
   </footer>
   <script type="module" src="js/app.js"></script>
   <script type="module" src="js/learning-ui.js"></script>
