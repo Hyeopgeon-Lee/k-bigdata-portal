@@ -38,7 +38,13 @@ for(const [term,id] of Object.entries(cases)){
 assert.ok(readFileSync(new URL('../certifications.html',import.meta.url),'utf8').includes('content="noindex, nofollow"'));
 assert.deepEqual(certifications.filter(c=>c.preparationGuide).map(c=>c.id),['engineer','industrial','sqld','ncp']);
 for (const id of ['engineer','industrial']) {
+ const cert=certifications.find(c=>c.id===id);
+ assert.equal(cert.importanceSources.length,0);
+ assert.ok(cert.overview.includes('민간 IT 기업'));
+ assert.ok(cert.importance.includes('민간 IT 기업'));
  const guide=certifications.find(c=>c.id===id).preparationGuide;
+ assert.ok(guide.steps.some(text=>text.includes('최근 5년')&&text.includes('모두 풀어')));
+ assert.ok(guide.steps.some(text=>text.includes('이해되지 않는')&&text.includes('반드시 풀어')));
  assert.ok(guide.target.includes('1학년') && guide.target.includes('제1회'));
  assert.ok(guide.steps.some(text=>text.includes('학사')||text.includes('학위')));
  assert.ok(guide.steps.some(text=>text.includes('4월')&&text.includes('겨울방학')));
