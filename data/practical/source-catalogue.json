@@ -343,6 +343,87 @@
       "publisher": "ChoboPark",
       "status": "C·Python·Java 실제 코드 복원 교차검증",
       "license": "공개 복원자료를 코드 구조 확인에 사용."
+    },
+    {
+      "examType": "engineer",
+      "year": 2023,
+      "round": 1,
+      "url": "https://grandlife.co.kr/2023-info-processing-practical-1/",
+      "publisher": "GrandLife",
+      "status": "C·Java·Python·SQL 문제 구조·정답·문항 순서 교차검증",
+      "license": "공개 복원자료를 사실 확인에 사용. 원문 대량 복제 없이 학습용으로 정규화."
+    },
+    {
+      "examType": "engineer",
+      "year": 2023,
+      "round": 1,
+      "url": "https://starrykss.tistory.com/2138",
+      "publisher": "별의 블로그",
+      "status": "C·Java·Python·SQL 문제 구조·정답·문항 순서 교차검증",
+      "license": "공개 복원자료를 사실 확인에 사용. 원문 대량 복제 없이 학습용으로 정규화."
+    },
+    {
+      "examType": "engineer",
+      "year": 2023,
+      "round": 1,
+      "url": "https://bhher.tistory.com/123",
+      "publisher": "BHHer",
+      "status": "C·Java·Python·SQL 문제 구조·정답·문항 순서 교차검증",
+      "license": "공개 복원자료를 사실 확인에 사용. 원문 대량 복제 없이 학습용으로 정규화."
+    },
+    {
+      "examType": "engineer",
+      "year": 2023,
+      "round": 2,
+      "url": "https://skyoung2991.tistory.com/73",
+      "publisher": "똘냥이네",
+      "status": "C·Java·Python·SQL 문제 구조·정답·문항 순서 교차검증",
+      "license": "공개 복원자료를 사실 확인에 사용. 원문 대량 복제 없이 학습용으로 정규화."
+    },
+    {
+      "examType": "engineer",
+      "year": 2023,
+      "round": 2,
+      "url": "https://bhher.tistory.com/125",
+      "publisher": "BHHer",
+      "status": "C·Java·Python·SQL 문제 구조·정답·문항 순서 교차검증",
+      "license": "공개 복원자료를 사실 확인에 사용. 원문 대량 복제 없이 학습용으로 정규화."
+    },
+    {
+      "examType": "engineer",
+      "year": 2023,
+      "round": 2,
+      "url": "https://siss.tistory.com/m/303",
+      "publisher": "SISS",
+      "status": "C·Java·Python·SQL 문제 구조·정답·문항 순서 교차검증",
+      "license": "공개 복원자료를 사실 확인에 사용. 원문 대량 복제 없이 학습용으로 정규화."
+    },
+    {
+      "examType": "engineer",
+      "year": 2023,
+      "round": 3,
+      "url": "https://phyho.tistory.com/288",
+      "publisher": "phyho",
+      "status": "C·Java·Python·SQL 문제 구조·정답·문항 순서 교차검증",
+      "license": "공개 복원자료를 사실 확인에 사용. 원문 대량 복제 없이 학습용으로 정규화."
+    },
+    {
+      "examType": "engineer",
+      "year": 2023,
+      "round": 3,
+      "url": "https://skyoung2991.tistory.com/74",
+      "publisher": "똘냥이네",
+      "status": "C·Java·Python·SQL 문제 구조·정답·문항 순서 교차검증",
+      "license": "공개 복원자료를 사실 확인에 사용. 원문 대량 복제 없이 학습용으로 정규화."
+    },
+    {
+      "examType": "engineer",
+      "year": 2023,
+      "round": 3,
+      "url": "https://grandlife.co.kr/2023-info-processing-practical-3/",
+      "publisher": "GrandLife",
+      "status": "C·Java·Python·SQL 문제 구조·정답·문항 순서 교차검증",
+      "license": "공개 복원자료를 사실 확인에 사용. 원문 대량 복제 없이 학습용으로 정규화."
     }
   ]
 }

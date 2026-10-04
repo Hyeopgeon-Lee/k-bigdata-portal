@@ -3153,5 +3153,1027 @@
     ],
     "verificationNote": "복수 자료에서 필드값 1,5,3 및 10,30,50, hap 오버라이딩과 정답 509가 일치합니다. 실제 시험 번호 20번을 문어CBT·응시자 복원 인덱스로 확인했습니다.",
     "grading": "exact"
+  },
+  {
+    "id": "R-JAVA-0026",
+    "language": "Java",
+    "title": "static 필드와 지역·인스턴스 변수 구분",
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "static",
+      "후위 증가",
+      "필드"
+    ],
+    "question": "다음 Java 프로그램의 출력 결과를 줄마다 쓰세요.",
+    "code": "class StaticData { public int value=20; static int count=0; }\npublic class Main {\n public static void main(String[] args){\n  int value=10; StaticData.count=value;\n  StaticData item=new StaticData();\n  System.out.println(StaticData.count++);\n  System.out.println(item.count);\n  System.out.println(value);\n  System.out.print(item.value);\n }\n}",
+    "answer": "10\n11\n10\n20",
+    "explanation": "count++는 10을 출력한 뒤 11이 됩니다. 지역 value는 10, item.value는 20입니다.",
+    "steps": [
+      "count++는 10을 출력한 뒤 11이 됩니다.",
+      "지역 value는 10, item.value는 20입니다."
+    ],
+    "sources": [
+      {
+        "name": "GrandLife",
+        "url": "https://grandlife.co.kr/2023-info-processing-practical-1/"
+      },
+      {
+        "name": "별의 블로그",
+        "url": "https://starrykss.tistory.com/2138"
+      },
+      {
+        "name": "똘냥이네",
+        "url": "https://skyoung2991.tistory.com/72"
+      }
+    ],
+    "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-C-0027",
+    "language": "C",
+    "title": "문자 배열과 포인터 출력",
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "문자 배열",
+      "포인터",
+      "역참조"
+    ],
+    "question": "다음 C 프로그램의 출력 결과를 줄마다 쓰세요.",
+    "code": "#include <stdio.h>\nint main(void){\n char word[]=\"Art\"; char *p=word;\n printf(\"%s\\n\",word); printf(\"%c\\n\",*p); printf(\"%c\\n\",*word);\n printf(\"%s\\n\",p);\n for(int i=0;word[i]!='\\0';i++) printf(\"%c\",word[i]);\n return 0;\n}",
+    "answer": "Art\nA\nA\nArt\nArt",
+    "explanation": "word와 p는 같은 첫 문자를 가리킵니다. 역참조는 A이고 문자열 출력은 Art입니다.",
+    "steps": [
+      "word와 p는 같은 첫 문자를 가리킵니다.",
+      "역참조는 A이고 문자열 출력은 Art입니다."
+    ],
+    "sources": [
+      {
+        "name": "GrandLife",
+        "url": "https://grandlife.co.kr/2023-info-processing-practical-1/"
+      },
+      {
+        "name": "별의 블로그",
+        "url": "https://starrykss.tistory.com/2138"
+      },
+      {
+        "name": "똘냥이네",
+        "url": "https://skyoung2991.tistory.com/72"
+      }
+    ],
+    "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-C-0028",
+    "language": "C",
+    "title": "중첩 반복문으로 공통 문자 출력",
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "문자열",
+      "중첩 반복문"
+    ],
+    "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
+    "code": "#include <stdio.h>\nint main(void){\n char *a=\"qwer\",*b=\"qwtety\";\n for(int i=0;a[i]!='\\0';i++)\n  for(int j=0;b[j]!='\\0';j++)\n   if(a[i]==b[j]) printf(\"%c\",a[i]);\n return 0;\n}",
+    "answer": "qwe",
+    "explanation": "q,w,e는 두 문자열에 모두 존재합니다. r은 두 번째 문자열에 없어 출력되지 않습니다.",
+    "steps": [
+      "q,w,e는 두 문자열에 모두 존재합니다.",
+      "r은 두 번째 문자열에 없어 출력되지 않습니다."
+    ],
+    "sources": [
+      {
+        "name": "BHHer",
+        "url": "https://bhher.tistory.com/123"
+      },
+      {
+        "name": "별의 블로그",
+        "url": "https://starrykss.tistory.com/2138"
+      },
+      {
+        "name": "GrandLife",
+        "url": "https://grandlife.co.kr/2023-info-processing-practical-1/"
+      }
+    ],
+    "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-SQL-0019",
+    "language": "SQL",
+    "title": "조건에 맞는 행 DELETE",
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "questionType": "sql_write",
+    "difficulty": "실전",
+    "concepts": [
+      "DELETE",
+      "WHERE"
+    ],
+    "question": "학생 테이블에서 이름이 '민수'인 행만 삭제하는 SQL을 작성하세요.",
+    "code": "-- 테이블: 학생\n-- 조건: 이름 = '민수'",
+    "answer": "DELETE FROM 학생 WHERE 이름 = '민수';",
+    "explanation": "DELETE FROM 뒤에 학생 테이블을 지정합니다. WHERE 이름='민수'로 삭제 대상을 제한합니다.",
+    "steps": [
+      "DELETE FROM 뒤에 학생 테이블을 지정합니다.",
+      "WHERE 이름='민수'로 삭제 대상을 제한합니다."
+    ],
+    "sources": [
+      {
+        "name": "2023년 1회 응시후기",
+        "url": "https://it-freelancer.tistory.com/1017"
+      },
+      {
+        "name": "GrandLife",
+        "url": "https://grandlife.co.kr/2023-info-processing-practical-1/"
+      }
+    ],
+    "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "grading": "self",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-SQL-0020",
+    "language": "SQL",
+    "title": "GROUP BY와 HAVING으로 평균 조건 조회",
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "questionType": "sql_write",
+    "difficulty": "실전",
+    "concepts": [
+      "GROUP BY",
+      "HAVING",
+      "AVG",
+      "MIN",
+      "MAX"
+    ],
+    "question": "성적 테이블에서 과목별 평균이 90점 이상인 과목의 과목이름, 최소점수, 최대점수를 조회하세요. WHERE는 사용하지 않습니다.",
+    "code": "-- 성적(과목이름, 점수)",
+    "answer": "SELECT 과목이름, MIN(점수) AS 최소점수, MAX(점수) AS 최대점수\nFROM 성적\nGROUP BY 과목이름\nHAVING AVG(점수) >= 90;",
+    "explanation": "과목이름으로 그룹화합니다. 그룹 평균 조건은 HAVING에 둡니다.",
+    "steps": [
+      "과목이름으로 그룹화합니다.",
+      "그룹 평균 조건은 HAVING에 둡니다."
+    ],
+    "sources": [
+      {
+        "name": "BHHer",
+        "url": "https://bhher.tistory.com/123"
+      },
+      {
+        "name": "GrandLife",
+        "url": "https://grandlife.co.kr/2023-info-processing-practical-1/"
+      },
+      {
+        "name": "2023년 1회 복원",
+        "url": "https://master-hun.tistory.com/244"
+      }
+    ],
+    "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "grading": "self",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-JAVA-0027",
+    "language": "Java",
+    "title": "오버로드와 상속 필드 초기화",
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "상속",
+      "오버로딩",
+      "업캐스팅"
+    ],
+    "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
+    "code": "abstract class Vehicle {\n String name;\n abstract public String getName(String v);\n public String getName(){ return \"Vehicle name: \"+name; }\n}\nclass Car extends Vehicle {\n Car(String v){ name=v; }\n public String getName(String v){ return \"Car name: \"+v; }\n}\npublic class Main {\n public static void main(String[] args){\n  Vehicle v=new Car(\"Spark\");\n  System.out.println(v.getName());\n }\n}",
+    "answer": "Vehicle name: Spark",
+    "explanation": "Car 생성 시 name은 Spark가 됩니다. 인자 없는 getName은 Vehicle 메서드가 실행됩니다.",
+    "steps": [
+      "Car 생성 시 name은 Spark가 됩니다.",
+      "인자 없는 getName은 Vehicle 메서드가 실행됩니다."
+    ],
+    "sources": [
+      {
+        "name": "Breaking Dev",
+        "url": "https://nameisris.tistory.com/18"
+      },
+      {
+        "name": "개발하는 엉배",
+        "url": "https://sancheck-developer.tistory.com/144"
+      },
+      {
+        "name": "GrandLife",
+        "url": "https://grandlife.co.kr/2023-info-processing-practical-1/"
+      }
+    ],
+    "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "grading": "exact",
+    "acceptedAnswers": [
+      "Vehicle name : Spark",
+      "Vehicle name:Spark"
+    ]
+  },
+  {
+    "id": "R-JAVA-0028",
+    "language": "Java",
+    "title": "부모·자식 동일 필드와 생성자 호출",
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "생성자",
+      "this",
+      "super",
+      "필드 숨김"
+    ],
+    "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
+    "code": "class Parent {\n int x=100; Parent(){this(500);} Parent(int x){this.x=x;}\n int getX(){return x;}\n}\nclass Child extends Parent {\n int x=4000; Child(){this(5000);} Child(int x){this.x=x;}\n}\npublic class Main {\n public static void main(String[] args){\n  Child c=new Child(); System.out.println(c.getX());\n }\n}",
+    "answer": "500",
+    "explanation": "Child(int) 전에 암시적 super()가 실행됩니다. Parent()는 Parent.x를 500으로 만들고 getX는 그 값을 반환합니다.",
+    "steps": [
+      "Child(int) 전에 암시적 super()가 실행됩니다.",
+      "Parent()는 Parent.x를 500으로 만들고 getX는 그 값을 반환합니다."
+    ],
+    "sources": [
+      {
+        "name": "Breaking Dev",
+        "url": "https://nameisris.tistory.com/18"
+      },
+      {
+        "name": "개발하는 엉배",
+        "url": "https://sancheck-developer.tistory.com/144"
+      },
+      {
+        "name": "GrandLife",
+        "url": "https://grandlife.co.kr/2023-info-processing-practical-1/"
+      }
+    ],
+    "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-C-0029",
+    "language": "C",
+    "title": "배열 인덱스 순환 이동",
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "questionType": "blank",
+    "difficulty": "실전",
+    "concepts": [
+      "배열",
+      "모듈로 연산"
+    ],
+    "question": "첫 원소를 맨 뒤로 보내 순환 출력할 때 [빈칸] 식을 쓰세요.",
+    "code": "int n[5]={5,4,3,2,1};\nfor(int i=0;i<5;i++) printf(\"%d\",n[[빈칸]]);",
+    "answer": "(i+1)%5",
+    "explanation": "필요한 인덱스는 1,2,3,4,0입니다. (i+1)%5가 이 순서를 만듭니다.",
+    "steps": [
+      "필요한 인덱스는 1,2,3,4,0입니다.",
+      "(i+1)%5가 이 순서를 만듭니다."
+    ],
+    "sources": [
+      {
+        "name": "똘냥이네",
+        "url": "https://skyoung2991.tistory.com/73"
+      },
+      {
+        "name": "BHHer",
+        "url": "https://bhher.tistory.com/125"
+      },
+      {
+        "name": "GrandLife",
+        "url": "https://grandlife.co.kr/2023-info-processing-practical-2/"
+      }
+    ],
+    "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "grading": "exact",
+    "acceptedAnswers": [
+      "(i + 1) % 5",
+      "(i+1) % 5"
+    ]
+  },
+  {
+    "id": "R-JAVA-0029",
+    "language": "Java",
+    "title": "나눗셈·나머지로 화폐 단위 분해",
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "questionType": "blank",
+    "difficulty": "실전",
+    "concepts": [
+      "정수 나눗셈",
+      "나머지"
+    ],
+    "question": "4620원을 1000, 500, 100, 10원 단위 개수로 나누는 ①~④ 식을 순서대로 쓰세요.",
+    "code": "int m=4620;\nint a=①;\nint b=②;\nint c=③;\nint d=④;",
+    "answer": "m/1000 | (m%1000)/500 | (m%500)/100 | (m%100)/10",
+    "explanation": "큰 단위부터 몫을 구합니다. 다음 단위는 남은 금액의 나머지에서 구합니다.",
+    "steps": [
+      "큰 단위부터 몫을 구합니다.",
+      "다음 단위는 남은 금액의 나머지에서 구합니다."
+    ],
+    "sources": [
+      {
+        "name": "BHHer",
+        "url": "https://bhher.tistory.com/125"
+      },
+      {
+        "name": "똘냥이네",
+        "url": "https://skyoung2991.tistory.com/73"
+      },
+      {
+        "name": "GrandLife",
+        "url": "https://grandlife.co.kr/2023-info-processing-practical-2/"
+      }
+    ],
+    "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "grading": "self",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-C-0030",
+    "language": "C",
+    "title": "switch fall-through 출력",
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "switch",
+      "fall-through"
+    ],
+    "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
+    "code": "#include <stdio.h>\nint main(void){\n int n[3]={73,95,82},sum=0;\n for(int i=0;i<3;i++) sum+=n[i];\n switch(sum/30){\n  case 10:\n  case 9: printf(\"A\");\n  case 8: printf(\"B\");\n  case 7:\n  case 6: printf(\"C\");\n  default: printf(\"D\");\n }\n return 0;\n}",
+    "answer": "BCD",
+    "explanation": "합은 250이고 250/30은 8입니다. break가 없어 case 8부터 B,C,D가 이어집니다.",
+    "steps": [
+      "합은 250이고 250/30은 8입니다.",
+      "break가 없어 case 8부터 B,C,D가 이어집니다."
+    ],
+    "sources": [
+      {
+        "name": "똘냥이네",
+        "url": "https://skyoung2991.tistory.com/73"
+      },
+      {
+        "name": "BHHer",
+        "url": "https://bhher.tistory.com/125"
+      }
+    ],
+    "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-C-0031",
+    "language": "C",
+    "title": "1부터 2023까지 4의 배수 개수",
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "반복문",
+      "나머지",
+      "배수"
+    ],
+    "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
+    "code": "#include <stdio.h>\nint main(void){\n int c=0;\n for(int i=1;i<=2023;i++) if(i%4==0)c++;\n printf(\"%d\",c); return 0;\n}",
+    "answer": "505",
+    "explanation": "4×505=2020은 범위 안의 마지막 4의 배수입니다. 따라서 505개입니다.",
+    "steps": [
+      "4×505=2020은 범위 안의 마지막 4의 배수입니다.",
+      "따라서 505개입니다."
+    ],
+    "sources": [
+      {
+        "name": "똘냥이네",
+        "url": "https://skyoung2991.tistory.com/73"
+      },
+      {
+        "name": "GrandLife",
+        "url": "https://grandlife.co.kr/2023-info-processing-practical-2/"
+      },
+      {
+        "name": "BHHer",
+        "url": "https://bhher.tistory.com/125"
+      }
+    ],
+    "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-C-0032",
+    "language": "C",
+    "title": "스택 push·pop 순서 추적",
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "스택",
+      "LIFO",
+      "push",
+      "pop"
+    ],
+    "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
+    "code": "#include <stdio.h>\nint st[10],top=-1;\nvoid push(int v){st[++top]=v;}\nint pop(void){return st[top--];}\nint main(void){\n push(5);push(2);printf(\"%d\",pop());\n push(4);push(1);printf(\"%d\",pop());\n push(3);printf(\"%d\",pop());printf(\"%d\",pop());\n push(6);printf(\"%d\",pop());printf(\"%d\",pop());\n return 0;\n}",
+    "answer": "213465",
+    "explanation": "LIFO에 따라 pop 값은 2,1,3,4,6,5 순입니다. 이를 붙이면 213465입니다.",
+    "steps": [
+      "LIFO에 따라 pop 값은 2,1,3,4,6,5 순입니다.",
+      "이를 붙이면 213465입니다."
+    ],
+    "sources": [
+      {
+        "name": "똘냥이네",
+        "url": "https://skyoung2991.tistory.com/73"
+      },
+      {
+        "name": "GrandLife",
+        "url": "https://grandlife.co.kr/2023-info-processing-practical-2/"
+      },
+      {
+        "name": "BHHer",
+        "url": "https://bhher.tistory.com/125"
+      }
+    ],
+    "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-JAVA-0030",
+    "language": "Java",
+    "title": "문자열 풀과 new String 참조 비교",
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "String pool",
+      "==",
+      "equals"
+    ],
+    "question": "다음 Java 프로그램의 출력 결과를 줄마다 쓰세요.",
+    "code": "public class Main{\n public static void main(String[] args){\n  String a=\"Programming\",b=\"Programming\",c=new String(\"Programming\");\n  System.out.println(a==b);\n  System.out.println(a==c);\n  System.out.println(a.equals(c));\n  System.out.println(b.equals(c));\n }\n}",
+    "answer": "true\nfalse\ntrue\ntrue",
+    "explanation": "a와 b는 문자열 풀의 같은 객체를 참조합니다. c는 별도 객체지만 내용은 같으므로 equals는 true입니다.",
+    "steps": [
+      "a와 b는 문자열 풀의 같은 객체를 참조합니다.",
+      "c는 별도 객체지만 내용은 같으므로 equals는 true입니다."
+    ],
+    "sources": [
+      {
+        "name": "SISS",
+        "url": "https://siss.tistory.com/m/303"
+      },
+      {
+        "name": "2023년 2회 복원",
+        "url": "https://pgotza.tistory.com/entry/%EC%A0%95%EB%B3%B4%EC%B2%98%EB%A6%AC%EA%B8%B0%EC%82%AC-%EC%8B%A4%EA%B8%B0-2023%EB%85%84-2%ED%9A%8C-%EA%B8%B0%EC%B6%9C%EB%AC%B8%EC%A0%9C-%EB%B3%B5%EC%9B%90"
+      },
+      {
+        "name": "GrandLife",
+        "url": "https://grandlife.co.kr/2023-info-processing-practical-2/"
+      }
+    ],
+    "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-SQL-0021",
+    "language": "SQL",
+    "title": "DROP VIEW 연쇄 삭제 옵션",
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "questionType": "blank",
+    "difficulty": "실전",
+    "concepts": [
+      "DROP VIEW",
+      "CASCADE"
+    ],
+    "question": "뷰와 이를 참조하는 다른 객체를 함께 삭제하려고 합니다. [빈칸] 키워드를 쓰세요.",
+    "code": "DROP VIEW 성적요약 [빈칸];",
+    "answer": "CASCADE",
+    "explanation": "의존 객체까지 연쇄 삭제하는 옵션은 CASCADE입니다.",
+    "steps": [
+      "의존 객체까지 연쇄 삭제하는 옵션은 CASCADE입니다."
+    ],
+    "sources": [
+      {
+        "name": "SISS",
+        "url": "https://siss.tistory.com/m/303"
+      },
+      {
+        "name": "GrandLife",
+        "url": "https://grandlife.co.kr/2023-info-processing-practical-2/"
+      },
+      {
+        "name": "2023년 2회 합격후기",
+        "url": "https://floating-branch.tistory.com/206"
+      }
+    ],
+    "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "grading": "exact",
+    "acceptedAnswers": [
+      "cascade",
+      "Cascade"
+    ]
+  },
+  {
+    "id": "R-C-0033",
+    "language": "C",
+    "title": "선택 정렬 비교 연산자",
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "questionType": "blank",
+    "difficulty": "실전",
+    "concepts": [
+      "선택 정렬",
+      "오름차순"
+    ],
+    "question": "오름차순 정렬을 위해 [빈칸]에 들어갈 비교 연산자를 쓰세요.",
+    "code": "int v[]={64,25,12,22,11};\nfor(int i=0;i<4;i++)\n for(int j=i+1;j<5;j++)\n  if(v[i] [빈칸] v[j]){\n   int t=v[i];v[i]=v[j];v[j]=t;\n  }",
+    "answer": ">",
+    "explanation": "앞 값이 더 클 때 교환하면 작은 값이 앞으로 이동합니다.",
+    "steps": [
+      "앞 값이 더 클 때 교환하면 작은 값이 앞으로 이동합니다."
+    ],
+    "sources": [
+      {
+        "name": "BHHer",
+        "url": "https://bhher.tistory.com/125"
+      },
+      {
+        "name": "GrandLife",
+        "url": "https://grandlife.co.kr/2023-info-processing-practical-2/"
+      },
+      {
+        "name": "정처기실기",
+        "url": "https://phyho.tistory.com/285"
+      }
+    ],
+    "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-PY-0018",
+    "language": "Python",
+    "title": "문자열 구간 슬라이싱 결합",
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "문자열",
+      "슬라이싱"
+    ],
+    "question": "다음 Python 코드의 출력 결과를 쓰세요.",
+    "code": "a=\"engineer information processing\"\nb=a[:3]\nc=a[4:6]\nd=a[28:]\nprint(b+c+d)",
+    "answer": "engneing",
+    "explanation": "슬라이스 결과는 eng, ne, ing입니다. 합치면 engneing입니다.",
+    "steps": [
+      "슬라이스 결과는 eng, ne, ing입니다.",
+      "합치면 engneing입니다."
+    ],
+    "sources": [
+      {
+        "name": "BHHer",
+        "url": "https://bhher.tistory.com/125"
+      },
+      {
+        "name": "2023년 2회 복원",
+        "url": "https://theif45.tistory.com/150"
+      },
+      {
+        "name": "GrandLife",
+        "url": "https://grandlife.co.kr/2023-info-processing-practical-2/"
+      }
+    ],
+    "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-JAVA-0031",
+    "language": "Java",
+    "title": "super 호출 내부의 동적 바인딩",
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "상속",
+      "오버라이딩",
+      "super"
+    ],
+    "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
+    "code": "class A{\n public void paint(){System.out.print(\"A\");draw();}\n public void draw(){System.out.print(\"B\");draw();}\n}\nclass B extends A{\n public void paint(){super.draw();System.out.print(\"C\");this.draw();}\n public void draw(){System.out.print(\"D\");}\n}\npublic class Main{\n public static void main(String[] args){A b=new B();b.paint();b.draw();}\n}",
+    "answer": "BDCDD",
+    "explanation": "B.paint에서 super.draw가 B를 출력합니다. 그 내부 draw는 B.draw로 바인딩되어 D가 붙고 이후 C,D,D가 이어집니다.",
+    "steps": [
+      "B.paint에서 super.draw가 B를 출력합니다.",
+      "그 내부 draw는 B.draw로 바인딩되어 D가 붙고 이후 C,D,D가 이어집니다."
+    ],
+    "sources": [
+      {
+        "name": "BHHer",
+        "url": "https://bhher.tistory.com/126"
+      },
+      {
+        "name": "정처기실기",
+        "url": "https://phyho.tistory.com/288"
+      },
+      {
+        "name": "GrandLife",
+        "url": "https://grandlife.co.kr/2023-info-processing-practical-3/"
+      }
+    ],
+    "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-C-0034",
+    "language": "C",
+    "title": "100 이하 완전수의 합",
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "완전수",
+      "약수",
+      "반복문"
+    ],
+    "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
+    "code": "#include <stdio.h>\nint perfect(int n){\n int s=0; for(int i=1;i<=n/2;i++) if(n%i==0)s+=i;\n return n==s;\n}\nint main(void){\n int s=0; for(int n=2;n<=100;n++) if(perfect(n))s+=n;\n printf(\"%d\",s); return 0;\n}",
+    "answer": "34",
+    "explanation": "100 이하 완전수는 6과 28입니다. 합은 34입니다.",
+    "steps": [
+      "100 이하 완전수는 6과 28입니다.",
+      "합은 34입니다."
+    ],
+    "sources": [
+      {
+        "name": "정처기실기",
+        "url": "https://phyho.tistory.com/288"
+      },
+      {
+        "name": "GrandLife",
+        "url": "https://grandlife.co.kr/2023-info-processing-practical-3/"
+      }
+    ],
+    "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-C-0035",
+    "language": "C",
+    "title": "구조체 포인터 멤버 접근 연산자",
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "questionType": "blank",
+    "difficulty": "실전",
+    "concepts": [
+      "구조체",
+      "포인터",
+      "->"
+    ],
+    "question": "구조체 포인터 d2가 numPtr 멤버에 접근하도록 [빈칸] 연산자를 쓰세요.",
+    "code": "Data *d2;\nd2 [빈칸] numPtr = &num;",
+    "answer": "->",
+    "explanation": "구조체 포인터의 멤버 접근 연산자는 ->입니다.",
+    "steps": [
+      "구조체 포인터의 멤버 접근 연산자는 ->입니다."
+    ],
+    "sources": [
+      {
+        "name": "정처기실기",
+        "url": "https://phyho.tistory.com/288"
+      },
+      {
+        "name": "똘냥이네",
+        "url": "https://skyoung2991.tistory.com/74"
+      },
+      {
+        "name": "GrandLife",
+        "url": "https://grandlife.co.kr/2023-info-processing-practical-3/"
+      }
+    ],
+    "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-SQL-0022",
+    "language": "SQL",
+    "title": "UNION 중복 제거 후 내림차순",
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "questionType": "sql_result",
+    "difficulty": "실전",
+    "concepts": [
+      "UNION",
+      "ORDER BY",
+      "DESC"
+    ],
+    "question": "다음 SQL의 결과를 위에서부터 쓰세요.",
+    "code": "-- T1.A: 3,1,4\n-- T2.A: 2,4,3\nSELECT A FROM T1\nUNION\nSELECT A FROM T2\nORDER BY A DESC;",
+    "answer": "4\n3\n2\n1",
+    "explanation": "UNION은 중복을 제거합니다. 1,2,3,4를 내림차순 정렬하면 4,3,2,1입니다.",
+    "steps": [
+      "UNION은 중복을 제거합니다.",
+      "1,2,3,4를 내림차순 정렬하면 4,3,2,1입니다."
+    ],
+    "sources": [
+      {
+        "name": "똘냥이네",
+        "url": "https://skyoung2991.tistory.com/74"
+      },
+      {
+        "name": "GrandLife",
+        "url": "https://grandlife.co.kr/2023-info-processing-practical-3/"
+      }
+    ],
+    "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-C-0036",
+    "language": "C",
+    "title": "재귀 팩토리얼 계산",
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "재귀",
+      "팩토리얼"
+    ],
+    "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
+    "code": "#include <stdio.h>\nint f(int n){ if(n<=1)return 1; return n*f(n-1); }\nint main(void){printf(\"%d\",f(7));return 0;}",
+    "answer": "5040",
+    "explanation": "7! = 7×6×5×4×3×2×1입니다. 결과는 5040입니다.",
+    "steps": [
+      "7! = 7×6×5×4×3×2×1입니다.",
+      "결과는 5040입니다."
+    ],
+    "sources": [
+      {
+        "name": "똘냥이네",
+        "url": "https://skyoung2991.tistory.com/74"
+      },
+      {
+        "name": "정처기실기",
+        "url": "https://phyho.tistory.com/288"
+      },
+      {
+        "name": "GrandLife",
+        "url": "https://grandlife.co.kr/2023-info-processing-practical-3/"
+      }
+    ],
+    "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-C-0037",
+    "language": "C",
+    "title": "문자열 포인터 산술과 문자 코드",
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "문자열 포인터",
+      "포인터 산술",
+      "ASCII"
+    ],
+    "question": "다음 C 프로그램의 출력 결과를 줄마다 쓰세요.",
+    "code": "#include <stdio.h>\nint main(void){\n char *p=\"KOREA\";\n printf(\"%s\\n\",p); printf(\"%s\\n\",p+1);\n printf(\"%c\\n\",*p); printf(\"%c\\n\",*(p+3)); printf(\"%c\",*p+4);\n return 0;\n}",
+    "answer": "KOREA\nOREA\nK\nE\nO",
+    "explanation": "p+1은 OREA를 가리킵니다. *p는 K, *(p+3)은 E, 'K'+4는 O입니다.",
+    "steps": [
+      "p+1은 OREA를 가리킵니다.",
+      "*p는 K, *(p+3)은 E, 'K'+4는 O입니다."
+    ],
+    "sources": [
+      {
+        "name": "정처기실기",
+        "url": "https://phyho.tistory.com/288"
+      },
+      {
+        "name": "GrandLife",
+        "url": "https://grandlife.co.kr/2023-info-processing-practical-3/"
+      }
+    ],
+    "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-JAVA-0032",
+    "language": "Java",
+    "title": "오버라이딩된 재귀 메서드 호출",
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "상속",
+      "오버라이딩",
+      "재귀"
+    ],
+    "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
+    "code": "class Parent{\n int compute(int n){if(n<=1)return n;return compute(n-1)+compute(n-2);}\n}\nclass Child extends Parent{\n int compute(int n){if(n<=1)return n;return compute(n-1)+compute(n-3);}\n}\npublic class Main{\n public static void main(String[] args){Parent x=new Child();System.out.print(x.compute(7));}\n}",
+    "answer": "2",
+    "explanation": "실제 객체가 Child라 Child.compute가 재귀적으로 적용됩니다. 계산 결과 C(7)=2입니다.",
+    "steps": [
+      "실제 객체가 Child라 Child.compute가 재귀적으로 적용됩니다.",
+      "계산 결과 C(7)=2입니다."
+    ],
+    "sources": [
+      {
+        "name": "정처기실기",
+        "url": "https://phyho.tistory.com/288"
+      },
+      {
+        "name": "GrandLife",
+        "url": "https://grandlife.co.kr/2023-info-processing-practical-3/"
+      }
+    ],
+    "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-JAVA-0033",
+    "language": "Java",
+    "title": "static 메서드의 인스턴스 필드 접근 오류",
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "questionType": "error",
+    "difficulty": "실전",
+    "concepts": [
+      "static",
+      "인스턴스 변수",
+      "컴파일 오류"
+    ],
+    "question": "다음 Java 코드에서 컴파일 오류가 발생하는 줄 번호를 쓰세요.",
+    "code": "1 class Person {\n2  private String name;\n3  Person(String v){name=v;}\n4\n5  public static String getName(){\n6   String prefix=\"\";\n7   return prefix + name;\n8  }\n9 }",
+    "answer": "7",
+    "explanation": "name은 인스턴스 필드입니다. static 메서드에서 객체 없이 name을 참조한 7번 줄이 오류입니다.",
+    "steps": [
+      "name은 인스턴스 필드입니다.",
+      "static 메서드에서 객체 없이 name을 참조한 7번 줄이 오류입니다."
+    ],
+    "sources": [
+      {
+        "name": "정처기실기",
+        "url": "https://phyho.tistory.com/288"
+      },
+      {
+        "name": "GrandLife",
+        "url": "https://grandlife.co.kr/2023-info-processing-practical-3/"
+      }
+    ],
+    "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "grading": "exact",
+    "acceptedAnswers": [
+      "7번",
+      "7번 줄"
+    ]
+  },
+  {
+    "id": "R-PY-0019",
+    "language": "Python",
+    "title": "공백 입력 분리 메서드",
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "questionType": "blank",
+    "difficulty": "실전",
+    "concepts": [
+      "input",
+      "split"
+    ],
+    "question": "공백으로 구분한 두 값을 각각 저장하려고 합니다. [빈칸] 메서드 이름을 쓰세요.",
+    "code": "first, second = input().[빈칸]()",
+    "answer": "split",
+    "explanation": "input() 결과를 공백 기준으로 나누는 메서드는 split()입니다.",
+    "steps": [
+      "input() 결과를 공백 기준으로 나누는 메서드는 split()입니다."
+    ],
+    "sources": [
+      {
+        "name": "정처기실기",
+        "url": "https://phyho.tistory.com/288"
+      },
+      {
+        "name": "GrandLife",
+        "url": "https://grandlife.co.kr/2023-info-processing-practical-3/"
+      }
+    ],
+    "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "grading": "exact",
+    "acceptedAnswers": [
+      "split()"
+    ]
   }
 ]
