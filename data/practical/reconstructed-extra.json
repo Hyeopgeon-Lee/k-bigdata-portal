@@ -6648,38 +6648,6 @@
     "acceptedAnswers": []
   },
   {
-    "id": "R-IND-JAVA-0014",
-    "language": "Java",
-    "title": "복합 대입 연산 반복 문제",
-    "sourceType": "reconstructed",
-    "confidence": "C",
-    "questionType": "output",
-    "difficulty": "실전",
-    "concepts": [
-      "복합 대입",
-      "나머지"
-    ],
-    "question": "다음 Java 코드의 출력값을 쓰세요.",
-    "code": "int i=17;\ni+=1; i-=2; i*=3; i/=4; i%=5;\nSystem.out.print(i);",
-    "answer": "2",
-    "explanation": "17→18→16→48→12→2입니다.",
-    "steps": [
-      "17→18→16→48→12→2입니다."
-    ],
-    "sources": [
-      {
-        "name": "잡코딩 · 산업기사 2024-3 복원자료",
-        "url": "https://complainrevolutionist.tistory.com/208"
-      }
-    ],
-    "verificationNote": "산업기사 2024-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
-    "enabled": true,
-    "createdAt": "2026-10-05",
-    "updatedAt": "2026-10-05",
-    "grading": "exact",
-    "acceptedAnswers": []
-  },
-  {
     "id": "R-IND-C-0026",
     "language": "C",
     "title": "배열 뒤집기 후 가운데 값",
