@@ -4175,5 +4175,773 @@
     "acceptedAnswers": [
       "split()"
     ]
+  },
+  {
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "difficulty": "실전",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "id": "R-JAVA-0034",
+    "language": "Java",
+    "title": "객체 참조 전달과 필드 누적",
+    "questionType": "output",
+    "concepts": [
+      "객체 참조",
+      "메서드",
+      "필드 변경"
+    ],
+    "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
+    "code": "class A { int a; int b; }\npublic class Main {\n    static void multiply(A value){ value.a *= 10; }\n    static void add(A value){ value.a += value.b; }\n    public static void main(String[] args){\n        A item=new A();\n        item.a=100;\n        multiply(item);\n        item.b=item.a;\n        add(item);\n        System.out.print(item.a);\n    }\n}",
+    "answer": "2000",
+    "explanation": "같은 객체를 참조하므로 메서드 내부의 필드 변경이 유지됩니다. 100→1000, b=1000, 다시 더해 2000입니다.",
+    "steps": [
+      "item.a는 100에서 시작합니다.",
+      "multiply에서 10배가 되어 1000입니다.",
+      "item.b에도 1000이 저장됩니다.",
+      "add에서 a+b=2000이 됩니다."
+    ],
+    "sources": [
+      {
+        "name": "문어CBT · 2022년 1회",
+        "url": "https://www.sqldpass.com/blog/past-exam/engineer-2022-1"
+      },
+      {
+        "name": "슈고링 · 2022년 1회",
+        "url": "https://sugoring-it.tistory.com/244"
+      },
+      {
+        "name": "Peterica · 2022년 1회",
+        "url": "https://peterica.tistory.com/614"
+      }
+    ],
+    "verificationNote": "복수 독립 자료에서 2022년 1회 3번, a=100에서 두 메서드를 거쳐 2000이 출력되는 구조가 일치합니다. 식별자만 정규화했습니다.",
+    "grading": "exact"
+  },
+  {
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "difficulty": "실전",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "id": "R-JAVA-0035",
+    "language": "Java",
+    "title": "Runnable 구현 객체를 Thread에 전달",
+    "questionType": "blank",
+    "concepts": [
+      "Runnable",
+      "Thread",
+      "implements",
+      "객체 생성"
+    ],
+    "question": "다음 Java 코드의 [빈칸]에 들어갈 클래스 이름을 쓰세요.",
+    "code": "class Car implements Runnable {\n    public void run() {\n        System.out.println(\"Message\");\n    }\n}\npublic class Main {\n    public static void main(String[] args) {\n        Thread thread = new Thread(new [빈칸]());\n        thread.start();\n    }\n}",
+    "answer": "Car",
+    "acceptedAnswers": [
+      "Car()"
+    ],
+    "explanation": "Thread 생성자에 Runnable 구현 객체를 전달해야 하므로 Car 인스턴스를 생성합니다.",
+    "steps": [
+      "Car는 Runnable을 구현합니다.",
+      "Thread에는 Runnable 객체를 전달할 수 있습니다.",
+      "new Car()가 필요하므로 빈칸은 Car입니다."
+    ],
+    "sources": [
+      {
+        "name": "슈고링 · 2022년 1회",
+        "url": "https://sugoring-it.tistory.com/244"
+      },
+      {
+        "name": "2022년 1회 복원",
+        "url": "https://ss-o.tistory.com/165"
+      },
+      {
+        "name": "문어CBT · 2022년 1회",
+        "url": "https://www.sqldpass.com/blog/past-exam/engineer-2022-1"
+      }
+    ],
+    "verificationNote": "복수 자료에서 2022년 1회 11번 Runnable/Thread 빈칸의 정답 Car가 일치합니다.",
+    "grading": "exact"
+  },
+  {
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "difficulty": "실전",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "id": "R-C-0038",
+    "language": "C",
+    "title": "재귀 팩토리얼 입력값 5",
+    "questionType": "output",
+    "concepts": [
+      "재귀",
+      "팩토리얼",
+      "기저 조건"
+    ],
+    "question": "입력값으로 5가 주어질 때 다음 C 프로그램의 출력 숫자를 쓰세요.",
+    "code": "#include <stdio.h>\nint factorial(int n){\n    if(n<=1) return 1;\n    return n*factorial(n-1);\n}\nint main(void){\n    int input=5;\n    printf(\"%d\",factorial(input));\n    return 0;\n}",
+    "answer": "120",
+    "explanation": "5! = 5×4×3×2×1 = 120입니다.",
+    "steps": [
+      "n<=1이면 1을 반환합니다.",
+      "5부터 2까지 재귀적으로 곱합니다.",
+      "결과는 120입니다."
+    ],
+    "sources": [
+      {
+        "name": "슈고링 · 2022년 1회",
+        "url": "https://sugoring-it.tistory.com/244"
+      },
+      {
+        "name": "Peterica · 2022년 1회",
+        "url": "https://peterica.tistory.com/614"
+      },
+      {
+        "name": "문어CBT · 2022년 1회",
+        "url": "https://www.sqldpass.com/blog/past-exam/engineer-2022-1"
+      }
+    ],
+    "verificationNote": "복수 자료에서 2022년 1회 14번, 입력 5의 재귀 factorial 출력 120이 일치합니다. 입력 부분만 학습용으로 고정했습니다.",
+    "grading": "exact"
+  },
+  {
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "difficulty": "실전",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "id": "R-C-0039",
+    "language": "C",
+    "title": "정수를 역순으로 만드는 연산자",
+    "questionType": "blank",
+    "concepts": [
+      "while",
+      "나머지",
+      "정수 나눗셈",
+      "자리수"
+    ],
+    "question": "1234를 4321로 뒤집는 다음 C 코드의 ①~③ 연산자를 순서대로 쓰세요.",
+    "code": "int number=1234;\nint div=10;\nint result=0;\nwhile(number ① 0){\n    result=result*div;\n    result=result + number ② div;\n    number=number ③ div;\n}\nprintf(\"%d\",result);",
+    "answer": "> % /",
+    "acceptedAnswers": [
+      ">, %, /",
+      "> % /",
+      ">|%|/"
+    ],
+    "explanation": "반복 조건은 number>0, 마지막 자리 추출은 %10, 마지막 자리 제거는 /10입니다.",
+    "steps": [
+      "number가 0보다 큰 동안 반복합니다.",
+      "number%10으로 마지막 자릿수를 얻습니다.",
+      "number/10으로 마지막 자릿수를 제거합니다."
+    ],
+    "sources": [
+      {
+        "name": "슈고링 · 2022년 1회",
+        "url": "https://sugoring-it.tistory.com/244"
+      },
+      {
+        "name": "Peterica · 2022년 1회",
+        "url": "https://peterica.tistory.com/614"
+      },
+      {
+        "name": "문어CBT · 2022년 1회",
+        "url": "https://www.sqldpass.com/blog/past-exam/engineer-2022-1"
+      }
+    ],
+    "verificationNote": "복수 자료에서 2022년 1회 15번의 세 연산자 >, %, /와 결과 4321이 일치합니다.",
+    "grading": "exact"
+  },
+  {
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "difficulty": "실전",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "id": "R-C-0040",
+    "language": "C",
+    "title": "13195의 가장 큰 소인수 탐색",
+    "questionType": "output",
+    "concepts": [
+      "소수 판별",
+      "약수",
+      "반복문"
+    ],
+    "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
+    "code": "#include <stdio.h>\nint prime(int n){\n    for(int i=2;i<n;i++)\n        if(n%i==0) return 0;\n    return 1;\n}\nint main(void){\n    int number=13195,max=0;\n    for(int i=2;i<number;i++)\n        if(prime(i) && number%i==0) max=i;\n    printf(\"%d\",max);\n    return 0;\n}",
+    "answer": "29",
+    "explanation": "13195의 소인수 중 반복문에서 마지막으로 만나는 가장 큰 값은 29입니다.",
+    "steps": [
+      "2부터 13194까지 소수인지 검사합니다.",
+      "13195를 나누는 소수일 때 max를 갱신합니다.",
+      "가장 큰 소인수 29가 최종 저장됩니다."
+    ],
+    "sources": [
+      {
+        "name": "슈고링 · 2022년 1회",
+        "url": "https://sugoring-it.tistory.com/244"
+      },
+      {
+        "name": "Peterica · 2022년 1회",
+        "url": "https://peterica.tistory.com/614"
+      },
+      {
+        "name": "문어CBT · 2022년 1회",
+        "url": "https://www.sqldpass.com/blog/past-exam/engineer-2022-1"
+      }
+    ],
+    "verificationNote": "복수 자료에서 2022년 1회 19번, 13195의 최대 소인수 29가 일치합니다.",
+    "grading": "exact"
+  },
+  {
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "difficulty": "실전",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "id": "R-SQL-0023",
+    "language": "SQL",
+    "title": "ALL 서브쿼리 비교 조건",
+    "questionType": "blank",
+    "concepts": [
+      "ALL",
+      "서브쿼리",
+      "비교 연산"
+    ],
+    "question": "H 회사의 모든 제품 단가보다 비싼 제품을 조회하려고 합니다. [빈칸]에 들어갈 키워드를 쓰세요.",
+    "code": "SELECT 제조사, 제품명, 단가\nFROM 제품\nWHERE 단가 > [빈칸] (\n    SELECT 단가\n    FROM 제품\n    WHERE 제조사='H'\n);",
+    "answer": "ALL",
+    "acceptedAnswers": [
+      "all",
+      "All"
+    ],
+    "explanation": "> ALL(subquery)은 서브쿼리가 반환한 모든 값보다 큰 경우만 참입니다.",
+    "steps": [
+      "비교 대상은 H 회사 제품들의 여러 단가입니다.",
+      "모든 단가보다 커야 하므로 ALL을 사용합니다."
+    ],
+    "sources": [
+      {
+        "name": "슈고링 · 2022년 2회",
+        "url": "https://sugoring-it.tistory.com/245"
+      },
+      {
+        "name": "별의 블로그 · 2022년 2회",
+        "url": "https://starrykss.tistory.com/2082"
+      },
+      {
+        "name": "문어CBT · 2022년 2회",
+        "url": "https://www.sqldpass.com/blog/past-exam/engineer-2022-2"
+      }
+    ],
+    "verificationNote": "복수 자료에서 2022년 2회 3번 SQL의 정답 ALL이 일치합니다.",
+    "grading": "exact"
+  },
+  {
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "difficulty": "실전",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "id": "R-SQL-0024",
+    "language": "SQL",
+    "title": "OR·IN 조건과 COUNT(열)의 NULL 제외",
+    "questionType": "sql_result",
+    "concepts": [
+      "COUNT",
+      "NULL",
+      "IN",
+      "OR"
+    ],
+    "question": "다음 테이블과 SQL의 결과를 쓰세요.",
+    "tables": [
+      {
+        "name": "T",
+        "columns": [
+          "col1",
+          "col2"
+        ],
+        "rows": [
+          [
+            2,
+            null
+          ],
+          [
+            3,
+            6
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            6,
+            3
+          ],
+          [
+            null,
+            3
+          ]
+        ]
+      }
+    ],
+    "code": "SELECT COUNT(col2)\nFROM T\nWHERE col1 IN (2,3)\n   OR col2 IN (3,5);",
+    "answer": "4",
+    "explanation": "WHERE를 만족하는 다섯 행 가운데 col2가 NULL인 첫 행은 COUNT(col2)에서 제외되어 4입니다.",
+    "steps": [
+      "조건은 col1이 2/3이거나 col2가 3/5인 행을 선택합니다.",
+      "다섯 행이 조건에 포함됩니다.",
+      "COUNT(col2)는 NULL을 제외하므로 4입니다."
+    ],
+    "sources": [
+      {
+        "name": "슈고링 · 2022년 2회",
+        "url": "https://sugoring-it.tistory.com/245"
+      },
+      {
+        "name": "레이커 후기 · 2022년 2회",
+        "url": "https://laker99.tistory.com/entry/%EC%A0%95%EB%B3%B4%EC%B2%98%EB%A6%AC%EA%B8%B0%EC%82%AC-2022%EB%85%84-2%ED%9A%8C-%EC%8B%A4%EA%B8%B0-%EC%8B%9C%ED%97%98-%ED%9B%84%EA%B8%B0"
+      },
+      {
+        "name": "문어CBT · 2022년 2회",
+        "url": "https://www.sqldpass.com/blog/past-exam/engineer-2022-2"
+      }
+    ],
+    "verificationNote": "복수 자료에서 2022년 2회 4번 SQL과 정답 4를 확인했습니다. 테이블 값은 공개 복원표의 공통값을 사용했습니다.",
+    "grading": "exact"
+  },
+  {
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "difficulty": "실전",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "id": "R-JAVA-0036",
+    "language": "Java",
+    "title": "switch fall-through 누적",
+    "questionType": "output",
+    "concepts": [
+      "switch",
+      "fall-through",
+      "default"
+    ],
+    "question": "다음 Java 코드의 출력 결과를 쓰세요.",
+    "code": "public class Main {\n    public static void main(String[] args){\n        int i=3, k=1;\n        switch(i){\n            case 1: k+=1;\n            case 2: k++;\n            case 3: k=0;\n            case 4: k+=3;\n            case 5: k-=10;\n            default: k--;\n        }\n        System.out.print(k);\n    }\n}",
+    "answer": "-8",
+    "explanation": "case 3부터 break 없이 case 4, 5, default까지 이어져 0→3→-7→-8이 됩니다.",
+    "steps": [
+      "i=3이므로 case 3에서 시작합니다.",
+      "k=0, 이어 k=3, k=-7이 됩니다.",
+      "default에서 한 번 더 감소해 -8입니다."
+    ],
+    "sources": [
+      {
+        "name": "슈고링 · 2022년 2회",
+        "url": "https://sugoring-it.tistory.com/245"
+      },
+      {
+        "name": "개발슝이 · 2022년 2회",
+        "url": "https://smkim9202.tistory.com/244"
+      },
+      {
+        "name": "Java 기출풀이 · 2022년",
+        "url": "https://zoo-tech.tistory.com/45"
+      }
+    ],
+    "verificationNote": "복수 독립 자료에서 2022년 2회 7번 switch 코드와 정답 -8이 일치합니다.",
+    "grading": "exact"
+  },
+  {
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "difficulty": "실전",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "id": "R-PY-0020",
+    "language": "Python",
+    "title": "문자열 슬라이싱과 포맷 문자열 결합",
+    "questionType": "output",
+    "concepts": [
+      "문자열",
+      "슬라이싱",
+      "포맷 문자열"
+    ],
+    "question": "다음 Python 3 코드의 출력 결과를 쓰세요.",
+    "code": "a=\"REMEMBER NOVEMBER\"\nb=a[:3] + a[12:16]\nc=\"R AND %s\" % \"STR\"\nprint(b+c)",
+    "answer": "REMEMBER AND STR",
+    "explanation": "b는 REMEMBE, c는 R AND STR이므로 이어 붙이면 REMEMBER AND STR입니다.",
+    "steps": [
+      "a[:3]은 REM입니다.",
+      "a[12:16]은 EMBE라서 b는 REMEMBE입니다.",
+      "c는 R AND STR입니다.",
+      "두 문자열을 결합하면 REMEMBER AND STR입니다."
+    ],
+    "sources": [
+      {
+        "name": "슈고링 · 2022년 2회",
+        "url": "https://sugoring-it.tistory.com/245"
+      },
+      {
+        "name": "별의 블로그 · 2022년 2회",
+        "url": "https://starrykss.tistory.com/2082"
+      },
+      {
+        "name": "Python 기출 정리",
+        "url": "https://todays-mine.tistory.com/80"
+      }
+    ],
+    "verificationNote": "복수 자료에서 2022년 2회 13번 코드와 정답 REMEMBER AND STR이 일치합니다.",
+    "grading": "exact"
+  },
+  {
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "difficulty": "실전",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "id": "R-C-0041",
+    "language": "C",
+    "title": "포인터 이동으로 문자열 길이 합산",
+    "questionType": "output",
+    "concepts": [
+      "문자열 포인터",
+      "널 문자",
+      "함수"
+    ],
+    "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
+    "code": "#include <stdio.h>\nint len(char *p){\n    int result=0;\n    while(*p!='\\0'){ p++; result++; }\n    return result;\n}\nint main(void){\n    char *a=\"2022\";\n    char *b=\"202207\";\n    printf(\"%d\",len(a)+len(b));\n    return 0;\n}",
+    "answer": "10",
+    "explanation": "문자열 길이는 각각 4와 6이며 합은 10입니다.",
+    "steps": [
+      "2022의 길이는 4입니다.",
+      "202207의 길이는 6입니다.",
+      "4+6=10입니다."
+    ],
+    "sources": [
+      {
+        "name": "슈고링 · 2022년 2회",
+        "url": "https://sugoring-it.tistory.com/245"
+      },
+      {
+        "name": "별의 블로그 · 2022년 2회",
+        "url": "https://starrykss.tistory.com/2082"
+      },
+      {
+        "name": "레이커 후기 · 2022년 2회",
+        "url": "https://laker99.tistory.com/entry/%EC%A0%95%EB%B3%B4%EC%B2%98%EB%A6%AC%EA%B8%B0%EC%82%AC-2022%EB%85%84-2%ED%9A%8C-%EC%8B%A4%EA%B8%B0-%EC%8B%9C%ED%97%98-%ED%9B%84%EA%B8%B0"
+      }
+    ],
+    "verificationNote": "복수 자료에서 2022년 2회 15번 문자열 길이 함수와 정답 10이 일치합니다.",
+    "grading": "exact"
+  },
+  {
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "difficulty": "실전",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "id": "R-C-0042",
+    "language": "C",
+    "title": "포인터 차분 배열의 누적 합",
+    "questionType": "output",
+    "concepts": [
+      "배열",
+      "포인터",
+      "차분",
+      "누적"
+    ],
+    "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
+    "code": "#include <stdio.h>\nint main(void){\n    int a[4]={0,2,4,8};\n    int b[3]={0};\n    int sum=0;\n    for(int i=1;i<4;i++){\n        int *p=a+i;\n        b[i-1]=*p-a[i-1];\n        sum += b[i-1]+a[i];\n    }\n    printf(\"%d\",sum);\n    return 0;\n}",
+    "answer": "22",
+    "explanation": "각 반복에서 (2-0)+2=4, (4-2)+4=6, (8-4)+8=12를 더해 총 22입니다.",
+    "steps": [
+      "i=1에서 4를 더합니다.",
+      "i=2에서 6을 더합니다.",
+      "i=3에서 12를 더합니다.",
+      "합은 22입니다."
+    ],
+    "sources": [
+      {
+        "name": "슈고링 · 2022년 2회",
+        "url": "https://sugoring-it.tistory.com/245"
+      },
+      {
+        "name": "별의 블로그 · 2022년 2회",
+        "url": "https://starrykss.tistory.com/2082"
+      },
+      {
+        "name": "레이커 후기 · 2022년 2회",
+        "url": "https://laker99.tistory.com/entry/%EC%A0%95%EB%B3%B4%EC%B2%98%EB%A6%AC%EA%B8%B0%EC%82%AC-2022%EB%85%84-2%ED%9A%8C-%EC%8B%A4%EA%B8%B0-%EC%8B%9C%ED%97%98-%ED%9B%84%EA%B8%B0"
+      }
+    ],
+    "verificationNote": "복수 자료에서 2022년 2회 16번 배열 값 0,2,4,8과 정답 22가 일치합니다.",
+    "grading": "exact"
+  },
+  {
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "difficulty": "실전",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "id": "R-JAVA-0037",
+    "language": "Java",
+    "title": "객체 필드 변경 후 반복 누적",
+    "questionType": "output",
+    "concepts": [
+      "객체 필드",
+      "생성자",
+      "반복문",
+      "메서드"
+    ],
+    "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
+    "code": "public class Main {\n    int a;\n    Main(int a){ this.a=a; }\n    int calc(){\n        int b=1;\n        for(int i=1;i<a;i++) b=a*i+b;\n        return a+b;\n    }\n    public static void main(String[] args){\n        Main obj=new Main(3);\n        obj.a=5;\n        int b=obj.calc();\n        System.out.print(obj.a+b);\n    }\n}",
+    "answer": "61",
+    "explanation": "obj.a를 5로 바꾼 뒤 calc에서 b가 1→6→16→31→51이 되고 56을 반환합니다. 5+56=61입니다.",
+    "steps": [
+      "생성자 값 3은 main에서 a=5로 덮어씁니다.",
+      "반복 결과 b는 51입니다.",
+      "calc는 a+b=56을 반환합니다.",
+      "main에서 5+56=61을 출력합니다."
+    ],
+    "sources": [
+      {
+        "name": "슈고링 · 2022년 2회",
+        "url": "https://sugoring-it.tistory.com/245"
+      },
+      {
+        "name": "Java 기출풀이 · 2022년",
+        "url": "https://roadtofree.tistory.com/entry/%EC%A0%95%EB%B3%B4%EC%B2%98%EB%A6%AC%EA%B8%B0%EC%82%AC-%EC%8B%A4%EA%B8%B0-%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D-%EB%AC%B8%EC%A0%9C-Java-%EA%B8%B0%EC%B6%9C-%ED%92%80%EC%9D%B4-%EB%AA%A8%EC%9D%8C"
+      },
+      {
+        "name": "개발하는 엉배 · 2022년 Java",
+        "url": "https://sancheck-developer.tistory.com/143"
+      }
+    ],
+    "verificationNote": "복수 자료의 코드 추적 결과가 61로 일치합니다. 일부 블로그의 제목/타이포에 -61 표기가 있으나 해당 블로그 자체 풀이와 다른 독립 자료는 61로 일치해 61을 채택했습니다.",
+    "grading": "exact"
+  },
+  {
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "difficulty": "실전",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "id": "R-PY-0021",
+    "language": "Python",
+    "title": "map과 lambda로 리스트 전체에 100 더하기",
+    "questionType": "output",
+    "concepts": [
+      "map",
+      "lambda",
+      "list"
+    ],
+    "question": "다음 Python 3 코드의 출력 결과를 쓰세요.",
+    "code": "values=[1,2,3,4,5]\nvalues=list(map(lambda n:n+100,values))\nprint(values)",
+    "answer": "[101, 102, 103, 104, 105]",
+    "explanation": "각 원소에 100을 더한 결과를 list로 변환합니다.",
+    "steps": [
+      "1~5 각각에 100을 더합니다.",
+      "결과 리스트는 101~105입니다."
+    ],
+    "sources": [
+      {
+        "name": "문어CBT · 2022년 3회",
+        "url": "https://www.sqldpass.com/blog/past-exam/engineer-2022-3"
+      },
+      {
+        "name": "TechDotori · 2022년 3회",
+        "url": "https://techdotori.tistory.com/86?category=1181090"
+      },
+      {
+        "name": "Peterica · 2022년 3회",
+        "url": "https://peterica.tistory.com/616"
+      }
+    ],
+    "verificationNote": "복수 자료에서 2022년 3회 Python map/lambda 문제와 출력 [101,102,103,104,105]가 일치합니다. 일부 자료는 전체 문항 번호를 9 또는 20으로 재배열해 번호는 미확정 처리합니다.",
+    "grading": "exact"
+  },
+  {
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "difficulty": "실전",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "id": "R-SQL-0025",
+    "language": "SQL",
+    "title": "SELECT·DISTINCT·COUNT DISTINCT 결과",
+    "questionType": "sql_result",
+    "concepts": [
+      "SELECT",
+      "DISTINCT",
+      "COUNT"
+    ],
+    "question": "STUDENT에 세 학과 학생이 각각 50명, 100명, 50명 있습니다. 다음 세 SQL의 결과 개수를 순서대로 쓰세요.",
+    "code": "SELECT DEPT FROM STUDENT;\n\nSELECT DISTINCT DEPT FROM STUDENT;\n\nSELECT COUNT(DISTINCT DEPT)\nFROM STUDENT\nWHERE DEPT='인터넷과';",
+    "answer": "200 3 1",
+    "acceptedAnswers": [
+      "200, 3, 1",
+      "200\n3\n1"
+    ],
+    "explanation": "전체 행은 200, 서로 다른 학과는 3개, 인터넷과로 제한한 서로 다른 학과값은 1개입니다.",
+    "steps": [
+      "학생 총수는 200명입니다.",
+      "DISTINCT DEPT는 세 학과를 반환합니다.",
+      "인터넷과 조건에서는 DISTINCT DEPT가 하나입니다."
+    ],
+    "sources": [
+      {
+        "name": "LakeData · 2022년 3회",
+        "url": "https://lakedata.tistory.com/29"
+      },
+      {
+        "name": "2022년 3회 풀이",
+        "url": "https://jidefine231228.tistory.com/88"
+      },
+      {
+        "name": "문어CBT · 2022년 3회",
+        "url": "https://www.sqldpass.com/blog/past-exam/engineer-2022-3"
+      }
+    ],
+    "verificationNote": "복수 자료에서 2022년 3회 12번 SQL의 결과 200,3,1이 일치합니다. 학과명은 복원자료별 차이가 있어 결과에 영향을 주지 않는 대표값으로 정리했습니다.",
+    "grading": "exact"
+  },
+  {
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "difficulty": "실전",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "id": "R-C-0043",
+    "language": "C",
+    "title": "6부터 30까지 완전수 개수",
+    "questionType": "output",
+    "concepts": [
+      "완전수",
+      "약수",
+      "중첩 반복문"
+    ],
+    "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
+    "code": "#include <stdio.h>\nint main(void){\n    int count=0;\n    for(int n=6;n<=30;n++){\n        int sum=0;\n        for(int j=1;j<=n/2;j++)\n            if(n%j==0) sum+=j;\n        if(sum==n) count++;\n    }\n    printf(\"%d\",count);\n    return 0;\n}",
+    "answer": "2",
+    "explanation": "6~30 사이 완전수는 6과 28 두 개입니다.",
+    "steps": [
+      "6의 진약수 합은 6입니다.",
+      "28의 진약수 합도 28입니다.",
+      "이 범위의 완전수는 두 개이므로 2입니다."
+    ],
+    "sources": [
+      {
+        "name": "LakeData · 2022년 3회",
+        "url": "https://lakedata.tistory.com/29"
+      },
+      {
+        "name": "문어CBT · 2022년 3회",
+        "url": "https://www.sqldpass.com/blog/past-exam/engineer-2022-3"
+      },
+      {
+        "name": "Peterica · 2022년 3회",
+        "url": "https://peterica.tistory.com/616"
+      }
+    ],
+    "verificationNote": "복수 자료에서 2022년 3회 13번 완전수 개수의 정답 2가 일치합니다. 일부 자료의 코드 언어 표기가 혼재해 표준 C 형태로 정규화했습니다.",
+    "grading": "exact"
+  },
+  {
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "difficulty": "실전",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "id": "R-JAVA-0038",
+    "language": "Java",
+    "title": "배열 생성 메서드의 순차 출력",
+    "questionType": "output",
+    "concepts": [
+      "배열",
+      "메서드 반환",
+      "반복문"
+    ],
+    "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
+    "code": "public class Main {\n    static int[] makeArray(){\n        int[] data=new int[4];\n        for(int i=0;i<data.length;i++) data[i]=i;\n        return data;\n    }\n    public static void main(String[] args){\n        for(int value:makeArray()) System.out.print(value);\n    }\n}",
+    "answer": "0123",
+    "explanation": "길이 4 배열에 인덱스 값을 그대로 저장하므로 0,1,2,3이 연속 출력됩니다.",
+    "steps": [
+      "배열은 [0,1,2,3]으로 만들어집니다.",
+      "반복문이 앞에서부터 각 값을 출력합니다.",
+      "줄바꿈 없이 0123입니다."
+    ],
+    "sources": [
+      {
+        "name": "문어CBT · 2022년 3회",
+        "url": "https://www.sqldpass.com/blog/past-exam/engineer-2022-3"
+      },
+      {
+        "name": "슈고링 계열 2022년 3회",
+        "url": "https://sugoring-it.tistory.com/m/246"
+      },
+      {
+        "name": "개발슝이 · 2022년 3회",
+        "url": "https://smkim9202.tistory.com/243"
+      }
+    ],
+    "verificationNote": "복수 자료에서 2022년 3회 19번 배열 생성 Java 코드와 정답 0123이 일치합니다.",
+    "grading": "exact"
+  },
+  {
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "difficulty": "실전",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "id": "R-JAVA-0039",
+    "language": "Java",
+    "title": "3의 배수이면서 홀수인 최댓값",
+    "questionType": "output",
+    "concepts": [
+      "반복문",
+      "나머지",
+      "조건식"
+    ],
+    "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
+    "code": "public class Main {\n    public static void main(String[] args){\n        int result=0;\n        for(int i=1;i<999;i++)\n            if(i%3==0 && i%2!=0) result=i;\n        System.out.print(result);\n    }\n}",
+    "answer": "993",
+    "explanation": "1~998에서 3의 배수이면서 홀수인 가장 큰 값이 마지막으로 result에 저장됩니다.",
+    "steps": [
+      "조건을 만족할 때마다 result가 갱신됩니다.",
+      "998 이하에서 조건을 만족하는 가장 큰 값은 993입니다.",
+      "최종 출력은 993입니다."
+    ],
+    "sources": [
+      {
+        "name": "문어CBT · 2022년 3회",
+        "url": "https://www.sqldpass.com/blog/past-exam/engineer-2022-3"
+      },
+      {
+        "name": "2022년 3회 풀이",
+        "url": "https://dandelion07.tistory.com/143"
+      },
+      {
+        "name": "SISS · 2022년 3회",
+        "url": "https://siss.tistory.com/301"
+      }
+    ],
+    "verificationNote": "복수 독립 자료에서 2022년 3회 20번 코드와 정답 993이 일치합니다.",
+    "grading": "exact"
   }
 ]

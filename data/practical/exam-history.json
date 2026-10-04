@@ -1208,5 +1208,192 @@
     "sourceName": "2023년 3회 복수 복원자료",
     "sourceUrl": "https://grandlife.co.kr/2023-info-processing-practical-3/",
     "verificationNote": "복수 자료에서 회차·문항번호·정답을 교차 확인. 신뢰도 B."
+  },
+  {
+    "id": "H-E-2022-1-J3",
+    "questionId": "R-JAVA-0034",
+    "examType": "engineer",
+    "year": 2022,
+    "round": 1,
+    "questionNumber": 3,
+    "sourceName": "2022년 1회 복수 복원자료",
+    "sourceUrl": "https://www.sqldpass.com/blog/past-exam/engineer-2022-1",
+    "verificationNote": "복수 공개 자료에서 회차·문항번호·정답을 교차 확인. 신뢰도 B."
+  },
+  {
+    "id": "H-E-2022-1-J11",
+    "questionId": "R-JAVA-0035",
+    "examType": "engineer",
+    "year": 2022,
+    "round": 1,
+    "questionNumber": 11,
+    "sourceName": "2022년 1회 복수 복원자료",
+    "sourceUrl": "https://www.sqldpass.com/blog/past-exam/engineer-2022-1",
+    "verificationNote": "복수 공개 자료에서 회차·문항번호·정답을 교차 확인. 신뢰도 B."
+  },
+  {
+    "id": "H-E-2022-1-C14",
+    "questionId": "R-C-0038",
+    "examType": "engineer",
+    "year": 2022,
+    "round": 1,
+    "questionNumber": 14,
+    "sourceName": "2022년 1회 복수 복원자료",
+    "sourceUrl": "https://www.sqldpass.com/blog/past-exam/engineer-2022-1",
+    "verificationNote": "복수 공개 자료에서 회차·문항번호·정답을 교차 확인. 신뢰도 B."
+  },
+  {
+    "id": "H-E-2022-1-C15",
+    "questionId": "R-C-0039",
+    "examType": "engineer",
+    "year": 2022,
+    "round": 1,
+    "questionNumber": 15,
+    "sourceName": "2022년 1회 복수 복원자료",
+    "sourceUrl": "https://www.sqldpass.com/blog/past-exam/engineer-2022-1",
+    "verificationNote": "복수 공개 자료에서 회차·문항번호·정답을 교차 확인. 신뢰도 B."
+  },
+  {
+    "id": "H-E-2022-1-C19",
+    "questionId": "R-C-0040",
+    "examType": "engineer",
+    "year": 2022,
+    "round": 1,
+    "questionNumber": 19,
+    "sourceName": "2022년 1회 복수 복원자료",
+    "sourceUrl": "https://www.sqldpass.com/blog/past-exam/engineer-2022-1",
+    "verificationNote": "복수 공개 자료에서 회차·문항번호·정답을 교차 확인. 신뢰도 B."
+  },
+  {
+    "id": "H-E-2022-2-S3",
+    "questionId": "R-SQL-0023",
+    "examType": "engineer",
+    "year": 2022,
+    "round": 2,
+    "questionNumber": 3,
+    "sourceName": "2022년 2회 복수 복원자료",
+    "sourceUrl": "https://sugoring-it.tistory.com/245",
+    "verificationNote": "복수 공개 자료에서 회차·문항번호·정답을 교차 확인. 신뢰도 B."
+  },
+  {
+    "id": "H-E-2022-2-S4",
+    "questionId": "R-SQL-0024",
+    "examType": "engineer",
+    "year": 2022,
+    "round": 2,
+    "questionNumber": 4,
+    "sourceName": "2022년 2회 복수 복원자료",
+    "sourceUrl": "https://sugoring-it.tistory.com/245",
+    "verificationNote": "복수 공개 자료에서 회차·문항번호·정답을 교차 확인. 신뢰도 B."
+  },
+  {
+    "id": "H-E-2022-2-J7",
+    "questionId": "R-JAVA-0036",
+    "examType": "engineer",
+    "year": 2022,
+    "round": 2,
+    "questionNumber": 7,
+    "sourceName": "2022년 2회 복수 복원자료",
+    "sourceUrl": "https://sugoring-it.tistory.com/245",
+    "verificationNote": "복수 공개 자료에서 회차·문항번호·정답을 교차 확인. 신뢰도 B."
+  },
+  {
+    "id": "H-E-2022-2-P13",
+    "questionId": "R-PY-0020",
+    "examType": "engineer",
+    "year": 2022,
+    "round": 2,
+    "questionNumber": 13,
+    "sourceName": "2022년 2회 복수 복원자료",
+    "sourceUrl": "https://sugoring-it.tistory.com/245",
+    "verificationNote": "복수 공개 자료에서 회차·문항번호·정답을 교차 확인. 신뢰도 B."
+  },
+  {
+    "id": "H-E-2022-2-C15",
+    "questionId": "R-C-0041",
+    "examType": "engineer",
+    "year": 2022,
+    "round": 2,
+    "questionNumber": 15,
+    "sourceName": "2022년 2회 복수 복원자료",
+    "sourceUrl": "https://sugoring-it.tistory.com/245",
+    "verificationNote": "복수 공개 자료에서 회차·문항번호·정답을 교차 확인. 신뢰도 B."
+  },
+  {
+    "id": "H-E-2022-2-C16",
+    "questionId": "R-C-0042",
+    "examType": "engineer",
+    "year": 2022,
+    "round": 2,
+    "questionNumber": 16,
+    "sourceName": "2022년 2회 복수 복원자료",
+    "sourceUrl": "https://sugoring-it.tistory.com/245",
+    "verificationNote": "복수 공개 자료에서 회차·문항번호·정답을 교차 확인. 신뢰도 B."
+  },
+  {
+    "id": "H-E-2022-2-J17",
+    "questionId": "R-JAVA-0037",
+    "examType": "engineer",
+    "year": 2022,
+    "round": 2,
+    "questionNumber": 17,
+    "sourceName": "2022년 2회 복수 복원자료",
+    "sourceUrl": "https://sugoring-it.tistory.com/245",
+    "verificationNote": "복수 공개 자료에서 회차·문항번호·정답을 교차 확인. 신뢰도 B."
+  },
+  {
+    "id": "H-E-2022-3-P",
+    "questionId": "R-PY-0021",
+    "examType": "engineer",
+    "year": 2022,
+    "round": 3,
+    "questionNumber": null,
+    "sourceName": "2022년 3회 복수 복원자료",
+    "sourceUrl": "https://www.sqldpass.com/blog/past-exam/engineer-2022-3",
+    "verificationNote": "문제 내용·정답은 교차 확인했으나 복원자료별 전체 문항 순서가 달라 번호는 추정하지 않음. 신뢰도 B."
+  },
+  {
+    "id": "H-E-2022-3-S12",
+    "questionId": "R-SQL-0025",
+    "examType": "engineer",
+    "year": 2022,
+    "round": 3,
+    "questionNumber": 12,
+    "sourceName": "2022년 3회 복수 복원자료",
+    "sourceUrl": "https://www.sqldpass.com/blog/past-exam/engineer-2022-3",
+    "verificationNote": "복수 공개 자료에서 회차·문항번호·정답을 교차 확인. 신뢰도 B."
+  },
+  {
+    "id": "H-E-2022-3-C13",
+    "questionId": "R-C-0043",
+    "examType": "engineer",
+    "year": 2022,
+    "round": 3,
+    "questionNumber": 13,
+    "sourceName": "2022년 3회 복수 복원자료",
+    "sourceUrl": "https://www.sqldpass.com/blog/past-exam/engineer-2022-3",
+    "verificationNote": "복수 공개 자료에서 회차·문항번호·정답을 교차 확인. 신뢰도 B."
+  },
+  {
+    "id": "H-E-2022-3-J19",
+    "questionId": "R-JAVA-0038",
+    "examType": "engineer",
+    "year": 2022,
+    "round": 3,
+    "questionNumber": 19,
+    "sourceName": "2022년 3회 복수 복원자료",
+    "sourceUrl": "https://www.sqldpass.com/blog/past-exam/engineer-2022-3",
+    "verificationNote": "복수 공개 자료에서 회차·문항번호·정답을 교차 확인. 신뢰도 B."
+  },
+  {
+    "id": "H-E-2022-3-J20",
+    "questionId": "R-JAVA-0039",
+    "examType": "engineer",
+    "year": 2022,
+    "round": 3,
+    "questionNumber": 20,
+    "sourceName": "2022년 3회 복수 복원자료",
+    "sourceUrl": "https://www.sqldpass.com/blog/past-exam/engineer-2022-3",
+    "verificationNote": "복수 공개 자료에서 회차·문항번호·정답을 교차 확인. 신뢰도 B."
   }
 ]
