@@ -181,6 +181,96 @@
       "publisher": "BHHer",
       "status": "SQL 문장·정답 교차검증",
       "license": "공개 복원자료를 사실 검증에만 사용."
+    },
+    {
+      "examType": "engineer",
+      "year": 2024,
+      "round": 3,
+      "url": "https://august-jhy.tistory.com/254?category=1274101",
+      "publisher": "August-JHY",
+      "status": "Java·C·Python 복원 코드·정답 교차검증",
+      "license": "공개 복원자료를 사실 확인에 사용. 식별자·서식만 정규화."
+    },
+    {
+      "examType": "engineer",
+      "year": 2024,
+      "round": 3,
+      "url": "https://newbt.kr/%EC%8B%9C%ED%97%98/%EC%A0%95%EB%B3%B4%EC%B2%98%EB%A6%AC%EA%B8%B0%EC%82%AC%20%EC%8B%A4%EA%B8%B0/2024%EB%85%84%2B3%ED%9A%8C/%EC%83%81%EB%91%90",
+      "publisher": "뉴비티",
+      "status": "문항번호·코드·정답 교차검증",
+      "license": "공개 문제은행을 사실 검증에 사용. 원문 대량 복제하지 않음."
+    },
+    {
+      "examType": "engineer",
+      "year": 2024,
+      "round": 3,
+      "url": "https://bhher.tistory.com/121",
+      "publisher": "BHHer",
+      "status": "SQL 및 코드 복원 교차검증",
+      "license": "공개 복원자료를 사실 확인에 사용."
+    },
+    {
+      "examType": "engineer",
+      "year": 2025,
+      "round": 2,
+      "url": "https://bhher.tistory.com/m/122",
+      "publisher": "BHHer",
+      "status": "Java·C·Python 코드와 정답 교차검증",
+      "license": "공개 복원자료를 사실 확인에 사용. 식별자·서식만 정규화."
+    },
+    {
+      "examType": "engineer",
+      "year": 2025,
+      "round": 2,
+      "url": "https://jeongcheogi.edugamja.com/past-exam/2025/2025-2-review",
+      "publisher": "정처기 감자",
+      "status": "프로그래밍 9문항 유형·가답안 교차검증",
+      "license": "공개 분석자료를 유형·정답 확인에 사용."
+    },
+    {
+      "examType": "engineer",
+      "year": 2025,
+      "round": 2,
+      "url": "https://siss.tistory.com/m/309",
+      "publisher": "SISS",
+      "status": "C·Java 문항번호·코드·정답 교차검증",
+      "license": "공개 복원자료를 사실 확인에 사용."
+    },
+    {
+      "examType": "engineer",
+      "year": 2026,
+      "round": 1,
+      "url": "https://www.sqldpass.com/blog/past-exam/engineer-2026-1",
+      "publisher": "문어CBT",
+      "status": "20문항 회차·번호·정답 교차검증",
+      "license": "공개 복원자료를 사실 확인에 사용. 원문 대량 복제하지 않음."
+    },
+    {
+      "examType": "engineer",
+      "year": 2026,
+      "round": 1,
+      "url": "https://grandlife.co.kr/2026-info-processing-practical-1/",
+      "publisher": "GrandLife",
+      "status": "코딩·SQL 세부 조건과 정답 교차검증",
+      "license": "공개 재구성 자료를 사실 확인에 사용."
+    },
+    {
+      "examType": "engineer",
+      "year": 2026,
+      "round": 1,
+      "url": "https://jeongcheogi.edugamja.com/past-exam/2026/2026-1-review",
+      "publisher": "정처기 감자",
+      "status": "코딩 7문항·SQL 출제현황 및 가답안 교차검증",
+      "license": "공개 분석자료를 사실 검증에 사용."
+    },
+    {
+      "examType": "engineer",
+      "year": 2026,
+      "round": 1,
+      "url": "https://silgi.kr/it-exam/2026/1",
+      "publisher": "silgi.kr",
+      "status": "C 배열 평균 문제 값·정답 교차검증",
+      "license": "공개 학습자료를 사실 검증에 사용."
     }
   ]
 }
