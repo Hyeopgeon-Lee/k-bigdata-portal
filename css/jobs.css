@@ -1,0 +1,14 @@
+/* Role guide only: reuse existing portal cards, navy tokens and disclosures. */
+body[data-page=jobs] .filters{flex-wrap:nowrap;overflow-x:auto;padding:6px 2px 12px}
+body[data-page=jobs] .filters button{flex:0 0 auto;white-space:nowrap}
+body[data-page=jobs] .resource-card .tags span{font-size:13px}
+.job-fit{margin-bottom:24px}.job-fit-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.job-fit-grid a{display:flex;flex-direction:column;gap:8px;padding:16px;min-height:48px;border:1px solid var(--color-border);border-radius:10px;color:var(--color-primary);line-height:1.7}
+.job-fit-grid a span{color:#4e5a70;font-size:16px}.job-fit-grid a strong{font-size:17px}
+.job-compare>summary,.job-tracks summary{cursor:pointer;min-height:48px;align-content:center;color:var(--color-primary);font-weight:700;font-size:18px}
+.job-compare>p{margin:16px 0}.job-comparison-roles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.job-comparison-roles article{min-width:0}.job-comparison-roles h4{font-size:19px;margin:16px 0}
+.job-comparison-roles dt{font-weight:700;margin-top:14px;color:#142d70}.job-comparison-roles dd{margin:6px 0 0;line-height:1.8;color:#4e5a70}
+.job-tracks{margin:20px 0}.job-tracks h3{margin:0 0 12px}.job-tracks>p{font-weight:650}.job-tracks details{border-top:1px solid var(--color-border);padding:8px 0}
+.job-back-top{min-height:48px;display:inline-flex;align-items:center;margin-top:20px}
+@media(max-width:767px){.job-fit-grid,.job-comparison-roles{grid-template-columns:1fr}body[data-page=jobs] .job-group .resource-grid{grid-template-columns:1fr}.job-compare{padding:18px}}

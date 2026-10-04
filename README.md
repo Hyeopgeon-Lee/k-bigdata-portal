@@ -69,7 +69,7 @@ roleIds·primaryRoleIds는 기존 jobs id를 사용합니다. 직무 → 자격�
 
 ## 직무 추가 / 수정
 
-직무는 현재 7개와 기존 id를 유지합니다. jobGroups는 핵심 진출 5개 / 연계 개발 2개를 구분하며 우열·취업 보장·자격 판정이 아닙니다. 상세의 함께 학습할 기술은 docs.jobIds에서 생성하고, 기존 기술 태그와 자격증·면접 연결도 보존합니다. `js/jobs.js`에서 id, name, english, overview(한 줄 정의), description(소개), tags, tasks, essentialSkills, plusSkills, recruitmentKeywords, education, studyOrder, projectIdeas, portfolio, readinessChecklist, interviewTopics, interviewCategories, certifications, relatedRoles, category, aliases를 수정합니다.
+직무는 기존 7개 ID를 유지하고 system / qa / mobile / analyst를 추가한 총 11개입니다. jobGroups는 소프트웨어 개발 / 클라우드·인프라 / 데이터·AI / 품질·테스트로 분류하며 중요도 순위를 표시하지 않습니다. 상세의 함께 학습할 기술은 jobLearningDocs에서 기존 docs.jobIds와 직무 기술명을 연결해 생성하고, 기존 기술 태그와 자격증·면접 연결도 보존합니다. `js/jobs.js`에서 id, name, english, overview(한 줄 정의), description(소개), tags, tasks, essentialSkills, plusSkills, recruitmentKeywords, education, studyOrder, projectIdeas, portfolio, readinessChecklist, interviewTopics, interviewCategories, certifications, relatedRoles, category, aliases를 수정합니다.
 projectIdeas는 {title, description}, relatedRoles는 {name, description, id?} 배열입니다. 기존 idea 필드는 호환 목적으로 유지합니다.
 jobComparisons와 jobGuidance도 같은 파일에서 관리합니다. interviewRoleLinks는 면접의 직무 태그에서 직무 가이드로 돌아가는 연결을 관리합니다. 직무 데이터의 기술·키워드는 통합검색과 목록 내 검색에 함께 반영됩니다.
 체크리스트는 브라우저 메모리의 자체 점검 UI이며 저장·전송·판정을 하지 않습니다.
@@ -209,3 +209,13 @@ OCP·OCJP는 제품/버전별 현행 체계와 구분하고, 워드프로세서 
 검사: `node --test tests/*.test.mjs`. 신규 `portal-ux.test.mjs`와 기존 13개 테스트를 함께 실행합니다. 브라우저 결과와 한계는 [전체 UX 검수](tests/portal-ux-qa.md)에 기록합니다. 운영 도메인 직접 열기는 현재 브라우저의 저장된 접근 제한으로 확인하지 못했으므로 localhost 검수와 GitHub Pages 배포 성공을 구분합니다.
 
 2026-10-04 첨부 데이터의 516개 레코드를 중복 제거하여 고유 학습문제 184개(정규화 142, 변형 42)를 추가했습니다. 기존 36개와 합쳐 총 220개입니다. **258개 실제 복원기출을 확보한 것이 아닙니다.** 새 자료의 출제 회차 및 복원 신뢰도는 미검증이므로 출제 이력 집계에서 제외합니다. 문제 종류 필터에서 정규화 자료를 선택하세요. 상세 관리·검수 범위는 [데이터 반영 안내](data/practical/IMPORT-README.md)를 참고하세요.
+
+## 11개 직무 실전 준비 가이드 (2026-10-04)
+
+`js/jobs.js`가 직무 ID·명칭·영문·alias의 단일 관리 지점입니다. 향후 resume.html은 jobById / jobIdentity를 import하여 같은 ID를 사용하면 됩니다. 이력서 페이지 자체는 아직 생성하지 않았습니다. 신규 필드 suitability(관심 선택), careerPath(확장 예시), AI의 tracks / trackGuidance는 기존 상세 구조에 추가됩니다. 프로젝트는 직무마다 3개 이상이며 오류·검증·증거를 포함합니다.
+
+`js/job-guide-ui.js`는 관심별 빠른 선택과 직무별 title / description / canonical / OG / WebPage·Occupation JSON-LD를 관리합니다. `css/jobs.css`는 직무 페이지에만 적용합니다. 7개 비교는 기존 직무 데이터를 재사용해 목적·업무·기술·프로젝트·포트폴리오·관심을 보여줍니다. 관련 자격증은 선택적 학습 보완 수단입니다.
+
+검색엔진 정책은 변경하지 않습니다. 모든 내부 HTML은 noindex, nofollow를 유지하며 새 sitemap이나 크롤링 차단 robots.txt는 생성하지 않았습니다. JavaScript 메타 변경은 JS 미실행 크롤러/미리보기에서 반영되지 않을 수 있으며 검색 노출을 보장하지 않습니다.
+
+콘텐츠 검토 참고: [Flutter 앱 구조](https://docs.flutter.dev/app-architecture), [Playwright 테스트 원칙](https://playwright.dev/docs/best-practices), [pandas 집계 공식 안내](https://pandas.pydata.org/docs/user_guide/groupby.html). 면접·자격증 링크는 실제 등록 ID와 분야만 사용합니다.

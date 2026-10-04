@@ -1,7 +1,8 @@
+import {initJobGuide} from "./job-guide-ui.js";
 import {initPortalUX} from "./portal-ux.js";
 import {initGroupedSearch} from "./search-ui.js";
 import {certifications,certificationPaths,certificationGuidance} from "./certifications.js";
-import {jobs,jobComparisons,jobGuidance,jobGroups} from "./jobs.js";
+import {jobs,jobComparisons,jobGuidance,jobGroups,jobLearningDocs} from "./jobs.js";
 import {docs,docCategories,docFlows,findDocForSkill} from "./docs.js";
 import {questions} from "./interview.js";
 import {initInterview} from "./interview-ui.js";
@@ -55,7 +56,7 @@ return '<article class="detail-panel cert-detail"><a class="back-link" href="cer
 
 function renderJobDetail(job) {
   const section = (title, body, id) => '<section class="job-section"'+(id?' id="'+esc(id)+'"':"")+'><h3>'+esc(title)+'</h3>'+body+'</section>';
-  const learningDocs = docs.filter(doc => doc.jobIds.includes(job.id));
+  const learningDocs = jobLearningDocs(job,docs);
   const blog = services.find(service => service.id === "tech-blog");
   const certs = certifications.filter(cert => job.certifications.includes(cert.id) || cert.roleIds.includes(job.id));
   const interviewLinks = job.interviewCategories.filter(category => questions.some(q => q.category === category));
@@ -64,8 +65,9 @@ function renderJobDetail(job) {
   const projectCards = '<div class="job-projects">'+job.projectIdeas.map(project=>'<article class="job-info-card"><h4>'+esc(project.title)+'</h4><p>'+esc(project.description)+'</p></article>').join("")+'</div>';
   const skillsCard=(title,values)=>'<section class="job-info-card"><h3>'+esc(title)+'</h3>'+skillTags(values)+'</section>';
   return '<nav class="job-jump" aria-label="직무 상세 빠른 이동"><a href="#job-study">학습 순서</a><a href="#job-docs">함께 학습할 기술</a><a href="#job-projects">프로젝트</a><a href="#job-portfolio">포트폴리오</a><a href="#job-readiness">신입 준비</a><a href="#job-interview">면접</a></nav>'+
+    (job.tracks?'<aside class="job-tracks notice"><h3>AI 준비 트랙 선택</h3><p>'+esc(job.trackGuidance)+'</p>'+job.tracks.map(track=>'<details><summary>'+esc(track.name)+'</summary>'+skillTags(track.skills)+'<p>'+esc(track.goal)+'</p></details>').join('')+'</aside>':'')+
     section("이 직무는 어떤 일을 하나요?",'<p>'+esc(job.description)+'</p>')+
-    '<div class="job-two-column"><section class="job-info-card"><h3>주요 업무</h3>'+list(job.tasks)+'</section>'+skillsCard("필수 기술",job.essentialSkills)+skillsCard("추가로 배우면 좋은 기술",job.plusSkills)+skillsCard("채용공고에서 찾아볼 키워드",job.recruitmentKeywords)+'</div><p class="hint">'+esc(jobGuidance.skills)+'</p>'+
+    '<div class="job-two-column"><section class="job-info-card"><h3>주요 업무</h3>'+list(job.tasks)+'</section>'+skillsCard("신입이 먼저 준비할 핵심 기술",job.essentialSkills)+skillsCard("추가로 배우면 좋은 기술",job.plusSkills)+skillsCard("채용공고에서 찾아볼 키워드",job.recruitmentKeywords)+'</div><p class="hint">'+esc(jobGuidance.skills)+'</p>'+
     section("학과 교육과의 연결",'<p>'+esc(job.education)+'</p>')+
     section("함께 학습할 기술",'<p class="hint">공식 Reference로 사용법을 확인하고 기술블로그로 변화와 실무 흐름을 함께 읽으세요.</p><div class="doc-related">'+learningDocs.map(docLink).join("")+'</div><p><a href="'+esc(blog.url)+'" target="_blank" rel="noopener noreferrer">'+esc(blog.source)+' ↗<span class="sr-only"> 외부 사이트, 새 창</span></a></p>',"job-docs")+
     section("어떤 기술부터 공부할까요?",'<ol>'+job.studyOrder.map(step=>'<li>'+esc(step)+'</li>').join("")+'</ol>',"job-study")+
@@ -73,8 +75,9 @@ function renderJobDetail(job) {
     section("포트폴리오에서 보여줘야 할 것",list(job.portfolio),"job-portfolio")+
     section("신입 준비 체크리스트",'<p class="hint">'+esc(jobGuidance.readiness)+' 체크 상태는 저장하거나 전송하지 않습니다.</p>'+checklist,"job-readiness")+
     section("기술면접 준비",list(job.interviewTopics)+'<div class="job-topic-links">'+interviewLinks.map(category=>'<a href="interview.html?category='+esc(encodeURIComponent(category))+'">'+esc(category)+' 문제 →</a>').join("")+'</div><p class="hint">'+esc(jobGuidance.interview)+'</p><a class="back-link" href="docs.html">개발 공식문서 살펴보기 →</a>',"job-interview")+
-    section("관련 IT 자격증",'<ul>'+certs.map(c=>'<li><a href="certifications.html?id='+esc(c.id)+'">'+esc(c.name)+'</a></li>').join("")+'</ul>')+
-    section("연관 직무",'<ul class="job-related">'+related+'</ul>')+
+    section("관련 IT 자격증",'<p class="hint">필수 취업 조건이 아니라 직무 기초지식을 보완하고 취업 준비에 활용할 수 있는 관련 자격증입니다.</p><ul>'+certs.map(c=>'<li><a href="certifications.html?id='+esc(c.id)+'">'+esc(c.name)+'</a></li>').join("")+'</ul>')+
+    section("비슷한 직무와 차이",'<ul class="job-related">'+related+'</ul>')+
+    section("Career Path",'<p class="hint">경험과 관심에 따라 확장할 수 있는 예시이며 정해진 승진 순서는 아닙니다.</p><ol>'+job.careerPath.map(step=>'<li>'+esc(step)+'</li>').join("")+'</ol>')+
     '<div class="detail-actions"><a class="button button-primary" href="https://portfolio.k-bigdata.kr/">학과 프로젝트 보기 ↗</a><a class="button button-secondary" href="https://ready.k-bigdata.kr/">취업 준비 점검 ↗</a><a class="button button-secondary" href="project-guide.html">프로젝트 제작 가이드</a><a class="button button-secondary" href="interview.html">기술면접 학습</a></div>';
 }
 
@@ -92,7 +95,7 @@ if(flowRoot){flowRoot.hidden=!!selected;flowRoot.innerHTML=docFlows.map(flow=>'<
 if(page==="jobs"){
   const comparisonRoot=document.querySelector("#job-comparisons");
   comparisonRoot.hidden=!!selected;
-  comparisonRoot.innerHTML='<h2>직무의 차이를 이해하고 선택하세요</h2><div class="job-comparison-grid">'+jobComparisons.map(item=>'<article class="job-info-card"><h3>'+esc(item.title)+'</h3><p>'+esc(item.description)+'</p><div class="job-topic-links">'+item.roles.map(id=>{const role=jobs.find(j=>j.id===id);return '<a href="jobs.html?id='+esc(id)+'">'+esc(role.name)+' →</a>';}).join("")+'</div></article>').join("")+'</div>';
+  comparisonRoot.innerHTML='<h2>직무의 차이를 이해하고 선택하세요</h2><div class="job-comparison-grid">'+jobComparisons.map(item=>'<details class="job-info-card job-compare"><summary>'+esc(item.title)+'</summary><p>'+esc(item.description)+'</p><div class="job-comparison-roles">'+item.roles.map(id=>{const role=jobs.find(j=>j.id===id);return '<article><h4><a href="jobs.html?id='+esc(id)+'">'+esc(role.name)+' →</a></h4><dl><dt>핵심 목적</dt><dd>'+esc(role.overview)+'</dd><dt>주요 업무</dt><dd>'+esc(role.tasks[0])+'</dd><dt>대표 기술</dt><dd>'+esc(role.essentialSkills.slice(0,4).join(" · "))+'</dd><dt>신입 프로젝트</dt><dd>'+esc(role.projectIdeas[0].title)+'</dd><dt>포트폴리오 증거</dt><dd>'+esc(role.portfolio[0])+'</dd><dt>이런 관심이 있다면</dt><dd>'+esc(role.suitability)+'</dd></dl></article>';}).join("")+'</div></details>').join("")+'</div>';
 }
 const root=document.querySelector("#items"),detail=document.querySelector("#detail"),controls=document.querySelector("#list-controls");
 const certLink=id=>{const c=certifications.find(c=>c.id===id);return c?'<li><a href="certifications.html?id='+esc(id)+'">'+esc(c.name)+'</a></li>':"";};
@@ -107,7 +110,7 @@ const filters=document.querySelector("#filters"),input=document.querySelector("#
 function pool(){return data.filter(item=>(active==="전체"||item.category===active)&&matches(page==="jobs"?jobSearchText(item):page==="docs"?docSearchText(item):page==="certifications"?certificationSearchText(item):[item.name,item.english,item.overview,item.question,item.answer,item.category,...(item.tags||[]),...(item.keywords||[])].join(" "),query));}
 function card(item){if(page==="certifications")return renderCertificateCard(item);if(page==="docs")return renderDocCard(item);return '<article class="resource-card">'+icon+'<p><span class="badge">'+esc(item.category)+'</span></p><h2>'+esc(item.name)+'</h2>'+(item.english?'<p class="english">'+esc(item.english)+'</p>':"")+'<p>'+esc(item.overview)+'</p>'+tags(item.tags||[])+'<a class="card-link" href="'+esc(page==="docs"?item.url:page+".html?id="+item.id)+'">'+(page==="docs"?"공식문서 열기 ↗":"자세히 보기 →")+'<span class="sr-only"> · '+esc(item.name)+'</span></a></article>';}
 function question(item){return '<article class="question"><span class="badge">'+esc(item.category)+'</span> <span class="badge">'+esc(item.difficulty)+'</span><h2>'+esc(item.question)+'</h2><details><summary>답변 보기 / 접기</summary><p>'+esc(item.answer)+'</p><h3>핵심 키워드</h3>'+tags(item.keywords)+'<h3>추가 설명</h3><p>'+esc(item.extra)+'</p></details></article>';}
-function render(){const scroll=filters.scrollLeft;const available=pool(),items=random||(page==="docs"?available.slice(0,visibleLimit):available);filters.innerHTML=["전체",...cats].map(c=>'<button type="button" data-category="'+esc(c)+'" aria-pressed="'+String(c===active)+'">'+esc(page==="docs"?(docCategories.find(group=>group.name===c)?.label||c):c)+'</button>').join("");filters.scrollLeft=scroll;root.innerHTML=page==="jobs"?jobGroups.map(group=>{const grouped=items.filter(item=>group.ids.includes(item.id));return grouped.length?'<section class="job-group"><h2>'+esc(group.name)+'</h2><p>'+esc(group.description)+'</p><div class="resource-grid">'+grouped.map(card).join("")+'</div></section>':"";}).join(""):items.map(page==="interview"?question:card).join("");if(page==="docs"){document.querySelector("#docs-more").hidden=available.length<=visibleLimit;}document.querySelector("#list-status").textContent=items.length?(page==="docs"?available.length+"개 중 "+items.length+"개":items.length+"개")+" "+(random?"랜덤 문제 (필터 결과 "+available.length+"개)":"항목"):"검색 결과가 없습니다."; }
+function render(){const scroll=filters.scrollLeft;const available=pool(),items=random||(page==="docs"?available.slice(0,visibleLimit):available);filters.innerHTML=["전체",...cats].map(c=>'<button type="button" data-category="'+esc(c)+'" aria-pressed="'+String(c===active)+'">'+esc(page==="docs"?(docCategories.find(group=>group.name===c)?.label||c):c)+'</button>').join("");filters.scrollLeft=scroll;root.innerHTML=page==="jobs"?jobGroups.map(group=>{const grouped=group.ids.map(id=>items.find(item=>item.id===id)).filter(Boolean);return grouped.length?'<section class="job-group"><h2>'+esc(group.name)+'</h2><p>'+esc(group.description)+'</p><div class="resource-grid">'+grouped.map(card).join("")+'</div></section>':"";}).join(""):items.map(page==="interview"?question:card).join("");if(page==="docs"){document.querySelector("#docs-more").hidden=available.length<=visibleLimit;}document.querySelector("#list-status").textContent=items.length?(page==="docs"?available.length+"개 중 "+items.length+"개":items.length+"개")+" "+(random?"랜덤 문제 (필터 결과 "+available.length+"개)":"항목"):"검색 결과가 없습니다."; }
 filters.addEventListener("click",e=>{const button=e.target.closest("button");if(!button)return;active=button.dataset.category;random=null;visibleLimit=16;render();[...filters.querySelectorAll("button")].find(b=>b.dataset.category===active)?.focus();});
 document.querySelector("#docs-more")?.addEventListener("click",()=>{visibleLimit+=16;render();root.querySelectorAll(".resource-card")[visibleLimit-16]?.querySelector("a")?.focus({preventScroll:true});});
 input.addEventListener("input",()=>{query=input.value;random=null;visibleLimit=16;render();});
@@ -119,3 +122,4 @@ render();
 }
 }
 initPortalUX();
+if(page==="jobs")initJobGuide();

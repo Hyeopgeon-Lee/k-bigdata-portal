@@ -19,6 +19,7 @@ export function matches(text,query){
 }
 export const jobSearchText = job => [
 job.name,job.english,job.overview,job.description,job.aliases,job.education,
+job.category,job.suitability,...(job.careerPath||[]),...(job.tracks||[]).flatMap(track=>[track.name,track.goal,...track.skills]),
 ...(job.tags||[]),...(job.essentialSkills||[]),...(job.plusSkills||[]),
 ...(job.recruitmentKeywords||[]),...(job.tasks||[]),...(job.interviewTopics||[]),
 ...(job.relatedRoles||[]).map(role=>role.name)
