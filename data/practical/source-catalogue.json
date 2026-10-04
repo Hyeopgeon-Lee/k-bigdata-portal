@@ -514,6 +514,69 @@
       "publisher": "시나공(길벗) 2026 정보처리산업기사 실기 기본서 공개 미리보기",
       "status": "2025년 3회 공개 미리보기에서 문제 1·5·6 및 정답/해설 직접 확인",
       "license": "출판사 공개 미리보기를 사실 검증에 사용. 원문을 대량 복제하지 않고 문제 설명·해설은 학습용으로 재작성."
+    },
+    {
+      "examType": "industrial_engineer",
+      "year": 2022,
+      "round": null,
+      "url": "https://allen8524.tistory.com/90",
+      "publisher": "Logic & Coffee",
+      "status": "2022~2024 Java 기출 코드·문항번호·정답 교차검증",
+      "license": "공개 학습 정리 페이지를 사실 검증에 사용."
+    },
+    {
+      "examType": "industrial_engineer",
+      "year": 2022,
+      "round": null,
+      "url": "https://allen8524.tistory.com/92",
+      "publisher": "Logic & Coffee",
+      "status": "2022~2024 SQL 기출 구문·문항번호·정답 교차검증",
+      "license": "공개 학습 정리 페이지를 사실 검증에 사용."
+    },
+    {
+      "examType": "industrial_engineer",
+      "year": 2022,
+      "round": null,
+      "url": "https://allen8524.tistory.com/91",
+      "publisher": "Logic & Coffee",
+      "status": "Python 2022년 기출 코드·정답 교차검증",
+      "license": "공개 학습 정리 페이지를 사실 검증에 사용."
+    },
+    {
+      "examType": "industrial_engineer",
+      "year": 2022,
+      "round": 2,
+      "url": "https://www.sinagong.co.kr/community/001002002/book-qnas/205733",
+      "publisher": "시나공",
+      "status": "최대·최소값 제외 평균 7.50 코드·정답 확인",
+      "license": "출판사 Q&A 공개 페이지를 사실 검증에 사용."
+    },
+    {
+      "examType": "industrial_engineer",
+      "year": 2024,
+      "round": 2,
+      "url": "https://www.sinagong.co.kr/community/001002002/book-qnas/281741",
+      "publisher": "시나공",
+      "status": "Python continue 문제 정답 101 정오 확인",
+      "license": "출판사 공식 Q&A를 사실 검증에 사용."
+    },
+    {
+      "examType": "industrial_engineer",
+      "year": 2023,
+      "round": 3,
+      "url": "https://www.memoengine.com/Docs/industrial-engineer-information-processing/recursive-number-printing/",
+      "publisher": "MemoEngine",
+      "status": "재귀 출력 1234 코드·결과 교차검증",
+      "license": "공개 기술 해설 페이지를 사실 검증에 사용."
+    },
+    {
+      "examType": "industrial_engineer",
+      "year": 2023,
+      "round": 3,
+      "url": "https://www.redplus.net/docs/industrial-engineer-information-processing/max-min-value-comparison/",
+      "publisher": "RedPlus",
+      "status": "포인터 compare 문제 코드·주소 전달 구조 교차검증",
+      "license": "공개 기술 해설 페이지를 사실 검증에 사용."
     }
   ]
 }
