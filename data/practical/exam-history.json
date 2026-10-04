@@ -2011,5 +2011,38 @@
     "sourceName": "잡코딩 정보 블로그 · 산업기사 2024년 3회",
     "sourceUrl": "https://complainrevolutionist.tistory.com/208",
     "verificationNote": "기사 문제은행의 동일한 제네릭 타입소거 B0 문항과 코드·정답이 일치하여 기존 문제에 산업기사 출제이력만 연결. 산업기사 출처는 단일 공개 복원자료."
+  },
+  {
+    "id": "H-I-2025-3-1-R-IND-PY-0003",
+    "questionId": "R-IND-PY-0003",
+    "examType": "industrial_engineer",
+    "year": 2025,
+    "round": 3,
+    "questionNumber": 1,
+    "sourceName": "시나공 2026 정보처리산업기사 실기 공개 미리보기",
+    "sourceUrl": "https://gfile.gilbut.co.kr/gilbut/bookdata/BN004729/preview/files/basic-html/page23.html",
+    "verificationNote": "2025년 3회 1번 Python dict.get 문제와 정답 none을 출판사 공개 복원자료에서 확인. 신뢰도 C."
+  },
+  {
+    "id": "H-I-2025-3-5-R-IND-SQL-0012",
+    "questionId": "R-IND-SQL-0012",
+    "examType": "industrial_engineer",
+    "year": 2025,
+    "round": 3,
+    "questionNumber": 5,
+    "sourceName": "시나공 2026 정보처리산업기사 실기 공개 미리보기",
+    "sourceUrl": "https://gfile.gilbut.co.kr/gilbut/bookdata/BN004729/preview/files/basic-html/page24.html",
+    "verificationNote": "2025년 3회 5번 SQL CHECK 제약조건 문제와 정답 CHECK를 출판사 공개 복원자료에서 확인. 신뢰도 C."
+  },
+  {
+    "id": "H-I-2025-3-6-R-IND-C-0029",
+    "questionId": "R-IND-C-0029",
+    "examType": "industrial_engineer",
+    "year": 2025,
+    "round": 3,
+    "questionNumber": 6,
+    "sourceName": "시나공 2026 정보처리산업기사 실기 공개 미리보기",
+    "sourceUrl": "https://gfile.gilbut.co.kr/gilbut/bookdata/BN004729/preview/files/basic-html/page24.html",
+    "verificationNote": "2025년 3회 6번 C 포인터 문제와 정답 3을 출판사 공개 복원자료에서 확인. 신뢰도 C."
   }
 ]
