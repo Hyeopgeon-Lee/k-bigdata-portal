@@ -26,7 +26,7 @@ for(const page of pages){
  const html=readFileSync(new URL(page.replaceAll('\\','/'),root),'utf8');
  assert.match(html,/<meta name="robots" content="noindex, nofollow">/,page);
  assert.ok(!html.includes('content="index, follow"'));
- for(const text of ['skip-link','menu-toggle','aria-controls="portal-nav"','footer-links'])assert.ok(html.includes(text),page+' '+text);
+ for(const text of ['skip-link','menu-toggle','aria-controls="portal-nav"',page==='practical.html'?'study-footer':'footer-links'])assert.ok(html.includes(text),page+' '+text);
  for(const [,url] of html.matchAll(/(?:href|src)="([^"]+)"/g))if(!/^(https?:|#|mailto:)/.test(url))assert.ok(existsSync(new URL(url.split(/[?#]/)[0],root)),page+' '+url);
 }
 for(const service of services)if(!service.url.startsWith('https://'))assert.ok(existsSync(new URL(service.url,root)));

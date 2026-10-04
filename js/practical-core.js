@@ -6,7 +6,7 @@ export const typeLabels = {output:"실행결과",blank:"빈칸채우기",interpr
 export const languages = ["C","Java","Python","SQL"];
 export const escapeHTML = value => String(value ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 export const remainingSeconds = (startedAt, now=Date.now()) => Math.max(0,Math.ceil((WAIT_SECONDS*1000-(now-startedAt))/1000));
-export const canSubmit = (attempt, answer, now=Date.now()) => !!attempt && !attempt.submittedAt && remainingSeconds(attempt.startedAt,now)===0 && !!answer.trim();
+export const canSubmit = (attempt, answer, now=Date.now()) => !!attempt && !attempt.submittedAt && Number.isFinite(attempt.startedAt) && now>=attempt.startedAt && !!answer.trim();
 export const canReveal = (attempt,now=Date.now()) => !!attempt?.submittedAt && remainingSeconds(attempt.startedAt,now)===0;
 export function gradeAnswer(question, answer) {
   const normalize = value => String(value).normalize("NFKC").trim().replace(/\r/g,"").replace(/[\t ]+/g," ").replace(/ *\n */g,"\n");
@@ -30,6 +30,28 @@ export function shuffle(items,random=Math.random){const result=[...items];for(le
 export function dailyQuestions(bank,day){
   const seed=[...day].reduce((a,c)=>((a*31+c.charCodeAt(0))>>>0),0);
   return languages.flatMap(l=>{const items=bank.filter(q=>q.language===l&&q.sourceType==="reconstructed");return items.length?[items[seed%items.length]]:[];});
+}
+// Pure, deterministic recommendation. Saved daily plans keep the target stable.
+export function recommendFive(bank,attempts,day){
+ const latest=new Map();for(const a of [...attempts].sort((a,b)=>a.submittedAt-b.submittedAt))latest.set(a.questionId,a);
+ const weak=new Set(bank.filter(q=>latest.get(q.id)?.correct===false).flatMap(q=>q.concepts));
+ const seed=[...day].reduce((s,c)=>(s*31+c.charCodeAt(0))>>>0,0);
+ const tie=q=>[...q.id].reduce((s,c)=>(s*33+c.charCodeAt(0))>>>0,seed);
+ const rank=q=>(q.concepts.some(c=>weak.has(c))?8:0)+(!latest.has(q.id)?4:0)+(q.sourceType==='reconstructed'?2:q.sourceType==='practice'?0:1);
+ const ordered=[...bank].sort((a,b)=>rank(b)-rank(a)||(latest.get(a.id)?.submittedAt||0)-(latest.get(b.id)?.submittedAt||0)||tie(a)-tie(b));
+ const selected=[],take=predicate=>{const q=ordered.find(q=>!selected.includes(q)&&predicate(q));if(q)selected.push(q);};
+ take(q=>q.sourceType==='reconstructed');take(q=>q.sourceType==='reconstructed');
+ take(q=>q.sourceType==='normalized'||q.sourceType==='transformed');take(q=>q.sourceType==='normalized'||q.sourceType==='transformed');
+ take(q=>q.language==='SQL'||q.concepts.some(c=>weak.has(c)));
+ while(selected.length<Math.min(5,bank.length))take(()=>true);
+ return selected;
+}
+export function matchesExam(q,exam,bank=[]){
+ if(exam==='all')return true;
+ if(q.sourceType==='reconstructed')return q.history.some(h=>h.examType===exam);
+ if(q.examTypes)return q.examTypes.includes(exam);
+ const parent=bank.find(p=>p.id===q.originalQuestionId);
+ return parent?matchesExam(parent,exam):true;
 }
 export const localDay = (date=new Date()) => [date.getFullYear(),String(date.getMonth()+1).padStart(2,"0"),String(date.getDate()).padStart(2,"0")].join("-");
 export function summarizeAttempts(attempts){const judged=attempts.filter(a=>typeof a.correct==="boolean");return {total:attempts.length,correct:judged.filter(a=>a.correct).length,wrong:judged.filter(a=>!a.correct).length,pending:attempts.length-judged.length,rate:judged.length?Math.round(judged.filter(a=>a.correct).length/judged.length*100):null,average:attempts.length?Math.round(attempts.reduce((sum,a)=>sum+a.elapsedSeconds,0)/attempts.length):0};}

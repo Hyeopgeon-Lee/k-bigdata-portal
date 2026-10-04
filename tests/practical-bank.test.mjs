@@ -23,7 +23,7 @@ const repeated=buildBank(questions,[...history,{...history[0],id:'synthetic-test
 assert.equal(bankStats(repeated).unique,16);assert.equal(bankStats(repeated).history,19);assert.equal(bankStats(repeated).repeated,3);
 const startedAt=1000,attempt={startedAt,submittedAt:null};
 assert.equal(remainingSeconds(startedAt,1000),60);assert.equal(remainingSeconds(startedAt,60999),1);assert.equal(remainingSeconds(startedAt,61000),0);
-assert.equal(canSubmit(attempt,'8',60999),false);assert.equal(canSubmit(attempt,'8',61000),true);assert.equal(canSubmit(attempt,' ',61000),false);
+assert.equal(canSubmit(attempt,'8',1000),true);assert.equal(canSubmit(attempt,'8',31000),true);assert.equal(canSubmit(attempt,'8',60999),true);assert.equal(canSubmit(attempt,'8',61000),true);assert.equal(canSubmit(attempt,' ',61000),false);
 assert.equal(canReveal(attempt,90000),false);assert.equal(canReveal({...attempt,submittedAt:2000},2000),false);assert.equal(canReveal({...attempt,submittedAt:61000},61000),true);
 assert.equal(canSubmit({...attempt,submittedAt:61000},'8',62000),false);
 const sql=bank.find(q=>q.grading==='self');assert.equal(gradeAnswer(sql,'different SQL'),null);assert.equal(gradeAnswer(bank[0],'incorrect'),false);
