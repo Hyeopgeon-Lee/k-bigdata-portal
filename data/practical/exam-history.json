@@ -1,5 +1,15 @@
 [
-  {"id":"H-I-2022-1-P11","questionId":"R-PY-0002","examType":"industrial_engineer","year":2022,"round":1,"questionNumber":11,"sourceName":"잡코딩 · 산업기사 2022년 1회","sourceUrl":"https://complainrevolutionist.tistory.com/52","verificationNote":"단일 공개 자료 확인 및 Python 실행 검증. 신뢰도 C."},
+  {
+    "id": "H-I-2022-1-P11",
+    "questionId": "R-PY-0002",
+    "examType": "industrial_engineer",
+    "year": 2022,
+    "round": 1,
+    "questionNumber": 11,
+    "sourceName": "잡코딩 · 산업기사 2022년 1회",
+    "sourceUrl": "https://complainrevolutionist.tistory.com/52",
+    "verificationNote": "단일 공개 자료 확인 및 Python 실행 검증. 신뢰도 C."
+  },
   {
     "id": "H-E-2020-1-C",
     "questionId": "R-C-0001",
@@ -43,5 +53,148 @@
     "sourceName": "코딩하는 핑가 · 2022년 1회",
     "sourceUrl": "https://ss-o.tistory.com/165",
     "verificationNote": "SQL 구조와 빈칸 답안이 일치하나 샘플 데이터가 달라 B."
+  },
+  {
+    "id": "H-I-2022-2-3",
+    "questionId": "R-SQL-0002",
+    "examType": "industrial_engineer",
+    "year": 2022,
+    "round": 2,
+    "questionNumber": 3,
+    "sourceName": "잡코딩 정보 블로그",
+    "sourceUrl": "https://complainrevolutionist.tistory.com/53",
+    "verificationNote": "공개 복원자료에서 회차·문제번호·답을 확인. 단일 출처 신뢰도 C."
+  },
+  {
+    "id": "H-I-2022-3-5",
+    "questionId": "R-PY-0003",
+    "examType": "industrial_engineer",
+    "year": 2022,
+    "round": 3,
+    "questionNumber": 5,
+    "sourceName": "잡코딩 정보 블로그",
+    "sourceUrl": "https://complainrevolutionist.tistory.com/54",
+    "verificationNote": "공개 복원자료에서 회차·문제번호·답을 확인. 단일 출처 신뢰도 C."
+  },
+  {
+    "id": "H-I-2022-3-10",
+    "questionId": "R-PY-0004",
+    "examType": "industrial_engineer",
+    "year": 2022,
+    "round": 3,
+    "questionNumber": 10,
+    "sourceName": "잡코딩 정보 블로그",
+    "sourceUrl": "https://complainrevolutionist.tistory.com/54",
+    "verificationNote": "공개 복원자료에서 회차·문제번호·답을 확인. 단일 출처 신뢰도 C."
+  },
+  {
+    "id": "H-I-2023-1-12",
+    "questionId": "R-JAVA-0002",
+    "examType": "industrial_engineer",
+    "year": 2023,
+    "round": 1,
+    "questionNumber": 12,
+    "sourceName": "잡코딩 정보 블로그",
+    "sourceUrl": "https://complainrevolutionist.tistory.com/193",
+    "verificationNote": "공개 복원자료에서 회차·문제번호·답을 확인. 단일 출처 신뢰도 C."
+  },
+  {
+    "id": "H-I-2023-2-6",
+    "questionId": "R-SQL-0003",
+    "examType": "industrial_engineer",
+    "year": 2023,
+    "round": 2,
+    "questionNumber": 6,
+    "sourceName": "잡코딩 정보 블로그",
+    "sourceUrl": "https://complainrevolutionist.tistory.com/194",
+    "verificationNote": "공개 복원자료에서 회차·문제번호·답을 확인. 단일 출처 신뢰도 C."
+  },
+  {
+    "id": "H-I-2023-3-3",
+    "questionId": "R-SQL-0004",
+    "examType": "industrial_engineer",
+    "year": 2023,
+    "round": 3,
+    "questionNumber": 3,
+    "sourceName": "잡코딩 정보 블로그",
+    "sourceUrl": "https://complainrevolutionist.tistory.com/195",
+    "verificationNote": "공개 복원자료에서 회차·문제번호·답을 확인. 단일 출처 신뢰도 C."
+  },
+  {
+    "id": "H-I-2024-1-15",
+    "questionId": "R-PY-0005",
+    "examType": "industrial_engineer",
+    "year": 2024,
+    "round": 1,
+    "questionNumber": 15,
+    "sourceName": "잡코딩 정보 블로그",
+    "sourceUrl": "https://complainrevolutionist.tistory.com/206",
+    "verificationNote": "공개 복원자료에서 회차·문제번호·답을 확인. 단일 출처 신뢰도 C."
+  },
+  {
+    "id": "H-I-2024-2-3",
+    "questionId": "R-C-0002",
+    "examType": "industrial_engineer",
+    "year": 2024,
+    "round": 2,
+    "questionNumber": 3,
+    "sourceName": "잡코딩 정보 블로그",
+    "sourceUrl": "https://complainrevolutionist.tistory.com/207",
+    "verificationNote": "공개 복원자료에서 회차·문제번호·답을 확인. 단일 출처 신뢰도 C."
+  },
+  {
+    "id": "H-I-2024-3-10",
+    "questionId": "R-SQL-0005",
+    "examType": "industrial_engineer",
+    "year": 2024,
+    "round": 3,
+    "questionNumber": 10,
+    "sourceName": "잡코딩 정보 블로그",
+    "sourceUrl": "https://complainrevolutionist.tistory.com/208",
+    "verificationNote": "공개 복원자료에서 회차·문제번호·답을 확인. 단일 출처 신뢰도 C."
+  },
+  {
+    "id": "H-I-2022-1-15",
+    "questionId": "R-SQL-0006",
+    "examType": "industrial_engineer",
+    "year": 2022,
+    "round": 1,
+    "questionNumber": 15,
+    "sourceName": "잡코딩 정보 블로그",
+    "sourceUrl": "https://complainrevolutionist.tistory.com/52",
+    "verificationNote": "같은 게시자의 두 회차 자료에서 조건과 답이 일치합니다. 독립 출처가 아니므로 신뢰도 C 유지. 설명·풀이 자체 작성."
+  },
+  {
+    "id": "H-I-2024-3-16",
+    "questionId": "R-SQL-0006",
+    "examType": "industrial_engineer",
+    "year": 2024,
+    "round": 3,
+    "questionNumber": 16,
+    "sourceName": "잡코딩 정보 블로그",
+    "sourceUrl": "https://complainrevolutionist.tistory.com/208",
+    "verificationNote": "같은 게시자의 두 회차 자료에서 조건과 답이 일치합니다. 독립 출처가 아니므로 신뢰도 C 유지. 설명·풀이 자체 작성."
+  },
+  {
+    "id": "H-I-2022-2-7",
+    "questionId": "R-C-0003",
+    "examType": "industrial_engineer",
+    "year": 2022,
+    "round": 2,
+    "questionNumber": 7,
+    "sourceName": "잡코딩 정보 블로그",
+    "sourceUrl": "https://complainrevolutionist.tistory.com/53",
+    "verificationNote": "동일 게시자의 2022년 2회 7번·2024년 3회 11번에서 구조와 결과 일치. 독립 출처 미확보로 C. 문법적 main 반환형만 표준 C로 명시."
+  },
+  {
+    "id": "H-I-2024-3-11",
+    "questionId": "R-C-0003",
+    "examType": "industrial_engineer",
+    "year": 2024,
+    "round": 3,
+    "questionNumber": 11,
+    "sourceName": "잡코딩 정보 블로그",
+    "sourceUrl": "https://complainrevolutionist.tistory.com/208",
+    "verificationNote": "동일 게시자의 2022년 2회 7번·2024년 3회 11번에서 구조와 결과 일치. 독립 출처 미확보로 C. 문법적 main 반환형만 표준 C로 명시."
   }
 ]

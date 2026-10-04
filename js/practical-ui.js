@@ -1,18 +1,18 @@
 import {loadPracticalBank} from "./practical-data.js";
 import {sourceLabels,examLabels,typeLabels,languages,escapeHTML as esc,remainingSeconds,canSubmit,canReveal,gradeAnswer,bankStats,questionText,shuffle,dailyQuestions,localDay,summarizeAttempts,highlightCode} from "./practical-core.js";
-import {getAttempts,saveAttempt,getSession,saveSession,clearLocalLearning,storageAvailable} from "./practical-store.js";
+import {getAttempts,saveAttempt,getSession,saveSession,clearLocalLearning,storageAvailable,getPreferences,savePreferences,exportLearning,importLearning} from "./practical-store.js";
 import {matches} from "./search.js";
 
 const $=selector=>document.querySelector(selector),root=$("#bank-content"),status=$("#bank-status");
 let bank=[],coverage={},view="bank",current=null,attempt=null,timer=null,queue=[],queueIndex=0;
-const filters={exam:"all",language:"all",source:"reconstructed",difficulty:"all",type:"all",sort:"latest",query:""};
+const filters={exam:"all",language:"all",source:"reconstructed",difficulty:"all",type:"all",sort:"latest",query:"",completion:"unseen"};
 const badge=(text,cls="")=>'<span class="badge '+cls+'">'+esc(text)+'</span>';
 const button=(action,label,extra="")=>'<button type="button" class="button button-secondary" data-action="'+action+'" '+extra+'>'+esc(label)+'</button>';
 const historyLabel=h=>examLabels[h.examType]+" "+h.year+"년 "+h.round+"회"+(h.questionNumber?" · "+h.questionNumber+"번":"");
 function metadata(q){return '<div class="bank-badges">'+badge(sourceLabels[q.sourceType],"source-"+q.sourceType)+badge(q.language)+badge(q.difficulty)+badge(typeLabels[q.questionType])+(q.confidence?badge("복원 신뢰도 "+q.confidence):"")+'</div>';}
 function latest(q){return Math.max(0,...q.history.map(h=>h.year*10+h.round));}
 function storageNotice(){ $("#storage-status").textContent=storageAvailable?"":"브라우저 저장소를 사용할 수 없어 이번 화면의 임시 기록만 유지합니다. 새로고침·탭 종료 시 기록이 사라질 수 있습니다."; }
-function pool(){return bank.filter(q=>(filters.exam==="all"||q.history.some(h=>h.examType===filters.exam)||(q.sourceType!=="reconstructed"&&(q.examTypes||Object.keys(examLabels)).includes(filters.exam)))&&(filters.language==="all"||q.language===filters.language)&&(filters.source==="all"||q.sourceType===filters.source)&&(filters.difficulty==="all"||q.difficulty===filters.difficulty)&&(filters.type==="all"||q.questionType===filters.type)&&matches(questionText(q),filters.query));}
+function pool(){const done=new Set(getAttempts().map(a=>a.questionId));return bank.filter(q=>(filters.completion==="all"||(filters.completion==="solved"?done.has(q.id):!done.has(q.id)))&&(filters.exam==="all"||q.history.some(h=>h.examType===filters.exam)||(q.sourceType!=="reconstructed"&&(q.examTypes||Object.keys(examLabels)).includes(filters.exam)))&&(filters.language==="all"||q.language===filters.language)&&(filters.source==="all"||q.sourceType===filters.source)&&(filters.difficulty==="all"||q.difficulty===filters.difficulty)&&(filters.type==="all"||q.questionType===filters.type)&&matches(questionText(q),filters.query));}
 function sorted(items){
  const attempts=getAttempts(),rate=q=>{const a=attempts.filter(a=>a.questionId===q.id&&typeof a.correct==="boolean");return a.length?a.filter(a=>!a.correct).length/a.length:-1;};
  if(filters.sort==="random")return shuffle(items);
@@ -27,14 +27,17 @@ function stopTimer(){if(timer)clearInterval(timer);timer=null;}
 function setUrl(id=null){const url=new URL(location.href);if(id)url.searchParams.set("id",id);else url.searchParams.delete("id");history.replaceState(null,"",url);}
 function selectView(next){stopTimer();current=null;attempt=null;queue=[];view=next;setUrl();render();}
 function render(){
+ savePreferences({filters:{...filters}});
  stopTimer();$("#bank-controls").hidden=!!current||view!=="bank";
  $("#today-overview").hidden=!!current||view!=="bank";
  document.querySelectorAll("[data-view]").forEach(b=>{const selected=!current&&b.dataset.view===view;b.setAttribute("aria-pressed",String(selected));b.classList.toggle("button-primary",selected);b.classList.toggle("button-secondary",!selected);});
  status.textContent="";
  if(current){renderQuestion();return;}
  if(view==="bank"){
+   const last=getPreferences().lastQuestionId,resume=bank.find(q=>q.id===last),session=resume&&getSession(resume.id);
+   const resumeHTML=resume?'<aside class="paper-notice"><h2>이어서 학습하기</h2><p>'+esc(resume.title)+(session?.submittedAt?' · 제출한 문제':' · 진행 중인 문제')+'</p>'+button("resume","마지막 문제 이어서 보기",'data-id="'+esc(resume.id)+'"')+button("next-unseen","다음 미풀이 문제")+'</aside>':'';
    const available=sorted(pool());status.textContent=available.length+"개 고유 문제 · 확인된 출제 이력 "+available.filter(q=>q.sourceType==="reconstructed").flatMap(q=>q.history).length+"건";
-   root.innerHTML=available.length?'<div class="bank-card-grid">'+available.map(q=>card(q)).join("")+'</div>':'<div class="bank-empty"><h2>등록된 조건의 문제가 없습니다.</h2><p>아직 검증·등록하지 못한 회차일 수 있습니다. 다른 조건을 선택하세요.</p>'+button("reset","필터 초기화")+'</div>';
+   root.innerHTML=resumeHTML+(available.length?'<div class="bank-card-grid">'+available.map(q=>card(q)).join("")+'</div>':'<div class="bank-empty"><h2>등록된 조건의 문제가 없습니다.</h2><p>아직 검증·등록하지 못한 회차일 수 있습니다. 다른 조건을 선택하세요.</p>'+button("show-all","전체 문제 보기")+button("reset","필터 초기화")+'</div>');
  }else if(view==="today"){
    const today=dailyQuestions(bank,localDay());root.innerHTML='<h2>오늘의 문제 · '+esc(localDay())+'</h2><p>언어별 한 문제씩 권장합니다. 모두 풀어야 하는 것은 아닙니다.</p><div class="bank-card-grid">'+today.map(q=>card(q)).join("")+'</div>';
  }else if(view==="random") renderRandom();
@@ -54,7 +57,7 @@ function statsHTML(s){return '<p>풀이 '+s.total+' · 정답 '+s.correct+' · �
 function renderProgress(){
  const all=getAttempts(),today=localDay(),cutoff=new Date();cutoff.setHours(0,0,0,0);cutoff.setDate(cutoff.getDate()-6);
  const week=all.filter(a=>a.submittedAt>=cutoff.getTime());
- root.innerHTML='<h2>내 학습현황</h2><p>제출한 풀이 시도 기준입니다. 재풀이도 한 번의 시도로 집계하며 미판정 SQL은 정답률에서 제외합니다.</p><section class="bank-empty"><h3>오늘 · '+today+'</h3>'+statsHTML(summarizeAttempts(all.filter(a=>localDay(new Date(a.submittedAt))===today)))+'</section><h3>최근 7일 · 오늘 포함</h3><div class="bank-progress-grid">'+languages.map(language=>'<article><h3>'+language+'</h3>'+statsHTML(summarizeAttempts(week.filter(a=>bank.find(q=>q.id===a.questionId)?.language===language)))+'</article>').join("")+'</div><p class="hint">다른 브라우저·기기와 동기화되지 않습니다. 순위와 학생 간 비교는 제공하지 않습니다.</p><details><summary>학습기록 관리</summary><p>삭제하면 이 기기에 저장된 풀이와 오답노트가 모두 지워지며 복구할 수 없습니다.</p>'+button("confirm-clear","내 학습기록 삭제")+'<div id="clear-confirm"></div></details>';
+ root.innerHTML='<h2>내 학습현황</h2><p>제출한 풀이 시도 기준입니다. 재풀이도 한 번의 시도로 집계하며 미판정 SQL은 정답률에서 제외합니다.</p><section class="bank-empty"><h3>오늘 · '+today+'</h3>'+statsHTML(summarizeAttempts(all.filter(a=>localDay(new Date(a.submittedAt))===today)))+'</section><h3>최근 7일 · 오늘 포함</h3><div class="bank-progress-grid">'+languages.map(language=>'<article><h3>'+language+'</h3>'+statsHTML(summarizeAttempts(week.filter(a=>bank.find(q=>q.id===a.questionId)?.language===language)))+'</article>').join("")+'</div><p class="hint">다른 브라우저·기기와 동기화되지 않습니다. 순위와 학생 간 비교는 제공하지 않습니다.</p><details><summary>학습기록 관리</summary><p>삭제하면 이 기기에 저장된 풀이와 오답노트가 모두 지워지며 복구할 수 없습니다.</p>'+button("export-learning","학습 기록 내보내기")+'<label for="import-learning">학습 기록 가져오기 (JSON, 현재 기록과 병합)</label><input id="import-learning" type="file" accept=".json,application/json"><p id="import-status" role="status"></p>'+button("confirm-clear","내 학습기록 삭제")+'<div id="clear-confirm"></div></details>';
 }
 function openQuestion(id,fresh=false){
  const q=bank.find(q=>q.id===id);if(!q)return;
@@ -62,7 +65,7 @@ function openQuestion(id,fresh=false){
  // Wrong-note reattempts and explicit retries always start a fresh thinking period.
  if(!fresh&&previous&&Number.isFinite(previous.startedAt)&&previous.startedAt<=now&&(!previous.submittedAt||view!=="wrong"))attempt=previous;
  else attempt={id:globalThis.crypto?.randomUUID?.()||id+"-"+now,questionId:id,startedAt:now,submittedAt:null,answer:"",correct:null,viewedExplanation:false,retryCount:getAttempts().filter(a=>a.questionId===id).length};
- saveSession(id,attempt);setUrl(id);render();$("#solve-title").focus({preventScroll:true});$("#solve-title").scrollIntoView({block:"start",behavior:"auto"});
+ saveSession(id,attempt);savePreferences({lastQuestionId:id});setUrl(id);render();$("#solve-title").focus({preventScroll:true});$("#solve-title").scrollIntoView({block:"start",behavior:"auto"});
 }
 function tablesHTML(q){return (q.tables||[]).map(t=>'<div class="table-scroll" tabindex="0" role="region" aria-label="'+esc(t.name)+' 데이터 표"><table><caption>'+esc(t.name)+'</caption><thead><tr>'+t.columns.map(c=>'<th scope="col">'+esc(c)+'</th>').join("")+'</tr></thead><tbody>'+t.rows.map(row=>'<tr>'+row.map(v=>'<td>'+esc(v===null?'NULL':v)+'</td>').join("")+'</tr>').join("")+'</tbody></table></div>').join("");}
 function renderQuestion(){
@@ -99,6 +102,10 @@ root.addEventListener("click",event=>{
  const b=event.target.closest("[data-action]");if(!b)return;
  const action=b.dataset.action;
  if(action==="open")openQuestion(b.dataset.id,true);
+ if(action==="resume")openQuestion(b.dataset.id,false);
+ if(action==="next-unseen"){const done=new Set(getAttempts().map(a=>a.questionId)),next=sorted(bank.filter(q=>q.sourceType==="reconstructed"&&!done.has(q.id)))[0];if(next)openQuestion(next.id,false);else status.textContent="등록된 복원문제를 모두 풀었습니다. 전체 문제에서 복습하세요.";}
+ if(action==="show-all"){filters.completion="all";$("#completion-filter").value="all";render();}
+ if(action==="export-learning"){const url=URL.createObjectURL(new Blob([JSON.stringify(exportLearning(),null,2)],{type:"application/json"})),link=document.createElement("a");link.href=url;link.download="kbigdata-learning-"+localDay()+".json";link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
  if(action==="back")selectView("bank");
  if(action==="reset")resetFilters();
  if(action==="retry")openQuestion(current.id,true);
@@ -123,12 +130,18 @@ root.addEventListener("click",event=>{
  if(action==="delete-learning"){clearLocalLearning();render();}
 });
 document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>selectView(b.dataset.view)));
-for(const key of ["exam","language","source","difficulty","type","sort"]){$("#"+key+"-filter").addEventListener("change",event=>{filters[key]=event.target.value;render();});}
+for(const key of ["exam","language","source","difficulty","type","sort","completion"]){$("#"+key+"-filter").addEventListener("change",event=>{filters[key]=event.target.value;render();});}
 $("#bank-query").addEventListener("input",event=>{filters.query=event.target.value;render();});
-function resetFilters(){Object.assign(filters,{exam:"all",language:"all",source:"reconstructed",difficulty:"all",type:"all",sort:"latest",query:""});for(const key of ["exam","language","source","difficulty","type","sort"])$("#"+key+"-filter").value=filters[key];$("#bank-query").value="";selectView("bank");}
+function resetFilters(){Object.assign(filters,{exam:"all",language:"all",source:"reconstructed",difficulty:"all",type:"all",sort:"latest",query:"",completion:"unseen"});for(const key of ["exam","language","source","difficulty","type","sort","completion"])$("#"+key+"-filter").value=filters[key];$("#bank-query").value="";selectView("bank");}
 $("#bank-reset").addEventListener("click",resetFilters);
 loadPracticalBank().then(result=>{
- bank=result.bank;coverage=result.coverage;const stats=bankStats(bank);
+ bank=result.bank;coverage=result.coverage;
+ const saved=getPreferences().filters;
+ if(saved&&typeof saved==="object"){
+  for(const key of ["exam","language","source","difficulty","type","sort","completion"]){const select=$("#"+key+"-filter");if([...select.options].some(o=>o.value===saved[key])){filters[key]=saved[key];select.value=saved[key];}}
+  if(typeof saved.query==="string"){filters.query=saved.query.slice(0,200);$("#bank-query").value=filters.query;}
+ }
+ const stats=bankStats(bank);
  $("#today-overview").innerHTML='<h2>오늘의 문제</h2><p class="hint">매일 언어별 한 문제씩 권장합니다. 지금 필요한 문제만 선택해도 됩니다.</p><div class="job-topic-links">'+dailyQuestions(bank,localDay()).map(q=>'<a href="practical.html?id='+esc(q.id)+'">'+esc(q.language)+' · '+esc(q.title)+' →</a>').join("")+'</div>';
  $("#bank-stats").innerHTML=[['복원기출 출제 이력',stats.history],...languages.map(l=>[l,stats.languages[l]])].map(([name,count])=>'<div><strong>'+count+'</strong><span>'+name+'</span></div>').join("");
  $("#coverage-notice").textContent=coverage.notice+' 고유 복원문제 '+stats.unique+'개 · 기사 '+stats.exams.engineer+'건 · 산업기사 '+stats.exams.industrial_engineer+'건 · 재출제 '+stats.repeated+'개.';
@@ -138,3 +151,9 @@ loadPracticalBank().then(result=>{
 }).catch(()=>{root.innerHTML='<div class="bank-empty"><h2>문제 데이터를 불러오지 못했습니다.</h2><p>네트워크 연결을 확인하고 페이지를 새로고침하세요.</p></div>';status.textContent="데이터 로딩 오류";});
 window.addEventListener("pagehide",stopTimer);
 window.addEventListener("pageshow",()=>{if(current){updateGate();if(!attempt.submittedAt&&remainingSeconds(attempt.startedAt)>0&&!timer)timer=setInterval(updateGate,500);}});
+root.addEventListener("change",async event=>{
+ if(event.target.id!=="import-learning")return;
+ const message=$("#import-status"),file=event.target.files[0];if(!file)return;
+ try{if(file.size>5*1024*1024)throw Error("5MB 이하 JSON 파일만 가져올 수 있습니다.");const count=importLearning(JSON.parse(await file.text()));renderProgress();$("#import-status").textContent=count+"건을 확인하고 기존 기록과 병합했습니다.";storageNotice();}
+ catch(error){message.textContent=error instanceof SyntaxError?"JSON 파일을 확인하세요.":error.message;}
+});

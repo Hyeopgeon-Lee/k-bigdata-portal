@@ -11,5 +11,5 @@ else{
   const result=spawnSync(python,['-I','-c',q.code],{encoding:'utf8',timeout:5000});
   assert.equal(result.status,0,q.id+': '+result.stderr);assert.equal(result.stdout.trim().replaceAll('\r',''),q.answer,q.id);
  }
- console.log('PASS: all 3 Python examples executed in isolated Python 3.');
+ console.log('PASS: all '+questions.filter(q=>q.language==='Python').length+' Python examples executed in isolated Python 3.');
 }
