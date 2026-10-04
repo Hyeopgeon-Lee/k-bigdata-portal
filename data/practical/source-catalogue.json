@@ -631,6 +631,15 @@
       "publisher": "BHHer",
       "status": "이중 포인터 배열 변환 코드·정답 교차검증",
       "license": "공개 기출 해설 페이지를 사실 검증에 사용."
+    },
+    {
+      "examType": "industrial_engineer",
+      "year": 2022,
+      "round": null,
+      "url": "https://bhher.tistory.com/99",
+      "publisher": "BHHer",
+      "status": "2022~2024 산업기사 C언어 기출 코드·상수·정답 교차검증",
+      "license": "공개 기출 해설 페이지를 사실 검증에 사용."
     }
   ]
 }
