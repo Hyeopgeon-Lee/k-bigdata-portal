@@ -1,0 +1,102 @@
+/* Shared portal UX: reuse navy/blue tokens; no new theme or framework. */
+:root{--portal-header-height:76px;--study-header-height:56px}
+.learning-cross-nav{display:flex;gap:8px;overflow-x:auto;white-space:nowrap;padding:12px 2px;scroll-padding:2px}
+.learning-cross-nav a{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 14px;border:1px solid var(--color-border);border-radius:9px;background:white;color:var(--color-primary);font-size:14px;font-weight:650}
+.learning-cross-nav a[aria-current=page]{background:var(--color-primary);border-color:var(--color-primary);color:white}
+.portal-mobile-home{display:none}
+.quick-launch{margin-top:22px}.quick-launch h2{font-size:20px;margin:0 0 12px}
+#quick-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;max-width:540px}
+#quick-actions .button{font-size:16px;min-height:52px;padding:10px}
+.journey-disclosure{margin-top:24px;margin-bottom:20px}
+.journey-disclosure>summary,.ux-disclosure>summary,.doc-flow-guide>summary{min-height:48px;align-content:center;font-weight:700;font-size:16px;color:var(--color-primary);cursor:pointer}
+.journey-disclosure .journey-section{padding:20px 0;width:100%}
+.journey-disclosure .journey-section h2{font-size:24px}
+.ux-disclosure{margin-top:14px;padding:12px 16px;background:#fff;border:1px solid var(--color-border);border-radius:12px}
+.ux-disclosure[open]>summary{border-bottom:1px solid var(--color-border);margin-bottom:16px}
+.ux-disclosure .job-section{margin-top:12px}
+.ux-at-glance{background:#f1f5fc;border:1px solid #c8d6ee;border-radius:12px;padding:18px;margin:20px 0}
+.ux-at-glance h3,.ux-at-glance h4{margin:8px 0;font-size:17px}.ux-at-glance p{margin:8px 0}
+.next-learning{padding-top:24px;padding-bottom:40px}.next-learning h2{font-size:22px}.next-learning .button{margin:0 8px 10px 0}
+.search-results{grid-template-columns:1fr}
+.search-group{min-width:0;background:white;padding:18px;border:1px solid var(--color-border);border-radius:12px}
+.search-group h3{margin:0 0 10px;font-size:19px}.search-group h3 small{color:var(--color-text-muted)}
+.search-group ul{list-style:none;padding:0;display:grid;gap:8px}
+.search-group ul a{display:flex;align-items:center;min-height:44px;line-height:1.7}
+.search-group .button{min-height:44px;padding:10px 14px;font:inherit;cursor:pointer}
+.doc-flow-guide{margin:18px 0;padding:12px 16px;border:1px solid var(--color-border);border-radius:12px;background:white}
+#docs-more{margin-top:20px;min-height:48px;font:inherit;cursor:pointer}
+body[data-page=jobs] .page-hero,body[data-page=certifications] .page-hero,body[data-page=docs] .page-hero{padding-top:20px;padding-bottom:22px}
+body[data-page=jobs] .page-hero h1,body[data-page=certifications] .page-hero h1,body[data-page=docs] .page-hero h1{font-size:32px}
+body[data-page=docs] .doc-hero-support,body[data-page=docs] .doc-explore-heading{display:none}
+body[data-page=docs] #list-controls>.hint{display:none}
+body[data-page=jobs] .resource-card h2{font-size:21px}
+body[data-page=jobs] .resource-card{padding:22px}
+body[data-page=jobs] .resource-card .tags span:nth-child(n+5){display:none}
+body[data-page=jobs] .resource-card .english{display:none}
+body[data-page=certifications] .cert-core-section{margin:22px 0 28px}
+body[data-guide-page] .guide-hero{padding:24px 0 30px;background:#f5f7fb}
+body[data-guide-page] .guide-hero h1{font-size:32px;line-height:1.4}
+body[data-guide-page] .guide-lead{font-size:16px;margin-top:14px}
+body[data-guide-page] .guide-actions{margin-top:18px}
+body[data-guide-page] .guide-body{padding:24px 0 40px}
+body[data-guide-page] .principle{margin:0;padding:18px}
+body[data-guide-page] .guide-section-head h2{font-size:28px;line-height:1.4}
+body[data-guide-page] #process{margin-top:24px}
+body[data-guide-page] .steps{display:grid;grid-template-columns:1fr;gap:10px}
+body[data-guide-page] .step{min-height:0;padding:14px 18px;box-shadow:none}
+body[data-guide-page] .step>summary{display:flex;gap:14px;align-items:center;min-height:48px;cursor:pointer;font-size:18px}
+body[data-guide-page] .step p,body[data-guide-page] .step li{font-size:16px;line-height:1.8}
+body[data-guide-page] .step p{margin-top:16px}
+body[data-guide-page] .formula{margin-top:20px;padding:24px}
+body[data-guide-page] .checklist{margin-top:24px;gap:14px}
+body[data-guide-page] .checklist .ux-disclosure{margin:0}
+body[data-guide-page] .checklist-card{border:0;padding:0}
+body[data-guide-page] .ux-disclosure:not([open])>.checklist-card{display:none}
+body[data-guide-page] .guide-cta{margin-top:24px;background:#f5f7fb}
+.practical-page.is-solving .learning-cross-nav,body[data-interview-mode^=PRACTICE] .learning-cross-nav{display:none}
+.practical-page .study-footer{display:block;padding:0;color:#fff;background:var(--color-primary-dark)}
+.practical-page .study-footer a{color:inherit}
+.detail-panel>h1{font-size:28px;line-height:1.4;margin:18px 0 12px;overflow-wrap:anywhere}
+@media(max-width:900px){
+ :root{--portal-header-height:60px}
+ .site-header{height:var(--portal-header-height)}
+ .portal-mobile-home{display:inline-flex;align-items:center;min-height:44px;font-size:14px;font-weight:700;margin-left:auto}
+ .menu-toggle{margin-left:0;font-size:14px}
+}
+@media(max-width:767px){
+ body[data-portal-home] .hero{padding:22px 0 0;background:#f5f7fb}
+ body[data-portal-home] .hero::before{display:none}
+ body[data-portal-home] .hero-grid{display:flex;flex-direction:column;gap:12px;min-height:0}
+ body[data-portal-home] .hero-copy{width:100%;padding:0}
+ body[data-portal-home] .hero h1{font-size:30px;line-height:1.25}
+ body[data-portal-home] .hero-description{font-size:16px;line-height:1.7;margin-top:12px}
+ body[data-portal-home] .eyebrow{font-size:12px;margin-bottom:10px}
+ body[data-portal-home] .hero-actions{display:none}
+ body[data-portal-home] .portal-map{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;height:auto;margin:6px 0 16px}
+ body[data-portal-home] .portal-map .hub-card,body[data-portal-home] .network-lines{display:none}
+ body[data-portal-home] .portal-map .orbit-card{position:static;width:auto;min-height:44px;display:block;padding:10px;box-shadow:none}
+ body[data-portal-home] .orbit-card>span,body[data-portal-home] .orbit-card strong{display:none}
+ body[data-portal-home] .orbit-card small{font-size:14px;text-align:center}
+ body[data-portal-home] .services-section{padding-top:28px;padding-bottom:40px}
+ body[data-portal-home] .section-intro h2{font-size:26px}
+ body[data-portal-home] .service-card{padding:20px;min-height:0}
+ body[data-portal-home] .service-meta,body[data-portal-home] .service-kind,body[data-portal-home] .service-source,body[data-portal-home] .card-decoration{display:none}
+ body[data-portal-home] .service-icon{width:32px;height:32px}
+ body[data-portal-home] .service-card h3{font-size:21px;margin:10px 0 8px}
+ body[data-portal-home] .service-card>p{font-size:16px;line-height:1.7;margin:0 0 12px}
+ body[data-portal-home] .service-tags{margin:0 0 16px}
+ body[data-portal-home] .service-tags span{font-size:13px}
+ body[data-portal-home] .card-link{position:static;font-size:15px;min-height:44px;display:flex;align-items:center;margin-top:8px}
+ .learning-cross-nav{padding-block:8px}
+ .page-hero .back-link{margin-bottom:12px}
+ .page-hero p,.resource-card p{font-size:16px!important;line-height:1.8}
+ .detail-panel{padding:18px}
+ .detail-panel p,.detail-panel li{font-size:16px}
+ .job-jump{gap:8px}
+ .job-jump a{font-size:14px}
+ .job-section{scroll-margin-top:80px}
+ .search-group{padding:14px}
+ .footer-brand strong{font-size:18px}
+ .site-footer .footer-links a{font-size:15px;min-height:44px}
+ body[data-guide-page] .guide-hero h1{font-size:28px}
+}

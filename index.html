@@ -10,8 +10,8 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/learning.css">
-</head>
-<body>
+<link rel="stylesheet" href="css/portal-ux.css"></head>
+<body data-portal-home>
   <a class="skip-link" href="#services">서비스 목록으로 건너뛰기</a>
 <header class="site-header"><div class="container header-inner">
 <a class="brand" href="index.html" aria-label="통합 서비스 포털 홈"><span class="brand-mark" aria-hidden="true"><span></span></span><span class="brand-copy"><strong>빅데이터소프트웨어공학과</strong><small>통합 서비스 포털</small></span></a>
@@ -30,7 +30,7 @@
           <div class="hero-actions">
             <a class="button button-primary" href="#services">전체 서비스 보기 <span aria-hidden="true">↓</span></a>
             <a class="button button-secondary" href="https://www.kopo.ac.kr/kangseo/content.do?menu=1547">학과 홈페이지 <span aria-hidden="true">↗</span></a>
-          </div>
+          </div><section class="quick-launch" aria-labelledby="quick-title"><h2 id="quick-title">오늘 무엇을 할까요?</h2><div id="quick-actions"></div></section>
         </div>
 
 
@@ -51,7 +51,7 @@
         </div>
       </div>
     </section>
-    <section class="journey-section container" aria-labelledby="journey-title"><p class="section-kicker">YOUR NEXT STEP</p><h2 id="journey-title">목표 직무부터 첫 입사지원까지</h2><p class="journey-lead">현재 필요한 단계부터 시작하세요. 기술을 배우고, 프로젝트로 증명하고, 취업 준비로 연결합니다.</p><ol id="student-journey" class="student-journey"></ol></section>
+    <details class="journey-disclosure container"><summary>학습·취업 준비 흐름 보기</summary><section class="journey-section container" aria-labelledby="journey-title"><p class="section-kicker">YOUR NEXT STEP</p><h2 id="journey-title">목표 직무부터 첫 입사지원까지</h2><p class="journey-lead">현재 필요한 단계부터 시작하세요. 기술을 배우고, 프로젝트로 증명하고, 취업 준비로 연결합니다.</p><ol id="student-journey" class="student-journey"></ol></section></details>
 
 
 <section class="portal-search container" aria-labelledby="search-heading"><h2 id="search-heading">포털 통합검색</h2><label for="portal-query">서비스·직무·자격증·공식문서·면접·기술블로그 검색</label><input id="portal-query" type="search" placeholder="예: Kubernetes, 쿠버네티스, SQL" autocomplete="off"><p id="search-status" role="status"></p><ul id="search-results" class="search-results"></ul></section>
@@ -60,7 +60,7 @@
         <div class="section-intro">
           <p class="section-kicker">SERVICES</p>
           <h2 id="services-title">네 영역에서 필요한 도구를 찾으세요</h2>
-          <p>GUIDE는 포털 학습 안내, SERVICE는 운영 서비스, EXTERNAL은 외부 학습 사이트입니다. 내부는 →, 외부는 ↗로 구분합니다.</p>
+          <p>지금 필요한 학습과 학과 서비스를 선택하세요. 외부 사이트는 ↗로 표시합니다.</p>
         </div>
         <div id="service-groups" aria-live="polite"></div>
         <noscript><p class="noscript">서비스 목록을 표시하려면 JavaScript를 활성화해 주세요.</p></noscript>

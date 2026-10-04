@@ -1,3 +1,5 @@
+import {initPortalUX} from "./portal-ux.js";
+import {initGroupedSearch} from "./search-ui.js";
 import {certifications,certificationPaths,certificationGuidance} from "./certifications.js";
 import {jobs,jobComparisons,jobGuidance,jobGroups} from "./jobs.js";
 import {docs,docCategories,docFlows,findDocForSkill} from "./docs.js";
@@ -17,13 +19,7 @@ toggle?.addEventListener("click",()=>{const open=toggle.getAttribute("aria-expan
 nav?.addEventListener("click",e=>{if(e.target.closest("a"))closeMenu();});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&toggle?.getAttribute("aria-expanded")==="true"){closeMenu();toggle.focus();}});
 document.addEventListener("click",e=>{if(!e.target.closest(".site-header"))closeMenu();});
-const portalQuery=document.querySelector("#portal-query");
-portalQuery?.addEventListener("input",()=>{
-const query=portalQuery.value.trim(),results=query?searchIndex.filter(item=>matches(item.text,query)):[];
-document.querySelector("#search-status").textContent=query?results.length+"개 결과":"한글·영문 키워드로 검색하세요.";
-document.querySelector("#search-results").innerHTML=results.map(r=>'<li><a href="'+esc(r.url)+'"'+(isExternal(r.url)?' target="_blank" rel="noopener noreferrer"':'')+'>'+esc(r.title)+(isExternal(r.url)?' ↗<span class="sr-only"> 외부 사이트, 새 창</span>':' →')+'<small>'+esc(r.type)+'</small></a></li>').join("");
-});
-
+initGroupedSearch();
 
 const docLink = doc => '<a href="docs.html?id='+esc(doc.id)+'">'+esc(doc.name)+'</a>';
 const skillTags = values => '<div class="tags doc-related">'+values.map(value=>{const doc=findDocForSkill(value);return doc?'<a href="docs.html?id='+esc(doc.id)+'">'+esc(value)+'<span class="sr-only"> 공식문서 학습 안내</span></a>':'<span>'+esc(value)+'</span>';}).join("")+'</div>';
@@ -106,14 +102,15 @@ detail.innerHTML=page==="certifications"?renderCertificateDetail(selected):'<art
 }else{
 if(id){detail.innerHTML='<p class="notice" role="status">요청한 항목을 찾을 수 없습니다. 전체 목록에서 선택하세요.</p>';}
 const cats=page==="docs"?docCategories.map(c=>c.name):[...new Set(data.map(item=>item.category))];
-let active=cats.includes(params.get("category"))?params.get("category"):"전체",query="",random=null;
+let active=cats.includes(params.get("category"))?params.get("category"):"전체",query="",random=null,visibleLimit=16;
 const filters=document.querySelector("#filters"),input=document.querySelector("#local-query");
 function pool(){return data.filter(item=>(active==="전체"||item.category===active)&&matches(page==="jobs"?jobSearchText(item):page==="docs"?docSearchText(item):page==="certifications"?certificationSearchText(item):[item.name,item.english,item.overview,item.question,item.answer,item.category,...(item.tags||[]),...(item.keywords||[])].join(" "),query));}
 function card(item){if(page==="certifications")return renderCertificateCard(item);if(page==="docs")return renderDocCard(item);return '<article class="resource-card">'+icon+'<p><span class="badge">'+esc(item.category)+'</span></p><h2>'+esc(item.name)+'</h2>'+(item.english?'<p class="english">'+esc(item.english)+'</p>':"")+'<p>'+esc(item.overview)+'</p>'+tags(item.tags||[])+'<a class="card-link" href="'+esc(page==="docs"?item.url:page+".html?id="+item.id)+'">'+(page==="docs"?"공식문서 열기 ↗":"자세히 보기 →")+'<span class="sr-only"> · '+esc(item.name)+'</span></a></article>';}
 function question(item){return '<article class="question"><span class="badge">'+esc(item.category)+'</span> <span class="badge">'+esc(item.difficulty)+'</span><h2>'+esc(item.question)+'</h2><details><summary>답변 보기 / 접기</summary><p>'+esc(item.answer)+'</p><h3>핵심 키워드</h3>'+tags(item.keywords)+'<h3>추가 설명</h3><p>'+esc(item.extra)+'</p></details></article>';}
-function render(){const scroll=filters.scrollLeft;const available=pool(),items=random||available;filters.innerHTML=["전체",...cats].map(c=>'<button type="button" data-category="'+esc(c)+'" aria-pressed="'+String(c===active)+'">'+esc(page==="docs"?(docCategories.find(group=>group.name===c)?.label||c):c)+'</button>').join("");filters.scrollLeft=scroll;root.innerHTML=page==="jobs"?jobGroups.map(group=>{const grouped=items.filter(item=>group.ids.includes(item.id));return grouped.length?'<section class="job-group"><h2>'+esc(group.name)+'</h2><p>'+esc(group.description)+'</p><div class="resource-grid">'+grouped.map(card).join("")+'</div></section>':"";}).join(""):items.map(page==="interview"?question:card).join("");document.querySelector("#list-status").textContent=items.length?items.length+"개 "+(random?"랜덤 문제 (필터 결과 "+available.length+"개)":"항목"):"검색 결과가 없습니다."; }
-filters.addEventListener("click",e=>{const button=e.target.closest("button");if(!button)return;active=button.dataset.category;random=null;render();[...filters.querySelectorAll("button")].find(b=>b.dataset.category===active)?.focus();});
-input.addEventListener("input",()=>{query=input.value;random=null;render();});
+function render(){const scroll=filters.scrollLeft;const available=pool(),items=random||(page==="docs"?available.slice(0,visibleLimit):available);filters.innerHTML=["전체",...cats].map(c=>'<button type="button" data-category="'+esc(c)+'" aria-pressed="'+String(c===active)+'">'+esc(page==="docs"?(docCategories.find(group=>group.name===c)?.label||c):c)+'</button>').join("");filters.scrollLeft=scroll;root.innerHTML=page==="jobs"?jobGroups.map(group=>{const grouped=items.filter(item=>group.ids.includes(item.id));return grouped.length?'<section class="job-group"><h2>'+esc(group.name)+'</h2><p>'+esc(group.description)+'</p><div class="resource-grid">'+grouped.map(card).join("")+'</div></section>':"";}).join(""):items.map(page==="interview"?question:card).join("");if(page==="docs"){document.querySelector("#docs-more").hidden=available.length<=visibleLimit;}document.querySelector("#list-status").textContent=items.length?(page==="docs"?available.length+"개 중 "+items.length+"개":items.length+"개")+" "+(random?"랜덤 문제 (필터 결과 "+available.length+"개)":"항목"):"검색 결과가 없습니다."; }
+filters.addEventListener("click",e=>{const button=e.target.closest("button");if(!button)return;active=button.dataset.category;random=null;visibleLimit=16;render();[...filters.querySelectorAll("button")].find(b=>b.dataset.category===active)?.focus();});
+document.querySelector("#docs-more")?.addEventListener("click",()=>{visibleLimit+=16;render();root.querySelectorAll(".resource-card")[visibleLimit-16]?.querySelector("a")?.focus({preventScroll:true});});
+input.addEventListener("input",()=>{query=input.value;random=null;visibleLimit=16;render();});
 function pick(count){const items=[...pool()];for(let i=items.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[items[i],items[j]]=[items[j],items[i]];}random=items.slice(0,count);render();}
 document.querySelector("#random-one")?.addEventListener("click",()=>pick(1));
 document.querySelector("#random-ten")?.addEventListener("click",()=>pick(10));
@@ -121,3 +118,4 @@ document.querySelector("#show-all")?.addEventListener("click",()=>{random=null;r
 render();
 }
 }
+initPortalUX();

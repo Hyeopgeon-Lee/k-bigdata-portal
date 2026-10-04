@@ -1,4 +1,4 @@
-import { categories, services, serviceKind, isExternal, studentJourney } from "./services.js";
+import { categories, services, serviceKind, isExternal, studentJourney,quickActions } from "./services.js";
 
 const icons = {
   book: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h7l2 2 2-2h7v16h-7l-2 2-2-2H3ZM12 6v16M6 9h3M15 9h3M6 13h3M15 13h3"/></svg>',
@@ -13,7 +13,7 @@ const escapeHTML = (value) => String(value).replace(/[&<>'"]/g, (char) => ({ "&"
 
 function serviceCard(service, index) {
   const external = isExternal(service.url);
-  const tags = service.tags.slice(0, service.featured ? 5 : 4).map((tag) => `<span>${escapeHTML(tag)}</span>`).join("");
+  const tags = service.tags.slice(0,3).map((tag) => `<span>${escapeHTML(tag)}</span>`).join("");
   return `<a class="service-card accent-${escapeHTML(service.accent)}" href="${escapeHTML(service.url)}" ${external ? 'target="_blank" rel="noopener noreferrer"' : ''} aria-label="${escapeHTML(service.name)} ${external ? '외부 사이트, 새 창' : '안내로 이동'}" style="--delay:${index * 70}ms">
     <span class="card-decoration" aria-hidden="true"></span>
     <span class="service-icon">${icons[service.icon] || icons.clipboard}</span>
@@ -37,6 +37,12 @@ const groups = Object.values(categories).map((category) => {
 
 const serviceGroups = document.querySelector("#service-groups");
 if (serviceGroups) serviceGroups.innerHTML = groups;
+const quickRoot=document.querySelector("#quick-actions");
+if(quickRoot)quickRoot.innerHTML=quickActions.map(id=>{
+ const service=services.find(s=>s.id===id),external=isExternal(service.url);
+ const label={practical:"실기 문제 풀기",interview:"기술면접 연습",ready:"취업 준비 점검",apply:"입사지원 현황"}[id];
+ return '<a class="button button-secondary" href="'+escapeHTML(service.url)+'"'+(external?' target="_blank" rel="noopener noreferrer"':'')+'>'+escapeHTML(label)+(external?' ↗<span class="sr-only"> 외부 사이트, 새 창</span>':' →')+'</a>';
+}).join("");
 document.querySelector("#current-year").textContent = new Date().getFullYear();
 
 const heroIconMap = { career: "users", learning: "book", project: "send", campus: "calendar" };

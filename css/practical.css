@@ -13,8 +13,8 @@
 @media(max-width:767px){.bank-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.bank-stats>div:first-child{grid-column:1/-1}.bank-filter-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.bank-controls,.bank-solve,.bank-card,.bank-disclaimer{padding:20px}.bank-card-grid,.bank-progress-grid{grid-template-columns:1fr}.bank-result{padding:16px}.code-scroll pre{padding:16px;font-size:14px}.paper-notice{padding:20px}.paper-notice h2{font-size:21px}}
 @media(max-width:400px){.bank-filter-grid{grid-template-columns:1fr}.bank-solve{padding:16px}}
 /* Mobile study app. All overrides stay inside this page. */
-.practical-page{font-size:16px;--keyboard-inset:0px}
-.practical-page .study-header{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;position:sticky;top:76px;z-index:90;padding:6px 16px;min-height:56px;border-bottom:1px solid var(--color-border);background:#fff}
+.practical-page{font-size:16px;--keyboard-inset:0px;--study-header-height:56px}
+.practical-page .study-header{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;position:sticky;top:var(--portal-header-height);z-index:90;padding:6px 16px;min-height:56px;border-bottom:1px solid var(--color-border);background:#fff}
 .practical-page .study-header strong{text-align:center;font-size:16px}
 .practical-page .study-header a,.practical-page .study-header button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;font:inherit;font-size:14px;color:var(--color-primary);background:none;border:0;padding:6px;cursor:pointer}
 .practical-page .container{width:min(calc(100% - 24px),920px)}
@@ -59,9 +59,9 @@
 .practical-page .bank-badges{gap:6px}
 .practical-page .source-normalized{background:#f2edf8;color:#573479;border:1px solid #d7c7e9}
 .practical-page .bank-solve{border:0;border-radius:0;padding:0;background:transparent}
-.practical-page .solve-progress{display:flex;gap:10px;align-items:center;justify-content:space-between;position:sticky;top:132px;z-index:80;background:#f5f7fb;border-bottom:1px solid var(--color-border);padding:8px 0;font-size:14px}
+.practical-page .solve-progress{display:flex;gap:10px;align-items:center;justify-content:space-between;position:sticky;top:calc(var(--portal-header-height) + var(--study-header-height));z-index:80;background:#f5f7fb;border-bottom:1px solid var(--color-border);padding:8px 0;font-size:14px}
 .practical-page .solve-progress .button{font-size:14px;min-height:44px;padding:8px 10px}
-.practical-page .bank-solve h2{font-size:21px;line-height:1.5;scroll-margin-top:190px;margin:16px 0 8px}
+.practical-page .bank-solve h2{font-size:21px;line-height:1.5;scroll-margin-top:calc(var(--portal-header-height) + var(--study-header-height) + 58px);margin:16px 0 8px}
 .practical-page .solve-question{font-size:17px;margin:14px 0}
 .practical-page .code-scroll{background:#fff;margin:12px 0 20px;border-radius:10px}
 .practical-page .code-scroll pre{padding:12px;font:15px/1.8 ui-monospace,SFMono-Regular,Consolas,monospace;min-width:min-content}
@@ -88,9 +88,10 @@
 .practical-page .study-footer{display:flex;justify-content:center;gap:24px;padding:14px 12px calc(14px + env(safe-area-inset-bottom));border-top:1px solid var(--color-border);background:#fff;font-size:14px;color:var(--color-primary)}
 .practical-page .study-footer a{display:inline-flex;align-items:center;min-height:44px}
 @media(max-width:900px){
+ .practical-page{--portal-header-height:0px;--study-header-height:calc(56px + env(safe-area-inset-top))}
  .practical-page .site-header{display:none}
  .practical-page .study-header{top:0;padding-top:calc(6px + env(safe-area-inset-top))}
- .practical-page .solve-progress{top:calc(56px + env(safe-area-inset-top))}
+ .practical-page .solve-progress{top:var(--study-header-height)}
  .practical-page .bank-solve h2,.practical-page .bank-result #result-heading{scroll-margin-top:130px}
 }
 @media(min-width:768px){
