@@ -757,7 +757,7 @@
     "language": "C",
     "title": "비트 OR와 AND의 차",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "output",
     "difficulty": "기본",
     "concepts": [
@@ -778,12 +778,16 @@
       {
         "name": "잡코딩 · 산업기사 2024년 2회",
         "url": "https://complainrevolutionist.tistory.com/207"
+      },
+      {
+        "name": "BHHer · C언어 기출문제 정리 2022~2024",
+        "url": "https://bhher.tistory.com/99"
       }
     ],
-    "verificationNote": "단일 공개 복원자료의 회차·문제번호·답 확인. 독립 교차 출처 미확보로 C. 문제 설명과 해설은 자체 작성.",
+    "verificationNote": "단일 공개 복원자료의 회차·문제번호·답 확인. 독립 교차 출처 미확보로 C. 문제 설명과 해설은 자체 작성. 독립 C 기출 해설 자료에서 동일 회차의 코드·상수·정답을 재검증하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "grading": "exact"
   },
   {
@@ -1187,7 +1191,7 @@
   },
   {
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "output",
     "difficulty": "기본",
     "sources": [
@@ -1198,11 +1202,15 @@
       {
         "name": "잡코딩 · 산업기사 2024년 3회 11번",
         "url": "https://complainrevolutionist.tistory.com/208"
+      },
+      {
+        "name": "BHHer · C언어 기출문제 정리 2022~2024",
+        "url": "https://bhher.tistory.com/99"
       }
     ],
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "grading": "exact",
     "id": "R-C-0003",
     "language": "C",
@@ -1222,7 +1230,7 @@
       "i=10의 처리가 끝난 뒤 증감식으로 i=11이 됩니다.",
       "11<=10이 거짓이므로 종료합니다. i+sum=41입니다."
     ],
-    "verificationNote": "동일 게시자의 2022년 2회 7번·2024년 3회 11번에서 구조와 결과 일치. 독립 출처 미확보로 C. 문법적 main 반환형만 표준 C로 명시."
+    "verificationNote": "동일 게시자의 2022년 2회 7번·2024년 3회 11번에서 구조와 결과 일치. 독립 출처 미확보로 C. 문법적 main 반환형만 표준 C로 명시. 독립 C 기출 해설 자료에서 동일 회차의 코드·상수·정답을 재검증하여 신뢰도 B로 승격."
   },
   {
     "sourceType": "transformed",
