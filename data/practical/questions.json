@@ -455,7 +455,7 @@
     "language": "Python",
     "title": "정수와 문자열의 자료형 확인",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "output",
     "difficulty": "기본",
     "concepts": [
@@ -477,12 +477,16 @@
       {
         "name": "잡코딩 · 산업기사 2022년 1회 복원자료",
         "url": "https://complainrevolutionist.tistory.com/52"
+      },
+      {
+        "name": "Logic & Coffee · 정보처리산업기사 실기 Python 기출문제 정리",
+        "url": "https://allen8524.tistory.com/91"
       }
     ],
-    "verificationNote": "단일 공개 복원자료의 11번을 확인했습니다. 코드와 출력을 Python으로 실행 검증합니다. 독립적인 교차 출처는 미확보이므로 신뢰도 C입니다.",
+    "verificationNote": "단일 공개 복원자료의 11번을 확인했습니다. 코드와 출력을 Python으로 실행 검증합니다. 독립적인 교차 출처는 미확보이므로 신뢰도 C입니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "grading": "exact"
   },
   {
@@ -490,7 +494,7 @@
     "language": "SQL",
     "title": "조건에 맞는 사원 급여 갱신",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "sql_write",
     "difficulty": "기본",
     "concepts": [
@@ -511,12 +515,16 @@
       {
         "name": "잡코딩 · 산업기사 2022년 2회",
         "url": "https://complainrevolutionist.tistory.com/53"
+      },
+      {
+        "name": "Logic & Coffee · 정보처리산업기사 실기 SQL 기출문제 정리",
+        "url": "https://allen8524.tistory.com/92"
       }
     ],
-    "verificationNote": "단일 공개 복원자료의 회차·문제번호·답 확인. 독립 교차 출처 미확보로 C. 문제 설명과 해설은 자체 작성.",
+    "verificationNote": "단일 공개 복원자료의 회차·문제번호·답 확인. 독립 교차 출처 미확보로 C. 문제 설명과 해설은 자체 작성. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "grading": "self"
   },
   {
@@ -524,7 +532,7 @@
     "language": "Python",
     "title": "함수가 반환한 lambda 호출",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "output",
     "difficulty": "기본",
     "concepts": [
@@ -545,12 +553,16 @@
       {
         "name": "잡코딩 · 산업기사 2022년 3회",
         "url": "https://complainrevolutionist.tistory.com/54"
+      },
+      {
+        "name": "Logic & Coffee · 정보처리산업기사 실기 Python 기출문제 정리",
+        "url": "https://allen8524.tistory.com/91"
       }
     ],
-    "verificationNote": "단일 공개 복원자료의 회차·문제번호·답 확인. 독립 교차 출처 미확보로 C. 문제 설명과 해설은 자체 작성.",
+    "verificationNote": "단일 공개 복원자료의 회차·문제번호·답 확인. 독립 교차 출처 미확보로 C. 문제 설명과 해설은 자체 작성. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "grading": "exact"
   },
   {
@@ -592,7 +604,7 @@
     "language": "Java",
     "title": "논리·시프트·비트 연산 추적",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "output",
     "difficulty": "기본",
     "concepts": [
@@ -614,12 +626,16 @@
       {
         "name": "잡코딩 · 산업기사 2023년 1회",
         "url": "https://complainrevolutionist.tistory.com/193"
+      },
+      {
+        "name": "Logic & Coffee · 정보처리산업기사 실기 Java 기출문제 정리",
+        "url": "https://allen8524.tistory.com/90"
       }
     ],
-    "verificationNote": "단일 공개 복원자료의 회차·문제번호·답 확인. 독립 교차 출처 미확보로 C. 문제 설명과 해설은 자체 작성.",
+    "verificationNote": "단일 공개 복원자료의 회차·문제번호·답 확인. 독립 교차 출처 미확보로 C. 문제 설명과 해설은 자체 작성. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "grading": "exact"
   },
   {
@@ -627,7 +643,7 @@
     "language": "SQL",
     "title": "조건 필터와 중복 제거",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "sql_write",
     "difficulty": "기본",
     "concepts": [
@@ -648,12 +664,16 @@
       {
         "name": "잡코딩 · 산업기사 2023년 2회",
         "url": "https://complainrevolutionist.tistory.com/194"
+      },
+      {
+        "name": "Logic & Coffee · 정보처리산업기사 실기 SQL 기출문제 정리",
+        "url": "https://allen8524.tistory.com/92"
       }
     ],
-    "verificationNote": "단일 공개 복원자료의 SQL 작성 조건·예시 답을 확인. 독립 출처 미확보 신뢰도 C.",
+    "verificationNote": "단일 공개 복원자료의 SQL 작성 조건·예시 답을 확인. 독립 출처 미확보 신뢰도 C. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "grading": "self"
   },
   {
@@ -661,7 +681,7 @@
     "language": "SQL",
     "title": "중복 없는 학년 조회",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "sql_write",
     "difficulty": "기본",
     "concepts": [
@@ -681,12 +701,16 @@
       {
         "name": "잡코딩 · 산업기사 2023년 3회",
         "url": "https://complainrevolutionist.tistory.com/195"
+      },
+      {
+        "name": "Logic & Coffee · 정보처리산업기사 실기 SQL 기출문제 정리",
+        "url": "https://allen8524.tistory.com/92"
       }
     ],
-    "verificationNote": "단일 공개 복원자료의 SQL 작성 조건·예시 답을 확인. 독립 출처 미확보 신뢰도 C.",
+    "verificationNote": "단일 공개 복원자료의 SQL 작성 조건·예시 답을 확인. 독립 출처 미확보 신뢰도 C. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "grading": "self"
   },
   {
@@ -763,7 +787,7 @@
     "language": "SQL",
     "title": "중복을 허용하지 않는 인덱스",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "blank",
     "difficulty": "기본",
     "concepts": [
@@ -784,12 +808,16 @@
       {
         "name": "잡코딩 · 산업기사 2024년 3회",
         "url": "https://complainrevolutionist.tistory.com/208"
+      },
+      {
+        "name": "Logic & Coffee · 정보처리산업기사 실기 SQL 기출문제 정리",
+        "url": "https://allen8524.tistory.com/92"
       }
     ],
-    "verificationNote": "단일 공개 복원자료의 회차·문제번호·답 확인. 독립 교차 출처 미확보로 C. 문제 설명과 해설은 자체 작성.",
+    "verificationNote": "단일 공개 복원자료의 회차·문제번호·답 확인. 독립 교차 출처 미확보로 C. 문제 설명과 해설은 자체 작성. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "grading": "sql_keywords"
   },
   {
@@ -1112,7 +1140,7 @@
   },
   {
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "sql_result",
     "difficulty": "기본",
     "sources": [
@@ -1123,11 +1151,15 @@
       {
         "name": "잡코딩 · 산업기사 2024년 3회 16번",
         "url": "https://complainrevolutionist.tistory.com/208"
+      },
+      {
+        "name": "Logic & Coffee · 정보처리산업기사 실기 SQL 기출문제 정리",
+        "url": "https://allen8524.tistory.com/92"
       }
     ],
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "grading": "exact",
     "id": "R-SQL-0006",
     "language": "SQL",
@@ -1147,7 +1179,7 @@
       "30대 중 35~39세는 0~6명일 수 있습니다.",
       "최소 11명, 최대 11+6=17명입니다."
     ],
-    "verificationNote": "같은 게시자의 두 회차 자료에서 조건과 답이 일치합니다. 독립 출처가 아니므로 신뢰도 C 유지. 설명·풀이 자체 작성."
+    "verificationNote": "같은 게시자의 두 회차 자료에서 조건과 답이 일치합니다. 독립 출처가 아니므로 신뢰도 C 유지. 설명·풀이 자체 작성. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격."
   },
   {
     "sourceType": "reconstructed",
