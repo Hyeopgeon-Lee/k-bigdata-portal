@@ -2945,9 +2945,12 @@
     "code": "SELECT *\nFROM 학생\nWHERE 이름 LIKE ①\nORDER BY 이름 ②;",
     "answer": "'이%' DESC",
     "acceptedAnswers": [
+      "'이%' DESC",
       "이% DESC",
       "'이%', DESC",
-      "이%, DESC"
+      "이%, DESC",
+      "① '이%' ② DESC",
+      "① 이% ② DESC"
     ],
     "explanation": "이로 시작하는 문자열은 LIKE '이%'로 찾고 내림차순은 DESC를 사용합니다.",
     "steps": [
@@ -2969,7 +2972,7 @@
       }
     ],
     "verificationNote": "복수 자료에서 실제 시험 번호 14번, LIKE 이%와 DESC 두 빈칸이 일치합니다.",
-    "grading": "self"
+    "grading": "exact"
   },
   {
     "sourceType": "reconstructed",
