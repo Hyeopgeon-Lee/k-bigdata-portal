@@ -271,6 +271,78 @@
       "publisher": "silgi.kr",
       "status": "C 배열 평균 문제 값·정답 교차검증",
       "license": "공개 학습자료를 사실 검증에 사용."
+    },
+    {
+      "examType": "engineer",
+      "year": 2025,
+      "round": 1,
+      "url": "https://www.sqldpass.com/blog/past-exam/engineer-2025-1",
+      "publisher": "문어CBT",
+      "status": "20문항 번호·정답 및 코딩/SQL 구조 교차검증",
+      "license": "공개 복원자료를 사실 검증에 사용. 원문 대량 복제하지 않음."
+    },
+    {
+      "examType": "engineer",
+      "year": 2025,
+      "round": 1,
+      "url": "https://grandlife.co.kr/2025-info-processing-practical-1/",
+      "publisher": "GrandLife",
+      "status": "코딩·SQL 재구성 코드 및 해설 교차검증",
+      "license": "공개 재구성 자료를 사실 검증에 사용."
+    },
+    {
+      "examType": "engineer",
+      "year": 2025,
+      "round": 1,
+      "url": "https://chobopark.tistory.com/540",
+      "publisher": "ChoboPark",
+      "status": "응시 직후 복원 코드·정답 교차검증",
+      "license": "공개 복원자료를 사실 확인에 사용."
+    },
+    {
+      "examType": "engineer",
+      "year": 2025,
+      "round": 1,
+      "url": "https://djhelloworld.tistory.com/240",
+      "publisher": "DJ Hello World",
+      "status": "C·SQL 문항번호·코드·정답 교차검증",
+      "license": "공개 복원자료를 사실 확인에 사용."
+    },
+    {
+      "examType": "engineer",
+      "year": 2026,
+      "round": 2,
+      "url": "https://www.sqldpass.com/blog/past-exam/engineer-2026-2",
+      "publisher": "문어CBT",
+      "status": "20문항 실제 번호·정답·SQL/C/Java/Python 구조 검증",
+      "license": "공개 복원자료를 사실 확인에 사용. 원문 대량 복제하지 않음."
+    },
+    {
+      "examType": "engineer",
+      "year": 2026,
+      "round": 2,
+      "url": "https://jeongcheogi.edugamja.com/past-exam/2026/2026-2-review",
+      "publisher": "정처기 감자",
+      "status": "실제 시험번호·언어 분포·출제 논란 교차검증",
+      "license": "공개 분석자료를 번호·정답·논란 확인에 사용."
+    },
+    {
+      "examType": "engineer",
+      "year": 2026,
+      "round": 2,
+      "url": "https://jeongcheogi.edugamja.com/community/restoration",
+      "publisher": "정처기 감자 복원 커뮤니티",
+      "status": "응시자 제보 기반 1~20번 문항 매핑 확인",
+      "license": "공개 복원 인덱스를 문항번호 확인에 사용."
+    },
+    {
+      "examType": "engineer",
+      "year": 2026,
+      "round": 2,
+      "url": "https://chobopark.tistory.com/562",
+      "publisher": "ChoboPark",
+      "status": "C·Python·Java 실제 코드 복원 교차검증",
+      "license": "공개 복원자료를 코드 구조 확인에 사용."
     }
   ]
 }
