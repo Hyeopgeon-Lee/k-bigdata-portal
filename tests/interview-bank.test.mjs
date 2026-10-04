@@ -1,12 +1,17 @@
 import assert from 'node:assert/strict';
 import {readFileSync, existsSync, statSync} from 'node:fs';
 import {questions, interviewGroups, interviewJobTags, matchesInterviewCategory, selectRandomQuestions, questionSearchText, interviewSources} from '../js/interview.js';
-import {renderInterviewQuestion} from '../js/interview-ui.js';
+import {renderInterviewQuestion,practiceModeButtonId} from '../js/interview-ui.js';
 import {matches, searchIndex, normalize} from '../js/search.js';
 import {jobs} from '../js/jobs.js';
 import {docs} from '../js/docs.js';
 
 const counts = {'자료구조·알고리즘':15,'Java·객체지향':18,'데이터베이스·SQL':18,'운영체제·Linux':14,'네트워크·Web·HTTP':17,'Spring Boot·Backend':18,'Git·GitHub':8,'Docker·Kubernetes':18,'DevOps·Cloud Native·MSA':14,'AI·데이터 기초':10};
+assert.equal(practiceModeButtonId(null,null),'show-all');
+assert.equal(practiceModeButtonId({mode:'one'},null),'random-one');
+assert.equal(practiceModeButtonId({mode:'ten',items:[questions[0]]},null),'random-ten');
+assert.equal(practiceModeButtonId({mode:'ten',complete:true},null),'random-ten');
+assert.equal(practiceModeButtonId(null,questions[0]),null);
 assert.equal(questions.length,150);
 assert.deepEqual(interviewGroups,Object.keys(counts));
 assert.equal(new Set(questions.map(q=>q.id)).size,150);

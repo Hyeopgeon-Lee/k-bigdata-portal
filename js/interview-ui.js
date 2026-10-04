@@ -17,6 +17,9 @@ export function renderInterviewQuestion(item, practice = false) {
     (!practice ? '<a class="question-permalink" href="interview.html?id=' + esc(item.id) + '">이 문제만 연습하기 →<span class="sr-only"> · ' + esc(item.code) + '</span></a>' : '') + '</article>';
 }
 
+// Track the requested mode, not the number available in a filtered practice pool.
+export const practiceModeButtonId = (session, direct) => direct ? null : session ? (session.mode === "one" ? "random-one" : "random-ten") : "show-all";
+
 export function initInterview() {
   const root = document.querySelector("#items"), detail = document.querySelector("#detail");
   const filters = document.querySelector("#filters"), roles = document.querySelector("#job-filters");
@@ -48,6 +51,13 @@ export function initInterview() {
     filterButtons(roles, ["전체", ...interviewJobTags], job, "job");
     document.querySelector("#active-interview-filter").textContent = active !== "전체" && !interviewGroups.includes(active) ? "기존 연결 분야: " + active + " · 분야 버튼을 선택하면 해당 전체 학습 분야로 전환합니다." : "";
     const available = pool();
+    const selectedMode = practiceModeButtonId(session, direct);
+    for (const id of ["random-one", "random-ten", "show-all"]) {
+      const button = document.querySelector("#" + id), selected = id === selectedMode;
+      button.classList.toggle("button-primary", selected);
+      button.classList.toggle("button-secondary", !selected);
+      button.setAttribute("aria-pressed", String(selected));
+    }
     document.querySelector("#random-one").disabled = !available.length;
     document.querySelector("#random-ten").disabled = !available.length;
     if (session?.complete) {
@@ -56,7 +66,7 @@ export function initInterview() {
       if (focusQuestion) {const heading=document.querySelector("#practice-done");heading.focus({preventScroll:true});heading.scrollIntoView({block:"start",behavior:"auto"});}
     } else if (session || direct) {
       const item = direct || session.items[session.index];
-      root.innerHTML = '<section class="practice-session" aria-label="한 문제씩 말하기 연습"><div class="practice-progress"><p>' + (direct ? "선택한 기술면접 문제" : session.items.length === 1 ? "랜덤 기술면접" : "모의 기술면접") + '</p>' + (!direct ? '<strong>' + (session.index + 1) + ' / ' + session.items.length + '</strong>' : '') + '</div><p class="hint">먼저 30초 정도 자신의 말로 답해보고, 답변과 꼬리질문을 확인하세요.</p>' + renderInterviewQuestion(item, true) + '<div class="practice-actions">' + (!direct ? '<button type="button" class="button button-primary" data-action="next">' + (session.items.length === 1 ? "다른 랜덤 문제" : session.index === session.items.length - 1 ? "연습 완료" : "다음 문제") + '</button>' : '') + '<button type="button" class="button button-secondary" data-action="all">전체 문제 보기</button></div></section>';
+root.innerHTML = '<section class="practice-session" aria-label="한 문제씩 말하기 연습"><div class="practice-progress"><p>' + (direct ? "선택한 기술면접 문제" : session.mode === "one" ? "랜덤 기술면접" : "모의 기술면접") + '</p>' + (!direct ? '<strong>' + (session.index + 1) + ' / ' + session.items.length + '</strong>' : '') + '</div><p class="hint">먼저 30초 정도 자신의 말로 답해보고, 답변과 꼬리질문을 확인하세요.</p>' + renderInterviewQuestion(item, true) + '<div class="practice-actions">' + (!direct ? '<button type="button" class="button button-primary" data-action="next">' + (session.mode === "one" ? "다른 랜덤 문제" : session.index === session.items.length - 1 ? "연습 완료" : "다음 문제") + '</button>' : '') + '<button type="button" class="button button-secondary" data-action="all">전체 문제 보기</button></div></section>';
       status.textContent = direct ? "선택한 문제 1개 · " + item.code : "필터 결과 " + available.length + "개에서 선택 · " + (session.index + 1) + " / " + session.items.length;
       if (focusQuestion) {const heading=document.querySelector("#practice-question-heading");heading.focus({preventScroll:true});heading.scrollIntoView({block:"start",behavior:"auto"});}
     } else {
@@ -70,7 +80,7 @@ export function initInterview() {
     let candidates = count === 1 && available.length > 1 ? available.filter(q => q.id !== lastRandom) : available;
     const picked = selectRandomQuestions(candidates, count);
     clearPractice();
-    if (picked.length) {session = {items:picked, index:0, complete:false}; lastRandom = picked[0].id;}
+    if (picked.length) {session = {items:picked, index:0, complete:false, mode:count === 1 ? "one" : "ten"}; lastRandom = picked[0].id;}
     render(true);
   }
   function reset() {active = "전체"; job = "전체"; query = ""; input.value = ""; clearPractice(); render();}
@@ -99,7 +109,7 @@ export function initInterview() {
     if (button.dataset.action === "reset") reset();
     if (button.dataset.action === "restart") start(10);
     if (button.dataset.action === "next" && session) {
-      if (session.items.length === 1) start(1);
+      if (session.mode === "one") start(1);
       else {session.index++; session.complete = session.index >= session.items.length; render(true);}
     }
   });
