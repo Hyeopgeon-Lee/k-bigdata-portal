@@ -5677,7 +5677,7 @@
         "url": "https://complainrevolutionist.tistory.com/193"
       }
     ],
-    "verificationNote": "산업기사 2023-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "verificationNote": "산업기사 2023-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 2026-10-05 추가 웹 교차검증을 수행했으나 동일 문항의 독립 출처를 확보하지 못해 C등급을 의도적으로 유지함.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
@@ -5748,7 +5748,7 @@
         "url": "https://complainrevolutionist.tistory.com/193"
       }
     ],
-    "verificationNote": "산업기사 2023-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "verificationNote": "산업기사 2023-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 2026-10-05 추가 웹 교차검증을 수행했으나 동일 문항의 독립 출처를 확보하지 못해 C등급을 의도적으로 유지함.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
@@ -6378,7 +6378,7 @@
         "url": "https://complainrevolutionist.tistory.com/206"
       }
     ],
-    "verificationNote": "산업기사 2024-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "verificationNote": "산업기사 2024-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 2026-10-05 추가 웹 교차검증을 수행했으나 동일 문항의 독립 출처를 확보하지 못해 C등급을 의도적으로 유지함.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
@@ -6982,7 +6982,7 @@
         "url": "https://gfile.gilbut.co.kr/gilbut/bookdata/BN004729/preview/files/basic-html/page25.html"
       }
     ],
-    "verificationNote": "출판사 공개 미리보기에서 2025년 3회 1번 문제 코드와 정답 none을 직접 확인. 동일 출판사 자료이므로 독립 교차출처로 보지 않고 신뢰도 C 유지.",
+    "verificationNote": "출판사 공개 미리보기에서 2025년 3회 1번 문제 코드와 정답 none을 직접 확인. 동일 출판사 자료이므로 독립 교차출처로 보지 않고 신뢰도 C 유지. 2026-10-05 추가 웹 교차검증을 수행했으나 동일 문항의 독립 출처를 확보하지 못해 C등급을 의도적으로 유지함.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
@@ -7025,7 +7025,7 @@
         "url": "https://gfile.gilbut.co.kr/gilbut/bookdata/BN004729/preview/files/basic-html/page25.html"
       }
     ],
-    "verificationNote": "출판사 공개 미리보기에서 2025년 3회 5번 SQL과 정답 CHECK를 직접 확인. 동일 출판사 자료이므로 신뢰도 C.",
+    "verificationNote": "출판사 공개 미리보기에서 2025년 3회 5번 SQL과 정답 CHECK를 직접 확인. 동일 출판사 자료이므로 신뢰도 C. 2026-10-05 추가 웹 교차검증을 수행했으나 동일 문항의 독립 출처를 확보하지 못해 C등급을 의도적으로 유지함.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
@@ -7063,7 +7063,7 @@
         "url": "https://gfile.gilbut.co.kr/gilbut/bookdata/BN004729/preview/files/basic-html/page26.html"
       }
     ],
-    "verificationNote": "출판사 공개 미리보기에서 2025년 3회 6번 C 코드와 정답 3을 직접 확인. 공백과 main 반환형만 정규화했으며 신뢰도 C.",
+    "verificationNote": "출판사 공개 미리보기에서 2025년 3회 6번 C 코드와 정답 3을 직접 확인. 공백과 main 반환형만 정규화했으며 신뢰도 C. 2026-10-05 추가 웹 교차검증을 수행했으나 동일 문항의 독립 출처를 확보하지 못해 C등급을 의도적으로 유지함.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
