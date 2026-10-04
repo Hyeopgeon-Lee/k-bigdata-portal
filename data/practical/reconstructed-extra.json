@@ -6745,5 +6745,124 @@
     "updatedAt": "2026-10-05",
     "grading": "exact",
     "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-PY-0003",
+    "language": "Python",
+    "title": "딕셔너리 get의 기본값 반환",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "기본",
+    "concepts": [
+      "dict.get",
+      "딕셔너리",
+      "기본값"
+    ],
+    "question": "다음 Python 코드에서 존재하지 않는 키를 기본값과 함께 조회했을 때 출력 결과를 쓰세요.",
+    "code": "data={\"name\":\"ted\",\"phone\":\"0101234\",\"birth\":\"0909\"}\nprint(data.get(\"grade\",\"none\"))",
+    "answer": "none",
+    "explanation": "grade 키가 딕셔너리에 없으므로 get의 두 번째 인수로 지정한 기본값 none이 반환됩니다.",
+    "steps": [
+      "딕셔너리에는 name, phone, birth 키만 있습니다.",
+      "grade 키는 존재하지 않습니다.",
+      "get(key, default)는 키가 없으면 default를 반환하므로 none이 출력됩니다."
+    ],
+    "sources": [
+      {
+        "name": "시나공 2026 정보처리산업기사 실기 공개 미리보기 · 2025년 3회 문제 1",
+        "url": "https://gfile.gilbut.co.kr/gilbut/bookdata/BN004729/preview/files/basic-html/page23.html"
+      },
+      {
+        "name": "시나공 공개 미리보기 · 2025년 3회 정답/해설",
+        "url": "https://gfile.gilbut.co.kr/gilbut/bookdata/BN004729/preview/files/basic-html/page25.html"
+      }
+    ],
+    "verificationNote": "출판사 공개 미리보기에서 2025년 3회 1번 문제 코드와 정답 none을 직접 확인. 동일 출판사 자료이므로 독립 교차출처로 보지 않고 신뢰도 C 유지.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact"
+  },
+  {
+    "id": "R-IND-SQL-0012",
+    "language": "SQL",
+    "title": "CHECK 제약조건으로 성별 허용값 제한",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "blank",
+    "difficulty": "기본",
+    "concepts": [
+      "CREATE TABLE",
+      "CONSTRAINT",
+      "CHECK",
+      "IN"
+    ],
+    "question": "Students 테이블의 gender 열에 m 또는 f만 입력할 수 있도록 제약조건을 정의할 때 [빈칸]에 들어갈 SQL 예약어를 쓰세요.",
+    "code": "CREATE TABLE Students (\n    std_ID INT PRIMARY KEY,\n    name VARCHAR(20) NOT NULL,\n    major VARCHAR(20) REFERENCES Info(major),\n    gender VARCHAR(1),\n    CONSTRAINT const_gd [빈칸] (gender IN ('m','f'))\n);",
+    "answer": "CHECK",
+    "acceptedAnswers": [
+      "check",
+      "Check"
+    ],
+    "explanation": "특정 열의 허용값을 조건식으로 제한할 때 CHECK 제약조건을 사용합니다.",
+    "steps": [
+      "const_gd는 제약조건 이름입니다.",
+      "gender 값은 m 또는 f 중 하나여야 합니다.",
+      "조건식 검증 제약조건은 CHECK이므로 빈칸은 CHECK입니다."
+    ],
+    "sources": [
+      {
+        "name": "시나공 2026 정보처리산업기사 실기 공개 미리보기 · 2025년 3회 문제 5",
+        "url": "https://gfile.gilbut.co.kr/gilbut/bookdata/BN004729/preview/files/basic-html/page24.html"
+      },
+      {
+        "name": "시나공 공개 미리보기 · 2025년 3회 정답/해설",
+        "url": "https://gfile.gilbut.co.kr/gilbut/bookdata/BN004729/preview/files/basic-html/page25.html"
+      }
+    ],
+    "verificationNote": "출판사 공개 미리보기에서 2025년 3회 5번 SQL과 정답 CHECK를 직접 확인. 동일 출판사 자료이므로 신뢰도 C.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact"
+  },
+  {
+    "id": "R-IND-C-0029",
+    "language": "C",
+    "title": "배열 포인터의 현재값과 이전값 합",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "기본",
+    "concepts": [
+      "배열",
+      "포인터 산술",
+      "역참조"
+    ],
+    "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
+    "code": "#include <stdio.h>\nint main(void){\n    int k[]={1,2,3};\n    int *p=k+1;\n    printf(\"%d\", *p + *(p-1));\n    return 0;\n}",
+    "answer": "3",
+    "explanation": "p는 배열의 두 번째 원소 2를 가리키고 p-1은 첫 번째 원소 1을 가리키므로 합은 3입니다.",
+    "steps": [
+      "k+1은 k[1]의 주소이므로 *p는 2입니다.",
+      "p-1은 k[0]을 가리키므로 *(p-1)은 1입니다.",
+      "2+1=3입니다."
+    ],
+    "sources": [
+      {
+        "name": "시나공 2026 정보처리산업기사 실기 공개 미리보기 · 2025년 3회 문제 6",
+        "url": "https://gfile.gilbut.co.kr/gilbut/bookdata/BN004729/preview/files/basic-html/page24.html"
+      },
+      {
+        "name": "시나공 공개 미리보기 · 2025년 3회 문제 6 정답/해설",
+        "url": "https://gfile.gilbut.co.kr/gilbut/bookdata/BN004729/preview/files/basic-html/page26.html"
+      }
+    ],
+    "verificationNote": "출판사 공개 미리보기에서 2025년 3회 6번 C 코드와 정답 3을 직접 확인. 공백과 main 반환형만 정규화했으며 신뢰도 C.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact"
   }
 ]
