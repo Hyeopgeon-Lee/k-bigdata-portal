@@ -5445,7 +5445,7 @@
     "language": "C",
     "title": "2차원 배열 전체 합",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "output",
     "difficulty": "실전",
     "concepts": [
@@ -5463,9 +5463,13 @@
       {
         "name": "잡코딩 · 산업기사 2022-3 복원자료",
         "url": "https://complainrevolutionist.tistory.com/54"
+      },
+      {
+        "name": "시나공 공식 Q&A · 2022년 3회 산업기사 6번 정답 확인",
+        "url": "https://www.sinagong.co.kr/community/001002002/book-qnas/281879"
       }
     ],
-    "verificationNote": "산업기사 2022-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "verificationNote": "산업기사 2022-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 기출·해설 자료에서 동일 코드 구조와 정답을 재확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
@@ -5477,7 +5481,7 @@
     "language": "C",
     "title": "50 이하 7의 배수 합",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "output",
     "difficulty": "실전",
     "concepts": [
@@ -5496,9 +5500,13 @@
       {
         "name": "잡코딩 · 산업기사 2022-3 복원자료",
         "url": "https://complainrevolutionist.tistory.com/54"
+      },
+      {
+        "name": "공부 일기 · 정보처리산업기사 2022년 3회 후기/복원",
+        "url": "https://1273000982.tistory.com/171"
       }
     ],
-    "verificationNote": "산업기사 2022-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "verificationNote": "산업기사 2022-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 기출·해설 자료에서 동일 코드 구조와 정답을 재확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
@@ -5547,7 +5555,7 @@
     "language": "C",
     "title": "퀵정렬 pivot 중앙 인덱스",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "blank",
     "difficulty": "실전",
     "concepts": [
@@ -5566,9 +5574,13 @@
       {
         "name": "잡코딩 · 산업기사 2023-1 복원자료",
         "url": "https://complainrevolutionist.tistory.com/193"
+      },
+      {
+        "name": "BHHer · C언어 기출문제 정리 2022~2024",
+        "url": "https://bhher.tistory.com/99"
       }
     ],
-    "verificationNote": "산업기사 2023-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "verificationNote": "산업기사 2023-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 기출·해설 자료에서 동일 코드 구조와 정답을 재확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
@@ -5580,7 +5592,7 @@
     "language": "C",
     "title": "1부터 n까지 재귀 합",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "blank",
     "difficulty": "실전",
     "concepts": [
@@ -5598,9 +5610,13 @@
       {
         "name": "잡코딩 · 산업기사 2023-1 복원자료",
         "url": "https://complainrevolutionist.tistory.com/193"
+      },
+      {
+        "name": "BHHer · C언어 기출문제 정리 2022~2024",
+        "url": "https://bhher.tistory.com/99"
       }
     ],
-    "verificationNote": "산업기사 2023-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "verificationNote": "산업기사 2023-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 기출·해설 자료에서 동일 코드 구조와 정답을 재확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
@@ -6108,7 +6124,7 @@
     "language": "C",
     "title": "대문자 개수 세기",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "output",
     "difficulty": "실전",
     "concepts": [
@@ -6127,9 +6143,13 @@
       {
         "name": "잡코딩 · 산업기사 2024-1 복원자료",
         "url": "https://complainrevolutionist.tistory.com/206"
+      },
+      {
+        "name": "BHHer · C언어 기출문제 정리 2022~2024",
+        "url": "https://bhher.tistory.com/99"
       }
     ],
-    "verificationNote": "산업기사 2024-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "verificationNote": "산업기사 2024-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 기출·해설 자료에서 동일 코드 구조와 정답을 재확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
@@ -6326,7 +6346,7 @@
     "language": "C",
     "title": "입력 문자열 두 개 역순 출력",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "output",
     "difficulty": "실전",
     "concepts": [
@@ -6346,9 +6366,13 @@
       {
         "name": "잡코딩 · 산업기사 2024-1 복원자료",
         "url": "https://complainrevolutionist.tistory.com/206"
+      },
+      {
+        "name": "BHHer · C언어 기출문제 정리 2022~2024",
+        "url": "https://bhher.tistory.com/99"
       }
     ],
-    "verificationNote": "산업기사 2024-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "verificationNote": "산업기사 2024-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 기출·해설 자료에서 동일 코드 구조와 정답을 재확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
@@ -6362,7 +6386,7 @@
     "language": "C",
     "title": "999가 나누어지는 첫 증가값",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "output",
     "difficulty": "실전",
     "concepts": [
@@ -6381,9 +6405,13 @@
       {
         "name": "잡코딩 · 산업기사 2024-1 복원자료",
         "url": "https://complainrevolutionist.tistory.com/206"
+      },
+      {
+        "name": "BHHer · C언어 기출문제 정리 2022~2024",
+        "url": "https://bhher.tistory.com/99"
       }
     ],
-    "verificationNote": "산업기사 2024-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "verificationNote": "산업기사 2024-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 기출·해설 자료에서 동일 코드 구조와 정답을 재확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
@@ -6690,7 +6718,7 @@
     "language": "C",
     "title": "union 멤버 합산",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "output",
     "difficulty": "실전",
     "concepts": [
@@ -6710,9 +6738,13 @@
       {
         "name": "잡코딩 · 산업기사 2024-3 복원자료",
         "url": "https://complainrevolutionist.tistory.com/208"
+      },
+      {
+        "name": "myCompiler · 2024년 3회 정보처리산업기사 C 4번",
+        "url": "https://www.mycompiler.io/view/4kWMIhAKisw"
       }
     ],
-    "verificationNote": "산업기사 2024-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "verificationNote": "산업기사 2024-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 기출·해설 자료에서 동일 코드 구조와 정답을 재확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
@@ -6826,7 +6858,7 @@
     "language": "C",
     "title": "이중 포인터 배열 변환",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "output",
     "difficulty": "실전",
     "concepts": [
@@ -6845,9 +6877,13 @@
       {
         "name": "잡코딩 · 산업기사 2024-3 복원자료",
         "url": "https://complainrevolutionist.tistory.com/208"
+      },
+      {
+        "name": "BHHer · 2024년 3회 이중포인터 기출 해설",
+        "url": "https://bhher.tistory.com/121"
       }
     ],
-    "verificationNote": "산업기사 2024-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "verificationNote": "산업기사 2024-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 기출·해설 자료에서 동일 코드 구조와 정답을 재확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
