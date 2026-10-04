@@ -1,7 +1,7 @@
 /* Shared portal UX: reuse navy/blue tokens; no new theme or framework. */
 :root{--portal-header-height:76px;--study-header-height:56px}
-.learning-cross-nav{display:flex;gap:8px;overflow-x:auto;white-space:nowrap;padding:12px 2px;scroll-padding:2px}
-.learning-cross-nav a{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 14px;border:1px solid var(--color-border);border-radius:9px;background:white;color:var(--color-primary);font-size:14px;font-weight:650}
+.learning-cross-nav{display:flex;flex-wrap:wrap;gap:8px;overflow:visible;white-space:normal;padding:12px 2px;scroll-padding:2px}
+.learning-cross-nav a{flex:0 1 auto;max-width:100%;display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 14px;border:1px solid var(--color-border);border-radius:9px;background:white;color:var(--color-primary);font-size:14px;font-weight:650}
 .learning-cross-nav a[aria-current=page]{background:var(--color-primary);border-color:var(--color-primary);color:white}
 .portal-mobile-home{display:none}
 .quick-launch{margin-top:22px}.quick-launch h2{font-size:20px;margin:0 0 12px}
@@ -87,7 +87,7 @@ body[data-guide-page] .guide-cta{margin-top:24px;background:#f5f7fb}
  body[data-portal-home] .service-tags{margin:0 0 16px}
  body[data-portal-home] .service-tags span{font-size:13px}
  body[data-portal-home] .card-link{position:static;font-size:15px;min-height:44px;display:flex;align-items:center;margin-top:8px}
- .learning-cross-nav{padding-block:8px}
+ .learning-cross-nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));padding-block:8px}.learning-cross-nav a{min-width:0;padding-inline:6px}
  .page-hero .back-link,.page-hero .section-kicker{display:none}
  .cert-detail .cert-importance{padding:16px;margin-block:16px}
  .ux-disclosure>.job-section>h3,.ux-disclosure>.cert-preparation>h3{display:none}

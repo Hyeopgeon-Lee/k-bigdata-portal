@@ -1,6 +1,6 @@
 /* Role guide only: reuse existing portal cards, navy tokens and disclosures. */
-body[data-page=jobs] .filters{flex-wrap:nowrap;overflow-x:auto;padding:6px 2px 12px}
-body[data-page=jobs] .filters button{flex:0 0 auto;white-space:nowrap}
+body[data-page=jobs] .filters{flex-wrap:wrap;overflow:visible;padding:6px 2px 12px}
+body[data-page=jobs] .filters button{flex:0 1 auto;max-width:100%;white-space:normal}
 body[data-page=jobs] .resource-card .tags span{font-size:13px}
 .job-fit{margin-bottom:24px}.job-fit-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .job-fit-grid a{display:flex;flex-direction:column;gap:8px;padding:16px;min-height:48px;border:1px solid var(--color-border);border-radius:10px;color:var(--color-primary);line-height:1.7}

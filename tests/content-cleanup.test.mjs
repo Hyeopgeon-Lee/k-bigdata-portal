@@ -30,6 +30,12 @@ assert.equal(questions.length,150);
 assert.equal(jobs.length,11);
 assert.equal(certifications.length,12);
 assert.equal(docs.length,40);
+// Navigation wraps; only code/table content keeps independent horizontal scrolling.
+for(const file of ['css/jobs.css','css/learning.css','css/portal-ux.css','css/practical.css']){
+ assert.ok(!read(file).includes('overflow-x:auto'),file+' has a horizontal navigation strip');
+}
+assert.ok(read('css/practical.css').includes('.bank-nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))'));
+assert.ok(read('css/practical.css').includes('.code-scroll,.table-scroll{max-width:100%;overflow:auto'));
 for(const q of questions)for(const id of q.sourceIds)assert.ok(interviewSources[id]);
 assert.equal(new Set(selectRandomQuestions(questions,10).map(q=>q.id)).size,10);
 for(const page of ['index','jobs','certifications','docs','interview','practical','project-guide']){
