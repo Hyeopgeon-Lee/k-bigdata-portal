@@ -6,11 +6,41 @@ import {matches} from "./search.js";
 const $=selector=>document.querySelector(selector),root=$("#bank-content"),status=$("#bank-status");
 let bank=[],view="home",current=null,attempt=null,timer=null,queue=[],queueIndex=0,aliases={},pageLimit=24,queueKind="random";
 const filters={exam:"all",language:"all",source:"reconstructed",difficulty:"all",type:"all",sort:"latest",query:"",completion:"unseen",year:"all",round:"all"};
-const compactLabels={reconstructed:"기출 복원",normalized:"기출 기반 · 학습",transformed:"기출 기반 · 변형",practice:"추가 연습"};
+const compactLabels={reconstructed:"복원기출",normalized:"기출유형 연습",transformed:"기출 변형",practice:"추가 연습"};
 const badge=(text,cls="")=>'<span class="badge '+cls+'">'+esc(text)+'</span>';
 const button=(action,label,extra="")=>'<button type="button" class="button button-secondary" data-action="'+action+'" '+extra+'>'+esc(label)+'</button>';
 const historyLabel=h=>examLabels[h.examType]+" "+h.year+"년 "+h.round+"회"+(h.questionNumber?" · "+h.questionNumber+"번":"");
 function metadata(q){return '<div class="bank-badges">'+badge(compactLabels[q.sourceType],"source-"+q.sourceType)+badge(q.language)+badge(q.difficulty)+'</div>';}
+function variantDetail(q){
+ const sameTitle=bank.filter(item=>item.title===q.title).length;
+ if(sameTitle<2)return "";
+ const update=q.question.match(/사원번호\s*(\d+).*?급여를\s*(\d+)/);
+ if(update)return "사원 "+update[1]+" → 급여 "+update[2];
+ const insert=q.question.match(/각각\s*(\d+)\s*,\s*'([^']+)'/);
+ if(insert)return insert[1]+" · "+insert[2]+" 입력";
+ const array=String(q.code||"").match(/=\s*(\{\{[^;\n]+?\}\}|\{[^;\n]+?\})\s*;/);
+ if(array){
+   const values=array[1].replace(/[{}]/g," ").replace(/\s*,\s*/g," · ").replace(/\s+/g," ").trim();
+   return "초기값 "+values.slice(0,44);
+ }
+ return "";
+}
+function cardTitle(q){const detail=variantDetail(q);return detail?q.title+" · "+detail:q.title;}
+function solveHeading(q){
+ const h=[...q.history].sort((a,b)=>b.year*10+b.round-a.year*10-a.round)[0];
+ if(q.sourceType==="reconstructed"&&h)return historyLabel(h);
+ return q.language+" · "+(typeLabels[q.questionType]||"실기")+" 문제";
+}
+function displayCode(q){
+ const code=String(q.code||"");
+ if(q.language!=="SQL")return code;
+ return code.replace(/\s+(INNER JOIN|LEFT JOIN|RIGHT JOIN|FULL JOIN|CROSS JOIN|FROM|WHERE|GROUP BY|HAVING|ORDER BY|UNION ALL|UNION|SET|VALUES)\s+/gi,"\n$1 ");
+}
+function updateCodeScrollHint(){
+ const region=document.querySelector(".code-scroll"),hint=document.querySelector(".code-scroll-hint");
+ if(!region||!hint)return;
+ hint.hidden=region.scrollWidth<=region.clientWidth+2;
+}
 function latest(q){return Math.max(0,...q.history.map(h=>h.year*10+h.round));}
 function storageNotice(){ $("#storage-status").textContent=storageAvailable?"":"브라우저 저장소를 사용할 수 없어 이번 화면의 임시 기록만 유지합니다. 새로고침·탭 종료 시 기록이 사라질 수 있습니다."; }
 function basicPool(){return bank.filter(q=>matchesExam(q,filters.exam,bank)&&(filters.language==="all"||q.language===filters.language));}
@@ -23,7 +53,7 @@ function sorted(items){
 }
 function card(q,extra=""){
  const h=[...q.history].sort((a,b)=>b.year*10+b.round-a.year*10-a.round)[0];
- return '<article class="bank-card">'+metadata(q)+(h?'<small>'+esc(historyLabel(h))+'</small>':'')+'<h2>'+esc(q.title)+'</h2>'+extra+button("open",view==="wrong"?"다시 풀기":"문제 풀기",'data-id="'+esc(q.id)+'"')+'</article>';
+ return '<article class="bank-card">'+metadata(q)+(h?'<small>'+esc(historyLabel(h))+'</small>':'')+'<h2>'+esc(cardTitle(q))+'</h2>'+extra+button("open",view==="wrong"?"다시 풀기":"문제 풀기",'data-id="'+esc(q.id)+'"')+'</article>';
 }
 function stopTimer(){if(timer)clearInterval(timer);timer=null;}
 function setUrl(id=null){const url=new URL(location.href);if(id)url.searchParams.set("id",id);else url.searchParams.delete("id");history.replaceState(null,"",url);}
@@ -102,7 +132,9 @@ function renderQuestion(){
  const q=current,submitted=!!attempt.submittedAt;
  const multiline=q.questionType==="sql_write"||q.answer.includes("\n"),attributes='id="my-answer" required maxlength="10000" autocomplete="off" spellcheck="false" '+(submitted?'disabled':'');
  const input=multiline?'<textarea '+attributes+' rows="'+(q.questionType==="sql_write"?6:2)+'">'+esc(attempt.answer||"")+'</textarea>':'<input '+attributes+' type="text" value="'+esc(attempt.answer||"")+'">';
- root.innerHTML='<article class="bank-solve"><div class="solve-progress">'+button("back","← 학습 시작")+'<strong>'+(queue.length?(queueIndex+1)+' / '+queue.length:'문제풀이')+'</strong><span>'+esc(q.language)+' · '+esc(q.difficulty)+'</span></div><h2 id="solve-title" tabindex="-1">'+esc(q.title)+'</h2>'+metadata(q)+'<p class="solve-question">'+esc(q.question.replace(" 공개 복원자료 간 초기 배열 순서 차이가 있어 아래 코드의 초기값을 기준으로 풀이합니다.",""))+'</p>'+tablesHTML(q)+(q.code?'<div class="code-scroll" tabindex="0" role="region" aria-label="'+esc(q.language)+' 문제 코드 · 좌우 스크롤 가능"><pre><code>'+highlightCode(q.code)+'</code></pre></div>':'')+(q.inputData?'<h3>입력 데이터</h3><pre class="input-data">'+esc(q.inputData)+'</pre>':'')+'<form id="answer-form"><label for="my-answer">내가 생각한 정답</label>'+input+'<p class="hint">'+(q.grading==="self"?'SQL은 예시답과 직접 비교해 판정합니다.':'출력의 대소문자와 줄바꿈을 확인하세요.')+'</p></form><p id="gate-status" role="status"></p><div id="answer-result"></div><div class="solve-actions"><p class="bank-timer" id="solve-timer" role="timer" aria-live="off"></p><button id="submit-answer" class="button button-primary" form="answer-form" type="submit" disabled>내 답 확정</button><button id="reveal-answer" class="button button-primary" type="button" data-action="reveal" disabled hidden>풀이·정답 확인</button><button id="next-answer" class="button button-primary" type="button" data-action="next" hidden>다음 문제</button></div></article>';
+ const shownCode=displayCode(q);
+ root.innerHTML='<article class="bank-solve"><div class="solve-progress">'+button("back","← 학습 시작")+'<strong>'+(queue.length?(queueIndex+1)+' / '+queue.length:'문제풀이')+'</strong><span>'+esc(q.language)+' · '+esc(q.difficulty)+'</span></div><h2 id="solve-title" tabindex="-1">'+esc(solveHeading(q))+'</h2>'+metadata(q)+'<p class="solve-question">'+esc(q.question.replace(" 공개 복원자료 간 초기 배열 순서 차이가 있어 아래 코드의 초기값을 기준으로 풀이합니다.",""))+'</p>'+tablesHTML(q)+(q.code?'<div class="code-scroll" tabindex="0" role="region" aria-label="'+esc(q.language)+' 문제 코드 · 좌우 스크롤 가능"><pre><code>'+highlightCode(shownCode)+'</code></pre></div><p class="code-scroll-hint" hidden aria-hidden="true">← 좌우로 밀어 코드 보기 →</p>':'')+(q.inputData?'<h3>입력 데이터</h3><pre class="input-data">'+esc(q.inputData)+'</pre>':'')+'<form id="answer-form"><label for="my-answer">내가 생각한 정답</label>'+input+'<p class="hint">'+(q.grading==="self"?'SQL은 예시답과 직접 비교해 판정합니다.':'출력의 대소문자와 줄바꿈을 확인하세요.')+'</p></form><p id="gate-status" role="status"></p><div id="answer-result"></div><div class="solve-actions"><p class="bank-timer" id="solve-timer" role="timer" aria-live="off"></p><button id="submit-answer" class="button button-primary" form="answer-form" type="submit" disabled>내 답 확정</button><button id="reveal-answer" class="button button-primary" type="button" data-action="reveal" disabled hidden>풀이·정답 확인</button><button id="next-answer" class="button button-primary" type="button" data-action="next" hidden>다음 문제</button></div></article>';
+ requestAnimationFrame(updateCodeScrollHint);
  $("#answer-form").addEventListener("submit",submitAnswer);
  $("#my-answer").addEventListener("input",()=>{if(!attempt.submittedAt){attempt.answer=$("#my-answer").value;saveSession(q.id,attempt);updateGate();}});
  updateGate();timer=setInterval(updateGate,500);
@@ -134,7 +166,7 @@ function revealAnswer(){
  const q=current,similar=bank.filter(item=>item.originalQuestionId===q.id||q.originalQuestionId&&item.originalQuestionId===q.originalQuestionId&&item.id!==q.id);
  const extraExplanation=q.explanation==="공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다."?"":q.explanation;
  const sourceDetails=q.history.length||q.sources.length?'<details class="bank-sources"><summary>출제 이력 · 출처</summary>'+(q.history.length?'<ul>'+q.history.map(h=>'<li>'+esc(historyLabel(h))+'</li>').join("")+'</ul>':'')+(q.sources.length?'<ul>'+q.sources.map(s=>'<li><a href="'+esc(s.url)+'" target="_blank" rel="noopener noreferrer">'+esc(s.name==="데이터셋 참고 출처 (문항·회차 일치 미검증)"?"학습 자료":s.name)+' ↗<span class="sr-only"> 외부 자료, 새 창</span></a></li>').join("")+'</ul>':'')+'</details>':'';
- $("#answer-result").innerHTML='<section class="bank-result"><h3 tabindex="-1" id="result-heading">'+(attempt.correct===true?'정답입니다':attempt.correct===false?'오답입니다 · 오답노트에 저장했습니다':'예시 답안과 직접 비교하세요')+'</h3><div class="answer-pair"><div><h4>내 답</h4><pre>'+esc(attempt.answer)+'</pre></div><div><h4>'+(q.grading==="self"?'예시 정답':'정답')+'</h4><pre>'+esc(q.answer)+'</pre></div></div>'+(q.grading==="self"?'<p>동등한 SQL은 정답으로 기록할 수 있습니다.</p><div class="practice-actions">'+button("self-correct","정답으로 기록")+button("self-wrong","오답으로 기록")+'</div>':'')+'<h3>왜 이런 답인가?</h3><ol class="bank-steps">'+q.steps.map(step=>'<li>'+esc(step)+'</li>').join("")+'</ol>'+(extraExplanation?'<details><summary>추가 설명</summary><p>'+esc(extraExplanation)+'</p></details>':'')+'<div class="practice-actions">'+button("retry","다시 풀기")+similar.slice(0,3).map(s=>button("similar","비슷한 문제",'data-id="'+esc(s.id)+'" aria-label="'+esc(s.title)+' 비슷한 문제"')).join("")+'</div>'+sourceDetails+'</section>';
+ $("#answer-result").innerHTML='<section class="bank-result"><h3 tabindex="-1" id="result-heading">'+(attempt.correct===true?'정답입니다':attempt.correct===false?'오답입니다 · 오답노트에 저장했습니다':'예시 답안과 직접 비교하세요')+'</h3><div class="answer-pair"><div><h4>내 답</h4><pre>'+esc(attempt.answer)+'</pre></div><div><h4>'+(q.grading==="self"?'예시 정답':'정답')+'</h4><pre>'+esc(q.answer)+'</pre></div></div>'+(q.grading==="self"?'<p>동등한 SQL은 정답으로 기록할 수 있습니다.</p><div class="practice-actions">'+button("self-correct","정답으로 기록")+button("self-wrong","오답으로 기록")+'</div>':'')+'<div class="concept-reveal"><h3>핵심 개념</h3><p>'+esc(q.title)+'</p></div><h3>왜 이런 답인가?</h3><ol class="bank-steps">'+q.steps.map(step=>'<li>'+esc(step)+'</li>').join("")+'</ol>'+(extraExplanation?'<details><summary>추가 설명</summary><p>'+esc(extraExplanation)+'</p></details>':'')+'<div class="practice-actions">'+button("retry","다시 풀기")+similar.slice(0,3).map(s=>button("similar","비슷한 문제",'data-id="'+esc(s.id)+'" aria-label="'+esc(s.title)+' 비슷한 문제"')).join("")+'</div>'+sourceDetails+'</section>';
  updateGate();
  $("#result-heading").focus({preventScroll:true});$("#result-heading").scrollIntoView({block:"start",behavior:"auto"});
 }
@@ -212,6 +244,7 @@ loadPracticalBank().then(result=>{
 }).catch(()=>{root.innerHTML='<div class="bank-empty"><h2>문제 데이터를 불러오지 못했습니다.</h2><p>네트워크 연결을 확인하고 페이지를 새로고침하세요.</p></div>';status.textContent="데이터 로딩 오류";});
 window.addEventListener("pagehide",stopTimer);
 window.addEventListener("pageshow",()=>{if(current){updateGate();if(remainingSeconds(attempt.startedAt)>0&&!timer)timer=setInterval(updateGate,500);}});
+window.addEventListener("resize",()=>{if(current)requestAnimationFrame(updateCodeScrollHint);});
 function adjustKeyboard(){
  const viewport=window.visualViewport;
  const inset=viewport&&document.activeElement?.id==="my-answer"?Math.max(0,window.innerHeight-viewport.height-viewport.offsetTop):0;
