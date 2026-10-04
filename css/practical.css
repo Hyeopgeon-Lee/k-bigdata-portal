@@ -111,3 +111,14 @@
  .practical-page .study-header{gap:4px;padding-inline:8px}
  .practical-page .study-quick-menu .button{font-size:13px}
 }
+
+/* Practical readability refinements: source clarity, repeated-variant distinction, and mobile code overflow cue. */
+.practical-page .source-normalized{background:#eef6ee;color:#315b39;border:1px solid #c6ddc9}
+.practical-page .source-reconstructed{font-weight:800}
+.practical-page .code-scroll-hint{margin:-12px 0 16px;text-align:center;color:#59647a;font-size:12px;line-height:1.5}
+.practical-page .concept-reveal{margin:18px 0 6px;padding:14px 16px;border-left:3px solid #142d70;background:#f4f7fc;border-radius:0 10px 10px 0}
+.practical-page .concept-reveal h3{margin:0 0 6px;font-size:16px}
+.practical-page .concept-reveal p{margin:0;color:#253b60;font-weight:650}
+@media(max-width:767px){
+ .practical-page .code-scroll-hint{font-size:12px}
+}
