@@ -449,5 +449,40 @@
     "updatedAt": "2026-10-04",
     "sources": [],
     "confidence": null
+  },
+  {
+    "id": "R-PY-0002",
+    "language": "Python",
+    "title": "정수와 문자열의 자료형 확인",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "기본",
+    "concepts": [
+      "자료형",
+      "type",
+      "정수",
+      "문자열"
+    ],
+    "question": "아래 Python 코드가 출력하는 두 줄을 쓰세요.",
+    "code": "x=10\ny='test'\nprint(type(x))\nprint(type(y))",
+    "answer": "<class 'int'>\n<class 'str'>",
+    "explanation": "type 함수는 값의 자료형을 반환합니다. 따옴표 없는 정수와 따옴표로 감싼 문자열을 구분해서 추적합니다.",
+    "steps": [
+      "x에는 정수 리터럴 10이 저장됩니다.",
+      "y에는 문자열 리터럴 test가 저장됩니다.",
+      "첫 줄은 <class 'int'>, 둘째 줄은 <class 'str'>입니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2022년 1회 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/52"
+      }
+    ],
+    "verificationNote": "단일 공개 복원자료의 11번을 확인했습니다. 코드와 출력을 Python으로 실행 검증합니다. 독립적인 교차 출처는 미확보이므로 신뢰도 C입니다.",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "grading": "exact"
   }
 ]

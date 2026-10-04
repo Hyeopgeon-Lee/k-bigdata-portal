@@ -18,9 +18,9 @@ for(const q of bank){
  for(const s of q.sources)assert.match(s.url,/^https:\/\//);
  assert.equal(gradeAnswer(q,q.answer),true);
 }
-assert.deepEqual(bankStats(bank),{unique:4,history:4,repeated:0,languages:{C:1,Java:1,Python:1,SQL:1},exams:{engineer:4,industrial_engineer:0}});
+assert.deepEqual(bankStats(bank),{unique:5,history:5,repeated:0,languages:{C:1,Java:1,Python:2,SQL:1},exams:{engineer:4,industrial_engineer:1}});
 const repeated=buildBank(questions,[...history,{...history[0],id:'synthetic-test-only',year:2023,round:3}]);
-assert.equal(bankStats(repeated).unique,4);assert.equal(bankStats(repeated).history,5);assert.equal(bankStats(repeated).repeated,1);
+assert.equal(bankStats(repeated).unique,5);assert.equal(bankStats(repeated).history,6);assert.equal(bankStats(repeated).repeated,1);
 const startedAt=1000,attempt={startedAt,submittedAt:null};
 assert.equal(remainingSeconds(startedAt,1000),60);assert.equal(remainingSeconds(startedAt,60999),1);assert.equal(remainingSeconds(startedAt,61000),0);
 assert.equal(canSubmit(attempt,'8',60999),false);assert.equal(canSubmit(attempt,'8',61000),true);assert.equal(canSubmit(attempt,' ',61000),false);
