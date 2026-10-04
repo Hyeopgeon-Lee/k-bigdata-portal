@@ -185,3 +185,6 @@ OCP·OCJP는 제품/버전별 현행 체계와 구분하고, 워드프로세서 
 
 `node tests/portal-redesign.test.mjs`와 기존 job-guide / certifications-guide / interview-bank / docs-hub 테스트를 모두 실행합니다. portal-baseline.json은 개편 전 main 커밋의 서비스 URL·7개 직무·12개 자격증·150개 면접·40개 문서 ID 목록입니다. ID를 변경하지 않으며 정책 변경이 없는 한 기준 파일도 임의 갱신하지 않습니다.
 모바일 Navigation·키보드·7개 해상도·브라우저 Console·운영 화면 검수는 tests/portal-redesign-qa.md에 기록합니다.
+# 첨부 실기 학습 데이터 추가
+
+2026-10-04 첨부 데이터의 516개 레코드를 중복 제거하여 고유 학습문제 184개(정규화 142, 변형 42)를 추가했습니다. 기존 36개와 합쳐 총 220개입니다. **258개 실제 복원기출을 확보한 것이 아닙니다.** 새 자료의 출제 회차 및 복원 신뢰도는 미검증이므로 출제 이력 집계에서 제외합니다. 문제 종류 필터에서 정규화 자료를 선택하세요. 상세 관리·검수 범위는 [데이터 반영 안내](data/practical/IMPORT-README.md)를 참고하세요.

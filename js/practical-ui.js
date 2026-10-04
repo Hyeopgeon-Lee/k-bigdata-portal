@@ -4,7 +4,7 @@ import {getAttempts,saveAttempt,getSession,saveSession,clearLocalLearning,storag
 import {matches} from "./search.js";
 
 const $=selector=>document.querySelector(selector),root=$("#bank-content"),status=$("#bank-status");
-let bank=[],coverage={},view="bank",current=null,attempt=null,timer=null,queue=[],queueIndex=0;
+let bank=[],coverage={},view="bank",current=null,attempt=null,timer=null,queue=[],queueIndex=0,aliases={};
 const filters={exam:"all",language:"all",source:"reconstructed",difficulty:"all",type:"all",sort:"latest",query:"",completion:"unseen"};
 const badge=(text,cls="")=>'<span class="badge '+cls+'">'+esc(text)+'</span>';
 const button=(action,label,extra="")=>'<button type="button" class="button button-secondary" data-action="'+action+'" '+extra+'>'+esc(label)+'</button>';
@@ -60,6 +60,7 @@ function renderProgress(){
  root.innerHTML='<h2>내 학습현황</h2><p>제출한 풀이 시도 기준입니다. 재풀이도 한 번의 시도로 집계하며 미판정 SQL은 정답률에서 제외합니다.</p><section class="bank-empty"><h3>오늘 · '+today+'</h3>'+statsHTML(summarizeAttempts(all.filter(a=>localDay(new Date(a.submittedAt))===today)))+'</section><h3>최근 7일 · 오늘 포함</h3><div class="bank-progress-grid">'+languages.map(language=>'<article><h3>'+language+'</h3>'+statsHTML(summarizeAttempts(week.filter(a=>bank.find(q=>q.id===a.questionId)?.language===language)))+'</article>').join("")+'</div><p class="hint">다른 브라우저·기기와 동기화되지 않습니다. 순위와 학생 간 비교는 제공하지 않습니다.</p><details><summary>학습기록 관리</summary><p>삭제하면 이 기기에 저장된 풀이와 오답노트가 모두 지워지며 복구할 수 없습니다.</p>'+button("export-learning","학습 기록 내보내기")+'<label for="import-learning">학습 기록 가져오기 (JSON, 현재 기록과 병합)</label><input id="import-learning" type="file" accept=".json,application/json"><p id="import-status" role="status"></p>'+button("confirm-clear","내 학습기록 삭제")+'<div id="clear-confirm"></div></details>';
 }
 function openQuestion(id,fresh=false){
+ id=aliases[id]||id;
  const q=bank.find(q=>q.id===id);if(!q)return;
  const previous=getSession(id),now=Date.now();current=q;
  // Wrong-note reattempts and explicit retries always start a fresh thinking period.
@@ -135,19 +136,24 @@ $("#bank-query").addEventListener("input",event=>{filters.query=event.target.val
 function resetFilters(){Object.assign(filters,{exam:"all",language:"all",source:"reconstructed",difficulty:"all",type:"all",sort:"latest",query:"",completion:"unseen"});for(const key of ["exam","language","source","difficulty","type","sort","completion"])$("#"+key+"-filter").value=filters[key];$("#bank-query").value="";selectView("bank");}
 $("#bank-reset").addEventListener("click",resetFilters);
 loadPracticalBank().then(result=>{
- bank=result.bank;coverage=result.coverage;
+ bank=result.bank;coverage=result.coverage;aliases=result.aliases||{};
  const saved=getPreferences().filters;
  if(saved&&typeof saved==="object"){
   for(const key of ["exam","language","source","difficulty","type","sort","completion"]){const select=$("#"+key+"-filter");if([...select.options].some(o=>o.value===saved[key])){filters[key]=saved[key];select.value=saved[key];}}
   if(typeof saved.query==="string"){filters.query=saved.query.slice(0,200);$("#bank-query").value=filters.query;}
  }
  const stats=bankStats(bank);
+ const imported=bank.filter(q=>q.importIds);
+ const importNotice=document.createElement("aside");importNotice.className="paper-notice";
+ const heading=document.createElement("h2");heading.textContent="추가 학습문제 등록";
+ const description=document.createElement("p");description.textContent="첨부 데이터 516개를 중복 제거한 "+imported.length+"개 고유 학습문제로 등록했습니다. 정규화 "+imported.filter(q=>q.sourceType==="normalized").length+"개 · 변형 "+imported.filter(q=>q.sourceType==="transformed").length+"개. 실제 복원기출 및 출제 횟수와 별도로 집계합니다. 문제 종류 필터에서 선택하세요.";
+ importNotice.append(heading,description);$("#bank-stats").before(importNotice);
  $("#today-overview").innerHTML='<h2>오늘의 문제</h2><p class="hint">매일 언어별 한 문제씩 권장합니다. 지금 필요한 문제만 선택해도 됩니다.</p><div class="job-topic-links">'+dailyQuestions(bank,localDay()).map(q=>'<a href="practical.html?id='+esc(q.id)+'">'+esc(q.language)+' · '+esc(q.title)+' →</a>').join("")+'</div>';
  $("#bank-stats").innerHTML=[['복원기출 출제 이력',stats.history],...languages.map(l=>[l,stats.languages[l]])].map(([name,count])=>'<div><strong>'+count+'</strong><span>'+name+'</span></div>').join("");
  $("#coverage-notice").textContent=coverage.notice+' 고유 복원문제 '+stats.unique+'개 · 기사 '+stats.exams.engineer+'건 · 산업기사 '+stats.exams.industrial_engineer+'건 · 재출제 '+stats.repeated+'개.';
  $("#coverage-pending").textContent="검토일 "+coverage.reviewDate+" · 아직 확보하지 못한 범위: "+coverage.pending;$("#confidence-policy").textContent=coverage.confidencePolicy;
  const params=new URLSearchParams(location.search),id=params.get("id"),exam=params.get("exam");if(Object.keys(examLabels).includes(exam)){filters.exam=exam;$("#exam-filter").value=exam;}
- if(id&&bank.some(q=>q.id===id))openQuestion(id);else{render();if(id)status.textContent="요청한 문제를 찾을 수 없습니다. 등록된 목록에서 선택하세요.";}
+ if(id&&bank.some(q=>q.id===(aliases[id]||id)))openQuestion(id);else{render();if(id)status.textContent="요청한 문제를 찾을 수 없습니다. 등록된 목록에서 선택하세요.";}
 }).catch(()=>{root.innerHTML='<div class="bank-empty"><h2>문제 데이터를 불러오지 못했습니다.</h2><p>네트워크 연결을 확인하고 페이지를 새로고침하세요.</p></div>';status.textContent="데이터 로딩 오류";});
 window.addEventListener("pagehide",stopTimer);
 window.addEventListener("pageshow",()=>{if(current){updateGate();if(!attempt.submittedAt&&remainingSeconds(attempt.startedAt)>0&&!timer)timer=setInterval(updateGate,500);}});

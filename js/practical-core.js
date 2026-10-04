@@ -1,6 +1,6 @@
 // Pure learning rules. No browser storage, network, or code execution here.
 export const WAIT_SECONDS = 60;
-export const sourceLabels = {reconstructed:"비공식 복원기출",transformed:"기출 기반 변형",practice:"추가 연습문제"};
+export const sourceLabels = {reconstructed:"비공식 복원기출",normalized:"공개 복원자료 기반 정규화",transformed:"기출 기반 변형",practice:"추가 연습문제"};
 export const examLabels = {engineer:"정보처리기사",industrial_engineer:"정보처리산업기사"};
 export const typeLabels = {output:"실행결과",blank:"빈칸채우기",interpret:"코드해석",sql_result:"SQL 결과",sql_write:"SQL 작성",error:"오류 찾기",other:"기타"};
 export const languages = ["C","Java","Python","SQL"];
