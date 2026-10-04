@@ -154,6 +154,33 @@
       "publisher": "문어CBT",
       "status": "회차별 20문항 및 프로그래밍·SQL 분류 교차검증",
       "license": "공개 복원자료를 회차·분류·정답 확인에 사용."
+    },
+    {
+      "examType": "engineer",
+      "year": 2024,
+      "round": 1,
+      "url": "https://grandlife.co.kr/2024-info-processing-practical-1/",
+      "publisher": "GrandLife 교차 정답표",
+      "status": "20문항 번호·정답 교차검증",
+      "license": "공개 복원자료를 사실 검증에만 사용."
+    },
+    {
+      "examType": "engineer",
+      "year": 2024,
+      "round": 2,
+      "url": "https://www.moducbt.com/exam/solution/29113",
+      "publisher": "모두CBT",
+      "status": "SQL 3번 키워드 교차검증",
+      "license": "공개 복원자료를 사실 검증에만 사용."
+    },
+    {
+      "examType": "engineer",
+      "year": 2024,
+      "round": 2,
+      "url": "https://bhher.tistory.com/115",
+      "publisher": "BHHer",
+      "status": "SQL 문장·정답 교차검증",
+      "license": "공개 복원자료를 사실 검증에만 사용."
     }
   ]
 }
