@@ -570,7 +570,7 @@
     "language": "Python",
     "title": "중첩 함수 호출 순서",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "output",
     "difficulty": "기본",
     "concepts": [
@@ -591,12 +591,16 @@
       {
         "name": "잡코딩 · 산업기사 2022년 3회",
         "url": "https://complainrevolutionist.tistory.com/54"
+      },
+      {
+        "name": "공부 일기 · 정보처리산업기사 2022년 3회 후기/복원",
+        "url": "https://1273000982.tistory.com/171"
       }
     ],
-    "verificationNote": "단일 공개 복원자료의 회차·문제번호·답 확인. 독립 교차 출처 미확보로 C. 문제 설명과 해설은 자체 작성.",
+    "verificationNote": "단일 공개 복원자료의 회차·문제번호·답 확인. 독립 교차 출처 미확보로 C. 문제 설명과 해설은 자체 작성. 별도 공개 기출·해설 자료에서 동일 코드 구조와 정답을 재확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "grading": "exact"
   },
   {
