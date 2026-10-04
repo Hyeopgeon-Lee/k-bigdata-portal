@@ -1,0 +1,47 @@
+/* Mobile-first interview-only overrides; shared portal components stay intact. */
+body[data-page="interview"] .container{width:min(calc(100% - 24px),880px)}
+body[data-page="interview"] .page-hero{padding:24px 0 20px}
+body[data-page="interview"] .page-hero h1{font-size:28px;line-height:1.35;margin:6px 0 12px;word-break:keep-all}
+body[data-page="interview"] .page-hero p{font-size:16px;line-height:1.8;margin:8px 0;color:var(--color-text-muted)}
+body[data-page="interview"] .page-hero .section-kicker{font-size:11px;margin:0;color:var(--color-primary)}
+body[data-page="interview"] .interview-stats{background:none;border:0;padding:0;font-size:14px!important}
+body[data-page="interview"] .interview-home-link{display:none}
+body[data-page="interview"] #interview-home>.button{width:100%;min-height:56px;font-size:17px}
+body[data-page="interview"] .interview-home-secondary{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+body[data-page="interview"] .button{font:inherit;font-weight:700;min-height:48px;padding:12px 14px;cursor:pointer}
+body[data-page="interview"] #filter-panel{border:1px solid var(--color-border);border-radius:12px;background:white;padding:12px;margin-bottom:16px}
+body[data-page="interview"] #filter-panel>summary{min-height:48px;align-content:center;color:var(--color-primary);font-weight:700;cursor:pointer}
+body[data-page="interview"] #active-interview-filter,body[data-page="interview"] .browse-actions{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+body[data-page="interview"] #reset-interview{margin-bottom:16px}
+body[data-page="interview"] .question{padding:18px;min-width:0}
+body[data-page="interview"] .question h2{font-size:21px;line-height:1.65;word-break:keep-all;overflow-wrap:anywhere;scroll-margin-top:90px}
+body[data-page="interview"] .question-code{font-size:12px;font-weight:400;margin-left:auto}
+body[data-page="interview"] .question-role{font-size:13px;line-height:1.7}
+body[data-page="interview"] .question-role a{min-height:44px}
+body[data-page="interview"] .practice-session{padding:0;border:0;background:none}
+body[data-page="interview"] .practice-progress{margin:12px 0}
+body[data-page="interview"] .question .answer-content p{font-size:16px;line-height:1.8}
+body[data-page="interview"] .question .short-answer{padding:12px}
+body[data-page="interview"] .question summary{min-height:48px;font-size:16px;line-height:1.7}
+body[data-page="interview"] .answer-extra,body[data-page="interview"] .question-sources{border-top:1px solid var(--color-border);margin-top:12px}
+body[data-page="interview"] .question .tags span{font-size:14px}
+body[data-page="interview"] .question-sources a{display:inline-flex;align-items:center;min-height:44px}
+body[data-page="interview"] .interview-bottom{position:fixed;bottom:0;left:0;right:0;z-index:60;display:flex;gap:10px;padding:10px max(12px,calc((100% - 880px)/2)) calc(10px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid var(--color-border)}
+body[data-page="interview"] .interview-bottom .button-primary{flex:1}
+body[data-page="interview"][data-interview-mode^="PRACTICE"] .learning-content{padding-bottom:120px}
+body[data-page="interview"][data-interview-mode^="PRACTICE"] .site-footer{display:none}
+body[data-page="interview"] .interview-editorial{margin-top:48px}
+body[data-page="interview"] .practice-complete{padding:20px}
+@media(max-width:900px){
+ body[data-page="interview"] .site-header{height:60px}
+ body[data-page="interview"] .interview-home-link{display:inline-flex;align-items:center;min-height:44px;font-weight:700;font-size:14px}
+ body[data-page="interview"] .menu-toggle{margin-left:0;min-height:44px}
+ body[data-page="interview"] .brand-copy{display:none}
+}
+@media(min-width:768px){
+ body[data-page="interview"] .page-hero{padding-top:40px}
+ body[data-page="interview"] .page-hero h1{font-size:36px}
+ body[data-page="interview"] .question{padding:26px}
+ body[data-page="interview"][data-interview-mode="BROWSE"] .question-list{grid-template-columns:repeat(2,minmax(0,1fr))}
+ body[data-page="interview"] .question-list>.button{grid-column:1/-1}
+}

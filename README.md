@@ -101,6 +101,13 @@ shortAnswer는 말로 설명할 2~4문장, detailedAnswer는 전제·예외를 �
 `node tests/interview-bank.test.mjs`로 데이터·검색·500회 랜덤 선택·기존 연결·답변 초기 숨김을 검사합니다. 문제 수를 변경하면 테스트의 목표 개수도 의도에 맞게 갱신하세요. 브라우저 검수 기록은 `tests/interview-bank-qa.md`에 있습니다.
 
 ## 실기 코딩·SQL 문제은행
+## 기술면접 모바일 학습
+
+`interview.html` 기본 화면은 전체 문제를 렌더링하지 않고 바로 1문제 시작, 10문제 모의면접, 문제 찾아보기를 제공합니다. 탐색은 20개씩 추가 표시하며 분야·직무·난이도와 검색을 함께 적용합니다. 답변 확인 시 핵심 답변·키워드를 먼저 표시하고 상세 설명·꼬리질문·공식문서는 각각 접습니다. 기존 id/category/job URL과 데이터는 유지하며 difficulty 파라미터를 지원합니다. 점수·진도·개인정보·LocalStorage 기록은 추가하지 않습니다.
+
+전용 스타일은 `css/interview.css`에서 페이지 scope로 관리합니다. 테스트는 `tests/interview-mobile.test.mjs`, 실제 브라우저 검수 기록은 `tests/interview-mobile-qa.md`입니다. noindex, nofollow를 유지합니다. Service Worker는 공통 모듈/데이터의 캐시 갱신 전략을 별도 검증한 후 도입할 후속 개선사항입니다. 현재 오프라인 사용은 보장하지 않습니다.
+
+## 실기 코딩·SQL 문제은행
 
 `practical.html`은 문제 확인 → 직접 풀이 → 내 답 즉시 확정 → 문제를 연 뒤 60초 경과 → 정답·단계별 풀이 → 다음 문제 흐름의 모바일 학습 화면입니다. 답 확정은 60초 전에도 가능하지만 정답 공개는 답 확정과 60초 경과가 모두 필요합니다. 이동 중에는 머릿속으로 코드를 추적하고, 가능한 환경에서는 종이와 펜을 사용합니다. 정보처리기사·산업기사 상세의 `?exam=engineer` / `?exam=industrial_engineer`, 영구 링크 `practical.html?id=문제ID`를 유지합니다.
 

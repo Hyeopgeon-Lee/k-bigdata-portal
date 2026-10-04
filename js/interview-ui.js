@@ -1,122 +1,51 @@
-import {questions, interviewGroups, interviewJobTags, questionSearchText, matchesInterviewCategory,
-  selectRandomQuestions, interviewSources, interviewEditorialSources, interviewReviewDate} from "./interview.js";
+import {questions, interviewGroups, interviewJobTags, questionSearchText, matchesInterviewCategory, selectRandomQuestions, interviewSources, interviewEditorialSources, interviewReviewDate} from "./interview.js";
 import {matches} from "./search.js";
 import {interviewRoleLinks} from "./jobs.js";
-
-const esc = value => String(value ?? "").replace(/[&<>'"]/g, c => ({"&":"&amp;", "<":"&lt;", ">":"&gt;", "'":"&#39;", '"':"&quot;"}[c]));
-const tags = values => '<div class="tags">' + values.map(value => '<span>' + esc(value) + '</span>').join("") + '</div>';
-const external = source => '<a href="' + esc(source.url) + '" target="_blank" rel="noopener noreferrer">' + esc(source.name) + ' ↗<span class="sr-only"> 외부 문서, 새 창</span></a>';
-
-export function renderInterviewQuestion(item, practice = false) {
-  const sources = item.sourceIds.map(id => interviewSources[id]).filter(Boolean);
-  return '<article class="question" data-question-id="' + esc(item.id) + '"><div class="question-meta"><span class="question-code">' + esc(item.code) + '</span><span class="badge">' + esc(item.group) + '</span><span class="badge">' + esc(item.difficulty) + '</span></div>' +
-    '<h2' + (practice ? ' tabindex="-1" id="practice-question-heading"' : '') + '>' + esc(item.question) + '</h2><p class="question-role">관련 직무 · ' + item.jobTags.map(tag=>'<a href="'+esc(interviewRoleLinks[tag])+'">'+esc(tag)+'<span class="sr-only"> 직무 가이드</span></a>').join(" · ") + '</p>' +
-    '<details class="question-answer"><summary><span class="answer-toggle">답변 보기</span><span class="sr-only"> · ' + esc(item.code) + '</span></summary><div class="answer-content"><h3>핵심 답변</h3><p class="short-answer">' + esc(item.shortAnswer) + '</p><h3>상세 설명</h3><p>' + esc(item.detailedAnswer) + '</p><h3>핵심 키워드</h3>' + tags(item.keywords) +
-    '<h3>면접관이 이어서 물어볼 수 있는 질문</h3><ol class="follow-ups">' + item.followUps.map(text => '<li>' + esc(text) + '</li>').join("") + '</ol>' +
-    '<details class="question-sources"><summary>개념 확인용 공식 문서</summary><ul>' + sources.map(source => '<li>' + external(source) + '</li>').join("") + '</ul></details></div></details>' +
-    (!practice ? '<a class="question-permalink" href="interview.html?id=' + esc(item.id) + '">이 문제만 연습하기 →<span class="sr-only"> · ' + esc(item.code) + '</span></a>' : '') + '</article>';
+const esc=value=>String(value??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
+const external=s=>'<a href="'+esc(s.url)+'" target="_blank" rel="noopener noreferrer">'+esc(s.name)+' ↗<span class="sr-only"> 외부 문서, 새 창</span></a>';
+const action=(key,text,primary=false,extra="")=>'<button type="button" class="button button-'+(primary?'primary':'secondary')+'" data-action="'+key+'" '+extra+'>'+esc(text)+'</button>';
+const meta=q=>'<div class="question-meta"><span class="badge">'+esc(q.group)+'</span><span class="badge">'+esc(q.difficulty)+'</span><span class="question-code">'+esc(q.code)+'</span></div>';
+const roles=q=>'<p class="question-role">관련 직무 · '+q.jobTags.map(t=>'<a href="'+esc(interviewRoleLinks[t])+'">'+esc(t)+'<span class="sr-only"> 직무 가이드</span></a>').join(' · ')+'</p>';
+export function renderInterviewQuestion(q,practice=false){
+ return '<article class="question" data-question-id="'+esc(q.id)+'">'+meta(q)+'<h2'+(practice?' tabindex="-1" id="practice-question-heading"':'')+'>'+esc(q.question)+'</h2>'+roles(q)+'<p class="hint">30초 정도 머릿속으로 답을 정리한 뒤 확인하세요.</p><details class="question-answer"><summary><span class="answer-toggle">답변 확인</span><span class="sr-only"> · '+esc(q.code)+'</span></summary><div class="answer-content"><h3>핵심 답변</h3><p class="short-answer">'+esc(q.shortAnswer)+'</p><h3>핵심 키워드</h3><div class="tags">'+q.keywords.map(t=>'<span>'+esc(t)+'</span>').join('')+'</div><details class="answer-extra"><summary>상세 설명 보기</summary><p>'+esc(q.detailedAnswer)+'</p></details><details class="answer-extra"><summary>꼬리질문 '+q.followUps.length+'개 보기<span class="sr-only"> · 면접관이 이어서 물어볼 수 있는 질문</span></summary><ol class="follow-ups">'+q.followUps.map(t=>'<li>'+esc(t)+'</li>').join('')+'</ol></details><details class="question-sources"><summary>공식문서 확인</summary><ul>'+q.sourceIds.map(id=>interviewSources[id]).filter(Boolean).map(s=>'<li>'+external(s)+'</li>').join('')+'</ul></details></div></details></article>';
 }
-
-// Track the requested mode, not the number available in a filtered practice pool.
-export const practiceModeButtonId = (session, direct) => direct ? null : session ? (session.mode === "one" ? "random-one" : "random-ten") : "show-all";
-
-export function initInterview() {
-  const root = document.querySelector("#items"), detail = document.querySelector("#detail");
-  const filters = document.querySelector("#filters"), roles = document.querySelector("#job-filters");
-  const input = document.querySelector("#local-query"), status = document.querySelector("#list-status");
-  const params = new URLSearchParams(location.search);
-  const requestedCategory = params.get("category"), requestedRole = params.get("job");
-  let active = questions.some(q => matchesInterviewCategory(q, requestedCategory)) ? requestedCategory : "전체";
-  let job = interviewJobTags.includes(requestedRole) ? requestedRole : "전체";
-  let query = params.get("q") || "", session = null, direct = questions.find(q => q.id === params.get("id"));
-  let lastRandom = null;
-  input.value = query;
-  document.querySelector("#interview-stats").textContent = "전체 " + questions.length + "문제 · " + interviewGroups.length + "개 분야";
-  if (params.has("id") && !direct) detail.innerHTML = '<p class="notice" role="status">요청한 문제를 찾을 수 없습니다. 전체 목록에서 선택하세요.</p>';
-  else if (requestedCategory && active === "전체" && requestedCategory !== "전체") detail.innerHTML = '<p class="notice" role="status">요청한 분야를 찾을 수 없어 전체 문제를 표시합니다.</p>';
-  const sourceRoot = document.querySelector("#interview-reference-list");
-  sourceRoot.innerHTML = interviewEditorialSources.map(source => '<li>' + external(source) + '</li>').join("");
-  document.querySelector("#interview-review-date").textContent = interviewReviewDate;
-
-  function pool() {
-    return questions.filter(item => matchesInterviewCategory(item, active) && (job === "전체" || item.jobTags.includes(job)) && matches(questionSearchText(item), query));
-  }
-  function filterButtons(element, values, current, key) {
-    const scroll = element.scrollLeft;
-    element.innerHTML = values.map(value => '<button type="button" data-' + key + '="' + esc(value) + '" aria-pressed="' + (current === value) + '">' + esc(value) + '</button>').join("");
-    element.scrollLeft = scroll;
-  }
-  function render(focusQuestion = false) {
-    filterButtons(filters, ["전체", ...interviewGroups], interviewGroups.includes(active) || active === "전체" ? active : questions.find(q => q.category === active)?.group, "category");
-    filterButtons(roles, ["전체", ...interviewJobTags], job, "job");
-    document.querySelector("#active-interview-filter").textContent = active !== "전체" && !interviewGroups.includes(active) ? "기존 연결 분야: " + active + " · 분야 버튼을 선택하면 해당 전체 학습 분야로 전환합니다." : "";
-    const available = pool();
-    const selectedMode = practiceModeButtonId(session, direct);
-    for (const id of ["random-one", "random-ten", "show-all"]) {
-      const button = document.querySelector("#" + id), selected = id === selectedMode;
-      button.classList.toggle("button-primary", selected);
-      button.classList.toggle("button-secondary", !selected);
-      button.setAttribute("aria-pressed", String(selected));
-    }
-    document.querySelector("#random-one").disabled = !available.length;
-    document.querySelector("#random-ten").disabled = !available.length;
-    if (session?.complete) {
-      root.innerHTML = '<section class="practice-complete" aria-labelledby="practice-done"><p class="section-kicker">PRACTICE COMPLETE</p><h2 id="practice-done" tabindex="-1">모의 기술면접 완료</h2><p>' + session.items.length + '문제를 연습했습니다. 말하기 어려웠던 개념과 꼬리질문을 공식 문서·프로젝트 코드로 다시 확인하세요.</p><p class="hint">점수를 계산하거나 학습 결과를 저장하지 않습니다.</p><div class="practice-actions"><button type="button" class="button button-primary" data-action="restart">다시 10문제</button><button type="button" class="button button-secondary" data-action="all">전체 문제 보기</button></div></section>';
-      status.textContent = "모의 기술면접 " + session.items.length + "문제 완료";
-      if (focusQuestion) {const heading=document.querySelector("#practice-done");heading.focus({preventScroll:true});heading.scrollIntoView({block:"start",behavior:"auto"});}
-    } else if (session || direct) {
-      const item = direct || session.items[session.index];
-root.innerHTML = '<section class="practice-session" aria-label="한 문제씩 말하기 연습"><div class="practice-progress"><p>' + (direct ? "선택한 기술면접 문제" : session.mode === "one" ? "랜덤 기술면접" : "모의 기술면접") + '</p>' + (!direct ? '<strong>' + (session.index + 1) + ' / ' + session.items.length + '</strong>' : '') + '</div><p class="hint">먼저 30초 정도 자신의 말로 답해보고, 답변과 꼬리질문을 확인하세요.</p>' + renderInterviewQuestion(item, true) + '<div class="practice-actions">' + (!direct ? '<button type="button" class="button button-primary" data-action="next">' + (session.mode === "one" ? "다른 랜덤 문제" : session.index === session.items.length - 1 ? "연습 완료" : "다음 문제") + '</button>' : '') + '<button type="button" class="button button-secondary" data-action="all">전체 문제 보기</button></div></section>';
-      status.textContent = direct ? "선택한 문제 1개 · " + item.code : "필터 결과 " + available.length + "개에서 선택 · " + (session.index + 1) + " / " + session.items.length;
-      if (focusQuestion) {const heading=document.querySelector("#practice-question-heading");heading.focus({preventScroll:true});heading.scrollIntoView({block:"start",behavior:"auto"});}
-    } else {
-      root.innerHTML = available.length ? available.map(item => renderInterviewQuestion(item)).join("") : '<div class="notice"><h2>검색 결과가 없습니다</h2><p>다른 키워드를 사용하거나 분야·직무 필터를 초기화해 보세요.</p><button type="button" class="button button-secondary" data-action="reset">필터 초기화</button></div>';
-      status.textContent = "전체 " + questions.length + "문제 중 " + available.length + "문제 · 분야 " + active + " · 직무 " + job;
-    }
-  }
-  function clearPractice() {session = null; direct = null; detail.innerHTML = "";}
-  function start(count) {
-    const available = pool();
-    let candidates = count === 1 && available.length > 1 ? available.filter(q => q.id !== lastRandom) : available;
-    const picked = selectRandomQuestions(candidates, count);
-    clearPractice();
-    if (picked.length) {session = {items:picked, index:0, complete:false, mode:count === 1 ? "one" : "ten"}; lastRandom = picked[0].id;}
-    render(true);
-  }
-  function reset() {active = "전체"; job = "전체"; query = ""; input.value = ""; clearPractice(); render();}
-  function showAll() {clearPractice(); render(); root.querySelector("summary")?.focus({preventScroll:true});}
-  filters.addEventListener("click", event => {
-    const button = event.target.closest("button[data-category]");
-    if (!button) return;
-    active = button.dataset.category; clearPractice(); render();
-    [...filters.querySelectorAll("button")].find(b => b.dataset.category === active)?.focus({preventScroll:true});
-  });
-  roles.addEventListener("click", event => {
-    const button = event.target.closest("button[data-job]");
-    if (!button) return;
-    job = button.dataset.job; clearPractice(); render();
-    [...roles.querySelectorAll("button")].find(b => b.dataset.job === job)?.focus({preventScroll:true});
-  });
-  input.addEventListener("input", () => {query = input.value; clearPractice(); render();});
-  document.querySelector("#random-one").addEventListener("click", () => start(1));
-  document.querySelector("#random-ten").addEventListener("click", () => start(10));
-  document.querySelector("#show-all").addEventListener("click", showAll);
-  document.querySelector("#reset-interview").addEventListener("click", reset);
-  root.addEventListener("click", event => {
-    const button = event.target.closest("button[data-action]");
-    if (!button) return;
-    if (button.dataset.action === "all") showAll();
-    if (button.dataset.action === "reset") reset();
-    if (button.dataset.action === "restart") start(10);
-    if (button.dataset.action === "next" && session) {
-      if (session.mode === "one") start(1);
-      else {session.index++; session.complete = session.index >= session.items.length; render(true);}
-    }
-  });
-  root.addEventListener("toggle", event => {
-    const details = event.target;
-    if (!details.classList.contains("question-answer")) return;
-    details.querySelector(".answer-toggle").textContent = details.open ? "답변 숨기기" : "답변 보기";
-  }, true);
-  render();
+export const practiceModeButtonId=(session,direct)=>direct?null:session?(session.mode==="one"?"random-one":"random-ten"):"show-all";
+export const filterInterviewQuestions=(items,{category="전체",job="전체",difficulty="전체",query=""}={})=>items.filter(q=>matchesInterviewCategory(q,category)&&(job==="전체"||q.jobTags.includes(job))&&(difficulty==="전체"||q.difficulty===difficulty)&&matches(questionSearchText(q),query));
+export function initInterview(){
+ const $=s=>document.querySelector(s),root=$("#items"),controls=$("#list-controls"),input=$("#local-query"),status=$("#list-status"),params=new URLSearchParams(location.search),levels=["기초","기본","심화"];
+ const filters={category:questions.some(q=>matchesInterviewCategory(q,params.get("category")))?params.get("category"):"전체",job:interviewJobTags.includes(params.get("job"))?params.get("job"):"전체",difficulty:levels.includes(params.get("difficulty"))?params.get("difficulty"):"전체",query:params.get("q")||""};
+ let direct=questions.find(q=>q.id===params.get("id")),session=null,lastRandom=direct?.id||null,limit=20,mode=direct?"PRACTICE_ONE":params.size?"BROWSE":"HOME";
+ input.value=filters.query;$("#interview-stats").textContent=questions.length+"문제 · "+interviewGroups.length+"개 분야";
+ $("#interview-reference-list").innerHTML=interviewEditorialSources.map(s=>'<li>'+external(s)+'</li>').join('');$("#interview-review-date").textContent=interviewReviewDate;
+ if(params.has("id")&&!direct)$("#detail").textContent="요청한 문제를 찾을 수 없습니다. 목록에서 다른 문제를 선택하세요.";
+ const pool=()=>filterInterviewQuestions(questions,filters);
+ function syncURL(){const url=new URL(location.href);url.search="";for(const [k,v]of Object.entries(filters))if(v&&v!=="전체")url.searchParams.set(k==="query"?"q":k,v);if(direct)url.searchParams.set("id",direct.id);history.replaceState(null,"",url);}
+ function buttons(id,values,current,key){const el=$(id),scroll=el.scrollLeft;el.innerHTML=values.map(v=>'<button type="button" data-filter="'+key+'" data-value="'+esc(v)+'" aria-pressed="'+(v===current)+'">'+esc(v)+'</button>').join('');el.scrollLeft=scroll;}
+ function syncFilters(){buttons("#filters",["전체",...interviewGroups],interviewGroups.includes(filters.category)?filters.category:questions.find(q=>q.category===filters.category)?.group||"전체","category");buttons("#job-filters",["전체",...interviewJobTags],filters.job,"job");buttons("#difficulty-filters",["전체",...levels],filters.difficulty,"difficulty");const applied=Object.entries(filters).filter(([,v])=>v&&v!=="전체");$("#active-interview-filter").innerHTML=applied.map(([k,v])=>action("remove-filter",v+" ×",false,'data-key="'+k+'" aria-label="'+esc(v)+' 조건 해제"')).join('');$("#reset-interview").hidden=!applied.length;}
+ function listCard(q){return '<article class="question">'+meta(q)+'<h2>'+esc(q.question)+'</h2>'+roles(q)+action("select","이 문제 연습하기",false,'data-id="'+esc(q.id)+'"')+'<a class="question-permalink" href="interview.html?id='+encodeURIComponent(q.id)+'"><span class="sr-only">'+esc(q.question)+' </span>문제 링크 →</a></article>';}
+ function render(focus=false){
+  document.body.dataset.interviewMode=mode;$("#interview-home").hidden=mode!=="HOME";$(".page-hero").hidden=mode.startsWith("PRACTICE")||mode==="COMPLETE";controls.hidden=mode!=="BROWSE";status.hidden=mode!=="BROWSE";syncFilters();
+  if(mode==="HOME")root.innerHTML="";
+  else if(mode==="BROWSE"){const available=pool();root.innerHTML=available.length?available.slice(0,limit).map(listCard).join('')+(available.length>limit?action("more","문제 더 보기"):""):'<section class="notice"><h2 tabindex="-1">조건에 맞는 문제가 없습니다.</h2><p>다른 분야를 선택하거나 필터를 초기화하세요.</p>'+action("reset","필터 초기화")+'</section>';status.textContent=available.length+"문제 중 "+Math.min(limit,available.length)+"문제 표시";}
+  else if(mode==="COMPLETE")root.innerHTML='<section class="practice-complete"><h2 tabindex="-1">모의 기술면접 완료</h2><p>'+session.items.length+'문제를 연습했습니다.</p><p>다시 풀어볼 문제를 정리한 뒤 공식문서와 프로젝트 코드로 복습하세요.</p><div class="practice-actions">'+action("restart","다시 10문제",true)+action("one","랜덤 1문제")+action("all","문제 찾아보기")+'</div></section>';
+  else{const q=direct||session.items[session.index],ten=mode==="PRACTICE_TEN";root.innerHTML='<section class="practice-session" aria-label="한 문제씩 면접 연습"><div class="practice-progress">'+action("home","← 학습 시작")+'<strong>'+(ten?(session.index+1)+" / "+session.items.length:"한 문제 연습")+'</strong></div>'+renderInterviewQuestion(q,true)+'<div class="interview-bottom" aria-label="학습 진행">'+(ten?action("previous","이전",false,session.index===0?'disabled':''):'')+action("next",ten?(session.index===session.items.length-1?"연습 완료":"다음 문제"):"다른 문제",true)+'</div><p class="hint">가능하면 실제 면접처럼 소리 내어 설명해보세요.</p></section>';if(session?.opened.has(q.id))root.querySelector(".question-answer").open=true;}
+  if(focus){root.querySelector('h2')?.focus({preventScroll:true});root.scrollIntoView({block:"start",behavior:"auto"});}
+ }
+ function browse(){direct=null;session=null;mode="BROWSE";syncURL();render();$("#filter-panel summary").focus({preventScroll:true});controls.scrollIntoView({block:"start",behavior:"auto"});}
+ function start(count){const available=pool(),picked=selectRandomQuestions(count===1&&available.length>1?available.filter(q=>q.id!==lastRandom):available,count);direct=null;$("#detail").textContent="";if(!picked.length){browse();return;}session={items:picked,index:0,mode:count===1?"one":"ten",opened:new Set()};lastRandom=picked[0].id;mode=count===1?"PRACTICE_ONE":"PRACTICE_TEN";syncURL();render(true);}
+ function reset(){Object.assign(filters,{category:"전체",job:"전체",difficulty:"전체",query:""});input.value="";limit=20;browse();}
+ $("#random-one").addEventListener("click",()=>start(1));$("#random-ten").addEventListener("click",()=>start(10));$("#show-all").addEventListener("click",browse);$("#reset-interview").addEventListener("click",reset);
+ input.addEventListener("input",()=>{filters.query=input.value;limit=20;syncURL();render();});
+ controls.addEventListener("click",event=>{const b=event.target.closest('button[data-filter]');if(!b)return;filters[b.dataset.filter]=b.dataset.value;limit=20;syncURL();render();[...controls.querySelectorAll('button[data-filter]')].find(el=>el.dataset.filter===b.dataset.filter&&el.dataset.value===b.dataset.value)?.focus({preventScroll:true});});
+ $(".learning-content").addEventListener("click",event=>{const b=event.target.closest('button[data-action]');if(!b)return;const key=b.dataset.action;
+  if(key==="all")browse();if(key==="one")start(1);if(key==="restart")start(10);if(key==="reset")reset();
+  if(key==="home"){mode="HOME";session=null;direct=null;syncURL();render();$("#random-one").focus();}
+  if(key==="more"){limit+=20;render();root.querySelectorAll('.question')[limit-20]?.querySelector('button')?.focus({preventScroll:true});}
+  if(key==="select"){direct=questions.find(q=>q.id===b.dataset.id);lastRandom=direct.id;session=null;mode="PRACTICE_ONE";syncURL();render(true);}
+  if(key==="remove-filter"){filters[b.dataset.key]=b.dataset.key==="query"?"":"전체";input.value=filters.query;limit=20;syncURL();render();$("#filter-panel summary").focus({preventScroll:true});}
+  if(key==="previous"&&session&&session.index>0){session.index--;render(true);}
+  if(key==="next"){if(mode==="PRACTICE_ONE")start(1);else if(session){session.index++;mode=session.index>=session.items.length?"COMPLETE":"PRACTICE_TEN";render(true);}}
+ });
+ root.addEventListener("toggle",event=>{const d=event.target;if(!d.classList.contains("question-answer"))return;d.querySelector(".answer-toggle").textContent=d.open?"답변 숨기기":"답변 확인";if(session){const id=d.closest('[data-question-id]').dataset.questionId;if(d.open)session.opened.add(id);else session.opened.delete(id);}},true);
+ render(!!direct);$("#interview-fallback").hidden=true;
 }
