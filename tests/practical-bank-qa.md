@@ -74,7 +74,7 @@
 
 기존 certifications-guide, docs-hub, interview-bank, job-guide, portal-redesign와 신규 practical-bank, practical-sql, practical-python 총 8종 통과.
 
-- 7개 직무 / 12개 자격증 / 150개 면접 / 40개 문서의 기존 ID 유지.
+- 7개 직무 / 10개 자격증 / 150개 면접 / 40개 문서의 기존 ID 유지.
 - 기존 서비스 URL 및 CNAME 유지, 카테고리 4개 유지, 신규 서비스 하나 추가(13개).
 - JSON ID·이력 참조·빈 답/풀이·종류·난이도·신뢰도·정직한 집계 검증.
 - 59.999초 잠금, 60초 제출, 미제출 공개 금지, SQL 직접 판정, 저장 idempotency/차단 fallback.

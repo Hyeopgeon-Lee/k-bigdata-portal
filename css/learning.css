@@ -82,23 +82,26 @@ body[data-page=docs] .detail-panel .notice h3{margin-top:0}
 .doc-flows[hidden]{display:none}
 @media(max-width:767px){.doc-flows,.doc-detail-grid{grid-template-columns:1fr}body[data-page=docs] .page-hero>p{font-size:16px}.doc-flow{padding:14px 18px}.doc-explore-heading{font-size:22px}}
 /* Certifications share the career guide's cards, typography and quiet emphasis. */
-.cert-paths>h2,.cert-core-section>h2{font-size:clamp(23px,3vw,30px);line-height:1.45;letter-spacing:-.03em}
-.cert-path-grid,.cert-core-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
-.cert-core-section{margin:40px 0 48px}.cert-path-grid .job-topic-links{margin-bottom:0}
 .cert-badges{display:flex;flex-wrap:wrap;gap:7px;margin:8px 0}
 .cert-priority-badge{color:#142d70;background:#e8effa;border:1px solid #c8d6ee;font-size:13px}
 .cert-card.cert-core{border-color:#a9bddc;border-top:3px solid #142d70;background:#fbfcff}
-.cert-card h3{font-size:23px;line-height:1.4;margin:16px 0 8px;letter-spacing:-.03em}
-.cert-card .tags span{font-size:13px}
-.cert-detail{font-size:16px}.cert-detail .cert-overview{font-size:18px;font-weight:650;color:#253b60}
-.cert-importance{padding:24px;background:#f8fafe;border:1px solid #dce3ef;border-radius:14px;margin-top:28px}
-.cert-importance.is-core{border-left:4px solid #142d70;background:#edf3fc}
-.cert-importance h3,.cert-note h3{margin-top:0}.cert-importance p{margin-bottom:0}
-.cert-study-order li{padding:8px 4px}
+.cert-detail{font-size:16px}.cert-detail .cert-overview{font-weight:400;color:#253b60}
+body[data-page=certifications] .cert-detail h1{font-size:clamp(26px,3vw,34px);line-height:1.35;margin:18px 0 12px}
+body[data-page=certifications] .cert-detail{max-width:920px;margin-inline:auto}
+body[data-page=certifications] .cert-detail .job-section{margin-top:22px;padding-top:18px;border-top:1px solid #dce3ef}
+body[data-page=certifications] .cert-detail .job-section h2{margin:0 0 10px;font-size:19px}
+body[data-page=certifications] .cert-detail p,body[data-page=certifications] .cert-detail li{font-size:16px;line-height:1.65}
+body[data-page=certifications] .cert-exam-stage h3{margin:12px 0 6px;font-size:16px;color:#142d70}
+body[data-page=certifications] .cert-exam-stage ul{display:flex;flex-wrap:wrap;gap:6px 20px;padding-left:20px;margin:0}
+body[data-page=certifications] .cert-card,body[data-page=certifications] .cert-detail{min-width:0;overflow-wrap:anywhere}
+body[data-page=certifications] .cert-card h2{font-size:21px;line-height:1.4}
+body[data-page=certifications] .cert-card .cert-institution{font-size:14px;color:#59647a}
+body[data-page=certifications] .cert-detail .detail-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+body[data-page=certifications] .cert-detail .button{min-height:48px;white-space:normal;max-width:100%}
 body[data-page=certifications] .filters{flex-wrap:wrap;overflow:visible;padding:6px 4px 14px}
 body[data-page=certifications] .filters button{white-space:normal;flex:0 1 auto;max-width:100%}
-body[data-page=certifications] #list-controls{margin-top:32px}
-@media(max-width:767px){.cert-path-grid,.cert-core-grid{grid-template-columns:1fr}.cert-importance{padding:20px}.cert-detail .cert-overview{font-size:17px}}
+body[data-page=certifications] #list-controls{margin-top:0}
+@media(max-width:767px){body[data-page=certifications] .page-hero{padding-top:24px;padding-bottom:20px}body[data-page=certifications] .section-kicker{display:none}body[data-page=certifications] .cert-detail{padding:20px 16px}body[data-page=certifications] .cert-detail .detail-actions{display:grid;grid-template-columns:1fr}body[data-page=certifications] .cert-card{padding:20px}body[data-page=certifications] .cert-card .resource-icon{display:none}}
 /* Interview practice: same portal palette, readable answers, no modal or stored results. */
 body[data-page=interview] .learning-content{max-width:1040px}
 body[data-page=interview] .interview-stats{display:inline-block;margin:14px 0 0;padding:10px 16px;background:#e8effa;border:1px solid #c8d6ee;border-radius:10px;color:#142d70;font-size:16px;font-weight:700}

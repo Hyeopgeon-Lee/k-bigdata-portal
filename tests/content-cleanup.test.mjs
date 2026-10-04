@@ -1,12 +1,12 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {jobs,jobGuidance} from '../js/jobs.js';
-import {certifications,certificationGuidance} from '../js/certifications.js';
+import {certifications} from '../js/certifications.js';
 import {docs} from '../js/docs.js';
 import {questions,interviewSources,selectRandomQuestions} from '../js/interview.js';
 const read=path=>readFileSync(new URL('../'+path,import.meta.url),'utf8');
 const defensive=/취업.{0,8}보장|합격.{0,8}보장|출제.{0,8}보장|공통 채용 요건|모든 기업의 공통|판정하지|의미하지 않습니다|뜻하지 않습니다|적성 판정|대신하지 않습니다/;
-for(const [name,value] of Object.entries({jobs,jobGuidance,certifications,certificationGuidance,docs})){
+for(const [name,value] of Object.entries({jobs,jobGuidance,certifications,docs})){
  assert.ok(!defensive.test(JSON.stringify(value)),name+' contains defensive student guidance');
 }
 for(const file of ['interview.html','js/interview-ui.js','js/interview.js','data/interview-sources.js','css/interview.css','css/learning.css']){
@@ -28,7 +28,7 @@ assert.ok(docs.find(d=>d.id==='jwt').note.includes('민감정보'));
 assert.ok(docs.find(d=>d.id==='gemma').note.includes('이용 조건'));
 assert.equal(questions.length,150);
 assert.equal(jobs.length,11);
-assert.equal(certifications.length,12);
+assert.equal(certifications.length,10);
 assert.equal(docs.length,40);
 // Navigation wraps; only code/table content keeps independent horizontal scrolling.
 for(const file of ['css/jobs.css','css/learning.css','css/portal-ux.css','css/practical.css']){

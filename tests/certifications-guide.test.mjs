@@ -3,54 +3,34 @@ import {readFileSync} from 'node:fs';
 import {certifications,certificationPaths} from '../js/certifications.js';
 import {jobs} from '../js/jobs.js';
 import {matches,certificationSearchText,searchIndex} from '../js/search.js';
-const baseline={
-  "engineer": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=1320",
-  "industrial": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=2290",
-  "adsp": "https://www.dataq.or.kr/www/main.do",
-  "sqld": "https://www.dataq.or.kr/www/main.do",
-  "ocp": "https://www.oracle.com/education/certification/",
-  "cka": "https://training.linuxfoundation.org/certification/certified-kubernetes-administrator-cka/",
-  "ncp": "https://www.ncloud.com/support/certexam",
-  "linux": "https://www.ihd.or.kr/",
-  "ocjp": "https://www.oracle.com/education/certification/",
-  "office": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=2193",
-  "computer": "https://license.korcham.net/",
-  "word": "https://license.korcham.net/"
-};
-assert.deepEqual(certifications.map(c=>c.id),Object.keys(baseline));
-assert.equal(certifications.length,12);
+import {renderCertificateCard,renderCertificateDetail} from '../js/certifications-ui.js';
+assert.deepEqual(certifications.map(c=>c.id),['engineer','industrial','adsp','sqld','cka','ncp','linux','office','computer','word']);
+assert.equal(new Set(certifications.map(c=>c.id)).size,10);
+assert.deepEqual(certificationPaths.map(p=>p.title),['개발·정보시스템','클라우드·DevOps','데이터·DB','IT 활용']);
 assert.deepEqual(certifications.filter(c=>c.priority==='core').map(c=>c.id),['engineer','industrial','cka','ncp']);
 for(const cert of certifications){
- assert.equal(cert.url,baseline[cert.id]);
- for(const field of ['description','importance','whatYouLearn','careerUsage','studyOrder','nextStudy','officialCheckItems'])assert.ok(cert[field]?.length,cert.id+': '+field);
- assert.ok(cert.studyOrder.length>=4&&cert.studyOrder.length<=6);
- for(const id of [...cert.roleIds,...cert.primaryRoleIds])assert.ok(jobs.some(j=>j.id===id));
- if(cert.priority==='core')assert.ok(cert.badges.length);
- assert.ok(!/졸업점수|졸업실적|졸업 인정|배점|합격점수|시험시간|[0-9]+점/.test(JSON.stringify(cert)));
+ assert.ok(cert.summary&&cert.institution&&cert.examScope.length);
+ assert.equal(new URL(cert.url).protocol,'https:');
+ for(const scope of cert.examScope)assert.ok(scope.subjects.length);
+ for(const id of cert.relatedJobIds||[])assert.ok(jobs.some(j=>j.id===id));
+ assert.ok((cert.relatedJobIds||[]).length<=4);
+ for(const field of ['description','importance','whatYouLearn','careerUsage','studyOrder','nextStudy','officialCheckItems','importanceSources','roleIds','preparationGuide'])assert.ok(!(field in cert));
+ assert.ok(matches(certificationSearchText(cert),cert.name));
+ assert.ok(searchIndex.some(r=>r.url==='certifications.html?id='+cert.id));
+ const html=renderCertificateDetail(cert,jobs);
+ assert.ok(html.includes('주요 시험 영역')&&html.includes('rel="noopener noreferrer"'));
+ assert.ok((html.match(/class="button /g)||[]).length<=3);
+ assert.ok(html.includes('<h1 tabindex="-1">'));
+ assert.ok(!/졸업점수|졸업 인정|배점/.test(JSON.stringify(cert)));
 }
-for(const path of certificationPaths)for(const id of path.ids)assert.ok(certifications.some(c=>c.id===id));
-for(const job of jobs)for(const id of job.certifications)assert.ok(certifications.some(c=>c.id===id));
-const cases={'정보처리기사':'engineer','정보처리산업기사':'industrial','공공기관':'engineer','공공 SI':'industrial','정보화':'engineer','개발자':'engineer','CKA':'cka','Kubernetes':'cka','쿠버네티스':'cka','K8s':'cka','DevOps':'cka','NCP':'ncp','NAVER Cloud':'ncp','클라우드':'ncp','Cloud':'ncp','SQL':'sqld','SQLD':'sqld','DB':'sqld','Database':'sqld','Java':'ocjp','OCJP':'ocjp','Linux':'linux','리눅스':'linux'};
-for(const [term,id] of Object.entries(cases)){
- assert.ok(matches(certificationSearchText(certifications.find(c=>c.id===id)),term),term);
- assert.ok(searchIndex.some(r=>r.url==='certifications.html?id='+id&&matches(r.text,term)),term+' portal');
-}
+for(const p of certificationPaths)for(const id of p.ids)assert.ok(certifications.some(c=>c.id===id));
+for(const j of jobs)for(const id of j.certifications)assert.ok(certifications.some(c=>c.id===id));
+for(const removed of ['oc'+'p','oc'+'jp'])assert.ok(!searchIndex.some(r=>r.type==='IT 자격증'&&matches(r.text,removed)));
+for(const [term,id] of Object.entries({'쿠버네티스':'cka','K8s':'cka','DevOps':'cka','NCP':'ncp','NAVER Cloud':'ncp','SQL':'sqld','DB':'sqld','Linux':'linux','공공 SI':'engineer'}))assert.ok(matches(certificationSearchText(certifications.find(c=>c.id===id)),term));
+assert.deepEqual(certifications.filter(c=>c.recommendedTiming).map(c=>c.id),['engineer','industrial','sqld','ncp']);
+for(const id of ['engineer','industrial'])assert.ok(renderCertificateDetail(certifications.find(c=>c.id===id),jobs).includes('practical.html?exam='));
+for(const id of ['office','computer','word'])assert.ok(!renderCertificateDetail(certifications.find(c=>c.id===id),jobs).includes('관련 IT 직무'));
+assert.ok(!renderCertificateCard({id:'x',name:'<script>',summary:'&'}).includes('<script>'));
+assert.ok(!renderCertificateDetail({id:'x',url:'javascript:alert(1)'}).includes('javascript:'));
 assert.ok(readFileSync(new URL('../certifications.html',import.meta.url),'utf8').includes('content="noindex, nofollow"'));
-assert.deepEqual(certifications.filter(c=>c.preparationGuide).map(c=>c.id),['engineer','industrial','sqld','ncp']);
-for (const id of ['engineer','industrial']) {
- const cert=certifications.find(c=>c.id===id);
- assert.equal(cert.importanceSources.length,0);
- assert.ok(cert.overview.includes('민간 IT 기업'));
- assert.ok(cert.importance.includes('민간 IT 기업'));
- const guide=certifications.find(c=>c.id===id).preparationGuide;
- assert.ok(guide.steps.some(text=>text.includes('최근 5년')&&text.includes('모두 풀어')));
- assert.ok(guide.steps.some(text=>text.includes('이해되지 않는')&&text.includes('반드시 풀어')));
- assert.ok(guide.target.includes('1학년') && guide.target.includes('제1회'));
- assert.ok(guide.steps.some(text=>text.includes('학사')||text.includes('학위')));
- assert.ok(guide.steps.some(text=>text.includes('4월')&&text.includes('겨울방학')));
- assert.ok(guide.steps.some(text=>text.includes('7월')&&text.includes('학과 안내')));
- assert.ok(!guide.target.includes('반드시 합격'));
-}
-assert.ok(certifications.find(c=>c.id==='sqld').preparationGuide.target.includes('1학년 1학기 데이터베이스'));
-assert.ok(certifications.find(c=>c.id==='ncp').preparationGuide.target.includes('리눅스·클라우드컴퓨팅'));
-console.log('PASS: 12 stable IDs/URLs, 4 core badges, 23 search terms, role links, 4 preparation guides, no internal scores.');
+console.log('PASS: 10 certificates, official scopes, compact safe rendering, valid relationships, search, timing and noindex.');

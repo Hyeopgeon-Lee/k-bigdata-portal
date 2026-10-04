@@ -148,8 +148,7 @@ export const jobs = [
     "certifications": [
       "engineer",
       "industrial",
-      "sqld",
-      "ocjp"
+      "sqld"
     ],
     "relatedRoles": [
       {
@@ -284,7 +283,6 @@ export const jobs = [
     ],
     "certifications": [
       "cka",
-      "ocjp",
       "engineer"
     ],
     "relatedRoles": [
@@ -690,8 +688,7 @@ export const jobs = [
       "sqld",
       "adsp",
       "engineer",
-      "industrial",
-      "ocp"
+      "industrial"
     ],
     "relatedRoles": [
       {
@@ -1531,8 +1528,7 @@ export const jobs = [
     ],
     "certifications": [
       "sqld",
-      "adsp",
-      "ocp"
+      "adsp"
     ],
     "relatedRoles": [
       {

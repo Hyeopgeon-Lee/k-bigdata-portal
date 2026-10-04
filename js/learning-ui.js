@@ -1,7 +1,8 @@
 import {initJobGuide} from "./job-guide-ui.js";
 import {initPortalUX} from "./portal-ux.js";
 import {initGroupedSearch} from "./search-ui.js";
-import {certifications,certificationPaths,certificationGuidance} from "./certifications.js";
+import {certifications,certificationPaths} from "./certifications.js";
+import {renderCertificateCard,renderCertificateDetail} from "./certifications-ui.js";
 import {jobs,jobComparisons,jobGuidance,jobGroups,jobLearningDocs} from "./jobs.js";
 import {docs,docCategories,docFlows,findDocForSkill} from "./docs.js";
 import {questions} from "./interview.js";
@@ -37,28 +38,11 @@ function renderDocDetail(item){
 }
 
 
-const certBadges = item => '<div class="cert-badges">'+item.badges.map(badge=>'<span class="badge cert-priority-badge">'+esc(badge)+'</span>').join("")+'</div>';
-function renderCertificateCard(item,heading="h2"){
- return '<article class="resource-card cert-card'+(item.priority==="core"?' cert-core':'')+'" data-cert-id="'+esc(item.id)+'">'+icon+'<p><span class="badge">'+esc(item.category)+'</span></p>'+certBadges(item)+'<'+heading+'>'+esc(item.name)+'</'+heading+'><p class="english">'+esc(item.english)+'</p><p>'+esc(item.overview)+'</p>'+tags(item.tags)+'<a class="card-link" href="certifications.html?id='+esc(item.id)+'">학습·취업 준비 가이드 →<span class="sr-only"> · '+esc(item.name)+'</span></a></article>';
-}
-function renderCertificateDetail(item){
- const section=(title,body,id)=>'<section class="job-section"'+(id?' id="'+esc(id)+'"':'')+'><h3>'+esc(title)+'</h3>'+body+'</section>';
- const roleIds=[...new Set([...item.roleIds,...jobs.filter(job=>job.certifications.includes(item.id)).map(job=>job.id)])];
- const roles=roleIds.map(id=>jobs.find(job=>job.id===id)).filter(Boolean);
- const primary=roles.filter(role=>item.primaryRoleIds.includes(role.id)),related=roles.filter(role=>!item.primaryRoleIds.includes(role.id));
- const roleLinks=values=>'<div class="job-topic-links">'+values.map(role=>'<a href="jobs.html?id='+esc(role.id)+'">'+esc(role.name)+' →</a>').join("")+'</div>';
- const extraRoles=item.roles.filter(name=>!jobs.some(job=>job.name===name));
- const preparation=item.preparationGuide?'<aside class="cert-importance is-core cert-preparation" aria-labelledby="cert-preparation-heading"><h3 id="cert-preparation-heading">학과 권장 취득 시기와 준비 계획</h3><h4>'+esc(item.preparationGuide.title)+'</h4><p>'+esc(item.preparationGuide.target)+'</p>'+list(item.preparationGuide.steps)+(item.preparationGuide.note?'<p class="hint">'+esc(item.preparationGuide.note)+'</p>':'')+'</aside>':'';
- const note=item.note?'<aside class="notice cert-note"><h3>'+esc(item.noteTitle||"학과 안내 명칭과 현재 시행기관 안내")+'</h3><p>'+esc(item.note)+'</p></aside>':'';
-
-return '<article class="detail-panel cert-detail"><a class="back-link" href="certifications.html">← 전체 자격증</a><h2 tabindex="-1">'+esc(item.name)+'</h2><p class="english">'+esc(item.english)+'</p><p class="cert-institution"><strong>시행기관</strong> '+esc(item.institution)+'</p>'+certBadges(item)+'<p class="cert-overview">'+esc(item.overview)+'</p><section class="cert-importance'+(item.priority==="core"?' is-core':'')+'"><h3>왜 중요한가요?</h3><p>'+esc(item.importance)+'</p>'+'</section>'+preparation+section("무엇을 공부하나요?",'<p>'+esc(item.description)+'</p><p>'+esc(item.whatYouLearn)+'</p>')+section("핵심 학습 분야",skillTags(item.fields),"cert-fields")+section("학과 교육과의 연결",'<p>'+esc(item.education)+'</p>')+section("관련 IT 직무",(primary.length?'<h4>가장 직접적인 관련 직무</h4>'+roleLinks(primary)+'<h4>연관 직무</h4>':'')+roleLinks(related)+(extraRoles.length?list(extraRoles):''))+section("자격증 공부를 취업 준비로 연결하기",list(item.careerUsage),"cert-career")+section("추천 학습 순서",'<ol class="cert-study-order">'+item.studyOrder.map(step=>'<li>'+esc(step)+'</li>').join("")+'</ol>',"cert-study")+section("취득 후 다음 학습",list(item.nextStudy))+note+'<p class="cert-exam-check">'+esc(certificationGuidance.exam)+'</p>'+'<div class="detail-actions"><a class="button button-primary" href="'+esc(item.url)+'" target="_blank" rel="noopener noreferrer">공식 사이트에서 자세히 보기 ↗<span class="sr-only"> '+esc(item.name)+' 외부 사이트, 새 창</span></a><a class="button button-secondary" href="jobs.html">IT 직무 가이드</a><a class="button button-secondary" href="project-guide.html">프로젝트 제작 가이드</a><a class="button button-secondary" href="interview.html">기술면접 학습</a><a class="button button-secondary" href="https://ready.k-bigdata.kr/">취업 준비 점검 ↗</a><a class="button button-secondary" href="https://apply.k-bigdata.kr/">입사지원 현황 ↗</a><a class="button button-secondary" href="https://portfolio.k-bigdata.kr/">학과 프로젝트 보기 ↗</a></div></article>';
-}
-
 function renderJobDetail(job) {
   const section = (title, body, id) => '<section class="job-section"'+(id?' id="'+esc(id)+'"':"")+'><h3>'+esc(title)+'</h3>'+body+'</section>';
   const learningDocs = jobLearningDocs(job,docs);
   const blog = services.find(service => service.id === "tech-blog");
-  const certs = certifications.filter(cert => job.certifications.includes(cert.id) || cert.roleIds.includes(job.id));
+  const certs = certifications.filter(cert => job.certifications.includes(cert.id) || (cert.relatedJobIds || []).includes(job.id));
   const interviewLinks = job.interviewCategories.filter(category => questions.some(q => q.category === category));
   const related = job.relatedRoles.map(role => '<li>'+(role.id?'<a href="jobs.html?id='+esc(role.id)+'">'+esc(role.name)+'</a>':'<strong>'+esc(role.name)+'</strong>')+'<p>'+esc(role.description)+'</p></li>').join("");
   const checklist = '<ul class="job-checklist">'+job.readinessChecklist.map((text,i)=>'<li><label><input type="checkbox" id="ready-'+esc(job.id)+'-'+i+'"><span>'+esc(text)+'</span></label></li>').join("")+'</ul>';
@@ -88,8 +72,6 @@ if(page==="interview"){
 const data={certifications,jobs,docs,interview:questions}[page];
 const params=new URLSearchParams(location.search),id=params.get("id");
 const selected=data.find(item=>item.id===id);
-const certLanding=document.querySelector("#cert-landing");
-if(certLanding){certLanding.hidden=!!selected;certLanding.innerHTML='<section class="cert-paths" aria-labelledby="cert-path-title"><h2 id="cert-path-title">진로에 따라 먼저 준비할 자격증을 확인하세요</h2><p class="hint">'+esc(certificationGuidance.career)+'</p><div class="cert-path-grid">'+certificationPaths.map(path=>'<article class="job-info-card"><h3>'+esc(path.title)+'</h3><p>'+esc(path.description)+'</p><div class="job-topic-links">'+path.ids.map(id=>{const cert=certifications.find(c=>c.id===id);return '<a href="certifications.html?id='+esc(id)+'">'+esc(cert.name)+' →</a>';}).join("")+'</div></article>').join("")+'</div></section><section class="cert-core-section" aria-labelledby="cert-core-title"><h2 id="cert-core-title">취업 준비 핵심 자격증</h2><div class="cert-core-grid">'+certifications.filter(c=>c.priority==="core").map(c=>renderCertificateCard(c,"h3")).join("")+'</div></section>';}
 const flowRoot=document.querySelector("#doc-flows");
 if(flowRoot){flowRoot.hidden=!!selected;flowRoot.innerHTML=docFlows.map(flow=>'<details class="doc-flow"><summary>'+esc(flow.title)+'</summary><p>'+esc(flow.description)+'</p><div class="doc-related">'+flow.steps.map(id=>docLink(docs.find(doc=>doc.id===id))).join("")+'</div></details>').join("");}
 if(page==="jobs"){
@@ -101,10 +83,10 @@ const root=document.querySelector("#items"),detail=document.querySelector("#deta
 const certLink=id=>{const c=certifications.find(c=>c.id===id);return c?'<li><a href="certifications.html?id='+esc(id)+'">'+esc(c.name)+'</a></li>':"";};
 if(selected&&(page==="certifications"||page==="jobs"||page==="docs")){
 controls.hidden=true;root.hidden=true;
-detail.innerHTML=page==="certifications"?renderCertificateDetail(selected):'<article class="detail-panel"><a class="back-link" href="'+page+'.html">← 전체 목록</a><p><span class="badge">'+esc(selected.category)+'</span></p><h2 tabindex="-1">'+esc(selected.name)+'</h2><p>'+esc(selected.english)+'</p><p>'+esc(selected.overview)+'</p>'+tags(selected.tags)+(page==="docs"?renderDocDetail(selected):renderJobDetail(selected))+'</article>';
+detail.innerHTML=page==="certifications"?renderCertificateDetail(selected,jobs):'<article class="detail-panel"><a class="back-link" href="'+page+'.html">← 전체 목록</a><p><span class="badge">'+esc(selected.category)+'</span></p><h2 tabindex="-1">'+esc(selected.name)+'</h2><p>'+esc(selected.english)+'</p><p>'+esc(selected.overview)+'</p>'+tags(selected.tags)+(page==="docs"?renderDocDetail(selected):renderJobDetail(selected))+'</article>';
 }else{
 if(id){detail.innerHTML='<p class="notice" role="status">요청한 항목을 찾을 수 없습니다. 전체 목록에서 선택하세요.</p>';}
-const cats=page==="docs"?docCategories.map(c=>c.name):[...new Set(data.map(item=>item.category))];
+const cats=page==="certifications"?certificationPaths.map(path=>path.title):page==="docs"?docCategories.map(c=>c.name):[...new Set(data.map(item=>item.category))];
 let active=cats.includes(params.get("category"))?params.get("category"):"전체",query="",random=null,visibleLimit=16;
 const filters=document.querySelector("#filters"),input=document.querySelector("#local-query");
 function pool(){return data.filter(item=>(active==="전체"||item.category===active)&&matches(page==="jobs"?jobSearchText(item):page==="docs"?docSearchText(item):page==="certifications"?certificationSearchText(item):[item.name,item.english,item.overview,item.question,item.answer,item.category,...(item.tags||[]),...(item.keywords||[])].join(" "),query));}

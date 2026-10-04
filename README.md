@@ -57,12 +57,11 @@ js/learning-ui.js           필터·상세·검색·랜덤·모바일 메뉴
 
 ## 자격증 추가 / 수정
 
-`js/certifications.js`에서 id, name, english, category, institution, priority, badges, overview, description, importance, tags, whatYouLearn, fields, roles, roleIds, primaryRoleIds, education, careerUsage, studyOrder, nextStudy, officialCheckItems, url, note, noteTitle, aliases, importanceSources를 관리합니다. 선택적 preparationGuide({title,target,steps,note})는 학과 권장 취득 시기와 준비 계획이며 4개 자격증 상세에서 사용합니다. 공식 시험 일정·응시요건과 구분하며 새 연도에 공식 일정과 학과 안내를 다시 확인하세요.
-priority는 core/standard로 핵심 4개 영역과 카드 강조만 제어하며 점수·랭킹을 뜻하지 않습니다. certificationPaths는 진로별 안내, certificationGuidance는 공통 주의사항입니다.
-roleIds·primaryRoleIds는 기존 jobs id를 사용합니다. 직무 → 자격증 링크는 기존 직무 데이터의 certifications와 자격증 roleIds의 합집합으로 표시하며 반대 방향도 같은 관계를 사용합니다.
+`js/certifications.js`는 10개 자격증을 4개 분야로 관리합니다. 모델은 id/name/category/institution/priority/summary/examScope/departmentCourses/relatedJobIds/recommendedTiming/url/aliases이며 선택 항목은 생략합니다. 시험 영역은 시행기관 공식 과목, 학과 연결은 교육 주제로 분리합니다.
+`js/certifications-ui.js`가 간결한 카드와 상세 화면을 렌더링합니다. 관련 직무는 relatedJobIds의 실제 jobs ID로 연결하며 기사·산업기사에는 실기 연습 링크를 제공합니다.
 시험 일정·비용·버전·시험시간·유효기간 같은 변경 가능한 값은 하드코딩하지 않습니다. 중요도는 취업 준비 안내이며 채용·실무 능력을 보장하지 않습니다.
-`node tests/certifications-guide.test.mjs`로 12개 ID·URL 보존, 핵심 4개, 필드·검색·직무 연결·민감 내용 미노출을 확인합니다.
-현재 등록 범위는 지정된 12개 자격증입니다. 운영자가 승인하지 않은 자격증을 임의로 추가하지 않습니다.
+`node tests/certifications-guide.test.mjs`로 10개 ID·공식 URL, 핵심 4개, 필드·검색·직무 연결·민감 내용 미노출을 확인합니다.
+현재 등록 범위는 지정된 10개 자격증입니다. 운영자가 승인하지 않은 자격증을 임의로 추가하지 않습니다.
 명칭 체계가 바뀐 경우 학과 안내 명칭을 보존하고 note에 현재 시행기관 안내를 구분합니다.
 시험 일정·비용·응시 자격은 하드코딩하지 않고 공식 시행기관 버튼으로 안내합니다.
 상세 URL은 `certifications.html?id=고유id`입니다.
@@ -184,13 +183,10 @@ Pages 설정은 저장소 관리자 권한, DNS 설정은 도메인 관리자 �
 
 ## 공식 링크 확인 메모
 
-2026-10-03 기준 Q-Net, Oracle, NAVER Cloud, Linux Foundation, 개발 공식문서 및 학과 공식 홈페이지/홍보 페이지의 공식 출처를 확인했습니다.
 DataQ·KAIT·대한상공회의소는 공식 출처를 확인했으나 자동 수집 제한 또는 시간 초과가 있어 응시 전에 해당 기관 사이트의 최신 안내를 직접 확인하세요.
-OCP·OCJP는 제품/버전별 현행 체계와 구분하고, 워드프로세서 1급은 현재 단일등급 안내를 함께 표시합니다.
-
 ## 학생 포털 개편 회귀 검사
 
-`node tests/portal-redesign.test.mjs`와 기존 job-guide / certifications-guide / interview-bank / docs-hub 테스트를 모두 실행합니다. portal-baseline.json은 개편 전 main 커밋의 서비스 URL·7개 직무·12개 자격증·150개 면접·40개 문서 ID 목록입니다. ID를 변경하지 않으며 정책 변경이 없는 한 기준 파일도 임의 갱신하지 않습니다.
+`node tests/portal-redesign.test.mjs`와 기존 job-guide / certifications-guide / interview-bank / docs-hub 테스트를 모두 실행합니다. portal-baseline.json은 개편 전 main 커밋의 서비스 URL·7개 직무·10개 자격증·150개 면접·40개 문서 ID 목록입니다. ID를 변경하지 않으며 정책 변경이 없는 한 기준 파일도 임의 갱신하지 않습니다.
 모바일 Navigation·키보드·7개 해상도·브라우저 Console·운영 화면 검수는 tests/portal-redesign-qa.md에 기록합니다.
 # 첨부 실기 학습 데이터 추가
 
@@ -198,7 +194,7 @@ OCP·OCJP는 제품/버전별 현행 체계와 구분하고, 워드프로세서 
 
 - 메인: 4개 빠른 실행(실기, 기술면접, Ready, Apply), 작은 모바일 카테고리, 접힌 준비 흐름. 자격증 단계에서 실기 학습으로 연결합니다.
 - 학습 페이지: 데이터 기반 6개 학습 바로가기. 문제 풀이 중에는 감춰 집중 공간을 확보합니다.
-- 직무/자격증: 기존 상세 내용을 삭제하지 않고 `details`로 감쌉니다. 직무 한눈에 보기와 자격증 바로 학습하기에서 실제 데이터 관계를 연결합니다. 해시 바로가기는 접힌 부모도 엽니다.
+- 직무/자격증: 기존 상세 내용을 삭제하지 않고 `details`로 감쌉니다. 직무 한눈에 보기와 자격증 상세에서 관련 직무와 실기 학습을 연결합니다. 해시 바로가기는 접힌 부모도 엽니다.
 - 공식문서: 검색 우선, 분야 필터, 기술 관계 접기, 16개 단위 더 보기. 40개 데이터/URL은 유지합니다.
 - 프로젝트: 기존 11단계를 접고 펼치는 가이드와 다음 학습 연결로 정리합니다.
 - 통합검색: 메인에만 배치하며 결과를 유형별로 우선 4개씩 보여줍니다. 그룹별 더 보기와 기존 동의어/짧은 단어 오탐 방지 로직을 유지합니다.

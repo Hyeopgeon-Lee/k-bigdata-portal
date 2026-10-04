@@ -48,19 +48,10 @@ export function initPortalUX(){
  }
  if(page==="jobs"&&!job)disclosure(document.querySelector("#job-comparisons"),"직무 간 차이 이해하기");
  if(page==="certifications"){
-  disclosure(document.querySelector(".cert-paths"),"진로별 자격증 선택 안내");
   const cert=certifications.find(c=>c.id===id),panel=document.querySelector(".cert-detail");
   if(cert&&panel){
    detailHeading(panel);
    document.querySelector(".page-hero").hidden=true;
-   const relatedDocs=docs.filter(doc=>[doc.name,doc.english,...(doc.skillNames||[])].some(name=>[...cert.fields,...cert.tags,cert.education].some(field=>String(field).toLowerCase().includes(name.toLowerCase()))));
-   const relatedJobs=jobs.filter(job=>job.certifications.includes(cert.id));
-   const next=document.createElement("section");next.className="ux-at-glance";
-   next.innerHTML='<h3>바로 학습하기</h3><div class="doc-related">'+(['engineer','industrial'].includes(cert.id)?link("practical.html?exam="+(cert.id==="engineer"?"engineer":"industrial_engineer"),"실기 문제 연습"):'')+relatedDocs.slice(0,4).map(d=>link("docs.html?id="+d.id,d.name)).join('')+link("interview.html","기술면접 연습")+link("jobs.html","관련 직무 탐색")+'</div>';
-   panel.querySelector(".cert-importance").before(next);
-   const pathways=document.createElement('div');pathways.className='doc-related';pathways.innerHTML=relatedJobs.slice(0,3).map(job=>link('jobs.html?id='+job.id,job.name)).join('');next.append(pathways);
-   for(const section of [...panel.querySelectorAll(":scope > .job-section")])disclosure(section,section.querySelector("h3").textContent);
-   disclosure(panel.querySelector(".cert-preparation"),"학과 권장 취득 시기와 준비 계획");
   }
  }
  for(const node of document.querySelectorAll(".checklist-card"))disclosure(node,node.querySelector("h2").textContent);
