@@ -577,6 +577,60 @@
       "publisher": "RedPlus",
       "status": "포인터 compare 문제 코드·주소 전달 구조 교차검증",
       "license": "공개 기술 해설 페이지를 사실 검증에 사용."
+    },
+    {
+      "examType": "industrial_engineer",
+      "year": 2022,
+      "round": 3,
+      "url": "https://1273000982.tistory.com/171",
+      "publisher": "공부 일기",
+      "status": "2022년 3회 C·Python 문제와 정답 교차검증",
+      "license": "공개 합격후기/복원 내용을 사실 확인에 사용."
+    },
+    {
+      "examType": "industrial_engineer",
+      "year": 2022,
+      "round": 3,
+      "url": "https://www.sinagong.co.kr/community/001002002/book-qnas/281879",
+      "publisher": "시나공",
+      "status": "2022년 3회 6번 정답 304 공식 확인",
+      "license": "출판사 공식 Q&A를 사실 검증에 사용."
+    },
+    {
+      "examType": "industrial_engineer",
+      "year": 2023,
+      "round": 1,
+      "url": "https://bhher.tistory.com/99",
+      "publisher": "BHHer",
+      "status": "퀵정렬·재귀 C 코드와 정답 교차검증",
+      "license": "공개 기출 해설 페이지를 사실 검증에 사용."
+    },
+    {
+      "examType": "industrial_engineer",
+      "year": 2024,
+      "round": 1,
+      "url": "https://bhher.tistory.com/99",
+      "publisher": "BHHer",
+      "status": "대문자 개수·문자열 역순·do-while 문제 교차검증",
+      "license": "공개 기출 해설 페이지를 사실 검증에 사용."
+    },
+    {
+      "examType": "industrial_engineer",
+      "year": 2024,
+      "round": 3,
+      "url": "https://www.mycompiler.io/view/4kWMIhAKisw",
+      "publisher": "myCompiler 사용자 공개 코드",
+      "status": "2024년 3회 4번 union 코드 재현 확인",
+      "license": "공개 실행 코드 페이지를 사실 검증에 사용."
+    },
+    {
+      "examType": "industrial_engineer",
+      "year": 2024,
+      "round": 3,
+      "url": "https://bhher.tistory.com/121",
+      "publisher": "BHHer",
+      "status": "이중 포인터 배열 변환 코드·정답 교차검증",
+      "license": "공개 기출 해설 페이지를 사실 검증에 사용."
     }
   ]
 }
