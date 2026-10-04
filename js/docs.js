@@ -57,7 +57,7 @@ export const docFlows = [
       "spark",
       "kafka"
     ],
-    "description": "Hadoop의 HDFS는 분산 저장, Spark는 분산 처리, Kafka는 이벤트 스트리밍을 담당합니다. Hadoop에는 MapReduce 처리도 포함되며, 이 순서대로 모두 설치해야 한다는 뜻은 아닙니다."
+    "description": "Hadoop의 HDFS는 분산 저장, Spark는 분산 처리, Kafka는 이벤트 스트리밍을 담당합니다. Hadoop에는 MapReduce 처리도 포함됩니다. 저장·처리·스트리밍 요구에 맞는 도구를 선택하세요."
   },
   {
     "title": "Cloud Native: 실행부터 배포 관리까지",
@@ -82,7 +82,7 @@ export const docFlows = [
       "prometheus",
       "grafana"
     ],
-    "description": "Git·GitHub로 협업 → Actions 또는 Jenkins로 테스트·빌드 → Kubernetes·Argo CD로 배포 → Prometheus·Grafana로 관측. CI 도구는 대안이며 모든 도구가 필수는 아닙니다."
+    "description": "Git·GitHub로 협업 → Actions 또는 Jenkins로 테스트·빌드 → Kubernetes·Argo CD로 배포 → Prometheus·Grafana로 관측. Actions와 Jenkins 중 프로젝트 환경에 맞는 CI 도구를 선택하세요."
   },
   {
     "title": "생성형 AI: 모델과 실행 환경",
@@ -1478,7 +1478,7 @@ export const docs = [
     "interviewCategories": [
       "AI / 빅데이터"
     ],
-    "note": "모델마다 이용 조건이 다릅니다. 로컬 실행만으로 개인정보 보호·정확성이 보장되지 않으며 입력 데이터와 오류를 검토하세요."
+    "note": "모델 이용 조건, 입력 데이터의 개인정보, 응답 오류를 확인하세요."
   },
   {
     "id": "gemma",
@@ -1520,7 +1520,7 @@ export const docs = [
     "interviewCategories": [
       "AI / 빅데이터"
     ],
-    "note": "공개 가중치는 무조건적인 자유 이용을 뜻하지 않습니다. Gemma 이용 조건을 확인하고 Fine-tuning은 개념부터 학습하세요."
+    "note": "Gemma 이용 조건을 확인하고 Fine-tuning은 개념부터 학습하세요."
   },
   {
     "id": "publicdata",
@@ -1650,7 +1650,7 @@ export const docs = [
     "interviewCategories": [
       "네트워크"
     ],
-    "note": "Papago 등 제품은 제공 채널과 정책이 변경될 수 있습니다. 이 항목은 현재 네이버 개발자 제품 목록에서 안내하는 기능만 다룹니다."
+    "note": "프로젝트에서 사용할 API의 인증 방식·호출 한도·요금을 확인하세요."
   },
   {
     "id": "naver-maps",

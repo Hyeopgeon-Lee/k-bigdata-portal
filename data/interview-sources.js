@@ -1,4 +1,4 @@
-// Sources verify concepts, not a guarantee of questions asked by any employer.
+// Official references for reviewing technical concepts.
 export const interviewSources = {
   nist: {name: "NIST · Dictionary of Algorithms and Data Structures", url: "https://xlinux.nist.gov/dads/", type: "official"},
   java: {name: "Oracle Java API · Object / Collections", url: "https://docs.oracle.com/en/java/javase/25/docs/api/index.html", type: "official"},
@@ -34,9 +34,3 @@ export const interviewSources = {
   ml: {name: "Google · Machine Learning Crash Course", url: "https://developers.google.com/machine-learning/crash-course", type: "official"},
   rag: {name: "Google Cloud · RAG overview", url: "https://cloud.google.com/vertex-ai/generative-ai/docs/rag-engine/rag-overview", type: "official"}
 };
-export const interviewEditorialSources = [
-  {name: "Interview Question for Beginner · 공개 면접 주제", url: "https://github.com/jbee37142/Interview_Question_for_Beginner"},
-  {name: "Backend interview question · 준비자가 공유한 질문", url: "https://github.com/ksundong/backend-interview-question"},
-  {name: "신입개발자 교육 후기 · 우아한형제들", url: "https://techblog.woowahan.com/2566/"}
-];
-export const interviewReviewDate = "2026-10-03";

@@ -6,22 +6,21 @@
 <nav class="main-nav" id="portal-nav" aria-label="주요 메뉴"><a href="index.html#services">전체 서비스</a><a href="index.html#career">취업 · 진로</a><a href="index.html#learning">학습 · 역량</a><a href="index.html#project">프로젝트 · 성장</a><a href="index.html#campus">학과 생활</a><a href="https://www.kopo.ac.kr/kangseo/content.do?menu=1547">학과 홈페이지 ↗</a></nav>
 </div></header>
 <main id="content" class="learning-main"><nav class="container learning-cross-nav" aria-label="학습 바로가기" data-learning-nav></nav>
- <section class="page-hero container"><p class="section-kicker">INTERVIEW PRACTICE</p><h1>기술면접 문제은행</h1><p>신입 개발자 기술면접 핵심 문제를<br>짧게 반복해서 연습하세요.</p><p id="interview-stats" class="interview-stats"></p></section>
+ <section class="page-hero container"><h1>기술면접 문제은행</h1><p>신입 IT 직무 핵심 문제를<br>짧게 반복해서 연습하세요.</p><p id="interview-stats" class="interview-stats"></p></section>
  <section class="container learning-content" aria-label="기술면접 학습">
   <div id="detail" role="status"></div>
   <div id="interview-home"><button type="button" id="random-one" class="button button-primary">바로 1문제 시작</button><div class="interview-home-secondary"><button type="button" id="random-ten" class="button button-secondary">10문제 모의면접</button><button type="button" id="show-all" class="button button-secondary">문제 찾아보기</button></div></div>
   <div id="list-controls" hidden>
+   <h2 class="interview-browse-heading">원하는 문제 골라보기</h2>
+   <label for="local-query">문제 검색</label><input id="local-query" type="search" placeholder="예: 트랜잭션, JWT, Kubernetes" autocomplete="off">
    <details id="filter-panel"><summary>분야 · 직무 · 난이도 선택</summary>
     <h2 class="interview-filter-heading" id="field-filter-heading">학습 분야</h2><div id="filters" class="filters" role="group" aria-labelledby="field-filter-heading"></div>
     <h2 class="interview-filter-heading" id="job-filter-heading">직무</h2><div id="job-filters" class="filters" role="group" aria-labelledby="job-filter-heading"></div>
     <h2 class="interview-filter-heading" id="difficulty-filter-heading">난이도</h2><div id="difficulty-filters" class="filters" role="group" aria-labelledby="difficulty-filter-heading"></div>
    </details>
    <div id="active-interview-filter" aria-label="적용된 조건"></div><button type="button" id="reset-interview" class="button button-secondary" hidden>전체 초기화</button>
-   <label for="local-query">목록 내 검색</label><input id="local-query" type="search" placeholder="예: 트랜잭션, JWT, Kubernetes" autocomplete="off">
-   <p class="hint">선택한 조건은 랜덤 연습과 모의면접에도 적용됩니다.</p><div class="browse-actions"><button type="button" class="button button-secondary" data-action="one">조건 안에서 1문제</button><button type="button" class="button button-secondary" data-action="restart">조건 안에서 10문제</button><button type="button" class="button button-secondary" data-action="home">학습 시작으로</button></div>
   </div>
   <p id="list-status" role="status"></p><div id="items" class="question-list"></div>
-  <details class="interview-editorial"><summary>문제 구성·검수 기준과 참고 자료</summary><p>공개 면접 준비 자료의 주제와 학과 진출 직무를 참고해 질문·답변을 새로 작성했습니다. 특정 기업의 실제 출제나 합격을 보장하지 않습니다. 문제별 공식 문서는 개념을 확인하기 위한 자료이며 사용 버전과 구현에 따른 차이를 함께 확인하세요.</p><p>기초 → 기본 → 심화 순서로 연습하고, 자신의 프로젝트 사례로 답변을 보완하세요.</p><p class="hint">콘텐츠 검토일: <span id="interview-review-date"></span></p><ul id="interview-reference-list"></ul></details>
   <p id="interview-fallback" class="notice">학습 화면을 준비하고 있습니다. 화면이 표시되지 않으면 새로고침하거나 <a href="index.html">포털 홈</a>으로 이동하세요.</p><noscript><p>학습하려면 JavaScript를 활성화해 주세요.</p></noscript>
  </section>
 </main>

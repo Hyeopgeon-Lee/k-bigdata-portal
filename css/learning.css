@@ -94,8 +94,6 @@ body[data-page=docs] .detail-panel .notice h3{margin-top:0}
 .cert-importance{padding:24px;background:#f8fafe;border:1px solid #dce3ef;border-radius:14px;margin-top:28px}
 .cert-importance.is-core{border-left:4px solid #142d70;background:#edf3fc}
 .cert-importance h3,.cert-note h3{margin-top:0}.cert-importance p{margin-bottom:0}
-.cert-source{margin-top:20px}.cert-source summary{cursor:pointer;color:#142d70;font-weight:700;min-height:44px;align-content:center}
-.cert-source a{text-decoration:underline;text-underline-offset:3px}
 .cert-study-order li{padding:8px 4px}
 body[data-page=certifications] .filters{flex-wrap:nowrap;overflow-x:auto;padding:6px 4px 14px}
 body[data-page=certifications] .filters button{white-space:nowrap;flex:0 0 auto}
@@ -122,7 +120,7 @@ body[data-page=interview] .question{min-width:0;padding:28px}
 .follow-ups{padding-left:24px;margin:12px 0}.follow-ups li+li{margin-top:12px}
 .question-sources{margin-top:22px;border-top:1px solid #e3e9f2}
 .question-sources>summary{font-size:14px;font-weight:500}
-.question-sources li{margin:6px 0;line-height:1.8}.question-sources a,.interview-editorial a{text-decoration:underline;text-underline-offset:3px;color:#142d70}
+.question-sources li{margin:6px 0;line-height:1.8}.question-sources a{text-decoration:underline;text-underline-offset:3px;color:#142d70}
 .question-permalink{display:inline-flex;align-items:center;min-height:44px;margin-top:12px;color:#142d70;font-size:14px}
 .practice-session,.practice-complete{min-width:0;padding:24px;border:1px solid #c8d6ee;border-radius:18px;background:#edf3fc}
 .practice-progress{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:center;color:#142d70}
@@ -130,9 +128,6 @@ body[data-page=interview] .question{min-width:0;padding:28px}
 .practice-complete h2{font-size:clamp(24px,4vw,32px)}.practice-complete p{line-height:1.85}
 body[data-page=interview] .practice-actions .button{font-size:15px;padding:12px 18px;min-height:48px}
 body[data-page=interview] .button:disabled{opacity:.55;cursor:not-allowed}
-.interview-editorial{margin-top:36px;padding:20px;border:1px solid #dce3ef;border-radius:14px;background:#fff}
-.interview-editorial>summary{min-height:44px;cursor:pointer;align-content:center;color:#142d70;font-weight:700;line-height:1.6}
-.interview-editorial p,.interview-editorial li{font-size:15px;line-height:1.85;color:#4e5a70}
 .question h2:focus-visible,.practice-complete h2:focus-visible{outline:3px solid #1ba7d4;outline-offset:5px;border-radius:4px}
 .question h2,.practice-complete h2{scroll-margin-top:110px}
 @media(max-width:767px){body[data-page=interview] .question{padding:20px}.practice-session,.practice-complete{padding:16px}.question .short-answer{padding:14px}.question-meta .badge{font-size:12px}.question-role{font-size:13px}.question .answer-content p,.follow-ups li{font-size:16px}}

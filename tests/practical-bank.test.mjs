@@ -36,7 +36,8 @@ assert.ok(!highlightCode('<script>alert(1)</script>').includes('<script>'));
 assert.deepEqual(summarizeAttempts([{correct:true,elapsedSeconds:60},{correct:false,elapsedSeconds:80},{correct:null,elapsedSeconds:100}]),{total:3,correct:1,wrong:1,pending:1,rate:50,average:80});
 assert.ok(services.some(s=>s.id==='practical'&&s.url==='practical.html'));
 for(const term of ['실기','SQL','정보처리산업기사','오답노트'])assert.ok(searchIndex.some(s=>s.url==='practical.html'&&matches(s.text,term)));
-assert.ok(read('js/learning-ui.js').includes('실기 코딩·SQL 문제 풀기'));
+assert.ok(read('js/portal-ux.js').includes('실기 문제 연습'));
+assert.ok(read('js/portal-ux.js').includes('practical.html?exam='));
 const html=read('practical.html');assert.match(html,/<meta name="robots" content="noindex, nofollow">/);assert.ok(!html.includes('258'));assert.ok(html.includes('value="reconstructed"'));
 const ui=read('js/practical-ui.js');assert.ok(ui.includes('if(!canSubmit(attempt,answer))'));assert.ok(ui.includes('if(!canReveal(attempt))'));assert.ok(ui.includes('rel="noopener noreferrer"'));
 // Storage adapter: reload continuity, attempts idempotency, blocked storage fallback.

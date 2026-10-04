@@ -1,4 +1,4 @@
-import {questions, interviewGroups, interviewJobTags, questionSearchText, matchesInterviewCategory, selectRandomQuestions, interviewSources, interviewEditorialSources, interviewReviewDate} from "./interview.js";
+import {questions, interviewGroups, interviewJobTags, questionSearchText, matchesInterviewCategory, selectRandomQuestions, interviewSources} from "./interview.js";
 import {matches} from "./search.js";
 import {interviewRoleLinks} from "./jobs.js";
 const esc=value=>String(value??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
@@ -16,7 +16,6 @@ export function initInterview(){
  const filters={category:questions.some(q=>matchesInterviewCategory(q,params.get("category")))?params.get("category"):"전체",job:interviewJobTags.includes(params.get("job"))?params.get("job"):"전체",difficulty:levels.includes(params.get("difficulty"))?params.get("difficulty"):"전체",query:params.get("q")||""};
  let direct=questions.find(q=>q.id===params.get("id")),session=null,lastRandom=direct?.id||null,limit=20,mode=direct?"PRACTICE_ONE":params.size?"BROWSE":"HOME";
  input.value=filters.query;$("#interview-stats").textContent=questions.length+"문제 · "+interviewGroups.length+"개 분야";
- $("#interview-reference-list").innerHTML=interviewEditorialSources.map(s=>'<li>'+external(s)+'</li>').join('');$("#interview-review-date").textContent=interviewReviewDate;
  if(params.has("id")&&!direct)$("#detail").textContent="요청한 문제를 찾을 수 없습니다. 목록에서 다른 문제를 선택하세요.";
  const pool=()=>filterInterviewQuestions(questions,filters);
  function syncURL(){const url=new URL(location.href);url.search="";for(const [k,v]of Object.entries(filters))if(v&&v!=="전체")url.searchParams.set(k==="query"?"q":k,v);if(direct)url.searchParams.set("id",direct.id);history.replaceState(null,"",url);}
@@ -24,7 +23,7 @@ export function initInterview(){
  function syncFilters(){buttons("#filters",["전체",...interviewGroups],interviewGroups.includes(filters.category)?filters.category:questions.find(q=>q.category===filters.category)?.group||"전체","category");buttons("#job-filters",["전체",...interviewJobTags],filters.job,"job");buttons("#difficulty-filters",["전체",...levels],filters.difficulty,"difficulty");const applied=Object.entries(filters).filter(([,v])=>v&&v!=="전체");$("#active-interview-filter").innerHTML=applied.map(([k,v])=>action("remove-filter",v+" ×",false,'data-key="'+k+'" aria-label="'+esc(v)+' 조건 해제"')).join('');$("#reset-interview").hidden=!applied.length;}
  function listCard(q){return '<article class="question">'+meta(q)+'<h2>'+esc(q.question)+'</h2>'+roles(q)+action("select","이 문제 연습하기",false,'data-id="'+esc(q.id)+'"')+'<a class="question-permalink" href="interview.html?id='+encodeURIComponent(q.id)+'"><span class="sr-only">'+esc(q.question)+' </span>문제 링크 →</a></article>';}
  function render(focus=false){
-  document.body.dataset.interviewMode=mode;$("#interview-home").hidden=mode!=="HOME";$(".page-hero").hidden=mode.startsWith("PRACTICE")||mode==="COMPLETE";controls.hidden=mode!=="BROWSE";status.hidden=mode!=="BROWSE";syncFilters();
+  document.body.dataset.interviewMode=mode;$("#interview-home").hidden=mode!=="HOME"&&mode!=="BROWSE";$(".page-hero").hidden=mode.startsWith("PRACTICE")||mode==="COMPLETE";controls.hidden=mode!=="BROWSE";status.hidden=mode!=="BROWSE";syncFilters();
   if(mode==="HOME")root.innerHTML="";
   else if(mode==="BROWSE"){const available=pool();root.innerHTML=available.length?available.slice(0,limit).map(listCard).join('')+(available.length>limit?action("more","문제 더 보기"):""):'<section class="notice"><h2 tabindex="-1">조건에 맞는 문제가 없습니다.</h2><p>다른 분야를 선택하거나 필터를 초기화하세요.</p>'+action("reset","필터 초기화")+'</section>';status.textContent=available.length+"문제 중 "+Math.min(limit,available.length)+"문제 표시";}
   else if(mode==="COMPLETE")root.innerHTML='<section class="practice-complete"><h2 tabindex="-1">모의 기술면접 완료</h2><p>'+session.items.length+'문제를 연습했습니다.</p><p>다시 풀어볼 문제를 정리한 뒤 공식문서와 프로젝트 코드로 복습하세요.</p><div class="practice-actions">'+action("restart","다시 10문제",true)+action("one","랜덤 1문제")+action("all","문제 찾아보기")+'</div></section>';

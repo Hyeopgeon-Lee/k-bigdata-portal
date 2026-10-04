@@ -3,7 +3,6 @@ body[data-page="interview"] .container{width:min(calc(100% - 24px),880px)}
 body[data-page="interview"] .page-hero{padding:24px 0 20px}
 body[data-page="interview"] .page-hero h1{font-size:28px;line-height:1.35;margin:6px 0 12px;word-break:keep-all}
 body[data-page="interview"] .page-hero p{font-size:16px;line-height:1.8;margin:8px 0;color:var(--color-text-muted)}
-body[data-page="interview"] .page-hero .section-kicker{font-size:11px;margin:0;color:var(--color-primary)}
 body[data-page="interview"] .interview-stats{background:none;border:0;padding:0;font-size:14px!important}
 body[data-page="interview"] .interview-home-link{display:none}
 body[data-page="interview"] #interview-home>.button{width:100%;min-height:56px;font-size:17px}
@@ -11,7 +10,7 @@ body[data-page="interview"] .interview-home-secondary{display:grid;grid-template
 body[data-page="interview"] .button{font:inherit;font-weight:700;min-height:48px;padding:12px 14px;cursor:pointer}
 body[data-page="interview"] #filter-panel{border:1px solid var(--color-border);border-radius:12px;background:white;padding:12px;margin-bottom:16px}
 body[data-page="interview"] #filter-panel>summary{min-height:48px;align-content:center;color:var(--color-primary);font-weight:700;cursor:pointer}
-body[data-page="interview"] #active-interview-filter,body[data-page="interview"] .browse-actions{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+body[data-page="interview"] #active-interview-filter{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
 body[data-page="interview"] #reset-interview{margin-bottom:16px}
 body[data-page="interview"] .question{padding:18px;min-width:0}
 body[data-page="interview"] .question h2{font-size:21px;line-height:1.65;word-break:keep-all;overflow-wrap:anywhere;scroll-margin-top:90px}
@@ -30,7 +29,6 @@ body[data-page="interview"] .interview-bottom{position:fixed;bottom:0;left:0;rig
 body[data-page="interview"] .interview-bottom .button-primary{flex:1}
 body[data-page="interview"][data-interview-mode^="PRACTICE"] .learning-content{padding-bottom:120px}
 body[data-page="interview"][data-interview-mode^="PRACTICE"] .site-footer{display:none}
-body[data-page="interview"] .interview-editorial{margin-top:48px}
 body[data-page="interview"] .practice-complete{padding:20px}
 @media(max-width:900px){
  body[data-page="interview"] .site-header{height:60px}
@@ -45,3 +43,9 @@ body[data-page="interview"] .practice-complete{padding:20px}
  body[data-page="interview"][data-interview-mode="BROWSE"] .question-list{grid-template-columns:repeat(2,minmax(0,1fr))}
  body[data-page="interview"] .question-list>.button{grid-column:1/-1}
 }
+
+body[data-page="interview"][data-interview-mode="BROWSE"] #interview-home{margin-bottom:20px}
+body[data-page="interview"][data-interview-mode="BROWSE"] #show-all{display:none}
+body[data-page="interview"][data-interview-mode="BROWSE"] .interview-home-secondary{grid-template-columns:1fr}
+body[data-page="interview"] .interview-browse-heading{font-size:20px;margin:20px 0 12px}
+body[data-page="interview"] #local-query{margin-bottom:12px}

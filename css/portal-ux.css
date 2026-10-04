@@ -88,7 +88,9 @@ body[data-guide-page] .guide-cta{margin-top:24px;background:#f5f7fb}
  body[data-portal-home] .service-tags span{font-size:13px}
  body[data-portal-home] .card-link{position:static;font-size:15px;min-height:44px;display:flex;align-items:center;margin-top:8px}
  .learning-cross-nav{padding-block:8px}
- .page-hero .back-link{margin-bottom:12px}
+ .page-hero .back-link,.page-hero .section-kicker{display:none}
+ .cert-detail .cert-importance{padding:16px;margin-block:16px}
+ .ux-disclosure>.job-section>h3,.ux-disclosure>.cert-preparation>h3{display:none}
  .page-hero p,.resource-card p{font-size:16px!important;line-height:1.8}
  .detail-panel{padding:18px}
  .detail-panel p,.detail-panel li{font-size:16px}

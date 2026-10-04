@@ -36,7 +36,7 @@ js/jobs.js                  직무 데이터
 js/interview.js             문제 데이터 공개 API / 검색 / 균형 랜덤 선택
 js/interview-ui.js          문제은행 전용 필터·답변·모의면접 UI
 data/interview-questions.js 기술면접 150문제 데이터
-data/interview-sources.js   공식 검수 문서와 출제 주제 참고 자료
+data/interview-sources.js   질문별 공식 기술문서
 js/docs.js                  공식문서 데이터
 js/search.js                통합검색 인덱스와 동의어
 js/learning-ui.js           필터·상세·검색·랜덤·모바일 메뉴
@@ -219,3 +219,16 @@ OCP·OCJP는 제품/버전별 현행 체계와 구분하고, 워드프로세서 
 검색엔진 정책은 변경하지 않습니다. 모든 내부 HTML은 noindex, nofollow를 유지하며 새 sitemap이나 크롤링 차단 robots.txt는 생성하지 않았습니다. JavaScript 메타 변경은 JS 미실행 크롤러/미리보기에서 반영되지 않을 수 있으며 검색 노출을 보장하지 않습니다.
 
 콘텐츠 검토 참고: [Flutter 앱 구조](https://docs.flutter.dev/app-architecture), [Playwright 테스트 원칙](https://playwright.dev/docs/best-practices), [pandas 집계 공식 안내](https://pandas.pydata.org/docs/user_guide/groupby.html). 면접·자격증 링크는 실제 등록 ID와 분야만 사용합니다.
+
+## 학생 화면 콘텐츠 정리 (2026-10-04)
+
+콘텐츠 편집·취업지도·학습 UX·모바일 UI·프론트엔드·QA의 여섯 관점으로 검토했습니다. 학생 화면에서 취업/합격/출제 관련 면책, 제작·검수 설명과 반복 안내를 제거하고 공고 확인·직접 구현·프로젝트 증거·학습 행동으로 안내합니다.
+
+- 면접: editorial 자료·검토일·참고자료 패널 및 의존 코드 제거. 질문별 공식 기술문서는 유지합니다. 탐색 조건은 상단 1문제/10문제 시작에 적용합니다.
+- 자격증: 중요도·준비 시기·학습 내용 유지, 시험 확인은 한 문장으로 축소. 중복 실기 CTA를 제거하고 상단 바로 학습하기에서 연결합니다.
+- 직무: 공고 확인·코드/테스트/문서로 준비 증명·말로 면접 연습 중심으로 정리합니다.
+- 실기: 문제 종류·출제 이력·출처 링크는 유지하고 긴 검증 설명은 화면에 출력하지 않습니다. 문제·정답·단계별 풀이·내부 검증 메타데이터·기록 스키마는 변경하지 않습니다. 제작 설명만 담긴 추가 설명은 접힘 UI도 만들지 않습니다.
+- 공식문서: Secret/JWT/API Key/개인정보/모델 이용 조건 등 기술적 주의는 유지하고 정책 대행·범위 면책을 제거합니다.
+- 프로젝트: 반복 영문 장식 제목을 제거합니다. 개인정보·라이선스·테스트·데이터 품질 안내는 유지합니다.
+
+내부 품질관리 자료는 삭제 대상이 아닙니다. TCP·동시성·SQL 등 답변의 기술적 한계도 학습 내용으로 유지합니다. 모든 HTML의 noindex, nofollow 정책은 동일합니다. 검증 내용은 [콘텐츠 정리 QA](tests/content-cleanup-qa.md)를 참고하세요.
