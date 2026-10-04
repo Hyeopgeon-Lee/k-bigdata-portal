@@ -1958,15 +1958,15 @@
     "verificationNote": "회차·문항번호·정답을 공개 복원자료에서 확인. 독립 출처 미확보로 신뢰도 C."
   },
   {
-    "id": "H-I-2024-3-7-R-IND-JAVA-0014",
-    "questionId": "R-IND-JAVA-0014",
+    "id": "H-I-2024-3-7-R-IND-JAVA-0003",
+    "questionId": "R-IND-JAVA-0003",
     "examType": "industrial_engineer",
     "year": 2024,
     "round": 3,
     "questionNumber": 7,
     "sourceName": "잡코딩 정보 블로그 · 산업기사 2024년 3회",
     "sourceUrl": "https://complainrevolutionist.tistory.com/208",
-    "verificationNote": "회차·문항번호·정답을 공개 복원자료에서 확인. 독립 출처 미확보로 신뢰도 C."
+    "verificationNote": "2022년 2회와 동일한 복합 대입 Java 코드·정답이 재출제된 것으로 공개 복원자료에서 확인. 동일 문제 객체에 2024년 3회 출제이력만 추가. 독립 출처 미확보로 신뢰도 C."
   },
   {
     "id": "H-I-2024-3-9-R-IND-C-0026",
