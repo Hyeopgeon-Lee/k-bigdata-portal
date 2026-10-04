@@ -50,7 +50,6 @@ export function initPortalUX(){
  if(page==="certifications"){
   const cert=certifications.find(c=>c.id===id),panel=document.querySelector(".cert-detail");
   if(cert&&panel){
-   detailHeading(panel);
    document.querySelector(".page-hero").hidden=true;
   }
  }

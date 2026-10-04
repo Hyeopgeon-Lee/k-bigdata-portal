@@ -33,4 +33,8 @@ for(const id of ['office','computer','word'])assert.ok(!renderCertificateDetail(
 assert.ok(!renderCertificateCard({id:'x',name:'<script>',summary:'&'}).includes('<script>'));
 assert.ok(!renderCertificateDetail({id:'x',url:'javascript:alert(1)'}).includes('javascript:'));
 assert.ok(readFileSync(new URL('../certifications.html',import.meta.url),'utf8').includes('content="noindex, nofollow"'));
-console.log('PASS: 10 certificates, official scopes, compact safe rendering, valid relationships, search, timing and noindex.');
+const css=readFileSync(new URL('../css/learning.css',import.meta.url),'utf8');
+assert.ok(css.includes('.cert-exam-stage ul{display:grid;grid-template-columns:minmax(0,1fr)'));
+assert.ok(css.includes('.cert-exam-stage li+li{margin-top:0}'));
+for(const cert of certifications)assert.equal((renderCertificateDetail(cert,jobs).match(/<h1\b/g)||[]).length,1);
+console.log('PASS: 10 certificates, official scopes, vertical exam lists, compact safe rendering, valid relationships, search, timing and noindex.');

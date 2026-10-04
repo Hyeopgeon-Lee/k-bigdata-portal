@@ -92,7 +92,12 @@ body[data-page=certifications] .cert-detail .job-section{margin-top:22px;padding
 body[data-page=certifications] .cert-detail .job-section h2{margin:0 0 10px;font-size:19px}
 body[data-page=certifications] .cert-detail p,body[data-page=certifications] .cert-detail li{font-size:16px;line-height:1.65}
 body[data-page=certifications] .cert-exam-stage h3{margin:12px 0 6px;font-size:16px;color:#142d70}
-body[data-page=certifications] .cert-exam-stage ul{display:flex;flex-wrap:wrap;gap:6px 20px;padding-left:20px;margin:0}
+body[data-page=certifications] .cert-exam-stage{min-width:0}
+body[data-page=certifications] .cert-exam-stage+.cert-exam-stage{margin-top:16px}
+body[data-page=certifications] .cert-exam-stage ul{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;padding:0 0 0 22px;margin:0;list-style:disc outside}
+body[data-page=certifications] .cert-exam-stage li{min-width:0;margin:0;padding:0 0 0 2px;line-height:1.6;word-break:normal;overflow-wrap:anywhere}
+body[data-page=certifications] .cert-exam-stage li+li{margin-top:0}
+body[data-page=certifications] .cert-exam-stage li::marker{color:#142d70}
 body[data-page=certifications] .cert-card,body[data-page=certifications] .cert-detail{min-width:0;overflow-wrap:anywhere}
 body[data-page=certifications] .cert-card h2{font-size:21px;line-height:1.4}
 body[data-page=certifications] .cert-card .cert-institution{font-size:14px;color:#59647a}
