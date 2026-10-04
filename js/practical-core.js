@@ -37,13 +37,19 @@ export function recommendFive(bank,attempts,day){
  const weak=new Set(bank.filter(q=>latest.get(q.id)?.correct===false).flatMap(q=>q.concepts));
  const seed=[...day].reduce((s,c)=>(s*31+c.charCodeAt(0))>>>0,0);
  const tie=q=>[...q.id].reduce((s,c)=>(s*33+c.charCodeAt(0))>>>0,seed);
- const rank=q=>(q.concepts.some(c=>weak.has(c))?8:0)+(!latest.has(q.id)?4:0)+(q.sourceType==='reconstructed'?2:q.sourceType==='practice'?0:1);
+ const sourceWeight={reconstructed:16,normalized:6,transformed:3,practice:1};
+ const rank=q=>(q.concepts.some(c=>weak.has(c))?8:0)+(!latest.has(q.id)?6:0)+(sourceWeight[q.sourceType]||0);
  const ordered=[...bank].sort((a,b)=>rank(b)-rank(a)||(latest.get(a.id)?.submittedAt||0)-(latest.get(b.id)?.submittedAt||0)||tie(a)-tie(b));
- const selected=[],take=predicate=>{const q=ordered.find(q=>!selected.includes(q)&&predicate(q));if(q)selected.push(q);};
- take(q=>q.sourceType==='reconstructed');take(q=>q.sourceType==='reconstructed');
- take(q=>q.sourceType==='normalized'||q.sourceType==='transformed');take(q=>q.sourceType==='normalized'||q.sourceType==='transformed');
- take(q=>q.language==='SQL'||q.concepts.some(c=>weak.has(c)));
- while(selected.length<Math.min(5,bank.length))take(()=>true);
+ const selected=[],usedConcepts=new Set();
+ const concept=q=>q.concepts[0]||q.title;
+ const take=predicate=>{
+   const fresh=ordered.find(q=>!selected.includes(q)&&predicate(q)&&!usedConcepts.has(concept(q)));
+   const q=fresh||ordered.find(q=>!selected.includes(q)&&predicate(q));
+   if(q){selected.push(q);usedConcepts.add(concept(q));}
+ };
+ // Verified reconstructed questions come first. Once exhausted, move to learning/variation items.
+ while(selected.length<Math.min(5,bank.length)&&ordered.some(q=>!selected.includes(q)&&q.sourceType==='reconstructed'))take(q=>q.sourceType==='reconstructed');
+ while(selected.length<Math.min(5,bank.length))take(q=>q.sourceType==='normalized'||q.sourceType==='transformed'||q.sourceType==='practice');
  return selected;
 }
 export function matchesExam(q,exam,bank=[]){
