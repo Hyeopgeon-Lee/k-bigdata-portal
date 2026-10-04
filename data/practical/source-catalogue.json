@@ -505,6 +505,15 @@
       "publisher": "개발슝이",
       "status": "C·Java·Python·SQL 회차·코드·정답 교차검증",
       "license": "공개 복원자료를 사실 확인에 사용. 원문 대량 복제 없이 학습용으로 정규화."
+    },
+    {
+      "examType": "industrial_engineer",
+      "year": 2025,
+      "round": 3,
+      "url": "https://gfile.gilbut.co.kr/gilbut/bookdata/BN004729/preview/index.html",
+      "publisher": "시나공(길벗) 2026 정보처리산업기사 실기 기본서 공개 미리보기",
+      "status": "2025년 3회 공개 미리보기에서 문제 1·5·6 및 정답/해설 직접 확인",
+      "license": "출판사 공개 미리보기를 사실 검증에 사용. 원문을 대량 복제하지 않고 문제 설명·해설은 학습용으로 재작성."
     }
   ]
 }
