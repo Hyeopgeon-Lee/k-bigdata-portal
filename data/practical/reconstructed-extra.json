@@ -5082,7 +5082,7 @@
     "language": "SQL",
     "title": "AVG와 COUNT 집계 함수 빈칸",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "blank",
     "difficulty": "실전",
     "concepts": [
@@ -5103,9 +5103,13 @@
       {
         "name": "잡코딩 · 산업기사 2022-1 복원자료",
         "url": "https://complainrevolutionist.tistory.com/52"
+      },
+      {
+        "name": "Logic & Coffee · 정보처리산업기사 실기 SQL 기출문제 정리",
+        "url": "https://allen8524.tistory.com/92"
       }
     ],
-    "verificationNote": "산업기사 2022-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "verificationNote": "산업기사 2022-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
@@ -5117,7 +5121,7 @@
     "language": "Java",
     "title": "while 누적 후 a+sum 출력",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "output",
     "difficulty": "실전",
     "concepts": [
@@ -5137,9 +5141,13 @@
       {
         "name": "잡코딩 · 산업기사 2022-1 복원자료",
         "url": "https://complainrevolutionist.tistory.com/52"
+      },
+      {
+        "name": "Logic & Coffee · 정보처리산업기사 실기 Java 기출문제 정리",
+        "url": "https://allen8524.tistory.com/90"
       }
     ],
-    "verificationNote": "산업기사 2022-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "verificationNote": "산업기사 2022-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
@@ -5151,7 +5159,7 @@
     "language": "Java",
     "title": "삼항 연산자와 절댓값 분기",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "output",
     "difficulty": "실전",
     "concepts": [
@@ -5170,9 +5178,13 @@
       {
         "name": "잡코딩 · 산업기사 2022-1 복원자료",
         "url": "https://complainrevolutionist.tistory.com/52"
+      },
+      {
+        "name": "Logic & Coffee · 정보처리산업기사 실기 Java 기출문제 정리",
+        "url": "https://allen8524.tistory.com/90"
       }
     ],
-    "verificationNote": "산업기사 2022-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "verificationNote": "산업기사 2022-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
@@ -5218,7 +5230,7 @@
     "language": "Java",
     "title": "복합 대입 연산 순차 계산",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "output",
     "difficulty": "실전",
     "concepts": [
@@ -5236,9 +5248,13 @@
       {
         "name": "잡코딩 · 산업기사 2022-2 복원자료",
         "url": "https://complainrevolutionist.tistory.com/53"
+      },
+      {
+        "name": "Logic & Coffee · 정보처리산업기사 실기 Java 기출문제 정리",
+        "url": "https://allen8524.tistory.com/90"
       }
     ],
-    "verificationNote": "산업기사 2022-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "verificationNote": "산업기사 2022-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
@@ -5250,7 +5266,7 @@
     "language": "C",
     "title": "최댓값·최솟값 제외 평균",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "output",
     "difficulty": "실전",
     "concepts": [
@@ -5271,9 +5287,13 @@
       {
         "name": "잡코딩 · 산업기사 2022-2 복원자료",
         "url": "https://complainrevolutionist.tistory.com/53"
+      },
+      {
+        "name": "시나공 · 정보처리산업기사 실기 최대·최소값 문제 Q&A",
+        "url": "https://www.sinagong.co.kr/community/001002002/book-qnas/205733"
       }
     ],
-    "verificationNote": "산업기사 2022-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "verificationNote": "산업기사 2022-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
@@ -5319,7 +5339,7 @@
     "language": "Java",
     "title": "26과 91의 최대공약수",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "output",
     "difficulty": "실전",
     "concepts": [
@@ -5337,9 +5357,13 @@
       {
         "name": "잡코딩 · 산업기사 2022-2 복원자료",
         "url": "https://complainrevolutionist.tistory.com/53"
+      },
+      {
+        "name": "Logic & Coffee · 정보처리산업기사 실기 Java 기출문제 정리",
+        "url": "https://allen8524.tistory.com/90"
       }
     ],
-    "verificationNote": "산업기사 2022-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "verificationNote": "산업기사 2022-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
@@ -5383,7 +5407,7 @@
     "language": "Java",
     "title": "10진수 11의 8비트 이진수 출력",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "output",
     "difficulty": "실전",
     "concepts": [
@@ -5403,9 +5427,13 @@
       {
         "name": "잡코딩 · 산업기사 2022-3 복원자료",
         "url": "https://complainrevolutionist.tistory.com/54"
+      },
+      {
+        "name": "Logic & Coffee · 정보처리산업기사 실기 Java 기출문제 정리",
+        "url": "https://allen8524.tistory.com/90"
       }
     ],
-    "verificationNote": "산업기사 2022-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "verificationNote": "산업기사 2022-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
@@ -5482,7 +5510,7 @@
     "language": "Java",
     "title": "상삼각 배열 채우기",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "output",
     "difficulty": "실전",
     "concepts": [
@@ -5501,9 +5529,13 @@
       {
         "name": "잡코딩 · 산업기사 2022-3 복원자료",
         "url": "https://complainrevolutionist.tistory.com/54"
+      },
+      {
+        "name": "Logic & Coffee · 정보처리산업기사 실기 Java 기출문제 정리",
+        "url": "https://allen8524.tistory.com/90"
       }
     ],
-    "verificationNote": "산업기사 2022-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "verificationNote": "산업기사 2022-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
@@ -5613,7 +5645,7 @@
     "language": "SQL",
     "title": "CHECK와 IN 허용값 제약",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "blank",
     "difficulty": "실전",
     "concepts": [
@@ -5633,9 +5665,13 @@
       {
         "name": "잡코딩 · 산업기사 2023-1 복원자료",
         "url": "https://complainrevolutionist.tistory.com/193"
+      },
+      {
+        "name": "Logic & Coffee · 정보처리산업기사 실기 SQL 기출문제 정리",
+        "url": "https://allen8524.tistory.com/92"
       }
     ],
-    "verificationNote": "산업기사 2023-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "verificationNote": "산업기사 2023-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
@@ -5716,7 +5752,7 @@
     "language": "Java",
     "title": "배열 오름차순 정렬 후 구분자 출력",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "output",
     "difficulty": "실전",
     "concepts": [
@@ -5736,9 +5772,13 @@
       {
         "name": "잡코딩 · 산업기사 2023-2 복원자료",
         "url": "https://complainrevolutionist.tistory.com/194"
+      },
+      {
+        "name": "Logic & Coffee · 정보처리산업기사 실기 Java 기출문제 정리",
+        "url": "https://allen8524.tistory.com/90"
       }
     ],
-    "verificationNote": "산업기사 2023-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "verificationNote": "산업기사 2023-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
@@ -5816,7 +5856,7 @@
     "language": "SQL",
     "title": "CHECK 제약조건 이름",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "blank",
     "difficulty": "실전",
     "concepts": [
@@ -5834,9 +5874,13 @@
       {
         "name": "잡코딩 · 산업기사 2023-2 복원자료",
         "url": "https://complainrevolutionist.tistory.com/194"
+      },
+      {
+        "name": "Logic & Coffee · 정보처리산업기사 실기 SQL 기출문제 정리",
+        "url": "https://allen8524.tistory.com/92"
       }
     ],
-    "verificationNote": "산업기사 2023-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "verificationNote": "산업기사 2023-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
@@ -5880,7 +5924,7 @@
     "language": "C",
     "title": "재귀 호출 후 오름차순 출력",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "output",
     "difficulty": "실전",
     "concepts": [
@@ -5898,9 +5942,13 @@
       {
         "name": "잡코딩 · 산업기사 2023-3 복원자료",
         "url": "https://complainrevolutionist.tistory.com/195"
+      },
+      {
+        "name": "MemoEngine · 정보처리산업기사 재귀 함수 기출 해설",
+        "url": "https://www.memoengine.com/Docs/industrial-engineer-information-processing/recursive-number-printing/"
       }
     ],
-    "verificationNote": "산업기사 2023-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "verificationNote": "산업기사 2023-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
@@ -5912,7 +5960,7 @@
     "language": "Java",
     "title": "부모·자식 필드와 오버라이딩",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "output",
     "difficulty": "실전",
     "concepts": [
@@ -5932,9 +5980,13 @@
       {
         "name": "잡코딩 · 산업기사 2023-3 복원자료",
         "url": "https://complainrevolutionist.tistory.com/195"
+      },
+      {
+        "name": "Logic & Coffee · 정보처리산업기사 실기 Java 기출문제 정리",
+        "url": "https://allen8524.tistory.com/90"
       }
     ],
-    "verificationNote": "산업기사 2023-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "verificationNote": "산업기사 2023-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
@@ -5946,7 +5998,7 @@
     "language": "C",
     "title": "포인터 인자 빈칸",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "blank",
     "difficulty": "실전",
     "concepts": [
@@ -5965,9 +6017,13 @@
       {
         "name": "잡코딩 · 산업기사 2023-3 복원자료",
         "url": "https://complainrevolutionist.tistory.com/195"
+      },
+      {
+        "name": "RedPlus · 정보처리산업기사 포인터 최대·최소값 기출 해설",
+        "url": "https://www.redplus.net/docs/industrial-engineer-information-processing/max-min-value-comparison/"
       }
     ],
-    "verificationNote": "산업기사 2023-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "verificationNote": "산업기사 2023-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
@@ -5979,7 +6035,7 @@
     "language": "Java",
     "title": "static 누적 변수 합",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "output",
     "difficulty": "실전",
     "concepts": [
@@ -5998,9 +6054,13 @@
       {
         "name": "잡코딩 · 산업기사 2023-3 복원자료",
         "url": "https://complainrevolutionist.tistory.com/195"
+      },
+      {
+        "name": "Logic & Coffee · 정보처리산업기사 실기 Java 기출문제 정리",
+        "url": "https://allen8524.tistory.com/90"
       }
     ],
-    "verificationNote": "산업기사 2023-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "verificationNote": "산업기사 2023-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
@@ -6012,7 +6072,7 @@
     "language": "Java",
     "title": "메서드 두 정수 합",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "output",
     "difficulty": "실전",
     "concepts": [
@@ -6030,9 +6090,13 @@
       {
         "name": "잡코딩 · 산업기사 2023-3 복원자료",
         "url": "https://complainrevolutionist.tistory.com/195"
+      },
+      {
+        "name": "Logic & Coffee · 정보처리산업기사 실기 Java 기출문제 정리",
+        "url": "https://allen8524.tistory.com/90"
       }
     ],
-    "verificationNote": "산업기사 2023-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "verificationNote": "산업기사 2023-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
@@ -6077,7 +6141,7 @@
     "language": "Java",
     "title": "향상된 for문 배열 합",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "output",
     "difficulty": "실전",
     "concepts": [
@@ -6096,9 +6160,13 @@
       {
         "name": "잡코딩 · 산업기사 2024-1 복원자료",
         "url": "https://complainrevolutionist.tistory.com/206"
+      },
+      {
+        "name": "Logic & Coffee · 정보처리산업기사 실기 Java 기출문제 정리",
+        "url": "https://allen8524.tistory.com/90"
       }
     ],
-    "verificationNote": "산업기사 2024-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "verificationNote": "산업기사 2024-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
@@ -6110,7 +6178,7 @@
     "language": "SQL",
     "title": "BETWEEN·HAVING·VALUES 빈칸",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "blank",
     "difficulty": "실전",
     "concepts": [
@@ -6131,9 +6199,13 @@
       {
         "name": "잡코딩 · 산업기사 2024-1 복원자료",
         "url": "https://complainrevolutionist.tistory.com/206"
+      },
+      {
+        "name": "Logic & Coffee · 정보처리산업기사 실기 SQL 기출문제 정리",
+        "url": "https://allen8524.tistory.com/92"
       }
     ],
-    "verificationNote": "산업기사 2024-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "verificationNote": "산업기사 2024-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
@@ -6145,7 +6217,7 @@
     "language": "SQL",
     "title": "AND·DISTINCT·IN 빈칸",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "blank",
     "difficulty": "실전",
     "concepts": [
@@ -6165,9 +6237,13 @@
       {
         "name": "잡코딩 · 산업기사 2024-1 복원자료",
         "url": "https://complainrevolutionist.tistory.com/206"
+      },
+      {
+        "name": "Logic & Coffee · 정보처리산업기사 실기 SQL 기출문제 정리",
+        "url": "https://allen8524.tistory.com/92"
       }
     ],
-    "verificationNote": "산업기사 2024-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "verificationNote": "산업기사 2024-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
@@ -6179,7 +6255,7 @@
     "language": "Java",
     "title": "오리·돼지 다리 수 빈칸",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "blank",
     "difficulty": "실전",
     "concepts": [
@@ -6199,9 +6275,13 @@
       {
         "name": "잡코딩 · 산업기사 2024-1 복원자료",
         "url": "https://complainrevolutionist.tistory.com/206"
+      },
+      {
+        "name": "Logic & Coffee · 정보처리산업기사 실기 Java 기출문제 정리",
+        "url": "https://allen8524.tistory.com/90"
       }
     ],
-    "verificationNote": "산업기사 2024-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "verificationNote": "산업기사 2024-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
@@ -6315,7 +6395,7 @@
     "language": "SQL",
     "title": "UPDATE SET WHERE 빈칸",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "blank",
     "difficulty": "실전",
     "concepts": [
@@ -6335,9 +6415,13 @@
       {
         "name": "잡코딩 · 산업기사 2024-1 복원자료",
         "url": "https://complainrevolutionist.tistory.com/206"
+      },
+      {
+        "name": "Logic & Coffee · 정보처리산업기사 실기 SQL 기출문제 정리",
+        "url": "https://allen8524.tistory.com/92"
       }
     ],
-    "verificationNote": "산업기사 2024-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "verificationNote": "산업기사 2024-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
@@ -6349,7 +6433,7 @@
     "language": "Java",
     "title": "메서드 내부 출력과 반환값 연속 출력",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "output",
     "difficulty": "실전",
     "concepts": [
@@ -6369,9 +6453,13 @@
       {
         "name": "잡코딩 · 산업기사 2024-2 복원자료",
         "url": "https://complainrevolutionist.tistory.com/207"
+      },
+      {
+        "name": "Logic & Coffee · 정보처리산업기사 실기 Java 기출문제 정리",
+        "url": "https://allen8524.tistory.com/90"
       }
     ],
-    "verificationNote": "산업기사 2024-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "verificationNote": "산업기사 2024-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
@@ -6416,7 +6504,7 @@
     "language": "SQL",
     "title": "SELECT·DISTINCT·COUNT DISTINCT 결과",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "sql_result",
     "difficulty": "실전",
     "concepts": [
@@ -6436,9 +6524,13 @@
       {
         "name": "잡코딩 · 산업기사 2024-2 복원자료",
         "url": "https://complainrevolutionist.tistory.com/207"
+      },
+      {
+        "name": "Logic & Coffee · 정보처리산업기사 실기 SQL 기출문제 정리",
+        "url": "https://allen8524.tistory.com/92"
       }
     ],
-    "verificationNote": "산업기사 2024-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "verificationNote": "산업기사 2024-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
@@ -6453,7 +6545,7 @@
     "language": "SQL",
     "title": "INSERT·VALUES·SET 빈칸",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "blank",
     "difficulty": "실전",
     "concepts": [
@@ -6472,9 +6564,13 @@
       {
         "name": "잡코딩 · 산업기사 2024-2 복원자료",
         "url": "https://complainrevolutionist.tistory.com/207"
+      },
+      {
+        "name": "Logic & Coffee · 정보처리산업기사 실기 SQL 기출문제 정리",
+        "url": "https://allen8524.tistory.com/92"
       }
     ],
-    "verificationNote": "산업기사 2024-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "verificationNote": "산업기사 2024-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
@@ -6486,7 +6582,7 @@
     "language": "SQL",
     "title": "AND·ASC·NOT 빈칸",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "blank",
     "difficulty": "실전",
     "concepts": [
@@ -6506,9 +6602,13 @@
       {
         "name": "잡코딩 · 산업기사 2024-2 복원자료",
         "url": "https://complainrevolutionist.tistory.com/207"
+      },
+      {
+        "name": "Logic & Coffee · 정보처리산업기사 실기 SQL 기출문제 정리",
+        "url": "https://allen8524.tistory.com/92"
       }
     ],
-    "verificationNote": "산업기사 2024-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "verificationNote": "산업기사 2024-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
@@ -6520,7 +6620,7 @@
     "language": "Python",
     "title": "continue로 -1 제외 출력",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "output",
     "difficulty": "실전",
     "concepts": [
@@ -6539,9 +6639,13 @@
       {
         "name": "잡코딩 · 산업기사 2024-2 복원자료",
         "url": "https://complainrevolutionist.tistory.com/207"
+      },
+      {
+        "name": "시나공 · 2024년 2회 Python 정답 정오 확인",
+        "url": "https://www.sinagong.co.kr/community/001002002/book-qnas/281741"
       }
     ],
-    "verificationNote": "산업기사 2024-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "verificationNote": "산업기사 2024-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
@@ -6620,7 +6724,7 @@
     "language": "SQL",
     "title": "JOIN USING 빈칸",
     "sourceType": "reconstructed",
-    "confidence": "C",
+    "confidence": "B",
     "questionType": "blank",
     "difficulty": "실전",
     "concepts": [
@@ -6638,9 +6742,13 @@
       {
         "name": "잡코딩 · 산업기사 2024-3 복원자료",
         "url": "https://complainrevolutionist.tistory.com/208"
+      },
+      {
+        "name": "Logic & Coffee · 정보처리산업기사 실기 SQL 기출문제 정리",
+        "url": "https://allen8524.tistory.com/92"
       }
     ],
-    "verificationNote": "산업기사 2024-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "verificationNote": "산업기사 2024-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
