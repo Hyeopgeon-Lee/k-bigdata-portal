@@ -746,10 +746,10 @@
         "url": "https://complainrevolutionist.tistory.com/206"
       }
     ],
-    "verificationNote": "단일 공개 복원자료의 회차·문제번호·답 확인. 독립 교차 출처 미확보로 C. 문제 설명과 해설은 자체 작성.",
+    "verificationNote": "단일 공개 복원자료의 회차·문제번호·답 확인. 독립 교차 출처 미확보로 C. 문제 설명과 해설은 자체 작성. 2026-10-05 추가 웹 교차검증을 수행했으나 동일 문항의 독립 출처를 확보하지 못해 C등급을 의도적으로 유지함.",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "grading": "exact"
   },
   {
