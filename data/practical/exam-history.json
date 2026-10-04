@@ -1,0 +1,46 @@
+[
+  {
+    "id": "H-E-2020-1-C",
+    "questionId": "R-C-0001",
+    "examType": "engineer",
+    "year": 2020,
+    "round": 1,
+    "questionNumber": null,
+    "sourceName": "밍지 · 2020년 코드 해설",
+    "sourceUrl": "https://techtrail.tistory.com/entry/정보처리기사-실기-2020년-1회-2회-기출-코드-해설-C언어-Java-Python",
+    "verificationNote": "두 공개 자료에서 정렬 구조와 결과 일치. 초기 배열 순서와 함수 구성 차이로 B. 원 시험 코드와 동일함을 보장하지 않음."
+  },
+  {
+    "id": "H-E-2020-1-J",
+    "questionId": "R-JAVA-0001",
+    "examType": "engineer",
+    "year": 2020,
+    "round": 1,
+    "questionNumber": null,
+    "sourceName": "개발슝이 · 2020년 1회",
+    "sourceUrl": "https://smkim9202.tistory.com/252",
+    "verificationNote": "배열 값과 정답 일치. 원소 생성 방법·변수명·함수 구조가 다르게 복원되어 B."
+  },
+  {
+    "id": "H-E-2022-1-P",
+    "questionId": "R-PY-0001",
+    "examType": "engineer",
+    "year": 2022,
+    "round": 1,
+    "questionNumber": 6,
+    "sourceName": "코딩하는 핑가 · 2022년 1회",
+    "sourceUrl": "https://ss-o.tistory.com/165",
+    "verificationNote": "인자값·기본값·결과값 일치. 출력 문자열 공백과 변수명이 달라 B."
+  },
+  {
+    "id": "H-E-2022-1-S",
+    "questionId": "R-SQL-0001",
+    "examType": "engineer",
+    "year": 2022,
+    "round": 1,
+    "questionNumber": 4,
+    "sourceName": "코딩하는 핑가 · 2022년 1회",
+    "sourceUrl": "https://ss-o.tistory.com/165",
+    "verificationNote": "SQL 구조와 빈칸 답안이 일치하나 샘플 데이터가 달라 B."
+  }
+]

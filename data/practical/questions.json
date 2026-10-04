@@ -1,0 +1,453 @@
+[
+  {
+    "id": "R-C-0001",
+    "language": "C",
+    "title": "인접 원소 교환과 정렬",
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "배열",
+      "버블 정렬",
+      "반복문"
+    ],
+    "question": "출력되는 배열 원소를 순서대로 쓰세요. 공개 복원자료 간 초기 배열 순서 차이가 있어 아래 코드의 초기값을 기준으로 풀이합니다.",
+    "code": "#include <stdio.h>\nint main(void) {\n    int values[] = {75, 95, 85, 100, 50};\n    for (int pass = 0; pass < 4; ++pass) {\n        for (int pos = 0; pos < 4 - pass; ++pos) {\n            if (values[pos] > values[pos + 1]) {\n                int saved = values[pos];\n                values[pos] = values[pos + 1];\n                values[pos + 1] = saved;\n            }\n        }\n    }\n    for (int pos = 0; pos < 5; ++pos) printf(\"%d \", values[pos]);\n    return 0;\n}",
+    "answer": "50 75 85 95 100",
+    "explanation": "인접한 두 값을 비교해 큰 값을 오른쪽으로 이동시키므로 오름차순이 됩니다. 복원 코드의 문법 오류와 main 반환형은 표준 C 형태로 정리했습니다.",
+    "steps": [
+      "초기 배열: 75, 95, 85, 100, 50.",
+      "첫 번째 순회: 75, 85, 95, 50, 100. 가장 큰 100이 오른쪽에 고정됩니다.",
+      "두 번째 순회: 75, 85, 50, 95, 100.",
+      "세 번째 순회: 75, 50, 85, 95, 100.",
+      "마지막 순회: 50, 75, 85, 95, 100. 이 순서로 출력합니다."
+    ],
+    "sources": [
+      {
+        "name": "밍지 · 2020년 코드 해설",
+        "url": "https://techtrail.tistory.com/entry/정보처리기사-실기-2020년-1회-2회-기출-코드-해설-C언어-Java-Python"
+      },
+      {
+        "name": "Devinus · 2020년 문제 분석",
+        "url": "https://devinus.tistory.com/36"
+      }
+    ],
+    "verificationNote": "두 공개 자료에서 정렬 구조와 결과 일치. 초기 배열 순서와 함수 구성 차이로 B. 원 시험 코드와 동일함을 보장하지 않음.",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "grading": "exact"
+  },
+  {
+    "id": "R-JAVA-0001",
+    "language": "Java",
+    "title": "배열 인덱스와 순차 출력",
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "questionType": "output",
+    "difficulty": "기본",
+    "concepts": [
+      "배열",
+      "반복문"
+    ],
+    "question": "배열의 각 값을 출력한 결과를 쓰세요. 마지막 공백은 채점에서 무시합니다.",
+    "code": "class Main {\n    public static void main(String[] args) {\n        int[] values = {0, 1, 2, 3};\n        for (int index = 0; index < values.length; index++) {\n            System.out.print(values[index] + \" \");\n        }\n    }\n}",
+    "answer": "0 1 2 3",
+    "explanation": "배열 인덱스는 0부터 시작합니다. 원소를 만드는 함수가 있는 복원과 직접 초기화한 복원이 있어 공통 초기값과 출력 흐름을 정리했습니다.",
+    "steps": [
+      "values의 길이는 4이며 인덱스는 0~3입니다.",
+      "index=0일 때 0, index=1일 때 1을 출력합니다.",
+      "index=2일 때 2, index=3일 때 3을 출력합니다.",
+      "index가 4가 되면 조건이 거짓이므로 종료합니다."
+    ],
+    "sources": [
+      {
+        "name": "개발슝이 · 2020년 1회",
+        "url": "https://smkim9202.tistory.com/252"
+      },
+      {
+        "name": "Devinus · 2020년 분석",
+        "url": "https://devinus.tistory.com/36"
+      }
+    ],
+    "verificationNote": "배열 값과 정답 일치. 원소 생성 방법·변수명·함수 구조가 다르게 복원되어 B.",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "grading": "exact"
+  },
+  {
+    "id": "R-PY-0001",
+    "language": "Python",
+    "title": "기본 매개변수",
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "questionType": "output",
+    "difficulty": "기본",
+    "concepts": [
+      "함수",
+      "기본 인자"
+    ],
+    "question": "Python 3 기준으로 출력 결과를 쓰세요. print가 삽입하는 공백을 확인하세요.",
+    "code": "def func(num1, num2=2):\n    print('a=', num1, 'b=', num2)\n\nfunc(20)",
+    "answer": "a= 20 b= 2",
+    "acceptedAnswers": [
+      "a = 20 b = 2",
+      "a=20 b=2"
+    ],
+    "explanation": "두 번째 인자가 생략되어 기본값 2가 사용됩니다. 자료마다 문자열 내부 공백 표기가 달라, 값이 같은 복원 답안의 공백 변형도 허용합니다.",
+    "steps": [
+      "func(20)이 num1에 20을 전달합니다.",
+      "num2는 별도 인자가 없으므로 기본값 2를 사용합니다.",
+      "print의 각 인자 사이에는 기본 구분자 공백이 삽입됩니다.",
+      "표시된 코드의 정확한 출력은 a= 20 b= 2입니다."
+    ],
+    "sources": [
+      {
+        "name": "코딩하는 핑가 · 2022년 1회",
+        "url": "https://ss-o.tistory.com/165"
+      },
+      {
+        "name": "개발하는 엉배 · Python 복원",
+        "url": "https://sancheck-developer.tistory.com/151"
+      },
+      {
+        "name": "unit-15 · 2022년 1회",
+        "url": "https://unit-15.tistory.com/219"
+      }
+    ],
+    "verificationNote": "인자값·기본값·결과값 일치. 출력 문자열 공백과 변수명이 달라 B.",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "grading": "exact"
+  },
+  {
+    "id": "R-SQL-0001",
+    "language": "SQL",
+    "title": "점수 내림차순 정렬 빈칸",
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "questionType": "blank",
+    "difficulty": "기본",
+    "concepts": [
+      "ORDER BY",
+      "DESC"
+    ],
+    "question": "점수가 높은 행부터 조회하려면 (1), (2), (3)에 무엇을 넣어야 하나요? 순서대로 한 줄에 입력하세요.",
+    "code": "SELECT name, score\nFROM 성적\n(1) BY (2) (3);",
+    "answer": "ORDER score DESC",
+    "acceptedAnswers": [
+      "ORDER SCORE DESC",
+      "ORDER, score, DESC",
+      "ORDER, SCORE, DESC"
+    ],
+    "explanation": "ORDER BY는 결과 정렬을 지정하고 DESC는 내림차순입니다. 복원자료에서 샘플 행의 이름·점수는 서로 달라 제시하지 않습니다.",
+    "steps": [
+      "FROM 성적: 조회할 테이블을 정합니다.",
+      "SELECT name, score: 출력할 컬럼을 지정합니다.",
+      "ORDER BY score DESC: score 값이 큰 행을 먼저 정렬합니다.",
+      "빈칸은 ORDER / score / DESC 순서입니다."
+    ],
+    "sources": [
+      {
+        "name": "코딩하는 핑가 · 2022년 1회",
+        "url": "https://ss-o.tistory.com/165"
+      },
+      {
+        "name": "unit-15 · 2022년 1회",
+        "url": "https://unit-15.tistory.com/219"
+      }
+    ],
+    "verificationNote": "SQL 구조와 빈칸 답안이 일치하나 샘플 데이터가 달라 B.",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "grading": "sql_keywords"
+  },
+  {
+    "id": "T-C-0001",
+    "language": "C",
+    "title": "내림차순으로 바꾼 인접 원소 정렬",
+    "sourceType": "transformed",
+    "originalQuestionId": "R-C-0001",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "배열",
+      "버블 정렬"
+    ],
+    "question": "비교 방향이 달라졌습니다. 출력 결과를 쓰세요.",
+    "code": "#include <stdio.h>\nint main(void) {\n    int a[] = {3, 8, 2};\n    for (int end = 2; end > 0; end--)\n        for (int i = 0; i < end; i++)\n            if (a[i] < a[i+1]) {\n                int t = a[i]; a[i] = a[i+1]; a[i+1] = t;\n            }\n    printf(\"%d %d %d\", a[0], a[1], a[2]);\n    return 0;\n}",
+    "answer": "8 3 2",
+    "explanation": "왼쪽 값이 작을 때 교환하므로 큰 값이 왼쪽으로 이동합니다. 이 문제는 기출의 실제 출제이력이 없는 새 변형입니다.",
+    "steps": [
+      "초기값 3, 8, 2.",
+      "3<8이므로 교환해 8, 3, 2가 됩니다.",
+      "3<2는 거짓이므로 그대로 유지합니다.",
+      "다음 순회에서 8<3도 거짓입니다. 출력은 8 3 2."
+    ],
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "sources": [],
+    "confidence": null,
+    "grading": "exact"
+  },
+  {
+    "id": "T-JAVA-0001",
+    "language": "Java",
+    "title": "배열을 역순으로 출력",
+    "sourceType": "transformed",
+    "originalQuestionId": "R-JAVA-0001",
+    "questionType": "output",
+    "difficulty": "기본",
+    "concepts": [
+      "배열",
+      "반복문"
+    ],
+    "question": "출력 순서를 직접 추적하세요.",
+    "code": "class Main {\n    public static void main(String[] args) {\n        int[] data = {2, 4, 6};\n        for (int i = data.length - 1; i >= 0; i--) {\n            System.out.print(data[i] + \" \");\n        }\n    }\n}",
+    "answer": "6 4 2",
+    "explanation": "뒤쪽 인덱스부터 방문하는 변형 연습입니다.",
+    "steps": [
+      "첫 인덱스는 3-1=2입니다.",
+      "data[2]는 6, data[1]은 4입니다.",
+      "data[0]은 2이며 i=-1에서 반복이 끝납니다."
+    ],
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "sources": [],
+    "confidence": null,
+    "grading": "exact"
+  },
+  {
+    "id": "T-PY-0001",
+    "language": "Python",
+    "title": "기본값과 명시 인자 비교",
+    "sourceType": "transformed",
+    "originalQuestionId": "R-PY-0001",
+    "questionType": "output",
+    "difficulty": "기본",
+    "concepts": [
+      "함수",
+      "기본 인자"
+    ],
+    "question": "두 줄의 출력을 순서대로 쓰세요.",
+    "code": "def total(a, b=3):\n    print(a + b)\n\ntotal(7)\ntotal(7, 5)",
+    "answer": "10\n12",
+    "explanation": "생략하면 기본값, 전달하면 명시 인자를 사용합니다.",
+    "steps": [
+      "total(7)에서 b는 기본값 3이므로 10.",
+      "total(7, 5)에서는 b=5로 덮어써 12.",
+      "두 호출의 출력은 서로 다른 줄입니다."
+    ],
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "sources": [],
+    "confidence": null,
+    "grading": "exact"
+  },
+  {
+    "id": "T-SQL-0001",
+    "language": "SQL",
+    "title": "여러 컬럼 정렬",
+    "sourceType": "transformed",
+    "originalQuestionId": "R-SQL-0001",
+    "questionType": "sql_result",
+    "difficulty": "실전",
+    "concepts": [
+      "ORDER BY",
+      "DESC",
+      "ASC"
+    ],
+    "question": "name 컬럼의 결과를 출력 순서대로 한 줄에 한 개씩 쓰세요.",
+    "code": "SELECT name FROM STUDENT\nORDER BY score DESC, name ASC;",
+    "tables": [
+      {
+        "name": "STUDENT",
+        "columns": [
+          "name",
+          "score"
+        ],
+        "rows": [
+          [
+            "Kim",
+            80
+          ],
+          [
+            "Lee",
+            95
+          ],
+          [
+            "Park",
+            80
+          ]
+        ]
+      }
+    ],
+    "answer": "Lee\nKim\nPark",
+    "explanation": "먼저 점수 내림차순, 동점이면 이름 오름차순입니다. ASCII 영문 이름을 기준으로 합니다.",
+    "steps": [
+      "FROM에서 세 행을 읽습니다.",
+      "score=95인 Lee가 먼저 옵니다.",
+      "80점인 Kim과 Park는 name ASC로 정렬합니다.",
+      "SELECT name의 결과는 Lee, Kim, Park입니다."
+    ],
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "sources": [],
+    "confidence": null,
+    "grading": "exact"
+  },
+  {
+    "id": "P-C-0001",
+    "language": "C",
+    "title": "포인터와 배열 원소",
+    "sourceType": "practice",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "포인터",
+      "배열"
+    ],
+    "question": "출력되는 두 수를 쓰세요.",
+    "code": "#include <stdio.h>\nint main(void) {\n    int a[] = {4, 7, 9};\n    int *p = a + 1;\n    *p += 2;\n    printf(\"%d %d\", a[1], *(p + 1));\n    return 0;\n}",
+    "answer": "9 9",
+    "explanation": "새로 작성한 포인터 연습문제이며 시험 출제를 주장하지 않습니다.",
+    "steps": [
+      "p는 a[1]의 주소입니다.",
+      "*p += 2는 a[1]을 7에서 9로 바꿉니다.",
+      "p+1은 a[2]를 가리키며 그 값도 9입니다."
+    ],
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "sources": [],
+    "confidence": null,
+    "grading": "exact"
+  },
+  {
+    "id": "P-JAVA-0001",
+    "language": "Java",
+    "title": "오버라이딩과 동적 메서드 호출",
+    "sourceType": "practice",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "상속",
+      "오버라이딩"
+    ],
+    "question": "프로그램 출력값을 쓰세요.",
+    "code": "class Parent { int value() { return 3; } }\nclass Child extends Parent { int value() { return 8; } }\nclass Main {\n    public static void main(String[] args) {\n        Parent p = new Child();\n        System.out.print(p.value());\n    }\n}",
+    "answer": "8",
+    "explanation": "변수 타입은 Parent지만 실제 객체는 Child이므로 오버라이딩된 메서드를 호출합니다.",
+    "steps": [
+      "new Child()로 Child 객체를 만듭니다.",
+      "Parent 타입의 p가 그 객체를 참조합니다.",
+      "인스턴스 메서드 value()는 실제 객체 타입에 따라 Child.value()로 선택됩니다.",
+      "반환값 8을 출력합니다."
+    ],
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "sources": [],
+    "confidence": null,
+    "grading": "exact"
+  },
+  {
+    "id": "P-PY-0001",
+    "language": "Python",
+    "title": "리스트 별칭과 슬라이스 복사",
+    "sourceType": "practice",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "리스트",
+      "참조",
+      "슬라이스"
+    ],
+    "question": "출력되는 두 리스트를 두 줄로 쓰세요.",
+    "code": "a = [1, 2]\nb = a\nc = a[:]\nb.append(3)\nprint(a)\nprint(c)",
+    "answer": "[1, 2, 3]\n[1, 2]",
+    "explanation": "b는 같은 리스트를 가리키고 c는 새 리스트를 만듭니다.",
+    "steps": [
+      "a와 b는 같은 객체를 참조합니다.",
+      "a[:]는 원소를 복사한 새 리스트 c를 만듭니다.",
+      "b.append(3)은 a에서도 보입니다.",
+      "a는 [1, 2, 3], c는 [1, 2]입니다."
+    ],
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "sources": [],
+    "confidence": null,
+    "grading": "exact"
+  },
+  {
+    "id": "P-SQL-0001",
+    "language": "SQL",
+    "title": "그룹별 평균과 HAVING",
+    "sourceType": "practice",
+    "questionType": "sql_write",
+    "difficulty": "실전",
+    "concepts": [
+      "GROUP BY",
+      "HAVING",
+      "AVG"
+    ],
+    "grading": "self",
+    "question": "STUDENT에서 학과별 평균 점수가 80 이상인 학과(dept)와 평균 점수(avg_score)를 조회하는 SQL을 작성하세요. 정렬은 필요 없습니다. 다른 동등한 SQL은 제출 후 예시와 비교해 직접 판정하세요.",
+    "code": "-- 아래 STUDENT 테이블을 사용합니다.",
+    "tables": [
+      {
+        "name": "STUDENT",
+        "columns": [
+          "id",
+          "dept",
+          "score"
+        ],
+        "rows": [
+          [
+            1,
+            "SW",
+            90
+          ],
+          [
+            2,
+            "SW",
+            70
+          ],
+          [
+            3,
+            "AI",
+            60
+          ],
+          [
+            4,
+            "AI",
+            80
+          ]
+        ]
+      }
+    ],
+    "answer": "SELECT dept, AVG(score) AS avg_score\nFROM STUDENT\nGROUP BY dept\nHAVING AVG(score) >= 80;",
+    "explanation": "SQL 동등성은 문자열만으로 판정할 수 없습니다. 예시와 결과를 비교해 직접 정답/오답을 기록합니다.",
+    "steps": [
+      "FROM: STUDENT의 네 행을 대상으로 합니다.",
+      "GROUP BY dept: SW와 AI 그룹을 만듭니다.",
+      "AVG(score): SW=80, AI=70입니다.",
+      "HAVING AVG(score)>=80: SW만 남습니다.",
+      "SELECT: dept=SW, avg_score=80을 출력합니다."
+    ],
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "sources": [],
+    "confidence": null
+  }
+]

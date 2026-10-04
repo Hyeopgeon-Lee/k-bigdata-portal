@@ -8,7 +8,7 @@ Vanilla HTML/CSS/JavaScript 기반 GitHub Pages 정적 사이트이며 로그인
 ## 메뉴 구조
 
 - 취업 · 진로: IT 직무 가이드, 취업 준비 점검, 입사지원 현황, 졸업생 네트워크
-- 학습 · 역량: IT 자격증, 기술면접 문제은행, 개발 공식문서, 기술 블로그
+- 학습 · 역량: IT 자격증, 실기 코딩·SQL 문제은행, 기술면접 문제은행, 개발 공식문서, 기술 블로그
 - 프로젝트 · 성장: 학과 포트폴리오, 졸업작품 주제 가이드
 - 학과 생활: 프로젝트실 예약, 학과 요청 · 신고
 
@@ -100,7 +100,46 @@ shortAnswer는 말로 설명할 2~4문장, detailedAnswer는 전제·예외를 �
 직접 링크는 `interview.html?id=고유id`, 기존 분야 링크는 `interview.html?category=Kubernetes`처럼 유지합니다. 직무 필터는 `?job=DevOps`, 검색은 `?q=JWT`를 지원합니다.
 `node tests/interview-bank.test.mjs`로 데이터·검색·500회 랜덤 선택·기존 연결·답변 초기 숨김을 검사합니다. 문제 수를 변경하면 테스트의 목표 개수도 의도에 맞게 갱신하세요. 브라우저 검수 기록은 `tests/interview-bank-qa.md`에 있습니다.
 
-## 통합검색
+## 실기 코딩·SQL 문제은행
+
+`practical.html`은 종이 풀이 → 최소 60초 → 내 답 제출 → 정답·단계별 풀이 → 오답 재풀이 흐름입니다. 기존 기술면접 문제은행과 별개의 학습 기능입니다. 정보처리기사·산업기사 상세에서 `?exam=engineer` / `?exam=industrial_engineer`로 연결합니다. 영구 문제 링크는 `practical.html?id=문제ID`입니다.
+
+현재 공개한 것은 **초기 검증분**입니다. 복원기출 4개(기사 출제 이력 4건, 산업기사 0건), 변형 4개, 추가 연습 4개입니다. 요청된 258문항을 확보했다고 표시하지 않습니다. 기사 2020년 1회와 2022년 1회의 일부만 검증했으며 나머지 회차·산업기사 자료는 확보 및 재사용 범위 검토가 필요합니다. 출처 간 표현 차이 때문에 현재 복원 신뢰도는 B만 사용합니다. 재출제는 아직 확인한 것이 없습니다. `coverage.json`과 페이지의 확보 범위를 함께 갱신하세요.
+
+```text
+data/practical/questions.json     고유 문제 master (정답·풀이 포함)
+data/practical/exam-history.json  출제 이력 / questionId 참조
+data/practical/coverage.json      실제 확보 범위·미확보 안내
+js/practical-core.js              집계·정답 판정·60초 규칙·검색 문자열
+js/practical-data.js              JSON 로딩 adapter
+js/practical-store.js             기기 내 저장 adapter
+js/practical-ui.js                목록·풀이·오답·랜덤·학습현황
+css/practical.css                 기존 디자인을 재사용한 전용 스타일
+tests/practical-bank.test.mjs     데이터·잠금·저장·정직한 집계 검사
+```
+
+### 문제·이력 추가
+
+1. questions.json에 영구 `id`, `language`(C/Java/Python/SQL), `title`, `question`, `code`, `questionType`, `difficulty`(기본/실전/고난도), `concepts`, `answer`, `steps`(단계 배열), `explanation`, `sourceType`, `sources`, `enabled`, `createdAt`, `updatedAt`를 정의합니다. 샘플 테이블은 `tables: [{name,columns,rows}]`, 입력값은 `inputData`를 사용할 수 있습니다.
+2. `sourceType`은 reconstructed / transformed / practice를 엄격히 구분합니다. 실제 출처 없는 문제에 reconstructed를 사용하지 않습니다. 출처는 `{name,url}`, 검토 메모는 verificationNote입니다. 검토한 답과 원 자료의 오류·차이를 기록하고, 코드·문제의 재사용 권리도 확인하세요. 공개 웹에서 보인다는 이유만으로 장문·대량 원문을 복제하지 않습니다.
+3. 복원기출에만 `confidence` A/B/C를 지정합니다. A는 독립적인 다수 출처가 필요합니다. 같은 자료를 재게시한 사이트들을 독립 출처로 세지 않습니다. 출처가 충돌하면 제외하거나 B/C와 차이 설명을 사용합니다.
+4. exam-history.json에는 영구 `id`, `questionId`, `examType`(engineer/industrial_engineer), `year`, `round`, `questionNumber`(확인 불가 시 null), `sourceName`, `sourceUrl`, `verificationNote`를 저장합니다. 출처가 여러 개라고 출제 이력을 여러 번 추가하지 않습니다. 동일 문제가 별도 회차에서 확인됐을 때만 같은 questionId에 새 이력을 연결합니다. 단순히 같은 개념은 재출제로 간주하지 않습니다.
+5. 변형은 `originalQuestionId`로 원 복원문제에 연결하며 실제 출제 이력을 부여하지 않습니다. 추가 연습도 이력을 만들지 않습니다. 필요하면 보조문제의 `examTypes`로 대상 시험을 제한합니다. 기본은 두 시험 공통 학습입니다.
+6. 문자열 정답은 exact 방식입니다. 앞뒤·연속 가로 공백을 정리하지만 줄바꿈과 대소문자는 구별합니다. 검토한 다른 표현만 acceptedAnswers 배열에 추가합니다. SQL 키워드 빈칸은 `grading: "sql_keywords"`로 대소문자와 쉼표 구분을 정리할 수 있습니다(문자열 리터럴 문제에는 사용하지 않습니다). 임의 SQL의 동등성을 확인할 수 없으므로 SQL 작성은 `grading: "self"`를 사용하여 제출·공개 후 직접 판정합니다. 자동 판정은 공식 시험 채점이 아닙니다.
+7. UI의 통계는 실제 데이터로 계산합니다. 대표 숫자는 복원기출 출제 이력 수이며 고유 문제 수와 구분합니다. 언어/시험 집계·재출제 수·신뢰도 집계도 데이터 기준입니다. 테스트의 초기 검증분 개수는 의도적으로 실제 등록량에 맞게 수정합니다.
+
+### 저장·학습시간·보안 범위
+
+- 제출 시도·답·정오 여부·풀이시간·해설 확인·재풀이 횟수를 LocalStorage에 저장합니다. 이름·학번·로그인·기기 식별자·학생 순위·서버 전송은 없습니다. 정답률은 판정된 시도만 분모로 쓰며 재풀이도 시도로 집계합니다.
+- SessionStorage는 현재 문제의 시작시각·초안·제출 상태를 보관합니다. 새로고침으로 60초를 생략하지 못하도록 시작시각을 유지하고, 명시적 재풀이와 오답 복습은 새 60초를 시작합니다. 저장이 차단되면 메모리로 작동하고 화면에 제한을 알립니다.
+- 이는 학습 습관 장치이지 보안 시험 시스템이 아닙니다. 정적 JSON에 정답이 포함되어 개발자 도구·파일 직접 열기로 읽을 수 있습니다. 이런 접근까지 차단한다고 주장하지 않습니다. 클라이언트 시계/저장소를 조작하는 강제 우회도 막지 않습니다.
+- 공용 기기에서는 학습현황의 기록 삭제를 사용하세요. 삭제 확인 UI가 있으며 복구 불가입니다. 저장소 초기화·기기 변경 시 기록이 유지되지 않습니다.
+- 랜덤은 기본 복원기출만, 5/10/20개 중복 없는 선택입니다. 데이터가 부족하면 실제 수만 제공합니다. 오늘의 문제는 날짜별·언어별 복원문제를 선택하며 필수 수행을 강요하지 않습니다.
+- 향후 승인된 GAS/Sheets 연동 시 data/store adapter를 교체할 수 있으나 현재는 연결·서버·추가 API를 만들지 않습니다.
+
+`node tests/practical-bank.test.mjs` 및 기존 테스트를 실행하세요. practical-sql.test.mjs는 Node 24의 내장 SQLite로 예시 SQL을 검증합니다. practical-python.test.mjs는 알려진 bundled Python 또는 PRACTICAL_PYTHON_BIN에서 Python 예시를 실행하며 사용 가능한 Python이 없으면 명확하게 SKIP합니다. 브라우저 런타임에는 이 도구들이 필요 없습니다. 기능·반응형 실측 결과와 데이터 확보 제한은 `tests/practical-bank-qa.md`에 기록합니다. 이 페이지 역시 noindex, nofollow를 유지합니다.
+
+## 통합검색 동작
 
 `js/search.js`가 각 데이터에서 인덱스를 생성합니다. 한글/영문·대소문자·주요 별칭을 고려합니다.
 새 동의어는 synonyms 배열에 추가합니다. 여러 검색어는 AND 조건입니다.

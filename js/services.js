@@ -26,6 +26,13 @@ export const categories = {
 };
 export const services = [
   {
+    id:"practical", name:"실기 코딩·SQL 문제은행", englishName:"PAPER FIRST PRACTICE",
+    category:"learning", url:"practical.html", icon:"book", accent:"blue", order:9.5,
+    description:"정보처리기사·산업기사 실기 C, Java, Python, SQL 비공식 복원기출을 직접 손으로 풀어보세요.",
+    shortDescription:"실기 코딩·SQL 복원기출을 종이와 펜으로 직접 추적하세요.",
+    tags:["C","Java","Python","SQL"], aliases:"실기 코딩 SQL 문제은행 종이 풀이 복원기출 정보처리기사 정보처리산업기사 오답노트", featured:false
+  },
+  {
     "id": "ready",
     "name": "취업 준비 점검",
     "englishName": "Career Ready",

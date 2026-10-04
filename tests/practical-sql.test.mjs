@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {DatabaseSync} from 'node:sqlite';
+const questions=JSON.parse(readFileSync(new URL('../data/practical/questions.json',import.meta.url),'utf8'));
+const db=new DatabaseSync(':memory:');
+db.exec("CREATE TABLE STUDENT(id INTEGER,dept TEXT,score INTEGER); INSERT INTO STUDENT VALUES(1,'SW',90),(2,'SW',70),(3,'AI',60),(4,'AI',80);");
+const answer=questions.find(q=>q.id==='P-SQL-0001').answer;
+assert.deepEqual(db.prepare(answer).all().map(row=>({...row})),[{dept:'SW',avg_score:80}]);
+db.exec("DROP TABLE STUDENT; CREATE TABLE STUDENT(name TEXT,score INTEGER); INSERT INTO STUDENT VALUES('Kim',80),('Lee',95),('Park',80);");
+const q=questions.find(q=>q.id==='T-SQL-0001');
+assert.equal(db.prepare(q.code).all().map(row=>row.name).join('\n'),q.answer);
+console.log('PASS: sample SQL results executed against in-memory SQLite (shared standard SQL only, not arbitrary student SQL grading).');
