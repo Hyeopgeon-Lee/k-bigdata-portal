@@ -424,6 +424,87 @@
       "publisher": "GrandLife",
       "status": "C·Java·Python·SQL 문제 구조·정답·문항 순서 교차검증",
       "license": "공개 복원자료를 사실 확인에 사용. 원문 대량 복제 없이 학습용으로 정규화."
+    },
+    {
+      "examType": "engineer",
+      "year": 2022,
+      "round": 1,
+      "url": "https://www.sqldpass.com/blog/past-exam/engineer-2022-1",
+      "publisher": "문어CBT",
+      "status": "C·Java·Python·SQL 회차·코드·정답 교차검증",
+      "license": "공개 복원자료를 사실 확인에 사용. 원문 대량 복제 없이 학습용으로 정규화."
+    },
+    {
+      "examType": "engineer",
+      "year": 2022,
+      "round": 1,
+      "url": "https://sugoring-it.tistory.com/244",
+      "publisher": "슈고링",
+      "status": "C·Java·Python·SQL 회차·코드·정답 교차검증",
+      "license": "공개 복원자료를 사실 확인에 사용. 원문 대량 복제 없이 학습용으로 정규화."
+    },
+    {
+      "examType": "engineer",
+      "year": 2022,
+      "round": 1,
+      "url": "https://peterica.tistory.com/614",
+      "publisher": "Peterica",
+      "status": "C·Java·Python·SQL 회차·코드·정답 교차검증",
+      "license": "공개 복원자료를 사실 확인에 사용. 원문 대량 복제 없이 학습용으로 정규화."
+    },
+    {
+      "examType": "engineer",
+      "year": 2022,
+      "round": 2,
+      "url": "https://sugoring-it.tistory.com/245",
+      "publisher": "슈고링",
+      "status": "C·Java·Python·SQL 회차·코드·정답 교차검증",
+      "license": "공개 복원자료를 사실 확인에 사용. 원문 대량 복제 없이 학습용으로 정규화."
+    },
+    {
+      "examType": "engineer",
+      "year": 2022,
+      "round": 2,
+      "url": "https://starrykss.tistory.com/2082",
+      "publisher": "별의 블로그",
+      "status": "C·Java·Python·SQL 회차·코드·정답 교차검증",
+      "license": "공개 복원자료를 사실 확인에 사용. 원문 대량 복제 없이 학습용으로 정규화."
+    },
+    {
+      "examType": "engineer",
+      "year": 2022,
+      "round": 2,
+      "url": "https://smkim9202.tistory.com/244",
+      "publisher": "개발슝이",
+      "status": "C·Java·Python·SQL 회차·코드·정답 교차검증",
+      "license": "공개 복원자료를 사실 확인에 사용. 원문 대량 복제 없이 학습용으로 정규화."
+    },
+    {
+      "examType": "engineer",
+      "year": 2022,
+      "round": 3,
+      "url": "https://www.sqldpass.com/blog/past-exam/engineer-2022-3",
+      "publisher": "문어CBT",
+      "status": "C·Java·Python·SQL 회차·코드·정답 교차검증",
+      "license": "공개 복원자료를 사실 확인에 사용. 원문 대량 복제 없이 학습용으로 정규화."
+    },
+    {
+      "examType": "engineer",
+      "year": 2022,
+      "round": 3,
+      "url": "https://starrykss.tistory.com/2107",
+      "publisher": "별의 블로그",
+      "status": "C·Java·Python·SQL 회차·코드·정답 교차검증",
+      "license": "공개 복원자료를 사실 확인에 사용. 원문 대량 복제 없이 학습용으로 정규화."
+    },
+    {
+      "examType": "engineer",
+      "year": 2022,
+      "round": 3,
+      "url": "https://smkim9202.tistory.com/243",
+      "publisher": "개발슝이",
+      "status": "C·Java·Python·SQL 회차·코드·정답 교차검증",
+      "license": "공개 복원자료를 사실 확인에 사용. 원문 대량 복제 없이 학습용으로 정규화."
     }
   ]
 }
