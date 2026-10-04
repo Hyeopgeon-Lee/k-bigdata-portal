@@ -4943,5 +4943,1839 @@
     ],
     "verificationNote": "복수 독립 자료에서 2022년 3회 20번 코드와 정답 993이 일치합니다.",
     "grading": "exact"
+  },
+  {
+    "id": "R-IND-C-0001",
+    "language": "C",
+    "title": "입력값 7의 반복 횟수",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "반복문",
+      "조건문"
+    ],
+    "question": "입력값 7일 때 다음 C 코드의 출력값을 쓰세요.",
+    "code": "int n=7,count=0;\nfor(int i=2;i<=n/2;i++)\n    if(i%1==0) count++;\nprintf(\"%d\",count);",
+    "answer": "2",
+    "explanation": "n/2는 정수 3입니다. i=2,3 두 번 조건이 참이어서 count=2입니다.",
+    "steps": [
+      "n/2는 정수 3입니다.",
+      "i=2,3 두 번 조건이 참이어서 count=2입니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2022-1 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/52"
+      }
+    ],
+    "verificationNote": "산업기사 2022-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-C-0002",
+    "language": "C",
+    "title": "홀수 가중치 누적합",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "for",
+      "누적합"
+    ],
+    "question": "다음 C 코드의 출력값을 쓰세요.",
+    "code": "int n=3,r=0;\nfor(int i=1;i<10;i=i+2) r=r+n*i;\nprintf(\"%d\",r);",
+    "answer": "75",
+    "explanation": "i는 1,3,5,7,9입니다. 3×(1+3+5+7+9)=75입니다.",
+    "steps": [
+      "i는 1,3,5,7,9입니다.",
+      "3×(1+3+5+7+9)=75입니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2022-1 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/52"
+      }
+    ],
+    "verificationNote": "산업기사 2022-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-C-0003",
+    "language": "C",
+    "title": "XOR로 두 정수 교환",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "XOR",
+      "비트 연산",
+      "값 교환"
+    ],
+    "question": "다음 C 코드의 출력값을 쓰세요.",
+    "code": "int n1=15,n2=22;\nn1^=n2; n2^=n1; n1^=n2;\nprintf(\"%d %d\",n1,n2);",
+    "answer": "22 15",
+    "explanation": "XOR 교환으로 임시변수 없이 두 값이 바뀝니다. 출력은 22 15입니다.",
+    "steps": [
+      "XOR 교환으로 임시변수 없이 두 값이 바뀝니다.",
+      "출력은 22 15입니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2022-1 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/52"
+      }
+    ],
+    "verificationNote": "산업기사 2022-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-C-0004",
+    "language": "C",
+    "title": "1부터 35까지 짝수·홀수 개수",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "반복문",
+      "나머지"
+    ],
+    "question": "다음 C 코드의 출력값을 쓰세요.",
+    "code": "int num=35,even=0,odd=0;\nfor(int i=1;i<=num;i++){\n if(i%2==0) even++; else odd++;\n}\nprintf(\"%d %d\",even,odd);",
+    "answer": "17 18",
+    "explanation": "1~35의 짝수는 17개입니다. 홀수는 18개입니다.",
+    "steps": [
+      "1~35의 짝수는 17개입니다.",
+      "홀수는 18개입니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2022-1 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/52"
+      }
+    ],
+    "verificationNote": "산업기사 2022-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-SQL-0001",
+    "language": "SQL",
+    "title": "AVG와 COUNT 집계 함수 빈칸",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "blank",
+    "difficulty": "실전",
+    "concepts": [
+      "AVG",
+      "COUNT",
+      "GROUP BY",
+      "HAVING"
+    ],
+    "question": "다음 SQL의 (가),(나)에 들어갈 집계 함수를 순서대로 쓰세요.",
+    "code": "SELECT sub_Code AS 과목코드, (가)(mid) AS 중간평균\nFROM Students\nGROUP BY sub_Code\nHAVING (나)(*) >= 5;",
+    "answer": "AVG COUNT",
+    "explanation": "평균은 AVG(mid)입니다. 행 수는 COUNT(*)로 셉니다.",
+    "steps": [
+      "평균은 AVG(mid)입니다.",
+      "행 수는 COUNT(*)로 셉니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2022-1 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/52"
+      }
+    ],
+    "verificationNote": "산업기사 2022-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "sql_keywords",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-JAVA-0001",
+    "language": "Java",
+    "title": "while 누적 후 a+sum 출력",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "while",
+      "누적합",
+      "break"
+    ],
+    "question": "다음 Java 코드의 출력값을 쓰세요.",
+    "code": "int a=0,ss=0;\nwhile(true){\n if(ss>100) break;\n ++a;\n ss+=a;\n}\nSystem.out.print(a+ss);",
+    "answer": "119",
+    "explanation": "ss가 100을 넘을 때까지 a를 증가시키며 누적합니다. 종료 시 a=14, ss=105이므로 119입니다.",
+    "steps": [
+      "ss가 100을 넘을 때까지 a를 증가시키며 누적합니다.",
+      "종료 시 a=14, ss=105이므로 119입니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2022-1 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/52"
+      }
+    ],
+    "verificationNote": "산업기사 2022-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-JAVA-0002",
+    "language": "Java",
+    "title": "삼항 연산자와 절댓값 분기",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "삼항 연산자",
+      "조건문"
+    ],
+    "question": "다음 Java 코드의 출력값을 쓰세요.",
+    "code": "int x=1,T_x=0,t_x=0;\nT_x=(x>=0)?x:-x;\nif(x>=0) t_x=x; else t_x=-x;\nSystem.out.println(T_x+\" \"+t_x);",
+    "answer": "1 1",
+    "explanation": "두 식 모두 x의 절댓값을 계산합니다. x=1이므로 1 1입니다.",
+    "steps": [
+      "두 식 모두 x의 절댓값을 계산합니다.",
+      "x=1이므로 1 1입니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2022-1 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/52"
+      }
+    ],
+    "verificationNote": "산업기사 2022-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-C-0005",
+    "language": "C",
+    "title": "최대공약수와 최소공배수의 합",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "최대공약수",
+      "최소공배수",
+      "반복문"
+    ],
+    "question": "27과 12의 최대공약수와 최소공배수를 구해 더하는 다음 코드의 출력값을 쓰세요.",
+    "code": "int a=27,b=12,l,g;\nfor(int i=b;i>0;i--){\n if(a%i==0 && b%i==0){g=i;break;}\n}\nl=a*b/g;\nprintf(\"%d\",g+l);",
+    "answer": "111",
+    "explanation": "최대공약수는 3입니다. 최소공배수는 108이므로 합은 111입니다.",
+    "steps": [
+      "최대공약수는 3입니다.",
+      "최소공배수는 108이므로 합은 111입니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2022-2 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/53"
+      }
+    ],
+    "verificationNote": "산업기사 2022-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-JAVA-0003",
+    "language": "Java",
+    "title": "복합 대입 연산 순차 계산",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "복합 대입",
+      "나머지"
+    ],
+    "question": "다음 Java 코드의 출력값을 쓰세요.",
+    "code": "int i=17;\ni+=1; i-=2; i*=3; i/=4; i%=5;\nSystem.out.print(i);",
+    "answer": "2",
+    "explanation": "17→18→16→48→12→2 순으로 계산됩니다.",
+    "steps": [
+      "17→18→16→48→12→2 순으로 계산됩니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2022-2 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/53"
+      }
+    ],
+    "verificationNote": "산업기사 2022-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-C-0006",
+    "language": "C",
+    "title": "최댓값·최솟값 제외 평균",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "배열",
+      "최댓값",
+      "최솟값",
+      "평균"
+    ],
+    "question": "다음 C 코드의 출력값을 쓰세요.",
+    "code": "int arr[6],max=0,min=99,sum=0;\nfor(int i=0;i<6;i++){arr[i]=i*i;sum+=arr[i];}\nfor(int i=0;i<6;i++){\n if(max<arr[i]) max=arr[i];\n if(min>arr[i]) min=arr[i];\n}\nprintf(\"%.2f\",(sum-max-min)/4.0);",
+    "answer": "7.50",
+    "explanation": "배열은 0,1,4,9,16,25입니다. 합 55에서 25와 0을 빼고 4로 나누면 7.50입니다.",
+    "steps": [
+      "배열은 0,1,4,9,16,25입니다.",
+      "합 55에서 25와 0을 빼고 4로 나누면 7.50입니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2022-2 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/53"
+      }
+    ],
+    "verificationNote": "산업기사 2022-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-C-0007",
+    "language": "C",
+    "title": "소수 판별 결과 연속 출력",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "sqrt",
+      "소수 판별",
+      "배열"
+    ],
+    "question": "다음 C 코드의 출력값을 쓰세요.",
+    "code": "int arr[5];\nfor(int i=0;i<5;i++) arr[i]=(i+2)+(i*2);\n/* check(x)는 2부터 sqrt(x)까지 나누어 소수면 1, 아니면 0 반환 */\nfor(int i=0;i<5;i++) printf(\"%d\",check(arr[i]));",
+    "answer": "11010",
+    "explanation": "arr는 2,5,8,11,14입니다. 소수 여부는 1,1,0,1,0입니다.",
+    "steps": [
+      "arr는 2,5,8,11,14입니다.",
+      "소수 여부는 1,1,0,1,0입니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2022-2 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/53"
+      }
+    ],
+    "verificationNote": "산업기사 2022-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-JAVA-0004",
+    "language": "Java",
+    "title": "26과 91의 최대공약수",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "삼항 연산자",
+      "최대공약수"
+    ],
+    "question": "다음 Java 코드의 출력값을 쓰세요.",
+    "code": "int a=26,b=91,g=0;\nint c=a<b?a:b;\nfor(int i=1;i<c;i++)\n if(a%i==0 && b%i==0) g=i;\nSystem.out.print(g);",
+    "answer": "13",
+    "explanation": "26과 91의 공약수 중 가장 큰 값은 13입니다.",
+    "steps": [
+      "26과 91의 공약수 중 가장 큰 값은 13입니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2022-2 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/53"
+      }
+    ],
+    "verificationNote": "산업기사 2022-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-C-0008",
+    "language": "C",
+    "title": "문자 포인터 배열의 대각 문자",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "2차원 문자배열",
+      "포인터 배열"
+    ],
+    "question": "다음 C 코드의 출력값을 쓰세요.",
+    "code": "char a[3][5]={\"KOR\",\"HUM\",\"RES\"};\nchar *pa[]={a[0],a[1],a[2]};\nint n=sizeof(pa)/sizeof(pa[0]);\nfor(int i=0;i<n;i++) printf(\"%c\",pa[i][i]);",
+    "answer": "KUS",
+    "explanation": "a[0][0]=K, a[1][1]=U, a[2][2]=S입니다.",
+    "steps": [
+      "a[0][0]=K, a[1][1]=U, a[2][2]=S입니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2022-2 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/53"
+      }
+    ],
+    "verificationNote": "산업기사 2022-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-JAVA-0005",
+    "language": "Java",
+    "title": "10진수 11의 8비트 이진수 출력",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "배열",
+      "2진수",
+      "while"
+    ],
+    "question": "정수 11을 8비트 이진수로 저장해 역순 출력하는 Java 코드의 결과를 쓰세요.",
+    "code": "int[] a=new int[8];\nint i=0,n=11;\nwhile(n>0){a[i++]=n%2;n/=2;}\nfor(i=7;i>=0;i--) System.out.print(a[i]);",
+    "answer": "00001011",
+    "explanation": "11의 이진수는 1011입니다. 8자리로 앞을 0으로 채워 00001011입니다.",
+    "steps": [
+      "11의 이진수는 1011입니다.",
+      "8자리로 앞을 0으로 채워 00001011입니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2022-3 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/54"
+      }
+    ],
+    "verificationNote": "산업기사 2022-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-C-0009",
+    "language": "C",
+    "title": "2차원 배열 전체 합",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "2차원 배열",
+      "누적합"
+    ],
+    "question": "다음 C 코드의 출력값을 쓰세요.",
+    "code": "int a[3][5]={{27,13,21,41,12},{11,20,17,35,15},{21,15,32,14,10}};\nint sum,ssum=0;\nfor(int i=0;i<3;i++){\n sum=0;\n for(int j=0;j<5;j++) sum+=a[i][j];\n ssum+=sum;\n}\nprintf(\"%d\",ssum);",
+    "answer": "304",
+    "explanation": "세 행의 모든 원소 합은 304입니다.",
+    "steps": [
+      "세 행의 모든 원소 합은 304입니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2022-3 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/54"
+      }
+    ],
+    "verificationNote": "산업기사 2022-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-C-0010",
+    "language": "C",
+    "title": "50 이하 7의 배수 합",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "while",
+      "배수",
+      "누적합"
+    ],
+    "question": "다음 C 코드의 출력값을 쓰세요.",
+    "code": "int i=1,n=0;\nwhile(i<=50){\n if(i%7==0) n+=i;\n i++;\n}\nprintf(\"%d\",n);",
+    "answer": "196",
+    "explanation": "7,14,21,28,35,42,49의 합은 196입니다.",
+    "steps": [
+      "7,14,21,28,35,42,49의 합은 196입니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2022-3 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/54"
+      }
+    ],
+    "verificationNote": "산업기사 2022-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-JAVA-0006",
+    "language": "Java",
+    "title": "상삼각 배열 채우기",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "2차원 배열",
+      "중첩 반복문"
+    ],
+    "question": "3×3 배열에서 i<=j 위치에 1부터 순서대로 저장하고 나머지는 공백으로 출력할 때 결과를 쓰세요.",
+    "code": "int[][] a=new int[3][3];\nint v=1;\nfor(int i=0;i<3;i++)\n for(int j=i;j<3;j++) a[i][j]=v++;",
+    "answer": "123\n 45\n  6",
+    "explanation": "첫 행은 1 2 3입니다. 둘째 행은 앞 한 칸이 비고 4 5, 셋째 행은 앞 두 칸이 비고 6입니다.",
+    "steps": [
+      "첫 행은 1 2 3입니다.",
+      "둘째 행은 앞 한 칸이 비고 4 5, 셋째 행은 앞 두 칸이 비고 6입니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2022-3 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/54"
+      }
+    ],
+    "verificationNote": "산업기사 2022-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-C-0011",
+    "language": "C",
+    "title": "퀵정렬 pivot 중앙 인덱스",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "blank",
+    "difficulty": "실전",
+    "concepts": [
+      "퀵정렬",
+      "pivot",
+      "정수 나눗셈"
+    ],
+    "question": "다음 퀵정렬 partition 코드의 (가)에 들어갈 값을 쓰세요.",
+    "code": "int pivot = arr[(left + right) / (가)];",
+    "answer": "2",
+    "explanation": "left와 right의 중간 인덱스를 사용하므로 2로 나눕니다.",
+    "steps": [
+      "left와 right의 중간 인덱스를 사용하므로 2로 나눕니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2023-1 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/193"
+      }
+    ],
+    "verificationNote": "산업기사 2023-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-C-0012",
+    "language": "C",
+    "title": "1부터 n까지 재귀 합",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "blank",
+    "difficulty": "실전",
+    "concepts": [
+      "재귀",
+      "누적합"
+    ],
+    "question": "다음 재귀 함수의 (가)에 들어갈 식을 쓰세요.",
+    "code": "int SumNTo1(int n){\n if(n<=1) return 1;\n else return n + (가);\n}",
+    "answer": "SumNTo1(n-1)",
+    "explanation": "n보다 하나 작은 값으로 같은 함수를 재귀 호출해야 합니다.",
+    "steps": [
+      "n보다 하나 작은 값으로 같은 함수를 재귀 호출해야 합니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2023-1 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/193"
+      }
+    ],
+    "verificationNote": "산업기사 2023-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-C-0013",
+    "language": "C",
+    "title": "문장 커버리지 실행 순서",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "interpret",
+    "difficulty": "실전",
+    "concepts": [
+      "문장 커버리지",
+      "while",
+      "if"
+    ],
+    "question": "i=1로 시작하는 while/if 코드의 문장 커버리지 실행 순서를 쓰세요.",
+    "code": "int i=1;\nwhile(i<=1){\n if(i%2==1) printf(\"%d\",i);\n i++;\n}\nreturn 0;",
+    "answer": "1234526",
+    "explanation": "복원 문제에 부여된 문장 번호 순서대로 실행하면 1234526입니다.",
+    "steps": [
+      "복원 문제에 부여된 문장 번호 순서대로 실행하면 1234526입니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2023-1 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/193"
+      }
+    ],
+    "verificationNote": "산업기사 2023-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-SQL-0002",
+    "language": "SQL",
+    "title": "CHECK와 IN 허용값 제약",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "blank",
+    "difficulty": "실전",
+    "concepts": [
+      "CHECK",
+      "IN",
+      "CREATE TABLE"
+    ],
+    "question": "TITLE에 지정한 다섯 값만 허용하려 할 때 (가),(나)를 순서대로 쓰세요.",
+    "code": "TITLE VARCHAR(20) (가) (TITLE (나) ('Intern','Staff','Manager','Director','President'))",
+    "answer": "CHECK IN",
+    "explanation": "허용값 검증은 CHECK 제약을 사용합니다. 목록 포함 여부는 IN을 사용합니다.",
+    "steps": [
+      "허용값 검증은 CHECK 제약을 사용합니다.",
+      "목록 포함 여부는 IN을 사용합니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2023-1 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/193"
+      }
+    ],
+    "verificationNote": "산업기사 2023-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "sql_keywords",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-PY-0001",
+    "language": "Python",
+    "title": "elif 빈칸",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "blank",
+    "difficulty": "실전",
+    "concepts": [
+      "if",
+      "elif",
+      "else"
+    ],
+    "question": "현금이 없고 카드가 있을 때 버스를 출력하도록 (가)에 들어갈 키워드를 쓰세요.",
+    "code": "if 'cash' in wallet:\n print('택시')\n(가)(card):\n print('버스')\nelse:\n print('도보')",
+    "answer": "elif",
+    "explanation": "첫 if가 거짓일 때 추가 조건을 검사하는 키워드는 elif입니다.",
+    "steps": [
+      "첫 if가 거짓일 때 추가 조건을 검사하는 키워드는 elif입니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2023-1 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/193"
+      }
+    ],
+    "verificationNote": "산업기사 2023-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-C-0014",
+    "language": "C",
+    "title": "반복 뺄셈으로 몫과 나머지",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "while",
+      "몫",
+      "나머지"
+    ],
+    "question": "55에서 4를 반복해서 빼 몫과 나머지를 구하는 코드의 출력값을 쓰세요.",
+    "code": "int d=55,n=4,r=d,q=0;\nwhile(r>=4){r=r-n;q++;}\nprintf(\"%d 그리고 %d\",q,r);",
+    "answer": "13 그리고 3",
+    "explanation": "55=4×13+3이므로 몫 13, 나머지 3입니다.",
+    "steps": [
+      "55=4×13+3이므로 몫 13, 나머지 3입니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2023-2 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/194"
+      }
+    ],
+    "verificationNote": "산업기사 2023-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": [
+      "13 3",
+      "13, 3"
+    ]
+  },
+  {
+    "id": "R-IND-JAVA-0007",
+    "language": "Java",
+    "title": "배열 오름차순 정렬 후 구분자 출력",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "배열",
+      "정렬",
+      "중첩 반복문"
+    ],
+    "question": "다음 Java 코드의 출력값을 쓰세요.",
+    "code": "int[] a={4,7,1,2};\nfor(int i=0;i<3;i++)\n for(int j=i+1;j<4;j++)\n  if(a[i]>a[j]){int t=a[j];a[j]=a[i];a[i]=t;}\nfor(int v:a) System.out.print(v+\"a\");",
+    "answer": "1a2a4a7a",
+    "explanation": "배열이 1,2,4,7로 정렬됩니다. 각 값 뒤에 a가 붙습니다.",
+    "steps": [
+      "배열이 1,2,4,7로 정렬됩니다.",
+      "각 값 뒤에 a가 붙습니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2023-2 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/194"
+      }
+    ],
+    "verificationNote": "산업기사 2023-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-C-0015",
+    "language": "C",
+    "title": "문자열 역순 복사",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "문자 배열",
+      "역순"
+    ],
+    "question": "abcd를 역순으로 복사하는 C 코드의 출력값을 쓰세요.",
+    "code": "char s1[5]=\"abcd\";\nchar s2[5];\nfor(int i=0;i<4;i++) s2[i]=s1[3-i];\ns2[4]='\\0';\nprintf(\"%s\",s2);",
+    "answer": "dcba",
+    "explanation": "d,c,b,a 순서로 복사되어 dcba가 됩니다.",
+    "steps": [
+      "d,c,b,a 순서로 복사되어 dcba가 됩니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2023-2 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/194"
+      }
+    ],
+    "verificationNote": "산업기사 2023-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-C-0016",
+    "language": "C",
+    "title": "정수와 문자 코드 출력",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "ASCII",
+      "char",
+      "printf"
+    ],
+    "question": "다음 C 코드의 출력값을 줄마다 쓰세요.",
+    "code": "int a=10;\nchar b='a';\nprintf(\"%d\\n\",a);\nprintf(\"%d\\n\",b);\nprintf(\"%c\",b);",
+    "answer": "10\n97\na",
+    "explanation": "문자 a의 ASCII 값은 97입니다. %c는 문자 a를 출력합니다.",
+    "steps": [
+      "문자 a의 ASCII 값은 97입니다.",
+      "%c는 문자 a를 출력합니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2023-2 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/194"
+      }
+    ],
+    "verificationNote": "산업기사 2023-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-SQL-0003",
+    "language": "SQL",
+    "title": "CHECK 제약조건 이름",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "blank",
+    "difficulty": "실전",
+    "concepts": [
+      "CHECK",
+      "도메인 무결성"
+    ],
+    "question": "특정 속성 값의 범위를 제한하는 SQL 제약조건을 쓰세요.",
+    "code": "-- SQL 제약조건 이름",
+    "answer": "CHECK",
+    "explanation": "허용 범위나 조건을 검사하는 제약조건은 CHECK입니다.",
+    "steps": [
+      "허용 범위나 조건을 검사하는 제약조건은 CHECK입니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2023-2 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/194"
+      }
+    ],
+    "verificationNote": "산업기사 2023-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-C-0017",
+    "language": "C",
+    "title": "1부터 5까지 팩토리얼",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "for",
+      "팩토리얼"
+    ],
+    "question": "다음 C 코드의 출력값을 쓰세요.",
+    "code": "int result=1;\nfor(int i=1;i<=5;i++) result*=i;\nprintf(\"%d\",result);",
+    "answer": "120",
+    "explanation": "1×2×3×4×5=120입니다.",
+    "steps": [
+      "1×2×3×4×5=120입니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2023-2 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/194"
+      }
+    ],
+    "verificationNote": "산업기사 2023-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-C-0018",
+    "language": "C",
+    "title": "재귀 호출 후 오름차순 출력",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "재귀",
+      "호출 스택"
+    ],
+    "question": "다음 C 코드의 출력값을 쓰세요.",
+    "code": "void prin(int a){\n if(a>1) prin(a-1);\n printf(\"%d\",a);\n}\nprin(4);",
+    "answer": "1234",
+    "explanation": "재귀가 1까지 내려간 뒤 반환되면서 1,2,3,4를 출력합니다.",
+    "steps": [
+      "재귀가 1까지 내려간 뒤 반환되면서 1,2,3,4를 출력합니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2023-3 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/195"
+      }
+    ],
+    "verificationNote": "산업기사 2023-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-JAVA-0008",
+    "language": "Java",
+    "title": "부모·자식 필드와 오버라이딩",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "상속",
+      "오버라이딩",
+      "super"
+    ],
+    "question": "다음 Java 코드의 출력 결과를 줄마다 쓰세요.",
+    "code": "class Berry{\n String Str;\n void meth(){func();}\n void func(){System.out.println(Str);}\n}\nclass Apple extends Berry{\n String Str;\n void func(){\n  Str=\"Apple\";\n  super.Str=\"Berry\";\n  super.func();\n  System.out.println(Str);\n }\n}\nBerry a=new Apple();\na.meth();",
+    "answer": "Berry\nApple",
+    "explanation": "Apple.func가 호출됩니다. 부모 필드에는 Berry, 자식 필드에는 Apple이 저장되어 순서대로 출력됩니다.",
+    "steps": [
+      "Apple.func가 호출됩니다.",
+      "부모 필드에는 Berry, 자식 필드에는 Apple이 저장되어 순서대로 출력됩니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2023-3 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/195"
+      }
+    ],
+    "verificationNote": "산업기사 2023-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-C-0019",
+    "language": "C",
+    "title": "포인터 인자 빈칸",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "blank",
+    "difficulty": "실전",
+    "concepts": [
+      "포인터",
+      "주소 연산자",
+      "함수 인자"
+    ],
+    "question": "compare 함수에 max와 min의 주소를 전달하려면 (가),(나)에 무엇을 써야 하나요?",
+    "code": "int max=0,min=0;\ncompare(3,7,(가),(나));",
+    "answer": "&max &min",
+    "explanation": "포인터 매개변수에는 변수의 주소를 넘겨야 합니다.",
+    "steps": [
+      "포인터 매개변수에는 변수의 주소를 넘겨야 합니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2023-3 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/195"
+      }
+    ],
+    "verificationNote": "산업기사 2023-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-JAVA-0009",
+    "language": "Java",
+    "title": "static 누적 변수 합",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "static",
+      "for",
+      "누적"
+    ],
+    "question": "다음 Java 코드의 출력값을 쓰세요.",
+    "code": "static int a=0;\nstatic int func(int t){a=a+t;return a;}\nfor(int i=0;i<5;i++) func(i);\nSystem.out.print(a);",
+    "answer": "10",
+    "explanation": "0+1+2+3+4=10입니다.",
+    "steps": [
+      "0+1+2+3+4=10입니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2023-3 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/195"
+      }
+    ],
+    "verificationNote": "산업기사 2023-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-JAVA-0010",
+    "language": "Java",
+    "title": "메서드 두 정수 합",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "메서드",
+      "return"
+    ],
+    "question": "다음 Java 코드의 출력값을 쓰세요.",
+    "code": "class A{int f(int a,int b){return a+b;}}\nSystem.out.print(new A().f(25,25));",
+    "answer": "50",
+    "explanation": "25+25=50입니다.",
+    "steps": [
+      "25+25=50입니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2023-3 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/195"
+      }
+    ],
+    "verificationNote": "산업기사 2023-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-C-0020",
+    "language": "C",
+    "title": "대문자 개수 세기",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "문자열",
+      "대문자",
+      "strlen"
+    ],
+    "question": "문자열 abCDEfGh에서 대문자 개수를 출력하는 코드의 결과를 쓰세요.",
+    "code": "char *str=\"abCDEfGh\";\nint count=0;\nfor(int i=0;i<strlen(str);i++)\n if(str[i]>='A'&&str[i]<='Z') count++;\nprintf(\"%d\",count);",
+    "answer": "4",
+    "explanation": "대문자는 C,D,E,G 네 글자입니다.",
+    "steps": [
+      "대문자는 C,D,E,G 네 글자입니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2024-1 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/206"
+      }
+    ],
+    "verificationNote": "산업기사 2024-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-JAVA-0011",
+    "language": "Java",
+    "title": "향상된 for문 배열 합",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "배열",
+      "향상된 for",
+      "누적합"
+    ],
+    "question": "다음 Java 코드의 출력값을 쓰세요.",
+    "code": "int[] a={1,2,3,4,5,6};\nint sum=0;\nfor(int v:a) sum+=v;\nSystem.out.print(sum);",
+    "answer": "21",
+    "explanation": "1부터 6까지 합은 21입니다.",
+    "steps": [
+      "1부터 6까지 합은 21입니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2024-1 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/206"
+      }
+    ],
+    "verificationNote": "산업기사 2024-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-SQL-0004",
+    "language": "SQL",
+    "title": "BETWEEN·HAVING·VALUES 빈칸",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "blank",
+    "difficulty": "실전",
+    "concepts": [
+      "BETWEEN",
+      "AND",
+      "HAVING",
+      "VALUES"
+    ],
+    "question": "다음 SQL 빈칸 중 SQL 키워드만 순서대로 쓰세요.",
+    "code": "WHERE 봉급 BETWEEN 5000 (가) 7000 (가) 이름 LIKE '김%';\nGROUP BY 부서명 (나) AVG(봉급)>6900;\nINSERT INTO 종업원 (다) (400,'정몽주','생산부',5000);",
+    "answer": "AND HAVING VALUES",
+    "explanation": "BETWEEN 범위와 추가 조건 연결에 AND가 사용됩니다. 그룹 조건은 HAVING, 삽입 값은 VALUES입니다.",
+    "steps": [
+      "BETWEEN 범위와 추가 조건 연결에 AND가 사용됩니다.",
+      "그룹 조건은 HAVING, 삽입 값은 VALUES입니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2024-1 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/206"
+      }
+    ],
+    "verificationNote": "산업기사 2024-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "sql_keywords",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-SQL-0005",
+    "language": "SQL",
+    "title": "AND·DISTINCT·IN 빈칸",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "blank",
+    "difficulty": "실전",
+    "concepts": [
+      "AND",
+      "DISTINCT",
+      "IN"
+    ],
+    "question": "다음 SQL의 세 빈칸을 순서대로 쓰세요.",
+    "code": "SELECT 이름 FROM 학생 WHERE 학년>=3 (가) 학과='전자계산';\nSELECT (나) JUNO FROM WORKS WHERE PNO (다) (1,2,3);",
+    "answer": "AND DISTINCT IN",
+    "explanation": "두 조건 연결은 AND입니다. 중복 제거는 DISTINCT, 목록 조건은 IN입니다.",
+    "steps": [
+      "두 조건 연결은 AND입니다.",
+      "중복 제거는 DISTINCT, 목록 조건은 IN입니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2024-1 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/206"
+      }
+    ],
+    "verificationNote": "산업기사 2024-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "sql_keywords",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-JAVA-0012",
+    "language": "Java",
+    "title": "오리·돼지 다리 수 빈칸",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "blank",
+    "difficulty": "실전",
+    "concepts": [
+      "for",
+      "연립 조건",
+      "변수"
+    ],
+    "question": "총 10마리, 다리 26개 조건을 만족하도록 (가),(나)에 들어갈 변수를 쓰세요.",
+    "code": "pigcnt=totalcnt-(가);\nif((2*duckcnt)+(4*(나))==totalleg)",
+    "answer": "duckcnt pigcnt",
+    "explanation": "돼지 수는 전체 수에서 오리 수를 빼 구합니다. 4를 곱할 변수는 pigcnt입니다.",
+    "steps": [
+      "돼지 수는 전체 수에서 오리 수를 빼 구합니다.",
+      "4를 곱할 변수는 pigcnt입니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2024-1 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/206"
+      }
+    ],
+    "verificationNote": "산업기사 2024-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-SQL-0006",
+    "language": "SQL",
+    "title": "학생 수 조건 SELECT 빈칸",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "blank",
+    "difficulty": "실전",
+    "concepts": [
+      "SELECT",
+      "WHERE"
+    ],
+    "question": "학생수가 30명 이하인 학과를 조회하는 SQL의 (가),(나)를 순서대로 쓰세요.",
+    "code": "SELECT (가) FROM 학생 WHERE (나);",
+    "answer": "학과 학생수<=30",
+    "explanation": "조회 열은 학과입니다. 조건은 학생수<=30입니다.",
+    "steps": [
+      "조회 열은 학과입니다.",
+      "조건은 학생수<=30입니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2024-1 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/206"
+      }
+    ],
+    "verificationNote": "산업기사 2024-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "self",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-C-0021",
+    "language": "C",
+    "title": "입력 문자열 두 개 역순 출력",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "문자열",
+      "동적 메모리",
+      "역순"
+    ],
+    "question": "입력으로 string, test가 순서대로 주어질 때 스택처럼 뒤에서부터 문자열을 역순 출력하는 결과를 쓰세요.",
+    "code": "입력: string, test\n마지막 입력부터 각 문자열을 역순 출력",
+    "answer": "2번 출력 :tset\n1번 출력 :gnirts",
+    "explanation": "두 번째 입력 test를 먼저 뒤집어 tset을 출력합니다. 그 다음 string을 뒤집어 gnirts를 출력합니다.",
+    "steps": [
+      "두 번째 입력 test를 먼저 뒤집어 tset을 출력합니다.",
+      "그 다음 string을 뒤집어 gnirts를 출력합니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2024-1 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/206"
+      }
+    ],
+    "verificationNote": "산업기사 2024-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": [
+      "2번 출력:tset\n1번 출력:gnirts"
+    ]
+  },
+  {
+    "id": "R-IND-C-0022",
+    "language": "C",
+    "title": "999가 나누어지는 첫 증가값",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "do-while",
+      "나머지"
+    ],
+    "question": "다음 C 코드의 출력값을 쓰세요.",
+    "code": "int sum=0,i=329;\ndo{\n sum=999%i;\n i++;\n}while(sum!=0);\nprintf(\"%d\",i);",
+    "answer": "334",
+    "explanation": "333에서 999%333이 0이 됩니다. 그 직후 i가 334로 증가된 상태로 출력됩니다.",
+    "steps": [
+      "333에서 999%333이 0이 됩니다.",
+      "그 직후 i가 334로 증가된 상태로 출력됩니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2024-1 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/206"
+      }
+    ],
+    "verificationNote": "산업기사 2024-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-SQL-0007",
+    "language": "SQL",
+    "title": "UPDATE SET WHERE 빈칸",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "blank",
+    "difficulty": "실전",
+    "concepts": [
+      "UPDATE",
+      "SET",
+      "WHERE",
+      "BETWEEN"
+    ],
+    "question": "다음 UPDATE 문의 (가),(나)에 들어갈 키워드를 순서대로 쓰세요.",
+    "code": "UPDATE 고객계좌 (가) 등급='우대고객' (나) 잔고 BETWEEN 1000000 AND 3000000;",
+    "answer": "SET WHERE",
+    "explanation": "변경값 지정은 SET, 대상 조건은 WHERE입니다.",
+    "steps": [
+      "변경값 지정은 SET, 대상 조건은 WHERE입니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2024-1 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/206"
+      }
+    ],
+    "verificationNote": "산업기사 2024-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "sql_keywords",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-JAVA-0013",
+    "language": "Java",
+    "title": "메서드 내부 출력과 반환값 연속 출력",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "메서드",
+      "return",
+      "출력 순서"
+    ],
+    "question": "다음 Java 코드의 출력값을 쓰세요.",
+    "code": "int A(int a,int b){\n System.out.print(a+b);\n return a*b;\n}\nSystem.out.print(new Test().A(5,5));",
+    "answer": "1025",
+    "explanation": "메서드 안에서 먼저 10이 출력됩니다. 반환값 25를 바깥 print가 이어서 출력해 1025입니다.",
+    "steps": [
+      "메서드 안에서 먼저 10이 출력됩니다.",
+      "반환값 25를 바깥 print가 이어서 출력해 1025입니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2024-2 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/207"
+      }
+    ],
+    "verificationNote": "산업기사 2024-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-C-0023",
+    "language": "C",
+    "title": "포인터 역참조 산술",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "포인터",
+      "역참조"
+    ],
+    "question": "다음 C 코드의 출력값을 쓰세요.",
+    "code": "int n1=11,n2=0;\nint *p=&n1;\nn2=*p+n1;\nprintf(\"%d\",*p-n1+n2);",
+    "answer": "22",
+    "explanation": "n2=22입니다. 11-11+22=22입니다.",
+    "steps": [
+      "n2=22입니다.",
+      "11-11+22=22입니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2024-2 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/207"
+      }
+    ],
+    "verificationNote": "산업기사 2024-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-SQL-0008",
+    "language": "SQL",
+    "title": "SELECT·DISTINCT·COUNT DISTINCT 결과",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "sql_result",
+    "difficulty": "실전",
+    "concepts": [
+      "SELECT",
+      "DISTINCT",
+      "COUNT"
+    ],
+    "question": "전기과 50명, 전산과 100명, 전자과 50명이 있을 때 세 SQL의 결과 개수를 순서대로 쓰세요.",
+    "code": "SELECT DEPT FROM STUDENT;\nSELECT DISTINCT DEPT FROM STUDENT;\nSELECT COUNT(DISTINCT DEPT) FROM STUDENT WHERE DEPT='전산과';",
+    "answer": "200 3 1",
+    "explanation": "전체 행은 200입니다. 학과 종류는 3개, 전산과 조건에서는 1개입니다.",
+    "steps": [
+      "전체 행은 200입니다.",
+      "학과 종류는 3개, 전산과 조건에서는 1개입니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2024-2 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/207"
+      }
+    ],
+    "verificationNote": "산업기사 2024-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": [
+      "200, 3, 1",
+      "200\n3\n1"
+    ]
+  },
+  {
+    "id": "R-IND-SQL-0009",
+    "language": "SQL",
+    "title": "INSERT·VALUES·SET 빈칸",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "blank",
+    "difficulty": "실전",
+    "concepts": [
+      "INSERT INTO",
+      "VALUES",
+      "UPDATE SET"
+    ],
+    "question": "다음 SQL의 세 빈칸을 순서대로 쓰세요.",
+    "code": "INSERT (1) 사원(이름,부서,주소) (2) ('윤정희','영업부','마포구');\nUPDATE 사원 (3) 부서='기획부' WHERE 이름='임선호';",
+    "answer": "INTO VALUES SET",
+    "explanation": "INSERT INTO, VALUES, UPDATE SET 구문을 사용합니다.",
+    "steps": [
+      "INSERT INTO, VALUES, UPDATE SET 구문을 사용합니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2024-2 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/207"
+      }
+    ],
+    "verificationNote": "산업기사 2024-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "sql_keywords",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-SQL-0010",
+    "language": "SQL",
+    "title": "AND·ASC·NOT 빈칸",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "blank",
+    "difficulty": "실전",
+    "concepts": [
+      "AND",
+      "ORDER BY",
+      "ASC",
+      "NOT LIKE"
+    ],
+    "question": "다음 세 SQL 조건의 빈칸을 순서대로 쓰세요.",
+    "code": "WHERE 성별='여' (1) 등급='GOLD';\nORDER BY 가입년도 (2);\nWHERE 이름 (3) LIKE '김%';",
+    "answer": "AND ASC NOT",
+    "explanation": "두 조건은 AND, 오름차순은 ASC, '김'으로 시작하지 않음은 NOT LIKE입니다.",
+    "steps": [
+      "두 조건은 AND, 오름차순은 ASC, '김'으로 시작하지 않음은 NOT LIKE입니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2024-2 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/207"
+      }
+    ],
+    "verificationNote": "산업기사 2024-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "sql_keywords",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-PY-0002",
+    "language": "Python",
+    "title": "continue로 -1 제외 출력",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "for",
+      "continue",
+      "리스트"
+    ],
+    "question": "다음 Python 코드의 출력값을 쓰세요.",
+    "code": "x=[1,-1,0,1,-1]\nfor n in x:\n if n==-1: continue\n print(n,end=\"\")",
+    "answer": "101",
+    "explanation": "-1은 모두 건너뛰고 1,0,1만 이어서 출력합니다.",
+    "steps": [
+      "-1은 모두 건너뛰고 1,0,1만 이어서 출력합니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2024-2 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/207"
+      }
+    ],
+    "verificationNote": "산업기사 2024-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-C-0024",
+    "language": "C",
+    "title": "포인터로 선택 정렬",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "포인터",
+      "선택 정렬",
+      "배열"
+    ],
+    "question": "다음 C 코드의 정렬 후 출력 결과를 쓰세요.",
+    "code": "int a[5]={3,4,5,10,2};\nint *p=a;\nfor(int i=0;i<5;i++)\n for(int j=i+1;j<5;j++)\n  if(*(p+i)>*(p+j)){\n   int t=*(p+i);*(p+i)=*(p+j);*(p+j)=t;\n  }",
+    "answer": "2 3 4 5 10",
+    "explanation": "오름차순으로 정렬되어 2 3 4 5 10이 됩니다.",
+    "steps": [
+      "오름차순으로 정렬되어 2 3 4 5 10이 됩니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2024-2 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/207"
+      }
+    ],
+    "verificationNote": "산업기사 2024-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-C-0025",
+    "language": "C",
+    "title": "union 멤버 합산",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "union",
+      "struct",
+      "포인터"
+    ],
+    "question": "다음 C 코드에서 islnt가 참일 때 출력값을 쓰세요.",
+    "code": "union Number{int intV; int floatV;};\nstruct data{union Number n1;union Number n2;char islnt;};\nstruct data a={{.intV=5},{.floatV=3.5},1};\n/* islnt가 참이면 n1.intV += n2.intV */\nprintf(\"%d\",a.n1.intV);",
+    "answer": "8",
+    "explanation": "두 번째 union 값은 int 멤버 기준 3으로 사용됩니다. 5+3=8입니다.",
+    "steps": [
+      "두 번째 union 값은 int 멤버 기준 3으로 사용됩니다.",
+      "5+3=8입니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2024-3 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/208"
+      }
+    ],
+    "verificationNote": "산업기사 2024-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-SQL-0011",
+    "language": "SQL",
+    "title": "JOIN USING 빈칸",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "blank",
+    "difficulty": "실전",
+    "concepts": [
+      "JOIN",
+      "USING"
+    ],
+    "question": "두 테이블의 학과코드가 같은 튜플을 JOIN할 때 빈칸 키워드를 쓰세요.",
+    "code": "SELECT 학번,이름,학생.학과코드,학과명\nFROM 학생 JOIN 학과\n(가)(학과코드);",
+    "answer": "USING",
+    "explanation": "동일 이름 열을 기준으로 조인할 때 USING(학과코드)를 사용할 수 있습니다.",
+    "steps": [
+      "동일 이름 열을 기준으로 조인할 때 USING(학과코드)를 사용할 수 있습니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2024-3 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/208"
+      }
+    ],
+    "verificationNote": "산업기사 2024-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-JAVA-0014",
+    "language": "Java",
+    "title": "복합 대입 연산 반복 문제",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "복합 대입",
+      "나머지"
+    ],
+    "question": "다음 Java 코드의 출력값을 쓰세요.",
+    "code": "int i=17;\ni+=1; i-=2; i*=3; i/=4; i%=5;\nSystem.out.print(i);",
+    "answer": "2",
+    "explanation": "17→18→16→48→12→2입니다.",
+    "steps": [
+      "17→18→16→48→12→2입니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2024-3 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/208"
+      }
+    ],
+    "verificationNote": "산업기사 2024-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-C-0026",
+    "language": "C",
+    "title": "배열 뒤집기 후 가운데 값",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "포인터",
+      "swap",
+      "배열 역순"
+    ],
+    "question": "1,2,3,4,5 배열을 양끝부터 교환해 뒤집은 뒤 arr[2]를 출력하면 무엇인가요?",
+    "code": "int arr[]={1,2,3,4,5};\n/* 양끝 포인터를 안쪽으로 이동하며 swap */\nprintf(\"%d\",arr[2]);",
+    "answer": "3",
+    "explanation": "역순 배열은 5,4,3,2,1이고 가운데 값은 3입니다.",
+    "steps": [
+      "역순 배열은 5,4,3,2,1이고 가운데 값은 3입니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2024-3 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/208"
+      }
+    ],
+    "verificationNote": "산업기사 2024-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-C-0027",
+    "language": "C",
+    "title": "하노이 이동 횟수 재귀 계산",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "재귀",
+      "하노이 탑"
+    ],
+    "question": "n=3일 때 다음 재귀 함수가 반환하는 값을 쓰세요.",
+    "code": "int f(int n){\n if(n==0) return 0;\n return f(n-1)+1+f(n-1);\n}",
+    "answer": "7",
+    "explanation": "점화식은 T(n)=2T(n-1)+1입니다. T(3)=7입니다.",
+    "steps": [
+      "점화식은 T(n)=2T(n-1)+1입니다.",
+      "T(3)=7입니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2024-3 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/208"
+      }
+    ],
+    "verificationNote": "산업기사 2024-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
+  },
+  {
+    "id": "R-IND-C-0028",
+    "language": "C",
+    "title": "이중 포인터 배열 변환",
+    "sourceType": "reconstructed",
+    "confidence": "C",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "이중 포인터",
+      "배열",
+      "나머지"
+    ],
+    "question": "다음 C 코드의 출력값을 쓰세요.",
+    "code": "int arr[]={3,1,4,1,5};\nint *p=arr; int **pp=&p;\nfor(int i=0;i<5;i++) *(*pp+i)=(*(*pp+i)+i)%5;\nprintf(\"%d\",arr[2]);",
+    "answer": "1",
+    "explanation": "arr[2]=(4+2)%5=1입니다.",
+    "steps": [
+      "arr[2]=(4+2)%5=1입니다."
+    ],
+    "sources": [
+      {
+        "name": "잡코딩 · 산업기사 2024-3 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/208"
+      }
+    ],
+    "verificationNote": "산업기사 2024-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "grading": "exact",
+    "acceptedAnswers": []
   }
 ]
