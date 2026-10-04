@@ -1,0 +1,831 @@
+[
+  {
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "difficulty": "실전",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "id": "R-JAVA-0003",
+    "language": "Java",
+    "title": "싱글톤 객체의 static 값 누적",
+    "questionType": "output",
+    "concepts": [
+      "static",
+      "싱글톤",
+      "객체 상태"
+    ],
+    "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
+    "code": "class Counter {\n    private static Counter instance;\n    private int value = 0;\n    private Counter() {}\n    static Counter getInstance() {\n        if (instance == null) instance = new Counter();\n        return instance;\n    }\n    void add() { value++; }\n    int value() { return value; }\n}\npublic class Main {\n    public static void main(String[] args) {\n        Counter a = Counter.getInstance();\n        Counter b = Counter.getInstance();\n        a.add(); b.add(); a.add(); b.add();\n        System.out.print(a.value());\n    }\n}",
+    "answer": "4",
+    "explanation": "getInstance()은 같은 Counter 객체를 반환하므로 a와 b가 동일한 value를 공유합니다.",
+    "steps": [
+      "첫 호출에서 Counter 객체가 한 번 생성됩니다.",
+      "a와 b는 같은 객체를 참조합니다.",
+      "add()가 총 네 번 호출되어 value는 4가 됩니다."
+    ],
+    "sources": [
+      {
+        "name": "ITPassLab · 2024년 1회 복원자료",
+        "url": "https://itpasslab.com/information-processing-engineer-practical"
+      },
+      {
+        "name": "AllA+ · 2024년 1회 후기",
+        "url": "https://allaplus391.tistory.com/13"
+      }
+    ],
+    "verificationNote": "서로 다른 공개 복원자료에서 싱글톤 구조와 출력값 4가 일치합니다. 변수명·서식은 학습용으로 정규화했습니다.",
+    "grading": "exact"
+  },
+  {
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "difficulty": "실전",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "id": "R-C-0004",
+    "language": "C",
+    "title": "삼항 연산자와 비트 시프트",
+    "questionType": "output",
+    "concepts": [
+      "삼항 연산자",
+      "조건식",
+      "비트 시프트"
+    ],
+    "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
+    "code": "#include <stdio.h>\nint main(void) {\n    int v1 = 0, v2 = 35, v3 = 29;\n    if (v1 > v2 ? v2 : v1) {\n        v2 = v2 << 2;\n    } else {\n        v3 = v3 << 2;\n    }\n    printf(\"%d\", v2 + v3);\n    return 0;\n}",
+    "answer": "151",
+    "acceptedAnswers": [
+      "151"
+    ],
+    "explanation": "삼항식의 결과는 0이므로 else가 실행됩니다. v3는 29<<2로 116이 되고, v2 35와 더해 151이 됩니다.",
+    "steps": [
+      "v1>v2는 거짓이므로 삼항식 결과는 v1인 0입니다.",
+      "if(0)은 거짓이므로 else가 실행됩니다.",
+      "29<<2는 116입니다.",
+      "35+116=151입니다."
+    ],
+    "sources": [
+      {
+        "name": "August-JHY · 2024년 1회 복원",
+        "url": "https://august-jhy.tistory.com/219"
+      },
+      {
+        "name": "2024년 1회 교차 정답표",
+        "url": "https://grandlife.co.kr/2024-info-processing-practical-1/"
+      }
+    ],
+    "verificationNote": "복수 공개 복원자료에서 v1=0, v2=35, v3=29의 조건·시프트 흐름과 정답 151을 확인했습니다. 공백·main 반환형만 정규화했습니다.",
+    "grading": "exact"
+  },
+  {
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "difficulty": "실전",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "id": "R-C-0005",
+    "language": "C",
+    "title": "문자열 역순 뒤 홀수 인덱스 출력",
+    "questionType": "output",
+    "concepts": [
+      "문자열",
+      "포인터",
+      "역순",
+      "인덱스"
+    ],
+    "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
+    "code": "#include <stdio.h>\n#include <string.h>\nint main(void) {\n    char text[] = \"ABCDEFGH\";\n    char *left = text;\n    char *right = text + strlen(text) - 1;\n    while (left < right) {\n        char temp = *left;\n        *left++ = *right;\n        *right-- = temp;\n    }\n    for (int i = 1; i < (int)strlen(text); i += 2)\n        putchar(text[i]);\n    return 0;\n}",
+    "answer": "GECA",
+    "explanation": "문자열을 뒤집으면 HGFEDCBA이고, 인덱스 1·3·5·7의 문자는 G·E·C·A입니다.",
+    "steps": [
+      "ABCDEFGH를 뒤집어 HGFEDCBA를 만듭니다.",
+      "홀수 인덱스 1,3,5,7을 선택합니다.",
+      "G, E, C, A가 차례로 출력됩니다."
+    ],
+    "sources": [
+      {
+        "name": "August-JHY · 2024년 1회 복원",
+        "url": "https://august-jhy.tistory.com/219"
+      },
+      {
+        "name": "2024년 1회 교차 정답표",
+        "url": "https://grandlife.co.kr/2024-info-processing-practical-1/"
+      }
+    ],
+    "verificationNote": "복수 공개 복원자료에서 ABCDEFGH 역순 처리 후 홀수 인덱스 출력과 정답 GECA를 확인했습니다. 변수명만 정규화했습니다.",
+    "grading": "exact"
+  },
+  {
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "difficulty": "실전",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "id": "R-C-0006",
+    "language": "C",
+    "title": "문자 종류별 변환",
+    "questionType": "output",
+    "concepts": [
+      "문자열",
+      "ctype",
+      "ASCII",
+      "나머지 연산"
+    ],
+    "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
+    "code": "#include <stdio.h>\n#include <ctype.h>\nint main(void) {\n    char *p = \"It is 8\";\n    char result[100];\n    int i;\n    for (i = 0; p[i] != '\\0'; i++) {\n        if (isupper((unsigned char)p[i]))\n            result[i] = (p[i] - 'A' + 5) % 25 + 'A';\n        else if (islower((unsigned char)p[i]))\n            result[i] = (p[i] - 'a' + 10) % 26 + 'a';\n        else if (isdigit((unsigned char)p[i]))\n            result[i] = (p[i] - '0' + 3) % 10 + '0';\n        else\n            result[i] = p[i];\n    }\n    result[i] = '\\0';\n    printf(\"%s\", result);\n    return 0;\n}",
+    "answer": "Nd sc 1",
+    "explanation": "I는 대문자 규칙으로 N, t·i·s는 소문자 규칙으로 d·s·c, 숫자 8은 1로 바뀝니다. 공백은 그대로 유지됩니다.",
+    "steps": [
+      "I: (8+5)%25=13 → N.",
+      "t, i, s는 각각 d, s, c로 변환됩니다.",
+      "8은 (8+3)%10=1이므로 1로 변환됩니다.",
+      "공백을 유지해 Nd sc 1이 됩니다."
+    ],
+    "sources": [
+      {
+        "name": "August-JHY · 2024년 1회 C 복원",
+        "url": "https://august-jhy.tistory.com/219"
+      },
+      {
+        "name": "2024년 1회 교차 정답표",
+        "url": "https://grandlife.co.kr/2024-info-processing-practical-1/"
+      }
+    ],
+    "verificationNote": "복수 공개 자료에서 문자열 It is 8, 문자별 이동 규칙과 정답 Nd sc 1을 확인했습니다. ctype 인자 캐스팅과 main 반환형만 안전하게 정규화했습니다.",
+    "grading": "exact"
+  },
+  {
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "difficulty": "실전",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "id": "R-PY-0006",
+    "language": "Python",
+    "title": "리스트 문자열의 두 번째 문자 누적",
+    "questionType": "output",
+    "concepts": [
+      "리스트",
+      "for in",
+      "문자열 인덱싱"
+    ],
+    "question": "다음 Python 3 코드의 출력 결과를 쓰세요.",
+    "code": "cities = [\"Seoul\", \"Kyeonggi\", \"Incheon\", \"Daejun\", \"Daegu\", \"Pusan\"]\ntext = \"S\"\nfor city in cities:\n    text = text + city[1]\nprint(text)",
+    "answer": "Seynaau",
+    "acceptedAnswers": [
+      "Soyaaar"
+    ],
+    "explanation": "초기 S 뒤에 각 도시 문자열의 인덱스 1 문자를 e, y, n, a, a, u 순서로 붙입니다.",
+    "steps": [
+      "Seoul[1]=e, Kyeonggi[1]=y입니다.",
+      "Incheon[1]=n, Daejun[1]=a입니다.",
+      "Daegu[1]=a, Pusan[1]=u입니다.",
+      "초기 S와 합쳐 Seynaau가 됩니다."
+    ],
+    "sources": [
+      {
+        "name": "August-JHY · 2024년 1회 Python 복원",
+        "url": "https://august-jhy.tistory.com/219"
+      },
+      {
+        "name": "2024년 1회 교차 정답표",
+        "url": "https://grandlife.co.kr/2024-info-processing-practical-1/"
+      }
+    ],
+    "verificationNote": "복수 공개 자료에서 도시 목록, 인덱스 1 누적 구조와 정답 Seynaau를 확인했습니다. 변수명만 정규화했습니다.",
+    "grading": "exact"
+  },
+  {
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "difficulty": "기본",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "id": "R-SQL-0007",
+    "language": "SQL",
+    "title": "INSERT·SELECT·FROM·SET 빈칸",
+    "questionType": "blank",
+    "concepts": [
+      "INSERT",
+      "VALUES",
+      "SELECT",
+      "FROM",
+      "UPDATE",
+      "SET"
+    ],
+    "question": "다음 네 SQL 문의 [1]~[4]에 들어갈 키워드를 순서대로 쓰세요.",
+    "tables": [
+      {
+        "name": "T",
+        "columns": [
+          "A",
+          "B"
+        ],
+        "rows": [
+          [
+            1,
+            "a"
+          ],
+          [
+            2,
+            "b"
+          ],
+          [
+            3,
+            "c"
+          ],
+          [
+            4,
+            "d"
+          ]
+        ]
+      }
+    ],
+    "code": "INSERT INTO 사원(사원번호, 이름, 주소, 부서)\n[1] (32431, '정실기', '서울', '영업');\n\nINSERT INTO 부서(사원번호, 이름, 나이, 부서)\n[2] 사원번호, 이름, 나이, 23 FROM 사원 WHERE 이름 = '정실기';\n\nSELECT * [3] 사원;\n\nUPDATE 사원 [4] 부서 = '퇴사' WHERE 사원번호 = 32431;",
+    "answer": "VALUES SELECT FROM SET",
+    "explanation": "직접 값을 삽입할 때 VALUES, 조회 결과를 삽입할 때 SELECT, 조회 대상은 FROM, 갱신 값 지정은 SET을 사용합니다.",
+    "steps": [
+      "INSERT에 직접 값을 넣으므로 VALUES입니다.",
+      "다른 조회 결과를 INSERT하므로 SELECT입니다.",
+      "SELECT의 대상 테이블 앞에는 FROM이 필요합니다.",
+      "UPDATE에서 변경할 열과 값 앞에는 SET이 필요합니다."
+    ],
+    "sources": [
+      {
+        "name": "모두CBT · 2024년 2회 SQL 복원",
+        "url": "https://www.moducbt.com/exam/solution/29113"
+      },
+      {
+        "name": "BHHer · 2024년 2회 복원",
+        "url": "https://bhher.tistory.com/115"
+      },
+      {
+        "name": "문어CBT · 2024년 2회 복원",
+        "url": "https://www.sqldpass.com/blog/past-exam/engineer-2024-2"
+      }
+    ],
+    "verificationNote": "여러 공개 복원자료에서 네 빈칸의 순서 VALUES, SELECT, FROM, SET이 일치합니다. 예시 식별자와 값은 한 복원본 기준으로 정리했습니다.",
+    "grading": "sql_keywords"
+  },
+  {
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "difficulty": "실전",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "id": "R-JAVA-0004",
+    "language": "Java",
+    "title": "오버라이딩 메서드의 동적 호출",
+    "questionType": "output",
+    "concepts": [
+      "상속",
+      "오버라이딩",
+      "동적 바인딩"
+    ],
+    "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
+    "code": "class Parent {\n    int a, b;\n    Parent(int a, int b) {\n        this.a = a;\n        this.b = b;\n    }\n    void print() {\n        System.out.println(a + b);\n    }\n}\nclass Child extends Parent {\n    int po = 3;\n    Child(int i) {\n        super(i, i + 1);\n    }\n    @Override\n    void print() {\n        System.out.println(po * po);\n    }\n}\npublic class Main {\n    public static void main(String[] args) {\n        Parent one = new Child(10);\n        one.print();\n    }\n}",
+    "answer": "9",
+    "explanation": "실제 객체가 Child이므로 오버라이딩된 print()가 호출되고, po=3이므로 3×3=9가 출력됩니다.",
+    "steps": [
+      "Parent 타입 변수에 Child 객체를 저장합니다.",
+      "인스턴스 메서드는 실제 객체 타입 기준으로 동적 바인딩됩니다.",
+      "Child.print()의 po*po=9가 출력됩니다."
+    ],
+    "sources": [
+      {
+        "name": "August-JHY · 2024년 1회 복원",
+        "url": "https://august-jhy.tistory.com/219"
+      },
+      {
+        "name": "2024년 1회 교차 정답표",
+        "url": "https://grandlife.co.kr/2024-info-processing-practical-1/"
+      }
+    ],
+    "verificationNote": "복수 공개 자료에서 부모 참조·자식 객체, po=3, 오버라이딩 출력 9를 확인했습니다. 클래스명만 정규화했습니다.",
+    "grading": "exact"
+  },
+  {
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "difficulty": "실전",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "id": "R-JAVA-0005",
+    "language": "Java",
+    "title": "배열 참조 비교",
+    "questionType": "output",
+    "concepts": [
+      "배열",
+      "참조 비교",
+      "=="
+    ],
+    "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
+    "code": "public class Main {\n    public static void main(String[] args) {\n        int[] a = new int[]{1, 2, 3, 4};\n        int[] b = new int[]{1, 2, 3, 4};\n        int[] c = new int[]{1, 2, 3};\n        check(a, b);\n        check(a, c);\n        check(b, c);\n    }\n    static void check(int[] a, int[] b) {\n        System.out.print(a == b ? \"O\" : \"N\");\n    }\n}",
+    "answer": "NNN",
+    "explanation": "a, b, c는 각각 new로 만든 서로 다른 배열 객체이므로 세 번의 참조 비교가 모두 거짓입니다.",
+    "steps": [
+      "a와 b는 값이 같아도 서로 다른 객체입니다.",
+      "a와 c도 다른 객체입니다.",
+      "b와 c도 다른 객체입니다.",
+      "세 호출 모두 N이므로 NNN입니다."
+    ],
+    "sources": [
+      {
+        "name": "August-JHY · 2024년 2회 Java 복원",
+        "url": "https://august-jhy.tistory.com/231"
+      },
+      {
+        "name": "문어CBT · 2024년 2회 복원",
+        "url": "https://www.sqldpass.com/blog/past-exam/engineer-2024-2"
+      }
+    ],
+    "verificationNote": "복수 공개 복원자료에서 세 배열을 각각 new로 생성하고 세 번 == 비교하여 NNN을 출력하는 구조가 일치합니다. 삼항식으로만 출력부를 간결화했습니다.",
+    "grading": "exact"
+  },
+  {
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "difficulty": "실전",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "id": "R-PY-0007",
+    "language": "Python",
+    "title": "부분 문자열 출현 횟수와 f-string",
+    "questionType": "output",
+    "concepts": [
+      "문자열",
+      "슬라이싱",
+      "함수",
+      "f-string"
+    ],
+    "question": "다음 Python 3 코드의 출력 결과를 쓰세요.",
+    "code": "def cnt(text, pattern):\n    result = 0\n    for i in range(len(text) - len(pattern) + 1):\n        sub = text[i:i + len(pattern)]\n        if sub == pattern:\n            result += 1\n    return result\n\ntext = \"abdcabcabca\"\np1 = \"ca\"\np2 = \"ab\"\nprint(f'ab{cnt(text, p2)}ca{cnt(text, p1)}')",
+    "answer": "ab3ca3",
+    "explanation": "문자열에서 ab와 ca가 각각 3번 등장하므로 f-string 결과는 ab3ca3입니다.",
+    "steps": [
+      "ab는 시작 인덱스 0,4,7에서 3번 나타납니다.",
+      "ca는 시작 인덱스 3,6,9에서 3번 나타납니다.",
+      "f-string이 ab + 3 + ca + 3을 결합합니다.",
+      "ab3ca3이 출력됩니다."
+    ],
+    "sources": [
+      {
+        "name": "August-JHY · 2024년 2회 Python 복원",
+        "url": "https://august-jhy.tistory.com/218"
+      },
+      {
+        "name": "문어CBT · 2024년 2회 복원",
+        "url": "https://www.sqldpass.com/blog/past-exam/engineer-2024-2"
+      }
+    ],
+    "verificationNote": "복수 공개 복원자료에서 문자열 abdcabcabca, 두 패턴 ca/ab와 출력 ab3ca3이 일치합니다. 함수명·매개변수명만 정규화했습니다.",
+    "grading": "exact"
+  },
+  {
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "difficulty": "실전",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "id": "R-C-0007",
+    "language": "C",
+    "title": "구조체 포인터와 문자열 인덱스",
+    "questionType": "output",
+    "concepts": [
+      "구조체",
+      "포인터",
+      "문자열 인덱스"
+    ],
+    "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
+    "code": "#include <stdio.h>\nstruct Test {\n    int i;\n    const char *g;\n};\nint main(void) {\n    struct Test test[] = {{1,\"AB\"},{2,\"DC\"},{3,\"EB\"}};\n    struct Test *p = &test[1];\n    printf(\"%s\", p->g + (p->i - 1));\n    return 0;\n}",
+    "answer": "C",
+    "explanation": "p는 test[1]을 가리켜 i=2, g=\"DC\"입니다. g+(2-1)은 문자열의 C 위치를 가리키고 %s는 그 위치부터 출력합니다.",
+    "steps": [
+      "p->i는 2이고 p->g는 DC입니다.",
+      "p->i-1은 1입니다.",
+      "DC의 시작 주소에서 한 글자 이동하면 C를 가리킵니다.",
+      "%s로 C부터 끝까지 출력하므로 C입니다."
+    ],
+    "sources": [
+      {
+        "name": "Top-Evo · 2025년 3회 복원",
+        "url": "https://top-evo.tistory.com/13"
+      },
+      {
+        "name": "정처기 감자 · 2025년 3회 복원검토",
+        "url": "https://jeongcheogi.edugamja.com/past-exam/2025/2025-3-review"
+      }
+    ],
+    "verificationNote": "복수 공개 복원자료에서 구조체 배열 값, p=&test[1], 문자열 포인터 연산과 정답 C가 일치합니다. 공백·main 반환형만 정규화했습니다.",
+    "grading": "exact"
+  },
+  {
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "difficulty": "실전",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "id": "R-C-0008",
+    "language": "C",
+    "title": "문자열 포인터 산술",
+    "questionType": "output",
+    "concepts": [
+      "문자열",
+      "포인터 산술",
+      "putchar"
+    ],
+    "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
+    "code": "#include <stdio.h>\nint main(void) {\n    char str[] = \"REPUBLICOFKOREA\";\n    int a = 0;\n    while (str[a] != '\\0')\n        ++a;\n    putchar(str[a - 2]);\n    return 0;\n}",
+    "answer": "E",
+    "explanation": "문자열 길이가 15이므로 반복 종료 시 a=15입니다. str[13]은 E입니다.",
+    "steps": [
+      "널 문자를 만날 때까지 a가 증가하여 15가 됩니다.",
+      "a-2는 13입니다.",
+      "0-based 인덱스 13의 문자는 E입니다."
+    ],
+    "sources": [
+      {
+        "name": "Top-Evo · 2025년 3회 복원",
+        "url": "https://top-evo.tistory.com/13"
+      },
+      {
+        "name": "정처기 감자 · 2025년 3회 복원검토",
+        "url": "https://jeongcheogi.edugamja.com/past-exam/2025/2025-3-review"
+      }
+    ],
+    "verificationNote": "복수 공개 복원자료에서 문자열, 길이 계산 반복문, str[a-2]와 정답 E가 일치합니다. main 서식만 정규화했습니다.",
+    "grading": "exact"
+  },
+  {
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "difficulty": "실전",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "id": "R-C-0009",
+    "language": "C",
+    "title": "연결 노드 누적과 XOR",
+    "questionType": "output",
+    "concepts": [
+      "구조체",
+      "연결리스트",
+      "비트 XOR",
+      "누적"
+    ],
+    "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
+    "code": "#include <stdio.h>\nstruct Node {\n    struct Node *next;\n    unsigned int x;\n};\nint main(void) {\n    struct Node t1 = {0, 5u};\n    struct Node t2 = {0, 7u};\n    struct Node t3 = {0, 11u};\n    t3.next = &t2;\n    t2.next = &t1;\n    struct Node *curr = &t3;\n    unsigned int sum = 0;\n    while (curr) {\n        sum = sum * 3 + curr->x;\n        curr = curr->next;\n    }\n    sum = (sum ^ 42u) + 100u;\n    printf(\"%u\", sum);\n    return 0;\n}",
+    "answer": "187",
+    "explanation": "누적값은 11 → 40 → 125가 됩니다. 125 XOR 42는 87이고 100을 더하면 187입니다.",
+    "steps": [
+      "첫 노드: 0×3+11=11입니다.",
+      "둘째 노드: 11×3+7=40입니다.",
+      "셋째 노드: 40×3+5=125입니다.",
+      "125 XOR 42=87, 87+100=187입니다."
+    ],
+    "sources": [
+      {
+        "name": "Top-Evo · 2025년 3회 복원",
+        "url": "https://top-evo.tistory.com/13"
+      },
+      {
+        "name": "정처기 감자 · 2025년 3회 복원검토",
+        "url": "https://jeongcheogi.edugamja.com/past-exam/2025/2025-3-review"
+      }
+    ],
+    "verificationNote": "복수 공개 복원자료에서 노드 값 11→7→5, sum=sum*3+x, XOR 42, +100과 정답 187이 일치합니다. 선언 서식만 정규화했습니다.",
+    "grading": "exact"
+  },
+  {
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "difficulty": "실전",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "id": "R-JAVA-0006",
+    "language": "Java",
+    "title": "인터페이스 구현 키워드",
+    "questionType": "blank",
+    "concepts": [
+      "interface",
+      "implements",
+      "상속 관계"
+    ],
+    "question": "다음 Java 코드의 [빈칸]에 들어갈 키워드를 쓰세요.",
+    "code": "interface Calc {\n    int add(int a, int b);\n}\nclass SimpleCalc [빈칸] Calc {\n    public int add(int a, int b) { return a + b; }\n}",
+    "answer": "implements",
+    "acceptedAnswers": [
+      "implements",
+      "IMPLEMENTS"
+    ],
+    "explanation": "Java 클래스가 인터페이스를 구현할 때 implements 키워드를 사용합니다.",
+    "steps": [
+      "Calc는 interface입니다.",
+      "클래스가 인터페이스의 추상 메서드를 구현하려면 implements를 사용합니다."
+    ],
+    "sources": [
+      {
+        "name": "Top-Evo · 2025년 3회 복원",
+        "url": "https://top-evo.tistory.com/13"
+      },
+      {
+        "name": "정처기 감자 · 2025년 3회 복원검토",
+        "url": "https://jeongcheogi.edugamja.com/past-exam/2025/2025-3-review"
+      }
+    ],
+    "verificationNote": "복수 공개 복원자료에서 빈칸 위치와 정답 implements가 일치합니다. 식별자만 정규화했습니다.",
+    "grading": "exact"
+  },
+  {
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "difficulty": "실전",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "id": "R-PY-0008",
+    "language": "Python",
+    "title": "enumerate로 딕셔너리 구성",
+    "questionType": "output",
+    "concepts": [
+      "enumerate",
+      "딕셔너리",
+      "sum",
+      "len",
+      "튜플"
+    ],
+    "question": "다음 Python 3 코드의 출력 결과를 쓰세요.",
+    "code": "data = [\n    [3, 5, 2, 4, 1],\n    [4, 5, 1],\n    [4, 4, 1, 5, 4],\n    [4, 5]\n]\nresult = {}\nfor index, values in enumerate(data):\n    result[index] = (sum(values), len(values))\nprint(result)",
+    "answer": "{0: (15, 5), 1: (10, 3), 2: (18, 5), 3: (9, 2)}",
+    "explanation": "각 내부 리스트의 합과 길이를 튜플로 만들어 인덱스를 키로 저장합니다.",
+    "steps": [
+      "첫 리스트는 합 15, 길이 5입니다.",
+      "둘째는 (10,3), 셋째는 (18,5), 넷째는 (9,2)입니다.",
+      "enumerate의 인덱스 0~3을 키로 저장합니다."
+    ],
+    "sources": [
+      {
+        "name": "Top-Evo · 2025년 3회 복원",
+        "url": "https://top-evo.tistory.com/13"
+      },
+      {
+        "name": "ITPassLab · 2025년 3회 복원자료",
+        "url": "https://www.sqldpass.com/blog/past-exam/engineer-2025-3"
+      },
+      {
+        "name": "정처기 감자 · 2025년 3회 검토",
+        "url": "https://jeongcheogi.edugamja.com/past-exam/2025/2025-3-review"
+      }
+    ],
+    "verificationNote": "복수 공개 복원자료에서 네 내부 리스트의 값, enumerate, sum/len 결과와 최종 딕셔너리 출력이 일치합니다. 반복 변수명만 정규화했습니다.",
+    "grading": "exact"
+  },
+  {
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "difficulty": "실전",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "id": "R-JAVA-0007",
+    "language": "Java",
+    "title": "자식 생성자의 부모 생성자 호출",
+    "questionType": "blank",
+    "concepts": [
+      "상속",
+      "생성자",
+      "super"
+    ],
+    "question": "자식 클래스 생성자에서 부모 생성자를 호출하려면 [빈칸]에 무엇을 써야 하나요?",
+    "code": "class Rectangle {\n    int x, y;\n    Rectangle(int x, int y) {\n        this.x = x;\n        this.y = y;\n    }\n}\nclass Square extends Rectangle {\n    Square(int a) {\n        [빈칸](a, a);\n    }\n}\n",
+    "answer": "super",
+    "acceptedAnswers": [
+      "super",
+      "super(a, a)"
+    ],
+    "explanation": "Square 생성자에서 Rectangle(int,int) 부모 생성자를 호출해야 하므로 super가 들어갑니다.",
+    "steps": [
+      "Square는 Rectangle을 상속합니다.",
+      "Rectangle 생성자는 int 인자 두 개를 요구합니다.",
+      "부모 생성자 호출은 super(a,a) 형태이므로 빈칸은 super입니다."
+    ],
+    "sources": [
+      {
+        "name": "Top-Evo · 2025년 3회 복원",
+        "url": "https://top-evo.tistory.com/13"
+      },
+      {
+        "name": "정처기 감자 · 2025년 3회 복원검토",
+        "url": "https://jeongcheogi.edugamja.com/past-exam/2025/2025-3-review"
+      }
+    ],
+    "verificationNote": "복수 공개 복원자료에서 Rectangle/Square 상속 구조와 빈칸 super가 일치합니다. 불필요한 실행부만 생략했습니다.",
+    "grading": "exact"
+  },
+  {
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "difficulty": "실전",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "id": "R-C-0010",
+    "language": "C",
+    "title": "삼항·비트·논리 연산 순서",
+    "questionType": "output",
+    "concepts": [
+      "삼항 연산자",
+      "비트 AND",
+      "시프트",
+      "논리 AND",
+      "연산자 우선순위"
+    ],
+    "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
+    "code": "#include <stdio.h>\nint main(void) {\n    int x = 7, y = 4, z;\n    z = y % 3 < 3 ? 2 : 1;\n    z = z & z >> 1;\n    z = x > 5 && z <= 3 ? z * x : z / x;\n    printf(\"%d\", z);\n    return 0;\n}",
+    "answer": "0",
+    "explanation": "첫 식에서 z=2, 두 번째 식에서 2 & (2>>1)=0, 마지막 식은 조건이 참이지만 0×7이므로 0입니다.",
+    "steps": [
+      "4%3=1이고 1<3이므로 z=2입니다.",
+      ">>가 &보다 먼저 계산되어 2&(2>>1)=2&1=0입니다.",
+      "7>5와 0<=3이 모두 참이므로 0*7을 계산합니다.",
+      "출력은 0입니다."
+    ],
+    "sources": [
+      {
+        "name": "Top-Evo · 2025년 3회 복원",
+        "url": "https://top-evo.tistory.com/13"
+      },
+      {
+        "name": "정처기 감자 · 2025년 3회 복원검토",
+        "url": "https://jeongcheogi.edugamja.com/past-exam/2025/2025-3-review"
+      }
+    ],
+    "verificationNote": "복수 공개 복원자료에서 x=7, y=4, 두 삼항식과 비트식, 정답 0이 일치합니다. 공백·main 반환형만 정규화했습니다.",
+    "grading": "exact"
+  },
+  {
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "difficulty": "실전",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "id": "R-JAVA-0008",
+    "language": "Java",
+    "title": "enum 상수 조건 분기",
+    "questionType": "output",
+    "concepts": [
+      "enum",
+      "values",
+      "name",
+      "length",
+      "배열 인덱스"
+    ],
+    "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
+    "code": "enum Tri {\n    A(\"A\"), B(\"AB\"), C(\"ABC\");\n    private final String code;\n    Tri(String code) { this.code = code; }\n    String code() { return code; }\n}\npublic class Main {\n    public static void main(String[] args) {\n        Tri t = Tri.values()[Tri.A.name().length()];\n        System.out.print(t.code());\n    }\n}",
+    "answer": "AB",
+    "explanation": "Tri.A.name()은 A이고 길이는 1입니다. Tri.values()[1]은 B이며 B의 code는 AB입니다.",
+    "steps": [
+      "Tri.A.name()은 \"A\"입니다.",
+      "\"A\".length()는 1입니다.",
+      "values()[1]은 두 번째 상수 B입니다.",
+      "B의 code 값 AB를 출력합니다."
+    ],
+    "sources": [
+      {
+        "name": "Top-Evo · 2025년 3회 복원",
+        "url": "https://top-evo.tistory.com/13"
+      },
+      {
+        "name": "정처기 감자 · 2025년 3회 복원",
+        "url": "https://jeongcheogi.edugamja.com/past-exam/2025/2025-3"
+      }
+    ],
+    "verificationNote": "복수 공개 복원자료에서 enum 상수 A/B/C, code 문자열, values()[name().length()] 구조와 정답 AB가 일치합니다. 접근 제어자만 정리했습니다.",
+    "grading": "exact"
+  },
+  {
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "difficulty": "실전",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "id": "R-SQL-0009",
+    "language": "SQL",
+    "title": "COUNT(열)의 NULL 제외",
+    "questionType": "sql_result",
+    "concepts": [
+      "COUNT",
+      "NULL",
+      "집계 함수"
+    ],
+    "question": "다음 테이블과 SQL의 결과를 쓰세요.",
+    "tables": [
+      {
+        "name": "A",
+        "columns": [
+          "col1",
+          "col2"
+        ],
+        "rows": [
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            2,
+            null
+          ]
+        ]
+      }
+    ],
+    "code": "SELECT COUNT(col2)\nFROM A\nWHERE col1 IN (2, 3)\n   OR col2 IN (3, 5);",
+    "answer": "4",
+    "explanation": "WHERE 조건을 만족하는 행은 5개지만 COUNT(col2)는 col2가 NULL인 행을 제외하므로 4입니다.",
+    "steps": [
+      "col1 IN(2,3) 또는 col2 IN(3,5)를 만족하는 행은 모두 5개입니다.",
+      "(2,NULL) 행도 WHERE에는 포함됩니다.",
+      "COUNT(col2)는 NULL을 세지 않으므로 결과는 4입니다."
+    ],
+    "sources": [
+      {
+        "name": "Top-Evo · 2025년 3회 복원",
+        "url": "https://top-evo.tistory.com/13"
+      },
+      {
+        "name": "문어CBT · 2025년 3회 복원",
+        "url": "https://www.sqldpass.com/blog/past-exam/engineer-2025-3"
+      },
+      {
+        "name": "BHHer · 2025년 3회 정리",
+        "url": "https://bhher.tistory.com/138"
+      }
+    ],
+    "verificationNote": "복수 공개 복원자료에서 A 테이블의 5개 행, WHERE의 두 IN 조건, COUNT(col2)와 정답 4가 일치합니다.",
+    "grading": "exact"
+  },
+  {
+    "id": "R-C-0011",
+    "language": "C",
+    "title": "포인터 배열과 2차원 배열",
+    "sourceType": "reconstructed",
+    "confidence": "B",
+    "questionType": "output",
+    "difficulty": "실전",
+    "concepts": [
+      "2차원 배열",
+      "포인터 배열",
+      "이중 역참조"
+    ],
+    "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
+    "code": "#include <stdio.h>\nint main(void) {\n    int arr[3][3] = {1,2,3,4,5,6,7,8,9};\n    int *parr[2] = {arr[1], arr[2]};\n    printf(\"%d\", parr[1][1] + *(parr[1] + 2) + **parr);\n    return 0;\n}",
+    "answer": "21",
+    "explanation": "parr[1]은 arr[2]를, parr[0]은 arr[1]을 가리킵니다. 8+9+4=21입니다.",
+    "steps": [
+      "parr[1][1]은 arr[2][1]이므로 8입니다.",
+      "*(parr[1]+2)는 arr[2][2]이므로 9입니다.",
+      "**parr는 arr[1][0]이므로 4입니다.",
+      "8+9+4=21입니다."
+    ],
+    "sources": [
+      {
+        "name": "August-JHY · 2024년 2회 C 복원",
+        "url": "https://august-jhy.tistory.com/231"
+      },
+      {
+        "name": "문어CBT · 2024년 2회 복원",
+        "url": "https://www.sqldpass.com/blog/past-exam/engineer-2024-2"
+      }
+    ],
+    "verificationNote": "복수 공개 복원자료에서 배열 값, 포인터 배열 초기화, 식과 정답 21이 일치합니다. main 반환형과 공백만 정규화했습니다.",
+    "enabled": true,
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04",
+    "grading": "exact"
+  }
+]
