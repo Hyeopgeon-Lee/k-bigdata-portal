@@ -126,7 +126,7 @@ review('모바일가독성',questions,q=>{
   assert.ok(beginnerConcepts(q).length<=3,q.id);
   assert.ok(beginnerFocus(q).split(/\n/).length<=3,q.id);
   assert.ok(examMemory(q).split(/\n/).length<=3,q.id);
-  assert.ok(!/<(?:script|style|iframe)/i.testsolutionSummary(q),q.id);
+  assert.ok(!/<(?:script|style|iframe)/i.test(solutionSummary(q)),q.id);
 });
 assert.match(css,/\.beginner-flow/);
 assert.match(css,/\.beginner-section/);
