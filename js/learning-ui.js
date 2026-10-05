@@ -148,11 +148,11 @@ document.querySelector("#show-all")?.addEventListener("click",()=>{random=null;r
 render();
 }
 }
+ await initPortalUX();
  if(page==="jobs"){
   const {initJobGuide}=await import("./job-guide-ui.js?v=20261005-perf-1");
   initJobGuide();
  }
- await initPortalUX();
  initGroupedSearch();
 }
 
