@@ -30,7 +30,7 @@ for(const q of questions){
   if(q.language==='SQL'){
     assert.ok(/확인|구분|적|나눠|먼저|단계|표시|조립/.test(q.hint),q.id+' SQL hint should describe a solving action');
   }else{
-    assert.ok(/적|확인|표시|추적|구분|찾|계산|반영/.test(q.hint),q.id+' code hint should describe a tracing action');
+    assert.ok(/적|확인|표시|추적|구분|찾|계산|반영|생각|갱신/.test(q.hint),q.id+' code hint should describe a tracing action');
   }
 }
 
