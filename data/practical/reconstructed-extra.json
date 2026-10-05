@@ -26,6 +26,10 @@
       {
         "name": "AllA+ · 2024년 1회 후기",
         "url": "https://allaplus391.tistory.com/13"
+      },
+      {
+        "name": "August-JHY / 교차 정답표",
+        "url": "https://august-jhy.tistory.com/219"
       }
     ],
     "verificationNote": "2024년 1회 복원자료에서 Connection/_inst/get/count/getCount와 conn1·conn2·conn3 구조를 확인했습니다. 2026-10-06 source-fidelity 전수검사에서 원 복원자료의 식별자·구조·조건을 기준으로 보정했습니다.",
@@ -510,6 +514,10 @@
       {
         "name": "정처기 감자 · 2025년 3회 복원검토",
         "url": "https://jeongcheogi.edugamja.com/past-exam/2025/2025-3-review"
+      },
+      {
+        "name": "문어CBT / Top-Evo 교차검증",
+        "url": "https://www.sqldpass.com/blog/past-exam/engineer-2025-3"
       }
     ],
     "verificationNote": "복수 공개 복원자료에서 구조체 배열 값, p=&test[1], 문자열 포인터 연산과 정답 C가 일치합니다. 공백·main 반환형만 정규화했습니다.",
@@ -559,6 +567,10 @@
       {
         "name": "정처기 감자 · 2025년 3회 복원검토",
         "url": "https://jeongcheogi.edugamja.com/past-exam/2025/2025-3-review"
+      },
+      {
+        "name": "문어CBT / Top-Evo 교차검증",
+        "url": "https://www.sqldpass.com/blog/past-exam/engineer-2025-3"
       }
     ],
     "verificationNote": "복수 공개 복원자료에서 문자열, 길이 계산 반복문, str[a-2]와 정답 E가 일치합니다. main 서식만 정규화했습니다.",
@@ -609,6 +621,10 @@
       {
         "name": "정처기 감자 · 2025년 3회 복원검토",
         "url": "https://jeongcheogi.edugamja.com/past-exam/2025/2025-3-review"
+      },
+      {
+        "name": "문어CBT / Top-Evo 교차검증",
+        "url": "https://www.sqldpass.com/blog/past-exam/engineer-2025-3"
       }
     ],
     "verificationNote": "복수 공개 복원자료에서 노드 값 11→7→5, sum=sum*3+x, XOR 42, +100과 정답 187이 일치합니다. 선언 서식만 정규화했습니다.",
@@ -663,6 +679,10 @@
       {
         "name": "정처기 감자 · 2025년 3회 복원검토",
         "url": "https://jeongcheogi.edugamja.com/past-exam/2025/2025-3-review"
+      },
+      {
+        "name": "문어CBT / Top-Evo 교차검증",
+        "url": "https://www.sqldpass.com/blog/past-exam/engineer-2025-3"
       }
     ],
     "verificationNote": "2025년 3회 primary 복원자료에서 Machine/WashingMachine/name/run/Main 전체 구조와 정답 implements를 확인했습니다. 2026-10-06 source-fidelity 전수검사에서 원 복원자료의 식별자·구조·조건을 기준으로 보정했습니다.",
@@ -770,6 +790,10 @@
       {
         "name": "정처기 감자 · 2025년 3회 복원검토",
         "url": "https://jeongcheogi.edugamja.com/past-exam/2025/2025-3-review"
+      },
+      {
+        "name": "문어CBT / Top-Evo 교차검증",
+        "url": "https://www.sqldpass.com/blog/past-exam/engineer-2025-3"
       }
     ],
     "verificationNote": "2025년 3회 primary 복원자료의 Rectangle/Square 생성자와 실행 문맥을 기준으로 보정했습니다. 2026-10-06 source-fidelity 전수검사에서 원 복원자료의 식별자·구조·조건을 기준으로 보정했습니다.",
@@ -820,6 +844,10 @@
       {
         "name": "정처기 감자 · 2025년 3회 복원검토",
         "url": "https://jeongcheogi.edugamja.com/past-exam/2025/2025-3-review"
+      },
+      {
+        "name": "문어CBT / Top-Evo 교차검증",
+        "url": "https://www.sqldpass.com/blog/past-exam/engineer-2025-3"
       }
     ],
     "verificationNote": "복수 공개 복원자료에서 x=7, y=4, 두 삼항식과 비트식, 정답 0이 일치합니다. 공백·main 반환형만 정규화했습니다.",
@@ -872,6 +900,10 @@
       {
         "name": "정처기 감자 · 2025년 3회 복원",
         "url": "https://jeongcheogi.edugamja.com/past-exam/2025/2025-3"
+      },
+      {
+        "name": "문어CBT / Top-Evo 교차검증",
+        "url": "https://www.sqldpass.com/blog/past-exam/engineer-2025-3"
       }
     ],
     "verificationNote": "2025년 3회 primary 복원자료에서 Tri의 code 필드와 public code() 구조, 정답 AB를 확인했습니다. 2026-10-06 source-fidelity 전수검사에서 원 복원자료의 식별자·구조·조건을 기준으로 보정했습니다.",
@@ -1219,6 +1251,10 @@
       {
         "name": "GrandLife · 2024년 3회 교차정리",
         "url": "https://grandlife.co.kr/2024-info-processing-practical-3/"
+      },
+      {
+        "name": "2024년 3회 복수 복원자료",
+        "url": "https://august-jhy.tistory.com/254?category=1274101"
       }
     ],
     "verificationNote": "독립 복원자료에서 테이블 구성, 중첩 GROUP BY/HAVING 구조와 정답 1을 교차 확인했습니다. 별칭만 정규화했습니다.",
@@ -1326,6 +1362,10 @@
       {
         "name": "GrandLife · 2024년 3회 교차정리",
         "url": "https://grandlife.co.kr/2024-info-processing-practical-3/"
+      },
+      {
+        "name": "2024년 3회 복수 복원자료",
+        "url": "https://august-jhy.tistory.com/254?category=1274101"
       }
     ],
     "verificationNote": "2024년 3회 복원자료에서 func, 임시변수 t, 출력 포인터 current 구조를 확인했습니다. 2026-10-06 source-fidelity 전수검사에서 원 복원자료의 식별자·구조·조건을 기준으로 보정했습니다.",
@@ -2846,6 +2886,10 @@
       {
         "name": "정처LAB · 2025년 1회 10번",
         "url": "https://itpasslab.com/practical-question/engineer-practical-reconstructed-2025-1-10"
+      },
+      {
+        "name": "2025년 1회 복수 복원자료",
+        "url": "https://www.sqldpass.com/blog/past-exam/engineer-2025-1"
       }
     ],
     "verificationNote": "복수 독립 자료에서 B,A,D,E 배열, target C, 첫 출력 4와 최종 BACDE가 일치합니다. main 반환형만 정규화했습니다.",
@@ -3233,6 +3277,10 @@
       {
         "name": "GrandLife · 2025년 1회 19번",
         "url": "https://grandlife.co.kr/2025-info-processing-practical-1/"
+      },
+      {
+        "name": "2025년 1회 복수 복원자료",
+        "url": "https://www.sqldpass.com/blog/past-exam/engineer-2025-1"
       }
     ],
     "verificationNote": "복수 자료에서 두 학생의 복원 상수와 0xA5 AND 누적, 정답 908이 일치합니다.",
@@ -3286,6 +3334,10 @@
       {
         "name": "GrandLife · 2025년 1회 20번",
         "url": "https://grandlife.co.kr/2025-info-processing-practical-1/"
+      },
+      {
+        "name": "2025년 1회 복수 복원자료",
+        "url": "https://www.sqldpass.com/blog/past-exam/engineer-2025-1"
       }
     ],
     "verificationNote": "복수 독립 자료에서 String/int 오버로드 재귀식, 입력 \"5\"와 정답 4가 일치합니다. 메서드명만 통일했습니다.",
@@ -3610,6 +3662,10 @@
       {
         "name": "복원 커뮤니티 · 2026년 2회 14번",
         "url": "https://jeongcheogi.edugamja.com/community/restoration"
+      },
+      {
+        "name": "문어CBT·응시자 복원 인덱스",
+        "url": "https://www.sqldpass.com/blog/past-exam/engineer-2026-2"
       }
     ],
     "verificationNote": "복수 자료에서 실제 시험 번호 14번, LIKE 이%와 DESC 두 빈칸이 일치합니다.",
@@ -3664,6 +3720,10 @@
       {
         "name": "정처기 감자 · 실제 번호 15번 매핑",
         "url": "https://jeongcheogi.edugamja.com/community/restoration"
+      },
+      {
+        "name": "문어CBT·응시자 복원 인덱스",
+        "url": "https://www.sqldpass.com/blog/past-exam/engineer-2026-2"
       }
     ],
     "verificationNote": "코드 복원자료에서 노드 값과 후위 순회 정답 12가 일치하고, 응시자 복원 인덱스에서 실제 시험 15번으로 매핑됩니다. 함수명만 정규화했습니다.",
@@ -3718,6 +3778,10 @@
       {
         "name": "정처기 감자 · 실제 번호 18번 매핑",
         "url": "https://jeongcheogi.edugamja.com/community/restoration"
+      },
+      {
+        "name": "문어CBT·응시자 복원 인덱스",
+        "url": "https://www.sqldpass.com/blog/past-exam/engineer-2026-2"
       }
     ],
     "verificationNote": "복수 코드 복원자료에서 딕셔너리 내용과 정답 CNNLRPYT가 일치하며, 응시자 복원 인덱스에서 실제 시험 18번으로 매핑됩니다. Python 3.7 이상 조건을 명시했습니다.",
@@ -4356,6 +4420,10 @@
       {
         "name": "BHHer",
         "url": "https://bhher.tistory.com/125"
+      },
+      {
+        "name": "2023년 2회 복수 복원자료",
+        "url": "https://grandlife.co.kr/2023-info-processing-practical-2/"
       }
     ],
     "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
