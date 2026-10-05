@@ -1547,6 +1547,10 @@
       {
         "name": "GrandLife · 2024년 3회 교차정리",
         "url": "https://grandlife.co.kr/2024-info-processing-practical-3/"
+      },
+      {
+        "name": "잡코딩 · 산업기사 2024-3 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/208"
       }
     ],
     "verificationNote": "복수 복원자료에서 Integer/Object/Number 오버로드, 제네릭 값 0과 정답 B0가 일치합니다. 제네릭 클래스명만 정규화했습니다. 2026-10-06 전수 대조에서 원 복원자료의 지문·코드/SQL·빈칸 위치·정답을 재확인하고, 풀이 가능성을 해치던 축약 또는 구조 변경을 원문 의미에 맞게 보정했습니다.",
@@ -6527,6 +6531,10 @@
       {
         "name": "Logic & Coffee · 정보처리산업기사 실기 Java 기출문제 정리",
         "url": "https://allen8524.tistory.com/90"
+      },
+      {
+        "name": "잡코딩 · 산업기사 2024-3 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/208"
       }
     ],
     "verificationNote": "산업기사 2022-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
@@ -7840,7 +7848,7 @@
     "updatedAt": "2026-10-06",
     "grading": "sql_keywords",
     "acceptedAnswers": [],
-    "hint": "(가)는 관계형 데이터의 표 단위, (나)는 속성이 가질 수 있는 값의 집합입니다. BETWEEN의 두 경계와 추가 조건은 AND로 연결하고, 그룹 조건은 HAVING, INSERT의 실제 값 목록 앞에는 VALUES를 사용합니다.",
+    "hint": "(가)는 관계형 데이터의 표 형태 기본 단위, (나)는 한 속성이 가질 수 있는 값의 집합입니다. SQL 부분은 범위 조건을 완성하는 연결 예약어, 그룹 결과에 적용하는 조건 절, INSERT의 값 목록을 시작하는 예약어를 각각 구분해 보세요.",
     "solution": {
       "summary": "(가)는 릴레이션, (나)는 도메인입니다. SQL에서는 BETWEEN ... AND ..., GROUP BY 뒤 그룹 조건의 HAVING, INSERT 값 목록의 VALUES를 사용합니다. 정답은 릴레이션 도메인 AND HAVING VALUES입니다.",
       "flow": [
@@ -8335,7 +8343,7 @@
     "updatedAt": "2026-10-06",
     "grading": "sql_keywords",
     "acceptedAnswers": [],
-    "hint": "사원 정보를 새로 넣는 첫 문장은 INSERT INTO ... VALUES ... 구조입니다. 두 번째 문장은 기존 행을 변경하는 UPDATE ... SET ... WHERE ... 구조입니다.",
+    "hint": "첫 문장은 새 행을 입력하는 INSERT 문입니다. 테이블명 앞 위치와 실제 값 목록 앞 위치의 예약어를 구분하세요. 두 번째 문장은 UPDATE에서 변경할 열과 값을 지정하는 위치의 예약어를 찾으면 됩니다.",
     "solution": {
       "summary": "INSERT 문에는 INTO와 VALUES가 필요하고, UPDATE 문에서 변경할 열과 값을 지정할 때 SET을 사용합니다. 정답은 INTO VALUES SET입니다.",
       "flow": [
