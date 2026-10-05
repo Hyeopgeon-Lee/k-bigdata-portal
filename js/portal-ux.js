@@ -83,7 +83,7 @@ export async function initPortalUX(){
 
  if(page==="docs"){
   const controls=document.querySelector("#list-controls"),input=document.querySelector("#local-query"),label=document.querySelector('label[for="local-query"]');
-  if(controls&&input&&label&&!controls.contains(label))controls.prepend(label,input);
+  if(controls&&input&&label)controls.prepend(label,input);
   const guide=document.querySelector("#doc-flow-guide");
   if(guide)guide.hidden=!!document.querySelector("#detail .detail-panel");
  }
