@@ -1,0 +1,28 @@
+name: Practical runtime audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "data/practical/**"
+      - "tests/practical-runtime-audit.py"
+      - ".github/workflows/practical-runtime-audit.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  runtime-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "21"
+      - name: Verify reconstructed and normalized answers
+        run: python tests/practical-runtime-audit.py
