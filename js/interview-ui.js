@@ -1,6 +1,6 @@
 import {questions, interviewGroups, interviewJobTags, questionSearchText, matchesInterviewCategory, selectRandomQuestions, interviewSources} from "./interview.js?v=20261005-accuracy-1";
-import {matches} from "./search.js";
-import {interviewRoleLinks} from "./jobs.js";
+import {matches} from "./search-core.js?v=20261005-perf-1";
+import {interviewRoleLinks} from "./interview-links.js?v=20261005-perf-3";
 const esc=value=>String(value??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
 const external=s=>'<a href="'+esc(s.url)+'" target="_blank" rel="noopener noreferrer">'+esc(s.name)+' ↗<span class="sr-only"> 외부 문서, 새 창</span></a>';
 const action=(key,text,primary=false,extra="")=>'<button type="button" class="button button-'+(primary?'primary':'secondary')+'" data-action="'+key+'" '+extra+'>'+esc(text)+'</button>';
