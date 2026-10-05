@@ -727,3 +727,23 @@
 }
 .practical-page .bank-timer.hint-stage{color:#315b91}
 .practical-page .bank-timer.revealed-stage{color:#315b39}
+
+
+/* Timed reveal status: keep the 120-second learning transition clear on PC and mobile. */
+.practical-page .timeout-note{
+  margin:8px 0 18px;
+  padding:12px 14px;
+  border:1px solid #d9e2ef;
+  border-radius:10px;
+  background:#f7f9fc;
+  color:#53627a;
+  font-size:14px;
+  line-height:1.65;
+}
+@media(max-width:767px){
+  .practical-page .timeout-note{
+    margin-bottom:14px;
+    padding:10px 12px;
+    font-size:13px;
+  }
+}
