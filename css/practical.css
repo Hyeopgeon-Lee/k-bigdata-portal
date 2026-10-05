@@ -723,7 +723,7 @@
   .practical-page .bank-timer{line-height:1.45}
 }
 @media(min-width:901px){
-  .practical-page .solve-hint{
-    max-width:920px;
-  }
+  .practical-page .solve-hint{width:100%}
 }
+.practical-page .bank-timer.hint-stage{color:#315b91}
+.practical-page .bank-timer.revealed-stage{color:#315b39}
