@@ -675,3 +675,55 @@
     max-width:none;
   }
 }
+
+
+/* 2026-10-05 staged solving flow: self-solve → hint at 60s → answer at 120s. */
+.practical-page .solve-hint{
+  margin:22px 0 6px;
+  padding:18px 20px;
+  border:1px solid #c9d8ef;
+  border-left:4px solid #3468e8;
+  border-radius:12px;
+  background:#f4f8ff;
+  color:#22385d;
+}
+.practical-page .solve-hint[hidden]{display:none !important}
+.practical-page .solve-hint-kicker{
+  margin:0 0 4px;
+  color:#3468e8;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.08em;
+}
+.practical-page .solve-hint h3{
+  margin:0 0 8px;
+  font-size:18px;
+  color:#142d70;
+}
+.practical-page .solve-hint>p:last-child{
+  margin:0;
+  line-height:1.75;
+  word-break:keep-all;
+  overflow-wrap:anywhere;
+}
+.practical-page #gate-status:not(:empty){
+  margin:12px 0 0;
+  color:#465774;
+  font-size:14px;
+  line-height:1.6;
+}
+@media(max-width:767px){
+  .practical-page .solve-hint{
+    margin:18px 0 4px;
+    padding:15px 16px;
+    border-radius:10px;
+  }
+  .practical-page .solve-hint h3{font-size:17px}
+  .practical-page .solve-hint>p:last-child{font-size:15px;line-height:1.7}
+  .practical-page .bank-timer{line-height:1.45}
+}
+@media(min-width:901px){
+  .practical-page .solve-hint{
+    max-width:920px;
+  }
+}
