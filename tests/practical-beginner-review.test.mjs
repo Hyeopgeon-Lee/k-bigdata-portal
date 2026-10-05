@@ -116,7 +116,7 @@ review('UI가독성',questions,q=>{
 assert.match(ui,/1 · 코드 한 줄씩 값으로 이해하기/);
 assert.match(ui,/실행 흐름 따라가기/);
 assert.match(ui,/왜 이 답인가\?/);
-assert.match(ui,/시험에서 기억할 것/);
+assert.match(ui,/시험에서 꼭 기억할 것/);
 assert.match(ui,/lineByLineExplanation\(q,displayCode\(q\)\)/);
 assert.match(ui,/beginnerSteps\(q\)/);
 assert.doesNotMatch(ui,/beginnerConcepts\(q\)/);
