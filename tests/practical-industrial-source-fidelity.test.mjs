@@ -50,8 +50,8 @@ assert.equal(q('R-IND-SQL-0001').answer,'AVG COUNT');
 // 2024-1 #6: the source has five blanks; never collapse it to only three SQL keywords.
 {
   const x=q('R-IND-SQL-0004');
-  assert.match(x.question,/\(가\).*표\(table\)/s);
-  assert.match(x.question,/\(나\).*가능한 값의 집합/s);
+  assert.match(x.question,/표\(table\).*기본 단위를 \(가\)/s);
+  assert.match(x.question,/가능한 값의 집합을 \(나\)/s);
   assert.match(x.code,/\(다\)/);
   assert.match(x.code,/\(라\)/);
   assert.match(x.code,/\(마\)/);
