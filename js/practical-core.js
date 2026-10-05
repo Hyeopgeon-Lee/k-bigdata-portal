@@ -72,6 +72,110 @@ export function matchesExam(q,exam,bank=[]){
 export const localDay = (date=new Date()) => [date.getFullYear(),String(date.getMonth()+1).padStart(2,"0"),String(date.getDate()).padStart(2,"0")].join("-");
 export function summarizeAttempts(attempts){const judged=attempts.filter(a=>typeof a.correct==="boolean");return {total:attempts.length,correct:judged.filter(a=>a.correct).length,wrong:judged.filter(a=>!a.correct).length,pending:attempts.length-judged.length,rate:judged.length?Math.round(judged.filter(a=>a.correct).length/judged.length*100):null,average:attempts.length?Math.round(attempts.reduce((sum,a)=>sum+a.elapsedSeconds,0)/attempts.length):0};}
 // Lightweight lexical coloring only; never execute student code or fetch a CDN.
+export function formatCodeForDisplay(code,language){
+ const source=String(code??"").replace(/\r\n?/g,"\n");
+ if(language==="SQL"){
+  return source.replace(/\s+(INNER JOIN|LEFT JOIN|RIGHT JOIN|FULL JOIN|CROSS JOIN|JOIN|ON|FROM|WHERE|GROUP BY|HAVING|ORDER BY|UNION ALL|UNION|SET|VALUES)\s+/gi,"\n$1 ").trim();
+ }
+ if(language!=="C"&&language!=="Java")return source.split("\n").map(line=>line.replace(/\s+$/,"")).join("\n").trim();
+
+ const out=[],braces=[];
+ let buffer="",indent=0,parenDepth=0,bracketDepth=0,quote="",escaped=false,lineComment=false,blockComment=false;
+ const emit=()=>{
+  const text=buffer.trim();
+  if(text){
+   const prefix=text.startsWith("#")?"":"    ".repeat(Math.max(0,indent));
+   out.push(prefix+text);
+  }
+  buffer="";
+ };
+ const addSpace=()=>{if(buffer&&!/\s$/.test(buffer))buffer+=" ";};
+ const isStructuralBrace=prefix=>{
+  const p=prefix.trim();
+  if(!p)return true;
+  if(/->\s*$/.test(p))return true;
+  if(/\b(?:if|for|while|switch|catch|synchronized)\s*\([^{}]*\)\s*$/.test(p))return true;
+  if(/^(?:else|try|finally|do|static)\b/.test(p))return true;
+  if(/\b(?:class|interface|enum|record|struct|union)\b[^;]*$/.test(p))return true;
+  if(/\bnew\b[^;]*\)\s*$/.test(p))return true;
+  if(/(?:return|=)\s*\([^;()]*\)\s*$/.test(p))return false;
+  if(/\)\s*(?:throws\b[^{}]*)?$/.test(p))return true;
+  if(/(?:=|,)\s*[^;{}]*$/.test(p))return false;
+  return false;
+ };
+
+ for(let i=0;i<source.length;i++){
+  const ch=source[i],next=source[i+1];
+
+  if(lineComment){
+   buffer+=ch;
+   if(ch==="\n"){lineComment=false;emit();}
+   continue;
+  }
+  if(blockComment){
+   buffer+=ch;
+   if(ch==="*"&&next==="/"){buffer+="/";i++;blockComment=false;}
+   if(ch==="\n")emit();
+   continue;
+  }
+  if(quote){
+   buffer+=ch;
+   if(escaped){escaped=false;continue;}
+   if(ch==="\\"){escaped=true;continue;}
+   if(ch===quote)quote="";
+   continue;
+  }
+  if(ch==="/"&&next==="/"){addSpace();buffer+="//";i++;lineComment=true;continue;}
+  if(ch==="/"&&next==="*"){addSpace();buffer+="/*";i++;blockComment=true;continue;}
+  if(ch==='"'||ch==="'"){quote=ch;buffer+=ch;continue;}
+
+  if(ch==="("){parenDepth++;buffer+=ch;continue;}
+  if(ch===")"){parenDepth=Math.max(0,parenDepth-1);buffer+=ch;continue;}
+  if(ch==="["){bracketDepth++;buffer+=ch;continue;}
+  if(ch==="]"){bracketDepth=Math.max(0,bracketDepth-1);buffer+=ch;continue;}
+
+  if(ch==="{"){
+   const structural=parenDepth===0&&bracketDepth===0&&isStructuralBrace(buffer);
+   braces.push(structural);
+   if(structural){
+    buffer=buffer.trimEnd();
+    if(buffer)buffer+=" ";
+    buffer+="{";
+    emit();
+    indent++;
+   }else buffer+="{";
+   continue;
+  }
+  if(ch==="}"){
+   const structural=braces.length?braces.pop():true;
+   if(structural){
+    emit();
+    indent=Math.max(0,indent-1);
+    buffer="}";
+    emit();
+   }else buffer+="}";
+   continue;
+  }
+
+  const inInitializer=braces.some(value=>value===false);
+  if(ch===";"&&parenDepth===0&&bracketDepth===0&&!inInitializer){
+   buffer+=";";
+   emit();
+   continue;
+  }
+  if(ch==="\n"){emit();continue;}
+  if(/\s/.test(ch)){addSpace();continue;}
+  buffer+=ch;
+ }
+ emit();
+
+ return out.join("\n")
+  .replace(/}\n\s*(else|catch|finally)\b/g,"} $1")
+  .replace(/}\n\s*;/g,"};")
+  .replace(/[ \t]+$/gm,"")
+  .trim();
+}
+
 export function highlightCode(code){
   const token=/(\/\/[^\n]*|#[^\n]*|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\b(?:int|void|return|for|if|else|public|static|class|new|def|print|SELECT|FROM|WHERE|GROUP|BY|HAVING|ORDER|DESC|ASC|JOIN|ON|AS|NULL|COUNT|SUM|AVG)\b|\b\d+\b)/gi;
   let result="",last=0;for(const match of code.matchAll(token)){result+=escapeHTML(code.slice(last,match.index));const text=match[0],kind=/^(\/\/|#)/.test(text)?"comment":/^["']/.test(text)?"string":/^\d/.test(text)?"number":"keyword";result+='<span class="code-'+kind+'">'+escapeHTML(text)+'</span>';last=match.index+text.length;}return result+escapeHTML(code.slice(last));
