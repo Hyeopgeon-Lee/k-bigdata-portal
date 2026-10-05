@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {buildBank,bankStats,remainingSeconds,canSubmit,canReveal,gradeAnswer,dailyQuestions,shuffle,summarizeAttempts,highlightCode,questionText,sourceLabels,typeLabels} from '../js/practical-core.js';
+import {HINT_SECONDS,ANSWER_SECONDS,buildBank,bankStats,remainingSeconds,remainingAnswerSeconds,hintAvailable,answerDeadlineReached,canSubmit,canReveal,gradeAnswer,dailyQuestions,shuffle,summarizeAttempts,highlightCode,questionText,sourceLabels,typeLabels} from '../js/practical-core.js';
 import {services} from '../js/services.js';
 import {matches,searchIndex} from '../js/search.js';
 const root=new URL('../',import.meta.url),read=p=>readFileSync(new URL(p,root),'utf8');
@@ -22,10 +22,14 @@ assert.deepEqual(bankStats(bank),{unique:16,history:18,repeated:2,languages:{C:4
 const repeated=buildBank(questions,[...history,{...history[0],id:'synthetic-test-only',year:2023,round:3}]);
 assert.equal(bankStats(repeated).unique,16);assert.equal(bankStats(repeated).history,19);assert.equal(bankStats(repeated).repeated,3);
 const startedAt=1000,attempt={startedAt,submittedAt:null};
+assert.equal(HINT_SECONDS,60);assert.equal(ANSWER_SECONDS,120);
 assert.equal(remainingSeconds(startedAt,1000),60);assert.equal(remainingSeconds(startedAt,60999),1);assert.equal(remainingSeconds(startedAt,61000),0);
-assert.equal(canSubmit(attempt,'8',1000),true);assert.equal(canSubmit(attempt,'8',31000),true);assert.equal(canSubmit(attempt,'8',60999),true);assert.equal(canSubmit(attempt,'8',61000),true);assert.equal(canSubmit(attempt,' ',61000),false);
-assert.equal(canReveal(attempt,90000),false);assert.equal(canReveal({...attempt,submittedAt:2000},2000),false);assert.equal(canReveal({...attempt,submittedAt:61000},61000),true);
-assert.equal(canSubmit({...attempt,submittedAt:61000},'8',62000),false);
+assert.equal(remainingAnswerSeconds(startedAt,61000),60);assert.equal(remainingAnswerSeconds(startedAt,120999),1);assert.equal(remainingAnswerSeconds(startedAt,121000),0);
+assert.equal(hintAvailable(attempt,startedAt+59999),false);assert.equal(hintAvailable(attempt,startedAt+60000),true);
+assert.equal(answerDeadlineReached(attempt,startedAt+119999),false);assert.equal(answerDeadlineReached(attempt,startedAt+120000),true);
+assert.equal(canSubmit(attempt,'8',startedAt),true);assert.equal(canSubmit(attempt,'8',startedAt+60000),true);assert.equal(canSubmit(attempt,'8',startedAt+119999),true);assert.equal(canSubmit(attempt,'8',startedAt+120000),false);assert.equal(canSubmit(attempt,' ',startedAt+60000),false);
+assert.equal(canReveal(attempt,startedAt+90000),false);assert.equal(canReveal({...attempt,submittedAt:startedAt+20000},startedAt+20000),true);assert.equal(canReveal(attempt,startedAt+120000),true);
+assert.equal(canSubmit({...attempt,submittedAt:startedAt+61000},'8',startedAt+62000),false);
 const sql=bank.find(q=>q.grading==='self');assert.equal(gradeAnswer(sql,'different SQL'),null);assert.equal(gradeAnswer(bank[0],'incorrect'),false);
 assert.equal(gradeAnswer(bank.find(q=>q.id==='R-SQL-0001'),'order, SCORE, desc'),true);
 assert.equal(gradeAnswer(bank.find(q=>q.id==='T-PY-0001'),'10\n12'),true);assert.equal(gradeAnswer(bank.find(q=>q.id==='T-PY-0001'),'10 12'),false);
@@ -39,7 +43,7 @@ for(const term of ['실기','SQL','정보처리산업기사','오답노트'])ass
 assert.ok(read('js/certifications-ui.js').includes('실기 문제 연습'));
 assert.ok(read('js/certifications-ui.js').includes('practical.html?exam='));
 const html=read('practical.html');assert.match(html,/<meta name="robots" content="noindex, nofollow">/);assert.ok(!html.includes('258'));assert.ok(html.includes('value="reconstructed"'));
-const ui=read('js/practical-ui.js');assert.ok(ui.includes('if(!canSubmit(attempt,answer))'));assert.ok(ui.includes('if(!canReveal(attempt))'));assert.ok(ui.includes('rel="noopener noreferrer"'));
+const ui=read('js/practical-ui.js');assert.ok(ui.includes('if(!canSubmit(attempt,answer,now))'));assert.ok(ui.includes('answerDeadlineReached(attempt,now)'));assert.ok(ui.includes('hintAvailable(attempt,now)'));assert.ok(ui.includes('autoRevealAnswer'));assert.ok(ui.includes('rel="noopener noreferrer"'));
 // Storage adapter: reload continuity, attempts idempotency, blocked storage fallback.
 const fake=()=>{const data=new Map();return {getItem:k=>data.get(k)||null,setItem:(k,v)=>data.set(k,v),removeItem:k=>data.delete(k)};};
 globalThis.localStorage=fake();globalThis.sessionStorage=fake();
@@ -49,4 +53,4 @@ const record={id:'attempt-1',questionId:'q',submittedAt:61000,elapsedSeconds:60,
 store.saveAttempt(record);store.saveAttempt({...record,viewedExplanation:true});assert.equal(store.getAttempts().length,1);assert.equal(store.getAttempts()[0].viewedExplanation,true);
 globalThis.localStorage={getItem(){throw Error('blocked');},setItem(){throw Error('blocked');}};
 assert.equal(store.getAttempts().length,1);store.saveAttempt({...record,id:'attempt-2'});assert.equal(store.getAttempts().length,2);assert.equal(store.storageAvailable,false);
-console.log('PASS: honest source/history counts, 3 source types, filter/search metadata, 60-second boundary and submit/reveal guards, SQL self-grading, storage continuity/fallback, daily/random, noindex and certificate CTA.');
+console.log('PASS: source/history integrity, 60-second hint / 120-second answer boundaries, immediate submit reveal, grading, storage, daily/random, noindex and certificate CTA.');
