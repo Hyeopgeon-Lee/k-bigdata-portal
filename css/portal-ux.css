@@ -207,3 +207,35 @@ body[data-page="practical"] .portal-page-hero p{
 body[data-page="project-guide"] .guide-main{
   background:var(--color-background,#f5f7fb);
 }
+
+
+/* Complete portal service navigation: all portal tools, compact on PC and scrollable on mobile. */
+.portal-service-nav{
+  align-items:center;
+  row-gap:8px;
+  padding-top:12px;
+  padding-bottom:12px;
+}
+.portal-service-nav a{
+  white-space:nowrap;
+}
+@media(max-width:767px){
+  .portal-service-nav{
+    display:flex;
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    gap:6px;
+    width:min(calc(100% - 24px),var(--container));
+    padding:8px 0 10px;
+    scroll-snap-type:x proximity;
+    scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
+  }
+  .portal-service-nav::-webkit-scrollbar{display:none}
+  .portal-service-nav a{
+    flex:0 0 auto;
+    min-height:42px;
+    padding:8px 12px;
+    scroll-snap-align:start;
+  }
+}
