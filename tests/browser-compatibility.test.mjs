@@ -6,7 +6,7 @@ const read=path=>readFileSync(new URL(path,root),'utf8');
 const pages=['index.html','jobs.html','certifications.html','docs.html','interview.html','practical.html','project-guide.html'];
 const runtime=[
  'js/app.js','js/certifications-ui.js','js/certifications.js','js/docs.js','js/interview-ui.js','js/interview.js',
- 'js/job-guide-ui.js','js/jobs.js','js/learning-ui.js','js/portal-ux.js','js/practical-core.js','js/practical-data.js',
+ 'js/interview-links.js','js/job-guide-ui.js','js/jobs.js','js/learning-ui.js','js/portal-shell.js','js/portal-ux.js','js/practical-core.js','js/practical-data.js',
  'js/practical-store.js','js/practical-ui.js','js/search-core.js','js/search-ui.js','js/search.js','js/services.js'
 ];
 const js=runtime.map(read).join('\n');
