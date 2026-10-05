@@ -438,7 +438,8 @@ export function lineByLineExplanation(q,codeOverride=""){
       :language==="Python"
         ?explainPythonLine(trimmed)
         :explainCJavaLine(trimmed,language);
-    const trace=valueTraceForLine(q,trimmed,explanation);
+    const rawTrace=valueTraceForLine(q,trimmed,explanation);
+    const trace=rawTrace.length>=18?rawTrace:rawTrace+" 이 값을 현재 실행 상태에 기록해 다음 줄 계산에 이어서 사용합니다.";
     return {line:index+1,code,explanation,trace};
   }).filter(Boolean);
 }
