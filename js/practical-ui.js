@@ -174,7 +174,8 @@ function renderQuestion(){
  requestAnimationFrame(()=>{updateHorizontalScrollHints();observeSolveActions();});
  $("#answer-form").addEventListener("submit",submitAnswer);
  $("#my-answer").addEventListener("input",()=>{if(!attempt.viewedExplanation&&!attempt.submittedAt){attempt.answer=$("#my-answer").value;saveSession(q.id,attempt);updateGate();}});
- if(attempt.viewedExplanation&&canReveal(attempt))revealAnswer("resume");
+ if(attempt.submittedAt&&!attempt.viewedExplanation)revealAnswer("submitted");
+ else if(attempt.viewedExplanation&&canReveal(attempt))revealAnswer("resume");
  else{
   updateGate();
   if(!attempt.viewedExplanation)timer=setInterval(updateGate,500);
@@ -188,7 +189,7 @@ function updateGate(){
   revealAnswer("timeout");
   return;
  }
- const hintRemaining=secondsUntilHint(attempt.startedAt,now),answerRemaining=secondsUntilAnswer(attempt.startedAt,now);
+ const hintRemaining=remainingSeconds(attempt.startedAt,now),answerRemaining=remainingAnswerSeconds(attempt.startedAt,now);
  const hintReady=!revealed&&hintAvailable(attempt,now);
  const hintPanel=$("#solve-hint");
  if(hintPanel)hintPanel.hidden=!hintReady;
