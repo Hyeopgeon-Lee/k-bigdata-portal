@@ -108,13 +108,13 @@ pass('C and Java line explanations identify control flow',()=>{
 pass('practical UI uses line-by-line explanation renderer',()=>{
  const ui=readFileSync(new URL('js/practical-ui.js',root),'utf8');
  assert.match(ui,/lineByLineExplanation/);
- assert.match(ui,/코드 한 줄씩 해석/);
+ assert.match(ui,/코드 한 줄씩 값으로 이해하기/);
  assert.doesNotMatch(ui,/beginnerConcepts\(q\)/);
 });
 pass('mobile CSS contains dedicated line annotation layout',()=>{
  const css=readFileSync(new URL('css/practical.css',root),'utf8');
  assert.match(css,/\.line-explanation-list/);
- assert.match(css,/\.line-comment/);
+ assert.match(css,/\.line-trace/);
  assert.match(css,/@media\(max-width:767px\)/);
 });
 
