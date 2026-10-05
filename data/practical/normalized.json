@@ -15,12 +15,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[4] = {6, 8, 10, 12};\n    int *p = a + 1;\n    printf(\"%d\", *p + *(p + 2));\n    return 0;\n}",
       "inputData": "",
       "answer": "20",
-      "explanation": "p는 a[1]을 가리킨다. *(p+2)는 a[3]이다. 두 값을 더하면 20이다.",
-      "steps": [
-        "p는 a[1]을 가리킨다.",
-        "*(p+2)는 a[3]이다.",
-        "두 값을 더하면 20이다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -40,7 +34,15 @@
         "REC-001",
         "VAR-183"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "p는 a[1]을 가리킨다.",
+        "flow": [
+          "p는 a[1]을 가리킨다.",
+          "*(p+2)는 a[3]이다.",
+          "두 값을 더하면 20이다."
+        ]
+      }
     },
     {
       "id": "REC-002",
@@ -57,12 +59,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    char *p = \"KOREA\";\n    printf(\"%c %c\", *p, *(p + 1));\n    return 0;\n}",
       "inputData": "",
       "answer": "K O",
-      "explanation": "*p는 문자열 첫 문자이다. *(p+1)는 인덱스 1의 문자이다. 따라서 출력은 K O이다.",
-      "steps": [
-        "*p는 문자열 첫 문자이다.",
-        "*(p+1)는 인덱스 1의 문자이다.",
-        "따라서 출력은 K O이다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -102,7 +98,15 @@
         "VAR-214",
         "VAR-241"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "*p는 문자열 첫 문자이다.",
+        "flow": [
+          "*p는 문자열 첫 문자이다.",
+          "*(p+1)는 인덱스 1의 문자이다.",
+          "따라서 출력은 K O이다."
+        ]
+      }
     },
     {
       "id": "REC-003",
@@ -119,12 +123,6 @@
       "code": "#include <stdio.h>\nstruct Item { int x; int y; };\nint main(void) {\n    struct Item a[2] = {{6, 5}, {5, 10}};\n    struct Item *p = a;\n    printf(\"%d\", p->x + (p+1)->y);\n    return 0;\n}",
       "inputData": "",
       "answer": "16",
-      "explanation": "p->x는 첫 구조체의 x이다. (p+1)->y는 두 번째 구조체의 y이다. 합은 16이다.",
-      "steps": [
-        "p->x는 첫 구조체의 x이다.",
-        "(p+1)->y는 두 번째 구조체의 y이다.",
-        "합은 16이다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -144,7 +142,15 @@
         "REC-003",
         "VAR-215"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "p->x는 첫 구조체의 x이다.",
+        "flow": [
+          "p->x는 첫 구조체의 x이다.",
+          "(p+1)->y는 두 번째 구조체의 y이다.",
+          "합은 16이다."
+        ]
+      }
     },
     {
       "id": "REC-004",
@@ -161,12 +167,6 @@
       "code": "#include <stdio.h>\nint f(int n) {\n    if (n <= 1) return 1;\n    return n * f(n - 1);\n}\nint main(void) {\n    printf(\"%d\", f(5));\n    return 0;\n}",
       "inputData": "",
       "answer": "120",
-      "explanation": "f(n)=n×f(n-1) 형태의 재귀이다. f(1)=1에서 재귀가 종료된다. 5! = 120이다.",
-      "steps": [
-        "f(n)=n×f(n-1) 형태의 재귀이다.",
-        "f(1)=1에서 재귀가 종료된다.",
-        "5! = 120이다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -192,7 +192,15 @@
         "VAR-101",
         "VAR-216"
       ],
-      "hint": "종료 조건을 먼저 찾은 뒤 호출이 깊어지는 순서와 반환되면서 계산되는 순서를 분리해서 적어보세요."
+      "hint": "종료 조건을 먼저 찾은 뒤 호출이 깊어지는 순서와 반환되면서 계산되는 순서를 분리해서 적어보세요.",
+      "solution": {
+        "summary": "5! = 120이다.",
+        "flow": [
+          "f(n)=n×f(n-1) 형태의 재귀이다.",
+          "f(1)=1에서 재귀가 종료된다.",
+          "5! = 120이다."
+        ]
+      }
     },
     {
       "id": "REC-005",
@@ -209,12 +217,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a=14, b=25;\n    a ^= b;\n    b ^= a;\n    a ^= b;\n    printf(\"%d %d\", a, b);\n    return 0;\n}",
       "inputData": "",
       "answer": "25 14",
-      "explanation": "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다. 최종 a=25, b=14. 출력은 25 14이다.",
-      "steps": [
-        "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다.",
-        "최종 a=25, b=14.",
-        "출력은 25 14이다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -234,7 +236,15 @@
         "REC-005",
         "VAR-217"
       ],
-      "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요."
+      "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요.",
+      "solution": {
+        "summary": "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다.",
+        "flow": [
+          "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다.",
+          "최종 a=25, b=14.",
+          "출력은 25 14이다."
+        ]
+      }
     },
     {
       "id": "REC-006",
@@ -251,12 +261,6 @@
       "code": "class Parent {\n  int value=11;\n  int get() { return value; }\n}\nclass Child extends Parent {\n  int value=21;\n  @Override int get() { return value+1; }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Parent x=new Child();\n    System.out.print(x.value+\" \"+x.get());\n  }\n}",
       "inputData": "",
       "answer": "11 22",
-      "explanation": "필드는 참조 변수의 선언 타입 Parent 기준으로 접근한다. 메서드는 실제 객체 Child의 오버라이딩 메서드가 호출된다. 출력은 11 22.",
-      "steps": [
-        "필드는 참조 변수의 선언 타입 Parent 기준으로 접근한다.",
-        "메서드는 실제 객체 Child의 오버라이딩 메서드가 호출된다.",
-        "출력은 11 22."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -275,7 +279,15 @@
         "REC-006",
         "VAR-006"
       ],
-      "hint": "참조 변수의 선언 타입과 실제 객체 타입을 따로 적고, 필드 접근과 메서드 호출이 각각 어떤 타입을 기준으로 결정되는지 구분하세요."
+      "hint": "참조 변수의 선언 타입과 실제 객체 타입을 따로 적고, 필드 접근과 메서드 호출이 각각 어떤 타입을 기준으로 결정되는지 구분하세요.",
+      "solution": {
+        "summary": "필드는 참조 변수의 선언 타입 Parent 기준으로 접근한다.",
+        "flow": [
+          "필드는 참조 변수의 선언 타입 Parent 기준으로 접근한다.",
+          "메서드는 실제 객체 Child의 오버라이딩 메서드가 호출된다.",
+          "출력은 11 22."
+        ]
+      }
     },
     {
       "id": "REC-007",
@@ -292,12 +304,6 @@
       "code": "class Counter {\n  private static Counter one=new Counter();\n  private int n=0;\n  static Counter get() { return one; }\n  void inc() { n++; }\n  int value() { return n; }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Counter.get().inc();\n    Counter.get().inc();\n    Counter.get().inc();\n    Counter.get().inc();\n    Counter.get().inc();\n    System.out.print(Counter.get().value());\n  }\n}",
       "inputData": "",
       "answer": "5",
-      "explanation": "get()은 항상 동일한 Counter 객체를 반환한다. inc()가 총 5회 호출된다. 공유 필드 n의 최종값은 5.",
-      "steps": [
-        "get()은 항상 동일한 Counter 객체를 반환한다.",
-        "inc()가 총 5회 호출된다.",
-        "공유 필드 n의 최종값은 5."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -321,7 +327,15 @@
         "REC-149",
         "VAR-112"
       ],
-      "hint": "객체마다 따로 존재하는 값과 클래스 전체가 공유하는 값을 구분한 뒤, 호출 순서대로 공유 상태의 변화를 적어보세요."
+      "hint": "객체마다 따로 존재하는 값과 클래스 전체가 공유하는 값을 구분한 뒤, 호출 순서대로 공유 상태의 변화를 적어보세요.",
+      "solution": {
+        "summary": "get()은 항상 동일한 Counter 객체를 반환한다.",
+        "flow": [
+          "get()은 항상 동일한 Counter 객체를 반환한다.",
+          "inc()가 총 5회 호출된다.",
+          "공유 필드 n의 최종값은 5."
+        ]
+      }
     },
     {
       "id": "REC-008",
@@ -338,12 +352,6 @@
       "code": "public class Main {\n  static int f(int x) { return x+2; }\n  static int f(double x) { return (int)x+5; }\n  public static void main(String[] args) {\n    System.out.print(f(10)+\" \"+f(10.5));\n  }\n}",
       "inputData": "",
       "answer": "12 15",
-      "explanation": "정수 인자는 f(int)를 호출한다. 실수 인자는 f(double)을 호출한다. 출력은 12 15.",
-      "steps": [
-        "정수 인자는 f(int)를 호출한다.",
-        "실수 인자는 f(double)을 호출한다.",
-        "출력은 12 15."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -362,7 +370,15 @@
         "REC-008",
         "VAR-008"
       ],
-      "hint": "호출할 때 전달되는 인자의 컴파일 시점 타입을 먼저 확인하고, 그 타입 조합에 가장 잘 맞는 메서드 선언을 찾아보세요."
+      "hint": "호출할 때 전달되는 인자의 컴파일 시점 타입을 먼저 확인하고, 그 타입 조합에 가장 잘 맞는 메서드 선언을 찾아보세요.",
+      "solution": {
+        "summary": "정수 인자는 f(int)를 호출한다.",
+        "flow": [
+          "정수 인자는 f(int)를 호출한다.",
+          "실수 인자는 f(double)을 호출한다.",
+          "출력은 12 15."
+        ]
+      }
     },
     {
       "id": "REC-009",
@@ -379,12 +395,6 @@
       "code": "public class Main {\n  public static void main(String[] args) {\n    int r=10;\n    try {\n      r += 20 / 0;\n      r += 5;\n    } catch(ArithmeticException e) {\n      r += 3;\n    } finally {\n      r += 2;\n    }\n    System.out.print(r);\n  }\n}",
       "inputData": "",
       "answer": "15",
-      "explanation": "0으로 나누는 순간 ArithmeticException이 발생한다. catch에서 3을 더한다. finally에서 2를 더해 최종값이 결정된다.",
-      "steps": [
-        "0으로 나누는 순간 ArithmeticException이 발생한다.",
-        "catch에서 3을 더한다.",
-        "finally에서 2를 더해 최종값이 결정된다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -420,7 +430,15 @@
         "VAR-151",
         "VAR-222"
       ],
-      "hint": "각 문장이 실행된 직후 변수와 객체 상태를 한 줄씩 적고, 마지막 출력문이 실제로 참조하는 값을 확인하세요."
+      "hint": "각 문장이 실행된 직후 변수와 객체 상태를 한 줄씩 적고, 마지막 출력문이 실제로 참조하는 값을 확인하세요.",
+      "solution": {
+        "summary": "0으로 나누는 순간 ArithmeticException이 발생한다.",
+        "flow": [
+          "0으로 나누는 순간 ArithmeticException이 발생한다.",
+          "catch에서 3을 더한다.",
+          "finally에서 2를 더해 최종값이 결정된다."
+        ]
+      }
     },
     {
       "id": "REC-010",
@@ -437,12 +455,6 @@
       "code": "public class Main {\n  public static void main(String[] args) {\n    String a=new String(\"DATA\");\n    String b=new String(\"DATA\");\n    String c=a;\n    System.out.print((a==b)+\" \"+(a==c)+\" \"+a.equals(b));\n  }\n}",
       "inputData": "",
       "answer": "false true true",
-      "explanation": "a와 b는 내용은 같지만 서로 다른 객체다. c는 a와 같은 객체를 참조한다. equals는 문자열 내용을 비교한다.",
-      "steps": [
-        "a와 b는 내용은 같지만 서로 다른 객체다.",
-        "c는 a와 같은 객체를 참조한다.",
-        "equals는 문자열 내용을 비교한다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -478,7 +490,15 @@
         "VAR-162",
         "VAR-242"
       ],
-      "hint": "문자열 연산이 기존 값을 바꾸는지 새 값을 만드는지 구분하고, 각 호출 뒤 변수에 실제로 남는 값을 확인하세요."
+      "hint": "문자열 연산이 기존 값을 바꾸는지 새 값을 만드는지 구분하고, 각 호출 뒤 변수에 실제로 남는 값을 확인하세요.",
+      "solution": {
+        "summary": "a와 b는 내용은 같지만 서로 다른 객체다.",
+        "flow": [
+          "a와 b는 내용은 같지만 서로 다른 객체다.",
+          "c는 a와 같은 객체를 참조한다.",
+          "equals는 문자열 내용을 비교한다."
+        ]
+      }
     },
     {
       "id": "REC-011",
@@ -495,12 +515,6 @@
       "code": "public class Main {\n  static int f(int n) {\n    if(n<=1) return 1;\n    return n+f(n-1);\n  }\n  public static void main(String[] args) {\n    System.out.print(f(4));\n  }\n}",
       "inputData": "",
       "answer": "10",
-      "explanation": "f(n)=n+f(n-1)이다. f(1)=1에서 종료한다. 1부터 4까지의 합인 10.",
-      "steps": [
-        "f(n)=n+f(n-1)이다.",
-        "f(1)=1에서 종료한다.",
-        "1부터 4까지의 합인 10."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -524,7 +538,15 @@
         "REC-163",
         "VAR-116"
       ],
-      "hint": "재귀가 멈추는 조건을 먼저 찾고, 가장 깊은 호출에서 돌아오면서 어떤 값이 결합되는지 역순으로 적어보세요."
+      "hint": "재귀가 멈추는 조건을 먼저 찾고, 가장 깊은 호출에서 돌아오면서 어떤 값이 결합되는지 역순으로 적어보세요.",
+      "solution": {
+        "summary": "f(n)=n+f(n-1)이다.",
+        "flow": [
+          "f(n)=n+f(n-1)이다.",
+          "f(1)=1에서 종료한다.",
+          "1부터 4까지의 합인 10."
+        ]
+      }
     },
     {
       "id": "REC-012",
@@ -541,12 +563,6 @@
       "code": "class Calc {\n  int f(int a,int b) {\n    System.out.print(a+b+\" \");\n    return a*b;\n  }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Calc c=new Calc();\n    System.out.print(c.f(6,6));\n  }\n}",
       "inputData": "",
       "answer": "12 36",
-      "explanation": "f() 내부에서 먼저 a+b를 출력한다. 그 후 a*b를 반환한다. main이 반환값을 이어서 출력한다.",
-      "steps": [
-        "f() 내부에서 먼저 a+b를 출력한다.",
-        "그 후 a*b를 반환한다.",
-        "main이 반환값을 이어서 출력한다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -565,7 +581,15 @@
         "REC-012",
         "VAR-012"
       ],
-      "hint": "각 문장이 실행된 직후 변수와 객체 상태를 한 줄씩 적고, 마지막 출력문이 실제로 참조하는 값을 확인하세요."
+      "hint": "각 문장이 실행된 직후 변수와 객체 상태를 한 줄씩 적고, 마지막 출력문이 실제로 참조하는 값을 확인하세요.",
+      "solution": {
+        "summary": "f() 내부에서 먼저 a+b를 출력한다.",
+        "flow": [
+          "f() 내부에서 먼저 a+b를 출력한다.",
+          "그 후 a*b를 반환한다.",
+          "main이 반환값을 이어서 출력한다."
+        ]
+      }
     },
     {
       "id": "REC-013",
@@ -582,12 +606,6 @@
       "code": "public class Main {\n  public static void main(String[] args) {\n    int x=18;\n    x+=1; x-=2; x*=3; x/=4; x%=5;\n    System.out.print(x);\n  }\n}",
       "inputData": "",
       "answer": "2",
-      "explanation": "복합 대입 연산을 위에서 아래로 차례대로 수행한다. 정수 나눗셈은 소수부를 버린다. 최종 x=2.",
-      "steps": [
-        "복합 대입 연산을 위에서 아래로 차례대로 수행한다.",
-        "정수 나눗셈은 소수부를 버린다.",
-        "모든 연산을 위에서 아래로 적용한 뒤 최종 x=2이 됩니다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -606,7 +624,15 @@
         "REC-013",
         "VAR-013"
       ],
-      "hint": "각 문장이 실행된 직후 변수와 객체 상태를 한 줄씩 적고, 마지막 출력문이 실제로 참조하는 값을 확인하세요."
+      "hint": "각 문장이 실행된 직후 변수와 객체 상태를 한 줄씩 적고, 마지막 출력문이 실제로 참조하는 값을 확인하세요.",
+      "solution": {
+        "summary": "최종 x=2.",
+        "flow": [
+          "복합 대입 연산을 위에서 아래로 차례대로 수행한다.",
+          "정수 나눗셈은 소수부를 버린다.",
+          "모든 연산을 위에서 아래로 적용한 뒤 최종 x=2이 됩니다."
+        ]
+      }
     },
     {
       "id": "REC-014",
@@ -623,12 +649,6 @@
       "code": "interface P { int f(int x); }\nclass A implements P { public int f(int x) { return x+1; } }\nclass B implements P { public int f(int x) { return x*2; } }\npublic class Main {\n  public static void main(String[] args) {\n    P p=new B();\n    System.out.print(p.f(3));\n  }\n}",
       "inputData": "",
       "answer": "6",
-      "explanation": "참조 타입은 P지만 실제 객체는 B이다. B의 f()가 호출된다. 결과는 6.",
-      "steps": [
-        "참조 타입은 P지만 실제 객체는 B이다.",
-        "B의 f()가 호출된다.",
-        "앞 단계의 연산을 끝까지 적용하면 결과는 6이 됩니다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -664,7 +684,15 @@
         "VAR-166",
         "VAR-246"
       ],
-      "hint": "참조 변수의 선언 타입과 실제 객체 타입을 따로 적고, 필드 접근과 메서드 호출이 각각 어떤 타입을 기준으로 결정되는지 구분하세요."
+      "hint": "참조 변수의 선언 타입과 실제 객체 타입을 따로 적고, 필드 접근과 메서드 호출이 각각 어떤 타입을 기준으로 결정되는지 구분하세요.",
+      "solution": {
+        "summary": "결과는 6.",
+        "flow": [
+          "참조 타입은 P지만 실제 객체는 B이다.",
+          "B의 f()가 호출된다.",
+          "앞 단계의 연산을 끝까지 적용하면 결과는 6이 됩니다."
+        ]
+      }
     },
     {
       "id": "REC-015",
@@ -681,12 +709,6 @@
       "code": "x=[1, -1, 0, 2, -1, 3]\nfor n in x:\n    if n == -1:\n        continue\n    print(n, end=\"\")",
       "inputData": "",
       "answer": "1023",
-      "explanation": "-1이면 continue로 print를 건너뛴다. 나머지 값은 줄바꿈 없이 이어 출력된다. 결과는 1023.",
-      "steps": [
-        "-1이면 continue로 print를 건너뛴다.",
-        "나머지 값은 줄바꿈 없이 이어 출력된다.",
-        "결과는 1023."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -715,7 +737,15 @@
         "REC-120",
         "REC-197"
       ],
-      "hint": "각 반복 시작 시 변수 값을 적고, 건너뛰기나 종료가 발생하면 그 이후 문장이 실행되는지 표시하세요."
+      "hint": "각 반복 시작 시 변수 값을 적고, 건너뛰기나 종료가 발생하면 그 이후 문장이 실행되는지 표시하세요.",
+      "solution": {
+        "summary": "-1이면 continue로 print를 건너뛴다.",
+        "flow": [
+          "-1이면 continue로 print를 건너뛴다.",
+          "나머지 값은 줄바꿈 없이 이어 출력된다.",
+          "결과는 1023."
+        ]
+      }
     },
     {
       "id": "REC-016",
@@ -732,12 +762,6 @@
       "code": "def f(n):\n    return lambda a: a*n\ng=f(4)\nprint(g(7))",
       "inputData": "",
       "answer": "28",
-      "explanation": "f(4)은 a×4을 계산하는 lambda를 반환한다. g(7)=7×4. 결과는 28.",
-      "steps": [
-        "f(4)은 a×4을 계산하는 lambda를 반환한다.",
-        "g(7)=7×4.",
-        "앞 단계의 연산을 끝까지 적용하면 결과는 28이 됩니다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -766,7 +790,15 @@
         "REC-121",
         "REC-198"
       ],
-      "hint": "함수에 들어가는 입력과 나오는 값을 원소별로 하나씩 적은 뒤, 최종 결과에 어떤 값들이 모이는지 확인하세요."
+      "hint": "함수에 들어가는 입력과 나오는 값을 원소별로 하나씩 적은 뒤, 최종 결과에 어떤 값들이 모이는지 확인하세요.",
+      "solution": {
+        "summary": "결과는 28.",
+        "flow": [
+          "f(4)은 a×4을 계산하는 lambda를 반환한다.",
+          "g(7)=7×4.",
+          "앞 단계의 연산을 끝까지 적용하면 결과는 28이 됩니다."
+        ]
+      }
     },
     {
       "id": "REC-017",
@@ -783,12 +815,6 @@
       "code": "SELECT COUNT(DISTINCT dept) FROM student;",
       "inputData": "student.dept: 개발, 개발, 인프라, 데이터, 데이터",
       "answer": "3",
-      "explanation": "중복을 제거하면 개발, 인프라, 데이터 3개이다. COUNT(DISTINCT dept)는 서로 다른 dept 개수를 센다. 정답은 3.",
-      "steps": [
-        "중복을 제거하면 개발, 인프라, 데이터 3개이다.",
-        "COUNT(DISTINCT dept)는 서로 다른 dept 개수를 센다.",
-        "앞 단계의 중간 결과를 최종 출력 형식으로 정리하면 정답은 3입니다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -822,7 +848,15 @@
         "VAR-156",
         "VAR-225"
       ],
-      "hint": "그룹을 나누는 기준과 각 그룹에서 계산할 값을 먼저 적고, 행 단위 조건과 그룹 단위 조건을 서로 분리해 보세요."
+      "hint": "그룹을 나누는 기준과 각 그룹에서 계산할 값을 먼저 적고, 행 단위 조건과 그룹 단위 조건을 서로 분리해 보세요.",
+      "solution": {
+        "summary": "정답은 3.",
+        "flow": [
+          "중복을 제거하면 개발, 인프라, 데이터 3개이다.",
+          "COUNT(DISTINCT dept)는 서로 다른 dept 개수를 센다.",
+          "앞 단계의 중간 결과를 최종 출력 형식으로 정리하면 정답은 3입니다."
+        ]
+      }
     },
     {
       "id": "REC-018",
@@ -839,12 +873,6 @@
       "code": "",
       "inputData": "salaries(emp_num, name, salary)",
       "answer": "UPDATE salaries SET salary = 2700 WHERE emp_num = 2072;",
-      "explanation": "UPDATE 뒤에 테이블명을 쓴다. SET으로 변경할 열과 값을 지정한다. WHERE로 대상 사원번호를 한정한다.",
-      "steps": [
-        "UPDATE 뒤에 테이블명을 쓴다.",
-        "SET으로 변경할 열과 값을 지정한다.",
-        "WHERE로 대상 사원번호를 한정한다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -862,7 +890,15 @@
       "importIds": [
         "REC-018"
       ],
-      "hint": "어떤 행이 바뀌어야 하는지 조건을 먼저 문장으로 정리한 뒤, 그 행에서 변경되는 열과 새 값을 따로 적어보세요."
+      "hint": "어떤 행이 바뀌어야 하는지 조건을 먼저 문장으로 정리한 뒤, 그 행에서 변경되는 열과 새 값을 따로 적어보세요.",
+      "solution": {
+        "summary": "UPDATE 뒤에 테이블명을 쓴다.",
+        "flow": [
+          "UPDATE 뒤에 테이블명을 쓴다.",
+          "SET으로 변경할 열과 값을 지정한다.",
+          "WHERE로 대상 사원번호를 한정한다."
+        ]
+      }
     },
     {
       "id": "REC-019",
@@ -879,12 +915,6 @@
       "code": "",
       "inputData": "dept(code, name)",
       "answer": "INSERT INTO dept(code, name) VALUES (103, 'AI');",
-      "explanation": "INSERT INTO 테이블명(열 목록)을 작성한다. VALUES에 열 순서와 맞게 값을 쓴다. 문자열은 작은따옴표로 감싼다.",
-      "steps": [
-        "INSERT INTO 테이블명(열 목록)을 작성한다.",
-        "VALUES에 열 순서와 맞게 값을 쓴다.",
-        "문자열은 작은따옴표로 감싼다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -902,7 +932,15 @@
       "importIds": [
         "REC-019"
       ],
-      "hint": "추가할 열의 순서와 값의 순서가 서로 대응되는지 먼저 확인하고, 생략되는 열이 있는지도 살펴보세요."
+      "hint": "추가할 열의 순서와 값의 순서가 서로 대응되는지 먼저 확인하고, 생략되는 열이 있는지도 살펴보세요.",
+      "solution": {
+        "summary": "INSERT INTO 테이블명(열 목록)을 작성한다.",
+        "flow": [
+          "INSERT INTO 테이블명(열 목록)을 작성한다.",
+          "VALUES에 열 순서와 맞게 값을 쓴다.",
+          "문자열은 작은따옴표로 감싼다."
+        ]
+      }
     },
     {
       "id": "REC-020",
@@ -919,12 +957,6 @@
       "code": "",
       "inputData": "student(id, name, score)",
       "answer": "DELETE FROM student WHERE score < 60;",
-      "explanation": "DELETE FROM 뒤에 대상 테이블을 쓴다. WHERE score < 60 조건을 지정한다. WHERE를 생략하면 전체 행이 삭제되므로 반드시 조건을 확인한다.",
-      "steps": [
-        "DELETE FROM 뒤에 대상 테이블을 쓴다.",
-        "WHERE score < 60 조건을 지정한다.",
-        "WHERE를 생략하면 전체 행이 삭제되므로 반드시 조건을 확인한다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -949,7 +981,15 @@
         "VAR-020",
         "VAR-173"
       ],
-      "hint": "삭제 대상이 되는 행의 조건을 먼저 찾고, 조건을 만족하는 행과 남는 행을 작은 표로 나눠보세요."
+      "hint": "삭제 대상이 되는 행의 조건을 먼저 찾고, 조건을 만족하는 행과 남는 행을 작은 표로 나눠보세요.",
+      "solution": {
+        "summary": "DELETE FROM 뒤에 대상 테이블을 쓴다.",
+        "flow": [
+          "DELETE FROM 뒤에 대상 테이블을 쓴다.",
+          "WHERE score < 60 조건을 지정한다.",
+          "WHERE를 생략하면 전체 행이 삭제되므로 반드시 조건을 확인한다."
+        ]
+      }
     },
     {
       "id": "REC-021",
@@ -966,12 +1006,6 @@
       "code": "",
       "inputData": "student(id, name, dept)",
       "answer": "CREATE INDEX idx_name_5 ON student(name);",
-      "explanation": "CREATE INDEX 뒤에 인덱스명을 쓴다. ON 뒤에 테이블과 대상 열을 지정한다. 정답은 CREATE INDEX idx_name_5 ON student(name); 마지막으로 테이블명·열 이름·조건 연산자와 SQL 문장의 순서를 다시 확인합니다.",
-      "steps": [
-        "CREATE INDEX 뒤에 인덱스명을 쓴다.",
-        "ON 뒤에 테이블과 대상 열을 지정한다.",
-        "정답은 CREATE INDEX idx_name_5 ON student(name);"
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -989,7 +1023,15 @@
       "importIds": [
         "REC-021"
       ],
-      "hint": "새 객체의 이름, 대상 테이블, 기준 열이 각각 어떤 역할인지 구분해 문장 구조를 먼저 잡아보세요."
+      "hint": "새 객체의 이름, 대상 테이블, 기준 열이 각각 어떤 역할인지 구분해 문장 구조를 먼저 잡아보세요.",
+      "solution": {
+        "summary": "CREATE INDEX 뒤에 인덱스명을 쓴다.",
+        "flow": [
+          "CREATE INDEX 뒤에 인덱스명을 쓴다.",
+          "ON 뒤에 테이블과 대상 열을 지정한다.",
+          "정답은 CREATE INDEX idx_name_5 ON student(name);"
+        ]
+      }
     },
     {
       "id": "REC-022",
@@ -1006,12 +1048,6 @@
       "code": "SELECT a.name, b.dept_name FROM employee a JOIN department b ON a.dept_id=b.dept_id ORDER BY a.name;",
       "inputData": "employee: (Kim,10),(Lee,20); department: (10,AI),(20,Cloud)",
       "answer": "Kim,AI; Lee,Cloud",
-      "explanation": "employee.dept_id와 department.dept_id가 같은 행을 연결한다. 각 직원의 부서명을 결합한다. name 오름차순으로 정렬한다.",
-      "steps": [
-        "employee.dept_id와 department.dept_id가 같은 행을 연결한다.",
-        "각 직원의 부서명을 결합한다.",
-        "name 오름차순으로 정렬한다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -1045,7 +1081,15 @@
         "VAR-175",
         "VAR-250"
       ],
-      "hint": "두 테이블에서 서로 대응되는 열을 먼저 표시하고, 연결된 행을 만든 뒤 나머지 조건과 출력 항목을 적용하세요."
+      "hint": "두 테이블에서 서로 대응되는 열을 먼저 표시하고, 연결된 행을 만든 뒤 나머지 조건과 출력 항목을 적용하세요.",
+      "solution": {
+        "summary": "employee.dept_id와 department.dept_id가 같은 행을 연결한다.",
+        "flow": [
+          "employee.dept_id와 department.dept_id가 같은 행을 연결한다.",
+          "각 직원의 부서명을 결합한다.",
+          "name 오름차순으로 정렬한다."
+        ]
+      }
     },
     {
       "id": "REC-023",
@@ -1062,12 +1106,6 @@
       "code": "SELECT name FROM employee WHERE salary > (SELECT AVG(salary) FROM employee) ORDER BY name;",
       "inputData": "employee(name,salary): (A,2000),(B,3000),(C,4000)",
       "answer": "C",
-      "explanation": "평균 급여는 3000이다. 3000보다 큰 직원만 선택한다. 따라서 C만 반환된다.",
-      "steps": [
-        "평균 급여는 3000이다.",
-        "3000보다 큰 직원만 선택한다.",
-        "따라서 C만 반환된다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -1101,7 +1139,15 @@
         "VAR-176",
         "VAR-251"
       ],
-      "hint": "안쪽 조회가 어떤 값이나 행 집합을 만드는지 먼저 구한 뒤, 그 결과가 바깥 조건에 어떻게 사용되는지 확인하세요."
+      "hint": "안쪽 조회가 어떤 값이나 행 집합을 만드는지 먼저 구한 뒤, 그 결과가 바깥 조건에 어떻게 사용되는지 확인하세요.",
+      "solution": {
+        "summary": "평균 급여는 3000이다.",
+        "flow": [
+          "평균 급여는 3000이다.",
+          "3000보다 큰 직원만 선택한다.",
+          "따라서 C만 반환된다."
+        ]
+      }
     },
     {
       "id": "REC-024",
@@ -1118,12 +1164,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int r = 0;\n    for (int i=1; i<=7; i++) {\n        if (i==4) continue;\n        if (i==7) break;\n        r += i * 3;\n    }\n    printf(\"%d\", r);\n    return 0;\n}",
       "inputData": "",
       "answer": "51",
-      "explanation": "i=4에서는 continue로 누적을 건너뛴다. i=7에서 break이므로 i=1~6까지만 반영된다. 최종 r=51.",
-      "steps": [
-        "i=4에서는 continue로 누적을 건너뛴다.",
-        "i=7에서 break이므로 i=1~6까지만 반영된다.",
-        "최종 r=51."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -1149,7 +1189,15 @@
         "VAR-024",
         "VAR-229"
       ],
-      "hint": "반복마다 조건식, 핵심 변수, 출력 여부를 표로 적고, 건너뛰기나 종료가 발생한 지점을 별도로 표시하세요."
+      "hint": "반복마다 조건식, 핵심 변수, 출력 여부를 표로 적고, 건너뛰기나 종료가 발생한 지점을 별도로 표시하세요.",
+      "solution": {
+        "summary": "i=4에서는 continue로 누적을 건너뛴다.",
+        "flow": [
+          "i=4에서는 continue로 누적을 건너뛴다.",
+          "i=7에서 break이므로 i=1~6까지만 반영된다.",
+          "최종 r=51."
+        ]
+      }
     },
     {
       "id": "REC-025",
@@ -1166,12 +1214,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int x=5;\n    switch (x) {\n        case 1: x += 1;\n        case 2: x += 3;\n        case 3: x *= 2;\n        default: x -= 1;\n    }\n    printf(\"%d\", x);\n    return 0;\n}",
       "inputData": "",
       "answer": "4",
-      "explanation": "break가 없으므로 일치한 case 이후가 연속 실행된다. default도 이어서 실행된다. 최종 x=4.",
-      "steps": [
-        "break가 없으므로 일치한 case 이후가 연속 실행된다.",
-        "default도 이어서 실행된다.",
-        "모든 연산을 위에서 아래로 적용한 뒤 최종 x=4이 됩니다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -1209,7 +1251,15 @@
         "VAR-189",
         "VAR-230"
       ],
-      "hint": "변수 값이 실제로 바뀌는 문장만 골라 실행 순서대로 상태를 적고, 마지막 출력문이 읽는 값을 확인하세요."
+      "hint": "변수 값이 실제로 바뀌는 문장만 골라 실행 순서대로 상태를 적고, 마지막 출력문이 읽는 값을 확인하세요.",
+      "solution": {
+        "summary": "최종 x=4.",
+        "flow": [
+          "break가 없으므로 일치한 case 이후가 연속 실행된다.",
+          "default도 이어서 실행된다.",
+          "모든 연산을 위에서 아래로 적용한 뒤 최종 x=4이 됩니다."
+        ]
+      }
     },
     {
       "id": "REC-026",
@@ -1226,12 +1276,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[5] = {9, 2, 12, 1, 7};\n    for(int i=0;i<4;i++)\n      for(int j=0;j<4-i;j++)\n        if(a[j] > a[j+1]) {\n          int t=a[j]; a[j]=a[j+1]; a[j+1]=t;\n        }\n    printf(\"%d %d\", a[0], a[4]);\n    return 0;\n}",
       "inputData": "",
       "answer": "1 12",
-      "explanation": "인접 원소를 비교해 큰 값을 뒤로 보낸다. 반복 종료 후 오름차순 정렬된다. 최솟값과 최댓값은 1 12.",
-      "steps": [
-        "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
-        "반복 종료 후 오름차순 정렬된다.",
-        "최솟값과 최댓값은 1 12."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -1251,7 +1295,15 @@
         "REC-026",
         "VAR-231"
       ],
-      "hint": "한 번의 순회가 끝날 때 배열이 어떻게 바뀌는지 줄마다 다시 적고, 비교 후 교환되는 두 위치만 표시하세요."
+      "hint": "한 번의 순회가 끝날 때 배열이 어떻게 바뀌는지 줄마다 다시 적고, 비교 후 교환되는 두 위치만 표시하세요.",
+      "solution": {
+        "summary": "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
+        "flow": [
+          "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
+          "반복 종료 후 오름차순 정렬된다.",
+          "최솟값과 최댓값은 1 12."
+        ]
+      }
     },
     {
       "id": "REC-027",
@@ -1268,12 +1320,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int n=1567, r=0;\n    while(n>0) {\n        r = r*10 + n%10;\n        n /= 10;\n    }\n    printf(\"%d\", r);\n    return 0;\n}",
       "inputData": "",
       "answer": "7651",
-      "explanation": "n%10으로 일의 자리 숫자를 얻는다. r=r×10+자리값으로 역순 수를 만든다. 최종 결과는 7651.",
-      "steps": [
-        "n%10으로 일의 자리 숫자를 얻는다.",
-        "r=r×10+자리값으로 역순 수를 만든다.",
-        "최종 결과는 7651."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -1299,7 +1345,15 @@
         "VAR-106",
         "VAR-232"
       ],
-      "hint": "문자열을 인덱스별 문자로 펼쳐 적고, 포인터나 반복문이 실제로 방문하거나 바꾸는 위치만 표시하세요."
+      "hint": "문자열을 인덱스별 문자로 펼쳐 적고, 포인터나 반복문이 실제로 방문하거나 바꾸는 위치만 표시하세요.",
+      "solution": {
+        "summary": "n%10으로 일의 자리 숫자를 얻는다.",
+        "flow": [
+          "n%10으로 일의 자리 숫자를 얻는다.",
+          "r=r×10+자리값으로 역순 수를 만든다.",
+          "최종 결과는 7651."
+        ]
+      }
     },
     {
       "id": "REC-028",
@@ -1316,12 +1370,6 @@
       "code": "#include <stdio.h>\nint f1(void) { return 4; }\nint f2(void) { return 10 + f1(); }\nint f3(void) { return 20 + f2(); }\nint main(void) { printf(\"%d\", f3()); return 0; }",
       "inputData": "",
       "answer": "34",
-      "explanation": "f1()=4. f2()=14. f3()=34.",
-      "steps": [
-        "앞 단계의 계산을 끝까지 적용해 최종 결과를 확인합니다. f1()=4.",
-        "f2()=14.",
-        "f3()=34."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -1359,7 +1407,15 @@
         "VAR-206",
         "VAR-233"
       ],
-      "hint": "연산자 우선순위와 정수 연산 규칙을 확인하고, 대입이 끝날 때마다 변수의 새 값을 한 단계씩 적어보세요."
+      "hint": "연산자 우선순위와 정수 연산 규칙을 확인하고, 대입이 끝날 때마다 변수의 새 값을 한 단계씩 적어보세요.",
+      "solution": {
+        "summary": "f1()=4.",
+        "flow": [
+          "앞 단계의 계산을 끝까지 적용해 최종 결과를 확인합니다. f1()=4.",
+          "f2()=14.",
+          "f3()=34."
+        ]
+      }
     },
     {
       "id": "REC-029",
@@ -1376,12 +1432,6 @@
       "code": "class A {\n  A(int x) { System.out.print(x+\" \"); }\n}\nclass B extends A {\n  B() { super(4); System.out.print(7); }\n}\npublic class Main {\n  public static void main(String[] args) { new B(); }\n}",
       "inputData": "",
       "answer": "4 7",
-      "explanation": "자식 생성자에서 super가 먼저 실행된다. 부모 생성자 출력 후 자식 생성자 본문이 실행된다. 출력은 4 7.",
-      "steps": [
-        "자식 생성자에서 super가 먼저 실행된다.",
-        "부모 생성자 출력 후 자식 생성자 본문이 실행된다.",
-        "출력은 4 7."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -1406,7 +1456,15 @@
         "REC-191",
         "VAR-141"
       ],
-      "hint": "객체가 만들어질 때 부모와 자식 생성자의 호출 순서를 먼저 적고, 각 생성자에서 바뀌는 필드를 차례대로 반영하세요."
+      "hint": "객체가 만들어질 때 부모와 자식 생성자의 호출 순서를 먼저 적고, 각 생성자에서 바뀌는 필드를 차례대로 반영하세요.",
+      "solution": {
+        "summary": "자식 생성자에서 super가 먼저 실행된다.",
+        "flow": [
+          "자식 생성자에서 super가 먼저 실행된다.",
+          "부모 생성자 출력 후 자식 생성자 본문이 실행된다.",
+          "출력은 4 7."
+        ]
+      }
     },
     {
       "id": "REC-030",
@@ -1423,12 +1481,6 @@
       "code": "public class Main {\n  static int total=0;\n  static void add(int x) { total+=x; }\n  public static void main(String[] args) {\n    add(5); add(7); add(9);\n    System.out.print(total);\n  }\n}",
       "inputData": "",
       "answer": "21",
-      "explanation": "static total은 모든 static 메서드 호출에서 공유된다. 세 번의 add 결과가 누적된다. 최종 total=21.",
-      "steps": [
-        "static total은 모든 static 메서드 호출에서 공유된다.",
-        "세 번의 add 결과가 누적된다.",
-        "최종 total=21."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -1462,7 +1514,15 @@
         "VAR-142",
         "VAR-192"
       ],
-      "hint": "객체마다 따로 존재하는 값과 클래스 전체가 공유하는 값을 구분한 뒤, 호출 순서대로 공유 상태의 변화를 적어보세요."
+      "hint": "객체마다 따로 존재하는 값과 클래스 전체가 공유하는 값을 구분한 뒤, 호출 순서대로 공유 상태의 변화를 적어보세요.",
+      "solution": {
+        "summary": "static total은 모든 static 메서드 호출에서 공유된다.",
+        "flow": [
+          "static total은 모든 static 메서드 호출에서 공유된다.",
+          "세 번의 add 결과가 누적된다.",
+          "최종 total=21."
+        ]
+      }
     },
     {
       "id": "REC-031",
@@ -1479,12 +1539,6 @@
       "code": "public class Main {\n  public static void main(String[] args) {\n    StringBuilder sb=new StringBuilder(\"DEV\");\n    sb.reverse().append(\"!\");\n    System.out.print(sb.toString());\n  }\n}",
       "inputData": "",
       "answer": "VED!",
-      "explanation": "reverse()로 문자열 순서를 뒤집는다. append(\"!\")로 느낌표를 붙인다. 결과는 VED!.",
-      "steps": [
-        "reverse()로 문자열 순서를 뒤집는다.",
-        "append(\"!\")로 느낌표를 붙인다.",
-        "결과는 VED!."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -1518,7 +1572,15 @@
         "VAR-143",
         "VAR-193"
       ],
-      "hint": "문자열 연산이 기존 값을 바꾸는지 새 값을 만드는지 구분하고, 각 호출 뒤 변수에 실제로 남는 값을 확인하세요."
+      "hint": "문자열 연산이 기존 값을 바꾸는지 새 값을 만드는지 구분하고, 각 호출 뒤 변수에 실제로 남는 값을 확인하세요.",
+      "solution": {
+        "summary": "reverse()로 문자열 순서를 뒤집는다.",
+        "flow": [
+          "reverse()로 문자열 순서를 뒤집는다.",
+          "append(\"!\")로 느낌표를 붙인다.",
+          "결과는 VED!."
+        ]
+      }
     },
     {
       "id": "REC-032",
@@ -1535,12 +1597,6 @@
       "code": "class Printer {\n  void print(Integer x) { System.out.print(\"I\"+x); }\n  void print(Number x) { System.out.print(\"N\"+x); }\n  void print(Object x) { System.out.print(\"O\"+x); }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Object x=Integer.valueOf(10);\n    new Printer().print(x);\n  }\n}",
       "inputData": "",
       "answer": "O10",
-      "explanation": "오버로딩 선택은 호출 시점의 선언 타입을 기준으로 한다. x의 선언 타입은 Object이다. print(Object)가 선택되어 O10.",
-      "steps": [
-        "오버로딩 선택은 호출 시점의 선언 타입을 기준으로 한다.",
-        "x의 선언 타입은 Object이다.",
-        "print(Object)가 선택되어 O10."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -1559,7 +1615,15 @@
         "REC-032",
         "VAR-032"
       ],
-      "hint": "호출할 때 전달되는 인자의 컴파일 시점 타입을 먼저 확인하고, 그 타입 조합에 가장 잘 맞는 메서드 선언을 찾아보세요."
+      "hint": "호출할 때 전달되는 인자의 컴파일 시점 타입을 먼저 확인하고, 그 타입 조합에 가장 잘 맞는 메서드 선언을 찾아보세요.",
+      "solution": {
+        "summary": "오버로딩 선택은 호출 시점의 선언 타입을 기준으로 한다.",
+        "flow": [
+          "오버로딩 선택은 호출 시점의 선언 타입을 기준으로 한다.",
+          "x의 선언 타입은 Object이다.",
+          "print(Object)가 선택되어 O10."
+        ]
+      }
     },
     {
       "id": "REC-033",
@@ -1576,12 +1640,6 @@
       "code": "abstract class Base {\n  abstract int f(int x);\n  int g(int x) { return f(x)+1; }\n}\nclass Sub extends Base {\n  int f(int x) { return x*2; }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Base b=new Sub();\n    System.out.print(b.g(7));\n  }\n}",
       "inputData": "",
       "answer": "15",
-      "explanation": "g()는 Base에 정의되어 있지만 내부 f() 호출은 동적 바인딩된다. Sub.f(x)=x×2. 따라서 결과는 15.",
-      "steps": [
-        "g()는 Base에 정의되어 있지만 내부 f() 호출은 동적 바인딩된다.",
-        "Sub.f(x)=x×2.",
-        "따라서 결과는 15."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -1606,7 +1664,15 @@
         "REC-195",
         "VAR-145"
       ],
-      "hint": "참조 변수의 선언 타입과 실제 객체 타입을 따로 적고, 필드 접근과 메서드 호출이 각각 어떤 타입을 기준으로 결정되는지 구분하세요."
+      "hint": "참조 변수의 선언 타입과 실제 객체 타입을 따로 적고, 필드 접근과 메서드 호출이 각각 어떤 타입을 기준으로 결정되는지 구분하세요.",
+      "solution": {
+        "summary": "g()는 Base에 정의되어 있지만 내부 f() 호출은 동적 바인딩된다.",
+        "flow": [
+          "g()는 Base에 정의되어 있지만 내부 f() 호출은 동적 바인딩된다.",
+          "Sub.f(x)=x×2.",
+          "따라서 결과는 15."
+        ]
+      }
     },
     {
       "id": "REC-034",
@@ -1623,12 +1689,6 @@
       "code": "public class Main {\n  public static void main(String[] args) {\n    int sum=0;\n    for(int i=1;i<=8;i++) {\n      if(i%2==0) sum+=i;\n      else sum-=i;\n    }\n    System.out.print(sum);\n  }\n}",
       "inputData": "",
       "answer": "4",
-      "explanation": "홀수는 빼고 짝수는 더한다. 1부터 8까지 차례대로 계산한다. 최종 sum=4.",
-      "steps": [
-        "홀수는 빼고 짝수는 더한다.",
-        "1부터 8까지 차례대로 계산한다.",
-        "최종 sum=4."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -1662,7 +1722,15 @@
         "VAR-146",
         "VAR-196"
       ],
-      "hint": "반복이 시작될 때 핵심 변수 값을 적고, 건너뛰기나 종료가 발생하면 그 뒤 문장이 실행되는지 여부를 표시하세요."
+      "hint": "반복이 시작될 때 핵심 변수 값을 적고, 건너뛰기나 종료가 발생하면 그 뒤 문장이 실행되는지 여부를 표시하세요.",
+      "solution": {
+        "summary": "홀수는 빼고 짝수는 더한다.",
+        "flow": [
+          "홀수는 빼고 짝수는 더한다.",
+          "1부터 8까지 차례대로 계산한다.",
+          "최종 sum=4."
+        ]
+      }
     },
     {
       "id": "REC-035",
@@ -1679,12 +1747,6 @@
       "code": "a={1,2,3,4}\nb={3,4,5}\nprint(sorted(a-b))\nprint(sorted(a&b))",
       "inputData": "",
       "answer": "[1, 2]\n[3, 4]",
-      "explanation": "a-b는 a에만 있는 원소이다. a&b는 공통 원소이다. sorted()로 오름차순 리스트 형태가 된다.",
-      "steps": [
-        "a-b는 a에만 있는 원소이다.",
-        "a&b는 공통 원소이다.",
-        "sorted()로 오름차순 리스트 형태가 된다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -1716,7 +1778,15 @@
         "VAR-122",
         "VAR-199"
       ],
-      "hint": "표현식을 한 번에 계산하지 말고 안쪽 연산부터 값과 자료형의 변화를 차례대로 적어보세요."
+      "hint": "표현식을 한 번에 계산하지 말고 안쪽 연산부터 값과 자료형의 변화를 차례대로 적어보세요.",
+      "solution": {
+        "summary": "a-b는 a에만 있는 원소이다.",
+        "flow": [
+          "a-b는 a에만 있는 원소이다.",
+          "a&b는 공통 원소이다.",
+          "sorted()로 오름차순 리스트 형태가 된다."
+        ]
+      }
     },
     {
       "id": "REC-036",
@@ -1733,12 +1803,6 @@
       "code": "s=\"K-BIGDATA\"\nprint(s[::-2])",
       "inputData": "",
       "answer": "AAGBK",
-      "explanation": "[::-2]는 뒤에서부터 두 칸씩 이동한다. 마지막 문자부터 인덱스를 감소시키며 선택한다. 결과는 AAGBK.",
-      "steps": [
-        "[::-2]는 뒤에서부터 두 칸씩 이동한다.",
-        "마지막 문자부터 인덱스를 감소시키며 선택한다.",
-        "결과는 AAGBK."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -1767,7 +1831,15 @@
         "REC-123",
         "REC-223"
       ],
-      "hint": "시작 위치, 끝 위치의 제외 여부, 이동 간격을 따로 적은 뒤 실제로 선택되는 인덱스만 순서대로 표시하세요."
+      "hint": "시작 위치, 끝 위치의 제외 여부, 이동 간격을 따로 적은 뒤 실제로 선택되는 인덱스만 순서대로 표시하세요.",
+      "solution": {
+        "summary": "[::-2]는 뒤에서부터 두 칸씩 이동한다.",
+        "flow": [
+          "[::-2]는 뒤에서부터 두 칸씩 이동한다.",
+          "마지막 문자부터 인덱스를 감소시키며 선택한다.",
+          "결과는 AAGBK."
+        ]
+      }
     },
     {
       "id": "REC-037",
@@ -1784,12 +1856,6 @@
       "code": "a=[[1,2],[3,4]]\nb=a[:]\nb[0].append(9)\nprint(len(a[0])+len(b[1]))",
       "inputData": "",
       "answer": "5",
-      "explanation": "a[:]는 바깥 리스트만 복사하는 얕은 복사이다. 내부 리스트는 공유되므로 b[0] 변경이 a[0]에도 반영된다. len(a[0])=3, len(b[1])=2.",
-      "steps": [
-        "a[:]는 바깥 리스트만 복사하는 얕은 복사이다.",
-        "내부 리스트는 공유되므로 b[0] 변경이 a[0]에도 반영된다.",
-        "len(a[0])=3, len(b[1])=2."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -1821,7 +1887,15 @@
         "VAR-152",
         "VAR-224"
       ],
-      "hint": "자료구조가 변경되는 연산 직후의 상태를 매번 다시 적고, 연산이 반환한 값과 컨테이너에 남은 값을 구분하세요."
+      "hint": "자료구조가 변경되는 연산 직후의 상태를 매번 다시 적고, 연산이 반환한 값과 컨테이너에 남은 값을 구분하세요.",
+      "solution": {
+        "summary": "a[:]는 바깥 리스트만 복사하는 얕은 복사이다.",
+        "flow": [
+          "a[:]는 바깥 리스트만 복사하는 얕은 복사이다.",
+          "내부 리스트는 공유되므로 b[0] 변경이 a[0]에도 반영된다.",
+          "len(a[0])=3, len(b[1])=2."
+        ]
+      }
     },
     {
       "id": "REC-038",
@@ -1838,12 +1912,6 @@
       "code": "SELECT name FROM student WHERE dept IN ('AI','DATA') ORDER BY name;",
       "inputData": "student: (Ann,AI),(Bob,CLOUD),(Kim,DATA),(Lee,SEC)",
       "answer": "Ann; Kim",
-      "explanation": "dept가 AI 또는 DATA인 행만 선택한다. name으로 정렬한다. 결과는 Ann, Kim.",
-      "steps": [
-        "dept가 AI 또는 DATA인 행만 선택한다.",
-        "name으로 정렬한다.",
-        "결과는 Ann, Kim."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -1877,7 +1945,15 @@
         "VAR-177",
         "VAR-252"
       ],
-      "hint": "원본 행에서 시작해 조건 적용, 계산 또는 그룹 처리, 최종 정렬 순으로 중간 결과를 단계별로 적어보세요."
+      "hint": "원본 행에서 시작해 조건 적용, 계산 또는 그룹 처리, 최종 정렬 순으로 중간 결과를 단계별로 적어보세요.",
+      "solution": {
+        "summary": "dept가 AI 또는 DATA인 행만 선택한다.",
+        "flow": [
+          "dept가 AI 또는 DATA인 행만 선택한다.",
+          "name으로 정렬한다.",
+          "결과는 Ann, Kim."
+        ]
+      }
     },
     {
       "id": "REC-039",
@@ -1894,12 +1970,6 @@
       "code": "SELECT COUNT(score) AS c1, COUNT(*) AS c2 FROM student;",
       "inputData": "student.score: 80, NULL, 90, NULL, 70",
       "answer": "3,5",
-      "explanation": "COUNT(score)는 NULL을 제외한다. COUNT(*)는 모든 행을 센다. 따라서 3과 5.",
-      "steps": [
-        "COUNT(score)는 NULL을 제외한다.",
-        "COUNT(*)는 모든 행을 센다.",
-        "따라서 3과 5."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -1933,7 +2003,15 @@
         "VAR-178",
         "VAR-253"
       ],
-      "hint": "그룹을 나누는 기준과 각 그룹에서 계산할 값을 먼저 적고, 행 단위 조건과 그룹 단위 조건을 서로 분리해 보세요."
+      "hint": "그룹을 나누는 기준과 각 그룹에서 계산할 값을 먼저 적고, 행 단위 조건과 그룹 단위 조건을 서로 분리해 보세요.",
+      "solution": {
+        "summary": "COUNT(score)는 NULL을 제외한다.",
+        "flow": [
+          "COUNT(score)는 NULL을 제외한다.",
+          "COUNT(*)는 모든 행을 센다.",
+          "따라서 3과 5."
+        ]
+      }
     },
     {
       "id": "REC-040",
@@ -1950,12 +2028,6 @@
       "code": "SELECT name, CASE WHEN score>=80 THEN 'PASS' ELSE 'RETRY' END AS result FROM student ORDER BY name;",
       "inputData": "student(name,score): (A,75),(B,80),(C,92)",
       "answer": "A,RETRY; B,PASS; C,PASS",
-      "explanation": "score가 80 이상이면 PASS. 그 외는 RETRY. 각 행에 CASE 결과를 적용한다.",
-      "steps": [
-        "score가 80 이상이면 PASS.",
-        "그 외는 RETRY.",
-        "각 행에 CASE 결과를 적용한다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -1989,7 +2061,15 @@
         "VAR-200",
         "VAR-254"
       ],
-      "hint": "원본 행에서 시작해 조건 적용, 계산 또는 그룹 처리, 최종 정렬 순으로 중간 결과를 단계별로 적어보세요."
+      "hint": "원본 행에서 시작해 조건 적용, 계산 또는 그룹 처리, 최종 정렬 순으로 중간 결과를 단계별로 적어보세요.",
+      "solution": {
+        "summary": "score가 80 이상이면 PASS.",
+        "flow": [
+          "score가 80 이상이면 PASS.",
+          "그 외는 RETRY.",
+          "각 행에 CASE 결과를 적용한다."
+        ]
+      }
     },
     {
       "id": "REC-041",
@@ -2006,12 +2086,6 @@
       "code": "SELECT name FROM member WHERE name LIKE 'K%' ORDER BY name;",
       "inputData": "member.name: Kim, Kang, Lee, Park",
       "answer": "Kang; Kim",
-      "explanation": "'K%'는 K로 시작하는 문자열을 의미한다. Kang과 Kim이 선택된다. ORDER BY name으로 Kang, Kim 순이다.",
-      "steps": [
-        "'K%'는 K로 시작하는 문자열을 의미한다.",
-        "Kang과 Kim이 선택된다.",
-        "ORDER BY name으로 Kang, Kim 순이다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -2045,7 +2119,15 @@
         "VAR-201",
         "VAR-255"
       ],
-      "hint": "원본 행에서 시작해 조건 적용, 계산 또는 그룹 처리, 최종 정렬 순으로 중간 결과를 단계별로 적어보세요."
+      "hint": "원본 행에서 시작해 조건 적용, 계산 또는 그룹 처리, 최종 정렬 순으로 중간 결과를 단계별로 적어보세요.",
+      "solution": {
+        "summary": "'K%'는 K로 시작하는 문자열을 의미한다.",
+        "flow": [
+          "'K%'는 K로 시작하는 문자열을 의미한다.",
+          "Kang과 Kim이 선택된다.",
+          "ORDER BY name으로 Kang, Kim 순이다."
+        ]
+      }
     },
     {
       "id": "REC-042",
@@ -2062,12 +2144,6 @@
       "code": "",
       "inputData": "orders(id,customer_id), customer(id,name)",
       "answer": "ALTER TABLE orders ADD CONSTRAINT fk_customer FOREIGN KEY(customer_id) REFERENCES customer(id);",
-      "explanation": "ALTER TABLE orders로 대상 테이블을 선택한다. ADD CONSTRAINT로 제약조건명을 지정한다. FOREIGN KEY와 REFERENCES로 참조 관계를 작성한다.",
-      "steps": [
-        "ALTER TABLE orders로 대상 테이블을 선택한다.",
-        "ADD CONSTRAINT로 제약조건명을 지정한다.",
-        "FOREIGN KEY와 REFERENCES로 참조 관계를 작성한다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -2101,7 +2177,15 @@
         "VAR-202",
         "VAR-256"
       ],
-      "hint": "추가할 제약조건의 이름, 자식 테이블의 외래키 열, 참조할 부모 테이블과 열을 순서대로 나눠 적은 뒤 ALTER TABLE 문으로 조립하세요."
+      "hint": "추가할 제약조건의 이름, 자식 테이블의 외래키 열, 참조할 부모 테이블과 열을 순서대로 나눠 적은 뒤 ALTER TABLE 문으로 조립하세요.",
+      "solution": {
+        "summary": "ALTER TABLE orders로 대상 테이블을 선택한다.",
+        "flow": [
+          "ALTER TABLE orders로 대상 테이블을 선택한다.",
+          "ADD CONSTRAINT로 제약조건명을 지정한다.",
+          "FOREIGN KEY와 REFERENCES로 참조 관계를 작성한다."
+        ]
+      }
     },
     {
       "id": "REC-043",
@@ -2118,12 +2202,6 @@
       "code": "SELECT a.id, b.code FROM A a CROSS JOIN B b ORDER BY a.id, b.code;",
       "inputData": "A.id: 1,2; B.code: X,Y,Z",
       "answer": "1,X; 1,Y; 1,Z; 2,X; 2,Y; 2,Z",
-      "explanation": "CROSS JOIN은 두 테이블의 모든 조합을 만든다. 2행×3행=6행이다. ORDER BY에 따라 id, code 순으로 정렬된다.",
-      "steps": [
-        "CROSS JOIN은 두 테이블의 모든 조합을 만든다.",
-        "2행×3행=6행이다.",
-        "ORDER BY에 따라 id, code 순으로 정렬된다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -2157,7 +2235,15 @@
         "VAR-203",
         "VAR-257"
       ],
-      "hint": "두 테이블에서 서로 대응되는 열을 먼저 표시하고, 연결된 행을 만든 뒤 나머지 조건과 출력 항목을 적용하세요."
+      "hint": "두 테이블에서 서로 대응되는 열을 먼저 표시하고, 연결된 행을 만든 뒤 나머지 조건과 출력 항목을 적용하세요.",
+      "solution": {
+        "summary": "CROSS JOIN은 두 테이블의 모든 조합을 만든다.",
+        "flow": [
+          "CROSS JOIN은 두 테이블의 모든 조합을 만든다.",
+          "2행×3행=6행이다.",
+          "ORDER BY에 따라 id, code 순으로 정렬된다."
+        ]
+      }
     },
     {
       "id": "REC-044",
@@ -2174,12 +2260,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int x=3;\n    int y=x++;\n    y += ++x;\n    printf(\"%d %d\", x, y);\n    return 0;\n}",
       "inputData": "",
       "answer": "5 8",
-      "explanation": "y=x++에서 y=3, x=4. ++x 후 x=5, 이를 y에 더한다. 최종 출력은 5 8.",
-      "steps": [
-        "y=x++에서 y=3, x=4.",
-        "++x 후 x=5, 이를 y에 더한다.",
-        "최종 출력은 5 8."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -2205,7 +2285,15 @@
         "VAR-108",
         "VAR-234"
       ],
-      "hint": "변수 값이 실제로 바뀌는 문장만 골라 실행 순서대로 상태를 적고, 마지막 출력문이 읽는 값을 확인하세요."
+      "hint": "변수 값이 실제로 바뀌는 문장만 골라 실행 순서대로 상태를 적고, 마지막 출력문이 읽는 값을 확인하세요.",
+      "solution": {
+        "summary": "y=x++에서 y=3, x=4.",
+        "flow": [
+          "y=x++에서 y=3, x=4.",
+          "++x 후 x=5, 이를 y에 더한다.",
+          "최종 출력은 5 8."
+        ]
+      }
     },
     {
       "id": "REC-045",
@@ -2222,12 +2310,6 @@
       "code": "#include <stdio.h>\n#include <string.h>\nint main(void) {\n    char s[]=\"aBcDEfG\";\n    int cnt=0;\n    for(int i=0;i<(int)strlen(s);i++)\n        if(s[i]>='A' && s[i]<='Z') cnt++;\n    printf(\"%d\", cnt);\n    return 0;\n}",
       "inputData": "",
       "answer": "4",
-      "explanation": "각 문자가 'A'~'Z' 범위인지 검사한다. 조건을 만족하는 문자마다 cnt를 증가시킨다. 대문자 개수는 4개.",
-      "steps": [
-        "각 문자가 'A'~'Z' 범위인지 검사한다.",
-        "조건을 만족하는 문자마다 cnt를 증가시킨다.",
-        "대문자 개수는 4개."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -2259,7 +2341,15 @@
         "REC-208",
         "REC-235"
       ],
-      "hint": "문자열을 인덱스별 문자로 펼쳐 적고, 포인터나 반복문이 실제로 방문하거나 바꾸는 위치만 표시하세요."
+      "hint": "문자열을 인덱스별 문자로 펼쳐 적고, 포인터나 반복문이 실제로 방문하거나 바꾸는 위치만 표시하세요.",
+      "solution": {
+        "summary": "각 문자가 'A'~'Z' 범위인지 검사한다.",
+        "flow": [
+          "각 문자가 'A'~'Z' 범위인지 검사한다.",
+          "조건을 만족하는 문자마다 cnt를 증가시킨다.",
+          "대문자 개수는 4개."
+        ]
+      }
     },
     {
       "id": "REC-046",
@@ -2276,12 +2366,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a=6, b=3;\n    int r = (a>b ? a : b) << 1;\n    printf(\"%d\", r);\n    return 0;\n}",
       "inputData": "",
       "answer": "12",
-      "explanation": "조건연산자로 더 큰 값을 선택한다. <<1은 2배와 같다. 결과는 12.",
-      "steps": [
-        "조건연산자로 더 큰 값을 선택한다.",
-        "<<1은 2배와 같다.",
-        "앞 단계의 연산을 끝까지 적용하면 결과는 12이 됩니다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -2307,7 +2391,15 @@
         "VAR-129",
         "VAR-236"
       ],
-      "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요."
+      "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요.",
+      "solution": {
+        "summary": "결과는 12.",
+        "flow": [
+          "조건연산자로 더 큰 값을 선택한다.",
+          "<<1은 2배와 같다.",
+          "앞 단계의 연산을 끝까지 적용하면 결과는 12이 됩니다."
+        ]
+      }
     },
     {
       "id": "REC-047",
@@ -2324,12 +2416,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[3]={3, 5, 9};\n    int *p[3]={&a[0],&a[1],&a[2]};\n    printf(\"%d\", *p[0] + *p[2]);\n    return 0;\n}",
       "inputData": "",
       "answer": "12",
-      "explanation": "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다. 각 포인터를 역참조해 값을 읽는다. 합은 12.",
-      "steps": [
-        "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다.",
-        "각 포인터를 역참조해 값을 읽는다.",
-        "필요한 값을 모두 계산해 더하면 합은 12이 됩니다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -2349,7 +2435,15 @@
         "REC-047",
         "VAR-237"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "합은 12.",
+        "flow": [
+          "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다.",
+          "각 포인터를 역참조해 값을 읽는다.",
+          "필요한 값을 모두 계산해 더하면 합은 12이 됩니다."
+        ]
+      }
     },
     {
       "id": "REC-048",
@@ -2366,12 +2460,6 @@
       "code": "#include <stdio.h>\nstruct Node { int data; struct Node *next; };\nint main(void) {\n    struct Node c={6, NULL};\n    struct Node b={7, &c};\n    struct Node a={2, &b};\n    struct Node *p=&a;\n    int sum=0;\n    while(p!=NULL) { sum+=p->data; p=p->next; }\n    printf(\"%d\", sum);\n    return 0;\n}",
       "inputData": "",
       "answer": "15",
-      "explanation": "p가 a→b→c 순서로 이동한다. 각 노드의 data를 sum에 누적한다. 최종 합은 15.",
-      "steps": [
-        "p가 a→b→c 순서로 이동한다.",
-        "각 노드의 data를 sum에 누적한다.",
-        "최종 합은 15."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -2391,7 +2479,15 @@
         "REC-048",
         "VAR-238"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "p가 a→b→c 순서로 이동한다.",
+        "flow": [
+          "p가 a→b→c 순서로 이동한다.",
+          "각 노드의 data를 sum에 누적한다.",
+          "최종 합은 15."
+        ]
+      }
     },
     {
       "id": "REC-049",
@@ -2408,12 +2504,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int s = 2;\n    for (int i = 1; i <= 5; i++) {\n        if (i % 2 == 0) s += i * 2;\n        else s += i;\n    }\n    printf(\"%d\", s);\n    return 0;\n}",
       "inputData": "",
       "answer": "23",
-      "explanation": "초기 s=2. 홀수 i는 i를, 짝수 i는 i×2를 더한다. i=1~5를 순서대로 적용한 최종 s는 23이다.",
-      "steps": [
-        "누적 계산을 시작하기 전 초기 s=2으로 초기 상태를 먼저 확인합니다.",
-        "홀수 i는 i를, 짝수 i는 i×2를 더한다.",
-        "i=1~5를 순서대로 적용한 최종 s는 23이다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -2439,7 +2529,15 @@
         "VAR-132",
         "VAR-239"
       ],
-      "hint": "반복마다 조건식, 핵심 변수, 출력 여부를 표로 적고, 건너뛰기나 종료가 발생한 지점을 별도로 표시하세요."
+      "hint": "반복마다 조건식, 핵심 변수, 출력 여부를 표로 적고, 건너뛰기나 종료가 발생한 지점을 별도로 표시하세요.",
+      "solution": {
+        "summary": "초기 s=2.",
+        "flow": [
+          "누적 계산을 시작하기 전 초기 s=2으로 초기 상태를 먼저 확인합니다.",
+          "홀수 i는 i를, 짝수 i는 i×2를 더한다.",
+          "i=1~5를 순서대로 적용한 최종 s는 23이다."
+        ]
+      }
     },
     {
       "id": "REC-050",
@@ -2456,12 +2554,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[4] = {8, 10, 12, 14};\n    int *p = a + 1;\n    printf(\"%d\", *p + *(p + 2));\n    return 0;\n}",
       "inputData": "",
       "answer": "24",
-      "explanation": "p는 a[1]을 가리킨다. *(p+2)는 a[3]이다. 두 값을 더하면 24이다.",
-      "steps": [
-        "p는 a[1]을 가리킨다.",
-        "*(p+2)는 a[3]이다.",
-        "두 값을 더하면 24이다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -2481,7 +2573,15 @@
         "REC-050",
         "VAR-213"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "p는 a[1]을 가리킨다.",
+        "flow": [
+          "p는 a[1]을 가리킨다.",
+          "*(p+2)는 a[3]이다.",
+          "두 값을 더하면 24이다."
+        ]
+      }
     },
     {
       "id": "REC-052",
@@ -2498,12 +2598,6 @@
       "code": "public class Main {\n  public static void main(String[] args) {\n    int[] a = {1, 2, 3, 4};\n    int sum=0;\n    for(int v : a) sum += v;\n    System.out.print(sum);\n  }\n}",
       "inputData": "",
       "answer": "10",
-      "explanation": "향상된 for문이 배열의 모든 원소를 순회한다. 각 값을 sum에 더한다. 최종 sum=10.",
-      "steps": [
-        "향상된 for문이 배열의 모든 원소를 순회한다.",
-        "각 값을 sum에 더한다.",
-        "최종 sum=10."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -2537,7 +2631,15 @@
         "VAR-147",
         "VAR-218"
       ],
-      "hint": "배열의 인덱스와 원소 값을 표로 적고, 반복이나 메서드 호출이 어느 위치를 읽거나 바꾸는지 표시하세요."
+      "hint": "배열의 인덱스와 원소 값을 표로 적고, 반복이나 메서드 호출이 어느 위치를 읽거나 바꾸는지 표시하세요.",
+      "solution": {
+        "summary": "향상된 for문이 배열의 모든 원소를 순회한다.",
+        "flow": [
+          "향상된 for문이 배열의 모든 원소를 순회한다.",
+          "각 값을 sum에 더한다.",
+          "최종 sum=10."
+        ]
+      }
     },
     {
       "id": "REC-053",
@@ -2554,12 +2656,6 @@
       "code": "class Parent {\n  int value=12;\n  int get() { return value; }\n}\nclass Child extends Parent {\n  int value=22;\n  @Override int get() { return value+1; }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Parent x=new Child();\n    System.out.print(x.value+\" \"+x.get());\n  }\n}",
       "inputData": "",
       "answer": "12 23",
-      "explanation": "필드는 참조 변수의 선언 타입 Parent 기준으로 접근한다. 메서드는 실제 객체 Child의 오버라이딩 메서드가 호출된다. 출력은 12 23.",
-      "steps": [
-        "필드는 참조 변수의 선언 타입 Parent 기준으로 접근한다.",
-        "메서드는 실제 객체 Child의 오버라이딩 메서드가 호출된다.",
-        "출력은 12 23."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -2578,7 +2674,15 @@
         "REC-053",
         "VAR-053"
       ],
-      "hint": "참조 변수의 선언 타입과 실제 객체 타입을 따로 적고, 필드 접근과 메서드 호출이 각각 어떤 타입을 기준으로 결정되는지 구분하세요."
+      "hint": "참조 변수의 선언 타입과 실제 객체 타입을 따로 적고, 필드 접근과 메서드 호출이 각각 어떤 타입을 기준으로 결정되는지 구분하세요.",
+      "solution": {
+        "summary": "필드는 참조 변수의 선언 타입 Parent 기준으로 접근한다.",
+        "flow": [
+          "필드는 참조 변수의 선언 타입 Parent 기준으로 접근한다.",
+          "메서드는 실제 객체 Child의 오버라이딩 메서드가 호출된다.",
+          "출력은 12 23."
+        ]
+      }
     },
     {
       "id": "REC-054",
@@ -2595,12 +2699,6 @@
       "code": "class Counter {\n  private static Counter one=new Counter();\n  private int n=0;\n  static Counter get() { return one; }\n  void inc() { n++; }\n  int value() { return n; }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Counter.get().inc();\n    Counter.get().inc();\n    Counter.get().inc();\n    System.out.print(Counter.get().value());\n  }\n}",
       "inputData": "",
       "answer": "3",
-      "explanation": "get()은 항상 동일한 Counter 객체를 반환한다. inc()가 총 3회 호출된다. 공유 필드 n의 최종값은 3.",
-      "steps": [
-        "get()은 항상 동일한 Counter 객체를 반환한다.",
-        "inc()가 총 3회 호출된다.",
-        "공유 필드 n의 최종값은 3."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -2626,7 +2724,15 @@
         "VAR-007",
         "VAR-149"
       ],
-      "hint": "객체마다 따로 존재하는 값과 클래스 전체가 공유하는 값을 구분한 뒤, 호출 순서대로 공유 상태의 변화를 적어보세요."
+      "hint": "객체마다 따로 존재하는 값과 클래스 전체가 공유하는 값을 구분한 뒤, 호출 순서대로 공유 상태의 변화를 적어보세요.",
+      "solution": {
+        "summary": "get()은 항상 동일한 Counter 객체를 반환한다.",
+        "flow": [
+          "get()은 항상 동일한 Counter 객체를 반환한다.",
+          "inc()가 총 3회 호출된다.",
+          "공유 필드 n의 최종값은 3."
+        ]
+      }
     },
     {
       "id": "REC-055",
@@ -2643,12 +2749,6 @@
       "code": "public class Main {\n  static int f(int x) { return x+2; }\n  static int f(double x) { return (int)x+5; }\n  public static void main(String[] args) {\n    System.out.print(f(11)+\" \"+f(11.5));\n  }\n}",
       "inputData": "",
       "answer": "13 16",
-      "explanation": "정수 인자는 f(int)를 호출한다. 실수 인자는 f(double)을 호출한다. 출력은 13 16.",
-      "steps": [
-        "정수 인자는 f(int)를 호출한다.",
-        "실수 인자는 f(double)을 호출한다.",
-        "출력은 13 16."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -2667,7 +2767,15 @@
         "REC-055",
         "VAR-055"
       ],
-      "hint": "호출할 때 전달되는 인자의 컴파일 시점 타입을 먼저 확인하고, 그 타입 조합에 가장 잘 맞는 메서드 선언을 찾아보세요."
+      "hint": "호출할 때 전달되는 인자의 컴파일 시점 타입을 먼저 확인하고, 그 타입 조합에 가장 잘 맞는 메서드 선언을 찾아보세요.",
+      "solution": {
+        "summary": "정수 인자는 f(int)를 호출한다.",
+        "flow": [
+          "정수 인자는 f(int)를 호출한다.",
+          "실수 인자는 f(double)을 호출한다.",
+          "출력은 13 16."
+        ]
+      }
     },
     {
       "id": "REC-058",
@@ -2684,12 +2792,6 @@
       "code": "public class Main {\n  static int f(int n) {\n    if(n<=1) return 1;\n    return n+f(n-1);\n  }\n  public static void main(String[] args) {\n    System.out.print(f(5));\n  }\n}",
       "inputData": "",
       "answer": "15",
-      "explanation": "f(n)=n+f(n-1)이다. f(1)=1에서 종료한다. 1부터 5까지의 합인 15.",
-      "steps": [
-        "f(n)=n+f(n-1)이다.",
-        "f(1)=1에서 종료한다.",
-        "1부터 5까지의 합인 15."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -2715,7 +2817,15 @@
         "VAR-011",
         "VAR-163"
       ],
-      "hint": "재귀가 멈추는 조건을 먼저 찾고, 가장 깊은 호출에서 돌아오면서 어떤 값이 결합되는지 역순으로 적어보세요."
+      "hint": "재귀가 멈추는 조건을 먼저 찾고, 가장 깊은 호출에서 돌아오면서 어떤 값이 결합되는지 역순으로 적어보세요.",
+      "solution": {
+        "summary": "f(n)=n+f(n-1)이다.",
+        "flow": [
+          "f(n)=n+f(n-1)이다.",
+          "f(1)=1에서 종료한다.",
+          "1부터 5까지의 합인 15."
+        ]
+      }
     },
     {
       "id": "REC-059",
@@ -2732,12 +2842,6 @@
       "code": "d={x:x*x for x in range(1,6)}\nr=0\nfor k,v in d.items():\n    if k & 1:\n        r += v\nprint(r)",
       "inputData": "",
       "answer": "35",
-      "explanation": "k&1이 1이면 홀수이다. 홀수 키에 해당하는 제곱값만 더한다. 합은 35.",
-      "steps": [
-        "k&1이 1이면 홀수이다.",
-        "홀수 키에 해당하는 제곱값만 더한다.",
-        "필요한 값을 모두 계산해 더하면 합은 35이 됩니다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -2766,7 +2870,15 @@
         "REC-153",
         "REC-247"
       ],
-      "hint": "키와 값을 표로 정리한 뒤 조회·추가·변경이 실행될 때 해당 키의 상태만 순서대로 추적하세요."
+      "hint": "키와 값을 표로 정리한 뒤 조회·추가·변경이 실행될 때 해당 키의 상태만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "합은 35.",
+        "flow": [
+          "k&1이 1이면 홀수이다.",
+          "홀수 키에 해당하는 제곱값만 더한다.",
+          "필요한 값을 모두 계산해 더하면 합은 35이 됩니다."
+        ]
+      }
     },
     {
       "id": "REC-060",
@@ -2783,12 +2895,6 @@
       "code": "a=['A', 'B', 'C', 'D']\nr=[]\nfor i,v in enumerate(a, start=2):\n    if i%2==0:\n        r.append(v+str(i))\nprint(\"-\".join(r))",
       "inputData": "",
       "answer": "A2-C4",
-      "explanation": "enumerate의 시작 인덱스는 2. 짝수 인덱스인 항목만 선택한다. '-'로 연결한 결과는 A2-C4.",
-      "steps": [
-        "enumerate의 시작 인덱스는 2.",
-        "짝수 인덱스인 항목만 선택한다.",
-        "'-'로 연결한 결과는 A2-C4."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -2820,7 +2926,15 @@
         "VAR-154",
         "VAR-248"
       ],
-      "hint": "표현식을 한 번에 계산하지 말고 안쪽 연산부터 값과 자료형의 변화를 차례대로 적어보세요."
+      "hint": "표현식을 한 번에 계산하지 말고 안쪽 연산부터 값과 자료형의 변화를 차례대로 적어보세요.",
+      "solution": {
+        "summary": "enumerate의 시작 인덱스는 2.",
+        "flow": [
+          "enumerate의 시작 인덱스는 2.",
+          "짝수 인덱스인 항목만 선택한다.",
+          "'-'로 연결한 결과는 A2-C4."
+        ]
+      }
     },
     {
       "id": "REC-061",
@@ -2837,12 +2951,6 @@
       "code": "s=\"DataEngineer\"\nx=s[::-1]\nprint(x.replace(\"g\",\"\",1))",
       "inputData": "",
       "answer": "reeninEataD",
-      "explanation": "s[::-1]로 문자열을 뒤집는다. 뒤집힌 문자열에서 첫 'g'만 제거한다. 결과는 reeninEataD.",
-      "steps": [
-        "s[::-1]로 문자열을 뒤집는다.",
-        "뒤집힌 문자열에서 첫 'g'만 제거한다.",
-        "결과는 reeninEataD."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -2865,7 +2973,15 @@
         "REC-061",
         "REC-167"
       ],
-      "hint": "표현식을 한 번에 계산하지 말고 안쪽 연산부터 값과 자료형의 변화를 차례대로 적어보세요."
+      "hint": "표현식을 한 번에 계산하지 말고 안쪽 연산부터 값과 자료형의 변화를 차례대로 적어보세요.",
+      "solution": {
+        "summary": "s[::-1]로 문자열을 뒤집는다.",
+        "flow": [
+          "s[::-1]로 문자열을 뒤집는다.",
+          "뒤집힌 문자열에서 첫 'g'만 제거한다.",
+          "결과는 reeninEataD."
+        ]
+      }
     },
     {
       "id": "REC-062",
@@ -2882,12 +2998,6 @@
       "code": "a=[x*x for x in range(1,8) if x%2==0]\nprint(sum(a))",
       "inputData": "",
       "answer": "56",
-      "explanation": "1부터 n까지 중 짝수만 선택한다. 각 짝수의 제곱을 리스트에 저장한다. 그 합은 56.",
-      "steps": [
-        "1부터 n까지 중 짝수만 선택한다.",
-        "각 짝수의 제곱을 리스트에 저장한다.",
-        "그 합은 56."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -2912,7 +3022,15 @@
         "VAR-062",
         "VAR-168"
       ],
-      "hint": "자료구조가 변경되는 연산 직후의 상태를 매번 다시 적고, 연산이 반환한 값과 컨테이너에 남은 값을 구분하세요."
+      "hint": "자료구조가 변경되는 연산 직후의 상태를 매번 다시 적고, 연산이 반환한 값과 컨테이너에 남은 값을 구분하세요.",
+      "solution": {
+        "summary": "1부터 n까지 중 짝수만 선택한다.",
+        "flow": [
+          "1부터 n까지 중 짝수만 선택한다.",
+          "각 짝수의 제곱을 리스트에 저장한다.",
+          "그 합은 56."
+        ]
+      }
     },
     {
       "id": "REC-063",
@@ -2929,12 +3047,6 @@
       "code": "SELECT dept, COUNT(*) AS cnt FROM student WHERE score >= 70 GROUP BY dept HAVING COUNT(*) >= 1 ORDER BY dept;",
       "inputData": "student(dept,score): (A,80), (A,70), (B,90), (B,60), (C,85)",
       "answer": "A,2; B,1; C,1",
-      "explanation": "WHERE score >= 70로 행을 먼저 필터링한다. dept별로 GROUP BY한 뒤 COUNT(*)를 계산한다. 결과: A,2; B,1; C,1.",
-      "steps": [
-        "WHERE score >= 70로 행을 먼저 필터링한다.",
-        "dept별로 GROUP BY한 뒤 COUNT(*)를 계산한다.",
-        "결과: A,2; B,1; C,1."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -2968,7 +3080,15 @@
         "VAR-204",
         "VAR-258"
       ],
-      "hint": "그룹을 나누는 기준과 각 그룹에서 계산할 값을 먼저 적고, 행 단위 조건과 그룹 단위 조건을 서로 분리해 보세요."
+      "hint": "그룹을 나누는 기준과 각 그룹에서 계산할 값을 먼저 적고, 행 단위 조건과 그룹 단위 조건을 서로 분리해 보세요.",
+      "solution": {
+        "summary": "WHERE score >= 70로 행을 먼저 필터링한다.",
+        "flow": [
+          "WHERE score >= 70로 행을 먼저 필터링한다.",
+          "dept별로 GROUP BY한 뒤 COUNT(*)를 계산한다.",
+          "결과: A,2; B,1; C,1."
+        ]
+      }
     },
     {
       "id": "REC-065",
@@ -2985,12 +3105,6 @@
       "code": "",
       "inputData": "salaries(emp_num, name, salary)",
       "answer": "UPDATE salaries SET salary = 2600 WHERE emp_num = 2074;",
-      "explanation": "UPDATE 뒤에 테이블명을 쓴다. SET으로 변경할 열과 값을 지정한다. WHERE로 대상 사원번호를 한정한다.",
-      "steps": [
-        "UPDATE 뒤에 테이블명을 쓴다.",
-        "SET으로 변경할 열과 값을 지정한다.",
-        "WHERE로 대상 사원번호를 한정한다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -3008,7 +3122,15 @@
       "importIds": [
         "REC-065"
       ],
-      "hint": "어떤 행이 바뀌어야 하는지 조건을 먼저 문장으로 정리한 뒤, 그 행에서 변경되는 열과 새 값을 따로 적어보세요."
+      "hint": "어떤 행이 바뀌어야 하는지 조건을 먼저 문장으로 정리한 뒤, 그 행에서 변경되는 열과 새 값을 따로 적어보세요.",
+      "solution": {
+        "summary": "UPDATE 뒤에 테이블명을 쓴다.",
+        "flow": [
+          "UPDATE 뒤에 테이블명을 쓴다.",
+          "SET으로 변경할 열과 값을 지정한다.",
+          "WHERE로 대상 사원번호를 한정한다."
+        ]
+      }
     },
     {
       "id": "REC-066",
@@ -3025,12 +3147,6 @@
       "code": "",
       "inputData": "dept(code, name)",
       "answer": "INSERT INTO dept(code, name) VALUES (117, 'CLOUD');",
-      "explanation": "INSERT INTO 테이블명(열 목록)을 작성한다. VALUES에 열 순서와 맞게 값을 쓴다. 문자열은 작은따옴표로 감싼다.",
-      "steps": [
-        "INSERT INTO 테이블명(열 목록)을 작성한다.",
-        "VALUES에 열 순서와 맞게 값을 쓴다.",
-        "문자열은 작은따옴표로 감싼다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -3048,7 +3164,15 @@
       "importIds": [
         "REC-066"
       ],
-      "hint": "추가할 열의 순서와 값의 순서가 서로 대응되는지 먼저 확인하고, 생략되는 열이 있는지도 살펴보세요."
+      "hint": "추가할 열의 순서와 값의 순서가 서로 대응되는지 먼저 확인하고, 생략되는 열이 있는지도 살펴보세요.",
+      "solution": {
+        "summary": "INSERT INTO 테이블명(열 목록)을 작성한다.",
+        "flow": [
+          "INSERT INTO 테이블명(열 목록)을 작성한다.",
+          "VALUES에 열 순서와 맞게 값을 쓴다.",
+          "문자열은 작은따옴표로 감싼다."
+        ]
+      }
     },
     {
       "id": "REC-067",
@@ -3065,12 +3189,6 @@
       "code": "",
       "inputData": "student(id, name, score)",
       "answer": "DELETE FROM student WHERE score < 70;",
-      "explanation": "DELETE FROM 뒤에 대상 테이블을 쓴다. WHERE score < 70 조건을 지정한다. WHERE를 생략하면 전체 행이 삭제되므로 반드시 조건을 확인한다.",
-      "steps": [
-        "DELETE FROM 뒤에 대상 테이블을 쓴다.",
-        "WHERE score < 70 조건을 지정한다.",
-        "WHERE를 생략하면 전체 행이 삭제되므로 반드시 조건을 확인한다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -3096,7 +3214,15 @@
         "VAR-067",
         "VAR-228"
       ],
-      "hint": "삭제 대상이 되는 행의 조건을 먼저 찾고, 조건을 만족하는 행과 남는 행을 작은 표로 나눠보세요."
+      "hint": "삭제 대상이 되는 행의 조건을 먼저 찾고, 조건을 만족하는 행과 남는 행을 작은 표로 나눠보세요.",
+      "solution": {
+        "summary": "DELETE FROM 뒤에 대상 테이블을 쓴다.",
+        "flow": [
+          "DELETE FROM 뒤에 대상 테이블을 쓴다.",
+          "WHERE score < 70 조건을 지정한다.",
+          "WHERE를 생략하면 전체 행이 삭제되므로 반드시 조건을 확인한다."
+        ]
+      }
     },
     {
       "id": "REC-068",
@@ -3113,12 +3239,6 @@
       "code": "#include <stdio.h>\nstruct Item { int x; int y; };\nint main(void) {\n    struct Item a[2] = {{6, 6}, {6, 11}};\n    struct Item *p = a;\n    printf(\"%d\", p->x + (p+1)->y);\n    return 0;\n}",
       "inputData": "",
       "answer": "17",
-      "explanation": "p->x는 첫 구조체의 x이다. (p+1)->y는 두 번째 구조체의 y이다. 합은 17이다.",
-      "steps": [
-        "p->x는 첫 구조체의 x이다.",
-        "(p+1)->y는 두 번째 구조체의 y이다.",
-        "합은 17이다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -3140,7 +3260,15 @@
       "importIds": [
         "REC-068"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "p->x는 첫 구조체의 x이다.",
+        "flow": [
+          "p->x는 첫 구조체의 x이다.",
+          "(p+1)->y는 두 번째 구조체의 y이다.",
+          "합은 17이다."
+        ]
+      }
     },
     {
       "id": "REC-069",
@@ -3157,12 +3285,6 @@
       "code": "#include <stdio.h>\nint f(int n) {\n    if (n <= 1) return 1;\n    return n * f(n - 1);\n}\nint main(void) {\n    printf(\"%d\", f(6));\n    return 0;\n}",
       "inputData": "",
       "answer": "720",
-      "explanation": "f(n)=n×f(n-1) 형태의 재귀이다. f(1)=1에서 재귀가 종료된다. 6! = 720이다.",
-      "steps": [
-        "f(n)=n×f(n-1) 형태의 재귀이다.",
-        "f(1)=1에서 재귀가 종료된다.",
-        "6! = 720이다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -3192,7 +3314,15 @@
         "VAR-004",
         "VAR-136"
       ],
-      "hint": "종료 조건을 먼저 찾은 뒤 호출이 깊어지는 순서와 반환되면서 계산되는 순서를 분리해서 적어보세요."
+      "hint": "종료 조건을 먼저 찾은 뒤 호출이 깊어지는 순서와 반환되면서 계산되는 순서를 분리해서 적어보세요.",
+      "solution": {
+        "summary": "6! = 720이다.",
+        "flow": [
+          "f(n)=n×f(n-1) 형태의 재귀이다.",
+          "f(1)=1에서 재귀가 종료된다.",
+          "6! = 720이다."
+        ]
+      }
     },
     {
       "id": "REC-070",
@@ -3209,12 +3339,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a=14, b=23;\n    a ^= b;\n    b ^= a;\n    a ^= b;\n    printf(\"%d %d\", a, b);\n    return 0;\n}",
       "inputData": "",
       "answer": "23 14",
-      "explanation": "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다. 최종 a=23, b=14. 출력은 23 14이다.",
-      "steps": [
-        "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다.",
-        "최종 a=23, b=14.",
-        "출력은 23 14이다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -3236,7 +3360,15 @@
       "importIds": [
         "REC-070"
       ],
-      "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요."
+      "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요.",
+      "solution": {
+        "summary": "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다.",
+        "flow": [
+          "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다.",
+          "최종 a=23, b=14.",
+          "출력은 23 14이다."
+        ]
+      }
     },
     {
       "id": "REC-071",
@@ -3253,12 +3385,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int r = 0;\n    for (int i=1; i<=7; i++) {\n        if (i==4) continue;\n        if (i==7) break;\n        r += i * 4;\n    }\n    printf(\"%d\", r);\n    return 0;\n}",
       "inputData": "",
       "answer": "68",
-      "explanation": "i=4에서는 continue로 누적을 건너뛴다. i=7에서 break이므로 i=1~6까지만 반영된다. 최종 r=68.",
-      "steps": [
-        "i=4에서는 continue로 누적을 건너뛴다.",
-        "i=7에서 break이므로 i=1~6까지만 반영된다.",
-        "최종 r=68."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -3281,7 +3407,15 @@
         "REC-071",
         "VAR-071"
       ],
-      "hint": "반복마다 조건식, 핵심 변수, 출력 여부를 표로 적고, 건너뛰기나 종료가 발생한 지점을 별도로 표시하세요."
+      "hint": "반복마다 조건식, 핵심 변수, 출력 여부를 표로 적고, 건너뛰기나 종료가 발생한 지점을 별도로 표시하세요.",
+      "solution": {
+        "summary": "i=4에서는 continue로 누적을 건너뛴다.",
+        "flow": [
+          "i=4에서는 continue로 누적을 건너뛴다.",
+          "i=7에서 break이므로 i=1~6까지만 반영된다.",
+          "최종 r=68."
+        ]
+      }
     },
     {
       "id": "REC-073",
@@ -3298,12 +3432,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[5] = {7, 2, 13, 1, 5};\n    for(int i=0;i<4;i++)\n      for(int j=0;j<4-i;j++)\n        if(a[j] > a[j+1]) {\n          int t=a[j]; a[j]=a[j+1]; a[j+1]=t;\n        }\n    printf(\"%d %d\", a[0], a[4]);\n    return 0;\n}",
       "inputData": "",
       "answer": "1 13",
-      "explanation": "인접 원소를 비교해 큰 값을 뒤로 보낸다. 반복 종료 후 오름차순 정렬된다. 최솟값과 최댓값은 1 13.",
-      "steps": [
-        "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
-        "반복 종료 후 오름차순 정렬된다.",
-        "최솟값과 최댓값은 1 13."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -3325,7 +3453,15 @@
       "importIds": [
         "REC-073"
       ],
-      "hint": "한 번의 순회가 끝날 때 배열이 어떻게 바뀌는지 줄마다 다시 적고, 비교 후 교환되는 두 위치만 표시하세요."
+      "hint": "한 번의 순회가 끝날 때 배열이 어떻게 바뀌는지 줄마다 다시 적고, 비교 후 교환되는 두 위치만 표시하세요.",
+      "solution": {
+        "summary": "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
+        "flow": [
+          "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
+          "반복 종료 후 오름차순 정렬된다.",
+          "최솟값과 최댓값은 1 13."
+        ]
+      }
     },
     {
       "id": "REC-074",
@@ -3342,12 +3478,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int n=1345, r=0;\n    while(n>0) {\n        r = r*10 + n%10;\n        n /= 10;\n    }\n    printf(\"%d\", r);\n    return 0;\n}",
       "inputData": "",
       "answer": "5431",
-      "explanation": "n%10으로 일의 자리 숫자를 얻는다. r=r×10+자리값으로 역순 수를 만든다. 최종 결과는 5431.",
-      "steps": [
-        "n%10으로 일의 자리 숫자를 얻는다.",
-        "r=r×10+자리값으로 역순 수를 만든다.",
-        "최종 결과는 5431."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -3377,7 +3507,15 @@
         "VAR-027",
         "VAR-158"
       ],
-      "hint": "문자열을 인덱스별 문자로 펼쳐 적고, 포인터나 반복문이 실제로 방문하거나 바꾸는 위치만 표시하세요."
+      "hint": "문자열을 인덱스별 문자로 펼쳐 적고, 포인터나 반복문이 실제로 방문하거나 바꾸는 위치만 표시하세요.",
+      "solution": {
+        "summary": "n%10으로 일의 자리 숫자를 얻는다.",
+        "flow": [
+          "n%10으로 일의 자리 숫자를 얻는다.",
+          "r=r×10+자리값으로 역순 수를 만든다.",
+          "최종 결과는 5431."
+        ]
+      }
     },
     {
       "id": "REC-076",
@@ -3394,12 +3532,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int x=1;\n    int y=x++;\n    y += ++x;\n    printf(\"%d %d\", x, y);\n    return 0;\n}",
       "inputData": "",
       "answer": "3 4",
-      "explanation": "y=x++에서 y=1, x=2. ++x 후 x=3, 이를 y에 더한다. 최종 출력은 3 4.",
-      "steps": [
-        "y=x++에서 y=1, x=2.",
-        "++x 후 x=3, 이를 y에 더한다.",
-        "최종 출력은 3 4."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -3429,7 +3561,15 @@
         "VAR-044",
         "VAR-160"
       ],
-      "hint": "변수 값이 실제로 바뀌는 문장만 골라 실행 순서대로 상태를 적고, 마지막 출력문이 읽는 값을 확인하세요."
+      "hint": "변수 값이 실제로 바뀌는 문장만 골라 실행 순서대로 상태를 적고, 마지막 출력문이 읽는 값을 확인하세요.",
+      "solution": {
+        "summary": "y=x++에서 y=1, x=2.",
+        "flow": [
+          "y=x++에서 y=1, x=2.",
+          "++x 후 x=3, 이를 y에 더한다.",
+          "최종 출력은 3 4."
+        ]
+      }
     },
     {
       "id": "REC-078",
@@ -3446,12 +3586,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a=6, b=4;\n    int r = (a>b ? a : b) << 1;\n    printf(\"%d\", r);\n    return 0;\n}",
       "inputData": "",
       "answer": "12",
-      "explanation": "조건연산자로 더 큰 값을 선택한다. <<1은 2배와 같다. 결과는 12.",
-      "steps": [
-        "조건연산자로 더 큰 값을 선택한다.",
-        "<<1은 2배와 같다.",
-        "앞 단계의 연산을 끝까지 적용하면 결과는 12이 됩니다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -3481,7 +3615,15 @@
         "VAR-046",
         "VAR-179"
       ],
-      "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요."
+      "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요.",
+      "solution": {
+        "summary": "결과는 12.",
+        "flow": [
+          "조건연산자로 더 큰 값을 선택한다.",
+          "<<1은 2배와 같다.",
+          "앞 단계의 연산을 끝까지 적용하면 결과는 12이 됩니다."
+        ]
+      }
     },
     {
       "id": "REC-079",
@@ -3498,12 +3640,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[3]={1, 5, 5};\n    int *p[3]={&a[0],&a[1],&a[2]};\n    printf(\"%d\", *p[0] + *p[2]);\n    return 0;\n}",
       "inputData": "",
       "answer": "6",
-      "explanation": "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다. 각 포인터를 역참조해 값을 읽는다. 합은 6.",
-      "steps": [
-        "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다.",
-        "각 포인터를 역참조해 값을 읽는다.",
-        "필요한 값을 모두 계산해 더하면 합은 6이 됩니다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -3525,7 +3661,15 @@
       "importIds": [
         "REC-079"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "합은 6.",
+        "flow": [
+          "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다.",
+          "각 포인터를 역참조해 값을 읽는다.",
+          "필요한 값을 모두 계산해 더하면 합은 6이 됩니다."
+        ]
+      }
     },
     {
       "id": "REC-080",
@@ -3542,12 +3686,6 @@
       "code": "#include <stdio.h>\nstruct Node { int data; struct Node *next; };\nint main(void) {\n    struct Node c={7, NULL};\n    struct Node b={7, &c};\n    struct Node a={3, &b};\n    struct Node *p=&a;\n    int sum=0;\n    while(p!=NULL) { sum+=p->data; p=p->next; }\n    printf(\"%d\", sum);\n    return 0;\n}",
       "inputData": "",
       "answer": "17",
-      "explanation": "p가 a→b→c 순서로 이동한다. 각 노드의 data를 sum에 누적한다. 최종 합은 17.",
-      "steps": [
-        "p가 a→b→c 순서로 이동한다.",
-        "각 노드의 data를 sum에 누적한다.",
-        "최종 합은 17."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -3569,7 +3707,15 @@
       "importIds": [
         "REC-080"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "p가 a→b→c 순서로 이동한다.",
+        "flow": [
+          "p가 a→b→c 순서로 이동한다.",
+          "각 노드의 data를 sum에 누적한다.",
+          "최종 합은 17."
+        ]
+      }
     },
     {
       "id": "REC-081",
@@ -3586,12 +3732,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int s = 3;\n    for (int i = 1; i <= 5; i++) {\n        if (i % 2 == 0) s += i * 2;\n        else s += i;\n    }\n    printf(\"%d\", s);\n    return 0;\n}",
       "inputData": "",
       "answer": "24",
-      "explanation": "초기 s=3. 홀수 i는 i를, 짝수 i는 i×2를 더한다. i=1~5를 순서대로 적용한 최종 s는 24이다.",
-      "steps": [
-        "누적 계산을 시작하기 전 초기 s=3으로 초기 상태를 먼저 확인합니다.",
-        "홀수 i는 i를, 짝수 i는 i×2를 더한다.",
-        "i=1~5를 순서대로 적용한 최종 s는 24이다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -3621,7 +3761,15 @@
         "VAR-049",
         "VAR-182"
       ],
-      "hint": "반복마다 조건식, 핵심 변수, 출력 여부를 표로 적고, 건너뛰기나 종료가 발생한 지점을 별도로 표시하세요."
+      "hint": "반복마다 조건식, 핵심 변수, 출력 여부를 표로 적고, 건너뛰기나 종료가 발생한 지점을 별도로 표시하세요.",
+      "solution": {
+        "summary": "초기 s=3.",
+        "flow": [
+          "누적 계산을 시작하기 전 초기 s=3으로 초기 상태를 먼저 확인합니다.",
+          "홀수 i는 i를, 짝수 i는 i×2를 더한다.",
+          "i=1~5를 순서대로 적용한 최종 s는 24이다."
+        ]
+      }
     },
     {
       "id": "REC-082",
@@ -3638,12 +3786,6 @@
       "code": "class Calc {\n  int f(int a,int b) {\n    System.out.print(a+b+\" \");\n    return a*b;\n  }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Calc c=new Calc();\n    System.out.print(c.f(7,6));\n  }\n}",
       "inputData": "",
       "answer": "13 42",
-      "explanation": "f() 내부에서 먼저 a+b를 출력한다. 그 후 a*b를 반환한다. main이 반환값을 이어서 출력한다.",
-      "steps": [
-        "f() 내부에서 먼저 a+b를 출력한다.",
-        "그 후 a*b를 반환한다.",
-        "main이 반환값을 이어서 출력한다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -3666,7 +3808,15 @@
         "REC-082",
         "VAR-082"
       ],
-      "hint": "각 문장이 실행된 직후 변수와 객체 상태를 한 줄씩 적고, 마지막 출력문이 실제로 참조하는 값을 확인하세요."
+      "hint": "각 문장이 실행된 직후 변수와 객체 상태를 한 줄씩 적고, 마지막 출력문이 실제로 참조하는 값을 확인하세요.",
+      "solution": {
+        "summary": "f() 내부에서 먼저 a+b를 출력한다.",
+        "flow": [
+          "f() 내부에서 먼저 a+b를 출력한다.",
+          "그 후 a*b를 반환한다.",
+          "main이 반환값을 이어서 출력한다."
+        ]
+      }
     },
     {
       "id": "REC-083",
@@ -3683,12 +3833,6 @@
       "code": "public class Main {\n  public static void main(String[] args) {\n    int x=19;\n    x+=1; x-=2; x*=3; x/=4; x%=5;\n    System.out.print(x);\n  }\n}",
       "inputData": "",
       "answer": "3",
-      "explanation": "복합 대입 연산을 위에서 아래로 차례대로 수행한다. 정수 나눗셈은 소수부를 버린다. 최종 x=3.",
-      "steps": [
-        "복합 대입 연산을 위에서 아래로 차례대로 수행한다.",
-        "정수 나눗셈은 소수부를 버린다.",
-        "모든 연산을 위에서 아래로 적용한 뒤 최종 x=3이 됩니다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -3711,7 +3855,15 @@
         "REC-083",
         "VAR-083"
       ],
-      "hint": "각 문장이 실행된 직후 변수와 객체 상태를 한 줄씩 적고, 마지막 출력문이 실제로 참조하는 값을 확인하세요."
+      "hint": "각 문장이 실행된 직후 변수와 객체 상태를 한 줄씩 적고, 마지막 출력문이 실제로 참조하는 값을 확인하세요.",
+      "solution": {
+        "summary": "최종 x=3.",
+        "flow": [
+          "복합 대입 연산을 위에서 아래로 차례대로 수행한다.",
+          "정수 나눗셈은 소수부를 버린다.",
+          "모든 연산을 위에서 아래로 적용한 뒤 최종 x=3이 됩니다."
+        ]
+      }
     },
     {
       "id": "REC-085",
@@ -3728,12 +3880,6 @@
       "code": "class A {\n  A(int x) { System.out.print(x+\" \"); }\n}\nclass B extends A {\n  B() { super(5); System.out.print(7); }\n}\npublic class Main {\n  public static void main(String[] args) { new B(); }\n}",
       "inputData": "",
       "answer": "5 7",
-      "explanation": "자식 생성자에서 super가 먼저 실행된다. 부모 생성자 출력 후 자식 생성자 본문이 실행된다. 출력은 5 7.",
-      "steps": [
-        "자식 생성자에서 super가 먼저 실행된다.",
-        "부모 생성자 출력 후 자식 생성자 본문이 실행된다.",
-        "출력은 5 7."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -3758,7 +3904,15 @@
         "VAR-029",
         "VAR-191"
       ],
-      "hint": "객체가 만들어질 때 부모와 자식 생성자의 호출 순서를 먼저 적고, 각 생성자에서 바뀌는 필드를 차례대로 반영하세요."
+      "hint": "객체가 만들어질 때 부모와 자식 생성자의 호출 순서를 먼저 적고, 각 생성자에서 바뀌는 필드를 차례대로 반영하세요.",
+      "solution": {
+        "summary": "자식 생성자에서 super가 먼저 실행된다.",
+        "flow": [
+          "자식 생성자에서 super가 먼저 실행된다.",
+          "부모 생성자 출력 후 자식 생성자 본문이 실행된다.",
+          "출력은 5 7."
+        ]
+      }
     },
     {
       "id": "REC-088",
@@ -3775,12 +3929,6 @@
       "code": "class Printer {\n  void print(Integer x) { System.out.print(\"I\"+x); }\n  void print(Number x) { System.out.print(\"N\"+x); }\n  void print(Object x) { System.out.print(\"O\"+x); }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Object x=Integer.valueOf(11);\n    new Printer().print(x);\n  }\n}",
       "inputData": "",
       "answer": "O11",
-      "explanation": "오버로딩 선택은 호출 시점의 선언 타입을 기준으로 한다. x의 선언 타입은 Object이다. print(Object)가 선택되어 O11.",
-      "steps": [
-        "오버로딩 선택은 호출 시점의 선언 타입을 기준으로 한다.",
-        "x의 선언 타입은 Object이다.",
-        "print(Object)가 선택되어 O11."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -3803,7 +3951,15 @@
         "REC-088",
         "VAR-088"
       ],
-      "hint": "호출할 때 전달되는 인자의 컴파일 시점 타입을 먼저 확인하고, 그 타입 조합에 가장 잘 맞는 메서드 선언을 찾아보세요."
+      "hint": "호출할 때 전달되는 인자의 컴파일 시점 타입을 먼저 확인하고, 그 타입 조합에 가장 잘 맞는 메서드 선언을 찾아보세요.",
+      "solution": {
+        "summary": "오버로딩 선택은 호출 시점의 선언 타입을 기준으로 한다.",
+        "flow": [
+          "오버로딩 선택은 호출 시점의 선언 타입을 기준으로 한다.",
+          "x의 선언 타입은 Object이다.",
+          "print(Object)가 선택되어 O11."
+        ]
+      }
     },
     {
       "id": "REC-089",
@@ -3820,12 +3976,6 @@
       "code": "abstract class Base {\n  abstract int f(int x);\n  int g(int x) { return f(x)+1; }\n}\nclass Sub extends Base {\n  int f(int x) { return x*2; }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Base b=new Sub();\n    System.out.print(b.g(3));\n  }\n}",
       "inputData": "",
       "answer": "7",
-      "explanation": "g()는 Base에 정의되어 있지만 내부 f() 호출은 동적 바인딩된다. Sub.f(x)=x×2. 따라서 결과는 7.",
-      "steps": [
-        "g()는 Base에 정의되어 있지만 내부 f() 호출은 동적 바인딩된다.",
-        "Sub.f(x)=x×2.",
-        "따라서 결과는 7."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -3850,7 +4000,15 @@
         "VAR-033",
         "VAR-195"
       ],
-      "hint": "참조 변수의 선언 타입과 실제 객체 타입을 따로 적고, 필드 접근과 메서드 호출이 각각 어떤 타입을 기준으로 결정되는지 구분하세요."
+      "hint": "참조 변수의 선언 타입과 실제 객체 타입을 따로 적고, 필드 접근과 메서드 호출이 각각 어떤 타입을 기준으로 결정되는지 구분하세요.",
+      "solution": {
+        "summary": "g()는 Base에 정의되어 있지만 내부 f() 호출은 동적 바인딩된다.",
+        "flow": [
+          "g()는 Base에 정의되어 있지만 내부 f() 호출은 동적 바인딩된다.",
+          "Sub.f(x)=x×2.",
+          "따라서 결과는 7."
+        ]
+      }
     },
     {
       "id": "REC-090",
@@ -3867,12 +4025,6 @@
       "code": "def add(a,b):\n    return a+b\ndef sub(a,b):\n    return a-b\nprint(sub(add(6,3), 3))",
       "inputData": "",
       "answer": "6",
-      "explanation": "add(6,3)=9. 그 결과에서 3를 뺀다. 최종 결과는 6.",
-      "steps": [
-        "add(6,3)=9.",
-        "그 결과에서 3를 뺀다.",
-        "최종 결과는 6."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -3895,7 +4047,15 @@
         "REC-090",
         "REC-169"
       ],
-      "hint": "호출 시 실제로 전달된 인자와 기본값이 사용되는 인자를 먼저 구분하고, 함수 내부 표현식을 그 값으로 치환해 보세요."
+      "hint": "호출 시 실제로 전달된 인자와 기본값이 사용되는 인자를 먼저 구분하고, 함수 내부 표현식을 그 값으로 치환해 보세요.",
+      "solution": {
+        "summary": "add(6,3)=9.",
+        "flow": [
+          "add(6,3)=9.",
+          "그 결과에서 3를 뺀다.",
+          "최종 결과는 6."
+        ]
+      }
     },
     {
       "id": "REC-091",
@@ -3912,12 +4072,6 @@
       "code": "a=(12, 23, 31)\nb=list(a)\nb[1]+=5\nprint(a[1], b[1])",
       "inputData": "",
       "answer": "23 28",
-      "explanation": "a는 튜플이므로 기존 값이 바뀌지 않는다. b는 a에서 만든 별도의 리스트이다. b[1]만 5 증가해 23 28가 출력된다.",
-      "steps": [
-        "a는 튜플이므로 기존 값이 바뀌지 않는다.",
-        "b는 a에서 만든 별도의 리스트이다.",
-        "b[1]만 5 증가해 23 28가 출력된다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -3939,7 +4093,15 @@
       "importIds": [
         "REC-091"
       ],
-      "hint": "자료구조가 변경되는 연산 직후의 상태를 매번 다시 적고, 연산이 반환한 값과 컨테이너에 남은 값을 구분하세요."
+      "hint": "자료구조가 변경되는 연산 직후의 상태를 매번 다시 적고, 연산이 반환한 값과 컨테이너에 남은 값을 구분하세요.",
+      "solution": {
+        "summary": "a는 튜플이므로 기존 값이 바뀌지 않는다.",
+        "flow": [
+          "a는 튜플이므로 기존 값이 바뀌지 않는다.",
+          "b는 a에서 만든 별도의 리스트이다.",
+          "b[1]만 5 증가해 23 28가 출력된다."
+        ]
+      }
     },
     {
       "id": "REC-092",
@@ -3956,12 +4118,6 @@
       "code": "a=[52, 62, 72, 82]\nprint(a.pop())\nprint(a.pop(1))",
       "inputData": "",
       "answer": "82\n62",
-      "explanation": "pop()은 마지막 원소를 제거하며 반환한다. pop(1)은 현재 리스트의 인덱스 1 원소를 제거한다. 출력은 82, 62 순서이다.",
-      "steps": [
-        "pop()은 마지막 원소를 제거하며 반환한다.",
-        "pop(1)은 현재 리스트의 인덱스 1 원소를 제거한다.",
-        "출력은 82, 62 순서이다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -3984,7 +4140,15 @@
         "REC-092",
         "VAR-092"
       ],
-      "hint": "자료구조가 변경되는 연산 직후의 상태를 매번 다시 적고, 연산이 반환한 값과 컨테이너에 남은 값을 구분하세요."
+      "hint": "자료구조가 변경되는 연산 직후의 상태를 매번 다시 적고, 연산이 반환한 값과 컨테이너에 남은 값을 구분하세요.",
+      "solution": {
+        "summary": "pop()은 마지막 원소를 제거하며 반환한다.",
+        "flow": [
+          "pop()은 마지막 원소를 제거하며 반환한다.",
+          "pop(1)은 현재 리스트의 인덱스 1 원소를 제거한다.",
+          "출력은 82, 62 순서이다."
+        ]
+      }
     },
     {
       "id": "REC-093",
@@ -4001,12 +4165,6 @@
       "code": "",
       "inputData": "student(id, name, dept)",
       "answer": "CREATE INDEX idx_name_1 ON student(name);",
-      "explanation": "CREATE INDEX 뒤에 인덱스명을 쓴다. ON 뒤에 테이블과 대상 열을 지정한다. 정답은 CREATE INDEX idx_name_1 ON student(name); 마지막으로 테이블명·열 이름·조건 연산자와 SQL 문장의 순서를 다시 확인합니다.",
-      "steps": [
-        "CREATE INDEX 뒤에 인덱스명을 쓴다.",
-        "ON 뒤에 테이블과 대상 열을 지정한다.",
-        "정답은 CREATE INDEX idx_name_1 ON student(name);"
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -4028,7 +4186,15 @@
       "importIds": [
         "REC-093"
       ],
-      "hint": "새 객체의 이름, 대상 테이블, 기준 열이 각각 어떤 역할인지 구분해 문장 구조를 먼저 잡아보세요."
+      "hint": "새 객체의 이름, 대상 테이블, 기준 열이 각각 어떤 역할인지 구분해 문장 구조를 먼저 잡아보세요.",
+      "solution": {
+        "summary": "CREATE INDEX 뒤에 인덱스명을 쓴다.",
+        "flow": [
+          "CREATE INDEX 뒤에 인덱스명을 쓴다.",
+          "ON 뒤에 테이블과 대상 열을 지정한다.",
+          "정답은 CREATE INDEX idx_name_1 ON student(name);"
+        ]
+      }
     },
     {
       "id": "REC-098",
@@ -4045,12 +4211,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[4] = {10, 12, 14, 16};\n    int *p = a + 1;\n    printf(\"%d\", *p + *(p + 2));\n    return 0;\n}",
       "inputData": "",
       "answer": "28",
-      "explanation": "p는 a[1]을 가리킨다. *(p+2)는 a[3]이다. 두 값을 더하면 28이다.",
-      "steps": [
-        "p는 a[1]을 가리킨다.",
-        "*(p+2)는 a[3]이다.",
-        "두 값을 더하면 28이다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -4074,7 +4234,15 @@
         "REC-098",
         "VAR-240"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "p는 a[1]을 가리킨다.",
+        "flow": [
+          "p는 a[1]을 가리킨다.",
+          "*(p+2)는 a[3]이다.",
+          "두 값을 더하면 28이다."
+        ]
+      }
     },
     {
       "id": "REC-100",
@@ -4091,12 +4259,6 @@
       "code": "#include <stdio.h>\nstruct Item { int x; int y; };\nint main(void) {\n    struct Item a[2] = {{6, 7}, {7, 7}};\n    struct Item *p = a;\n    printf(\"%d\", p->x + (p+1)->y);\n    return 0;\n}",
       "inputData": "",
       "answer": "13",
-      "explanation": "p->x는 첫 구조체의 x이다. (p+1)->y는 두 번째 구조체의 y이다. 합은 13이다.",
-      "steps": [
-        "p->x는 첫 구조체의 x이다.",
-        "(p+1)->y는 두 번째 구조체의 y이다.",
-        "합은 13이다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -4118,7 +4280,15 @@
       "importIds": [
         "REC-100"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "p->x는 첫 구조체의 x이다.",
+        "flow": [
+          "p->x는 첫 구조체의 x이다.",
+          "(p+1)->y는 두 번째 구조체의 y이다.",
+          "합은 13이다."
+        ]
+      }
     },
     {
       "id": "REC-101",
@@ -4135,12 +4305,6 @@
       "code": "#include <stdio.h>\nint f(int n) {\n    if (n <= 1) return 1;\n    return n * f(n - 1);\n}\nint main(void) {\n    printf(\"%d\", f(4));\n    return 0;\n}",
       "inputData": "",
       "answer": "24",
-      "explanation": "f(n)=n×f(n-1) 형태의 재귀이다. f(1)=1에서 재귀가 종료된다. 4! = 24이다.",
-      "steps": [
-        "f(n)=n×f(n-1) 형태의 재귀이다.",
-        "f(1)=1에서 재귀가 종료된다.",
-        "4! = 24이다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -4170,7 +4334,15 @@
         "VAR-069",
         "VAR-186"
       ],
-      "hint": "종료 조건을 먼저 찾은 뒤 호출이 깊어지는 순서와 반환되면서 계산되는 순서를 분리해서 적어보세요."
+      "hint": "종료 조건을 먼저 찾은 뒤 호출이 깊어지는 순서와 반환되면서 계산되는 순서를 분리해서 적어보세요.",
+      "solution": {
+        "summary": "4! = 24이다.",
+        "flow": [
+          "f(n)=n×f(n-1) 형태의 재귀이다.",
+          "f(1)=1에서 재귀가 종료된다.",
+          "4! = 24이다."
+        ]
+      }
     },
     {
       "id": "REC-102",
@@ -4187,12 +4359,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a=14, b=21;\n    a ^= b;\n    b ^= a;\n    a ^= b;\n    printf(\"%d %d\", a, b);\n    return 0;\n}",
       "inputData": "",
       "answer": "21 14",
-      "explanation": "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다. 최종 a=21, b=14. 출력은 21 14이다.",
-      "steps": [
-        "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다.",
-        "최종 a=21, b=14.",
-        "출력은 21 14이다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -4214,7 +4380,15 @@
       "importIds": [
         "REC-102"
       ],
-      "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요."
+      "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요.",
+      "solution": {
+        "summary": "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다.",
+        "flow": [
+          "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다.",
+          "최종 a=21, b=14.",
+          "출력은 21 14이다."
+        ]
+      }
     },
     {
       "id": "REC-103",
@@ -4231,12 +4405,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int r = 0;\n    for (int i=1; i<=7; i++) {\n        if (i==4) continue;\n        if (i==7) break;\n        r += i * 5;\n    }\n    printf(\"%d\", r);\n    return 0;\n}",
       "inputData": "",
       "answer": "85",
-      "explanation": "i=4에서는 continue로 누적을 건너뛴다. i=7에서 break이므로 i=1~6까지만 반영된다. 최종 r=85.",
-      "steps": [
-        "i=4에서는 continue로 누적을 건너뛴다.",
-        "i=7에서 break이므로 i=1~6까지만 반영된다.",
-        "최종 r=85."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -4259,7 +4427,15 @@
         "REC-103",
         "VAR-103"
       ],
-      "hint": "반복마다 조건식, 핵심 변수, 출력 여부를 표로 적고, 건너뛰기나 종료가 발생한 지점을 별도로 표시하세요."
+      "hint": "반복마다 조건식, 핵심 변수, 출력 여부를 표로 적고, 건너뛰기나 종료가 발생한 지점을 별도로 표시하세요.",
+      "solution": {
+        "summary": "i=4에서는 continue로 누적을 건너뛴다.",
+        "flow": [
+          "i=4에서는 continue로 누적을 건너뛴다.",
+          "i=7에서 break이므로 i=1~6까지만 반영된다.",
+          "최종 r=85."
+        ]
+      }
     },
     {
       "id": "REC-105",
@@ -4276,12 +4452,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[5] = {8, 2, 9, 1, 6};\n    for(int i=0;i<4;i++)\n      for(int j=0;j<4-i;j++)\n        if(a[j] > a[j+1]) {\n          int t=a[j]; a[j]=a[j+1]; a[j+1]=t;\n        }\n    printf(\"%d %d\", a[0], a[4]);\n    return 0;\n}",
       "inputData": "",
       "answer": "1 9",
-      "explanation": "인접 원소를 비교해 큰 값을 뒤로 보낸다. 반복 종료 후 오름차순 정렬된다. 최솟값과 최댓값은 1 9.",
-      "steps": [
-        "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
-        "반복 종료 후 오름차순 정렬된다.",
-        "최솟값과 최댓값은 1 9."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -4303,7 +4473,15 @@
       "importIds": [
         "REC-105"
       ],
-      "hint": "한 번의 순회가 끝날 때 배열이 어떻게 바뀌는지 줄마다 다시 적고, 비교 후 교환되는 두 위치만 표시하세요."
+      "hint": "한 번의 순회가 끝날 때 배열이 어떻게 바뀌는지 줄마다 다시 적고, 비교 후 교환되는 두 위치만 표시하세요.",
+      "solution": {
+        "summary": "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
+        "flow": [
+          "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
+          "반복 종료 후 오름차순 정렬된다.",
+          "최솟값과 최댓값은 1 9."
+        ]
+      }
     },
     {
       "id": "REC-106",
@@ -4320,12 +4498,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int n=1789, r=0;\n    while(n>0) {\n        r = r*10 + n%10;\n        n /= 10;\n    }\n    printf(\"%d\", r);\n    return 0;\n}",
       "inputData": "",
       "answer": "9871",
-      "explanation": "n%10으로 일의 자리 숫자를 얻는다. r=r×10+자리값으로 역순 수를 만든다. 최종 결과는 9871.",
-      "steps": [
-        "n%10으로 일의 자리 숫자를 얻는다.",
-        "r=r×10+자리값으로 역순 수를 만든다.",
-        "최종 결과는 9871."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -4355,7 +4527,15 @@
         "VAR-074",
         "VAR-205"
       ],
-      "hint": "문자열을 인덱스별 문자로 펼쳐 적고, 포인터나 반복문이 실제로 방문하거나 바꾸는 위치만 표시하세요."
+      "hint": "문자열을 인덱스별 문자로 펼쳐 적고, 포인터나 반복문이 실제로 방문하거나 바꾸는 위치만 표시하세요.",
+      "solution": {
+        "summary": "n%10으로 일의 자리 숫자를 얻는다.",
+        "flow": [
+          "n%10으로 일의 자리 숫자를 얻는다.",
+          "r=r×10+자리값으로 역순 수를 만든다.",
+          "최종 결과는 9871."
+        ]
+      }
     },
     {
       "id": "REC-108",
@@ -4372,12 +4552,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int x=2;\n    int y=x++;\n    y += ++x;\n    printf(\"%d %d\", x, y);\n    return 0;\n}",
       "inputData": "",
       "answer": "4 6",
-      "explanation": "y=x++에서 y=2, x=3. ++x 후 x=4, 이를 y에 더한다. 최종 출력은 4 6.",
-      "steps": [
-        "y=x++에서 y=2, x=3.",
-        "++x 후 x=4, 이를 y에 더한다.",
-        "최종 출력은 4 6."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -4407,7 +4581,15 @@
         "VAR-076",
         "VAR-207"
       ],
-      "hint": "변수 값이 실제로 바뀌는 문장만 골라 실행 순서대로 상태를 적고, 마지막 출력문이 읽는 값을 확인하세요."
+      "hint": "변수 값이 실제로 바뀌는 문장만 골라 실행 순서대로 상태를 적고, 마지막 출력문이 읽는 값을 확인하세요.",
+      "solution": {
+        "summary": "y=x++에서 y=2, x=3.",
+        "flow": [
+          "y=x++에서 y=2, x=3.",
+          "++x 후 x=4, 이를 y에 더한다.",
+          "최종 출력은 4 6."
+        ]
+      }
     },
     {
       "id": "REC-111",
@@ -4424,12 +4606,6 @@
       "code": "class Parent {\n  int value=13;\n  int get() { return value; }\n}\nclass Child extends Parent {\n  int value=23;\n  @Override int get() { return value+1; }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Parent x=new Child();\n    System.out.print(x.value+\" \"+x.get());\n  }\n}",
       "inputData": "",
       "answer": "13 24",
-      "explanation": "필드는 참조 변수의 선언 타입 Parent 기준으로 접근한다. 메서드는 실제 객체 Child의 오버라이딩 메서드가 호출된다. 출력은 13 24.",
-      "steps": [
-        "필드는 참조 변수의 선언 타입 Parent 기준으로 접근한다.",
-        "메서드는 실제 객체 Child의 오버라이딩 메서드가 호출된다.",
-        "출력은 13 24."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -4452,7 +4628,15 @@
         "REC-111",
         "VAR-111"
       ],
-      "hint": "참조 변수의 선언 타입과 실제 객체 타입을 따로 적고, 필드 접근과 메서드 호출이 각각 어떤 타입을 기준으로 결정되는지 구분하세요."
+      "hint": "참조 변수의 선언 타입과 실제 객체 타입을 따로 적고, 필드 접근과 메서드 호출이 각각 어떤 타입을 기준으로 결정되는지 구분하세요.",
+      "solution": {
+        "summary": "필드는 참조 변수의 선언 타입 Parent 기준으로 접근한다.",
+        "flow": [
+          "필드는 참조 변수의 선언 타입 Parent 기준으로 접근한다.",
+          "메서드는 실제 객체 Child의 오버라이딩 메서드가 호출된다.",
+          "출력은 13 24."
+        ]
+      }
     },
     {
       "id": "REC-112",
@@ -4469,12 +4653,6 @@
       "code": "class Counter {\n  private static Counter one=new Counter();\n  private int n=0;\n  static Counter get() { return one; }\n  void inc() { n++; }\n  int value() { return n; }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Counter.get().inc();\n    Counter.get().inc();\n    Counter.get().inc();\n    Counter.get().inc();\n    System.out.print(Counter.get().value());\n  }\n}",
       "inputData": "",
       "answer": "4",
-      "explanation": "get()은 항상 동일한 Counter 객체를 반환한다. inc()가 총 4회 호출된다. 공유 필드 n의 최종값은 4.",
-      "steps": [
-        "get()은 항상 동일한 Counter 객체를 반환한다.",
-        "inc()가 총 4회 호출된다.",
-        "공유 필드 n의 최종값은 4."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -4499,7 +4677,15 @@
         "VAR-054",
         "VAR-220"
       ],
-      "hint": "객체마다 따로 존재하는 값과 클래스 전체가 공유하는 값을 구분한 뒤, 호출 순서대로 공유 상태의 변화를 적어보세요."
+      "hint": "객체마다 따로 존재하는 값과 클래스 전체가 공유하는 값을 구분한 뒤, 호출 순서대로 공유 상태의 변화를 적어보세요.",
+      "solution": {
+        "summary": "get()은 항상 동일한 Counter 객체를 반환한다.",
+        "flow": [
+          "get()은 항상 동일한 Counter 객체를 반환한다.",
+          "inc()가 총 4회 호출된다.",
+          "공유 필드 n의 최종값은 4."
+        ]
+      }
     },
     {
       "id": "REC-113",
@@ -4516,12 +4702,6 @@
       "code": "public class Main {\n  static int f(int x) { return x+2; }\n  static int f(double x) { return (int)x+5; }\n  public static void main(String[] args) {\n    System.out.print(f(7)+\" \"+f(7.5));\n  }\n}",
       "inputData": "",
       "answer": "9 12",
-      "explanation": "정수 인자는 f(int)를 호출한다. 실수 인자는 f(double)을 호출한다. 출력은 9 12.",
-      "steps": [
-        "정수 인자는 f(int)를 호출한다.",
-        "실수 인자는 f(double)을 호출한다.",
-        "출력은 9 12."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -4544,7 +4724,15 @@
         "REC-113",
         "VAR-113"
       ],
-      "hint": "호출할 때 전달되는 인자의 컴파일 시점 타입을 먼저 확인하고, 그 타입 조합에 가장 잘 맞는 메서드 선언을 찾아보세요."
+      "hint": "호출할 때 전달되는 인자의 컴파일 시점 타입을 먼저 확인하고, 그 타입 조합에 가장 잘 맞는 메서드 선언을 찾아보세요.",
+      "solution": {
+        "summary": "정수 인자는 f(int)를 호출한다.",
+        "flow": [
+          "정수 인자는 f(int)를 호출한다.",
+          "실수 인자는 f(double)을 호출한다.",
+          "출력은 9 12."
+        ]
+      }
     },
     {
       "id": "REC-116",
@@ -4561,12 +4749,6 @@
       "code": "public class Main {\n  static int f(int n) {\n    if(n<=1) return 1;\n    return n+f(n-1);\n  }\n  public static void main(String[] args) {\n    System.out.print(f(6));\n  }\n}",
       "inputData": "",
       "answer": "21",
-      "explanation": "f(n)=n+f(n-1)이다. f(1)=1에서 종료한다. 1부터 6까지의 합인 21.",
-      "steps": [
-        "f(n)=n+f(n-1)이다.",
-        "f(1)=1에서 종료한다.",
-        "1부터 6까지의 합인 21."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -4591,7 +4773,15 @@
         "VAR-058",
         "VAR-243"
       ],
-      "hint": "재귀가 멈추는 조건을 먼저 찾고, 가장 깊은 호출에서 돌아오면서 어떤 값이 결합되는지 역순으로 적어보세요."
+      "hint": "재귀가 멈추는 조건을 먼저 찾고, 가장 깊은 호출에서 돌아오면서 어떤 값이 결합되는지 역순으로 적어보세요.",
+      "solution": {
+        "summary": "f(n)=n+f(n-1)이다.",
+        "flow": [
+          "f(n)=n+f(n-1)이다.",
+          "f(1)=1에서 종료한다.",
+          "1부터 6까지의 합인 21."
+        ]
+      }
     },
     {
       "id": "REC-117",
@@ -4608,12 +4798,6 @@
       "code": "class Calc {\n  int f(int a,int b) {\n    System.out.print(a+b+\" \");\n    return a*b;\n  }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Calc c=new Calc();\n    System.out.print(c.f(8,6));\n  }\n}",
       "inputData": "",
       "answer": "14 48",
-      "explanation": "f() 내부에서 먼저 a+b를 출력한다. 그 후 a*b를 반환한다. main이 반환값을 이어서 출력한다.",
-      "steps": [
-        "f() 내부에서 먼저 a+b를 출력한다.",
-        "그 후 a*b를 반환한다.",
-        "main이 반환값을 이어서 출력한다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -4636,7 +4820,15 @@
         "REC-117",
         "VAR-117"
       ],
-      "hint": "각 문장이 실행된 직후 변수와 객체 상태를 한 줄씩 적고, 마지막 출력문이 실제로 참조하는 값을 확인하세요."
+      "hint": "각 문장이 실행된 직후 변수와 객체 상태를 한 줄씩 적고, 마지막 출력문이 실제로 참조하는 값을 확인하세요.",
+      "solution": {
+        "summary": "f() 내부에서 먼저 a+b를 출력한다.",
+        "flow": [
+          "f() 내부에서 먼저 a+b를 출력한다.",
+          "그 후 a*b를 반환한다.",
+          "main이 반환값을 이어서 출력한다."
+        ]
+      }
     },
     {
       "id": "REC-118",
@@ -4653,12 +4845,6 @@
       "code": "public class Main {\n  public static void main(String[] args) {\n    int x=15;\n    x+=1; x-=2; x*=3; x/=4; x%=5;\n    System.out.print(x);\n  }\n}",
       "inputData": "",
       "answer": "0",
-      "explanation": "복합 대입 연산을 위에서 아래로 차례대로 수행한다. 정수 나눗셈은 소수부를 버린다. 최종 x=0.",
-      "steps": [
-        "복합 대입 연산을 위에서 아래로 차례대로 수행한다.",
-        "정수 나눗셈은 소수부를 버린다.",
-        "모든 연산을 위에서 아래로 적용한 뒤 최종 x=0이 됩니다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -4681,7 +4867,15 @@
         "REC-118",
         "VAR-118"
       ],
-      "hint": "각 문장이 실행된 직후 변수와 객체 상태를 한 줄씩 적고, 마지막 출력문이 실제로 참조하는 값을 확인하세요."
+      "hint": "각 문장이 실행된 직후 변수와 객체 상태를 한 줄씩 적고, 마지막 출력문이 실제로 참조하는 값을 확인하세요.",
+      "solution": {
+        "summary": "최종 x=0.",
+        "flow": [
+          "복합 대입 연산을 위에서 아래로 차례대로 수행한다.",
+          "정수 나눗셈은 소수부를 버린다.",
+          "모든 연산을 위에서 아래로 적용한 뒤 최종 x=0이 됩니다."
+        ]
+      }
     },
     {
       "id": "REC-129",
@@ -4698,12 +4892,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a=6, b=2;\n    int r = (a>b ? a : b) << 1;\n    printf(\"%d\", r);\n    return 0;\n}",
       "inputData": "",
       "answer": "12",
-      "explanation": "조건연산자로 더 큰 값을 선택한다. <<1은 2배와 같다. 결과는 12.",
-      "steps": [
-        "조건연산자로 더 큰 값을 선택한다.",
-        "<<1은 2배와 같다.",
-        "앞 단계의 연산을 끝까지 적용하면 결과는 12이 됩니다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -4733,7 +4921,15 @@
         "VAR-078",
         "VAR-209"
       ],
-      "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요."
+      "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요.",
+      "solution": {
+        "summary": "결과는 12.",
+        "flow": [
+          "조건연산자로 더 큰 값을 선택한다.",
+          "<<1은 2배와 같다.",
+          "앞 단계의 연산을 끝까지 적용하면 결과는 12이 됩니다."
+        ]
+      }
     },
     {
       "id": "REC-130",
@@ -4750,12 +4946,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[3]={2, 5, 6};\n    int *p[3]={&a[0],&a[1],&a[2]};\n    printf(\"%d\", *p[0] + *p[2]);\n    return 0;\n}",
       "inputData": "",
       "answer": "8",
-      "explanation": "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다. 각 포인터를 역참조해 값을 읽는다. 합은 8.",
-      "steps": [
-        "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다.",
-        "각 포인터를 역참조해 값을 읽는다.",
-        "필요한 값을 모두 계산해 더하면 합은 8이 됩니다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -4777,7 +4967,15 @@
       "importIds": [
         "REC-130"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "합은 8.",
+        "flow": [
+          "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다.",
+          "각 포인터를 역참조해 값을 읽는다.",
+          "필요한 값을 모두 계산해 더하면 합은 8이 됩니다."
+        ]
+      }
     },
     {
       "id": "REC-131",
@@ -4794,12 +4992,6 @@
       "code": "#include <stdio.h>\nstruct Node { int data; struct Node *next; };\nint main(void) {\n    struct Node c={8, NULL};\n    struct Node b={7, &c};\n    struct Node a={4, &b};\n    struct Node *p=&a;\n    int sum=0;\n    while(p!=NULL) { sum+=p->data; p=p->next; }\n    printf(\"%d\", sum);\n    return 0;\n}",
       "inputData": "",
       "answer": "19",
-      "explanation": "p가 a→b→c 순서로 이동한다. 각 노드의 data를 sum에 누적한다. 최종 합은 19.",
-      "steps": [
-        "p가 a→b→c 순서로 이동한다.",
-        "각 노드의 data를 sum에 누적한다.",
-        "최종 합은 19."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -4821,7 +5013,15 @@
       "importIds": [
         "REC-131"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "p가 a→b→c 순서로 이동한다.",
+        "flow": [
+          "p가 a→b→c 순서로 이동한다.",
+          "각 노드의 data를 sum에 누적한다.",
+          "최종 합은 19."
+        ]
+      }
     },
     {
       "id": "REC-132",
@@ -4838,12 +5038,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int s = 1;\n    for (int i = 1; i <= 5; i++) {\n        if (i % 2 == 0) s += i * 2;\n        else s += i;\n    }\n    printf(\"%d\", s);\n    return 0;\n}",
       "inputData": "",
       "answer": "22",
-      "explanation": "초기 s=1. 홀수 i는 i를, 짝수 i는 i×2를 더한다. i=1~5를 순서대로 적용한 최종 s는 22이다.",
-      "steps": [
-        "누적 계산을 시작하기 전 초기 s=1으로 초기 상태를 먼저 확인합니다.",
-        "홀수 i는 i를, 짝수 i는 i×2를 더한다.",
-        "i=1~5를 순서대로 적용한 최종 s는 22이다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -4873,7 +5067,15 @@
         "VAR-081",
         "VAR-212"
       ],
-      "hint": "반복마다 조건식, 핵심 변수, 출력 여부를 표로 적고, 건너뛰기나 종료가 발생한 지점을 별도로 표시하세요."
+      "hint": "반복마다 조건식, 핵심 변수, 출력 여부를 표로 적고, 건너뛰기나 종료가 발생한 지점을 별도로 표시하세요.",
+      "solution": {
+        "summary": "초기 s=1.",
+        "flow": [
+          "누적 계산을 시작하기 전 초기 s=1으로 초기 상태를 먼저 확인합니다.",
+          "홀수 i는 i를, 짝수 i는 i×2를 더한다.",
+          "i=1~5를 순서대로 적용한 최종 s는 22이다."
+        ]
+      }
     },
     {
       "id": "REC-133",
@@ -4890,12 +5092,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[4] = {5, 7, 9, 11};\n    int *p = a + 1;\n    printf(\"%d\", *p + *(p + 2));\n    return 0;\n}",
       "inputData": "",
       "answer": "18",
-      "explanation": "p는 a[1]을 가리킨다. *(p+2)는 a[3]이다. 두 값을 더하면 18이다.",
-      "steps": [
-        "p는 a[1]을 가리킨다.",
-        "*(p+2)는 a[3]이다.",
-        "두 값을 더하면 18이다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -4918,7 +5114,15 @@
         "REC-133",
         "VAR-001"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "p는 a[1]을 가리킨다.",
+        "flow": [
+          "p는 a[1]을 가리킨다.",
+          "*(p+2)는 a[3]이다.",
+          "두 값을 더하면 18이다."
+        ]
+      }
     },
     {
       "id": "REC-135",
@@ -4935,12 +5139,6 @@
       "code": "#include <stdio.h>\nstruct Item { int x; int y; };\nint main(void) {\n    struct Item a[2] = {{6, 5}, {5, 8}};\n    struct Item *p = a;\n    printf(\"%d\", p->x + (p+1)->y);\n    return 0;\n}",
       "inputData": "",
       "answer": "14",
-      "explanation": "p->x는 첫 구조체의 x이다. (p+1)->y는 두 번째 구조체의 y이다. 합은 14이다.",
-      "steps": [
-        "p->x는 첫 구조체의 x이다.",
-        "(p+1)->y는 두 번째 구조체의 y이다.",
-        "합은 14이다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -4962,7 +5160,15 @@
       "importIds": [
         "REC-135"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "p->x는 첫 구조체의 x이다.",
+        "flow": [
+          "p->x는 첫 구조체의 x이다.",
+          "(p+1)->y는 두 번째 구조체의 y이다.",
+          "합은 14이다."
+        ]
+      }
     },
     {
       "id": "REC-137",
@@ -4979,12 +5185,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a=14, b=28;\n    a ^= b;\n    b ^= a;\n    a ^= b;\n    printf(\"%d %d\", a, b);\n    return 0;\n}",
       "inputData": "",
       "answer": "28 14",
-      "explanation": "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다. 최종 a=28, b=14. 출력은 28 14이다.",
-      "steps": [
-        "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다.",
-        "최종 a=28, b=14.",
-        "출력은 28 14이다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -5006,7 +5206,15 @@
       "importIds": [
         "REC-137"
       ],
-      "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요."
+      "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요.",
+      "solution": {
+        "summary": "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다.",
+        "flow": [
+          "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다.",
+          "최종 a=28, b=14.",
+          "출력은 28 14이다."
+        ]
+      }
     },
     {
       "id": "REC-138",
@@ -5023,12 +5231,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int r = 0;\n    for (int i=1; i<=7; i++) {\n        if (i==4) continue;\n        if (i==7) break;\n        r += i * 6;\n    }\n    printf(\"%d\", r);\n    return 0;\n}",
       "inputData": "",
       "answer": "102",
-      "explanation": "i=4에서는 continue로 누적을 건너뛴다. i=7에서 break이므로 i=1~6까지만 반영된다. 최종 r=102.",
-      "steps": [
-        "i=4에서는 continue로 누적을 건너뛴다.",
-        "i=7에서 break이므로 i=1~6까지만 반영된다.",
-        "최종 r=102."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -5051,7 +5253,15 @@
         "REC-138",
         "VAR-138"
       ],
-      "hint": "반복마다 조건식, 핵심 변수, 출력 여부를 표로 적고, 건너뛰기나 종료가 발생한 지점을 별도로 표시하세요."
+      "hint": "반복마다 조건식, 핵심 변수, 출력 여부를 표로 적고, 건너뛰기나 종료가 발생한 지점을 별도로 표시하세요.",
+      "solution": {
+        "summary": "i=4에서는 continue로 누적을 건너뛴다.",
+        "flow": [
+          "i=4에서는 continue로 누적을 건너뛴다.",
+          "i=7에서 break이므로 i=1~6까지만 반영된다.",
+          "최종 r=102."
+        ]
+      }
     },
     {
       "id": "REC-140",
@@ -5068,12 +5278,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[5] = {9, 2, 10, 1, 7};\n    for(int i=0;i<4;i++)\n      for(int j=0;j<4-i;j++)\n        if(a[j] > a[j+1]) {\n          int t=a[j]; a[j]=a[j+1]; a[j+1]=t;\n        }\n    printf(\"%d %d\", a[0], a[4]);\n    return 0;\n}",
       "inputData": "",
       "answer": "1 10",
-      "explanation": "인접 원소를 비교해 큰 값을 뒤로 보낸다. 반복 종료 후 오름차순 정렬된다. 최솟값과 최댓값은 1 10.",
-      "steps": [
-        "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
-        "반복 종료 후 오름차순 정렬된다.",
-        "최솟값과 최댓값은 1 10."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -5095,7 +5299,15 @@
       "importIds": [
         "REC-140"
       ],
-      "hint": "한 번의 순회가 끝날 때 배열이 어떻게 바뀌는지 줄마다 다시 적고, 비교 후 교환되는 두 위치만 표시하세요."
+      "hint": "한 번의 순회가 끝날 때 배열이 어떻게 바뀌는지 줄마다 다시 적고, 비교 후 교환되는 두 위치만 표시하세요.",
+      "solution": {
+        "summary": "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
+        "flow": [
+          "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
+          "반복 종료 후 오름차순 정렬된다.",
+          "최솟값과 최댓값은 1 10."
+        ]
+      }
     },
     {
       "id": "REC-141",
@@ -5112,12 +5324,6 @@
       "code": "class A {\n  A(int x) { System.out.print(x+\" \"); }\n}\nclass B extends A {\n  B() { super(3); System.out.print(7); }\n}\npublic class Main {\n  public static void main(String[] args) { new B(); }\n}",
       "inputData": "",
       "answer": "3 7",
-      "explanation": "자식 생성자에서 super가 먼저 실행된다. 부모 생성자 출력 후 자식 생성자 본문이 실행된다. 출력은 3 7.",
-      "steps": [
-        "자식 생성자에서 super가 먼저 실행된다.",
-        "부모 생성자 출력 후 자식 생성자 본문이 실행된다.",
-        "출력은 3 7."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -5140,7 +5346,15 @@
         "REC-141",
         "VAR-085"
       ],
-      "hint": "객체가 만들어질 때 부모와 자식 생성자의 호출 순서를 먼저 적고, 각 생성자에서 바뀌는 필드를 차례대로 반영하세요."
+      "hint": "객체가 만들어질 때 부모와 자식 생성자의 호출 순서를 먼저 적고, 각 생성자에서 바뀌는 필드를 차례대로 반영하세요.",
+      "solution": {
+        "summary": "자식 생성자에서 super가 먼저 실행된다.",
+        "flow": [
+          "자식 생성자에서 super가 먼저 실행된다.",
+          "부모 생성자 출력 후 자식 생성자 본문이 실행된다.",
+          "출력은 3 7."
+        ]
+      }
     },
     {
       "id": "REC-144",
@@ -5157,12 +5371,6 @@
       "code": "class Printer {\n  void print(Integer x) { System.out.print(\"I\"+x); }\n  void print(Number x) { System.out.print(\"N\"+x); }\n  void print(Object x) { System.out.print(\"O\"+x); }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Object x=Integer.valueOf(7);\n    new Printer().print(x);\n  }\n}",
       "inputData": "",
       "answer": "O7",
-      "explanation": "오버로딩 선택은 호출 시점의 선언 타입을 기준으로 한다. x의 선언 타입은 Object이다. print(Object)가 선택되어 O7.",
-      "steps": [
-        "오버로딩 선택은 호출 시점의 선언 타입을 기준으로 한다.",
-        "x의 선언 타입은 Object이다.",
-        "print(Object)가 선택되어 O7."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -5185,7 +5393,15 @@
         "REC-144",
         "VAR-144"
       ],
-      "hint": "호출할 때 전달되는 인자의 컴파일 시점 타입을 먼저 확인하고, 그 타입 조합에 가장 잘 맞는 메서드 선언을 찾아보세요."
+      "hint": "호출할 때 전달되는 인자의 컴파일 시점 타입을 먼저 확인하고, 그 타입 조합에 가장 잘 맞는 메서드 선언을 찾아보세요.",
+      "solution": {
+        "summary": "오버로딩 선택은 호출 시점의 선언 타입을 기준으로 한다.",
+        "flow": [
+          "오버로딩 선택은 호출 시점의 선언 타입을 기준으로 한다.",
+          "x의 선언 타입은 Object이다.",
+          "print(Object)가 선택되어 O7."
+        ]
+      }
     },
     {
       "id": "REC-145",
@@ -5202,12 +5418,6 @@
       "code": "abstract class Base {\n  abstract int f(int x);\n  int g(int x) { return f(x)+1; }\n}\nclass Sub extends Base {\n  int f(int x) { return x*2; }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Base b=new Sub();\n    System.out.print(b.g(5));\n  }\n}",
       "inputData": "",
       "answer": "11",
-      "explanation": "g()는 Base에 정의되어 있지만 내부 f() 호출은 동적 바인딩된다. Sub.f(x)=x×2. 따라서 결과는 11.",
-      "steps": [
-        "g()는 Base에 정의되어 있지만 내부 f() 호출은 동적 바인딩된다.",
-        "Sub.f(x)=x×2.",
-        "따라서 결과는 11."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -5230,7 +5440,15 @@
         "REC-145",
         "VAR-089"
       ],
-      "hint": "참조 변수의 선언 타입과 실제 객체 타입을 따로 적고, 필드 접근과 메서드 호출이 각각 어떤 타입을 기준으로 결정되는지 구분하세요."
+      "hint": "참조 변수의 선언 타입과 실제 객체 타입을 따로 적고, 필드 접근과 메서드 호출이 각각 어떤 타입을 기준으로 결정되는지 구분하세요.",
+      "solution": {
+        "summary": "g()는 Base에 정의되어 있지만 내부 f() 호출은 동적 바인딩된다.",
+        "flow": [
+          "g()는 Base에 정의되어 있지만 내부 f() 호출은 동적 바인딩된다.",
+          "Sub.f(x)=x×2.",
+          "따라서 결과는 11."
+        ]
+      }
     },
     {
       "id": "REC-148",
@@ -5247,12 +5465,6 @@
       "code": "class Parent {\n  int value=14;\n  int get() { return value; }\n}\nclass Child extends Parent {\n  int value=24;\n  @Override int get() { return value+1; }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Parent x=new Child();\n    System.out.print(x.value+\" \"+x.get());\n  }\n}",
       "inputData": "",
       "answer": "14 25",
-      "explanation": "필드는 참조 변수의 선언 타입 Parent 기준으로 접근한다. 메서드는 실제 객체 Child의 오버라이딩 메서드가 호출된다. 출력은 14 25.",
-      "steps": [
-        "필드는 참조 변수의 선언 타입 Parent 기준으로 접근한다.",
-        "메서드는 실제 객체 Child의 오버라이딩 메서드가 호출된다.",
-        "출력은 14 25."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -5275,7 +5487,15 @@
         "REC-148",
         "VAR-148"
       ],
-      "hint": "참조 변수의 선언 타입과 실제 객체 타입을 따로 적고, 필드 접근과 메서드 호출이 각각 어떤 타입을 기준으로 결정되는지 구분하세요."
+      "hint": "참조 변수의 선언 타입과 실제 객체 타입을 따로 적고, 필드 접근과 메서드 호출이 각각 어떤 타입을 기준으로 결정되는지 구분하세요.",
+      "solution": {
+        "summary": "필드는 참조 변수의 선언 타입 Parent 기준으로 접근한다.",
+        "flow": [
+          "필드는 참조 변수의 선언 타입 Parent 기준으로 접근한다.",
+          "메서드는 실제 객체 Child의 오버라이딩 메서드가 호출된다.",
+          "출력은 14 25."
+        ]
+      }
     },
     {
       "id": "REC-150",
@@ -5292,12 +5512,6 @@
       "code": "public class Main {\n  static int f(int x) { return x+2; }\n  static int f(double x) { return (int)x+5; }\n  public static void main(String[] args) {\n    System.out.print(f(8)+\" \"+f(8.5));\n  }\n}",
       "inputData": "",
       "answer": "10 13",
-      "explanation": "정수 인자는 f(int)를 호출한다. 실수 인자는 f(double)을 호출한다. 출력은 10 13.",
-      "steps": [
-        "정수 인자는 f(int)를 호출한다.",
-        "실수 인자는 f(double)을 호출한다.",
-        "출력은 10 13."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -5320,7 +5534,15 @@
         "REC-150",
         "VAR-150"
       ],
-      "hint": "호출할 때 전달되는 인자의 컴파일 시점 타입을 먼저 확인하고, 그 타입 조합에 가장 잘 맞는 메서드 선언을 찾아보세요."
+      "hint": "호출할 때 전달되는 인자의 컴파일 시점 타입을 먼저 확인하고, 그 타입 조합에 가장 잘 맞는 메서드 선언을 찾아보세요.",
+      "solution": {
+        "summary": "정수 인자는 f(int)를 호출한다.",
+        "flow": [
+          "정수 인자는 f(int)를 호출한다.",
+          "실수 인자는 f(double)을 호출한다.",
+          "출력은 10 13."
+        ]
+      }
     },
     {
       "id": "REC-157",
@@ -5337,12 +5559,6 @@
       "code": "",
       "inputData": "salaries(emp_num, name, salary)",
       "answer": "UPDATE salaries SET salary = 2500 WHERE emp_num = 2070;",
-      "explanation": "UPDATE 뒤에 테이블명을 쓴다. SET으로 변경할 열과 값을 지정한다. WHERE로 대상 사원번호를 한정한다.",
-      "steps": [
-        "UPDATE 뒤에 테이블명을 쓴다.",
-        "SET으로 변경할 열과 값을 지정한다.",
-        "WHERE로 대상 사원번호를 한정한다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -5364,7 +5580,15 @@
       "importIds": [
         "REC-157"
       ],
-      "hint": "어떤 행이 바뀌어야 하는지 조건을 먼저 문장으로 정리한 뒤, 그 행에서 변경되는 열과 새 값을 따로 적어보세요."
+      "hint": "어떤 행이 바뀌어야 하는지 조건을 먼저 문장으로 정리한 뒤, 그 행에서 변경되는 열과 새 값을 따로 적어보세요.",
+      "solution": {
+        "summary": "UPDATE 뒤에 테이블명을 쓴다.",
+        "flow": [
+          "UPDATE 뒤에 테이블명을 쓴다.",
+          "SET으로 변경할 열과 값을 지정한다.",
+          "WHERE로 대상 사원번호를 한정한다."
+        ]
+      }
     },
     {
       "id": "REC-164",
@@ -5381,12 +5605,6 @@
       "code": "class Calc {\n  int f(int a,int b) {\n    System.out.print(a+b+\" \");\n    return a*b;\n  }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Calc c=new Calc();\n    System.out.print(c.f(4,6));\n  }\n}",
       "inputData": "",
       "answer": "10 24",
-      "explanation": "f() 내부에서 먼저 a+b를 출력한다. 그 후 a*b를 반환한다. main이 반환값을 이어서 출력한다.",
-      "steps": [
-        "f() 내부에서 먼저 a+b를 출력한다.",
-        "그 후 a*b를 반환한다.",
-        "main이 반환값을 이어서 출력한다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -5409,7 +5627,15 @@
         "REC-164",
         "VAR-164"
       ],
-      "hint": "각 문장이 실행된 직후 변수와 객체 상태를 한 줄씩 적고, 마지막 출력문이 실제로 참조하는 값을 확인하세요."
+      "hint": "각 문장이 실행된 직후 변수와 객체 상태를 한 줄씩 적고, 마지막 출력문이 실제로 참조하는 값을 확인하세요.",
+      "solution": {
+        "summary": "f() 내부에서 먼저 a+b를 출력한다.",
+        "flow": [
+          "f() 내부에서 먼저 a+b를 출력한다.",
+          "그 후 a*b를 반환한다.",
+          "main이 반환값을 이어서 출력한다."
+        ]
+      }
     },
     {
       "id": "REC-165",
@@ -5426,12 +5652,6 @@
       "code": "public class Main {\n  public static void main(String[] args) {\n    int x=16;\n    x+=1; x-=2; x*=3; x/=4; x%=5;\n    System.out.print(x);\n  }\n}",
       "inputData": "",
       "answer": "1",
-      "explanation": "복합 대입 연산을 위에서 아래로 차례대로 수행한다. 정수 나눗셈은 소수부를 버린다. 최종 x=1.",
-      "steps": [
-        "복합 대입 연산을 위에서 아래로 차례대로 수행한다.",
-        "정수 나눗셈은 소수부를 버린다.",
-        "모든 연산을 위에서 아래로 적용한 뒤 최종 x=1이 됩니다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -5454,7 +5674,15 @@
         "REC-165",
         "VAR-165"
       ],
-      "hint": "각 문장이 실행된 직후 변수와 객체 상태를 한 줄씩 적고, 마지막 출력문이 실제로 참조하는 값을 확인하세요."
+      "hint": "각 문장이 실행된 직후 변수와 객체 상태를 한 줄씩 적고, 마지막 출력문이 실제로 참조하는 값을 확인하세요.",
+      "solution": {
+        "summary": "최종 x=1.",
+        "flow": [
+          "복합 대입 연산을 위에서 아래로 차례대로 수행한다.",
+          "정수 나눗셈은 소수부를 버린다.",
+          "모든 연산을 위에서 아래로 적용한 뒤 최종 x=1이 됩니다."
+        ]
+      }
     },
     {
       "id": "REC-170",
@@ -5471,12 +5699,6 @@
       "code": "a=(12, 23, 33)\nb=list(a)\nb[1]+=5\nprint(a[1], b[1])",
       "inputData": "",
       "answer": "23 28",
-      "explanation": "a는 튜플이므로 기존 값이 바뀌지 않는다. b는 a에서 만든 별도의 리스트이다. b[1]만 5 증가해 23 28가 출력된다.",
-      "steps": [
-        "a는 튜플이므로 기존 값이 바뀌지 않는다.",
-        "b는 a에서 만든 별도의 리스트이다.",
-        "b[1]만 5 증가해 23 28가 출력된다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -5498,7 +5720,15 @@
       "importIds": [
         "REC-170"
       ],
-      "hint": "자료구조가 변경되는 연산 직후의 상태를 매번 다시 적고, 연산이 반환한 값과 컨테이너에 남은 값을 구분하세요."
+      "hint": "자료구조가 변경되는 연산 직후의 상태를 매번 다시 적고, 연산이 반환한 값과 컨테이너에 남은 값을 구분하세요.",
+      "solution": {
+        "summary": "a는 튜플이므로 기존 값이 바뀌지 않는다.",
+        "flow": [
+          "a는 튜플이므로 기존 값이 바뀌지 않는다.",
+          "b는 a에서 만든 별도의 리스트이다.",
+          "b[1]만 5 증가해 23 28가 출력된다."
+        ]
+      }
     },
     {
       "id": "REC-171",
@@ -5515,12 +5745,6 @@
       "code": "a=[44, 54, 64, 74]\nprint(a.pop())\nprint(a.pop(1))",
       "inputData": "",
       "answer": "74\n54",
-      "explanation": "pop()은 마지막 원소를 제거하며 반환한다. pop(1)은 현재 리스트의 인덱스 1 원소를 제거한다. 출력은 74, 54 순서이다.",
-      "steps": [
-        "pop()은 마지막 원소를 제거하며 반환한다.",
-        "pop(1)은 현재 리스트의 인덱스 1 원소를 제거한다.",
-        "출력은 74, 54 순서이다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -5543,7 +5767,15 @@
         "REC-171",
         "VAR-171"
       ],
-      "hint": "자료구조가 변경되는 연산 직후의 상태를 매번 다시 적고, 연산이 반환한 값과 컨테이너에 남은 값을 구분하세요."
+      "hint": "자료구조가 변경되는 연산 직후의 상태를 매번 다시 적고, 연산이 반환한 값과 컨테이너에 남은 값을 구분하세요.",
+      "solution": {
+        "summary": "pop()은 마지막 원소를 제거하며 반환한다.",
+        "flow": [
+          "pop()은 마지막 원소를 제거하며 반환한다.",
+          "pop(1)은 현재 리스트의 인덱스 1 원소를 제거한다.",
+          "출력은 74, 54 순서이다."
+        ]
+      }
     },
     {
       "id": "REC-172",
@@ -5560,12 +5792,6 @@
       "code": "",
       "inputData": "dept(code, name)",
       "answer": "INSERT INTO dept(code, name) VALUES (131, 'DATA');",
-      "explanation": "INSERT INTO 테이블명(열 목록)을 작성한다. VALUES에 열 순서와 맞게 값을 쓴다. 문자열은 작은따옴표로 감싼다.",
-      "steps": [
-        "INSERT INTO 테이블명(열 목록)을 작성한다.",
-        "VALUES에 열 순서와 맞게 값을 쓴다.",
-        "문자열은 작은따옴표로 감싼다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -5587,7 +5813,15 @@
       "importIds": [
         "REC-172"
       ],
-      "hint": "추가할 열의 순서와 값의 순서가 서로 대응되는지 먼저 확인하고, 생략되는 열이 있는지도 살펴보세요."
+      "hint": "추가할 열의 순서와 값의 순서가 서로 대응되는지 먼저 확인하고, 생략되는 열이 있는지도 살펴보세요.",
+      "solution": {
+        "summary": "INSERT INTO 테이블명(열 목록)을 작성한다.",
+        "flow": [
+          "INSERT INTO 테이블명(열 목록)을 작성한다.",
+          "VALUES에 열 순서와 맞게 값을 쓴다.",
+          "문자열은 작은따옴표로 감싼다."
+        ]
+      }
     },
     {
       "id": "REC-174",
@@ -5604,12 +5838,6 @@
       "code": "",
       "inputData": "student(id, name, dept)",
       "answer": "CREATE INDEX idx_name_6 ON student(name);",
-      "explanation": "CREATE INDEX 뒤에 인덱스명을 쓴다. ON 뒤에 테이블과 대상 열을 지정한다. 정답은 CREATE INDEX idx_name_6 ON student(name); 마지막으로 테이블명·열 이름·조건 연산자와 SQL 문장의 순서를 다시 확인합니다.",
-      "steps": [
-        "CREATE INDEX 뒤에 인덱스명을 쓴다.",
-        "ON 뒤에 테이블과 대상 열을 지정한다.",
-        "정답은 CREATE INDEX idx_name_6 ON student(name);"
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -5632,7 +5860,15 @@
         "REC-174",
         "VAR-021"
       ],
-      "hint": "새 객체의 이름, 대상 테이블, 기준 열이 각각 어떤 역할인지 구분해 문장 구조를 먼저 잡아보세요."
+      "hint": "새 객체의 이름, 대상 테이블, 기준 열이 각각 어떤 역할인지 구분해 문장 구조를 먼저 잡아보세요.",
+      "solution": {
+        "summary": "CREATE INDEX 뒤에 인덱스명을 쓴다.",
+        "flow": [
+          "CREATE INDEX 뒤에 인덱스명을 쓴다.",
+          "ON 뒤에 테이블과 대상 열을 지정한다.",
+          "정답은 CREATE INDEX idx_name_6 ON student(name);"
+        ]
+      }
     },
     {
       "id": "REC-180",
@@ -5649,12 +5885,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[3]={3, 5, 7};\n    int *p[3]={&a[0],&a[1],&a[2]};\n    printf(\"%d\", *p[0] + *p[2]);\n    return 0;\n}",
       "inputData": "",
       "answer": "10",
-      "explanation": "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다. 각 포인터를 역참조해 값을 읽는다. 합은 10.",
-      "steps": [
-        "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다.",
-        "각 포인터를 역참조해 값을 읽는다.",
-        "필요한 값을 모두 계산해 더하면 합은 10이 됩니다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -5672,7 +5902,15 @@
       "importIds": [
         "REC-180"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "합은 10.",
+        "flow": [
+          "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다.",
+          "각 포인터를 역참조해 값을 읽는다.",
+          "필요한 값을 모두 계산해 더하면 합은 10이 됩니다."
+        ]
+      }
     },
     {
       "id": "REC-181",
@@ -5689,12 +5927,6 @@
       "code": "#include <stdio.h>\nstruct Node { int data; struct Node *next; };\nint main(void) {\n    struct Node c={9, NULL};\n    struct Node b={7, &c};\n    struct Node a={2, &b};\n    struct Node *p=&a;\n    int sum=0;\n    while(p!=NULL) { sum+=p->data; p=p->next; }\n    printf(\"%d\", sum);\n    return 0;\n}",
       "inputData": "",
       "answer": "18",
-      "explanation": "p가 a→b→c 순서로 이동한다. 각 노드의 data를 sum에 누적한다. 최종 합은 18.",
-      "steps": [
-        "p가 a→b→c 순서로 이동한다.",
-        "각 노드의 data를 sum에 누적한다.",
-        "최종 합은 18."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -5712,7 +5944,15 @@
       "importIds": [
         "REC-181"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "p가 a→b→c 순서로 이동한다.",
+        "flow": [
+          "p가 a→b→c 순서로 이동한다.",
+          "각 노드의 data를 sum에 누적한다.",
+          "최종 합은 18."
+        ]
+      }
     },
     {
       "id": "REC-183",
@@ -5729,12 +5969,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[4] = {7, 9, 11, 13};\n    int *p = a + 1;\n    printf(\"%d\", *p + *(p + 2));\n    return 0;\n}",
       "inputData": "",
       "answer": "22",
-      "explanation": "p는 a[1]을 가리킨다. *(p+2)는 a[3]이다. 두 값을 더하면 22이다.",
-      "steps": [
-        "p는 a[1]을 가리킨다.",
-        "*(p+2)는 a[3]이다.",
-        "두 값을 더하면 22이다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -5754,7 +5988,15 @@
         "REC-183",
         "VAR-050"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "p는 a[1]을 가리킨다.",
+        "flow": [
+          "p는 a[1]을 가리킨다.",
+          "*(p+2)는 a[3]이다.",
+          "두 값을 더하면 22이다."
+        ]
+      }
     },
     {
       "id": "REC-185",
@@ -5771,12 +6013,6 @@
       "code": "#include <stdio.h>\nstruct Item { int x; int y; };\nint main(void) {\n    struct Item a[2] = {{6, 6}, {6, 9}};\n    struct Item *p = a;\n    printf(\"%d\", p->x + (p+1)->y);\n    return 0;\n}",
       "inputData": "",
       "answer": "15",
-      "explanation": "p->x는 첫 구조체의 x이다. (p+1)->y는 두 번째 구조체의 y이다. 합은 15이다.",
-      "steps": [
-        "p->x는 첫 구조체의 x이다.",
-        "(p+1)->y는 두 번째 구조체의 y이다.",
-        "합은 15이다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -5794,7 +6030,15 @@
       "importIds": [
         "REC-185"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "p->x는 첫 구조체의 x이다.",
+        "flow": [
+          "p->x는 첫 구조체의 x이다.",
+          "(p+1)->y는 두 번째 구조체의 y이다.",
+          "합은 15이다."
+        ]
+      }
     },
     {
       "id": "REC-187",
@@ -5811,12 +6055,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a=14, b=26;\n    a ^= b;\n    b ^= a;\n    a ^= b;\n    printf(\"%d %d\", a, b);\n    return 0;\n}",
       "inputData": "",
       "answer": "26 14",
-      "explanation": "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다. 최종 a=26, b=14. 출력은 26 14이다.",
-      "steps": [
-        "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다.",
-        "최종 a=26, b=14.",
-        "출력은 26 14이다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -5836,7 +6074,15 @@
         "REC-187",
         "VAR-005"
       ],
-      "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요."
+      "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요.",
+      "solution": {
+        "summary": "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다.",
+        "flow": [
+          "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다.",
+          "최종 a=26, b=14.",
+          "출력은 26 14이다."
+        ]
+      }
     },
     {
       "id": "REC-188",
@@ -5853,12 +6099,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int r = 0;\n    for (int i=1; i<=7; i++) {\n        if (i==4) continue;\n        if (i==7) break;\n        r += i * 2;\n    }\n    printf(\"%d\", r);\n    return 0;\n}",
       "inputData": "",
       "answer": "34",
-      "explanation": "i=4에서는 continue로 누적을 건너뛴다. i=7에서 break이므로 i=1~6까지만 반영된다. 최종 r=34.",
-      "steps": [
-        "i=4에서는 continue로 누적을 건너뛴다.",
-        "i=7에서 break이므로 i=1~6까지만 반영된다.",
-        "최종 r=34."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -5877,7 +6117,15 @@
         "REC-188",
         "VAR-188"
       ],
-      "hint": "반복마다 조건식, 핵심 변수, 출력 여부를 표로 적고, 건너뛰기나 종료가 발생한 지점을 별도로 표시하세요."
+      "hint": "반복마다 조건식, 핵심 변수, 출력 여부를 표로 적고, 건너뛰기나 종료가 발생한 지점을 별도로 표시하세요.",
+      "solution": {
+        "summary": "i=4에서는 continue로 누적을 건너뛴다.",
+        "flow": [
+          "i=4에서는 continue로 누적을 건너뛴다.",
+          "i=7에서 break이므로 i=1~6까지만 반영된다.",
+          "최종 r=34."
+        ]
+      }
     },
     {
       "id": "REC-190",
@@ -5894,12 +6142,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[5] = {7, 2, 11, 1, 5};\n    for(int i=0;i<4;i++)\n      for(int j=0;j<4-i;j++)\n        if(a[j] > a[j+1]) {\n          int t=a[j]; a[j]=a[j+1]; a[j+1]=t;\n        }\n    printf(\"%d %d\", a[0], a[4]);\n    return 0;\n}",
       "inputData": "",
       "answer": "1 11",
-      "explanation": "인접 원소를 비교해 큰 값을 뒤로 보낸다. 반복 종료 후 오름차순 정렬된다. 최솟값과 최댓값은 1 11.",
-      "steps": [
-        "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
-        "반복 종료 후 오름차순 정렬된다.",
-        "최솟값과 최댓값은 1 11."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -5917,7 +6159,15 @@
       "importIds": [
         "REC-190"
       ],
-      "hint": "한 번의 순회가 끝날 때 배열이 어떻게 바뀌는지 줄마다 다시 적고, 비교 후 교환되는 두 위치만 표시하세요."
+      "hint": "한 번의 순회가 끝날 때 배열이 어떻게 바뀌는지 줄마다 다시 적고, 비교 후 교환되는 두 위치만 표시하세요.",
+      "solution": {
+        "summary": "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
+        "flow": [
+          "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
+          "반복 종료 후 오름차순 정렬된다.",
+          "최솟값과 최댓값은 1 11."
+        ]
+      }
     },
     {
       "id": "REC-194",
@@ -5934,12 +6184,6 @@
       "code": "class Printer {\n  void print(Integer x) { System.out.print(\"I\"+x); }\n  void print(Number x) { System.out.print(\"N\"+x); }\n  void print(Object x) { System.out.print(\"O\"+x); }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Object x=Integer.valueOf(8);\n    new Printer().print(x);\n  }\n}",
       "inputData": "",
       "answer": "O8",
-      "explanation": "오버로딩 선택은 호출 시점의 선언 타입을 기준으로 한다. x의 선언 타입은 Object이다. print(Object)가 선택되어 O8.",
-      "steps": [
-        "오버로딩 선택은 호출 시점의 선언 타입을 기준으로 한다.",
-        "x의 선언 타입은 Object이다.",
-        "print(Object)가 선택되어 O8."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -5958,7 +6202,15 @@
         "REC-194",
         "VAR-194"
       ],
-      "hint": "호출할 때 전달되는 인자의 컴파일 시점 타입을 먼저 확인하고, 그 타입 조합에 가장 잘 맞는 메서드 선언을 찾아보세요."
+      "hint": "호출할 때 전달되는 인자의 컴파일 시점 타입을 먼저 확인하고, 그 타입 조합에 가장 잘 맞는 메서드 선언을 찾아보세요.",
+      "solution": {
+        "summary": "오버로딩 선택은 호출 시점의 선언 타입을 기준으로 한다.",
+        "flow": [
+          "오버로딩 선택은 호출 시점의 선언 타입을 기준으로 한다.",
+          "x의 선언 타입은 Object이다.",
+          "print(Object)가 선택되어 O8."
+        ]
+      }
     },
     {
       "id": "REC-210",
@@ -5975,12 +6227,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[3]={1, 5, 8};\n    int *p[3]={&a[0],&a[1],&a[2]};\n    printf(\"%d\", *p[0] + *p[2]);\n    return 0;\n}",
       "inputData": "",
       "answer": "9",
-      "explanation": "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다. 각 포인터를 역참조해 값을 읽는다. 합은 9.",
-      "steps": [
-        "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다.",
-        "각 포인터를 역참조해 값을 읽는다.",
-        "필요한 값을 모두 계산해 더하면 합은 9이 됩니다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -5998,7 +6244,15 @@
       "importIds": [
         "REC-210"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "합은 9.",
+        "flow": [
+          "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다.",
+          "각 포인터를 역참조해 값을 읽는다.",
+          "필요한 값을 모두 계산해 더하면 합은 9이 됩니다."
+        ]
+      }
     },
     {
       "id": "REC-211",
@@ -6015,12 +6269,6 @@
       "code": "#include <stdio.h>\nstruct Node { int data; struct Node *next; };\nint main(void) {\n    struct Node c={10, NULL};\n    struct Node b={7, &c};\n    struct Node a={3, &b};\n    struct Node *p=&a;\n    int sum=0;\n    while(p!=NULL) { sum+=p->data; p=p->next; }\n    printf(\"%d\", sum);\n    return 0;\n}",
       "inputData": "",
       "answer": "20",
-      "explanation": "p가 a→b→c 순서로 이동한다. 각 노드의 data를 sum에 누적한다. 최종 합은 20.",
-      "steps": [
-        "p가 a→b→c 순서로 이동한다.",
-        "각 노드의 data를 sum에 누적한다.",
-        "최종 합은 20."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -6038,7 +6286,15 @@
       "importIds": [
         "REC-211"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "p가 a→b→c 순서로 이동한다.",
+        "flow": [
+          "p가 a→b→c 순서로 이동한다.",
+          "각 노드의 data를 sum에 누적한다.",
+          "최종 합은 20."
+        ]
+      }
     },
     {
       "id": "REC-213",
@@ -6055,12 +6311,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[4] = {9, 11, 13, 15};\n    int *p = a + 1;\n    printf(\"%d\", *p + *(p + 2));\n    return 0;\n}",
       "inputData": "",
       "answer": "26",
-      "explanation": "p는 a[1]을 가리킨다. *(p+2)는 a[3]이다. 두 값을 더하면 26이다.",
-      "steps": [
-        "p는 a[1]을 가리킨다.",
-        "*(p+2)는 a[3]이다.",
-        "두 값을 더하면 26이다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -6080,7 +6330,15 @@
         "REC-213",
         "VAR-098"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "p는 a[1]을 가리킨다.",
+        "flow": [
+          "p는 a[1]을 가리킨다.",
+          "*(p+2)는 a[3]이다.",
+          "두 값을 더하면 26이다."
+        ]
+      }
     },
     {
       "id": "REC-215",
@@ -6097,12 +6355,6 @@
       "code": "#include <stdio.h>\nstruct Item { int x; int y; };\nint main(void) {\n    struct Item a[2] = {{6, 7}, {7, 10}};\n    struct Item *p = a;\n    printf(\"%d\", p->x + (p+1)->y);\n    return 0;\n}",
       "inputData": "",
       "answer": "16",
-      "explanation": "p->x는 첫 구조체의 x이다. (p+1)->y는 두 번째 구조체의 y이다. 합은 16이다.",
-      "steps": [
-        "p->x는 첫 구조체의 x이다.",
-        "(p+1)->y는 두 번째 구조체의 y이다.",
-        "합은 16이다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -6120,7 +6372,15 @@
       "importIds": [
         "REC-215"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "p->x는 첫 구조체의 x이다.",
+        "flow": [
+          "p->x는 첫 구조체의 x이다.",
+          "(p+1)->y는 두 번째 구조체의 y이다.",
+          "합은 16이다."
+        ]
+      }
     },
     {
       "id": "REC-217",
@@ -6137,12 +6397,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a=14, b=24;\n    a ^= b;\n    b ^= a;\n    a ^= b;\n    printf(\"%d %d\", a, b);\n    return 0;\n}",
       "inputData": "",
       "answer": "24 14",
-      "explanation": "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다. 최종 a=24, b=14. 출력은 24 14이다.",
-      "steps": [
-        "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다.",
-        "최종 a=24, b=14.",
-        "출력은 24 14이다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -6162,7 +6416,15 @@
         "REC-217",
         "VAR-070"
       ],
-      "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요."
+      "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요.",
+      "solution": {
+        "summary": "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다.",
+        "flow": [
+          "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다.",
+          "최종 a=24, b=14.",
+          "출력은 24 14이다."
+        ]
+      }
     },
     {
       "id": "REC-219",
@@ -6179,12 +6441,6 @@
       "code": "class Parent {\n  int value=10;\n  int get() { return value; }\n}\nclass Child extends Parent {\n  int value=20;\n  @Override int get() { return value+1; }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Parent x=new Child();\n    System.out.print(x.value+\" \"+x.get());\n  }\n}",
       "inputData": "",
       "answer": "10 21",
-      "explanation": "필드는 참조 변수의 선언 타입 Parent 기준으로 접근한다. 메서드는 실제 객체 Child의 오버라이딩 메서드가 호출된다. 출력은 10 21.",
-      "steps": [
-        "필드는 참조 변수의 선언 타입 Parent 기준으로 접근한다.",
-        "메서드는 실제 객체 Child의 오버라이딩 메서드가 호출된다.",
-        "출력은 10 21."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -6203,7 +6459,15 @@
         "REC-219",
         "VAR-219"
       ],
-      "hint": "참조 변수의 선언 타입과 실제 객체 타입을 따로 적고, 필드 접근과 메서드 호출이 각각 어떤 타입을 기준으로 결정되는지 구분하세요."
+      "hint": "참조 변수의 선언 타입과 실제 객체 타입을 따로 적고, 필드 접근과 메서드 호출이 각각 어떤 타입을 기준으로 결정되는지 구분하세요.",
+      "solution": {
+        "summary": "필드는 참조 변수의 선언 타입 Parent 기준으로 접근한다.",
+        "flow": [
+          "필드는 참조 변수의 선언 타입 Parent 기준으로 접근한다.",
+          "메서드는 실제 객체 Child의 오버라이딩 메서드가 호출된다.",
+          "출력은 10 21."
+        ]
+      }
     },
     {
       "id": "REC-221",
@@ -6220,12 +6484,6 @@
       "code": "public class Main {\n  static int f(int x) { return x+2; }\n  static int f(double x) { return (int)x+5; }\n  public static void main(String[] args) {\n    System.out.print(f(9)+\" \"+f(9.5));\n  }\n}",
       "inputData": "",
       "answer": "11 14",
-      "explanation": "정수 인자는 f(int)를 호출한다. 실수 인자는 f(double)을 호출한다. 출력은 11 14.",
-      "steps": [
-        "정수 인자는 f(int)를 호출한다.",
-        "실수 인자는 f(double)을 호출한다.",
-        "출력은 11 14."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -6244,7 +6502,15 @@
         "REC-221",
         "VAR-221"
       ],
-      "hint": "호출할 때 전달되는 인자의 컴파일 시점 타입을 먼저 확인하고, 그 타입 조합에 가장 잘 맞는 메서드 선언을 찾아보세요."
+      "hint": "호출할 때 전달되는 인자의 컴파일 시점 타입을 먼저 확인하고, 그 타입 조합에 가장 잘 맞는 메서드 선언을 찾아보세요.",
+      "solution": {
+        "summary": "정수 인자는 f(int)를 호출한다.",
+        "flow": [
+          "정수 인자는 f(int)를 호출한다.",
+          "실수 인자는 f(double)을 호출한다.",
+          "출력은 11 14."
+        ]
+      }
     },
     {
       "id": "REC-226",
@@ -6261,12 +6527,6 @@
       "code": "",
       "inputData": "salaries(emp_num, name, salary)",
       "answer": "UPDATE salaries SET salary = 2900 WHERE emp_num = 2072;",
-      "explanation": "UPDATE 뒤에 테이블명을 쓴다. SET으로 변경할 열과 값을 지정한다. WHERE로 대상 사원번호를 한정한다.",
-      "steps": [
-        "UPDATE 뒤에 테이블명을 쓴다.",
-        "SET으로 변경할 열과 값을 지정한다.",
-        "WHERE로 대상 사원번호를 한정한다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -6284,7 +6544,15 @@
       "importIds": [
         "REC-226"
       ],
-      "hint": "어떤 행이 바뀌어야 하는지 조건을 먼저 문장으로 정리한 뒤, 그 행에서 변경되는 열과 새 값을 따로 적어보세요."
+      "hint": "어떤 행이 바뀌어야 하는지 조건을 먼저 문장으로 정리한 뒤, 그 행에서 변경되는 열과 새 값을 따로 적어보세요.",
+      "solution": {
+        "summary": "UPDATE 뒤에 테이블명을 쓴다.",
+        "flow": [
+          "UPDATE 뒤에 테이블명을 쓴다.",
+          "SET으로 변경할 열과 값을 지정한다.",
+          "WHERE로 대상 사원번호를 한정한다."
+        ]
+      }
     },
     {
       "id": "REC-227",
@@ -6301,12 +6569,6 @@
       "code": "",
       "inputData": "dept(code, name)",
       "answer": "INSERT INTO dept(code, name) VALUES (145, 'AI');",
-      "explanation": "INSERT INTO 테이블명(열 목록)을 작성한다. VALUES에 열 순서와 맞게 값을 쓴다. 문자열은 작은따옴표로 감싼다.",
-      "steps": [
-        "INSERT INTO 테이블명(열 목록)을 작성한다.",
-        "VALUES에 열 순서와 맞게 값을 쓴다.",
-        "문자열은 작은따옴표로 감싼다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -6324,7 +6586,15 @@
       "importIds": [
         "REC-227"
       ],
-      "hint": "추가할 열의 순서와 값의 순서가 서로 대응되는지 먼저 확인하고, 생략되는 열이 있는지도 살펴보세요."
+      "hint": "추가할 열의 순서와 값의 순서가 서로 대응되는지 먼저 확인하고, 생략되는 열이 있는지도 살펴보세요.",
+      "solution": {
+        "summary": "INSERT INTO 테이블명(열 목록)을 작성한다.",
+        "flow": [
+          "INSERT INTO 테이블명(열 목록)을 작성한다.",
+          "VALUES에 열 순서와 맞게 값을 쓴다.",
+          "문자열은 작은따옴표로 감싼다."
+        ]
+      }
     },
     {
       "id": "REC-231",
@@ -6341,12 +6611,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[5] = {8, 2, 12, 1, 6};\n    for(int i=0;i<4;i++)\n      for(int j=0;j<4-i;j++)\n        if(a[j] > a[j+1]) {\n          int t=a[j]; a[j]=a[j+1]; a[j+1]=t;\n        }\n    printf(\"%d %d\", a[0], a[4]);\n    return 0;\n}",
       "inputData": "",
       "answer": "1 12",
-      "explanation": "인접 원소를 비교해 큰 값을 뒤로 보낸다. 반복 종료 후 오름차순 정렬된다. 최솟값과 최댓값은 1 12.",
-      "steps": [
-        "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
-        "반복 종료 후 오름차순 정렬된다.",
-        "최솟값과 최댓값은 1 12."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -6364,7 +6628,15 @@
       "importIds": [
         "REC-231"
       ],
-      "hint": "한 번의 순회가 끝날 때 배열이 어떻게 바뀌는지 줄마다 다시 적고, 비교 후 교환되는 두 위치만 표시하세요."
+      "hint": "한 번의 순회가 끝날 때 배열이 어떻게 바뀌는지 줄마다 다시 적고, 비교 후 교환되는 두 위치만 표시하세요.",
+      "solution": {
+        "summary": "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
+        "flow": [
+          "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
+          "반복 종료 후 오름차순 정렬된다.",
+          "최솟값과 최댓값은 1 12."
+        ]
+      }
     },
     {
       "id": "REC-237",
@@ -6381,12 +6653,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[3]={2, 5, 9};\n    int *p[3]={&a[0],&a[1],&a[2]};\n    printf(\"%d\", *p[0] + *p[2]);\n    return 0;\n}",
       "inputData": "",
       "answer": "11",
-      "explanation": "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다. 각 포인터를 역참조해 값을 읽는다. 합은 11.",
-      "steps": [
-        "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다.",
-        "각 포인터를 역참조해 값을 읽는다.",
-        "필요한 값을 모두 계산해 더하면 합은 11이 됩니다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -6404,7 +6670,15 @@
       "importIds": [
         "REC-237"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "합은 11.",
+        "flow": [
+          "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다.",
+          "각 포인터를 역참조해 값을 읽는다.",
+          "필요한 값을 모두 계산해 더하면 합은 11이 됩니다."
+        ]
+      }
     },
     {
       "id": "REC-238",
@@ -6421,12 +6695,6 @@
       "code": "#include <stdio.h>\nstruct Node { int data; struct Node *next; };\nint main(void) {\n    struct Node c={6, NULL};\n    struct Node b={7, &c};\n    struct Node a={4, &b};\n    struct Node *p=&a;\n    int sum=0;\n    while(p!=NULL) { sum+=p->data; p=p->next; }\n    printf(\"%d\", sum);\n    return 0;\n}",
       "inputData": "",
       "answer": "17",
-      "explanation": "p가 a→b→c 순서로 이동한다. 각 노드의 data를 sum에 누적한다. 최종 합은 17.",
-      "steps": [
-        "p가 a→b→c 순서로 이동한다.",
-        "각 노드의 data를 sum에 누적한다.",
-        "최종 합은 17."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -6444,7 +6712,15 @@
       "importIds": [
         "REC-238"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "p가 a→b→c 순서로 이동한다.",
+        "flow": [
+          "p가 a→b→c 순서로 이동한다.",
+          "각 노드의 data를 sum에 누적한다.",
+          "최종 합은 17."
+        ]
+      }
     },
     {
       "id": "REC-240",
@@ -6461,12 +6737,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[4] = {11, 13, 15, 17};\n    int *p = a + 1;\n    printf(\"%d\", *p + *(p + 2));\n    return 0;\n}",
       "inputData": "",
       "answer": "30",
-      "explanation": "p는 a[1]을 가리킨다. *(p+2)는 a[3]이다. 두 값을 더하면 30이다.",
-      "steps": [
-        "p는 a[1]을 가리킨다.",
-        "*(p+2)는 a[3]이다.",
-        "두 값을 더하면 30이다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -6486,7 +6756,15 @@
         "REC-240",
         "VAR-133"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "p는 a[1]을 가리킨다.",
+        "flow": [
+          "p는 a[1]을 가리킨다.",
+          "*(p+2)는 a[3]이다.",
+          "두 값을 더하면 30이다."
+        ]
+      }
     },
     {
       "id": "REC-244",
@@ -6503,12 +6781,6 @@
       "code": "class Calc {\n  int f(int a,int b) {\n    System.out.print(a+b+\" \");\n    return a*b;\n  }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Calc c=new Calc();\n    System.out.print(c.f(5,6));\n  }\n}",
       "inputData": "",
       "answer": "11 30",
-      "explanation": "f() 내부에서 먼저 a+b를 출력한다. 그 후 a*b를 반환한다. main이 반환값을 이어서 출력한다.",
-      "steps": [
-        "f() 내부에서 먼저 a+b를 출력한다.",
-        "그 후 a*b를 반환한다.",
-        "main이 반환값을 이어서 출력한다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -6527,7 +6799,15 @@
         "REC-244",
         "VAR-244"
       ],
-      "hint": "각 문장이 실행된 직후 변수와 객체 상태를 한 줄씩 적고, 마지막 출력문이 실제로 참조하는 값을 확인하세요."
+      "hint": "각 문장이 실행된 직후 변수와 객체 상태를 한 줄씩 적고, 마지막 출력문이 실제로 참조하는 값을 확인하세요.",
+      "solution": {
+        "summary": "f() 내부에서 먼저 a+b를 출력한다.",
+        "flow": [
+          "f() 내부에서 먼저 a+b를 출력한다.",
+          "그 후 a*b를 반환한다.",
+          "main이 반환값을 이어서 출력한다."
+        ]
+      }
     },
     {
       "id": "REC-245",
@@ -6544,12 +6824,6 @@
       "code": "public class Main {\n  public static void main(String[] args) {\n    int x=17;\n    x+=1; x-=2; x*=3; x/=4; x%=5;\n    System.out.print(x);\n  }\n}",
       "inputData": "",
       "answer": "2",
-      "explanation": "복합 대입 연산을 위에서 아래로 차례대로 수행한다. 정수 나눗셈은 소수부를 버린다. 최종 x=2.",
-      "steps": [
-        "복합 대입 연산을 위에서 아래로 차례대로 수행한다.",
-        "정수 나눗셈은 소수부를 버린다.",
-        "모든 연산을 위에서 아래로 적용한 뒤 최종 x=2이 됩니다."
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -6568,7 +6842,15 @@
         "REC-245",
         "VAR-245"
       ],
-      "hint": "각 문장이 실행된 직후 변수와 객체 상태를 한 줄씩 적고, 마지막 출력문이 실제로 참조하는 값을 확인하세요."
+      "hint": "각 문장이 실행된 직후 변수와 객체 상태를 한 줄씩 적고, 마지막 출력문이 실제로 참조하는 값을 확인하세요.",
+      "solution": {
+        "summary": "최종 x=2.",
+        "flow": [
+          "복합 대입 연산을 위에서 아래로 차례대로 수행한다.",
+          "정수 나눗셈은 소수부를 버린다.",
+          "모든 연산을 위에서 아래로 적용한 뒤 최종 x=2이 됩니다."
+        ]
+      }
     },
     {
       "id": "REC-249",
@@ -6585,12 +6867,6 @@
       "code": "",
       "inputData": "student(id, name, dept)",
       "answer": "CREATE INDEX idx_name_2 ON student(name);",
-      "explanation": "CREATE INDEX 뒤에 인덱스명을 쓴다. ON 뒤에 테이블과 대상 열을 지정한다. 정답은 CREATE INDEX idx_name_2 ON student(name); 마지막으로 테이블명·열 이름·조건 연산자와 SQL 문장의 순서를 다시 확인합니다.",
-      "steps": [
-        "CREATE INDEX 뒤에 인덱스명을 쓴다.",
-        "ON 뒤에 테이블과 대상 열을 지정한다.",
-        "정답은 CREATE INDEX idx_name_2 ON student(name);"
-      ],
       "sources": [
         {
           "name": "데이터셋 참고 출처 (문항·회차 일치 미검증)",
@@ -6610,7 +6886,15 @@
         "REC-249",
         "VAR-093"
       ],
-      "hint": "새 객체의 이름, 대상 테이블, 기준 열이 각각 어떤 역할인지 구분해 문장 구조를 먼저 잡아보세요."
+      "hint": "새 객체의 이름, 대상 테이블, 기준 열이 각각 어떤 역할인지 구분해 문장 구조를 먼저 잡아보세요.",
+      "solution": {
+        "summary": "CREATE INDEX 뒤에 인덱스명을 쓴다.",
+        "flow": [
+          "CREATE INDEX 뒤에 인덱스명을 쓴다.",
+          "ON 뒤에 테이블과 대상 열을 지정한다.",
+          "정답은 CREATE INDEX idx_name_2 ON student(name);"
+        ]
+      }
     },
     {
       "id": "VAR-003",
@@ -6627,12 +6911,6 @@
       "code": "#include <stdio.h>\nstruct Item { int x; int y; };\nint main(void) {\n    struct Item a[2] = {{6, 6}, {6, 10}};\n    struct Item *p = a;\n    printf(\"%d\", p->x + (p+1)->y);\n    return 0;\n}",
       "inputData": "",
       "answer": "16",
-      "explanation": "p->x는 첫 구조체의 x이다. (p+1)->y는 두 번째 구조체의 y이다. 합은 16이다.",
-      "steps": [
-        "p->x는 첫 구조체의 x이다.",
-        "(p+1)->y는 두 번째 구조체의 y이다.",
-        "합은 16이다."
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -6651,7 +6929,15 @@
       "importIds": [
         "VAR-003"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "p->x는 첫 구조체의 x이다.",
+        "flow": [
+          "p->x는 첫 구조체의 x이다.",
+          "(p+1)->y는 두 번째 구조체의 y이다.",
+          "합은 16이다."
+        ]
+      }
     },
     {
       "id": "VAR-015",
@@ -6668,12 +6954,6 @@
       "code": "x=[2, -1, 4, 0, -1, 1]\nfor n in x:\n    if n == -1:\n        continue\n    print(n, end=\"\")",
       "inputData": "",
       "answer": "2401",
-      "explanation": "-1이면 continue로 print를 건너뛴다. 나머지 값은 줄바꿈 없이 이어 출력된다. 결과는 2401.",
-      "steps": [
-        "-1이면 continue로 print를 건너뛴다.",
-        "나머지 값은 줄바꿈 없이 이어 출력된다.",
-        "결과는 2401."
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -6695,7 +6975,15 @@
         "VAR-120",
         "VAR-197"
       ],
-      "hint": "각 반복 시작 시 변수 값을 적고, 건너뛰기나 종료가 발생하면 그 이후 문장이 실행되는지 표시하세요."
+      "hint": "각 반복 시작 시 변수 값을 적고, 건너뛰기나 종료가 발생하면 그 이후 문장이 실행되는지 표시하세요.",
+      "solution": {
+        "summary": "-1이면 continue로 print를 건너뛴다.",
+        "flow": [
+          "-1이면 continue로 print를 건너뛴다.",
+          "나머지 값은 줄바꿈 없이 이어 출력된다.",
+          "결과는 2401."
+        ]
+      }
     },
     {
       "id": "VAR-016",
@@ -6712,12 +7000,6 @@
       "code": "def f(n):\n    return lambda a: a*n\ng=f(4)\nprint(g(5))",
       "inputData": "",
       "answer": "20",
-      "explanation": "f(4)은 a×4을 계산하는 lambda를 반환한다. g(5)=5×4. 결과는 20.",
-      "steps": [
-        "f(4)은 a×4을 계산하는 lambda를 반환한다.",
-        "g(5)=5×4.",
-        "앞 단계의 연산을 끝까지 적용하면 결과는 20이 됩니다."
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -6739,7 +7021,15 @@
         "VAR-121",
         "VAR-198"
       ],
-      "hint": "함수에 들어가는 입력과 나오는 값을 원소별로 하나씩 적은 뒤, 최종 결과에 어떤 값들이 모이는지 확인하세요."
+      "hint": "함수에 들어가는 입력과 나오는 값을 원소별로 하나씩 적은 뒤, 최종 결과에 어떤 값들이 모이는지 확인하세요.",
+      "solution": {
+        "summary": "결과는 20.",
+        "flow": [
+          "f(4)은 a×4을 계산하는 lambda를 반환한다.",
+          "g(5)=5×4.",
+          "앞 단계의 연산을 끝까지 적용하면 결과는 20이 됩니다."
+        ]
+      }
     },
     {
       "id": "VAR-018",
@@ -6756,12 +7046,6 @@
       "code": "",
       "inputData": "salaries(emp_num, name, salary)",
       "answer": "UPDATE salaries SET salary = 2700 WHERE emp_num = 2070;",
-      "explanation": "UPDATE 뒤에 테이블명을 쓴다. SET으로 변경할 열과 값을 지정한다. WHERE로 대상 사원번호를 한정한다.",
-      "steps": [
-        "UPDATE 뒤에 테이블명을 쓴다.",
-        "SET으로 변경할 열과 값을 지정한다.",
-        "WHERE로 대상 사원번호를 한정한다."
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -6780,7 +7064,15 @@
       "importIds": [
         "VAR-018"
       ],
-      "hint": "어떤 행이 바뀌어야 하는지 조건을 먼저 문장으로 정리한 뒤, 그 행에서 변경되는 열과 새 값을 따로 적어보세요."
+      "hint": "어떤 행이 바뀌어야 하는지 조건을 먼저 문장으로 정리한 뒤, 그 행에서 변경되는 열과 새 값을 따로 적어보세요.",
+      "solution": {
+        "summary": "UPDATE 뒤에 테이블명을 쓴다.",
+        "flow": [
+          "UPDATE 뒤에 테이블명을 쓴다.",
+          "SET으로 변경할 열과 값을 지정한다.",
+          "WHERE로 대상 사원번호를 한정한다."
+        ]
+      }
     },
     {
       "id": "VAR-019",
@@ -6797,12 +7089,6 @@
       "code": "",
       "inputData": "dept(code, name)",
       "answer": "INSERT INTO dept(code, name) VALUES (103, 'DATA');",
-      "explanation": "INSERT INTO 테이블명(열 목록)을 작성한다. VALUES에 열 순서와 맞게 값을 쓴다. 문자열은 작은따옴표로 감싼다.",
-      "steps": [
-        "INSERT INTO 테이블명(열 목록)을 작성한다.",
-        "VALUES에 열 순서와 맞게 값을 쓴다.",
-        "문자열은 작은따옴표로 감싼다."
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -6821,7 +7107,15 @@
       "importIds": [
         "VAR-019"
       ],
-      "hint": "추가할 열의 순서와 값의 순서가 서로 대응되는지 먼저 확인하고, 생략되는 열이 있는지도 살펴보세요."
+      "hint": "추가할 열의 순서와 값의 순서가 서로 대응되는지 먼저 확인하고, 생략되는 열이 있는지도 살펴보세요.",
+      "solution": {
+        "summary": "INSERT INTO 테이블명(열 목록)을 작성한다.",
+        "flow": [
+          "INSERT INTO 테이블명(열 목록)을 작성한다.",
+          "VALUES에 열 순서와 맞게 값을 쓴다.",
+          "문자열은 작은따옴표로 감싼다."
+        ]
+      }
     },
     {
       "id": "VAR-026",
@@ -6838,12 +7132,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[5] = {7, 2, 12, 1, 5};\n    for(int i=0;i<4;i++)\n      for(int j=0;j<4-i;j++)\n        if(a[j] > a[j+1]) {\n          int t=a[j]; a[j]=a[j+1]; a[j+1]=t;\n        }\n    printf(\"%d %d\", a[0], a[4]);\n    return 0;\n}",
       "inputData": "",
       "answer": "1 12",
-      "explanation": "인접 원소를 비교해 큰 값을 뒤로 보낸다. 반복 종료 후 오름차순 정렬된다. 최솟값과 최댓값은 1 12.",
-      "steps": [
-        "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
-        "반복 종료 후 오름차순 정렬된다.",
-        "최솟값과 최댓값은 1 12."
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -6862,7 +7150,15 @@
       "importIds": [
         "VAR-026"
       ],
-      "hint": "한 번의 순회가 끝날 때 배열이 어떻게 바뀌는지 줄마다 다시 적고, 비교 후 교환되는 두 위치만 표시하세요."
+      "hint": "한 번의 순회가 끝날 때 배열이 어떻게 바뀌는지 줄마다 다시 적고, 비교 후 교환되는 두 위치만 표시하세요.",
+      "solution": {
+        "summary": "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
+        "flow": [
+          "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
+          "반복 종료 후 오름차순 정렬된다.",
+          "최솟값과 최댓값은 1 12."
+        ]
+      }
     },
     {
       "id": "VAR-036",
@@ -6879,12 +7175,6 @@
       "code": "s=\"PYTHONIC\"\nprint(s[::-2])",
       "inputData": "",
       "answer": "CNHY",
-      "explanation": "[::-2]는 뒤에서부터 두 칸씩 이동한다. 마지막 문자부터 인덱스를 감소시키며 선택한다. 결과는 CNHY.",
-      "steps": [
-        "[::-2]는 뒤에서부터 두 칸씩 이동한다.",
-        "마지막 문자부터 인덱스를 감소시키며 선택한다.",
-        "결과는 CNHY."
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -6906,7 +7196,15 @@
         "VAR-123",
         "VAR-223"
       ],
-      "hint": "시작 위치, 끝 위치의 제외 여부, 이동 간격을 따로 적은 뒤 실제로 선택되는 인덱스만 순서대로 표시하세요."
+      "hint": "시작 위치, 끝 위치의 제외 여부, 이동 간격을 따로 적은 뒤 실제로 선택되는 인덱스만 순서대로 표시하세요.",
+      "solution": {
+        "summary": "[::-2]는 뒤에서부터 두 칸씩 이동한다.",
+        "flow": [
+          "[::-2]는 뒤에서부터 두 칸씩 이동한다.",
+          "마지막 문자부터 인덱스를 감소시키며 선택한다.",
+          "결과는 CNHY."
+        ]
+      }
     },
     {
       "id": "VAR-045",
@@ -6923,12 +7221,6 @@
       "code": "#include <stdio.h>\n#include <string.h>\nint main(void) {\n    char s[]=\"AbCdEFgH\";\n    int cnt=0;\n    for(int i=0;i<(int)strlen(s);i++)\n        if(s[i]>='A' && s[i]<='Z') cnt++;\n    printf(\"%d\", cnt);\n    return 0;\n}",
       "inputData": "",
       "answer": "5",
-      "explanation": "각 문자가 'A'~'Z' 범위인지 검사한다. 조건을 만족하는 문자마다 cnt를 증가시킨다. 대문자 개수는 5개.",
-      "steps": [
-        "각 문자가 'A'~'Z' 범위인지 검사한다.",
-        "조건을 만족하는 문자마다 cnt를 증가시킨다.",
-        "대문자 개수는 5개."
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -6953,7 +7245,15 @@
         "VAR-208",
         "VAR-235"
       ],
-      "hint": "문자열을 인덱스별 문자로 펼쳐 적고, 포인터나 반복문이 실제로 방문하거나 바꾸는 위치만 표시하세요."
+      "hint": "문자열을 인덱스별 문자로 펼쳐 적고, 포인터나 반복문이 실제로 방문하거나 바꾸는 위치만 표시하세요.",
+      "solution": {
+        "summary": "각 문자가 'A'~'Z' 범위인지 검사한다.",
+        "flow": [
+          "각 문자가 'A'~'Z' 범위인지 검사한다.",
+          "조건을 만족하는 문자마다 cnt를 증가시킨다.",
+          "대문자 개수는 5개."
+        ]
+      }
     },
     {
       "id": "VAR-047",
@@ -6970,12 +7270,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[3]={1, 5, 9};\n    int *p[3]={&a[0],&a[1],&a[2]};\n    printf(\"%d\", *p[0] + *p[2]);\n    return 0;\n}",
       "inputData": "",
       "answer": "10",
-      "explanation": "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다. 각 포인터를 역참조해 값을 읽는다. 합은 10.",
-      "steps": [
-        "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다.",
-        "각 포인터를 역참조해 값을 읽는다.",
-        "필요한 값을 모두 계산해 더하면 합은 10이 됩니다."
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -6994,7 +7288,15 @@
       "importIds": [
         "VAR-047"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "합은 10.",
+        "flow": [
+          "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다.",
+          "각 포인터를 역참조해 값을 읽는다.",
+          "필요한 값을 모두 계산해 더하면 합은 10이 됩니다."
+        ]
+      }
     },
     {
       "id": "VAR-048",
@@ -7011,12 +7313,6 @@
       "code": "#include <stdio.h>\nstruct Node { int data; struct Node *next; };\nint main(void) {\n    struct Node c={6, NULL};\n    struct Node b={7, &c};\n    struct Node a={3, &b};\n    struct Node *p=&a;\n    int sum=0;\n    while(p!=NULL) { sum+=p->data; p=p->next; }\n    printf(\"%d\", sum);\n    return 0;\n}",
       "inputData": "",
       "answer": "16",
-      "explanation": "p가 a→b→c 순서로 이동한다. 각 노드의 data를 sum에 누적한다. 최종 합은 16.",
-      "steps": [
-        "p가 a→b→c 순서로 이동한다.",
-        "각 노드의 data를 sum에 누적한다.",
-        "최종 합은 16."
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -7035,7 +7331,15 @@
       "importIds": [
         "VAR-048"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "p가 a→b→c 순서로 이동한다.",
+        "flow": [
+          "p가 a→b→c 순서로 이동한다.",
+          "각 노드의 data를 sum에 누적한다.",
+          "최종 합은 16."
+        ]
+      }
     },
     {
       "id": "VAR-059",
@@ -7052,12 +7356,6 @@
       "code": "d={x:x*x for x in range(1,7)}\nr=0\nfor k,v in d.items():\n    if k & 1:\n        r += v\nprint(r)",
       "inputData": "",
       "answer": "35",
-      "explanation": "k&1이 1이면 홀수이다. 홀수 키에 해당하는 제곱값만 더한다. 합은 35.",
-      "steps": [
-        "k&1이 1이면 홀수이다.",
-        "홀수 키에 해당하는 제곱값만 더한다.",
-        "필요한 값을 모두 계산해 더하면 합은 35이 됩니다."
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -7079,7 +7377,15 @@
         "VAR-153",
         "VAR-247"
       ],
-      "hint": "키와 값을 표로 정리한 뒤 조회·추가·변경이 실행될 때 해당 키의 상태만 순서대로 추적하세요."
+      "hint": "키와 값을 표로 정리한 뒤 조회·추가·변경이 실행될 때 해당 키의 상태만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "합은 35.",
+        "flow": [
+          "k&1이 1이면 홀수이다.",
+          "홀수 키에 해당하는 제곱값만 더한다.",
+          "필요한 값을 모두 계산해 더하면 합은 35이 됩니다."
+        ]
+      }
     },
     {
       "id": "VAR-061",
@@ -7096,12 +7402,6 @@
       "code": "s=\"HumanDev\"\nx=s[::-1]\nprint(x.replace(\"n\",\"\",1))",
       "inputData": "",
       "answer": "veDamuH",
-      "explanation": "s[::-1]로 문자열을 뒤집는다. 뒤집힌 문자열에서 첫 'n'만 제거한다. 결과는 veDamuH.",
-      "steps": [
-        "s[::-1]로 문자열을 뒤집는다.",
-        "뒤집힌 문자열에서 첫 'n'만 제거한다.",
-        "결과는 veDamuH."
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -7121,7 +7421,15 @@
         "VAR-061",
         "VAR-167"
       ],
-      "hint": "표현식을 한 번에 계산하지 말고 안쪽 연산부터 값과 자료형의 변화를 차례대로 적어보세요."
+      "hint": "표현식을 한 번에 계산하지 말고 안쪽 연산부터 값과 자료형의 변화를 차례대로 적어보세요.",
+      "solution": {
+        "summary": "s[::-1]로 문자열을 뒤집는다.",
+        "flow": [
+          "s[::-1]로 문자열을 뒤집는다.",
+          "뒤집힌 문자열에서 첫 'n'만 제거한다.",
+          "결과는 veDamuH."
+        ]
+      }
     },
     {
       "id": "VAR-065",
@@ -7138,12 +7446,6 @@
       "code": "",
       "inputData": "salaries(emp_num, name, salary)",
       "answer": "UPDATE salaries SET salary = 2600 WHERE emp_num = 2072;",
-      "explanation": "UPDATE 뒤에 테이블명을 쓴다. SET으로 변경할 열과 값을 지정한다. WHERE로 대상 사원번호를 한정한다.",
-      "steps": [
-        "UPDATE 뒤에 테이블명을 쓴다.",
-        "SET으로 변경할 열과 값을 지정한다.",
-        "WHERE로 대상 사원번호를 한정한다."
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -7162,7 +7464,15 @@
       "importIds": [
         "VAR-065"
       ],
-      "hint": "어떤 행이 바뀌어야 하는지 조건을 먼저 문장으로 정리한 뒤, 그 행에서 변경되는 열과 새 값을 따로 적어보세요."
+      "hint": "어떤 행이 바뀌어야 하는지 조건을 먼저 문장으로 정리한 뒤, 그 행에서 변경되는 열과 새 값을 따로 적어보세요.",
+      "solution": {
+        "summary": "UPDATE 뒤에 테이블명을 쓴다.",
+        "flow": [
+          "UPDATE 뒤에 테이블명을 쓴다.",
+          "SET으로 변경할 열과 값을 지정한다.",
+          "WHERE로 대상 사원번호를 한정한다."
+        ]
+      }
     },
     {
       "id": "VAR-066",
@@ -7179,12 +7489,6 @@
       "code": "",
       "inputData": "dept(code, name)",
       "answer": "INSERT INTO dept(code, name) VALUES (117, 'AI');",
-      "explanation": "INSERT INTO 테이블명(열 목록)을 작성한다. VALUES에 열 순서와 맞게 값을 쓴다. 문자열은 작은따옴표로 감싼다.",
-      "steps": [
-        "INSERT INTO 테이블명(열 목록)을 작성한다.",
-        "VALUES에 열 순서와 맞게 값을 쓴다.",
-        "문자열은 작은따옴표로 감싼다."
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -7203,7 +7507,15 @@
       "importIds": [
         "VAR-066"
       ],
-      "hint": "추가할 열의 순서와 값의 순서가 서로 대응되는지 먼저 확인하고, 생략되는 열이 있는지도 살펴보세요."
+      "hint": "추가할 열의 순서와 값의 순서가 서로 대응되는지 먼저 확인하고, 생략되는 열이 있는지도 살펴보세요.",
+      "solution": {
+        "summary": "INSERT INTO 테이블명(열 목록)을 작성한다.",
+        "flow": [
+          "INSERT INTO 테이블명(열 목록)을 작성한다.",
+          "VALUES에 열 순서와 맞게 값을 쓴다.",
+          "문자열은 작은따옴표로 감싼다."
+        ]
+      }
     },
     {
       "id": "VAR-068",
@@ -7220,12 +7532,6 @@
       "code": "#include <stdio.h>\nstruct Item { int x; int y; };\nint main(void) {\n    struct Item a[2] = {{6, 7}, {7, 11}};\n    struct Item *p = a;\n    printf(\"%d\", p->x + (p+1)->y);\n    return 0;\n}",
       "inputData": "",
       "answer": "17",
-      "explanation": "p->x는 첫 구조체의 x이다. (p+1)->y는 두 번째 구조체의 y이다. 합은 17이다.",
-      "steps": [
-        "p->x는 첫 구조체의 x이다.",
-        "(p+1)->y는 두 번째 구조체의 y이다.",
-        "합은 17이다."
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -7244,7 +7550,15 @@
       "importIds": [
         "VAR-068"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "p->x는 첫 구조체의 x이다.",
+        "flow": [
+          "p->x는 첫 구조체의 x이다.",
+          "(p+1)->y는 두 번째 구조체의 y이다.",
+          "합은 17이다."
+        ]
+      }
     },
     {
       "id": "VAR-073",
@@ -7261,12 +7575,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[5] = {8, 2, 13, 1, 6};\n    for(int i=0;i<4;i++)\n      for(int j=0;j<4-i;j++)\n        if(a[j] > a[j+1]) {\n          int t=a[j]; a[j]=a[j+1]; a[j+1]=t;\n        }\n    printf(\"%d %d\", a[0], a[4]);\n    return 0;\n}",
       "inputData": "",
       "answer": "1 13",
-      "explanation": "인접 원소를 비교해 큰 값을 뒤로 보낸다. 반복 종료 후 오름차순 정렬된다. 최솟값과 최댓값은 1 13.",
-      "steps": [
-        "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
-        "반복 종료 후 오름차순 정렬된다.",
-        "최솟값과 최댓값은 1 13."
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -7285,7 +7593,15 @@
       "importIds": [
         "VAR-073"
       ],
-      "hint": "한 번의 순회가 끝날 때 배열이 어떻게 바뀌는지 줄마다 다시 적고, 비교 후 교환되는 두 위치만 표시하세요."
+      "hint": "한 번의 순회가 끝날 때 배열이 어떻게 바뀌는지 줄마다 다시 적고, 비교 후 교환되는 두 위치만 표시하세요.",
+      "solution": {
+        "summary": "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
+        "flow": [
+          "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
+          "반복 종료 후 오름차순 정렬된다.",
+          "최솟값과 최댓값은 1 13."
+        ]
+      }
     },
     {
       "id": "VAR-079",
@@ -7302,12 +7618,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[3]={2, 5, 5};\n    int *p[3]={&a[0],&a[1],&a[2]};\n    printf(\"%d\", *p[0] + *p[2]);\n    return 0;\n}",
       "inputData": "",
       "answer": "7",
-      "explanation": "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다. 각 포인터를 역참조해 값을 읽는다. 합은 7.",
-      "steps": [
-        "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다.",
-        "각 포인터를 역참조해 값을 읽는다.",
-        "필요한 값을 모두 계산해 더하면 합은 7이 됩니다."
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -7326,7 +7636,15 @@
       "importIds": [
         "VAR-079"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "합은 7.",
+        "flow": [
+          "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다.",
+          "각 포인터를 역참조해 값을 읽는다.",
+          "필요한 값을 모두 계산해 더하면 합은 7이 됩니다."
+        ]
+      }
     },
     {
       "id": "VAR-080",
@@ -7343,12 +7661,6 @@
       "code": "#include <stdio.h>\nstruct Node { int data; struct Node *next; };\nint main(void) {\n    struct Node c={7, NULL};\n    struct Node b={7, &c};\n    struct Node a={4, &b};\n    struct Node *p=&a;\n    int sum=0;\n    while(p!=NULL) { sum+=p->data; p=p->next; }\n    printf(\"%d\", sum);\n    return 0;\n}",
       "inputData": "",
       "answer": "18",
-      "explanation": "p가 a→b→c 순서로 이동한다. 각 노드의 data를 sum에 누적한다. 최종 합은 18.",
-      "steps": [
-        "p가 a→b→c 순서로 이동한다.",
-        "각 노드의 data를 sum에 누적한다.",
-        "최종 합은 18."
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -7367,7 +7679,15 @@
       "importIds": [
         "VAR-080"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "p가 a→b→c 순서로 이동한다.",
+        "flow": [
+          "p가 a→b→c 순서로 이동한다.",
+          "각 노드의 data를 sum에 누적한다.",
+          "최종 합은 18."
+        ]
+      }
     },
     {
       "id": "VAR-090",
@@ -7384,12 +7704,6 @@
       "code": "def add(a,b):\n    return a+b\ndef sub(a,b):\n    return a-b\nprint(sub(add(6,4), 4))",
       "inputData": "",
       "answer": "6",
-      "explanation": "add(6,4)=10. 그 결과에서 4를 뺀다. 최종 결과는 6.",
-      "steps": [
-        "add(6,4)=10.",
-        "그 결과에서 4를 뺀다.",
-        "최종 결과는 6."
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -7409,7 +7723,15 @@
         "VAR-090",
         "VAR-169"
       ],
-      "hint": "호출 시 실제로 전달된 인자와 기본값이 사용되는 인자를 먼저 구분하고, 함수 내부 표현식을 그 값으로 치환해 보세요."
+      "hint": "호출 시 실제로 전달된 인자와 기본값이 사용되는 인자를 먼저 구분하고, 함수 내부 표현식을 그 값으로 치환해 보세요.",
+      "solution": {
+        "summary": "add(6,4)=10.",
+        "flow": [
+          "add(6,4)=10.",
+          "그 결과에서 4를 뺀다.",
+          "최종 결과는 6."
+        ]
+      }
     },
     {
       "id": "VAR-091",
@@ -7426,12 +7748,6 @@
       "code": "a=(10, 23, 31)\nb=list(a)\nb[1]+=5\nprint(a[1], b[1])",
       "inputData": "",
       "answer": "23 28",
-      "explanation": "a는 튜플이므로 기존 값이 바뀌지 않는다. b는 a에서 만든 별도의 리스트이다. b[1]만 5 증가해 23 28가 출력된다.",
-      "steps": [
-        "a는 튜플이므로 기존 값이 바뀌지 않는다.",
-        "b는 a에서 만든 별도의 리스트이다.",
-        "b[1]만 5 증가해 23 28가 출력된다."
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -7450,7 +7766,15 @@
       "importIds": [
         "VAR-091"
       ],
-      "hint": "자료구조가 변경되는 연산 직후의 상태를 매번 다시 적고, 연산이 반환한 값과 컨테이너에 남은 값을 구분하세요."
+      "hint": "자료구조가 변경되는 연산 직후의 상태를 매번 다시 적고, 연산이 반환한 값과 컨테이너에 남은 값을 구분하세요.",
+      "solution": {
+        "summary": "a는 튜플이므로 기존 값이 바뀌지 않는다.",
+        "flow": [
+          "a는 튜플이므로 기존 값이 바뀌지 않는다.",
+          "b는 a에서 만든 별도의 리스트이다.",
+          "b[1]만 5 증가해 23 28가 출력된다."
+        ]
+      }
     },
     {
       "id": "VAR-100",
@@ -7467,12 +7791,6 @@
       "code": "#include <stdio.h>\nstruct Item { int x; int y; };\nint main(void) {\n    struct Item a[2] = {{6, 5}, {5, 7}};\n    struct Item *p = a;\n    printf(\"%d\", p->x + (p+1)->y);\n    return 0;\n}",
       "inputData": "",
       "answer": "13",
-      "explanation": "p->x는 첫 구조체의 x이다. (p+1)->y는 두 번째 구조체의 y이다. 합은 13이다.",
-      "steps": [
-        "p->x는 첫 구조체의 x이다.",
-        "(p+1)->y는 두 번째 구조체의 y이다.",
-        "합은 13이다."
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -7491,7 +7809,15 @@
       "importIds": [
         "VAR-100"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "p->x는 첫 구조체의 x이다.",
+        "flow": [
+          "p->x는 첫 구조체의 x이다.",
+          "(p+1)->y는 두 번째 구조체의 y이다.",
+          "합은 13이다."
+        ]
+      }
     },
     {
       "id": "VAR-102",
@@ -7508,12 +7834,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a=14, b=22;\n    a ^= b;\n    b ^= a;\n    a ^= b;\n    printf(\"%d %d\", a, b);\n    return 0;\n}",
       "inputData": "",
       "answer": "22 14",
-      "explanation": "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다. 최종 a=22, b=14. 출력은 22 14이다.",
-      "steps": [
-        "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다.",
-        "최종 a=22, b=14.",
-        "출력은 22 14이다."
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -7532,7 +7852,15 @@
       "importIds": [
         "VAR-102"
       ],
-      "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요."
+      "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요.",
+      "solution": {
+        "summary": "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다.",
+        "flow": [
+          "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다.",
+          "최종 a=22, b=14.",
+          "출력은 22 14이다."
+        ]
+      }
     },
     {
       "id": "VAR-105",
@@ -7549,12 +7877,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[5] = {9, 2, 9, 1, 7};\n    for(int i=0;i<4;i++)\n      for(int j=0;j<4-i;j++)\n        if(a[j] > a[j+1]) {\n          int t=a[j]; a[j]=a[j+1]; a[j+1]=t;\n        }\n    printf(\"%d %d\", a[0], a[4]);\n    return 0;\n}",
       "inputData": "",
       "answer": "1 9",
-      "explanation": "인접 원소를 비교해 큰 값을 뒤로 보낸다. 반복 종료 후 오름차순 정렬된다. 최솟값과 최댓값은 1 9.",
-      "steps": [
-        "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
-        "반복 종료 후 오름차순 정렬된다.",
-        "최솟값과 최댓값은 1 9."
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -7573,7 +7895,15 @@
       "importIds": [
         "VAR-105"
       ],
-      "hint": "한 번의 순회가 끝날 때 배열이 어떻게 바뀌는지 줄마다 다시 적고, 비교 후 교환되는 두 위치만 표시하세요."
+      "hint": "한 번의 순회가 끝날 때 배열이 어떻게 바뀌는지 줄마다 다시 적고, 비교 후 교환되는 두 위치만 표시하세요.",
+      "solution": {
+        "summary": "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
+        "flow": [
+          "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
+          "반복 종료 후 오름차순 정렬된다.",
+          "최솟값과 최댓값은 1 9."
+        ]
+      }
     },
     {
       "id": "VAR-130",
@@ -7590,12 +7920,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[3]={3, 5, 6};\n    int *p[3]={&a[0],&a[1],&a[2]};\n    printf(\"%d\", *p[0] + *p[2]);\n    return 0;\n}",
       "inputData": "",
       "answer": "9",
-      "explanation": "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다. 각 포인터를 역참조해 값을 읽는다. 합은 9.",
-      "steps": [
-        "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다.",
-        "각 포인터를 역참조해 값을 읽는다.",
-        "필요한 값을 모두 계산해 더하면 합은 9이 됩니다."
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -7614,7 +7938,15 @@
       "importIds": [
         "VAR-130"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "합은 9.",
+        "flow": [
+          "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다.",
+          "각 포인터를 역참조해 값을 읽는다.",
+          "필요한 값을 모두 계산해 더하면 합은 9이 됩니다."
+        ]
+      }
     },
     {
       "id": "VAR-131",
@@ -7631,12 +7963,6 @@
       "code": "#include <stdio.h>\nstruct Node { int data; struct Node *next; };\nint main(void) {\n    struct Node c={8, NULL};\n    struct Node b={7, &c};\n    struct Node a={2, &b};\n    struct Node *p=&a;\n    int sum=0;\n    while(p!=NULL) { sum+=p->data; p=p->next; }\n    printf(\"%d\", sum);\n    return 0;\n}",
       "inputData": "",
       "answer": "17",
-      "explanation": "p가 a→b→c 순서로 이동한다. 각 노드의 data를 sum에 누적한다. 최종 합은 17.",
-      "steps": [
-        "p가 a→b→c 순서로 이동한다.",
-        "각 노드의 data를 sum에 누적한다.",
-        "최종 합은 17."
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -7655,7 +7981,15 @@
       "importIds": [
         "VAR-131"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "p가 a→b→c 순서로 이동한다.",
+        "flow": [
+          "p가 a→b→c 순서로 이동한다.",
+          "각 노드의 data를 sum에 누적한다.",
+          "최종 합은 17."
+        ]
+      }
     },
     {
       "id": "VAR-135",
@@ -7672,12 +8006,6 @@
       "code": "#include <stdio.h>\nstruct Item { int x; int y; };\nint main(void) {\n    struct Item a[2] = {{6, 6}, {6, 8}};\n    struct Item *p = a;\n    printf(\"%d\", p->x + (p+1)->y);\n    return 0;\n}",
       "inputData": "",
       "answer": "14",
-      "explanation": "p->x는 첫 구조체의 x이다. (p+1)->y는 두 번째 구조체의 y이다. 합은 14이다.",
-      "steps": [
-        "p->x는 첫 구조체의 x이다.",
-        "(p+1)->y는 두 번째 구조체의 y이다.",
-        "합은 14이다."
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -7696,7 +8024,15 @@
       "importIds": [
         "VAR-135"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "p->x는 첫 구조체의 x이다.",
+        "flow": [
+          "p->x는 첫 구조체의 x이다.",
+          "(p+1)->y는 두 번째 구조체의 y이다.",
+          "합은 14이다."
+        ]
+      }
     },
     {
       "id": "VAR-137",
@@ -7713,12 +8049,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a=14, b=20;\n    a ^= b;\n    b ^= a;\n    a ^= b;\n    printf(\"%d %d\", a, b);\n    return 0;\n}",
       "inputData": "",
       "answer": "20 14",
-      "explanation": "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다. 최종 a=20, b=14. 출력은 20 14이다.",
-      "steps": [
-        "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다.",
-        "최종 a=20, b=14.",
-        "출력은 20 14이다."
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -7737,7 +8067,15 @@
       "importIds": [
         "VAR-137"
       ],
-      "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요."
+      "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요.",
+      "solution": {
+        "summary": "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다.",
+        "flow": [
+          "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다.",
+          "최종 a=20, b=14.",
+          "출력은 20 14이다."
+        ]
+      }
     },
     {
       "id": "VAR-140",
@@ -7754,12 +8092,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[5] = {7, 2, 10, 1, 5};\n    for(int i=0;i<4;i++)\n      for(int j=0;j<4-i;j++)\n        if(a[j] > a[j+1]) {\n          int t=a[j]; a[j]=a[j+1]; a[j+1]=t;\n        }\n    printf(\"%d %d\", a[0], a[4]);\n    return 0;\n}",
       "inputData": "",
       "answer": "1 10",
-      "explanation": "인접 원소를 비교해 큰 값을 뒤로 보낸다. 반복 종료 후 오름차순 정렬된다. 최솟값과 최댓값은 1 10.",
-      "steps": [
-        "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
-        "반복 종료 후 오름차순 정렬된다.",
-        "최솟값과 최댓값은 1 10."
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -7778,7 +8110,15 @@
       "importIds": [
         "VAR-140"
       ],
-      "hint": "한 번의 순회가 끝날 때 배열이 어떻게 바뀌는지 줄마다 다시 적고, 비교 후 교환되는 두 위치만 표시하세요."
+      "hint": "한 번의 순회가 끝날 때 배열이 어떻게 바뀌는지 줄마다 다시 적고, 비교 후 교환되는 두 위치만 표시하세요.",
+      "solution": {
+        "summary": "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
+        "flow": [
+          "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
+          "반복 종료 후 오름차순 정렬된다.",
+          "최솟값과 최댓값은 1 10."
+        ]
+      }
     },
     {
       "id": "VAR-157",
@@ -7795,12 +8135,6 @@
       "code": "",
       "inputData": "salaries(emp_num, name, salary)",
       "answer": "UPDATE salaries SET salary = 2500 WHERE emp_num = 2074;",
-      "explanation": "UPDATE 뒤에 테이블명을 쓴다. SET으로 변경할 열과 값을 지정한다. WHERE로 대상 사원번호를 한정한다.",
-      "steps": [
-        "UPDATE 뒤에 테이블명을 쓴다.",
-        "SET으로 변경할 열과 값을 지정한다.",
-        "WHERE로 대상 사원번호를 한정한다."
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -7819,7 +8153,15 @@
       "importIds": [
         "VAR-157"
       ],
-      "hint": "어떤 행이 바뀌어야 하는지 조건을 먼저 문장으로 정리한 뒤, 그 행에서 변경되는 열과 새 값을 따로 적어보세요."
+      "hint": "어떤 행이 바뀌어야 하는지 조건을 먼저 문장으로 정리한 뒤, 그 행에서 변경되는 열과 새 값을 따로 적어보세요.",
+      "solution": {
+        "summary": "UPDATE 뒤에 테이블명을 쓴다.",
+        "flow": [
+          "UPDATE 뒤에 테이블명을 쓴다.",
+          "SET으로 변경할 열과 값을 지정한다.",
+          "WHERE로 대상 사원번호를 한정한다."
+        ]
+      }
     },
     {
       "id": "VAR-170",
@@ -7836,12 +8178,6 @@
       "code": "a=(10, 23, 33)\nb=list(a)\nb[1]+=5\nprint(a[1], b[1])",
       "inputData": "",
       "answer": "23 28",
-      "explanation": "a는 튜플이므로 기존 값이 바뀌지 않는다. b는 a에서 만든 별도의 리스트이다. b[1]만 5 증가해 23 28가 출력된다.",
-      "steps": [
-        "a는 튜플이므로 기존 값이 바뀌지 않는다.",
-        "b는 a에서 만든 별도의 리스트이다.",
-        "b[1]만 5 증가해 23 28가 출력된다."
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -7860,7 +8196,15 @@
       "importIds": [
         "VAR-170"
       ],
-      "hint": "자료구조가 변경되는 연산 직후의 상태를 매번 다시 적고, 연산이 반환한 값과 컨테이너에 남은 값을 구분하세요."
+      "hint": "자료구조가 변경되는 연산 직후의 상태를 매번 다시 적고, 연산이 반환한 값과 컨테이너에 남은 값을 구분하세요.",
+      "solution": {
+        "summary": "a는 튜플이므로 기존 값이 바뀌지 않는다.",
+        "flow": [
+          "a는 튜플이므로 기존 값이 바뀌지 않는다.",
+          "b는 a에서 만든 별도의 리스트이다.",
+          "b[1]만 5 증가해 23 28가 출력된다."
+        ]
+      }
     },
     {
       "id": "VAR-172",
@@ -7877,12 +8221,6 @@
       "code": "",
       "inputData": "dept(code, name)",
       "answer": "INSERT INTO dept(code, name) VALUES (131, 'CLOUD');",
-      "explanation": "INSERT INTO 테이블명(열 목록)을 작성한다. VALUES에 열 순서와 맞게 값을 쓴다. 문자열은 작은따옴표로 감싼다.",
-      "steps": [
-        "INSERT INTO 테이블명(열 목록)을 작성한다.",
-        "VALUES에 열 순서와 맞게 값을 쓴다.",
-        "문자열은 작은따옴표로 감싼다."
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -7901,7 +8239,15 @@
       "importIds": [
         "VAR-172"
       ],
-      "hint": "추가할 열의 순서와 값의 순서가 서로 대응되는지 먼저 확인하고, 생략되는 열이 있는지도 살펴보세요."
+      "hint": "추가할 열의 순서와 값의 순서가 서로 대응되는지 먼저 확인하고, 생략되는 열이 있는지도 살펴보세요.",
+      "solution": {
+        "summary": "INSERT INTO 테이블명(열 목록)을 작성한다.",
+        "flow": [
+          "INSERT INTO 테이블명(열 목록)을 작성한다.",
+          "VALUES에 열 순서와 맞게 값을 쓴다.",
+          "문자열은 작은따옴표로 감싼다."
+        ]
+      }
     },
     {
       "id": "VAR-174",
@@ -7918,12 +8264,6 @@
       "code": "",
       "inputData": "student(id, name, dept)",
       "answer": "CREATE INDEX idx_name_7 ON student(name);",
-      "explanation": "CREATE INDEX 뒤에 인덱스명을 쓴다. ON 뒤에 테이블과 대상 열을 지정한다. 정답은 CREATE INDEX idx_name_7 ON student(name); 마지막으로 테이블명·열 이름·조건 연산자와 SQL 문장의 순서를 다시 확인합니다.",
-      "steps": [
-        "CREATE INDEX 뒤에 인덱스명을 쓴다.",
-        "ON 뒤에 테이블과 대상 열을 지정한다.",
-        "정답은 CREATE INDEX idx_name_7 ON student(name);"
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -7942,7 +8282,15 @@
       "importIds": [
         "VAR-174"
       ],
-      "hint": "새 객체의 이름, 대상 테이블, 기준 열이 각각 어떤 역할인지 구분해 문장 구조를 먼저 잡아보세요."
+      "hint": "새 객체의 이름, 대상 테이블, 기준 열이 각각 어떤 역할인지 구분해 문장 구조를 먼저 잡아보세요.",
+      "solution": {
+        "summary": "CREATE INDEX 뒤에 인덱스명을 쓴다.",
+        "flow": [
+          "CREATE INDEX 뒤에 인덱스명을 쓴다.",
+          "ON 뒤에 테이블과 대상 열을 지정한다.",
+          "정답은 CREATE INDEX idx_name_7 ON student(name);"
+        ]
+      }
     },
     {
       "id": "VAR-180",
@@ -7959,12 +8307,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[3]={1, 5, 7};\n    int *p[3]={&a[0],&a[1],&a[2]};\n    printf(\"%d\", *p[0] + *p[2]);\n    return 0;\n}",
       "inputData": "",
       "answer": "8",
-      "explanation": "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다. 각 포인터를 역참조해 값을 읽는다. 합은 8.",
-      "steps": [
-        "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다.",
-        "각 포인터를 역참조해 값을 읽는다.",
-        "필요한 값을 모두 계산해 더하면 합은 8이 됩니다."
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -7983,7 +8325,15 @@
       "importIds": [
         "VAR-180"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "합은 8.",
+        "flow": [
+          "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다.",
+          "각 포인터를 역참조해 값을 읽는다.",
+          "필요한 값을 모두 계산해 더하면 합은 8이 됩니다."
+        ]
+      }
     },
     {
       "id": "VAR-181",
@@ -8000,12 +8350,6 @@
       "code": "#include <stdio.h>\nstruct Node { int data; struct Node *next; };\nint main(void) {\n    struct Node c={9, NULL};\n    struct Node b={7, &c};\n    struct Node a={3, &b};\n    struct Node *p=&a;\n    int sum=0;\n    while(p!=NULL) { sum+=p->data; p=p->next; }\n    printf(\"%d\", sum);\n    return 0;\n}",
       "inputData": "",
       "answer": "19",
-      "explanation": "p가 a→b→c 순서로 이동한다. 각 노드의 data를 sum에 누적한다. 최종 합은 19.",
-      "steps": [
-        "p가 a→b→c 순서로 이동한다.",
-        "각 노드의 data를 sum에 누적한다.",
-        "최종 합은 19."
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -8024,7 +8368,15 @@
       "importIds": [
         "VAR-181"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "p가 a→b→c 순서로 이동한다.",
+        "flow": [
+          "p가 a→b→c 순서로 이동한다.",
+          "각 노드의 data를 sum에 누적한다.",
+          "최종 합은 19."
+        ]
+      }
     },
     {
       "id": "VAR-185",
@@ -8041,12 +8393,6 @@
       "code": "#include <stdio.h>\nstruct Item { int x; int y; };\nint main(void) {\n    struct Item a[2] = {{6, 7}, {7, 9}};\n    struct Item *p = a;\n    printf(\"%d\", p->x + (p+1)->y);\n    return 0;\n}",
       "inputData": "",
       "answer": "15",
-      "explanation": "p->x는 첫 구조체의 x이다. (p+1)->y는 두 번째 구조체의 y이다. 합은 15이다.",
-      "steps": [
-        "p->x는 첫 구조체의 x이다.",
-        "(p+1)->y는 두 번째 구조체의 y이다.",
-        "합은 15이다."
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -8065,7 +8411,15 @@
       "importIds": [
         "VAR-185"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "p->x는 첫 구조체의 x이다.",
+        "flow": [
+          "p->x는 첫 구조체의 x이다.",
+          "(p+1)->y는 두 번째 구조체의 y이다.",
+          "합은 15이다."
+        ]
+      }
     },
     {
       "id": "VAR-187",
@@ -8082,12 +8436,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a=14, b=27;\n    a ^= b;\n    b ^= a;\n    a ^= b;\n    printf(\"%d %d\", a, b);\n    return 0;\n}",
       "inputData": "",
       "answer": "27 14",
-      "explanation": "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다. 최종 a=27, b=14. 출력은 27 14이다.",
-      "steps": [
-        "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다.",
-        "최종 a=27, b=14.",
-        "출력은 27 14이다."
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -8106,7 +8454,15 @@
       "importIds": [
         "VAR-187"
       ],
-      "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요."
+      "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요.",
+      "solution": {
+        "summary": "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다.",
+        "flow": [
+          "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다.",
+          "최종 a=27, b=14.",
+          "출력은 27 14이다."
+        ]
+      }
     },
     {
       "id": "VAR-190",
@@ -8123,12 +8479,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[5] = {8, 2, 11, 1, 6};\n    for(int i=0;i<4;i++)\n      for(int j=0;j<4-i;j++)\n        if(a[j] > a[j+1]) {\n          int t=a[j]; a[j]=a[j+1]; a[j+1]=t;\n        }\n    printf(\"%d %d\", a[0], a[4]);\n    return 0;\n}",
       "inputData": "",
       "answer": "1 11",
-      "explanation": "인접 원소를 비교해 큰 값을 뒤로 보낸다. 반복 종료 후 오름차순 정렬된다. 최솟값과 최댓값은 1 11.",
-      "steps": [
-        "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
-        "반복 종료 후 오름차순 정렬된다.",
-        "최솟값과 최댓값은 1 11."
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -8147,7 +8497,15 @@
       "importIds": [
         "VAR-190"
       ],
-      "hint": "한 번의 순회가 끝날 때 배열이 어떻게 바뀌는지 줄마다 다시 적고, 비교 후 교환되는 두 위치만 표시하세요."
+      "hint": "한 번의 순회가 끝날 때 배열이 어떻게 바뀌는지 줄마다 다시 적고, 비교 후 교환되는 두 위치만 표시하세요.",
+      "solution": {
+        "summary": "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
+        "flow": [
+          "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
+          "반복 종료 후 오름차순 정렬된다.",
+          "최솟값과 최댓값은 1 11."
+        ]
+      }
     },
     {
       "id": "VAR-210",
@@ -8164,12 +8522,6 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[3]={2, 5, 8};\n    int *p[3]={&a[0],&a[1],&a[2]};\n    printf(\"%d\", *p[0] + *p[2]);\n    return 0;\n}",
       "inputData": "",
       "answer": "10",
-      "explanation": "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다. 각 포인터를 역참조해 값을 읽는다. 합은 10.",
-      "steps": [
-        "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다.",
-        "각 포인터를 역참조해 값을 읽는다.",
-        "필요한 값을 모두 계산해 더하면 합은 10이 됩니다."
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -8188,7 +8540,15 @@
       "importIds": [
         "VAR-210"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "합은 10.",
+        "flow": [
+          "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다.",
+          "각 포인터를 역참조해 값을 읽는다.",
+          "필요한 값을 모두 계산해 더하면 합은 10이 됩니다."
+        ]
+      }
     },
     {
       "id": "VAR-211",
@@ -8205,12 +8565,6 @@
       "code": "#include <stdio.h>\nstruct Node { int data; struct Node *next; };\nint main(void) {\n    struct Node c={10, NULL};\n    struct Node b={7, &c};\n    struct Node a={4, &b};\n    struct Node *p=&a;\n    int sum=0;\n    while(p!=NULL) { sum+=p->data; p=p->next; }\n    printf(\"%d\", sum);\n    return 0;\n}",
       "inputData": "",
       "answer": "21",
-      "explanation": "p가 a→b→c 순서로 이동한다. 각 노드의 data를 sum에 누적한다. 최종 합은 21.",
-      "steps": [
-        "p가 a→b→c 순서로 이동한다.",
-        "각 노드의 data를 sum에 누적한다.",
-        "최종 합은 21."
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -8229,7 +8583,15 @@
       "importIds": [
         "VAR-211"
       ],
-      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+      "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.",
+      "solution": {
+        "summary": "p가 a→b→c 순서로 이동한다.",
+        "flow": [
+          "p가 a→b→c 순서로 이동한다.",
+          "각 노드의 data를 sum에 누적한다.",
+          "최종 합은 21."
+        ]
+      }
     },
     {
       "id": "VAR-226",
@@ -8246,12 +8608,6 @@
       "code": "",
       "inputData": "salaries(emp_num, name, salary)",
       "answer": "UPDATE salaries SET salary = 2900 WHERE emp_num = 2070;",
-      "explanation": "UPDATE 뒤에 테이블명을 쓴다. SET으로 변경할 열과 값을 지정한다. WHERE로 대상 사원번호를 한정한다.",
-      "steps": [
-        "UPDATE 뒤에 테이블명을 쓴다.",
-        "SET으로 변경할 열과 값을 지정한다.",
-        "WHERE로 대상 사원번호를 한정한다."
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -8270,7 +8626,15 @@
       "importIds": [
         "VAR-226"
       ],
-      "hint": "어떤 행이 바뀌어야 하는지 조건을 먼저 문장으로 정리한 뒤, 그 행에서 변경되는 열과 새 값을 따로 적어보세요."
+      "hint": "어떤 행이 바뀌어야 하는지 조건을 먼저 문장으로 정리한 뒤, 그 행에서 변경되는 열과 새 값을 따로 적어보세요.",
+      "solution": {
+        "summary": "UPDATE 뒤에 테이블명을 쓴다.",
+        "flow": [
+          "UPDATE 뒤에 테이블명을 쓴다.",
+          "SET으로 변경할 열과 값을 지정한다.",
+          "WHERE로 대상 사원번호를 한정한다."
+        ]
+      }
     },
     {
       "id": "VAR-227",
@@ -8287,12 +8651,6 @@
       "code": "",
       "inputData": "dept(code, name)",
       "answer": "INSERT INTO dept(code, name) VALUES (145, 'DATA');",
-      "explanation": "INSERT INTO 테이블명(열 목록)을 작성한다. VALUES에 열 순서와 맞게 값을 쓴다. 문자열은 작은따옴표로 감싼다.",
-      "steps": [
-        "INSERT INTO 테이블명(열 목록)을 작성한다.",
-        "VALUES에 열 순서와 맞게 값을 쓴다.",
-        "문자열은 작은따옴표로 감싼다."
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -8311,7 +8669,15 @@
       "importIds": [
         "VAR-227"
       ],
-      "hint": "추가할 열의 순서와 값의 순서가 서로 대응되는지 먼저 확인하고, 생략되는 열이 있는지도 살펴보세요."
+      "hint": "추가할 열의 순서와 값의 순서가 서로 대응되는지 먼저 확인하고, 생략되는 열이 있는지도 살펴보세요.",
+      "solution": {
+        "summary": "INSERT INTO 테이블명(열 목록)을 작성한다.",
+        "flow": [
+          "INSERT INTO 테이블명(열 목록)을 작성한다.",
+          "VALUES에 열 순서와 맞게 값을 쓴다.",
+          "문자열은 작은따옴표로 감싼다."
+        ]
+      }
     },
     {
       "id": "VAR-249",
@@ -8328,12 +8694,6 @@
       "code": "",
       "inputData": "student(id, name, dept)",
       "answer": "CREATE INDEX idx_name_3 ON student(name);",
-      "explanation": "CREATE INDEX 뒤에 인덱스명을 쓴다. ON 뒤에 테이블과 대상 열을 지정한다. 정답은 CREATE INDEX idx_name_3 ON student(name); 마지막으로 테이블명·열 이름·조건 연산자와 SQL 문장의 순서를 다시 확인합니다.",
-      "steps": [
-        "CREATE INDEX 뒤에 인덱스명을 쓴다.",
-        "ON 뒤에 테이블과 대상 열을 지정한다.",
-        "정답은 CREATE INDEX idx_name_3 ON student(name);"
-      ],
       "sources": [
         {
           "name": "원 학습문제 참고 출처",
@@ -8352,7 +8712,15 @@
       "importIds": [
         "VAR-249"
       ],
-      "hint": "새 객체의 이름, 대상 테이블, 기준 열이 각각 어떤 역할인지 구분해 문장 구조를 먼저 잡아보세요."
+      "hint": "새 객체의 이름, 대상 테이블, 기준 열이 각각 어떤 역할인지 구분해 문장 구조를 먼저 잡아보세요.",
+      "solution": {
+        "summary": "CREATE INDEX 뒤에 인덱스명을 쓴다.",
+        "flow": [
+          "CREATE INDEX 뒤에 인덱스명을 쓴다.",
+          "ON 뒤에 테이블과 대상 열을 지정한다.",
+          "정답은 CREATE INDEX idx_name_3 ON student(name);"
+        ]
+      }
     }
   ],
   "aliases": {
