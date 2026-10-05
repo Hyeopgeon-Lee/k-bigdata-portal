@@ -15,8 +15,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[4] = {6, 8, 10, 12};\n    int *p = a + 1;\n    printf(\"%d\", *p + *(p + 2));\n    return 0;\n}",
       "inputData": "",
       "answer": "20",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 배열과 포인터 산술의 흐름을 이해하는 것이 핵심입니다. p는 a[1]을 가리킨다. *(p+2)는 a[3]이다. 두 값을 더하면 20이다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "p는 a[1]을 가리킨다.",
         "*(p+2)는 a[3]이다.",
         "두 값을 더하면 20이다."
@@ -30,7 +31,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -57,8 +58,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    char *p = \"KOREA\";\n    printf(\"%c %c\", *p, *(p + 1));\n    return 0;\n}",
       "inputData": "",
       "answer": "K O",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 문자열 포인터와 역참조의 흐름을 이해하는 것이 핵심입니다. *p는 문자열 첫 문자이다. *(p+1)는 인덱스 1의 문자이다. 따라서 출력은 K O이다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "*p는 문자열 첫 문자이다.",
         "*(p+1)는 인덱스 1의 문자이다.",
         "따라서 출력은 K O이다."
@@ -80,7 +82,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -119,8 +121,9 @@
       "code": "#include <stdio.h>\nstruct Item { int x; int y; };\nint main(void) {\n    struct Item a[2] = {{6, 5}, {5, 10}};\n    struct Item *p = a;\n    printf(\"%d\", p->x + (p+1)->y);\n    return 0;\n}",
       "inputData": "",
       "answer": "16",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 구조체 배열과 구조체 포인터의 흐름을 이해하는 것이 핵심입니다. p->x는 첫 구조체의 x이다. (p+1)->y는 두 번째 구조체의 y이다. 합은 16이다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "p->x는 첫 구조체의 x이다.",
         "(p+1)->y는 두 번째 구조체의 y이다.",
         "합은 16이다."
@@ -134,7 +137,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -161,8 +164,9 @@
       "code": "#include <stdio.h>\nint f(int n) {\n    if (n <= 1) return 1;\n    return n * f(n - 1);\n}\nint main(void) {\n    printf(\"%d\", f(5));\n    return 0;\n}",
       "inputData": "",
       "answer": "120",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 재귀 함수와 팩토리얼의 흐름을 이해하는 것이 핵심입니다. f(n)=n×f(n-1) 형태의 재귀이다. f(1)=1에서 재귀가 종료된다. 5! = 120이다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "f(n)=n×f(n-1) 형태의 재귀이다.",
         "f(1)=1에서 재귀가 종료된다.",
         "5! = 120이다."
@@ -180,7 +184,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -209,8 +213,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a=14, b=25;\n    a ^= b;\n    b ^= a;\n    a ^= b;\n    printf(\"%d %d\", a, b);\n    return 0;\n}",
       "inputData": "",
       "answer": "25 14",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 비트 XOR을 이용한 값 교환의 흐름을 이해하는 것이 핵심입니다. 세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다. 최종 a=25, b=14. 출력은 25 14이다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다.",
         "최종 a=25, b=14.",
         "출력은 25 14이다."
@@ -224,7 +229,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -251,8 +256,9 @@
       "code": "class Parent {\n  int value=11;\n  int get() { return value; }\n}\nclass Child extends Parent {\n  int value=21;\n  @Override int get() { return value+1; }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Parent x=new Child();\n    System.out.print(x.value+\" \"+x.get());\n  }\n}",
       "inputData": "",
       "answer": "11 22",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 필드 숨김과 메서드 오버라이딩의 흐름을 이해하는 것이 핵심입니다. 필드는 참조 변수의 선언 타입 Parent 기준으로 접근한다. 메서드는 실제 객체 Child의 오버라이딩 메서드가 호출된다. 출력은 11 22. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "필드는 참조 변수의 선언 타입 Parent 기준으로 접근한다.",
         "메서드는 실제 객체 Child의 오버라이딩 메서드가 호출된다.",
         "출력은 11 22."
@@ -266,7 +272,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -292,8 +298,9 @@
       "code": "class Counter {\n  private static Counter one=new Counter();\n  private int n=0;\n  static Counter get() { return one; }\n  void inc() { n++; }\n  int value() { return n; }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Counter.get().inc();\n    Counter.get().inc();\n    Counter.get().inc();\n    Counter.get().inc();\n    Counter.get().inc();\n    System.out.print(Counter.get().value());\n  }\n}",
       "inputData": "",
       "answer": "5",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 static 싱글톤과 공유 상태의 흐름을 이해하는 것이 핵심입니다. get()은 항상 동일한 Counter 객체를 반환한다. inc()가 총 5회 호출된다. 공유 필드 n의 최종값은 5. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "get()은 항상 동일한 Counter 객체를 반환한다.",
         "inc()가 총 5회 호출된다.",
         "공유 필드 n의 최종값은 5."
@@ -311,7 +318,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -338,8 +345,9 @@
       "code": "public class Main {\n  static int f(int x) { return x+2; }\n  static int f(double x) { return (int)x+5; }\n  public static void main(String[] args) {\n    System.out.print(f(10)+\" \"+f(10.5));\n  }\n}",
       "inputData": "",
       "answer": "12 15",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 메서드 오버로딩과 인자 타입의 흐름을 이해하는 것이 핵심입니다. 정수 인자는 f(int)를 호출한다. 실수 인자는 f(double)을 호출한다. 출력은 12 15. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "정수 인자는 f(int)를 호출한다.",
         "실수 인자는 f(double)을 호출한다.",
         "출력은 12 15."
@@ -353,7 +361,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -379,8 +387,9 @@
       "code": "public class Main {\n  public static void main(String[] args) {\n    int r=10;\n    try {\n      r += 20 / 0;\n      r += 5;\n    } catch(ArithmeticException e) {\n      r += 3;\n    } finally {\n      r += 2;\n    }\n    System.out.print(r);\n  }\n}",
       "inputData": "",
       "answer": "15",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 예외처리 try-catch-finally의 흐름을 이해하는 것이 핵심입니다. 0으로 나누는 순간 ArithmeticException이 발생한다. catch에서 3을 더한다. finally에서 2를 더해 최종값이 결정된다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "0으로 나누는 순간 ArithmeticException이 발생한다.",
         "catch에서 3을 더한다.",
         "finally에서 2를 더해 최종값이 결정된다."
@@ -402,7 +411,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -437,8 +446,9 @@
       "code": "public class Main {\n  public static void main(String[] args) {\n    String a=new String(\"DATA\");\n    String b=new String(\"DATA\");\n    String c=a;\n    System.out.print((a==b)+\" \"+(a==c)+\" \"+a.equals(b));\n  }\n}",
       "inputData": "",
       "answer": "false true true",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 String 참조 비교와 equals의 흐름을 이해하는 것이 핵심입니다. a와 b는 내용은 같지만 서로 다른 객체다. c는 a와 같은 객체를 참조한다. equals는 문자열 내용을 비교한다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "a와 b는 내용은 같지만 서로 다른 객체다.",
         "c는 a와 같은 객체를 참조한다.",
         "equals는 문자열 내용을 비교한다."
@@ -460,7 +470,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -495,8 +505,9 @@
       "code": "public class Main {\n  static int f(int n) {\n    if(n<=1) return 1;\n    return n+f(n-1);\n  }\n  public static void main(String[] args) {\n    System.out.print(f(4));\n  }\n}",
       "inputData": "",
       "answer": "10",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 Java 재귀 호출의 흐름을 이해하는 것이 핵심입니다. f(n)=n+f(n-1)이다. f(1)=1에서 종료한다. 1부터 4까지의 합인 10. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "f(n)=n+f(n-1)이다.",
         "f(1)=1에서 종료한다.",
         "1부터 4까지의 합인 10."
@@ -514,7 +525,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -541,8 +552,9 @@
       "code": "class Calc {\n  int f(int a,int b) {\n    System.out.print(a+b+\" \");\n    return a*b;\n  }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Calc c=new Calc();\n    System.out.print(c.f(6,6));\n  }\n}",
       "inputData": "",
       "answer": "12 36",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 메서드 내부 출력과 반환값의 흐름을 이해하는 것이 핵심입니다. f() 내부에서 먼저 a+b를 출력한다. 그 후 a*b를 반환한다. main이 반환값을 이어서 출력한다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "f() 내부에서 먼저 a+b를 출력한다.",
         "그 후 a*b를 반환한다.",
         "main이 반환값을 이어서 출력한다."
@@ -556,7 +568,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -582,8 +594,9 @@
       "code": "public class Main {\n  public static void main(String[] args) {\n    int x=18;\n    x+=1; x-=2; x*=3; x/=4; x%=5;\n    System.out.print(x);\n  }\n}",
       "inputData": "",
       "answer": "2",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 복합 대입 연산자의 흐름을 이해하는 것이 핵심입니다. 복합 대입 연산을 위에서 아래로 차례대로 수행한다. 정수 나눗셈은 소수부를 버린다. 최종 x=2. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "복합 대입 연산을 위에서 아래로 차례대로 수행한다.",
         "정수 나눗셈은 소수부를 버린다.",
         "최종 x=2."
@@ -597,7 +610,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -623,8 +636,9 @@
       "code": "interface P { int f(int x); }\nclass A implements P { public int f(int x) { return x+1; } }\nclass B implements P { public int f(int x) { return x*2; } }\npublic class Main {\n  public static void main(String[] args) {\n    P p=new B();\n    System.out.print(p.f(3));\n  }\n}",
       "inputData": "",
       "answer": "6",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 인터페이스와 동적 바인딩의 흐름을 이해하는 것이 핵심입니다. 참조 타입은 P지만 실제 객체는 B이다. B의 f()가 호출된다. 결과는 6. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "참조 타입은 P지만 실제 객체는 B이다.",
         "B의 f()가 호출된다.",
         "결과는 6."
@@ -646,7 +660,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -681,8 +695,9 @@
       "code": "x=[1, -1, 0, 2, -1, 3]\nfor n in x:\n    if n == -1:\n        continue\n    print(n, end=\"\")",
       "inputData": "",
       "answer": "1023",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 for문과 continue의 흐름을 이해하는 것이 핵심입니다. -1이면 continue로 print를 건너뛴다. 나머지 값은 줄바꿈 없이 이어 출력된다. 결과는 1023. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "-1이면 continue로 print를 건너뛴다.",
         "나머지 값은 줄바꿈 없이 이어 출력된다.",
         "결과는 1023."
@@ -704,7 +719,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -732,8 +747,9 @@
       "code": "def f(n):\n    return lambda a: a*n\ng=f(4)\nprint(g(7))",
       "inputData": "",
       "answer": "28",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 lambda와 클로저의 흐름을 이해하는 것이 핵심입니다. f(4)은 a×4을 계산하는 lambda를 반환한다. g(7)=7×4. 결과는 28. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "f(4)은 a×4을 계산하는 lambda를 반환한다.",
         "g(7)=7×4.",
         "결과는 28."
@@ -755,7 +771,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -783,8 +799,9 @@
       "code": "SELECT COUNT(DISTINCT dept) FROM student;",
       "inputData": "student.dept: 개발, 개발, 인프라, 데이터, 데이터",
       "answer": "3",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 COUNT(DISTINCT) 반환값의 흐름을 이해하는 것이 핵심입니다. 중복을 제거하면 개발, 인프라, 데이터 3개이다. COUNT(DISTINCT dept)는 서로 다른 dept 개수를 센다. 정답은 3. 마지막으로 SELECT에 남는 열과 ORDER BY의 정렬 순서를 확인하고, 결과를 문제에서 요구한 형식으로 옮깁니다.",
       "steps": [
+        "먼저 주어진 테이블과 SQL을 따로 보고, FROM의 원본 행에서 시작해 조건과 집계가 적용될 때마다 남는 행을 적습니다.",
         "중복을 제거하면 개발, 인프라, 데이터 3개이다.",
         "COUNT(DISTINCT dept)는 서로 다른 dept 개수를 센다.",
         "정답은 3."
@@ -806,7 +823,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "self",
       "examTypes": [
         "engineer",
@@ -839,8 +856,9 @@
       "code": "",
       "inputData": "salaries(emp_num, name, salary)",
       "answer": "UPDATE salaries SET salary = 2700 WHERE emp_num = 2072;",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 UPDATE와 WHERE 조건의 흐름을 이해하는 것이 핵심입니다. UPDATE 뒤에 테이블명을 쓴다. SET으로 변경할 열과 값을 지정한다. WHERE로 대상 사원번호를 한정한다. 마지막으로 테이블명·열 이름·조건 연산자와 SQL 문장의 순서를 다시 확인합니다.",
       "steps": [
+        "먼저 문제에서 테이블명, 처리할 열, 값, 조건을 각각 표시한 뒤 어떤 SQL 명령이 필요한지 정합니다.",
         "UPDATE 뒤에 테이블명을 쓴다.",
         "SET으로 변경할 열과 값을 지정한다.",
         "WHERE로 대상 사원번호를 한정한다."
@@ -854,7 +872,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "self",
       "examTypes": [
         "engineer"
@@ -879,8 +897,9 @@
       "code": "",
       "inputData": "dept(code, name)",
       "answer": "INSERT INTO dept(code, name) VALUES (103, 'AI');",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 INSERT INTO 열 목록 지정의 흐름을 이해하는 것이 핵심입니다. INSERT INTO 테이블명(열 목록)을 작성한다. VALUES에 열 순서와 맞게 값을 쓴다. 문자열은 작은따옴표로 감싼다. 마지막으로 테이블명·열 이름·조건 연산자와 SQL 문장의 순서를 다시 확인합니다.",
       "steps": [
+        "먼저 문제에서 테이블명, 처리할 열, 값, 조건을 각각 표시한 뒤 어떤 SQL 명령이 필요한지 정합니다.",
         "INSERT INTO 테이블명(열 목록)을 작성한다.",
         "VALUES에 열 순서와 맞게 값을 쓴다.",
         "문자열은 작은따옴표로 감싼다."
@@ -894,7 +913,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "self",
       "examTypes": [
         "engineer"
@@ -919,8 +938,9 @@
       "code": "",
       "inputData": "student(id, name, score)",
       "answer": "DELETE FROM student WHERE score < 60;",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 DELETE와 비교 조건의 흐름을 이해하는 것이 핵심입니다. DELETE FROM 뒤에 대상 테이블을 쓴다. WHERE score < 60 조건을 지정한다. WHERE를 생략하면 전체 행이 삭제되므로 반드시 조건을 확인한다. 마지막으로 테이블명·열 이름·조건 연산자와 SQL 문장의 순서를 다시 확인합니다.",
       "steps": [
+        "먼저 문제에서 테이블명, 처리할 열, 값, 조건을 각각 표시한 뒤 어떤 SQL 명령이 필요한지 정합니다.",
         "DELETE FROM 뒤에 대상 테이블을 쓴다.",
         "WHERE score < 60 조건을 지정한다.",
         "WHERE를 생략하면 전체 행이 삭제되므로 반드시 조건을 확인한다."
@@ -938,7 +958,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "self",
       "examTypes": [
         "engineer"
@@ -966,8 +986,9 @@
       "code": "",
       "inputData": "student(id, name, dept)",
       "answer": "CREATE INDEX idx_name_5 ON student(name);",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 CREATE INDEX의 흐름을 이해하는 것이 핵심입니다. CREATE INDEX 뒤에 인덱스명을 쓴다. ON 뒤에 테이블과 대상 열을 지정한다. 정답은 CREATE INDEX idx_name_5 ON student(name); 마지막으로 테이블명·열 이름·조건 연산자와 SQL 문장의 순서를 다시 확인합니다.",
       "steps": [
+        "먼저 문제에서 테이블명, 처리할 열, 값, 조건을 각각 표시한 뒤 어떤 SQL 명령이 필요한지 정합니다.",
         "CREATE INDEX 뒤에 인덱스명을 쓴다.",
         "ON 뒤에 테이블과 대상 열을 지정한다.",
         "정답은 CREATE INDEX idx_name_5 ON student(name);"
@@ -981,7 +1002,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "self",
       "examTypes": [
         "engineer"
@@ -1006,8 +1027,9 @@
       "code": "SELECT a.name, b.dept_name FROM employee a JOIN department b ON a.dept_id=b.dept_id ORDER BY a.name;",
       "inputData": "employee: (Kim,10),(Lee,20); department: (10,AI),(20,Cloud)",
       "answer": "Kim,AI; Lee,Cloud",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 INNER JOIN 결과의 흐름을 이해하는 것이 핵심입니다. employee.dept_id와 department.dept_id가 같은 행을 연결한다. 각 직원의 부서명을 결합한다. name 오름차순으로 정렬한다. 마지막으로 SELECT에 남는 열과 ORDER BY의 정렬 순서를 확인하고, 결과를 문제에서 요구한 형식으로 옮깁니다.",
       "steps": [
+        "먼저 주어진 테이블과 SQL을 따로 보고, FROM의 원본 행에서 시작해 조건과 집계가 적용될 때마다 남는 행을 적습니다.",
         "employee.dept_id와 department.dept_id가 같은 행을 연결한다.",
         "각 직원의 부서명을 결합한다.",
         "name 오름차순으로 정렬한다."
@@ -1029,7 +1051,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "self",
       "examTypes": [
         "engineer",
@@ -1062,8 +1084,9 @@
       "code": "SELECT name FROM employee WHERE salary > (SELECT AVG(salary) FROM employee) ORDER BY name;",
       "inputData": "employee(name,salary): (A,2000),(B,3000),(C,4000)",
       "answer": "C",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 스칼라 서브쿼리와 평균 비교의 흐름을 이해하는 것이 핵심입니다. 평균 급여는 3000이다. 3000보다 큰 직원만 선택한다. 따라서 C만 반환된다. 마지막으로 SELECT에 남는 열과 ORDER BY의 정렬 순서를 확인하고, 결과를 문제에서 요구한 형식으로 옮깁니다.",
       "steps": [
+        "먼저 주어진 테이블과 SQL을 따로 보고, FROM의 원본 행에서 시작해 조건과 집계가 적용될 때마다 남는 행을 적습니다.",
         "평균 급여는 3000이다.",
         "3000보다 큰 직원만 선택한다.",
         "따라서 C만 반환된다."
@@ -1085,7 +1108,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "self",
       "examTypes": [
         "engineer",
@@ -1118,8 +1141,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int r = 0;\n    for (int i=1; i<=7; i++) {\n        if (i==4) continue;\n        if (i==7) break;\n        r += i * 3;\n    }\n    printf(\"%d\", r);\n    return 0;\n}",
       "inputData": "",
       "answer": "51",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 break와 continue 실행 흐름의 흐름을 이해하는 것이 핵심입니다. i=4에서는 continue로 누적을 건너뛴다. i=7에서 break이므로 i=1~6까지만 반영된다. 최종 r=51. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "i=4에서는 continue로 누적을 건너뛴다.",
         "i=7에서 break이므로 i=1~6까지만 반영된다.",
         "최종 r=51."
@@ -1137,7 +1161,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -1166,8 +1190,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int x=5;\n    switch (x) {\n        case 1: x += 1;\n        case 2: x += 3;\n        case 3: x *= 2;\n        default: x -= 1;\n    }\n    printf(\"%d\", x);\n    return 0;\n}",
       "inputData": "",
       "answer": "4",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 switch fall-through의 흐름을 이해하는 것이 핵심입니다. break가 없으므로 일치한 case 이후가 연속 실행된다. default도 이어서 실행된다. 최종 x=4. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "break가 없으므로 일치한 case 이후가 연속 실행된다.",
         "default도 이어서 실행된다.",
         "최종 x=4."
@@ -1189,7 +1214,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -1226,8 +1251,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[5] = {9, 2, 12, 1, 7};\n    for(int i=0;i<4;i++)\n      for(int j=0;j<4-i;j++)\n        if(a[j] > a[j+1]) {\n          int t=a[j]; a[j]=a[j+1]; a[j+1]=t;\n        }\n    printf(\"%d %d\", a[0], a[4]);\n    return 0;\n}",
       "inputData": "",
       "answer": "1 12",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 버블 정렬 결과 추적의 흐름을 이해하는 것이 핵심입니다. 인접 원소를 비교해 큰 값을 뒤로 보낸다. 반복 종료 후 오름차순 정렬된다. 최솟값과 최댓값은 1 12. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
         "반복 종료 후 오름차순 정렬된다.",
         "최솟값과 최댓값은 1 12."
@@ -1241,7 +1267,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -1268,8 +1294,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int n=1567, r=0;\n    while(n>0) {\n        r = r*10 + n%10;\n        n /= 10;\n    }\n    printf(\"%d\", r);\n    return 0;\n}",
       "inputData": "",
       "answer": "7651",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 나머지 연산을 이용한 정수 역순의 흐름을 이해하는 것이 핵심입니다. n%10으로 일의 자리 숫자를 얻는다. r=r×10+자리값으로 역순 수를 만든다. 최종 결과는 7651. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "n%10으로 일의 자리 숫자를 얻는다.",
         "r=r×10+자리값으로 역순 수를 만든다.",
         "최종 결과는 7651."
@@ -1287,7 +1314,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -1316,8 +1343,9 @@
       "code": "#include <stdio.h>\nint f1(void) { return 4; }\nint f2(void) { return 10 + f1(); }\nint f3(void) { return 20 + f2(); }\nint main(void) { printf(\"%d\", f3()); return 0; }",
       "inputData": "",
       "answer": "34",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 함수 호출과 반환값 누적의 흐름을 이해하는 것이 핵심입니다. f1()=4. f2()=14. f3()=34. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "f1()=4.",
         "f2()=14.",
         "f3()=34."
@@ -1339,7 +1367,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -1376,8 +1404,9 @@
       "code": "class A {\n  A(int x) { System.out.print(x+\" \"); }\n}\nclass B extends A {\n  B() { super(4); System.out.print(7); }\n}\npublic class Main {\n  public static void main(String[] args) { new B(); }\n}",
       "inputData": "",
       "answer": "4 7",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 생성자와 super 호출 순서의 흐름을 이해하는 것이 핵심입니다. 자식 생성자에서 super가 먼저 실행된다. 부모 생성자 출력 후 자식 생성자 본문이 실행된다. 출력은 4 7. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "자식 생성자에서 super가 먼저 실행된다.",
         "부모 생성자 출력 후 자식 생성자 본문이 실행된다.",
         "출력은 4 7."
@@ -1395,7 +1424,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -1423,8 +1452,9 @@
       "code": "public class Main {\n  static int total=0;\n  static void add(int x) { total+=x; }\n  public static void main(String[] args) {\n    add(5); add(7); add(9);\n    System.out.print(total);\n  }\n}",
       "inputData": "",
       "answer": "21",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 static 필드의 누적 상태의 흐름을 이해하는 것이 핵심입니다. static total은 모든 static 메서드 호출에서 공유된다. 세 번의 add 결과가 누적된다. 최종 total=21. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "static total은 모든 static 메서드 호출에서 공유된다.",
         "세 번의 add 결과가 누적된다.",
         "최종 total=21."
@@ -1446,7 +1476,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -1479,8 +1509,9 @@
       "code": "public class Main {\n  public static void main(String[] args) {\n    StringBuilder sb=new StringBuilder(\"DEV\");\n    sb.reverse().append(\"!\");\n    System.out.print(sb.toString());\n  }\n}",
       "inputData": "",
       "answer": "VED!",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 StringBuilder reverse와 append의 흐름을 이해하는 것이 핵심입니다. reverse()로 문자열 순서를 뒤집는다. append(\"!\")로 느낌표를 붙인다. 결과는 VED!. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "reverse()로 문자열 순서를 뒤집는다.",
         "append(\"!\")로 느낌표를 붙인다.",
         "결과는 VED!."
@@ -1502,7 +1533,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -1535,8 +1566,9 @@
       "code": "class Printer {\n  void print(Integer x) { System.out.print(\"I\"+x); }\n  void print(Number x) { System.out.print(\"N\"+x); }\n  void print(Object x) { System.out.print(\"O\"+x); }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Object x=Integer.valueOf(10);\n    new Printer().print(x);\n  }\n}",
       "inputData": "",
       "answer": "O10",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 오버로딩과 컴파일타임 타입의 흐름을 이해하는 것이 핵심입니다. 오버로딩 선택은 호출 시점의 선언 타입을 기준으로 한다. x의 선언 타입은 Object이다. print(Object)가 선택되어 O10. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "오버로딩 선택은 호출 시점의 선언 타입을 기준으로 한다.",
         "x의 선언 타입은 Object이다.",
         "print(Object)가 선택되어 O10."
@@ -1550,7 +1582,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -1576,8 +1608,9 @@
       "code": "abstract class Base {\n  abstract int f(int x);\n  int g(int x) { return f(x)+1; }\n}\nclass Sub extends Base {\n  int f(int x) { return x*2; }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Base b=new Sub();\n    System.out.print(b.g(7));\n  }\n}",
       "inputData": "",
       "answer": "15",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 추상 클래스와 오버라이딩 호출의 흐름을 이해하는 것이 핵심입니다. g()는 Base에 정의되어 있지만 내부 f() 호출은 동적 바인딩된다. Sub.f(x)=x×2. 따라서 결과는 15. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "g()는 Base에 정의되어 있지만 내부 f() 호출은 동적 바인딩된다.",
         "Sub.f(x)=x×2.",
         "따라서 결과는 15."
@@ -1595,7 +1628,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -1623,8 +1656,9 @@
       "code": "public class Main {\n  public static void main(String[] args) {\n    int sum=0;\n    for(int i=1;i<=8;i++) {\n      if(i%2==0) sum+=i;\n      else sum-=i;\n    }\n    System.out.print(sum);\n  }\n}",
       "inputData": "",
       "answer": "4",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 반복문과 홀짝 조건 누적의 흐름을 이해하는 것이 핵심입니다. 홀수는 빼고 짝수는 더한다. 1부터 8까지 차례대로 계산한다. 최종 sum=4. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "홀수는 빼고 짝수는 더한다.",
         "1부터 8까지 차례대로 계산한다.",
         "최종 sum=4."
@@ -1646,7 +1680,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -1679,8 +1713,9 @@
       "code": "a={1,2,3,4}\nb={3,4,5}\nprint(sorted(a-b))\nprint(sorted(a&b))",
       "inputData": "",
       "answer": "[1, 2]\n[3, 4]",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 집합 차집합과 교집합의 흐름을 이해하는 것이 핵심입니다. a-b는 a에만 있는 원소이다. a&b는 공통 원소이다. sorted()로 오름차순 리스트 형태가 된다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "a-b는 a에만 있는 원소이다.",
         "a&b는 공통 원소이다.",
         "sorted()로 오름차순 리스트 형태가 된다."
@@ -1702,7 +1737,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -1733,8 +1768,9 @@
       "code": "s=\"K-BIGDATA\"\nprint(s[::-2])",
       "inputData": "",
       "answer": "AAGBK",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 문자열 슬라이싱 역순의 흐름을 이해하는 것이 핵심입니다. [::-2]는 뒤에서부터 두 칸씩 이동한다. 마지막 문자부터 인덱스를 감소시키며 선택한다. 결과는 AAGBK. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "[::-2]는 뒤에서부터 두 칸씩 이동한다.",
         "마지막 문자부터 인덱스를 감소시키며 선택한다.",
         "결과는 AAGBK."
@@ -1756,7 +1792,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -1784,8 +1820,9 @@
       "code": "a=[[1,2],[3,4]]\nb=a[:]\nb[0].append(9)\nprint(len(a[0])+len(b[1]))",
       "inputData": "",
       "answer": "5",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 얕은 복사와 중첩 리스트의 흐름을 이해하는 것이 핵심입니다. a[:]는 바깥 리스트만 복사하는 얕은 복사이다. 내부 리스트는 공유되므로 b[0] 변경이 a[0]에도 반영된다. len(a[0])=3, len(b[1])=2. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "a[:]는 바깥 리스트만 복사하는 얕은 복사이다.",
         "내부 리스트는 공유되므로 b[0] 변경이 a[0]에도 반영된다.",
         "len(a[0])=3, len(b[1])=2."
@@ -1807,7 +1844,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -1838,8 +1875,9 @@
       "code": "SELECT name FROM student WHERE dept IN ('AI','DATA') ORDER BY name;",
       "inputData": "student: (Ann,AI),(Bob,CLOUD),(Kim,DATA),(Lee,SEC)",
       "answer": "Ann; Kim",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 IN 조건 검색의 흐름을 이해하는 것이 핵심입니다. dept가 AI 또는 DATA인 행만 선택한다. name으로 정렬한다. 결과는 Ann, Kim. 마지막으로 SELECT에 남는 열과 ORDER BY의 정렬 순서를 확인하고, 결과를 문제에서 요구한 형식으로 옮깁니다.",
       "steps": [
+        "먼저 주어진 테이블과 SQL을 따로 보고, FROM의 원본 행에서 시작해 조건과 집계가 적용될 때마다 남는 행을 적습니다.",
         "dept가 AI 또는 DATA인 행만 선택한다.",
         "name으로 정렬한다.",
         "결과는 Ann, Kim."
@@ -1861,7 +1899,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "self",
       "examTypes": [
         "engineer",
@@ -1894,8 +1932,9 @@
       "code": "SELECT COUNT(score) AS c1, COUNT(*) AS c2 FROM student;",
       "inputData": "student.score: 80, NULL, 90, NULL, 70",
       "answer": "3,5",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 COUNT(열)과 COUNT(*)의 NULL 처리의 흐름을 이해하는 것이 핵심입니다. COUNT(score)는 NULL을 제외한다. COUNT(*)는 모든 행을 센다. 따라서 3과 5. 마지막으로 SELECT에 남는 열과 ORDER BY의 정렬 순서를 확인하고, 결과를 문제에서 요구한 형식으로 옮깁니다.",
       "steps": [
+        "먼저 주어진 테이블과 SQL을 따로 보고, FROM의 원본 행에서 시작해 조건과 집계가 적용될 때마다 남는 행을 적습니다.",
         "COUNT(score)는 NULL을 제외한다.",
         "COUNT(*)는 모든 행을 센다.",
         "따라서 3과 5."
@@ -1917,7 +1956,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "self",
       "examTypes": [
         "engineer",
@@ -1950,8 +1989,9 @@
       "code": "SELECT name, CASE WHEN score>=80 THEN 'PASS' ELSE 'RETRY' END AS result FROM student ORDER BY name;",
       "inputData": "student(name,score): (A,75),(B,80),(C,92)",
       "answer": "A,RETRY; B,PASS; C,PASS",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 CASE 표현식의 흐름을 이해하는 것이 핵심입니다. score가 80 이상이면 PASS. 그 외는 RETRY. 각 행에 CASE 결과를 적용한다. 마지막으로 SELECT에 남는 열과 ORDER BY의 정렬 순서를 확인하고, 결과를 문제에서 요구한 형식으로 옮깁니다.",
       "steps": [
+        "먼저 주어진 테이블과 SQL을 따로 보고, FROM의 원본 행에서 시작해 조건과 집계가 적용될 때마다 남는 행을 적습니다.",
         "score가 80 이상이면 PASS.",
         "그 외는 RETRY.",
         "각 행에 CASE 결과를 적용한다."
@@ -1973,7 +2013,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "self",
       "examTypes": [
         "engineer",
@@ -2006,8 +2046,9 @@
       "code": "SELECT name FROM member WHERE name LIKE 'K%' ORDER BY name;",
       "inputData": "member.name: Kim, Kang, Lee, Park",
       "answer": "Kang; Kim",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 LIKE 접두 패턴의 흐름을 이해하는 것이 핵심입니다. 'K%'는 K로 시작하는 문자열을 의미한다. Kang과 Kim이 선택된다. ORDER BY name으로 Kang, Kim 순이다. 마지막으로 SELECT에 남는 열과 ORDER BY의 정렬 순서를 확인하고, 결과를 문제에서 요구한 형식으로 옮깁니다.",
       "steps": [
+        "먼저 주어진 테이블과 SQL을 따로 보고, FROM의 원본 행에서 시작해 조건과 집계가 적용될 때마다 남는 행을 적습니다.",
         "'K%'는 K로 시작하는 문자열을 의미한다.",
         "Kang과 Kim이 선택된다.",
         "ORDER BY name으로 Kang, Kim 순이다."
@@ -2029,7 +2070,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "self",
       "examTypes": [
         "engineer",
@@ -2062,8 +2103,9 @@
       "code": "",
       "inputData": "orders(id,customer_id), customer(id,name)",
       "answer": "ALTER TABLE orders ADD CONSTRAINT fk_customer FOREIGN KEY(customer_id) REFERENCES customer(id);",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 ALTER TABLE과 FOREIGN KEY의 흐름을 이해하는 것이 핵심입니다. ALTER TABLE orders로 대상 테이블을 선택한다. ADD CONSTRAINT로 제약조건명을 지정한다. FOREIGN KEY와 REFERENCES로 참조 관계를 작성한다. 마지막으로 테이블명·열 이름·조건 연산자와 SQL 문장의 순서를 다시 확인합니다.",
       "steps": [
+        "먼저 문제에서 테이블명, 처리할 열, 값, 조건을 각각 표시한 뒤 어떤 SQL 명령이 필요한지 정합니다.",
         "ALTER TABLE orders로 대상 테이블을 선택한다.",
         "ADD CONSTRAINT로 제약조건명을 지정한다.",
         "FOREIGN KEY와 REFERENCES로 참조 관계를 작성한다."
@@ -2118,8 +2160,9 @@
       "code": "SELECT a.id, b.code FROM A a CROSS JOIN B b ORDER BY a.id, b.code;",
       "inputData": "A.id: 1,2; B.code: X,Y,Z",
       "answer": "1,X; 1,Y; 1,Z; 2,X; 2,Y; 2,Z",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 CROSS JOIN 카티션 곱의 흐름을 이해하는 것이 핵심입니다. CROSS JOIN은 두 테이블의 모든 조합을 만든다. 2행×3행=6행이다. ORDER BY에 따라 id, code 순으로 정렬된다. 마지막으로 SELECT에 남는 열과 ORDER BY의 정렬 순서를 확인하고, 결과를 문제에서 요구한 형식으로 옮깁니다.",
       "steps": [
+        "먼저 주어진 테이블과 SQL을 따로 보고, FROM의 원본 행에서 시작해 조건과 집계가 적용될 때마다 남는 행을 적습니다.",
         "CROSS JOIN은 두 테이블의 모든 조합을 만든다.",
         "2행×3행=6행이다.",
         "ORDER BY에 따라 id, code 순으로 정렬된다."
@@ -2141,7 +2184,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "self",
       "examTypes": [
         "engineer",
@@ -2174,8 +2217,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int x=3;\n    int y=x++;\n    y += ++x;\n    printf(\"%d %d\", x, y);\n    return 0;\n}",
       "inputData": "",
       "answer": "5 8",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 후위·전위 증가 연산 추적의 흐름을 이해하는 것이 핵심입니다. y=x++에서 y=3, x=4. ++x 후 x=5, 이를 y에 더한다. 최종 출력은 5 8. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "y=x++에서 y=3, x=4.",
         "++x 후 x=5, 이를 y에 더한다.",
         "최종 출력은 5 8."
@@ -2193,7 +2237,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -2222,8 +2266,9 @@
       "code": "#include <stdio.h>\n#include <string.h>\nint main(void) {\n    char s[]=\"aBcDEfG\";\n    int cnt=0;\n    for(int i=0;i<(int)strlen(s);i++)\n        if(s[i]>='A' && s[i]<='Z') cnt++;\n    printf(\"%d\", cnt);\n    return 0;\n}",
       "inputData": "",
       "answer": "4",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 문자열 순회와 대문자 판별의 흐름을 이해하는 것이 핵심입니다. 각 문자가 'A'~'Z' 범위인지 검사한다. 조건을 만족하는 문자마다 cnt를 증가시킨다. 대문자 개수는 4개. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "각 문자가 'A'~'Z' 범위인지 검사한다.",
         "조건을 만족하는 문자마다 cnt를 증가시킨다.",
         "대문자 개수는 4개."
@@ -2245,7 +2290,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -2276,8 +2321,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a=6, b=3;\n    int r = (a>b ? a : b) << 1;\n    printf(\"%d\", r);\n    return 0;\n}",
       "inputData": "",
       "answer": "12",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 조건연산자와 비트 시프트의 흐름을 이해하는 것이 핵심입니다. 조건연산자로 더 큰 값을 선택한다. <<1은 2배와 같다. 결과는 12. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "조건연산자로 더 큰 값을 선택한다.",
         "<<1은 2배와 같다.",
         "결과는 12."
@@ -2295,7 +2341,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -2324,8 +2370,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[3]={3, 5, 9};\n    int *p[3]={&a[0],&a[1],&a[2]};\n    printf(\"%d\", *p[0] + *p[2]);\n    return 0;\n}",
       "inputData": "",
       "answer": "12",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 포인터 배열과 이중 간접 참조 개념의 흐름을 이해하는 것이 핵심입니다. p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다. 각 포인터를 역참조해 값을 읽는다. 합은 12. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다.",
         "각 포인터를 역참조해 값을 읽는다.",
         "합은 12."
@@ -2339,7 +2386,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -2366,8 +2413,9 @@
       "code": "#include <stdio.h>\nstruct Node { int data; struct Node *next; };\nint main(void) {\n    struct Node c={6, NULL};\n    struct Node b={7, &c};\n    struct Node a={2, &b};\n    struct Node *p=&a;\n    int sum=0;\n    while(p!=NULL) { sum+=p->data; p=p->next; }\n    printf(\"%d\", sum);\n    return 0;\n}",
       "inputData": "",
       "answer": "15",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 구조체 포인터 기반 연결리스트 순회의 흐름을 이해하는 것이 핵심입니다. p가 a→b→c 순서로 이동한다. 각 노드의 data를 sum에 누적한다. 최종 합은 15. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "p가 a→b→c 순서로 이동한다.",
         "각 노드의 data를 sum에 누적한다.",
         "최종 합은 15."
@@ -2381,7 +2429,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -2408,8 +2456,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int s = 2;\n    for (int i = 1; i <= 5; i++) {\n        if (i % 2 == 0) s += i * 2;\n        else s += i;\n    }\n    printf(\"%d\", s);\n    return 0;\n}",
       "inputData": "",
       "answer": "23",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 반복문과 조건문 누적값 추적의 흐름을 이해하는 것이 핵심입니다. 초기 s=2. 홀수 i는 i를, 짝수 i는 i×2를 더한다. i=1~5를 순서대로 적용한 최종 s는 23이다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "초기 s=2.",
         "홀수 i는 i를, 짝수 i는 i×2를 더한다.",
         "i=1~5를 순서대로 적용한 최종 s는 23이다."
@@ -2427,7 +2476,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -2456,8 +2505,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[4] = {8, 10, 12, 14};\n    int *p = a + 1;\n    printf(\"%d\", *p + *(p + 2));\n    return 0;\n}",
       "inputData": "",
       "answer": "24",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 배열과 포인터 산술의 흐름을 이해하는 것이 핵심입니다. p는 a[1]을 가리킨다. *(p+2)는 a[3]이다. 두 값을 더하면 24이다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "p는 a[1]을 가리킨다.",
         "*(p+2)는 a[3]이다.",
         "두 값을 더하면 24이다."
@@ -2471,7 +2521,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -2498,8 +2548,9 @@
       "code": "public class Main {\n  public static void main(String[] args) {\n    int[] a = {1, 2, 3, 4};\n    int sum=0;\n    for(int v : a) sum += v;\n    System.out.print(sum);\n  }\n}",
       "inputData": "",
       "answer": "10",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 향상된 for문과 배열 합계의 흐름을 이해하는 것이 핵심입니다. 향상된 for문이 배열의 모든 원소를 순회한다. 각 값을 sum에 더한다. 최종 sum=10. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "향상된 for문이 배열의 모든 원소를 순회한다.",
         "각 값을 sum에 더한다.",
         "최종 sum=10."
@@ -2521,7 +2572,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -2554,8 +2605,9 @@
       "code": "class Parent {\n  int value=12;\n  int get() { return value; }\n}\nclass Child extends Parent {\n  int value=22;\n  @Override int get() { return value+1; }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Parent x=new Child();\n    System.out.print(x.value+\" \"+x.get());\n  }\n}",
       "inputData": "",
       "answer": "12 23",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 필드 숨김과 메서드 오버라이딩의 흐름을 이해하는 것이 핵심입니다. 필드는 참조 변수의 선언 타입 Parent 기준으로 접근한다. 메서드는 실제 객체 Child의 오버라이딩 메서드가 호출된다. 출력은 12 23. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "필드는 참조 변수의 선언 타입 Parent 기준으로 접근한다.",
         "메서드는 실제 객체 Child의 오버라이딩 메서드가 호출된다.",
         "출력은 12 23."
@@ -2569,7 +2621,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -2595,8 +2647,9 @@
       "code": "class Counter {\n  private static Counter one=new Counter();\n  private int n=0;\n  static Counter get() { return one; }\n  void inc() { n++; }\n  int value() { return n; }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Counter.get().inc();\n    Counter.get().inc();\n    Counter.get().inc();\n    System.out.print(Counter.get().value());\n  }\n}",
       "inputData": "",
       "answer": "3",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 static 싱글톤과 공유 상태의 흐름을 이해하는 것이 핵심입니다. get()은 항상 동일한 Counter 객체를 반환한다. inc()가 총 3회 호출된다. 공유 필드 n의 최종값은 3. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "get()은 항상 동일한 Counter 객체를 반환한다.",
         "inc()가 총 3회 호출된다.",
         "공유 필드 n의 최종값은 3."
@@ -2614,7 +2667,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -2643,8 +2696,9 @@
       "code": "public class Main {\n  static int f(int x) { return x+2; }\n  static int f(double x) { return (int)x+5; }\n  public static void main(String[] args) {\n    System.out.print(f(11)+\" \"+f(11.5));\n  }\n}",
       "inputData": "",
       "answer": "13 16",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 메서드 오버로딩과 인자 타입의 흐름을 이해하는 것이 핵심입니다. 정수 인자는 f(int)를 호출한다. 실수 인자는 f(double)을 호출한다. 출력은 13 16. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "정수 인자는 f(int)를 호출한다.",
         "실수 인자는 f(double)을 호출한다.",
         "출력은 13 16."
@@ -2658,7 +2712,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -2684,8 +2738,9 @@
       "code": "public class Main {\n  static int f(int n) {\n    if(n<=1) return 1;\n    return n+f(n-1);\n  }\n  public static void main(String[] args) {\n    System.out.print(f(5));\n  }\n}",
       "inputData": "",
       "answer": "15",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 Java 재귀 호출의 흐름을 이해하는 것이 핵심입니다. f(n)=n+f(n-1)이다. f(1)=1에서 종료한다. 1부터 5까지의 합인 15. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "f(n)=n+f(n-1)이다.",
         "f(1)=1에서 종료한다.",
         "1부터 5까지의 합인 15."
@@ -2703,7 +2758,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -2732,8 +2787,9 @@
       "code": "d={x:x*x for x in range(1,6)}\nr=0\nfor k,v in d.items():\n    if k & 1:\n        r += v\nprint(r)",
       "inputData": "",
       "answer": "35",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 딕셔너리 컴프리헨션과 비트 연산의 흐름을 이해하는 것이 핵심입니다. k&1이 1이면 홀수이다. 홀수 키에 해당하는 제곱값만 더한다. 합은 35. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "k&1이 1이면 홀수이다.",
         "홀수 키에 해당하는 제곱값만 더한다.",
         "합은 35."
@@ -2755,7 +2811,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -2783,8 +2839,9 @@
       "code": "a=['A', 'B', 'C', 'D']\nr=[]\nfor i,v in enumerate(a, start=2):\n    if i%2==0:\n        r.append(v+str(i))\nprint(\"-\".join(r))",
       "inputData": "",
       "answer": "A2-C4",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 enumerate와 조건 필터링의 흐름을 이해하는 것이 핵심입니다. enumerate의 시작 인덱스는 2. 짝수 인덱스인 항목만 선택한다. '-'로 연결한 결과는 A2-C4. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "enumerate의 시작 인덱스는 2.",
         "짝수 인덱스인 항목만 선택한다.",
         "'-'로 연결한 결과는 A2-C4."
@@ -2806,7 +2863,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -2837,8 +2894,9 @@
       "code": "s=\"DataEngineer\"\nx=s[::-1]\nprint(x.replace(\"g\",\"\",1))",
       "inputData": "",
       "answer": "reeninEataD",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 문자열 반전과 replace의 흐름을 이해하는 것이 핵심입니다. s[::-1]로 문자열을 뒤집는다. 뒤집힌 문자열에서 첫 'g'만 제거한다. 결과는 reeninEataD. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "s[::-1]로 문자열을 뒤집는다.",
         "뒤집힌 문자열에서 첫 'g'만 제거한다.",
         "결과는 reeninEataD."
@@ -2856,7 +2914,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -2882,8 +2940,9 @@
       "code": "a=[x*x for x in range(1,8) if x%2==0]\nprint(sum(a))",
       "inputData": "",
       "answer": "56",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 리스트 컴프리헨션과 조건의 흐름을 이해하는 것이 핵심입니다. 1부터 n까지 중 짝수만 선택한다. 각 짝수의 제곱을 리스트에 저장한다. 그 합은 56. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "1부터 n까지 중 짝수만 선택한다.",
         "각 짝수의 제곱을 리스트에 저장한다.",
         "그 합은 56."
@@ -2901,7 +2960,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -2929,8 +2988,9 @@
       "code": "SELECT dept, COUNT(*) AS cnt FROM student WHERE score >= 70 GROUP BY dept HAVING COUNT(*) >= 1 ORDER BY dept;",
       "inputData": "student(dept,score): (A,80), (A,70), (B,90), (B,60), (C,85)",
       "answer": "A,2; B,1; C,1",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 WHERE·GROUP BY·HAVING 집계 결과의 흐름을 이해하는 것이 핵심입니다. WHERE score >= 70로 행을 먼저 필터링한다. dept별로 GROUP BY한 뒤 COUNT(*)를 계산한다. 결과: A,2; B,1; C,1. 마지막으로 SELECT에 남는 열과 ORDER BY의 정렬 순서를 확인하고, 결과를 문제에서 요구한 형식으로 옮깁니다.",
       "steps": [
+        "먼저 주어진 테이블과 SQL을 따로 보고, FROM의 원본 행에서 시작해 조건과 집계가 적용될 때마다 남는 행을 적습니다.",
         "WHERE score >= 70로 행을 먼저 필터링한다.",
         "dept별로 GROUP BY한 뒤 COUNT(*)를 계산한다.",
         "결과: A,2; B,1; C,1."
@@ -2952,7 +3012,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "self",
       "examTypes": [
         "engineer",
@@ -2985,8 +3045,9 @@
       "code": "",
       "inputData": "salaries(emp_num, name, salary)",
       "answer": "UPDATE salaries SET salary = 2600 WHERE emp_num = 2074;",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 UPDATE와 WHERE 조건의 흐름을 이해하는 것이 핵심입니다. UPDATE 뒤에 테이블명을 쓴다. SET으로 변경할 열과 값을 지정한다. WHERE로 대상 사원번호를 한정한다. 마지막으로 테이블명·열 이름·조건 연산자와 SQL 문장의 순서를 다시 확인합니다.",
       "steps": [
+        "먼저 문제에서 테이블명, 처리할 열, 값, 조건을 각각 표시한 뒤 어떤 SQL 명령이 필요한지 정합니다.",
         "UPDATE 뒤에 테이블명을 쓴다.",
         "SET으로 변경할 열과 값을 지정한다.",
         "WHERE로 대상 사원번호를 한정한다."
@@ -3000,7 +3061,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "self",
       "examTypes": [
         "engineer"
@@ -3025,8 +3086,9 @@
       "code": "",
       "inputData": "dept(code, name)",
       "answer": "INSERT INTO dept(code, name) VALUES (117, 'CLOUD');",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 INSERT INTO 열 목록 지정의 흐름을 이해하는 것이 핵심입니다. INSERT INTO 테이블명(열 목록)을 작성한다. VALUES에 열 순서와 맞게 값을 쓴다. 문자열은 작은따옴표로 감싼다. 마지막으로 테이블명·열 이름·조건 연산자와 SQL 문장의 순서를 다시 확인합니다.",
       "steps": [
+        "먼저 문제에서 테이블명, 처리할 열, 값, 조건을 각각 표시한 뒤 어떤 SQL 명령이 필요한지 정합니다.",
         "INSERT INTO 테이블명(열 목록)을 작성한다.",
         "VALUES에 열 순서와 맞게 값을 쓴다.",
         "문자열은 작은따옴표로 감싼다."
@@ -3040,7 +3102,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "self",
       "examTypes": [
         "engineer"
@@ -3065,8 +3127,9 @@
       "code": "",
       "inputData": "student(id, name, score)",
       "answer": "DELETE FROM student WHERE score < 70;",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 DELETE와 비교 조건의 흐름을 이해하는 것이 핵심입니다. DELETE FROM 뒤에 대상 테이블을 쓴다. WHERE score < 70 조건을 지정한다. WHERE를 생략하면 전체 행이 삭제되므로 반드시 조건을 확인한다. 마지막으로 테이블명·열 이름·조건 연산자와 SQL 문장의 순서를 다시 확인합니다.",
       "steps": [
+        "먼저 문제에서 테이블명, 처리할 열, 값, 조건을 각각 표시한 뒤 어떤 SQL 명령이 필요한지 정합니다.",
         "DELETE FROM 뒤에 대상 테이블을 쓴다.",
         "WHERE score < 70 조건을 지정한다.",
         "WHERE를 생략하면 전체 행이 삭제되므로 반드시 조건을 확인한다."
@@ -3084,7 +3147,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "self",
       "examTypes": [
         "engineer",
@@ -3113,8 +3176,9 @@
       "code": "#include <stdio.h>\nstruct Item { int x; int y; };\nint main(void) {\n    struct Item a[2] = {{6, 6}, {6, 11}};\n    struct Item *p = a;\n    printf(\"%d\", p->x + (p+1)->y);\n    return 0;\n}",
       "inputData": "",
       "answer": "17",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 구조체 배열과 구조체 포인터의 흐름을 이해하는 것이 핵심입니다. p->x는 첫 구조체의 x이다. (p+1)->y는 두 번째 구조체의 y이다. 합은 17이다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "p->x는 첫 구조체의 x이다.",
         "(p+1)->y는 두 번째 구조체의 y이다.",
         "합은 17이다."
@@ -3132,7 +3196,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -3157,8 +3221,9 @@
       "code": "#include <stdio.h>\nint f(int n) {\n    if (n <= 1) return 1;\n    return n * f(n - 1);\n}\nint main(void) {\n    printf(\"%d\", f(6));\n    return 0;\n}",
       "inputData": "",
       "answer": "720",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 재귀 함수와 팩토리얼의 흐름을 이해하는 것이 핵심입니다. f(n)=n×f(n-1) 형태의 재귀이다. f(1)=1에서 재귀가 종료된다. 6! = 720이다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "f(n)=n×f(n-1) 형태의 재귀이다.",
         "f(1)=1에서 재귀가 종료된다.",
         "6! = 720이다."
@@ -3180,7 +3245,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -3209,8 +3274,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a=14, b=23;\n    a ^= b;\n    b ^= a;\n    a ^= b;\n    printf(\"%d %d\", a, b);\n    return 0;\n}",
       "inputData": "",
       "answer": "23 14",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 비트 XOR을 이용한 값 교환의 흐름을 이해하는 것이 핵심입니다. 세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다. 최종 a=23, b=14. 출력은 23 14이다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다.",
         "최종 a=23, b=14.",
         "출력은 23 14이다."
@@ -3228,7 +3294,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -3253,8 +3319,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int r = 0;\n    for (int i=1; i<=7; i++) {\n        if (i==4) continue;\n        if (i==7) break;\n        r += i * 4;\n    }\n    printf(\"%d\", r);\n    return 0;\n}",
       "inputData": "",
       "answer": "68",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 break와 continue 실행 흐름의 흐름을 이해하는 것이 핵심입니다. i=4에서는 continue로 누적을 건너뛴다. i=7에서 break이므로 i=1~6까지만 반영된다. 최종 r=68. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "i=4에서는 continue로 누적을 건너뛴다.",
         "i=7에서 break이므로 i=1~6까지만 반영된다.",
         "최종 r=68."
@@ -3272,7 +3339,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -3298,8 +3365,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[5] = {7, 2, 13, 1, 5};\n    for(int i=0;i<4;i++)\n      for(int j=0;j<4-i;j++)\n        if(a[j] > a[j+1]) {\n          int t=a[j]; a[j]=a[j+1]; a[j+1]=t;\n        }\n    printf(\"%d %d\", a[0], a[4]);\n    return 0;\n}",
       "inputData": "",
       "answer": "1 13",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 버블 정렬 결과 추적의 흐름을 이해하는 것이 핵심입니다. 인접 원소를 비교해 큰 값을 뒤로 보낸다. 반복 종료 후 오름차순 정렬된다. 최솟값과 최댓값은 1 13. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
         "반복 종료 후 오름차순 정렬된다.",
         "최솟값과 최댓값은 1 13."
@@ -3317,7 +3385,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -3342,8 +3410,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int n=1345, r=0;\n    while(n>0) {\n        r = r*10 + n%10;\n        n /= 10;\n    }\n    printf(\"%d\", r);\n    return 0;\n}",
       "inputData": "",
       "answer": "5431",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 나머지 연산을 이용한 정수 역순의 흐름을 이해하는 것이 핵심입니다. n%10으로 일의 자리 숫자를 얻는다. r=r×10+자리값으로 역순 수를 만든다. 최종 결과는 5431. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "n%10으로 일의 자리 숫자를 얻는다.",
         "r=r×10+자리값으로 역순 수를 만든다.",
         "최종 결과는 5431."
@@ -3365,7 +3434,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -3394,8 +3463,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int x=1;\n    int y=x++;\n    y += ++x;\n    printf(\"%d %d\", x, y);\n    return 0;\n}",
       "inputData": "",
       "answer": "3 4",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 후위·전위 증가 연산 추적의 흐름을 이해하는 것이 핵심입니다. y=x++에서 y=1, x=2. ++x 후 x=3, 이를 y에 더한다. 최종 출력은 3 4. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "y=x++에서 y=1, x=2.",
         "++x 후 x=3, 이를 y에 더한다.",
         "최종 출력은 3 4."
@@ -3417,7 +3487,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -3446,8 +3516,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a=6, b=4;\n    int r = (a>b ? a : b) << 1;\n    printf(\"%d\", r);\n    return 0;\n}",
       "inputData": "",
       "answer": "12",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 조건연산자와 비트 시프트의 흐름을 이해하는 것이 핵심입니다. 조건연산자로 더 큰 값을 선택한다. <<1은 2배와 같다. 결과는 12. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "조건연산자로 더 큰 값을 선택한다.",
         "<<1은 2배와 같다.",
         "결과는 12."
@@ -3469,7 +3540,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -3498,8 +3569,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[3]={1, 5, 5};\n    int *p[3]={&a[0],&a[1],&a[2]};\n    printf(\"%d\", *p[0] + *p[2]);\n    return 0;\n}",
       "inputData": "",
       "answer": "6",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 포인터 배열과 이중 간접 참조 개념의 흐름을 이해하는 것이 핵심입니다. p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다. 각 포인터를 역참조해 값을 읽는다. 합은 6. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다.",
         "각 포인터를 역참조해 값을 읽는다.",
         "합은 6."
@@ -3517,7 +3589,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -3542,8 +3614,9 @@
       "code": "#include <stdio.h>\nstruct Node { int data; struct Node *next; };\nint main(void) {\n    struct Node c={7, NULL};\n    struct Node b={7, &c};\n    struct Node a={3, &b};\n    struct Node *p=&a;\n    int sum=0;\n    while(p!=NULL) { sum+=p->data; p=p->next; }\n    printf(\"%d\", sum);\n    return 0;\n}",
       "inputData": "",
       "answer": "17",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 구조체 포인터 기반 연결리스트 순회의 흐름을 이해하는 것이 핵심입니다. p가 a→b→c 순서로 이동한다. 각 노드의 data를 sum에 누적한다. 최종 합은 17. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "p가 a→b→c 순서로 이동한다.",
         "각 노드의 data를 sum에 누적한다.",
         "최종 합은 17."
@@ -3561,7 +3634,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -3586,8 +3659,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int s = 3;\n    for (int i = 1; i <= 5; i++) {\n        if (i % 2 == 0) s += i * 2;\n        else s += i;\n    }\n    printf(\"%d\", s);\n    return 0;\n}",
       "inputData": "",
       "answer": "24",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 반복문과 조건문 누적값 추적의 흐름을 이해하는 것이 핵심입니다. 초기 s=3. 홀수 i는 i를, 짝수 i는 i×2를 더한다. i=1~5를 순서대로 적용한 최종 s는 24이다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "초기 s=3.",
         "홀수 i는 i를, 짝수 i는 i×2를 더한다.",
         "i=1~5를 순서대로 적용한 최종 s는 24이다."
@@ -3609,7 +3683,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -3638,8 +3712,9 @@
       "code": "class Calc {\n  int f(int a,int b) {\n    System.out.print(a+b+\" \");\n    return a*b;\n  }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Calc c=new Calc();\n    System.out.print(c.f(7,6));\n  }\n}",
       "inputData": "",
       "answer": "13 42",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 메서드 내부 출력과 반환값의 흐름을 이해하는 것이 핵심입니다. f() 내부에서 먼저 a+b를 출력한다. 그 후 a*b를 반환한다. main이 반환값을 이어서 출력한다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "f() 내부에서 먼저 a+b를 출력한다.",
         "그 후 a*b를 반환한다.",
         "main이 반환값을 이어서 출력한다."
@@ -3657,7 +3732,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -3683,8 +3758,9 @@
       "code": "public class Main {\n  public static void main(String[] args) {\n    int x=19;\n    x+=1; x-=2; x*=3; x/=4; x%=5;\n    System.out.print(x);\n  }\n}",
       "inputData": "",
       "answer": "3",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 복합 대입 연산자의 흐름을 이해하는 것이 핵심입니다. 복합 대입 연산을 위에서 아래로 차례대로 수행한다. 정수 나눗셈은 소수부를 버린다. 최종 x=3. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "복합 대입 연산을 위에서 아래로 차례대로 수행한다.",
         "정수 나눗셈은 소수부를 버린다.",
         "최종 x=3."
@@ -3702,7 +3778,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -3728,8 +3804,9 @@
       "code": "class A {\n  A(int x) { System.out.print(x+\" \"); }\n}\nclass B extends A {\n  B() { super(5); System.out.print(7); }\n}\npublic class Main {\n  public static void main(String[] args) { new B(); }\n}",
       "inputData": "",
       "answer": "5 7",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 생성자와 super 호출 순서의 흐름을 이해하는 것이 핵심입니다. 자식 생성자에서 super가 먼저 실행된다. 부모 생성자 출력 후 자식 생성자 본문이 실행된다. 출력은 5 7. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "자식 생성자에서 super가 먼저 실행된다.",
         "부모 생성자 출력 후 자식 생성자 본문이 실행된다.",
         "출력은 5 7."
@@ -3747,7 +3824,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -3775,8 +3852,9 @@
       "code": "class Printer {\n  void print(Integer x) { System.out.print(\"I\"+x); }\n  void print(Number x) { System.out.print(\"N\"+x); }\n  void print(Object x) { System.out.print(\"O\"+x); }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Object x=Integer.valueOf(11);\n    new Printer().print(x);\n  }\n}",
       "inputData": "",
       "answer": "O11",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 오버로딩과 컴파일타임 타입의 흐름을 이해하는 것이 핵심입니다. 오버로딩 선택은 호출 시점의 선언 타입을 기준으로 한다. x의 선언 타입은 Object이다. print(Object)가 선택되어 O11. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "오버로딩 선택은 호출 시점의 선언 타입을 기준으로 한다.",
         "x의 선언 타입은 Object이다.",
         "print(Object)가 선택되어 O11."
@@ -3794,7 +3872,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -3820,8 +3898,9 @@
       "code": "abstract class Base {\n  abstract int f(int x);\n  int g(int x) { return f(x)+1; }\n}\nclass Sub extends Base {\n  int f(int x) { return x*2; }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Base b=new Sub();\n    System.out.print(b.g(3));\n  }\n}",
       "inputData": "",
       "answer": "7",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 추상 클래스와 오버라이딩 호출의 흐름을 이해하는 것이 핵심입니다. g()는 Base에 정의되어 있지만 내부 f() 호출은 동적 바인딩된다. Sub.f(x)=x×2. 따라서 결과는 7. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "g()는 Base에 정의되어 있지만 내부 f() 호출은 동적 바인딩된다.",
         "Sub.f(x)=x×2.",
         "따라서 결과는 7."
@@ -3839,7 +3918,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -3867,8 +3946,9 @@
       "code": "def add(a,b):\n    return a+b\ndef sub(a,b):\n    return a-b\nprint(sub(add(6,3), 3))",
       "inputData": "",
       "answer": "6",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 중첩 함수 호출의 반환값의 흐름을 이해하는 것이 핵심입니다. add(6,3)=9. 그 결과에서 3를 뺀다. 최종 결과는 6. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "add(6,3)=9.",
         "그 결과에서 3를 뺀다.",
         "최종 결과는 6."
@@ -3886,7 +3966,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -3912,8 +3992,9 @@
       "code": "a=(12, 23, 31)\nb=list(a)\nb[1]+=5\nprint(a[1], b[1])",
       "inputData": "",
       "answer": "23 28",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 튜플과 리스트 변환의 흐름을 이해하는 것이 핵심입니다. a는 튜플이므로 기존 값이 바뀌지 않는다. b는 a에서 만든 별도의 리스트이다. b[1]만 5 증가해 23 28가 출력된다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "a는 튜플이므로 기존 값이 바뀌지 않는다.",
         "b는 a에서 만든 별도의 리스트이다.",
         "b[1]만 5 증가해 23 28가 출력된다."
@@ -3931,7 +4012,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -3956,8 +4037,9 @@
       "code": "a=[52, 62, 72, 82]\nprint(a.pop())\nprint(a.pop(1))",
       "inputData": "",
       "answer": "82\n62",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 list.pop 인덱스와 기본 동작의 흐름을 이해하는 것이 핵심입니다. pop()은 마지막 원소를 제거하며 반환한다. pop(1)은 현재 리스트의 인덱스 1 원소를 제거한다. 출력은 82, 62 순서이다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "pop()은 마지막 원소를 제거하며 반환한다.",
         "pop(1)은 현재 리스트의 인덱스 1 원소를 제거한다.",
         "출력은 82, 62 순서이다."
@@ -3975,7 +4057,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -4001,8 +4083,9 @@
       "code": "",
       "inputData": "student(id, name, dept)",
       "answer": "CREATE INDEX idx_name_1 ON student(name);",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 CREATE INDEX의 흐름을 이해하는 것이 핵심입니다. CREATE INDEX 뒤에 인덱스명을 쓴다. ON 뒤에 테이블과 대상 열을 지정한다. 정답은 CREATE INDEX idx_name_1 ON student(name); 마지막으로 테이블명·열 이름·조건 연산자와 SQL 문장의 순서를 다시 확인합니다.",
       "steps": [
+        "먼저 문제에서 테이블명, 처리할 열, 값, 조건을 각각 표시한 뒤 어떤 SQL 명령이 필요한지 정합니다.",
         "CREATE INDEX 뒤에 인덱스명을 쓴다.",
         "ON 뒤에 테이블과 대상 열을 지정한다.",
         "정답은 CREATE INDEX idx_name_1 ON student(name);"
@@ -4020,7 +4103,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "self",
       "examTypes": [
         "engineer"
@@ -4045,8 +4128,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[4] = {10, 12, 14, 16};\n    int *p = a + 1;\n    printf(\"%d\", *p + *(p + 2));\n    return 0;\n}",
       "inputData": "",
       "answer": "28",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 배열과 포인터 산술의 흐름을 이해하는 것이 핵심입니다. p는 a[1]을 가리킨다. *(p+2)는 a[3]이다. 두 값을 더하면 28이다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "p는 a[1]을 가리킨다.",
         "*(p+2)는 a[3]이다.",
         "두 값을 더하면 28이다."
@@ -4064,7 +4148,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -4091,8 +4175,9 @@
       "code": "#include <stdio.h>\nstruct Item { int x; int y; };\nint main(void) {\n    struct Item a[2] = {{6, 7}, {7, 7}};\n    struct Item *p = a;\n    printf(\"%d\", p->x + (p+1)->y);\n    return 0;\n}",
       "inputData": "",
       "answer": "13",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 구조체 배열과 구조체 포인터의 흐름을 이해하는 것이 핵심입니다. p->x는 첫 구조체의 x이다. (p+1)->y는 두 번째 구조체의 y이다. 합은 13이다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "p->x는 첫 구조체의 x이다.",
         "(p+1)->y는 두 번째 구조체의 y이다.",
         "합은 13이다."
@@ -4110,7 +4195,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -4135,8 +4220,9 @@
       "code": "#include <stdio.h>\nint f(int n) {\n    if (n <= 1) return 1;\n    return n * f(n - 1);\n}\nint main(void) {\n    printf(\"%d\", f(4));\n    return 0;\n}",
       "inputData": "",
       "answer": "24",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 재귀 함수와 팩토리얼의 흐름을 이해하는 것이 핵심입니다. f(n)=n×f(n-1) 형태의 재귀이다. f(1)=1에서 재귀가 종료된다. 4! = 24이다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "f(n)=n×f(n-1) 형태의 재귀이다.",
         "f(1)=1에서 재귀가 종료된다.",
         "4! = 24이다."
@@ -4158,7 +4244,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -4187,8 +4273,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a=14, b=21;\n    a ^= b;\n    b ^= a;\n    a ^= b;\n    printf(\"%d %d\", a, b);\n    return 0;\n}",
       "inputData": "",
       "answer": "21 14",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 비트 XOR을 이용한 값 교환의 흐름을 이해하는 것이 핵심입니다. 세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다. 최종 a=21, b=14. 출력은 21 14이다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다.",
         "최종 a=21, b=14.",
         "출력은 21 14이다."
@@ -4206,7 +4293,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -4231,8 +4318,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int r = 0;\n    for (int i=1; i<=7; i++) {\n        if (i==4) continue;\n        if (i==7) break;\n        r += i * 5;\n    }\n    printf(\"%d\", r);\n    return 0;\n}",
       "inputData": "",
       "answer": "85",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 break와 continue 실행 흐름의 흐름을 이해하는 것이 핵심입니다. i=4에서는 continue로 누적을 건너뛴다. i=7에서 break이므로 i=1~6까지만 반영된다. 최종 r=85. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "i=4에서는 continue로 누적을 건너뛴다.",
         "i=7에서 break이므로 i=1~6까지만 반영된다.",
         "최종 r=85."
@@ -4250,7 +4338,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -4276,8 +4364,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[5] = {8, 2, 9, 1, 6};\n    for(int i=0;i<4;i++)\n      for(int j=0;j<4-i;j++)\n        if(a[j] > a[j+1]) {\n          int t=a[j]; a[j]=a[j+1]; a[j+1]=t;\n        }\n    printf(\"%d %d\", a[0], a[4]);\n    return 0;\n}",
       "inputData": "",
       "answer": "1 9",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 버블 정렬 결과 추적의 흐름을 이해하는 것이 핵심입니다. 인접 원소를 비교해 큰 값을 뒤로 보낸다. 반복 종료 후 오름차순 정렬된다. 최솟값과 최댓값은 1 9. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
         "반복 종료 후 오름차순 정렬된다.",
         "최솟값과 최댓값은 1 9."
@@ -4295,7 +4384,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -4320,8 +4409,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int n=1789, r=0;\n    while(n>0) {\n        r = r*10 + n%10;\n        n /= 10;\n    }\n    printf(\"%d\", r);\n    return 0;\n}",
       "inputData": "",
       "answer": "9871",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 나머지 연산을 이용한 정수 역순의 흐름을 이해하는 것이 핵심입니다. n%10으로 일의 자리 숫자를 얻는다. r=r×10+자리값으로 역순 수를 만든다. 최종 결과는 9871. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "n%10으로 일의 자리 숫자를 얻는다.",
         "r=r×10+자리값으로 역순 수를 만든다.",
         "최종 결과는 9871."
@@ -4343,7 +4433,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -4372,8 +4462,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int x=2;\n    int y=x++;\n    y += ++x;\n    printf(\"%d %d\", x, y);\n    return 0;\n}",
       "inputData": "",
       "answer": "4 6",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 후위·전위 증가 연산 추적의 흐름을 이해하는 것이 핵심입니다. y=x++에서 y=2, x=3. ++x 후 x=4, 이를 y에 더한다. 최종 출력은 4 6. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "y=x++에서 y=2, x=3.",
         "++x 후 x=4, 이를 y에 더한다.",
         "최종 출력은 4 6."
@@ -4395,7 +4486,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -4424,8 +4515,9 @@
       "code": "class Parent {\n  int value=13;\n  int get() { return value; }\n}\nclass Child extends Parent {\n  int value=23;\n  @Override int get() { return value+1; }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Parent x=new Child();\n    System.out.print(x.value+\" \"+x.get());\n  }\n}",
       "inputData": "",
       "answer": "13 24",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 필드 숨김과 메서드 오버라이딩의 흐름을 이해하는 것이 핵심입니다. 필드는 참조 변수의 선언 타입 Parent 기준으로 접근한다. 메서드는 실제 객체 Child의 오버라이딩 메서드가 호출된다. 출력은 13 24. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "필드는 참조 변수의 선언 타입 Parent 기준으로 접근한다.",
         "메서드는 실제 객체 Child의 오버라이딩 메서드가 호출된다.",
         "출력은 13 24."
@@ -4443,7 +4535,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -4469,8 +4561,9 @@
       "code": "class Counter {\n  private static Counter one=new Counter();\n  private int n=0;\n  static Counter get() { return one; }\n  void inc() { n++; }\n  int value() { return n; }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Counter.get().inc();\n    Counter.get().inc();\n    Counter.get().inc();\n    Counter.get().inc();\n    System.out.print(Counter.get().value());\n  }\n}",
       "inputData": "",
       "answer": "4",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 static 싱글톤과 공유 상태의 흐름을 이해하는 것이 핵심입니다. get()은 항상 동일한 Counter 객체를 반환한다. inc()가 총 4회 호출된다. 공유 필드 n의 최종값은 4. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "get()은 항상 동일한 Counter 객체를 반환한다.",
         "inc()가 총 4회 호출된다.",
         "공유 필드 n의 최종값은 4."
@@ -4488,7 +4581,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -4516,8 +4609,9 @@
       "code": "public class Main {\n  static int f(int x) { return x+2; }\n  static int f(double x) { return (int)x+5; }\n  public static void main(String[] args) {\n    System.out.print(f(7)+\" \"+f(7.5));\n  }\n}",
       "inputData": "",
       "answer": "9 12",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 메서드 오버로딩과 인자 타입의 흐름을 이해하는 것이 핵심입니다. 정수 인자는 f(int)를 호출한다. 실수 인자는 f(double)을 호출한다. 출력은 9 12. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "정수 인자는 f(int)를 호출한다.",
         "실수 인자는 f(double)을 호출한다.",
         "출력은 9 12."
@@ -4535,7 +4629,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -4561,8 +4655,9 @@
       "code": "public class Main {\n  static int f(int n) {\n    if(n<=1) return 1;\n    return n+f(n-1);\n  }\n  public static void main(String[] args) {\n    System.out.print(f(6));\n  }\n}",
       "inputData": "",
       "answer": "21",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 Java 재귀 호출의 흐름을 이해하는 것이 핵심입니다. f(n)=n+f(n-1)이다. f(1)=1에서 종료한다. 1부터 6까지의 합인 21. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "f(n)=n+f(n-1)이다.",
         "f(1)=1에서 종료한다.",
         "1부터 6까지의 합인 21."
@@ -4580,7 +4675,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -4608,8 +4703,9 @@
       "code": "class Calc {\n  int f(int a,int b) {\n    System.out.print(a+b+\" \");\n    return a*b;\n  }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Calc c=new Calc();\n    System.out.print(c.f(8,6));\n  }\n}",
       "inputData": "",
       "answer": "14 48",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 메서드 내부 출력과 반환값의 흐름을 이해하는 것이 핵심입니다. f() 내부에서 먼저 a+b를 출력한다. 그 후 a*b를 반환한다. main이 반환값을 이어서 출력한다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "f() 내부에서 먼저 a+b를 출력한다.",
         "그 후 a*b를 반환한다.",
         "main이 반환값을 이어서 출력한다."
@@ -4627,7 +4723,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -4653,8 +4749,9 @@
       "code": "public class Main {\n  public static void main(String[] args) {\n    int x=15;\n    x+=1; x-=2; x*=3; x/=4; x%=5;\n    System.out.print(x);\n  }\n}",
       "inputData": "",
       "answer": "0",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 복합 대입 연산자의 흐름을 이해하는 것이 핵심입니다. 복합 대입 연산을 위에서 아래로 차례대로 수행한다. 정수 나눗셈은 소수부를 버린다. 최종 x=0. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "복합 대입 연산을 위에서 아래로 차례대로 수행한다.",
         "정수 나눗셈은 소수부를 버린다.",
         "최종 x=0."
@@ -4672,7 +4769,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -4698,8 +4795,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a=6, b=2;\n    int r = (a>b ? a : b) << 1;\n    printf(\"%d\", r);\n    return 0;\n}",
       "inputData": "",
       "answer": "12",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 조건연산자와 비트 시프트의 흐름을 이해하는 것이 핵심입니다. 조건연산자로 더 큰 값을 선택한다. <<1은 2배와 같다. 결과는 12. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "조건연산자로 더 큰 값을 선택한다.",
         "<<1은 2배와 같다.",
         "결과는 12."
@@ -4721,7 +4819,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -4750,8 +4848,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[3]={2, 5, 6};\n    int *p[3]={&a[0],&a[1],&a[2]};\n    printf(\"%d\", *p[0] + *p[2]);\n    return 0;\n}",
       "inputData": "",
       "answer": "8",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 포인터 배열과 이중 간접 참조 개념의 흐름을 이해하는 것이 핵심입니다. p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다. 각 포인터를 역참조해 값을 읽는다. 합은 8. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다.",
         "각 포인터를 역참조해 값을 읽는다.",
         "합은 8."
@@ -4769,7 +4868,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -4794,8 +4893,9 @@
       "code": "#include <stdio.h>\nstruct Node { int data; struct Node *next; };\nint main(void) {\n    struct Node c={8, NULL};\n    struct Node b={7, &c};\n    struct Node a={4, &b};\n    struct Node *p=&a;\n    int sum=0;\n    while(p!=NULL) { sum+=p->data; p=p->next; }\n    printf(\"%d\", sum);\n    return 0;\n}",
       "inputData": "",
       "answer": "19",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 구조체 포인터 기반 연결리스트 순회의 흐름을 이해하는 것이 핵심입니다. p가 a→b→c 순서로 이동한다. 각 노드의 data를 sum에 누적한다. 최종 합은 19. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "p가 a→b→c 순서로 이동한다.",
         "각 노드의 data를 sum에 누적한다.",
         "최종 합은 19."
@@ -4813,7 +4913,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -4838,8 +4938,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int s = 1;\n    for (int i = 1; i <= 5; i++) {\n        if (i % 2 == 0) s += i * 2;\n        else s += i;\n    }\n    printf(\"%d\", s);\n    return 0;\n}",
       "inputData": "",
       "answer": "22",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 반복문과 조건문 누적값 추적의 흐름을 이해하는 것이 핵심입니다. 초기 s=1. 홀수 i는 i를, 짝수 i는 i×2를 더한다. i=1~5를 순서대로 적용한 최종 s는 22이다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "초기 s=1.",
         "홀수 i는 i를, 짝수 i는 i×2를 더한다.",
         "i=1~5를 순서대로 적용한 최종 s는 22이다."
@@ -4861,7 +4962,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer",
@@ -4890,8 +4991,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[4] = {5, 7, 9, 11};\n    int *p = a + 1;\n    printf(\"%d\", *p + *(p + 2));\n    return 0;\n}",
       "inputData": "",
       "answer": "18",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 배열과 포인터 산술의 흐름을 이해하는 것이 핵심입니다. p는 a[1]을 가리킨다. *(p+2)는 a[3]이다. 두 값을 더하면 18이다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "p는 a[1]을 가리킨다.",
         "*(p+2)는 a[3]이다.",
         "두 값을 더하면 18이다."
@@ -4909,7 +5011,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -4935,8 +5037,9 @@
       "code": "#include <stdio.h>\nstruct Item { int x; int y; };\nint main(void) {\n    struct Item a[2] = {{6, 5}, {5, 8}};\n    struct Item *p = a;\n    printf(\"%d\", p->x + (p+1)->y);\n    return 0;\n}",
       "inputData": "",
       "answer": "14",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 구조체 배열과 구조체 포인터의 흐름을 이해하는 것이 핵심입니다. p->x는 첫 구조체의 x이다. (p+1)->y는 두 번째 구조체의 y이다. 합은 14이다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "p->x는 첫 구조체의 x이다.",
         "(p+1)->y는 두 번째 구조체의 y이다.",
         "합은 14이다."
@@ -4954,7 +5057,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -4979,8 +5082,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a=14, b=28;\n    a ^= b;\n    b ^= a;\n    a ^= b;\n    printf(\"%d %d\", a, b);\n    return 0;\n}",
       "inputData": "",
       "answer": "28 14",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 비트 XOR을 이용한 값 교환의 흐름을 이해하는 것이 핵심입니다. 세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다. 최종 a=28, b=14. 출력은 28 14이다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다.",
         "최종 a=28, b=14.",
         "출력은 28 14이다."
@@ -4998,7 +5102,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -5023,8 +5127,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int r = 0;\n    for (int i=1; i<=7; i++) {\n        if (i==4) continue;\n        if (i==7) break;\n        r += i * 6;\n    }\n    printf(\"%d\", r);\n    return 0;\n}",
       "inputData": "",
       "answer": "102",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 break와 continue 실행 흐름의 흐름을 이해하는 것이 핵심입니다. i=4에서는 continue로 누적을 건너뛴다. i=7에서 break이므로 i=1~6까지만 반영된다. 최종 r=102. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "i=4에서는 continue로 누적을 건너뛴다.",
         "i=7에서 break이므로 i=1~6까지만 반영된다.",
         "최종 r=102."
@@ -5042,7 +5147,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -5068,8 +5173,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[5] = {9, 2, 10, 1, 7};\n    for(int i=0;i<4;i++)\n      for(int j=0;j<4-i;j++)\n        if(a[j] > a[j+1]) {\n          int t=a[j]; a[j]=a[j+1]; a[j+1]=t;\n        }\n    printf(\"%d %d\", a[0], a[4]);\n    return 0;\n}",
       "inputData": "",
       "answer": "1 10",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 버블 정렬 결과 추적의 흐름을 이해하는 것이 핵심입니다. 인접 원소를 비교해 큰 값을 뒤로 보낸다. 반복 종료 후 오름차순 정렬된다. 최솟값과 최댓값은 1 10. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
         "반복 종료 후 오름차순 정렬된다.",
         "최솟값과 최댓값은 1 10."
@@ -5087,7 +5193,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -5112,8 +5218,9 @@
       "code": "class A {\n  A(int x) { System.out.print(x+\" \"); }\n}\nclass B extends A {\n  B() { super(3); System.out.print(7); }\n}\npublic class Main {\n  public static void main(String[] args) { new B(); }\n}",
       "inputData": "",
       "answer": "3 7",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 생성자와 super 호출 순서의 흐름을 이해하는 것이 핵심입니다. 자식 생성자에서 super가 먼저 실행된다. 부모 생성자 출력 후 자식 생성자 본문이 실행된다. 출력은 3 7. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "자식 생성자에서 super가 먼저 실행된다.",
         "부모 생성자 출력 후 자식 생성자 본문이 실행된다.",
         "출력은 3 7."
@@ -5131,7 +5238,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -5157,8 +5264,9 @@
       "code": "class Printer {\n  void print(Integer x) { System.out.print(\"I\"+x); }\n  void print(Number x) { System.out.print(\"N\"+x); }\n  void print(Object x) { System.out.print(\"O\"+x); }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Object x=Integer.valueOf(7);\n    new Printer().print(x);\n  }\n}",
       "inputData": "",
       "answer": "O7",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 오버로딩과 컴파일타임 타입의 흐름을 이해하는 것이 핵심입니다. 오버로딩 선택은 호출 시점의 선언 타입을 기준으로 한다. x의 선언 타입은 Object이다. print(Object)가 선택되어 O7. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "오버로딩 선택은 호출 시점의 선언 타입을 기준으로 한다.",
         "x의 선언 타입은 Object이다.",
         "print(Object)가 선택되어 O7."
@@ -5176,7 +5284,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -5202,8 +5310,9 @@
       "code": "abstract class Base {\n  abstract int f(int x);\n  int g(int x) { return f(x)+1; }\n}\nclass Sub extends Base {\n  int f(int x) { return x*2; }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Base b=new Sub();\n    System.out.print(b.g(5));\n  }\n}",
       "inputData": "",
       "answer": "11",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 추상 클래스와 오버라이딩 호출의 흐름을 이해하는 것이 핵심입니다. g()는 Base에 정의되어 있지만 내부 f() 호출은 동적 바인딩된다. Sub.f(x)=x×2. 따라서 결과는 11. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "g()는 Base에 정의되어 있지만 내부 f() 호출은 동적 바인딩된다.",
         "Sub.f(x)=x×2.",
         "따라서 결과는 11."
@@ -5221,7 +5330,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -5247,8 +5356,9 @@
       "code": "class Parent {\n  int value=14;\n  int get() { return value; }\n}\nclass Child extends Parent {\n  int value=24;\n  @Override int get() { return value+1; }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Parent x=new Child();\n    System.out.print(x.value+\" \"+x.get());\n  }\n}",
       "inputData": "",
       "answer": "14 25",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 필드 숨김과 메서드 오버라이딩의 흐름을 이해하는 것이 핵심입니다. 필드는 참조 변수의 선언 타입 Parent 기준으로 접근한다. 메서드는 실제 객체 Child의 오버라이딩 메서드가 호출된다. 출력은 14 25. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "필드는 참조 변수의 선언 타입 Parent 기준으로 접근한다.",
         "메서드는 실제 객체 Child의 오버라이딩 메서드가 호출된다.",
         "출력은 14 25."
@@ -5266,7 +5376,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -5292,8 +5402,9 @@
       "code": "public class Main {\n  static int f(int x) { return x+2; }\n  static int f(double x) { return (int)x+5; }\n  public static void main(String[] args) {\n    System.out.print(f(8)+\" \"+f(8.5));\n  }\n}",
       "inputData": "",
       "answer": "10 13",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 메서드 오버로딩과 인자 타입의 흐름을 이해하는 것이 핵심입니다. 정수 인자는 f(int)를 호출한다. 실수 인자는 f(double)을 호출한다. 출력은 10 13. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "정수 인자는 f(int)를 호출한다.",
         "실수 인자는 f(double)을 호출한다.",
         "출력은 10 13."
@@ -5311,7 +5422,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -5337,8 +5448,9 @@
       "code": "",
       "inputData": "salaries(emp_num, name, salary)",
       "answer": "UPDATE salaries SET salary = 2500 WHERE emp_num = 2070;",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 UPDATE와 WHERE 조건의 흐름을 이해하는 것이 핵심입니다. UPDATE 뒤에 테이블명을 쓴다. SET으로 변경할 열과 값을 지정한다. WHERE로 대상 사원번호를 한정한다. 마지막으로 테이블명·열 이름·조건 연산자와 SQL 문장의 순서를 다시 확인합니다.",
       "steps": [
+        "먼저 문제에서 테이블명, 처리할 열, 값, 조건을 각각 표시한 뒤 어떤 SQL 명령이 필요한지 정합니다.",
         "UPDATE 뒤에 테이블명을 쓴다.",
         "SET으로 변경할 열과 값을 지정한다.",
         "WHERE로 대상 사원번호를 한정한다."
@@ -5356,7 +5468,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "self",
       "examTypes": [
         "engineer"
@@ -5381,8 +5493,9 @@
       "code": "class Calc {\n  int f(int a,int b) {\n    System.out.print(a+b+\" \");\n    return a*b;\n  }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Calc c=new Calc();\n    System.out.print(c.f(4,6));\n  }\n}",
       "inputData": "",
       "answer": "10 24",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 메서드 내부 출력과 반환값의 흐름을 이해하는 것이 핵심입니다. f() 내부에서 먼저 a+b를 출력한다. 그 후 a*b를 반환한다. main이 반환값을 이어서 출력한다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "f() 내부에서 먼저 a+b를 출력한다.",
         "그 후 a*b를 반환한다.",
         "main이 반환값을 이어서 출력한다."
@@ -5400,7 +5513,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -5426,8 +5539,9 @@
       "code": "public class Main {\n  public static void main(String[] args) {\n    int x=16;\n    x+=1; x-=2; x*=3; x/=4; x%=5;\n    System.out.print(x);\n  }\n}",
       "inputData": "",
       "answer": "1",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 복합 대입 연산자의 흐름을 이해하는 것이 핵심입니다. 복합 대입 연산을 위에서 아래로 차례대로 수행한다. 정수 나눗셈은 소수부를 버린다. 최종 x=1. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "복합 대입 연산을 위에서 아래로 차례대로 수행한다.",
         "정수 나눗셈은 소수부를 버린다.",
         "최종 x=1."
@@ -5445,7 +5559,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -5471,8 +5585,9 @@
       "code": "a=(12, 23, 33)\nb=list(a)\nb[1]+=5\nprint(a[1], b[1])",
       "inputData": "",
       "answer": "23 28",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 튜플과 리스트 변환의 흐름을 이해하는 것이 핵심입니다. a는 튜플이므로 기존 값이 바뀌지 않는다. b는 a에서 만든 별도의 리스트이다. b[1]만 5 증가해 23 28가 출력된다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "a는 튜플이므로 기존 값이 바뀌지 않는다.",
         "b는 a에서 만든 별도의 리스트이다.",
         "b[1]만 5 증가해 23 28가 출력된다."
@@ -5490,7 +5605,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -5515,8 +5630,9 @@
       "code": "a=[44, 54, 64, 74]\nprint(a.pop())\nprint(a.pop(1))",
       "inputData": "",
       "answer": "74\n54",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 list.pop 인덱스와 기본 동작의 흐름을 이해하는 것이 핵심입니다. pop()은 마지막 원소를 제거하며 반환한다. pop(1)은 현재 리스트의 인덱스 1 원소를 제거한다. 출력은 74, 54 순서이다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "pop()은 마지막 원소를 제거하며 반환한다.",
         "pop(1)은 현재 리스트의 인덱스 1 원소를 제거한다.",
         "출력은 74, 54 순서이다."
@@ -5534,7 +5650,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "engineer"
@@ -5560,8 +5676,9 @@
       "code": "",
       "inputData": "dept(code, name)",
       "answer": "INSERT INTO dept(code, name) VALUES (131, 'DATA');",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 INSERT INTO 열 목록 지정의 흐름을 이해하는 것이 핵심입니다. INSERT INTO 테이블명(열 목록)을 작성한다. VALUES에 열 순서와 맞게 값을 쓴다. 문자열은 작은따옴표로 감싼다. 마지막으로 테이블명·열 이름·조건 연산자와 SQL 문장의 순서를 다시 확인합니다.",
       "steps": [
+        "먼저 문제에서 테이블명, 처리할 열, 값, 조건을 각각 표시한 뒤 어떤 SQL 명령이 필요한지 정합니다.",
         "INSERT INTO 테이블명(열 목록)을 작성한다.",
         "VALUES에 열 순서와 맞게 값을 쓴다.",
         "문자열은 작은따옴표로 감싼다."
@@ -5579,7 +5696,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "self",
       "examTypes": [
         "engineer"
@@ -5604,8 +5721,9 @@
       "code": "",
       "inputData": "student(id, name, dept)",
       "answer": "CREATE INDEX idx_name_6 ON student(name);",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 CREATE INDEX의 흐름을 이해하는 것이 핵심입니다. CREATE INDEX 뒤에 인덱스명을 쓴다. ON 뒤에 테이블과 대상 열을 지정한다. 정답은 CREATE INDEX idx_name_6 ON student(name); 마지막으로 테이블명·열 이름·조건 연산자와 SQL 문장의 순서를 다시 확인합니다.",
       "steps": [
+        "먼저 문제에서 테이블명, 처리할 열, 값, 조건을 각각 표시한 뒤 어떤 SQL 명령이 필요한지 정합니다.",
         "CREATE INDEX 뒤에 인덱스명을 쓴다.",
         "ON 뒤에 테이블과 대상 열을 지정한다.",
         "정답은 CREATE INDEX idx_name_6 ON student(name);"
@@ -5623,7 +5741,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "self",
       "examTypes": [
         "engineer"
@@ -5649,8 +5767,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[3]={3, 5, 7};\n    int *p[3]={&a[0],&a[1],&a[2]};\n    printf(\"%d\", *p[0] + *p[2]);\n    return 0;\n}",
       "inputData": "",
       "answer": "10",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 포인터 배열과 이중 간접 참조 개념의 흐름을 이해하는 것이 핵심입니다. p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다. 각 포인터를 역참조해 값을 읽는다. 합은 10. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다.",
         "각 포인터를 역참조해 값을 읽는다.",
         "합은 10."
@@ -5664,7 +5783,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "industrial_engineer"
@@ -5689,8 +5808,9 @@
       "code": "#include <stdio.h>\nstruct Node { int data; struct Node *next; };\nint main(void) {\n    struct Node c={9, NULL};\n    struct Node b={7, &c};\n    struct Node a={2, &b};\n    struct Node *p=&a;\n    int sum=0;\n    while(p!=NULL) { sum+=p->data; p=p->next; }\n    printf(\"%d\", sum);\n    return 0;\n}",
       "inputData": "",
       "answer": "18",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 구조체 포인터 기반 연결리스트 순회의 흐름을 이해하는 것이 핵심입니다. p가 a→b→c 순서로 이동한다. 각 노드의 data를 sum에 누적한다. 최종 합은 18. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "p가 a→b→c 순서로 이동한다.",
         "각 노드의 data를 sum에 누적한다.",
         "최종 합은 18."
@@ -5704,7 +5824,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "industrial_engineer"
@@ -5729,8 +5849,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[4] = {7, 9, 11, 13};\n    int *p = a + 1;\n    printf(\"%d\", *p + *(p + 2));\n    return 0;\n}",
       "inputData": "",
       "answer": "22",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 배열과 포인터 산술의 흐름을 이해하는 것이 핵심입니다. p는 a[1]을 가리킨다. *(p+2)는 a[3]이다. 두 값을 더하면 22이다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "p는 a[1]을 가리킨다.",
         "*(p+2)는 a[3]이다.",
         "두 값을 더하면 22이다."
@@ -5744,7 +5865,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "industrial_engineer",
@@ -5771,8 +5892,9 @@
       "code": "#include <stdio.h>\nstruct Item { int x; int y; };\nint main(void) {\n    struct Item a[2] = {{6, 6}, {6, 9}};\n    struct Item *p = a;\n    printf(\"%d\", p->x + (p+1)->y);\n    return 0;\n}",
       "inputData": "",
       "answer": "15",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 구조체 배열과 구조체 포인터의 흐름을 이해하는 것이 핵심입니다. p->x는 첫 구조체의 x이다. (p+1)->y는 두 번째 구조체의 y이다. 합은 15이다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "p->x는 첫 구조체의 x이다.",
         "(p+1)->y는 두 번째 구조체의 y이다.",
         "합은 15이다."
@@ -5786,7 +5908,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "industrial_engineer"
@@ -5811,8 +5933,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a=14, b=26;\n    a ^= b;\n    b ^= a;\n    a ^= b;\n    printf(\"%d %d\", a, b);\n    return 0;\n}",
       "inputData": "",
       "answer": "26 14",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 비트 XOR을 이용한 값 교환의 흐름을 이해하는 것이 핵심입니다. 세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다. 최종 a=26, b=14. 출력은 26 14이다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다.",
         "최종 a=26, b=14.",
         "출력은 26 14이다."
@@ -5826,7 +5949,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "industrial_engineer",
@@ -5853,8 +5976,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int r = 0;\n    for (int i=1; i<=7; i++) {\n        if (i==4) continue;\n        if (i==7) break;\n        r += i * 2;\n    }\n    printf(\"%d\", r);\n    return 0;\n}",
       "inputData": "",
       "answer": "34",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 break와 continue 실행 흐름의 흐름을 이해하는 것이 핵심입니다. i=4에서는 continue로 누적을 건너뛴다. i=7에서 break이므로 i=1~6까지만 반영된다. 최종 r=34. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "i=4에서는 continue로 누적을 건너뛴다.",
         "i=7에서 break이므로 i=1~6까지만 반영된다.",
         "최종 r=34."
@@ -5868,7 +5992,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "industrial_engineer"
@@ -5894,8 +6018,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[5] = {7, 2, 11, 1, 5};\n    for(int i=0;i<4;i++)\n      for(int j=0;j<4-i;j++)\n        if(a[j] > a[j+1]) {\n          int t=a[j]; a[j]=a[j+1]; a[j+1]=t;\n        }\n    printf(\"%d %d\", a[0], a[4]);\n    return 0;\n}",
       "inputData": "",
       "answer": "1 11",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 버블 정렬 결과 추적의 흐름을 이해하는 것이 핵심입니다. 인접 원소를 비교해 큰 값을 뒤로 보낸다. 반복 종료 후 오름차순 정렬된다. 최솟값과 최댓값은 1 11. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
         "반복 종료 후 오름차순 정렬된다.",
         "최솟값과 최댓값은 1 11."
@@ -5909,7 +6034,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "industrial_engineer"
@@ -5934,8 +6059,9 @@
       "code": "class Printer {\n  void print(Integer x) { System.out.print(\"I\"+x); }\n  void print(Number x) { System.out.print(\"N\"+x); }\n  void print(Object x) { System.out.print(\"O\"+x); }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Object x=Integer.valueOf(8);\n    new Printer().print(x);\n  }\n}",
       "inputData": "",
       "answer": "O8",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 오버로딩과 컴파일타임 타입의 흐름을 이해하는 것이 핵심입니다. 오버로딩 선택은 호출 시점의 선언 타입을 기준으로 한다. x의 선언 타입은 Object이다. print(Object)가 선택되어 O8. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "오버로딩 선택은 호출 시점의 선언 타입을 기준으로 한다.",
         "x의 선언 타입은 Object이다.",
         "print(Object)가 선택되어 O8."
@@ -5949,7 +6075,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "industrial_engineer"
@@ -5975,8 +6101,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[3]={1, 5, 8};\n    int *p[3]={&a[0],&a[1],&a[2]};\n    printf(\"%d\", *p[0] + *p[2]);\n    return 0;\n}",
       "inputData": "",
       "answer": "9",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 포인터 배열과 이중 간접 참조 개념의 흐름을 이해하는 것이 핵심입니다. p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다. 각 포인터를 역참조해 값을 읽는다. 합은 9. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다.",
         "각 포인터를 역참조해 값을 읽는다.",
         "합은 9."
@@ -5990,7 +6117,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "industrial_engineer"
@@ -6015,8 +6142,9 @@
       "code": "#include <stdio.h>\nstruct Node { int data; struct Node *next; };\nint main(void) {\n    struct Node c={10, NULL};\n    struct Node b={7, &c};\n    struct Node a={3, &b};\n    struct Node *p=&a;\n    int sum=0;\n    while(p!=NULL) { sum+=p->data; p=p->next; }\n    printf(\"%d\", sum);\n    return 0;\n}",
       "inputData": "",
       "answer": "20",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 구조체 포인터 기반 연결리스트 순회의 흐름을 이해하는 것이 핵심입니다. p가 a→b→c 순서로 이동한다. 각 노드의 data를 sum에 누적한다. 최종 합은 20. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "p가 a→b→c 순서로 이동한다.",
         "각 노드의 data를 sum에 누적한다.",
         "최종 합은 20."
@@ -6030,7 +6158,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "industrial_engineer"
@@ -6055,8 +6183,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[4] = {9, 11, 13, 15};\n    int *p = a + 1;\n    printf(\"%d\", *p + *(p + 2));\n    return 0;\n}",
       "inputData": "",
       "answer": "26",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 배열과 포인터 산술의 흐름을 이해하는 것이 핵심입니다. p는 a[1]을 가리킨다. *(p+2)는 a[3]이다. 두 값을 더하면 26이다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "p는 a[1]을 가리킨다.",
         "*(p+2)는 a[3]이다.",
         "두 값을 더하면 26이다."
@@ -6070,7 +6199,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "industrial_engineer",
@@ -6097,8 +6226,9 @@
       "code": "#include <stdio.h>\nstruct Item { int x; int y; };\nint main(void) {\n    struct Item a[2] = {{6, 7}, {7, 10}};\n    struct Item *p = a;\n    printf(\"%d\", p->x + (p+1)->y);\n    return 0;\n}",
       "inputData": "",
       "answer": "16",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 구조체 배열과 구조체 포인터의 흐름을 이해하는 것이 핵심입니다. p->x는 첫 구조체의 x이다. (p+1)->y는 두 번째 구조체의 y이다. 합은 16이다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "p->x는 첫 구조체의 x이다.",
         "(p+1)->y는 두 번째 구조체의 y이다.",
         "합은 16이다."
@@ -6112,7 +6242,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "industrial_engineer"
@@ -6137,8 +6267,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a=14, b=24;\n    a ^= b;\n    b ^= a;\n    a ^= b;\n    printf(\"%d %d\", a, b);\n    return 0;\n}",
       "inputData": "",
       "answer": "24 14",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 비트 XOR을 이용한 값 교환의 흐름을 이해하는 것이 핵심입니다. 세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다. 최종 a=24, b=14. 출력은 24 14이다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다.",
         "최종 a=24, b=14.",
         "출력은 24 14이다."
@@ -6152,7 +6283,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "industrial_engineer",
@@ -6179,8 +6310,9 @@
       "code": "class Parent {\n  int value=10;\n  int get() { return value; }\n}\nclass Child extends Parent {\n  int value=20;\n  @Override int get() { return value+1; }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Parent x=new Child();\n    System.out.print(x.value+\" \"+x.get());\n  }\n}",
       "inputData": "",
       "answer": "10 21",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 필드 숨김과 메서드 오버라이딩의 흐름을 이해하는 것이 핵심입니다. 필드는 참조 변수의 선언 타입 Parent 기준으로 접근한다. 메서드는 실제 객체 Child의 오버라이딩 메서드가 호출된다. 출력은 10 21. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "필드는 참조 변수의 선언 타입 Parent 기준으로 접근한다.",
         "메서드는 실제 객체 Child의 오버라이딩 메서드가 호출된다.",
         "출력은 10 21."
@@ -6194,7 +6326,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "industrial_engineer"
@@ -6220,8 +6352,9 @@
       "code": "public class Main {\n  static int f(int x) { return x+2; }\n  static int f(double x) { return (int)x+5; }\n  public static void main(String[] args) {\n    System.out.print(f(9)+\" \"+f(9.5));\n  }\n}",
       "inputData": "",
       "answer": "11 14",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 메서드 오버로딩과 인자 타입의 흐름을 이해하는 것이 핵심입니다. 정수 인자는 f(int)를 호출한다. 실수 인자는 f(double)을 호출한다. 출력은 11 14. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "정수 인자는 f(int)를 호출한다.",
         "실수 인자는 f(double)을 호출한다.",
         "출력은 11 14."
@@ -6235,7 +6368,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "industrial_engineer"
@@ -6261,8 +6394,9 @@
       "code": "",
       "inputData": "salaries(emp_num, name, salary)",
       "answer": "UPDATE salaries SET salary = 2900 WHERE emp_num = 2072;",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 UPDATE와 WHERE 조건의 흐름을 이해하는 것이 핵심입니다. UPDATE 뒤에 테이블명을 쓴다. SET으로 변경할 열과 값을 지정한다. WHERE로 대상 사원번호를 한정한다. 마지막으로 테이블명·열 이름·조건 연산자와 SQL 문장의 순서를 다시 확인합니다.",
       "steps": [
+        "먼저 문제에서 테이블명, 처리할 열, 값, 조건을 각각 표시한 뒤 어떤 SQL 명령이 필요한지 정합니다.",
         "UPDATE 뒤에 테이블명을 쓴다.",
         "SET으로 변경할 열과 값을 지정한다.",
         "WHERE로 대상 사원번호를 한정한다."
@@ -6276,7 +6410,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "self",
       "examTypes": [
         "industrial_engineer"
@@ -6301,8 +6435,9 @@
       "code": "",
       "inputData": "dept(code, name)",
       "answer": "INSERT INTO dept(code, name) VALUES (145, 'AI');",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 INSERT INTO 열 목록 지정의 흐름을 이해하는 것이 핵심입니다. INSERT INTO 테이블명(열 목록)을 작성한다. VALUES에 열 순서와 맞게 값을 쓴다. 문자열은 작은따옴표로 감싼다. 마지막으로 테이블명·열 이름·조건 연산자와 SQL 문장의 순서를 다시 확인합니다.",
       "steps": [
+        "먼저 문제에서 테이블명, 처리할 열, 값, 조건을 각각 표시한 뒤 어떤 SQL 명령이 필요한지 정합니다.",
         "INSERT INTO 테이블명(열 목록)을 작성한다.",
         "VALUES에 열 순서와 맞게 값을 쓴다.",
         "문자열은 작은따옴표로 감싼다."
@@ -6316,7 +6451,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "self",
       "examTypes": [
         "industrial_engineer"
@@ -6341,8 +6476,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[5] = {8, 2, 12, 1, 6};\n    for(int i=0;i<4;i++)\n      for(int j=0;j<4-i;j++)\n        if(a[j] > a[j+1]) {\n          int t=a[j]; a[j]=a[j+1]; a[j+1]=t;\n        }\n    printf(\"%d %d\", a[0], a[4]);\n    return 0;\n}",
       "inputData": "",
       "answer": "1 12",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 버블 정렬 결과 추적의 흐름을 이해하는 것이 핵심입니다. 인접 원소를 비교해 큰 값을 뒤로 보낸다. 반복 종료 후 오름차순 정렬된다. 최솟값과 최댓값은 1 12. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
         "반복 종료 후 오름차순 정렬된다.",
         "최솟값과 최댓값은 1 12."
@@ -6356,7 +6492,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "industrial_engineer"
@@ -6381,8 +6517,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[3]={2, 5, 9};\n    int *p[3]={&a[0],&a[1],&a[2]};\n    printf(\"%d\", *p[0] + *p[2]);\n    return 0;\n}",
       "inputData": "",
       "answer": "11",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 포인터 배열과 이중 간접 참조 개념의 흐름을 이해하는 것이 핵심입니다. p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다. 각 포인터를 역참조해 값을 읽는다. 합은 11. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다.",
         "각 포인터를 역참조해 값을 읽는다.",
         "합은 11."
@@ -6396,7 +6533,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "industrial_engineer"
@@ -6421,8 +6558,9 @@
       "code": "#include <stdio.h>\nstruct Node { int data; struct Node *next; };\nint main(void) {\n    struct Node c={6, NULL};\n    struct Node b={7, &c};\n    struct Node a={4, &b};\n    struct Node *p=&a;\n    int sum=0;\n    while(p!=NULL) { sum+=p->data; p=p->next; }\n    printf(\"%d\", sum);\n    return 0;\n}",
       "inputData": "",
       "answer": "17",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 구조체 포인터 기반 연결리스트 순회의 흐름을 이해하는 것이 핵심입니다. p가 a→b→c 순서로 이동한다. 각 노드의 data를 sum에 누적한다. 최종 합은 17. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "p가 a→b→c 순서로 이동한다.",
         "각 노드의 data를 sum에 누적한다.",
         "최종 합은 17."
@@ -6436,7 +6574,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "industrial_engineer"
@@ -6461,8 +6599,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[4] = {11, 13, 15, 17};\n    int *p = a + 1;\n    printf(\"%d\", *p + *(p + 2));\n    return 0;\n}",
       "inputData": "",
       "answer": "30",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 배열과 포인터 산술의 흐름을 이해하는 것이 핵심입니다. p는 a[1]을 가리킨다. *(p+2)는 a[3]이다. 두 값을 더하면 30이다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "p는 a[1]을 가리킨다.",
         "*(p+2)는 a[3]이다.",
         "두 값을 더하면 30이다."
@@ -6476,7 +6615,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "industrial_engineer",
@@ -6503,8 +6642,9 @@
       "code": "class Calc {\n  int f(int a,int b) {\n    System.out.print(a+b+\" \");\n    return a*b;\n  }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Calc c=new Calc();\n    System.out.print(c.f(5,6));\n  }\n}",
       "inputData": "",
       "answer": "11 30",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 메서드 내부 출력과 반환값의 흐름을 이해하는 것이 핵심입니다. f() 내부에서 먼저 a+b를 출력한다. 그 후 a*b를 반환한다. main이 반환값을 이어서 출력한다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "f() 내부에서 먼저 a+b를 출력한다.",
         "그 후 a*b를 반환한다.",
         "main이 반환값을 이어서 출력한다."
@@ -6518,7 +6658,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "industrial_engineer"
@@ -6544,8 +6684,9 @@
       "code": "public class Main {\n  public static void main(String[] args) {\n    int x=17;\n    x+=1; x-=2; x*=3; x/=4; x%=5;\n    System.out.print(x);\n  }\n}",
       "inputData": "",
       "answer": "2",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 복합 대입 연산자의 흐름을 이해하는 것이 핵심입니다. 복합 대입 연산을 위에서 아래로 차례대로 수행한다. 정수 나눗셈은 소수부를 버린다. 최종 x=2. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "복합 대입 연산을 위에서 아래로 차례대로 수행한다.",
         "정수 나눗셈은 소수부를 버린다.",
         "최종 x=2."
@@ -6559,7 +6700,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "examTypes": [
         "industrial_engineer"
@@ -6585,8 +6726,9 @@
       "code": "",
       "inputData": "student(id, name, dept)",
       "answer": "CREATE INDEX idx_name_2 ON student(name);",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 CREATE INDEX의 흐름을 이해하는 것이 핵심입니다. CREATE INDEX 뒤에 인덱스명을 쓴다. ON 뒤에 테이블과 대상 열을 지정한다. 정답은 CREATE INDEX idx_name_2 ON student(name); 마지막으로 테이블명·열 이름·조건 연산자와 SQL 문장의 순서를 다시 확인합니다.",
       "steps": [
+        "먼저 문제에서 테이블명, 처리할 열, 값, 조건을 각각 표시한 뒤 어떤 SQL 명령이 필요한지 정합니다.",
         "CREATE INDEX 뒤에 인덱스명을 쓴다.",
         "ON 뒤에 테이블과 대상 열을 지정한다.",
         "정답은 CREATE INDEX idx_name_2 ON student(name);"
@@ -6600,7 +6742,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "self",
       "examTypes": [
         "industrial_engineer",
@@ -6627,8 +6769,9 @@
       "code": "#include <stdio.h>\nstruct Item { int x; int y; };\nint main(void) {\n    struct Item a[2] = {{6, 6}, {6, 10}};\n    struct Item *p = a;\n    printf(\"%d\", p->x + (p+1)->y);\n    return 0;\n}",
       "inputData": "",
       "answer": "16",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 구조체 배열과 구조체 포인터의 흐름을 이해하는 것이 핵심입니다. p->x는 첫 구조체의 x이다. (p+1)->y는 두 번째 구조체의 y이다. 합은 16이다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "p->x는 첫 구조체의 x이다.",
         "(p+1)->y는 두 번째 구조체의 y이다.",
         "합은 16이다."
@@ -6642,7 +6785,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "originalQuestionId": "REC-003",
       "examTypes": [
@@ -6668,8 +6811,9 @@
       "code": "x=[2, -1, 4, 0, -1, 1]\nfor n in x:\n    if n == -1:\n        continue\n    print(n, end=\"\")",
       "inputData": "",
       "answer": "2401",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 for문과 continue의 흐름을 이해하는 것이 핵심입니다. -1이면 continue로 print를 건너뛴다. 나머지 값은 줄바꿈 없이 이어 출력된다. 결과는 2401. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "-1이면 continue로 print를 건너뛴다.",
         "나머지 값은 줄바꿈 없이 이어 출력된다.",
         "결과는 2401."
@@ -6683,7 +6827,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "originalQuestionId": "REC-015",
       "examTypes": [
@@ -6712,8 +6856,9 @@
       "code": "def f(n):\n    return lambda a: a*n\ng=f(4)\nprint(g(5))",
       "inputData": "",
       "answer": "20",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 lambda와 클로저의 흐름을 이해하는 것이 핵심입니다. f(4)은 a×4을 계산하는 lambda를 반환한다. g(5)=5×4. 결과는 20. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "f(4)은 a×4을 계산하는 lambda를 반환한다.",
         "g(5)=5×4.",
         "결과는 20."
@@ -6727,7 +6872,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "originalQuestionId": "REC-016",
       "examTypes": [
@@ -6756,8 +6901,9 @@
       "code": "",
       "inputData": "salaries(emp_num, name, salary)",
       "answer": "UPDATE salaries SET salary = 2700 WHERE emp_num = 2070;",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 UPDATE와 WHERE 조건의 흐름을 이해하는 것이 핵심입니다. UPDATE 뒤에 테이블명을 쓴다. SET으로 변경할 열과 값을 지정한다. WHERE로 대상 사원번호를 한정한다. 마지막으로 테이블명·열 이름·조건 연산자와 SQL 문장의 순서를 다시 확인합니다.",
       "steps": [
+        "먼저 문제에서 테이블명, 처리할 열, 값, 조건을 각각 표시한 뒤 어떤 SQL 명령이 필요한지 정합니다.",
         "UPDATE 뒤에 테이블명을 쓴다.",
         "SET으로 변경할 열과 값을 지정한다.",
         "WHERE로 대상 사원번호를 한정한다."
@@ -6771,7 +6917,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "self",
       "originalQuestionId": "REC-018",
       "examTypes": [
@@ -6797,8 +6943,9 @@
       "code": "",
       "inputData": "dept(code, name)",
       "answer": "INSERT INTO dept(code, name) VALUES (103, 'DATA');",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 INSERT INTO 열 목록 지정의 흐름을 이해하는 것이 핵심입니다. INSERT INTO 테이블명(열 목록)을 작성한다. VALUES에 열 순서와 맞게 값을 쓴다. 문자열은 작은따옴표로 감싼다. 마지막으로 테이블명·열 이름·조건 연산자와 SQL 문장의 순서를 다시 확인합니다.",
       "steps": [
+        "먼저 문제에서 테이블명, 처리할 열, 값, 조건을 각각 표시한 뒤 어떤 SQL 명령이 필요한지 정합니다.",
         "INSERT INTO 테이블명(열 목록)을 작성한다.",
         "VALUES에 열 순서와 맞게 값을 쓴다.",
         "문자열은 작은따옴표로 감싼다."
@@ -6812,7 +6959,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "self",
       "originalQuestionId": "REC-019",
       "examTypes": [
@@ -6838,8 +6985,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[5] = {7, 2, 12, 1, 5};\n    for(int i=0;i<4;i++)\n      for(int j=0;j<4-i;j++)\n        if(a[j] > a[j+1]) {\n          int t=a[j]; a[j]=a[j+1]; a[j+1]=t;\n        }\n    printf(\"%d %d\", a[0], a[4]);\n    return 0;\n}",
       "inputData": "",
       "answer": "1 12",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 버블 정렬 결과 추적의 흐름을 이해하는 것이 핵심입니다. 인접 원소를 비교해 큰 값을 뒤로 보낸다. 반복 종료 후 오름차순 정렬된다. 최솟값과 최댓값은 1 12. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
         "반복 종료 후 오름차순 정렬된다.",
         "최솟값과 최댓값은 1 12."
@@ -6853,7 +7001,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "originalQuestionId": "REC-026",
       "examTypes": [
@@ -6879,8 +7027,9 @@
       "code": "s=\"PYTHONIC\"\nprint(s[::-2])",
       "inputData": "",
       "answer": "CNHY",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 문자열 슬라이싱 역순의 흐름을 이해하는 것이 핵심입니다. [::-2]는 뒤에서부터 두 칸씩 이동한다. 마지막 문자부터 인덱스를 감소시키며 선택한다. 결과는 CNHY. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "[::-2]는 뒤에서부터 두 칸씩 이동한다.",
         "마지막 문자부터 인덱스를 감소시키며 선택한다.",
         "결과는 CNHY."
@@ -6894,7 +7043,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "originalQuestionId": "REC-036",
       "examTypes": [
@@ -6923,8 +7072,9 @@
       "code": "#include <stdio.h>\n#include <string.h>\nint main(void) {\n    char s[]=\"AbCdEFgH\";\n    int cnt=0;\n    for(int i=0;i<(int)strlen(s);i++)\n        if(s[i]>='A' && s[i]<='Z') cnt++;\n    printf(\"%d\", cnt);\n    return 0;\n}",
       "inputData": "",
       "answer": "5",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 문자열 순회와 대문자 판별의 흐름을 이해하는 것이 핵심입니다. 각 문자가 'A'~'Z' 범위인지 검사한다. 조건을 만족하는 문자마다 cnt를 증가시킨다. 대문자 개수는 5개. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "각 문자가 'A'~'Z' 범위인지 검사한다.",
         "조건을 만족하는 문자마다 cnt를 증가시킨다.",
         "대문자 개수는 5개."
@@ -6938,7 +7088,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "originalQuestionId": "REC-045",
       "examTypes": [
@@ -6970,8 +7120,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[3]={1, 5, 9};\n    int *p[3]={&a[0],&a[1],&a[2]};\n    printf(\"%d\", *p[0] + *p[2]);\n    return 0;\n}",
       "inputData": "",
       "answer": "10",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 포인터 배열과 이중 간접 참조 개념의 흐름을 이해하는 것이 핵심입니다. p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다. 각 포인터를 역참조해 값을 읽는다. 합은 10. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다.",
         "각 포인터를 역참조해 값을 읽는다.",
         "합은 10."
@@ -6985,7 +7136,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "originalQuestionId": "REC-047",
       "examTypes": [
@@ -7011,8 +7162,9 @@
       "code": "#include <stdio.h>\nstruct Node { int data; struct Node *next; };\nint main(void) {\n    struct Node c={6, NULL};\n    struct Node b={7, &c};\n    struct Node a={3, &b};\n    struct Node *p=&a;\n    int sum=0;\n    while(p!=NULL) { sum+=p->data; p=p->next; }\n    printf(\"%d\", sum);\n    return 0;\n}",
       "inputData": "",
       "answer": "16",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 구조체 포인터 기반 연결리스트 순회의 흐름을 이해하는 것이 핵심입니다. p가 a→b→c 순서로 이동한다. 각 노드의 data를 sum에 누적한다. 최종 합은 16. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "p가 a→b→c 순서로 이동한다.",
         "각 노드의 data를 sum에 누적한다.",
         "최종 합은 16."
@@ -7026,7 +7178,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "originalQuestionId": "REC-048",
       "examTypes": [
@@ -7052,8 +7204,9 @@
       "code": "d={x:x*x for x in range(1,7)}\nr=0\nfor k,v in d.items():\n    if k & 1:\n        r += v\nprint(r)",
       "inputData": "",
       "answer": "35",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 딕셔너리 컴프리헨션과 비트 연산의 흐름을 이해하는 것이 핵심입니다. k&1이 1이면 홀수이다. 홀수 키에 해당하는 제곱값만 더한다. 합은 35. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "k&1이 1이면 홀수이다.",
         "홀수 키에 해당하는 제곱값만 더한다.",
         "합은 35."
@@ -7067,7 +7220,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "originalQuestionId": "REC-059",
       "examTypes": [
@@ -7096,8 +7249,9 @@
       "code": "s=\"HumanDev\"\nx=s[::-1]\nprint(x.replace(\"n\",\"\",1))",
       "inputData": "",
       "answer": "veDamuH",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 문자열 반전과 replace의 흐름을 이해하는 것이 핵심입니다. s[::-1]로 문자열을 뒤집는다. 뒤집힌 문자열에서 첫 'n'만 제거한다. 결과는 veDamuH. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "s[::-1]로 문자열을 뒤집는다.",
         "뒤집힌 문자열에서 첫 'n'만 제거한다.",
         "결과는 veDamuH."
@@ -7111,7 +7265,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "originalQuestionId": "REC-061",
       "examTypes": [
@@ -7138,8 +7292,9 @@
       "code": "",
       "inputData": "salaries(emp_num, name, salary)",
       "answer": "UPDATE salaries SET salary = 2600 WHERE emp_num = 2072;",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 UPDATE와 WHERE 조건의 흐름을 이해하는 것이 핵심입니다. UPDATE 뒤에 테이블명을 쓴다. SET으로 변경할 열과 값을 지정한다. WHERE로 대상 사원번호를 한정한다. 마지막으로 테이블명·열 이름·조건 연산자와 SQL 문장의 순서를 다시 확인합니다.",
       "steps": [
+        "먼저 문제에서 테이블명, 처리할 열, 값, 조건을 각각 표시한 뒤 어떤 SQL 명령이 필요한지 정합니다.",
         "UPDATE 뒤에 테이블명을 쓴다.",
         "SET으로 변경할 열과 값을 지정한다.",
         "WHERE로 대상 사원번호를 한정한다."
@@ -7153,7 +7308,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "self",
       "originalQuestionId": "REC-065",
       "examTypes": [
@@ -7179,8 +7334,9 @@
       "code": "",
       "inputData": "dept(code, name)",
       "answer": "INSERT INTO dept(code, name) VALUES (117, 'AI');",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 INSERT INTO 열 목록 지정의 흐름을 이해하는 것이 핵심입니다. INSERT INTO 테이블명(열 목록)을 작성한다. VALUES에 열 순서와 맞게 값을 쓴다. 문자열은 작은따옴표로 감싼다. 마지막으로 테이블명·열 이름·조건 연산자와 SQL 문장의 순서를 다시 확인합니다.",
       "steps": [
+        "먼저 문제에서 테이블명, 처리할 열, 값, 조건을 각각 표시한 뒤 어떤 SQL 명령이 필요한지 정합니다.",
         "INSERT INTO 테이블명(열 목록)을 작성한다.",
         "VALUES에 열 순서와 맞게 값을 쓴다.",
         "문자열은 작은따옴표로 감싼다."
@@ -7194,7 +7350,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "self",
       "originalQuestionId": "REC-066",
       "examTypes": [
@@ -7220,8 +7376,9 @@
       "code": "#include <stdio.h>\nstruct Item { int x; int y; };\nint main(void) {\n    struct Item a[2] = {{6, 7}, {7, 11}};\n    struct Item *p = a;\n    printf(\"%d\", p->x + (p+1)->y);\n    return 0;\n}",
       "inputData": "",
       "answer": "17",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 구조체 배열과 구조체 포인터의 흐름을 이해하는 것이 핵심입니다. p->x는 첫 구조체의 x이다. (p+1)->y는 두 번째 구조체의 y이다. 합은 17이다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "p->x는 첫 구조체의 x이다.",
         "(p+1)->y는 두 번째 구조체의 y이다.",
         "합은 17이다."
@@ -7235,7 +7392,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "originalQuestionId": "REC-068",
       "examTypes": [
@@ -7261,8 +7418,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[5] = {8, 2, 13, 1, 6};\n    for(int i=0;i<4;i++)\n      for(int j=0;j<4-i;j++)\n        if(a[j] > a[j+1]) {\n          int t=a[j]; a[j]=a[j+1]; a[j+1]=t;\n        }\n    printf(\"%d %d\", a[0], a[4]);\n    return 0;\n}",
       "inputData": "",
       "answer": "1 13",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 버블 정렬 결과 추적의 흐름을 이해하는 것이 핵심입니다. 인접 원소를 비교해 큰 값을 뒤로 보낸다. 반복 종료 후 오름차순 정렬된다. 최솟값과 최댓값은 1 13. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
         "반복 종료 후 오름차순 정렬된다.",
         "최솟값과 최댓값은 1 13."
@@ -7276,7 +7434,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "originalQuestionId": "REC-073",
       "examTypes": [
@@ -7302,8 +7460,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[3]={2, 5, 5};\n    int *p[3]={&a[0],&a[1],&a[2]};\n    printf(\"%d\", *p[0] + *p[2]);\n    return 0;\n}",
       "inputData": "",
       "answer": "7",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 포인터 배열과 이중 간접 참조 개념의 흐름을 이해하는 것이 핵심입니다. p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다. 각 포인터를 역참조해 값을 읽는다. 합은 7. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다.",
         "각 포인터를 역참조해 값을 읽는다.",
         "합은 7."
@@ -7317,7 +7476,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "originalQuestionId": "REC-079",
       "examTypes": [
@@ -7343,8 +7502,9 @@
       "code": "#include <stdio.h>\nstruct Node { int data; struct Node *next; };\nint main(void) {\n    struct Node c={7, NULL};\n    struct Node b={7, &c};\n    struct Node a={4, &b};\n    struct Node *p=&a;\n    int sum=0;\n    while(p!=NULL) { sum+=p->data; p=p->next; }\n    printf(\"%d\", sum);\n    return 0;\n}",
       "inputData": "",
       "answer": "18",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 구조체 포인터 기반 연결리스트 순회의 흐름을 이해하는 것이 핵심입니다. p가 a→b→c 순서로 이동한다. 각 노드의 data를 sum에 누적한다. 최종 합은 18. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "p가 a→b→c 순서로 이동한다.",
         "각 노드의 data를 sum에 누적한다.",
         "최종 합은 18."
@@ -7358,7 +7518,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "originalQuestionId": "REC-080",
       "examTypes": [
@@ -7384,8 +7544,9 @@
       "code": "def add(a,b):\n    return a+b\ndef sub(a,b):\n    return a-b\nprint(sub(add(6,4), 4))",
       "inputData": "",
       "answer": "6",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 중첩 함수 호출의 반환값의 흐름을 이해하는 것이 핵심입니다. add(6,4)=10. 그 결과에서 4를 뺀다. 최종 결과는 6. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "add(6,4)=10.",
         "그 결과에서 4를 뺀다.",
         "최종 결과는 6."
@@ -7399,7 +7560,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "originalQuestionId": "REC-090",
       "examTypes": [
@@ -7426,8 +7587,9 @@
       "code": "a=(10, 23, 31)\nb=list(a)\nb[1]+=5\nprint(a[1], b[1])",
       "inputData": "",
       "answer": "23 28",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 튜플과 리스트 변환의 흐름을 이해하는 것이 핵심입니다. a는 튜플이므로 기존 값이 바뀌지 않는다. b는 a에서 만든 별도의 리스트이다. b[1]만 5 증가해 23 28가 출력된다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "a는 튜플이므로 기존 값이 바뀌지 않는다.",
         "b는 a에서 만든 별도의 리스트이다.",
         "b[1]만 5 증가해 23 28가 출력된다."
@@ -7441,7 +7603,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "originalQuestionId": "REC-091",
       "examTypes": [
@@ -7467,8 +7629,9 @@
       "code": "#include <stdio.h>\nstruct Item { int x; int y; };\nint main(void) {\n    struct Item a[2] = {{6, 5}, {5, 7}};\n    struct Item *p = a;\n    printf(\"%d\", p->x + (p+1)->y);\n    return 0;\n}",
       "inputData": "",
       "answer": "13",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 구조체 배열과 구조체 포인터의 흐름을 이해하는 것이 핵심입니다. p->x는 첫 구조체의 x이다. (p+1)->y는 두 번째 구조체의 y이다. 합은 13이다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "p->x는 첫 구조체의 x이다.",
         "(p+1)->y는 두 번째 구조체의 y이다.",
         "합은 13이다."
@@ -7482,7 +7645,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "originalQuestionId": "REC-100",
       "examTypes": [
@@ -7508,8 +7671,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a=14, b=22;\n    a ^= b;\n    b ^= a;\n    a ^= b;\n    printf(\"%d %d\", a, b);\n    return 0;\n}",
       "inputData": "",
       "answer": "22 14",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 비트 XOR을 이용한 값 교환의 흐름을 이해하는 것이 핵심입니다. 세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다. 최종 a=22, b=14. 출력은 22 14이다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다.",
         "최종 a=22, b=14.",
         "출력은 22 14이다."
@@ -7523,7 +7687,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "originalQuestionId": "REC-102",
       "examTypes": [
@@ -7549,8 +7713,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[5] = {9, 2, 9, 1, 7};\n    for(int i=0;i<4;i++)\n      for(int j=0;j<4-i;j++)\n        if(a[j] > a[j+1]) {\n          int t=a[j]; a[j]=a[j+1]; a[j+1]=t;\n        }\n    printf(\"%d %d\", a[0], a[4]);\n    return 0;\n}",
       "inputData": "",
       "answer": "1 9",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 버블 정렬 결과 추적의 흐름을 이해하는 것이 핵심입니다. 인접 원소를 비교해 큰 값을 뒤로 보낸다. 반복 종료 후 오름차순 정렬된다. 최솟값과 최댓값은 1 9. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
         "반복 종료 후 오름차순 정렬된다.",
         "최솟값과 최댓값은 1 9."
@@ -7564,7 +7729,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "originalQuestionId": "REC-105",
       "examTypes": [
@@ -7590,8 +7755,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[3]={3, 5, 6};\n    int *p[3]={&a[0],&a[1],&a[2]};\n    printf(\"%d\", *p[0] + *p[2]);\n    return 0;\n}",
       "inputData": "",
       "answer": "9",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 포인터 배열과 이중 간접 참조 개념의 흐름을 이해하는 것이 핵심입니다. p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다. 각 포인터를 역참조해 값을 읽는다. 합은 9. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다.",
         "각 포인터를 역참조해 값을 읽는다.",
         "합은 9."
@@ -7605,7 +7771,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "originalQuestionId": "REC-130",
       "examTypes": [
@@ -7631,8 +7797,9 @@
       "code": "#include <stdio.h>\nstruct Node { int data; struct Node *next; };\nint main(void) {\n    struct Node c={8, NULL};\n    struct Node b={7, &c};\n    struct Node a={2, &b};\n    struct Node *p=&a;\n    int sum=0;\n    while(p!=NULL) { sum+=p->data; p=p->next; }\n    printf(\"%d\", sum);\n    return 0;\n}",
       "inputData": "",
       "answer": "17",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 구조체 포인터 기반 연결리스트 순회의 흐름을 이해하는 것이 핵심입니다. p가 a→b→c 순서로 이동한다. 각 노드의 data를 sum에 누적한다. 최종 합은 17. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "p가 a→b→c 순서로 이동한다.",
         "각 노드의 data를 sum에 누적한다.",
         "최종 합은 17."
@@ -7646,7 +7813,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "originalQuestionId": "REC-131",
       "examTypes": [
@@ -7672,8 +7839,9 @@
       "code": "#include <stdio.h>\nstruct Item { int x; int y; };\nint main(void) {\n    struct Item a[2] = {{6, 6}, {6, 8}};\n    struct Item *p = a;\n    printf(\"%d\", p->x + (p+1)->y);\n    return 0;\n}",
       "inputData": "",
       "answer": "14",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 구조체 배열과 구조체 포인터의 흐름을 이해하는 것이 핵심입니다. p->x는 첫 구조체의 x이다. (p+1)->y는 두 번째 구조체의 y이다. 합은 14이다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "p->x는 첫 구조체의 x이다.",
         "(p+1)->y는 두 번째 구조체의 y이다.",
         "합은 14이다."
@@ -7687,7 +7855,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "originalQuestionId": "REC-135",
       "examTypes": [
@@ -7713,8 +7881,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a=14, b=20;\n    a ^= b;\n    b ^= a;\n    a ^= b;\n    printf(\"%d %d\", a, b);\n    return 0;\n}",
       "inputData": "",
       "answer": "20 14",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 비트 XOR을 이용한 값 교환의 흐름을 이해하는 것이 핵심입니다. 세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다. 최종 a=20, b=14. 출력은 20 14이다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다.",
         "최종 a=20, b=14.",
         "출력은 20 14이다."
@@ -7728,7 +7897,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "originalQuestionId": "REC-137",
       "examTypes": [
@@ -7754,8 +7923,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[5] = {7, 2, 10, 1, 5};\n    for(int i=0;i<4;i++)\n      for(int j=0;j<4-i;j++)\n        if(a[j] > a[j+1]) {\n          int t=a[j]; a[j]=a[j+1]; a[j+1]=t;\n        }\n    printf(\"%d %d\", a[0], a[4]);\n    return 0;\n}",
       "inputData": "",
       "answer": "1 10",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 버블 정렬 결과 추적의 흐름을 이해하는 것이 핵심입니다. 인접 원소를 비교해 큰 값을 뒤로 보낸다. 반복 종료 후 오름차순 정렬된다. 최솟값과 최댓값은 1 10. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
         "반복 종료 후 오름차순 정렬된다.",
         "최솟값과 최댓값은 1 10."
@@ -7769,7 +7939,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "originalQuestionId": "REC-140",
       "examTypes": [
@@ -7795,8 +7965,9 @@
       "code": "",
       "inputData": "salaries(emp_num, name, salary)",
       "answer": "UPDATE salaries SET salary = 2500 WHERE emp_num = 2074;",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 UPDATE와 WHERE 조건의 흐름을 이해하는 것이 핵심입니다. UPDATE 뒤에 테이블명을 쓴다. SET으로 변경할 열과 값을 지정한다. WHERE로 대상 사원번호를 한정한다. 마지막으로 테이블명·열 이름·조건 연산자와 SQL 문장의 순서를 다시 확인합니다.",
       "steps": [
+        "먼저 문제에서 테이블명, 처리할 열, 값, 조건을 각각 표시한 뒤 어떤 SQL 명령이 필요한지 정합니다.",
         "UPDATE 뒤에 테이블명을 쓴다.",
         "SET으로 변경할 열과 값을 지정한다.",
         "WHERE로 대상 사원번호를 한정한다."
@@ -7810,7 +7981,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "self",
       "originalQuestionId": "REC-157",
       "examTypes": [
@@ -7836,8 +8007,9 @@
       "code": "a=(10, 23, 33)\nb=list(a)\nb[1]+=5\nprint(a[1], b[1])",
       "inputData": "",
       "answer": "23 28",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 튜플과 리스트 변환의 흐름을 이해하는 것이 핵심입니다. a는 튜플이므로 기존 값이 바뀌지 않는다. b는 a에서 만든 별도의 리스트이다. b[1]만 5 증가해 23 28가 출력된다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "a는 튜플이므로 기존 값이 바뀌지 않는다.",
         "b는 a에서 만든 별도의 리스트이다.",
         "b[1]만 5 증가해 23 28가 출력된다."
@@ -7851,7 +8023,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "originalQuestionId": "REC-170",
       "examTypes": [
@@ -7877,8 +8049,9 @@
       "code": "",
       "inputData": "dept(code, name)",
       "answer": "INSERT INTO dept(code, name) VALUES (131, 'CLOUD');",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 INSERT INTO 열 목록 지정의 흐름을 이해하는 것이 핵심입니다. INSERT INTO 테이블명(열 목록)을 작성한다. VALUES에 열 순서와 맞게 값을 쓴다. 문자열은 작은따옴표로 감싼다. 마지막으로 테이블명·열 이름·조건 연산자와 SQL 문장의 순서를 다시 확인합니다.",
       "steps": [
+        "먼저 문제에서 테이블명, 처리할 열, 값, 조건을 각각 표시한 뒤 어떤 SQL 명령이 필요한지 정합니다.",
         "INSERT INTO 테이블명(열 목록)을 작성한다.",
         "VALUES에 열 순서와 맞게 값을 쓴다.",
         "문자열은 작은따옴표로 감싼다."
@@ -7892,7 +8065,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "self",
       "originalQuestionId": "REC-172",
       "examTypes": [
@@ -7918,8 +8091,9 @@
       "code": "",
       "inputData": "student(id, name, dept)",
       "answer": "CREATE INDEX idx_name_7 ON student(name);",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 CREATE INDEX의 흐름을 이해하는 것이 핵심입니다. CREATE INDEX 뒤에 인덱스명을 쓴다. ON 뒤에 테이블과 대상 열을 지정한다. 정답은 CREATE INDEX idx_name_7 ON student(name); 마지막으로 테이블명·열 이름·조건 연산자와 SQL 문장의 순서를 다시 확인합니다.",
       "steps": [
+        "먼저 문제에서 테이블명, 처리할 열, 값, 조건을 각각 표시한 뒤 어떤 SQL 명령이 필요한지 정합니다.",
         "CREATE INDEX 뒤에 인덱스명을 쓴다.",
         "ON 뒤에 테이블과 대상 열을 지정한다.",
         "정답은 CREATE INDEX idx_name_7 ON student(name);"
@@ -7933,7 +8107,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "self",
       "originalQuestionId": "REC-174",
       "examTypes": [
@@ -7959,8 +8133,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[3]={1, 5, 7};\n    int *p[3]={&a[0],&a[1],&a[2]};\n    printf(\"%d\", *p[0] + *p[2]);\n    return 0;\n}",
       "inputData": "",
       "answer": "8",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 포인터 배열과 이중 간접 참조 개념의 흐름을 이해하는 것이 핵심입니다. p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다. 각 포인터를 역참조해 값을 읽는다. 합은 8. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다.",
         "각 포인터를 역참조해 값을 읽는다.",
         "합은 8."
@@ -7974,7 +8149,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "originalQuestionId": "REC-180",
       "examTypes": [
@@ -8000,8 +8175,9 @@
       "code": "#include <stdio.h>\nstruct Node { int data; struct Node *next; };\nint main(void) {\n    struct Node c={9, NULL};\n    struct Node b={7, &c};\n    struct Node a={3, &b};\n    struct Node *p=&a;\n    int sum=0;\n    while(p!=NULL) { sum+=p->data; p=p->next; }\n    printf(\"%d\", sum);\n    return 0;\n}",
       "inputData": "",
       "answer": "19",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 구조체 포인터 기반 연결리스트 순회의 흐름을 이해하는 것이 핵심입니다. p가 a→b→c 순서로 이동한다. 각 노드의 data를 sum에 누적한다. 최종 합은 19. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "p가 a→b→c 순서로 이동한다.",
         "각 노드의 data를 sum에 누적한다.",
         "최종 합은 19."
@@ -8015,7 +8191,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "originalQuestionId": "REC-181",
       "examTypes": [
@@ -8041,8 +8217,9 @@
       "code": "#include <stdio.h>\nstruct Item { int x; int y; };\nint main(void) {\n    struct Item a[2] = {{6, 7}, {7, 9}};\n    struct Item *p = a;\n    printf(\"%d\", p->x + (p+1)->y);\n    return 0;\n}",
       "inputData": "",
       "answer": "15",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 구조체 배열과 구조체 포인터의 흐름을 이해하는 것이 핵심입니다. p->x는 첫 구조체의 x이다. (p+1)->y는 두 번째 구조체의 y이다. 합은 15이다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "p->x는 첫 구조체의 x이다.",
         "(p+1)->y는 두 번째 구조체의 y이다.",
         "합은 15이다."
@@ -8056,7 +8233,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "originalQuestionId": "REC-185",
       "examTypes": [
@@ -8082,8 +8259,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a=14, b=27;\n    a ^= b;\n    b ^= a;\n    a ^= b;\n    printf(\"%d %d\", a, b);\n    return 0;\n}",
       "inputData": "",
       "answer": "27 14",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 비트 XOR을 이용한 값 교환의 흐름을 이해하는 것이 핵심입니다. 세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다. 최종 a=27, b=14. 출력은 27 14이다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "세 번의 XOR 연산으로 임시 변수 없이 값이 교환된다.",
         "최종 a=27, b=14.",
         "출력은 27 14이다."
@@ -8097,7 +8275,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "originalQuestionId": "REC-187",
       "examTypes": [
@@ -8123,8 +8301,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[5] = {8, 2, 11, 1, 6};\n    for(int i=0;i<4;i++)\n      for(int j=0;j<4-i;j++)\n        if(a[j] > a[j+1]) {\n          int t=a[j]; a[j]=a[j+1]; a[j+1]=t;\n        }\n    printf(\"%d %d\", a[0], a[4]);\n    return 0;\n}",
       "inputData": "",
       "answer": "1 11",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 버블 정렬 결과 추적의 흐름을 이해하는 것이 핵심입니다. 인접 원소를 비교해 큰 값을 뒤로 보낸다. 반복 종료 후 오름차순 정렬된다. 최솟값과 최댓값은 1 11. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "인접 원소를 비교해 큰 값을 뒤로 보낸다.",
         "반복 종료 후 오름차순 정렬된다.",
         "최솟값과 최댓값은 1 11."
@@ -8138,7 +8317,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "originalQuestionId": "REC-190",
       "examTypes": [
@@ -8164,8 +8343,9 @@
       "code": "#include <stdio.h>\nint main(void) {\n    int a[3]={2, 5, 8};\n    int *p[3]={&a[0],&a[1],&a[2]};\n    printf(\"%d\", *p[0] + *p[2]);\n    return 0;\n}",
       "inputData": "",
       "answer": "10",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 포인터 배열과 이중 간접 참조 개념의 흐름을 이해하는 것이 핵심입니다. p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다. 각 포인터를 역참조해 값을 읽는다. 합은 10. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "p[0]은 a[0]의 주소, p[2]는 a[2]의 주소이다.",
         "각 포인터를 역참조해 값을 읽는다.",
         "합은 10."
@@ -8179,7 +8359,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "originalQuestionId": "REC-210",
       "examTypes": [
@@ -8205,8 +8385,9 @@
       "code": "#include <stdio.h>\nstruct Node { int data; struct Node *next; };\nint main(void) {\n    struct Node c={10, NULL};\n    struct Node b={7, &c};\n    struct Node a={4, &b};\n    struct Node *p=&a;\n    int sum=0;\n    while(p!=NULL) { sum+=p->data; p=p->next; }\n    printf(\"%d\", sum);\n    return 0;\n}",
       "inputData": "",
       "answer": "21",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 구조체 포인터 기반 연결리스트 순회의 흐름을 이해하는 것이 핵심입니다. p가 a→b→c 순서로 이동한다. 각 노드의 data를 sum에 누적한다. 최종 합은 21. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
       "steps": [
+        "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
         "p가 a→b→c 순서로 이동한다.",
         "각 노드의 data를 sum에 누적한다.",
         "최종 합은 21."
@@ -8220,7 +8401,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "exact",
       "originalQuestionId": "REC-211",
       "examTypes": [
@@ -8246,8 +8427,9 @@
       "code": "",
       "inputData": "salaries(emp_num, name, salary)",
       "answer": "UPDATE salaries SET salary = 2900 WHERE emp_num = 2070;",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 UPDATE와 WHERE 조건의 흐름을 이해하는 것이 핵심입니다. UPDATE 뒤에 테이블명을 쓴다. SET으로 변경할 열과 값을 지정한다. WHERE로 대상 사원번호를 한정한다. 마지막으로 테이블명·열 이름·조건 연산자와 SQL 문장의 순서를 다시 확인합니다.",
       "steps": [
+        "먼저 문제에서 테이블명, 처리할 열, 값, 조건을 각각 표시한 뒤 어떤 SQL 명령이 필요한지 정합니다.",
         "UPDATE 뒤에 테이블명을 쓴다.",
         "SET으로 변경할 열과 값을 지정한다.",
         "WHERE로 대상 사원번호를 한정한다."
@@ -8261,7 +8443,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "self",
       "originalQuestionId": "REC-226",
       "examTypes": [
@@ -8287,8 +8469,9 @@
       "code": "",
       "inputData": "dept(code, name)",
       "answer": "INSERT INTO dept(code, name) VALUES (145, 'DATA');",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 INSERT INTO 열 목록 지정의 흐름을 이해하는 것이 핵심입니다. INSERT INTO 테이블명(열 목록)을 작성한다. VALUES에 열 순서와 맞게 값을 쓴다. 문자열은 작은따옴표로 감싼다. 마지막으로 테이블명·열 이름·조건 연산자와 SQL 문장의 순서를 다시 확인합니다.",
       "steps": [
+        "먼저 문제에서 테이블명, 처리할 열, 값, 조건을 각각 표시한 뒤 어떤 SQL 명령이 필요한지 정합니다.",
         "INSERT INTO 테이블명(열 목록)을 작성한다.",
         "VALUES에 열 순서와 맞게 값을 쓴다.",
         "문자열은 작은따옴표로 감싼다."
@@ -8302,7 +8485,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "self",
       "originalQuestionId": "REC-227",
       "examTypes": [
@@ -8328,8 +8511,9 @@
       "code": "",
       "inputData": "student(id, name, dept)",
       "answer": "CREATE INDEX idx_name_3 ON student(name);",
-      "explanation": "공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다.",
+      "explanation": "이 문제에서는 CREATE INDEX의 흐름을 이해하는 것이 핵심입니다. CREATE INDEX 뒤에 인덱스명을 쓴다. ON 뒤에 테이블과 대상 열을 지정한다. 정답은 CREATE INDEX idx_name_3 ON student(name); 마지막으로 테이블명·열 이름·조건 연산자와 SQL 문장의 순서를 다시 확인합니다.",
       "steps": [
+        "먼저 문제에서 테이블명, 처리할 열, 값, 조건을 각각 표시한 뒤 어떤 SQL 명령이 필요한지 정합니다.",
         "CREATE INDEX 뒤에 인덱스명을 쓴다.",
         "ON 뒤에 테이블과 대상 열을 지정한다.",
         "정답은 CREATE INDEX idx_name_3 ON student(name);"
@@ -8343,7 +8527,7 @@
       "verificationNote": "첨부 데이터셋에서 가져왔습니다. 동일 문장·코드·입력 데이터는 한 문제로 통합했습니다. 원 데이터의 복원 신뢰도 B와 연도는 실제 출제 근거로 사용하지 않습니다.",
       "enabled": true,
       "createdAt": "2026-10-04",
-      "updatedAt": "2026-10-04",
+      "updatedAt": "2026-10-05",
       "grading": "self",
       "originalQuestionId": "REC-249",
       "examTypes": [
