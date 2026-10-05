@@ -1,5 +1,5 @@
-import {loadPracticalBank} from "./practical-data.js?v=20261005-share-1";
-import {HINT_SECONDS,ANSWER_SECONDS,examLabels,typeLabels,languages,escapeHTML as esc,remainingSeconds,remainingAnswerSeconds,hintAvailable,answerDeadlineReached,canSubmit,canReveal,gradeAnswer,questionText,shuffle,recommendFive,matchesExam,localDay,summarizeAttempts,highlightCode,formatCodeForDisplay} from "./practical-core.js?v=20261005-share-1";
+import {loadPracticalBank} from "./practical-data.js?v=20261005-share-2";
+import {HINT_SECONDS,ANSWER_SECONDS,examLabels,typeLabels,languages,escapeHTML as esc,remainingSeconds,remainingAnswerSeconds,hintAvailable,answerDeadlineReached,canSubmit,canReveal,gradeAnswer,questionText,shuffle,recommendFive,matchesExam,localDay,summarizeAttempts,highlightCode,formatCodeForDisplay} from "./practical-core.js?v=20261005-share-2";
 import {getAttempts,saveAttempt,getSession,saveSession,clearLocalLearning,storageAvailable,getPreferences,savePreferences,exportLearning,importLearning} from "./practical-store.js";
 import {matches} from "./search.js";
 
@@ -97,7 +97,7 @@ function problemShareUrl(q=current){
 }
 function problemShareText(q=current){
  if(!q)return "";
- const prompt=String(q.question||"").replace(/\s+/g," ").trim();
+ const prompt=String(q.question||"").replace(" 공개 복원자료 간 초기 배열 순서 차이가 있어 아래 코드의 초기값을 기준으로 풀이합니다.","").replace(/\s+/g," ").trim();
  const preview=prompt.length>150?prompt.slice(0,147)+"...":prompt;
  return [solveHeading(q),q.language+" · "+q.title,preview].filter(Boolean).join("\n");
 }
