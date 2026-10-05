@@ -5065,13 +5065,14 @@
       "반복문",
       "조건문"
     ],
-    "question": "입력값 7일 때 다음 C 코드의 출력값을 쓰세요.",
-    "code": "int n=7,count=0;\nfor(int i=2;i<=n/2;i++)\n    if(i%1==0) count++;\nprintf(\"%d\",count);",
+    "question": "입력으로 7이 주어질 때 다음 C 프로그램의 출력값을 쓰세요.",
+    "code": "#include <stdio.h>\n\nint main(void) {\n    int n, count = 0;\n    scanf(\"%d\", &n);\n    for (int i = 2; i <= n / 2; i++) {\n        if (i % 1 == 0) count++;\n    }\n    printf(\"%d\", count);\n    return 0;\n}",
     "answer": "2",
     "explanation": "n/2는 정수 3입니다. i=2,3 두 번 조건이 참이어서 count=2입니다.",
     "steps": [
-      "n/2는 정수 3입니다.",
-      "i=2,3 두 번 조건이 참이어서 count=2입니다."
+      "입력값 7에서 n/2는 정수 나눗셈으로 3입니다.",
+      "반복 변수 i는 2와 3 두 값을 가집니다.",
+      "모든 정수는 1로 나누어 나머지가 0이므로 count가 두 번 증가해 2가 됩니다."
     ],
     "sources": [
       {
@@ -5089,7 +5090,8 @@
     "updatedAt": "2026-10-05",
     "grading": "exact",
     "acceptedAnswers": [],
-    "hint": "반복마다 조건식, 핵심 변수, 출력 여부를 표로 적고, 건너뛰기나 종료가 발생한 지점을 별도로 표시하세요."
+    "hint": "n/2의 정수 나눗셈 결과로 반복 범위를 먼저 정하고, i%1 조건이 각 반복에서 참인지 확인하세요.",
+    "inputData": "7\n"
   },
   {
     "id": "R-IND-C-0002",
@@ -5453,12 +5455,13 @@
       "배열"
     ],
     "question": "다음 C 코드의 출력값을 쓰세요.",
-    "code": "int arr[5];\nfor(int i=0;i<5;i++) arr[i]=(i+2)+(i*2);\n/* check(x)는 2부터 sqrt(x)까지 나누어 소수면 1, 아니면 0 반환 */\nfor(int i=0;i<5;i++) printf(\"%d\",check(arr[i]));",
+    "code": "#include <stdio.h>\n#include <math.h>\n\nint check(int a) {\n    int n = (int)sqrt(a);\n    int i = 2;\n    while (i <= n) {\n        if (a % i == 0) return 0;\n        i++;\n    }\n    return 1;\n}\n\nint main(void) {\n    int arr[5];\n    for (int i = 0; i < 5; i++) arr[i] = (i + 2) + (i * 2);\n    for (int i = 0; i < 5; i++) printf(\"%d\", check(arr[i]));\n    return 0;\n}",
     "answer": "11010",
     "explanation": "arr는 2,5,8,11,14입니다. 소수 여부는 1,1,0,1,0입니다.",
     "steps": [
-      "arr는 2,5,8,11,14입니다.",
-      "소수 여부는 1,1,0,1,0입니다."
+      "배열 값은 2, 5, 8, 11, 14입니다.",
+      "check는 2부터 각 수의 제곱근까지 나누어 떨어지는 수가 있으면 0, 없으면 1을 반환합니다.",
+      "각 반환값은 1, 1, 0, 1, 0이므로 연속 출력 결과는 11010입니다."
     ],
     "sources": [
       {
@@ -5476,7 +5479,7 @@
     "updatedAt": "2026-10-05",
     "grading": "exact",
     "acceptedAnswers": [],
-    "hint": "배열 인덱스와 현재 원소 값을 나란히 적고, 각 문장이 어느 인덱스를 읽거나 변경하는지 순서대로 표시하세요."
+    "hint": "먼저 arr에 만들어지는 다섯 값을 적은 뒤, 각 값이 2부터 제곱근까지의 수로 나누어지는지 확인해 check의 반환값을 순서대로 붙이세요."
   },
   {
     "id": "R-IND-JAVA-0004",
@@ -5679,12 +5682,13 @@
       "중첩 반복문"
     ],
     "question": "3×3 배열에서 i<=j 위치에 1부터 순서대로 저장하고 나머지는 공백으로 출력할 때 결과를 쓰세요.",
-    "code": "int[][] a=new int[3][3];\nint v=1;\nfor(int i=0;i<3;i++)\n for(int j=i;j<3;j++) a[i][j]=v++;",
+    "code": "class Main {\n    public static void main(String[] args) {\n        int[][] a = new int[3][3];\n        init(a);\n        data(a);\n        print(a);\n    }\n\n    static void init(int[][] a) {\n        for (int i = 0; i < 3; i++)\n            for (int j = 0; j < 3; j++)\n                a[i][j] = 0;\n    }\n\n    static void data(int[][] a) {\n        int v = 1;\n        for (int i = 0; i < 3; i++)\n            for (int j = i; j < 3; j++)\n                a[i][j] = v++;\n    }\n\n    static void print(int[][] a) {\n        for (int i = 0; i < 3; i++) {\n            for (int j = 0; j < 3; j++) {\n                if (a[i][j] == 0) System.out.print(\" \");\n                else System.out.print(a[i][j]);\n            }\n            System.out.println();\n        }\n    }\n}",
     "answer": "123\n 45\n  6",
     "explanation": "첫 행은 1 2 3입니다. 둘째 행은 앞 한 칸이 비고 4 5, 셋째 행은 앞 두 칸이 비고 6입니다.",
     "steps": [
-      "첫 행은 1 2 3입니다.",
-      "둘째 행은 앞 한 칸이 비고 4 5, 셋째 행은 앞 두 칸이 비고 6입니다."
+      "첫 행의 (0,0)~(0,2)에 1,2,3이 저장됩니다.",
+      "둘째 행은 (1,1),(1,2)에 4,5가 저장되고 첫 칸의 0은 공백으로 출력됩니다.",
+      "셋째 행은 (2,2)에 6이 저장되고 앞의 두 0은 공백으로 출력됩니다."
     ],
     "sources": [
       {
@@ -5702,7 +5706,7 @@
     "updatedAt": "2026-10-05",
     "grading": "exact",
     "acceptedAnswers": [],
-    "hint": "배열의 인덱스와 원소 값을 표로 적고, 반복이나 메서드 호출이 어느 위치를 읽거나 바꾸는지 표시하세요."
+    "hint": "data에서 j가 i부터 시작하므로 실제 값이 들어가는 좌표를 먼저 표시하고, print에서 0이 숫자가 아니라 공백으로 바뀐다는 점을 반영하세요."
   },
   {
     "id": "R-IND-C-0011",
@@ -6546,13 +6550,14 @@
       "동적 메모리",
       "역순"
     ],
-    "question": "입력으로 string, test가 순서대로 주어질 때 스택처럼 뒤에서부터 문자열을 역순 출력하는 결과를 쓰세요.",
-    "code": "입력: string, test\n마지막 입력부터 각 문자열을 역순 출력",
+    "question": "입력으로 string과 test가 순서대로 주어질 때 다음 C 프로그램의 출력 결과를 쓰세요.",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\nint main(void) {\n    int n = 2;\n    char *str[2];\n    for (int i = 0; i < n; i++) {\n        char input[100];\n        scanf(\"%99s\", input);\n        str[i] = malloc(strlen(input) + 1);\n        strcpy(str[i], input);\n    }\n\n    while (n > 0) {\n        printf(\"%d번 출력 :\", n);\n        for (int i = (int)strlen(str[n - 1]) - 1; i >= 0; i--)\n            printf(\"%c\", str[n - 1][i]);\n        printf(\"\\n\");\n        free(str[n - 1]);\n        n--;\n    }\n    return 0;\n}",
     "answer": "2번 출력 :tset\n1번 출력 :gnirts",
     "explanation": "두 번째 입력 test를 먼저 뒤집어 tset을 출력합니다. 그 다음 string을 뒤집어 gnirts를 출력합니다.",
     "steps": [
-      "두 번째 입력 test를 먼저 뒤집어 tset을 출력합니다.",
-      "그 다음 string을 뒤집어 gnirts를 출력합니다."
+      "n=2이므로 먼저 두 번째 입력 문자열 test를 선택합니다.",
+      "각 문자열은 마지막 문자부터 첫 문자까지 역순으로 출력합니다.",
+      "첫 줄 뒤에는 n이 1이 되어 첫 번째 입력 string을 같은 방식으로 출력합니다."
     ],
     "sources": [
       {
@@ -6572,7 +6577,8 @@
     "acceptedAnswers": [
       "2번 출력:tset\n1번 출력:gnirts"
     ],
-    "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+    "hint": "while에서 n이 2부터 줄어들므로 어떤 문자열이 먼저 선택되는지 정한 뒤, 선택된 문자열의 마지막 인덱스부터 0까지 거꾸로 읽으세요.",
+    "inputData": "string\ntest\n"
   },
   {
     "id": "R-IND-C-0022",
@@ -6899,11 +6905,13 @@
       "배열"
     ],
     "question": "다음 C 코드의 정렬 후 출력 결과를 쓰세요.",
-    "code": "int a[5]={3,4,5,10,2};\nint *p=a;\nfor(int i=0;i<5;i++)\n for(int j=i+1;j<5;j++)\n  if(*(p+i)>*(p+j)){\n   int t=*(p+i);*(p+i)=*(p+j);*(p+j)=t;\n  }",
+    "code": "#include <stdio.h>\n\nint main(void) {\n    int a[5] = {3, 4, 5, 10, 2};\n    int *p = a;\n    for (int i = 0; i < 5; i++) {\n        for (int j = i + 1; j < 5; j++) {\n            if (*(p + i) > *(p + j)) {\n                int temp = *(p + i);\n                *(p + i) = *(p + j);\n                *(p + j) = temp;\n            }\n        }\n        printf(\"%d \", *(p + i));\n    }\n    return 0;\n}",
     "answer": "2 3 4 5 10",
     "explanation": "오름차순으로 정렬되어 2 3 4 5 10이 됩니다.",
     "steps": [
-      "오름차순으로 정렬되어 2 3 4 5 10이 됩니다."
+      "i=0에서 가장 작은 2가 첫 위치로 이동해 먼저 출력됩니다.",
+      "이후 각 바깥 반복이 남은 구간의 최솟값을 현재 위치로 옮깁니다.",
+      "각 단계 출력은 2, 3, 4, 5, 10 순서가 됩니다."
     ],
     "sources": [
       {
@@ -6921,7 +6929,7 @@
     "updatedAt": "2026-10-05",
     "grading": "exact",
     "acceptedAnswers": [],
-    "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+    "hint": "바깥 반복의 i 위치에 남은 값 중 가장 작은 값이 오도록 안쪽 반복이 교환한다는 점을 확인하고, 각 i가 끝날 때 출력되는 값을 적으세요."
   },
   {
     "id": "R-IND-C-0025",
@@ -6937,12 +6945,13 @@
       "포인터"
     ],
     "question": "다음 C 코드에서 islnt가 참일 때 출력값을 쓰세요.",
-    "code": "union Number{int intV; int floatV;};\nstruct data{union Number n1;union Number n2;char islnt;};\nstruct data a={{.intV=5},{.floatV=3.5},1};\n/* islnt가 참이면 n1.intV += n2.intV */\nprintf(\"%d\",a.n1.intV);",
+    "code": "#include <stdio.h>\n\nunion Number {\n    int intV;\n    int floatV;\n};\n\nstruct data {\n    union Number n1;\n    union Number n2;\n    char isInt;\n};\n\nvoid func(struct data *a) {\n    if (a->isInt) a->n1.intV += a->n2.intV;\n    else a->n1.floatV += a->n2.floatV;\n}\n\nint main(void) {\n    struct data a = {{.intV = 5}, {.floatV = 3.5}, 1};\n    func(&a);\n    printf(\"%d\", a.n1.intV);\n    return 0;\n}",
     "answer": "8",
-    "explanation": "두 번째 union 값은 int 멤버 기준 3으로 사용됩니다. 5+3=8입니다.",
+    "explanation": "isInt가 1이므로 intV 분기가 실행됩니다. 이 복원 코드에서 floatV의 실제 선언형도 int이므로 초기값 3.5는 정수 3으로 변환되어 저장됩니다. 따라서 5와 3을 더한 8이 출력됩니다.",
     "steps": [
-      "두 번째 union 값은 int 멤버 기준 3으로 사용됩니다.",
-      "5+3=8입니다."
+      "isInt=1이므로 func의 intV 덧셈 분기를 실행합니다.",
+      "n1.intV는 5이고, int형인 n2.floatV에 3.5를 초기화하면 3으로 변환됩니다.",
+      "union 저장공간을 intV로 읽어 5+3을 계산하므로 8이 출력됩니다."
     ],
     "sources": [
       {
@@ -6960,7 +6969,7 @@
     "updatedAt": "2026-10-05",
     "grading": "exact",
     "acceptedAnswers": [],
-    "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+    "hint": "isInt 값으로 실행되는 분기를 먼저 고르고, 지정 초기화에서 각 union 멤버의 선언 자료형에 맞게 저장된 값을 확인한 뒤 덧셈을 수행하세요."
   },
   {
     "id": "R-IND-SQL-0011",
@@ -7013,11 +7022,13 @@
       "배열 역순"
     ],
     "question": "1,2,3,4,5 배열을 양끝부터 교환해 뒤집은 뒤 arr[2]를 출력하면 무엇인가요?",
-    "code": "int arr[]={1,2,3,4,5};\n/* 양끝 포인터를 안쪽으로 이동하며 swap */\nprintf(\"%d\",arr[2]);",
+    "code": "#include <stdio.h>\n\nvoid swap(int *a, int *b) {\n    int temp = *a;\n    *a = *b;\n    *b = temp;\n}\n\nvoid reverse(int *arr, int n) {\n    int *left = &arr[0];\n    int *right = &arr[n - 1];\n    while (left < right) {\n        swap(left, right);\n        left++;\n        right--;\n    }\n}\n\nint main(void) {\n    int arr[] = {1, 2, 3, 4, 5};\n    reverse(arr, 5);\n    printf(\"%d\", arr[2]);\n    return 0;\n}",
     "answer": "3",
     "explanation": "역순 배열은 5,4,3,2,1이고 가운데 값은 3입니다.",
     "steps": [
-      "역순 배열은 5,4,3,2,1이고 가운데 값은 3입니다."
+      "1과 5, 이어서 2와 4가 서로 교환됩니다.",
+      "배열은 5,4,3,2,1이 됩니다.",
+      "가운데 인덱스 2의 값은 그대로 3이므로 3이 출력됩니다."
     ],
     "sources": [
       {
@@ -7035,7 +7046,7 @@
     "updatedAt": "2026-10-05",
     "grading": "exact",
     "acceptedAnswers": [],
-    "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+    "hint": "양끝 포인터가 서로 만날 때까지 어떤 두 원소가 교환되는지 적고, 홀수 길이 배열의 가운데 원소가 교환 대상이 되는지 확인하세요."
   },
   {
     "id": "R-IND-C-0027",
@@ -7050,12 +7061,13 @@
       "하노이 탑"
     ],
     "question": "n=3일 때 다음 재귀 함수가 반환하는 값을 쓰세요.",
-    "code": "int f(int n){\n if(n==0) return 0;\n return f(n-1)+1+f(n-1);\n}",
+    "code": "#include <stdio.h>\n\nint move_count(int n, int from, int to, int temp) {\n    if (n == 0) return 0;\n    return move_count(n - 1, from, temp, to) + 1\n         + move_count(n - 1, temp, to, from);\n}\n\nint main(void) {\n    int n = 3;\n    printf(\"%d\", move_count(n, 3, 2, 1));\n    return 0;\n}",
     "answer": "7",
     "explanation": "점화식은 T(n)=2T(n-1)+1입니다. T(3)=7입니다.",
     "steps": [
-      "점화식은 T(n)=2T(n-1)+1입니다.",
-      "T(3)=7입니다."
+      "n=0이면 0을 반환합니다.",
+      "각 단계는 이전 단계의 반환값을 두 번 더하고 1을 추가하므로 T(n)=2T(n-1)+1입니다.",
+      "T(1)=1, T(2)=3, T(3)=7이므로 7이 출력됩니다."
     ],
     "sources": [
       {
@@ -7073,7 +7085,7 @@
     "updatedAt": "2026-10-05",
     "grading": "exact",
     "acceptedAnswers": [],
-    "hint": "종료 조건을 먼저 찾은 뒤 호출이 깊어지는 순서와 반환되면서 계산되는 순서를 분리해서 적어보세요."
+    "hint": "매개변수의 막대 번호보다 n에 따른 반환값만 추적하세요. n=0의 값을 기준으로 n=1, n=2, n=3 순서로 점화식을 계산하면 됩니다."
   },
   {
     "id": "R-IND-C-0028",
@@ -7089,11 +7101,13 @@
       "나머지"
     ],
     "question": "다음 C 코드의 출력값을 쓰세요.",
-    "code": "int arr[]={3,1,4,1,5};\nint *p=arr; int **pp=&p;\nfor(int i=0;i<5;i++) *(*pp+i)=(*(*pp+i)+i)%5;\nprintf(\"%d\",arr[2]);",
+    "code": "#include <stdio.h>\n\nvoid transform(int **arr, int size) {\n    for (int i = 0; i < size; i++)\n        *(*arr + i) = (*(*arr + i) + i) % size;\n}\n\nint main(void) {\n    int arr[] = {3, 1, 4, 1, 5};\n    int *p = arr;\n    int **pp = &p;\n    transform(pp, 5);\n    printf(\"%d\", arr[2]);\n    return 0;\n}",
     "answer": "1",
     "explanation": "arr[2]=(4+2)%5=1입니다.",
     "steps": [
-      "arr[2]=(4+2)%5=1입니다."
+      "**pp를 통해 p가 가리키는 arr의 각 원소를 차례로 수정합니다.",
+      "인덱스 2에서는 (4+2)%5를 계산합니다.",
+      "그 값이 1이므로 arr[2]에는 1이 저장되어 출력됩니다."
     ],
     "sources": [
       {
@@ -7111,7 +7125,7 @@
     "updatedAt": "2026-10-05",
     "grading": "exact",
     "acceptedAnswers": [],
-    "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
+    "hint": "이중 포인터를 결국 arr의 각 원소 접근으로 바꾸어 생각하고, 인덱스 i를 더한 뒤 size로 나머지를 구한 새 값을 인덱스별로 적으세요."
   },
   {
     "id": "R-IND-PY-0003",
