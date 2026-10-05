@@ -1,13 +1,20 @@
 // Pure learning rules. No browser storage, network, or code execution here.
-export const WAIT_SECONDS = 60;
+export const HINT_SECONDS = 60;
+export const REVEAL_SECONDS = 120;
+// Backward-compatible alias: the first learning milestone is the 60-second hint.
+export const WAIT_SECONDS = HINT_SECONDS;
 export const sourceLabels = {reconstructed:"비공식 복원기출",normalized:"공개 복원자료 기반 정규화",transformed:"기출 기반 변형",practice:"추가 연습문제"};
 export const examLabels = {engineer:"정보처리기사",industrial_engineer:"정보처리산업기사"};
 export const typeLabels = {output:"실행결과",blank:"빈칸채우기",interpret:"코드해석",sql_result:"SQL 결과",sql_write:"SQL 작성",error:"오류 찾기",other:"기타"};
 export const languages = ["C","Java","Python","SQL"];
 export const escapeHTML = value => String(value ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-export const remainingSeconds = (startedAt, now=Date.now()) => Math.max(0,Math.ceil((WAIT_SECONDS*1000-(now-startedAt))/1000));
-export const canSubmit = (attempt, answer, now=Date.now()) => !!attempt && !attempt.submittedAt && Number.isFinite(attempt.startedAt) && now>=attempt.startedAt && !!answer.trim();
-export const canReveal = (attempt,now=Date.now()) => !!attempt?.submittedAt && remainingSeconds(attempt.startedAt,now)===0;
+export const elapsedSeconds = (startedAt,now=Date.now()) => Math.max(0,Math.floor((now-startedAt)/1000));
+export const remainingSeconds = (startedAt, now=Date.now()) => Math.max(0,Math.ceil((HINT_SECONDS*1000-(now-startedAt))/1000));
+export const remainingRevealSeconds = (startedAt, now=Date.now()) => Math.max(0,Math.ceil((REVEAL_SECONDS*1000-(now-startedAt))/1000));
+export const hintAvailable = (attempt,now=Date.now()) => !!attempt && !attempt.submittedAt && !attempt.viewedExplanation && Number.isFinite(attempt.startedAt) && now-attempt.startedAt>=HINT_SECONDS*1000;
+export const shouldAutoReveal = (attempt,now=Date.now()) => !!attempt && !attempt.submittedAt && !attempt.viewedExplanation && Number.isFinite(attempt.startedAt) && now-attempt.startedAt>=REVEAL_SECONDS*1000;
+export const canSubmit = (attempt, answer, now=Date.now()) => !!attempt && !attempt.submittedAt && !attempt.viewedExplanation && Number.isFinite(attempt.startedAt) && now>=attempt.startedAt && now-attempt.startedAt<REVEAL_SECONDS*1000 && !!String(answer||"").trim();
+export const canReveal = (attempt,now=Date.now()) => !!attempt && !attempt.viewedExplanation && Number.isFinite(attempt.startedAt) && (!!attempt.submittedAt || now-attempt.startedAt>=REVEAL_SECONDS*1000);
 export function gradeAnswer(question, answer) {
   const normalize = value => String(value).normalize("NFKC").trim().replace(/\r/g,"").replace(/[\t ]+/g," ").replace(/ *\n */g,"\n");
   if(question.grading==="sql_keywords") return normalize(question.answer).toUpperCase()===normalize(answer).replace(/,/g," ").replace(/ +/g," ").toUpperCase();
