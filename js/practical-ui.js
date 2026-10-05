@@ -161,91 +161,99 @@ function openQuestion(id,fresh=false){
  saveSession(id,attempt);savePreferences({lastQuestionId:id,learningQueue:queue.length?{ids:queue.map(q=>q.id),index:queueIndex,kind:queueKind}:null});setUrl(id);render();$("#solve-title").focus({preventScroll:true});window.scrollTo({top:0,behavior:"auto"});
 }
 function tablesHTML(q){return (q.tables||[]).map((t,index)=>{const hintId="table-scroll-hint-"+index;return '<div class="table-scroll" tabindex="0" role="region" aria-label="'+esc(t.name)+' 데이터 표 · 좌우 스크롤 가능" data-scroll-hint="'+hintId+'"><table><caption>'+esc(t.name)+'</caption><thead><tr>'+t.columns.map(c=>'<th scope="col">'+esc(c)+'</th>').join("")+'</tr></thead><tbody>'+t.rows.map(row=>'<tr>'+row.map(v=>'<td>'+esc(v===null?'NULL':v)+'</td>').join("")+'</tr>').join("")+'</tbody></table></div><p id="'+hintId+'" class="scroll-hint table-scroll-hint" hidden aria-hidden="true">← 좌우로 밀어 표 보기 →</p>';}).join("");}
+function formatClock(seconds){
+ const safe=Math.max(0,Number(seconds)||0);
+ return String(Math.floor(safe/60)).padStart(2,"0")+":"+String(safe%60).padStart(2,"0");
+}
 function renderQuestion(){
- const q=current;
- if(attempt.submittedAt&&!attempt.viewedExplanation){
-   attempt={...attempt,correct:gradeAnswer(q,attempt.answer||""),viewedExplanation:true,autoRevealed:false,timedOut:false,usedHint:(attempt.elapsedSeconds||0)>=HINT_SECONDS};
-   saveSession(q.id,attempt);saveAttempt(attempt);
- }
- const locked=!!attempt.submittedAt||!!attempt.viewedExplanation;
- const multiline=q.questionType==="sql_write"||q.answer.includes("\n"),attributes='id="my-answer" required maxlength="10000" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-describedby="answer-hint timed-hint gate-status" '+(locked?'disabled':'');
+ const q=current,revealed=!!attempt.viewedExplanation;
+ const multiline=q.questionType==="sql_write"||q.answer.includes("\n"),attributes='id="my-answer" required maxlength="10000" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-describedby="answer-hint gate-status" '+(revealed?'disabled':'');
  const input=multiline?'<textarea '+attributes+' rows="'+(q.questionType==="sql_write"?7:4)+'">'+esc(attempt.answer||"")+'</textarea>':'<input '+attributes+' type="text" enterkeyhint="done" value="'+esc(attempt.answer||"")+'">';
  const shownCode=displayCode(q);
- root.innerHTML='<article class="bank-solve"><div class="solve-progress">'+button("back","← 학습 시작")+'<strong>'+(queue.length?(queueIndex+1)+' / '+queue.length:'문제풀이')+'</strong>'+button("answer-jump","답 입력 ↓",'aria-label="정답 입력란으로 이동"')+'</div><h2 id="solve-title" tabindex="-1">'+esc(solveHeading(q))+'</h2>'+metadata(q)+'<p class="solve-question">'+formatQuestion(q.question)+'</p>'+tablesHTML(q)+(q.code?'<div class="code-scroll'+(q.language==="SQL"?' code-scroll--sql':'')+(codeNeedsFocus(q)?' code-scroll--complex':'')+'" tabindex="0" role="region" aria-label="'+esc(q.language)+' 문제 코드'+(q.language==="SQL"?'':' · 좌우 스크롤 가능')+'" data-scroll-hint="code-scroll-hint"><pre><code>'+highlightCode(shownCode)+'</code></pre></div><p id="code-scroll-hint" class="scroll-hint code-scroll-hint" hidden aria-hidden="true">← 좌우로 밀어 코드 보기 →</p>'+codeToolsHTML(q,shownCode):'')+(q.inputData?'<h3>입력 데이터</h3><pre class="input-data">'+esc(q.inputData)+'</pre>':'')+'<form id="answer-form"><label for="my-answer">내가 생각한 정답</label>'+input+'<p class="hint" id="answer-hint">'+(q.grading==="self"?'SQL은 예시답과 직접 비교해 판정합니다.':'답을 제출하면 기다리지 않고 바로 채점과 풀이를 확인합니다.')+'</p></form><section id="timed-hint" class="timed-hint" aria-live="polite" hidden><strong>힌트</strong><p>'+esc(q.hint)+'</p></section><p id="gate-status" role="status"></p><div id="answer-result"></div><div class="solve-actions"><p class="bank-timer" id="solve-timer" role="timer" aria-live="off"></p><button id="submit-answer" class="button button-primary" form="answer-form" type="submit" disabled>답 제출하고 풀이 보기</button><button id="next-answer" class="button button-primary" type="button" data-action="next" hidden>다음 문제</button></div></article>';
+ root.innerHTML='<article class="bank-solve"><div class="solve-progress">'+button("back","← 학습 시작")+'<strong>'+(queue.length?(queueIndex+1)+' / '+queue.length:'문제풀이')+'</strong>'+button("answer-jump","답 입력 ↓",'aria-label="정답 입력란으로 이동"')+'</div><h2 id="solve-title" tabindex="-1">'+esc(solveHeading(q))+'</h2>'+metadata(q)+'<p class="solve-question">'+formatQuestion(q.question)+'</p>'+tablesHTML(q)+(q.code?'<div class="code-scroll'+(q.language==="SQL"?' code-scroll--sql':'')+(codeNeedsFocus(q)?' code-scroll--complex':'')+'" tabindex="0" role="region" aria-label="'+esc(q.language)+' 문제 코드'+(q.language==="SQL"?'':' · 좌우 스크롤 가능')+'" data-scroll-hint="code-scroll-hint"><pre><code>'+highlightCode(shownCode)+'</code></pre></div><p id="code-scroll-hint" class="scroll-hint code-scroll-hint" hidden aria-hidden="true">← 좌우로 밀어 코드 보기 →</p>'+codeToolsHTML(q,shownCode):'')+(q.inputData?'<h3>입력 데이터</h3><pre class="input-data">'+esc(q.inputData)+'</pre>':'')+'<form id="answer-form"><label for="my-answer">내가 생각한 정답</label>'+input+'<p class="hint" id="answer-hint">'+(q.grading==="self"?'SQL은 예시답과 직접 비교해 판정합니다.':'출력의 대소문자와 줄바꿈을 확인하세요.')+'</p></form><aside id="solve-hint" class="solve-hint" aria-live="polite" hidden><strong>힌트</strong><p>'+esc(q.hint||"문제의 실행 흐름을 단계별로 추적해 보세요.")+'</p></aside><p id="gate-status" role="status"></p><div id="answer-result"></div><div class="solve-actions"><p class="bank-timer" id="solve-timer" role="timer" aria-live="off"></p><button id="submit-answer" class="button button-primary" form="answer-form" type="submit" disabled>답 제출하고 풀이 보기</button><button id="next-answer" class="button button-primary" type="button" data-action="next" hidden>다음 문제</button></div></article>';
  requestAnimationFrame(()=>{updateHorizontalScrollHints();observeSolveActions();});
  $("#answer-form").addEventListener("submit",submitAnswer);
- $("#my-answer").addEventListener("input",()=>{if(!attempt.submittedAt&&!attempt.viewedExplanation){attempt.answer=$("#my-answer").value;saveSession(q.id,attempt);updateGate();}});
- if(attempt.viewedExplanation)renderExplanation(false);
- updateGate();
- if(!attempt.viewedExplanation)timer=setInterval(updateGate,500);
+ $("#my-answer").addEventListener("input",()=>{if(!attempt.viewedExplanation&&!attempt.submittedAt){attempt.answer=$("#my-answer").value;saveSession(q.id,attempt);updateGate();}});
+ if(attempt.viewedExplanation&&canReveal(attempt))revealAnswer("resume");
+ else{
+  updateGate();
+  if(!attempt.viewedExplanation)timer=setInterval(updateGate,500);
+ }
  storageNotice();
-}
-function formatClock(seconds){
- const safe=Math.max(0,seconds);
- return String(Math.floor(safe/60)).padStart(2,"0")+":"+String(safe%60).padStart(2,"0");
 }
 function updateGate(){
  if(!current||!$("#solve-timer"))return;
- if(shouldAutoReveal(attempt)){autoRevealAnswer();return;}
- const revealed=!!attempt.viewedExplanation;
- const hintShown=!revealed&&hintAvailable(attempt);
- $("#timed-hint").hidden=!hintShown;
- if(revealed){
-   $("#solve-timer").textContent=attempt.autoRevealed?"120초 경과 · 정답과 풀이가 공개되었습니다.":"✓ 제출 완료 · 정답과 풀이를 확인하세요.";
- }else if(hintShown){
-   $("#solve-timer").textContent="힌트 제공됨 · 정답 공개까지 "+formatClock(remainingRevealSeconds(attempt.startedAt));
- }else{
-   $("#solve-timer").textContent="힌트까지 "+formatClock(remainingSeconds(attempt.startedAt))+" · 제출하면 바로 채점";
+ const now=Date.now(),submitted=!!attempt.submittedAt,revealed=!!attempt.viewedExplanation;
+ if(!revealed&&!submitted&&canReveal(attempt,now)){
+  revealAnswer("timeout");
+  return;
  }
- $("#submit-answer").disabled=!canSubmit(attempt,$("#my-answer").value);
- $("#submit-answer").hidden=revealed;
+ const hintRemaining=secondsUntilHint(attempt.startedAt,now),answerRemaining=secondsUntilAnswer(attempt.startedAt,now);
+ const hintReady=!revealed&&hintAvailable(attempt,now);
+ const hintPanel=$("#solve-hint");
+ if(hintPanel)hintPanel.hidden=!hintReady;
+ if(hintReady&&!attempt.usedHint){
+  attempt.usedHint=true;
+  saveSession(current.id,attempt);
+ }
+ const timerEl=$("#solve-timer");
+ timerEl.classList.toggle("hint-stage",hintReady);
+ timerEl.classList.toggle("revealed-stage",revealed);
+ if(revealed)timerEl.textContent=attempt.timedOut?"120초 경과 · 정답 공개":"✓ 답 제출 · 풀이 공개";
+ else if(submitted)timerEl.textContent="✓ 답 제출 · 풀이 공개 중";
+ else if(hintRemaining>0)timerEl.textContent="힌트까지 "+formatClock(hintRemaining)+" · 제출하면 바로 채점";
+ else timerEl.textContent="힌트 제공 · 정답 공개까지 "+formatClock(answerRemaining);
+ const answerEl=$("#my-answer");
+ $("#submit-answer").disabled=!canSubmit(attempt,answerEl?.value||"",now);
+ $("#submit-answer").hidden=submitted||revealed;
  $("#next-answer").hidden=!revealed;
- $("#next-answer").disabled=current.grading==="self"&&attempt.correct===null&&!attempt.autoRevealed;
+ $("#next-answer").disabled=current.grading==="self"&&attempt.correct===null&&!attempt.timedOut;
  $("#next-answer").textContent=queue.length&&queueIndex+1===queue.length?"학습 완료":"다음 문제";
  if(revealed&&timer){clearInterval(timer);timer=null;}
 }
 function submitAnswer(event){
- event.preventDefault();const answer=$("#my-answer").value;
- if(!canSubmit(attempt,answer)){
-   $("#gate-status").textContent=attempt.viewedExplanation?"이미 정답과 풀이가 공개되었습니다.":"답을 입력한 뒤 제출하세요.";
-   return;
- }
- const now=Date.now(),elapsed=Math.max(0,Math.round((now-attempt.startedAt)/1000)),usedHint=elapsed>=HINT_SECONDS;
- attempt={...attempt,answer,submittedAt:now,elapsedSeconds:elapsed,correct:gradeAnswer(current,answer),viewedExplanation:true,autoRevealed:false,timedOut:false,usedHint};
- saveSession(current.id,attempt);saveAttempt(attempt);
- $("#my-answer").disabled=true;$("#my-answer").blur();
- $("#gate-status").textContent=usedHint?"힌트를 확인한 뒤 제출했습니다.":"답을 제출했습니다.";
- renderExplanation(true);updateGate();storageNotice();
+ event.preventDefault();
+ const answer=$("#my-answer").value,now=Date.now();
+ if(!canSubmit(attempt,answer,now)){$("#gate-status").textContent="자신의 답을 입력한 뒤 제출하세요.";return;}
+ attempt={...attempt,answer,submittedAt:now,elapsedSeconds:Math.round((now-attempt.startedAt)/1000),correct:null,timedOut:false,revealReason:"submitted",usedHint:!!attempt.usedHint};
+ saveSession(current.id,attempt);
+ saveAttempt(attempt);
+ $("#my-answer").disabled=true;
+ $("#my-answer").blur();
+ revealAnswer("submitted");
+ storageNotice();
 }
-function autoRevealAnswer(){
- if(!shouldAutoReveal(attempt))return;
- const now=Date.now(),draft=$("#my-answer")?.value??attempt.answer??"";
- attempt={...attempt,answer:draft,submittedAt:now,elapsedSeconds:Math.max(REVEAL_SECONDS,Math.round((now-attempt.startedAt)/1000)),correct:null,viewedExplanation:true,autoRevealed:true,timedOut:true,usedHint:true};
- saveSession(current.id,attempt);saveAttempt(attempt);
- if($("#my-answer"))$("#my-answer").disabled=true;
- $("#gate-status").textContent="120초가 지나 정답과 풀이가 자동으로 공개되었습니다.";
+function revealAnswer(reason="resume"){
+ const now=Date.now();
+ if(!canReveal(attempt,now)){$("#gate-status").textContent="답을 제출하거나 120초까지 계속 풀어보세요.";return;}
+ const isTimeout=reason==="timeout"||attempt.timedOut===true;
+ if(isTimeout&&!attempt.submittedAt){
+  const draft=$("#my-answer")?.value??attempt.answer??"";
+  attempt={...attempt,answer:draft,submittedAt:now,elapsedSeconds:Math.round((now-attempt.startedAt)/1000),correct:null,viewedExplanation:true,usedHint:true,timedOut:true,revealReason:"timeout",revealedAt:now};
+ }else if(!attempt.viewedExplanation){
+  attempt={...attempt,correct:gradeAnswer(current,attempt.answer),viewedExplanation:true,timedOut:false,revealReason:"submitted",revealedAt:now};
+ }
+ saveSession(current.id,attempt);
+ saveAttempt(attempt);
  if(timer){clearInterval(timer);timer=null;}
- renderExplanation(false);updateGate();storageNotice();
-}
-function revealAnswer(){
- if(!canReveal(attempt))return;
- if(!attempt.submittedAt){autoRevealAnswer();return;}
- if(!attempt.viewedExplanation){
-   attempt={...attempt,correct:gradeAnswer(current,attempt.answer||""),viewedExplanation:true,autoRevealed:false,timedOut:false,usedHint:(attempt.elapsedSeconds||0)>=HINT_SECONDS};
-   saveSession(current.id,attempt);saveAttempt(attempt);
- }
- renderExplanation(true);updateGate();
-}
-function renderExplanation(focusResult=true){
+ const answerInput=$("#my-answer");if(answerInput)answerInput.disabled=true;
+ const hintPanel=$("#solve-hint");if(hintPanel)hintPanel.hidden=true;
  const q=current,similar=bank.filter(item=>item.originalQuestionId===q.id||q.originalQuestionId&&item.originalQuestionId===q.originalQuestionId&&item.id!==q.id);
  const extraExplanation=q.explanation==="공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다."?"":q.explanation;
  const sourceDetails=q.history.length||q.sources.length?'<details class="bank-sources"><summary>출제 이력 · 출처</summary>'+(q.history.length?'<ul>'+q.history.map(h=>'<li>'+esc(historyLabel(h))+'</li>').join("")+'</ul>':'')+(q.sources.length?'<ul>'+q.sources.map(s=>'<li><a href="'+esc(s.url)+'" target="_blank" rel="noopener noreferrer">'+esc(s.name==="데이터셋 참고 출처 (문항·회차 일치 미검증)"?"학습 자료":s.name)+' ↗<span class="sr-only"> 외부 자료, 새 창</span></a></li>').join("")+'</ul>':'')+'</details>':'';
- const resultTitle=attempt.autoRevealed?"120초 경과 · 정답 공개":attempt.correct===true?"정답입니다":attempt.correct===false?"오답입니다 · 오답노트에 저장했습니다":"예시 답안과 직접 비교하세요";
- const answerLabel=attempt.autoRevealed?"작성 중이던 답":"내 답",myAnswer=String(attempt.answer||"").trim()||"미제출";
- const selfJudge=q.grading==="self"&&!attempt.autoRevealed?'<p>동등한 SQL은 정답으로 기록할 수 있습니다.</p><div class="practice-actions">'+button("self-correct","정답으로 기록")+button("self-wrong","오답으로 기록")+'</div>':'';
- $("#answer-result").innerHTML='<section class="bank-result"><h3 tabindex="-1" id="result-heading">'+resultTitle+'</h3>'+(attempt.autoRevealed?'<p class="timeout-note">권장 풀이 시간을 넘겨 학습용 정답과 해설을 공개했습니다.</p>':'')+'<div class="answer-pair"><div><h4>'+answerLabel+'</h4><pre>'+esc(myAnswer)+'</pre></div><div><h4>'+(q.grading==="self"?'예시 정답':'정답')+'</h4><pre>'+esc(q.answer)+'</pre></div></div>'+selfJudge+'<div class="concept-reveal"><h3>핵심 개념</h3><p>'+esc(q.title)+'</p></div><h3>왜 이런 답인가?</h3><ol class="bank-steps">'+q.steps.map(step=>'<li>'+esc(step)+'</li>').join("")+'</ol>'+(extraExplanation?'<details><summary>추가 설명</summary><p>'+esc(extraExplanation)+'</p></details>':'')+'<div class="practice-actions">'+button("retry","다시 풀기")+similar.slice(0,3).map(s=>button("similar","비슷한 문제",'data-id="'+esc(s.id)+'" aria-label="'+esc(s.title)+' 비슷한 문제"')).join("")+'</div>'+sourceDetails+'</section>';
- if(focusResult){
-   $("#result-heading").focus({preventScroll:true});$("#result-heading").scrollIntoView({block:"start",behavior:"auto"});
+ const resultTitle=attempt.timedOut?'120초가 지나 정답을 공개했습니다':attempt.correct===true?'정답입니다':attempt.correct===false?'오답입니다 · 오답노트에 저장했습니다':'예시 답안과 직접 비교하세요';
+ const learnerLabel=attempt.timedOut?'120초 시점 작성 중인 답':'내 답';
+ const learnerAnswer=attempt.answer?.trim()?attempt.answer:'미제출';
+ const selfJudge=q.grading==="self"&&!attempt.timedOut?'<p>동등한 SQL은 정답으로 기록할 수 있습니다.</p><div class="practice-actions">'+button("self-correct","정답으로 기록")+button("self-wrong","오답으로 기록")+'</div>':'';
+ $("#answer-result").innerHTML='<section class="bank-result"><h3 tabindex="-1" id="result-heading">'+esc(resultTitle)+'</h3>'+(attempt.timedOut?'<p class="timeout-note">권장 풀이 시간이 끝나 자동으로 정답과 풀이를 공개했습니다. 이 시도는 정답률에 포함하지 않습니다.</p>':'')+'<div class="answer-pair"><div><h4>'+esc(learnerLabel)+'</h4><pre>'+esc(learnerAnswer)+'</pre></div><div><h4>'+(q.grading==="self"?'예시 정답':'정답')+'</h4><pre>'+esc(q.answer)+'</pre></div></div>'+selfJudge+'<div class="concept-reveal"><h3>핵심 개념</h3><p>'+esc(q.title)+'</p></div><h3>왜 이런 답인가?</h3><ol class="bank-steps">'+q.steps.map(step=>'<li>'+esc(step)+'</li>').join("")+'</ol>'+(extraExplanation?'<details><summary>추가 설명</summary><p>'+esc(extraExplanation)+'</p></details>':'')+'<div class="practice-actions">'+button("retry","다시 풀기")+similar.slice(0,3).map(s=>button("similar","비슷한 문제",'data-id="'+esc(s.id)+'" aria-label="'+esc(s.title)+' 비슷한 문제"')).join("")+'</div>'+sourceDetails+'</section>';
+ updateGate();
+ if(attempt.timedOut){
+  $("#gate-status").textContent="120초가 지나 정답과 풀이를 자동 공개했습니다.";
+  $("#result-heading").scrollIntoView({block:"nearest",behavior:"smooth"});
+ }else{
+  $("#gate-status").textContent=attempt.usedHint?"힌트 확인 후 제출한 답을 채점했습니다.":"제출한 답을 바로 채점했습니다.";
+  $("#result-heading").focus({preventScroll:true});
+  $("#result-heading").scrollIntoView({block:"start",behavior:"auto"});
  }
 }
 root.addEventListener("click",event=>{
@@ -281,7 +289,7 @@ root.addEventListener("click",event=>{
    attempt.correct=action==="self-correct";saveSession(current.id,attempt);saveAttempt(attempt);revealAnswer();
  }
  if(action==="next"&&canReveal(attempt)){
-   if(current.grading==="self"&&attempt.correct===null){$("#gate-status").textContent="SQL 예시와 비교해 정답/오답을 먼저 기록하세요.";return;}
+   if(current.grading==="self"&&attempt.correct===null&&!attempt.timedOut){$("#gate-status").textContent="SQL 예시와 비교해 정답/오답을 먼저 기록하세요.";return;}
    if(!queue.length){
      const done=new Set(getAttempts().map(a=>a.questionId));
      const next=basicPool().find(q=>q.id!==current.id&&!done.has(q.id))||basicPool().find(q=>q.id!==current.id);
@@ -324,7 +332,7 @@ loadPracticalBank().then(result=>{
  if(id&&bank.some(q=>q.id===(aliases[id]||id)))openQuestion(id);else{if(id)view="bank";render();if(id)status.textContent="요청한 문제를 찾을 수 없습니다. 목록에서 선택하세요.";}
 }).catch(()=>{root.innerHTML='<div class="bank-empty"><h2>문제 데이터를 불러오지 못했습니다.</h2><p>네트워크 연결을 확인하고 페이지를 새로고침하세요.</p></div>';status.textContent="데이터 로딩 오류";});
 window.addEventListener("pagehide",stopTimer);
-window.addEventListener("pageshow",()=>{if(current){updateGate();if(remainingSeconds(attempt.startedAt)>0&&!timer)timer=setInterval(updateGate,500);}});
+window.addEventListener("pageshow",()=>{if(current){updateGate();if(!attempt.viewedExplanation&&!timer)timer=setInterval(updateGate,500);}});
 window.addEventListener("resize",()=>{if(current)requestAnimationFrame(()=>{updateHorizontalScrollHints();observeSolveActions();});});
 function adjustKeyboard(){
  const viewport=window.visualViewport;
