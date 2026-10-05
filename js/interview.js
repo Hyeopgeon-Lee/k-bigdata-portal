@@ -1,6 +1,6 @@
-import {questions} from "../data/interview-questions.js";
+import {questions} from "../data/interview-questions.js?v=20261005-accuracy-1";
 export {questions};
-export {interviewSources} from "../data/interview-sources.js";
+export {interviewSources} from "../data/interview-sources.js?v=20261005-accuracy-1";
 
 export const interviewGroups = [...new Set(questions.map(q => q.group))];
 export const interviewJobTags = ["공통", "백엔드", "Java", "데이터엔지니어", "AI개발", "클라우드", "DevOps"];
