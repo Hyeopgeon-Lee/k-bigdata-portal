@@ -792,3 +792,143 @@
     text-align:left;
   }
 }
+
+
+/* 2026-10-05 beginner explanation redesign: readable for first-year learners. */
+.practical-page .beginner-flow{
+  display:grid;
+  gap:14px;
+  margin:24px 0;
+}
+.practical-page .beginner-section{
+  padding:20px 22px;
+  border:1px solid #d7e0ee;
+  border-radius:14px;
+  background:#fff;
+}
+.practical-page .beginner-kicker{
+  margin:0 0 10px;
+  color:#142d70;
+  font-size:15px;
+  line-height:1.45;
+  font-weight:800;
+  letter-spacing:-.01em;
+}
+.practical-page .beginner-section>p:not(.beginner-kicker){
+  margin:0;
+  font-size:17px;
+  line-height:1.9;
+  color:#26364d;
+  word-break:keep-all;
+  overflow-wrap:anywhere;
+}
+.practical-page .beginner-focus{
+  border-left:5px solid #315f9e;
+  background:#f7f9fd;
+}
+.practical-page .beginner-memory{
+  border-left:5px solid #557457;
+  background:#f7faf6;
+}
+.practical-page .beginner-concepts{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+.practical-page .beginner-concept{
+  min-width:0;
+  padding:16px;
+  border:1px solid #e0e6ef;
+  border-radius:10px;
+  background:#f9fbfe;
+}
+.practical-page .beginner-concept h4{
+  margin:0 0 7px;
+  font-size:16px;
+  line-height:1.45;
+  color:#1e3760;
+}
+.practical-page .beginner-concept p{
+  margin:0;
+  font-size:16px;
+  line-height:1.8;
+  color:#35465f;
+  word-break:keep-all;
+}
+.practical-page .beginner-section .bank-steps{
+  margin:0;
+  padding-left:30px;
+}
+.practical-page .beginner-section .bank-steps li{
+  padding:9px 0 9px 4px;
+  font-size:17px;
+  line-height:1.85;
+  color:#26364d;
+}
+.practical-page .beginner-section .bank-steps li::marker{
+  font-weight:800;
+  color:#142d70;
+}
+.practical-page .beginner-explanation{
+  white-space:normal;
+}
+.practical-page .beginner-why{
+  background:#fcfcfd;
+}
+.practical-page .bank-sources{
+  margin-top:22px;
+}
+.practical-page .bank-result>.practice-actions{
+  margin-top:22px;
+}
+
+@media(max-width:767px){
+  .practical-page .beginner-flow{
+    gap:12px;
+    margin:20px 0;
+  }
+  .practical-page .beginner-section{
+    padding:17px 16px;
+    border-radius:12px;
+  }
+  .practical-page .beginner-kicker{
+    margin-bottom:8px;
+    font-size:14px;
+  }
+  .practical-page .beginner-section>p:not(.beginner-kicker){
+    font-size:16.5px;
+    line-height:1.85;
+  }
+  .practical-page .beginner-concepts{
+    grid-template-columns:1fr;
+    gap:9px;
+  }
+  .practical-page .beginner-concept{
+    padding:14px;
+  }
+  .practical-page .beginner-concept h4{
+    font-size:15.5px;
+  }
+  .practical-page .beginner-concept p{
+    font-size:16px;
+    line-height:1.75;
+  }
+  .practical-page .beginner-section .bank-steps{
+    padding-left:24px;
+  }
+  .practical-page .beginner-section .bank-steps li{
+    padding:7px 0 7px 3px;
+    font-size:16.5px;
+    line-height:1.8;
+  }
+}
+
+@media(max-width:400px){
+  .practical-page .beginner-section{
+    padding:15px 14px;
+  }
+  .practical-page .beginner-section>p:not(.beginner-kicker),
+  .practical-page .beginner-section .bank-steps li{
+    font-size:16px;
+  }
+}
