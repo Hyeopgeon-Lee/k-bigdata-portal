@@ -94,7 +94,7 @@ export function initInterview(){
  function start(count){const available=pool(),picked=selectRandomQuestions(count===1&&available.length>1?available.filter(q=>q.id!==lastRandom):available,count);direct=null;$("#detail").textContent="";if(!picked.length){browse();return;}session={items:picked,index:0,mode:count===1?"one":"ten",opened:new Set()};lastRandom=picked[0].id;mode=count===1?"PRACTICE_ONE":"PRACTICE_TEN";syncURL();render(true);}
  function reset(){Object.assign(filters,{category:"전체",job:"전체",difficulty:"전체",query:""});input.value="";limit=20;browse();}
  $("#random-one").addEventListener("click",()=>start(1));$("#random-ten").addEventListener("click",()=>start(10));$("#show-all").addEventListener("click",browse);$("#reset-interview").addEventListener("click",reset);
- input.addEventListener("input",()=>{filters.query=input.value;limit=20;syncURL();render();});
+ let interviewSearchTimer=0;input.addEventListener("input",()=>{clearTimeout(interviewSearchTimer);interviewSearchTimer=window.setTimeout(()=>{filters.query=input.value;limit=20;syncURL();render();},80);});
  controls.addEventListener("click",event=>{const b=event.target.closest('button[data-filter]');if(!b)return;filters[b.dataset.filter]=b.dataset.value;limit=20;syncURL();render();[...controls.querySelectorAll('button[data-filter]')].find(el=>el.dataset.filter===b.dataset.filter&&el.dataset.value===b.dataset.value)?.focus({preventScroll:true});});
  $(".learning-content").addEventListener("click",event=>{const b=event.target.closest('button[data-action]');if(!b)return;const key=b.dataset.action;
   if(key==="all")browse();if(key==="one")start(1);if(key==="restart")start(10);if(key==="reset")reset();
