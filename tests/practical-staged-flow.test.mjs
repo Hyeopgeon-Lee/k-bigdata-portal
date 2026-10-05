@@ -63,6 +63,6 @@ assert.ok(css.includes('.solve-hint[hidden]{display:none !important}'));
 assert.ok(css.includes('@media(max-width:767px)'));
 assert.ok(css.includes('.bank-timer.hint-stage'));
 assert.ok(html.includes('css/practical.css?v=20261005-solution-2'));
-assert.ok(html.includes('js/practical-ui.js?v=20261006-industrial-fidelity-1'));
+assert.ok(html.includes('js/practical-ui.js?v=20261006-engineer-fidelity-1'));
 
 console.log('PASS: 0-60 self solve, 60-120 hint, immediate submit grading, 120-second auto reveal, and responsive staged UI contract.');
