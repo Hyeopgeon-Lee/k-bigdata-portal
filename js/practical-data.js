@@ -1,6 +1,6 @@
-import {buildBank} from "./practical-core.js?v=20261005-share-1";
+import {buildBank} from "./practical-core.js?v=20261005-share-2";
 
-const DATA_VERSION="20261005-share-1";
+const DATA_VERSION="20261005-share-2";
 
 export async function loadPracticalBank(){
  const load=async path=>{
