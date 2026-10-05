@@ -35,7 +35,8 @@
       }
     ],
     "verificationNote": "서로 다른 공개 복원자료에서 싱글톤 구조와 출력값 4가 일치합니다. 변수명·서식은 학습용으로 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "객체마다 따로 가지는 값과 클래스 전체가 공유하는 값을 구분한 뒤, 호출 순서대로 공유 상태의 변화를 적어보세요."
   },
   {
     "sourceType": "reconstructed",
@@ -77,7 +78,8 @@
       }
     ],
     "verificationNote": "복수 공개 복원자료에서 v1=0, v2=35, v3=29의 조건·시프트 흐름과 정답 151을 확인했습니다. 공백·main 반환형만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -116,7 +118,8 @@
       }
     ],
     "verificationNote": "복수 공개 복원자료에서 ABCDEFGH 역순 처리 후 홀수 인덱스 출력과 정답 GECA를 확인했습니다. 변수명만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조가 일어날 때의 값만 순서대로 추적하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -156,7 +159,8 @@
       }
     ],
     "verificationNote": "복수 공개 자료에서 문자열 It is 8, 문자별 이동 규칙과 정답 Nd sc 1을 확인했습니다. ctype 인자 캐스팅과 main 반환형만 안전하게 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -198,7 +202,8 @@
       }
     ],
     "verificationNote": "복수 공개 자료에서 도시 목록, 인덱스 1 누적 구조와 정답 Seynaau를 확인했습니다. 변수명만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "자료구조가 변경되는 연산 직후의 상태를 매번 새로 적고, 반환되는 값과 남아 있는 값을 구분하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -271,7 +276,8 @@
       }
     ],
     "verificationNote": "여러 공개 복원자료에서 네 빈칸의 순서 VALUES, SELECT, FROM, SET이 일치합니다. 예시 식별자와 값은 한 복원본 기준으로 정리했습니다.",
-    "grading": "sql_keywords"
+    "grading": "sql_keywords",
+    "hint": "빈칸마다 필요한 문법 요소를 바로 넣기보다, 먼저 해당 위치가 조회·조건·그룹·정렬·변경 중 어떤 역할인지 구분해 보세요."
   },
   {
     "sourceType": "reconstructed",
@@ -309,7 +315,8 @@
       }
     ],
     "verificationNote": "복수 공개 자료에서 부모 참조·자식 객체, po=3, 오버라이딩 출력 9를 확인했습니다. 클래스명만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "참조 변수의 선언 타입과 실제 생성된 객체 타입을 따로 적고, 필드 접근과 메서드 호출의 규칙을 구분해서 추적하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -348,7 +355,8 @@
       }
     ],
     "verificationNote": "복수 공개 복원자료에서 세 배열을 각각 new로 생성하고 세 번 == 비교하여 NNN을 출력하는 구조가 일치합니다. 삼항식으로만 출력부를 간결화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "객체마다 따로 가지는 값과 클래스 전체가 공유하는 값을 구분한 뒤, 호출 순서대로 공유 상태의 변화를 적어보세요."
   },
   {
     "sourceType": "reconstructed",
@@ -388,7 +396,8 @@
       }
     ],
     "verificationNote": "복수 공개 복원자료에서 문자열 abdcabcabca, 두 패턴 ca/ab와 출력 ab3ca3이 일치합니다. 함수명·매개변수명만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "슬라이스의 시작 위치, 끝 위치의 제외 여부, 이동 간격을 따로 적은 뒤 선택되는 인덱스만 순서대로 표시하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -427,7 +436,8 @@
       }
     ],
     "verificationNote": "복수 공개 복원자료에서 구조체 배열 값, p=&test[1], 문자열 포인터 연산과 정답 C가 일치합니다. 공백·main 반환형만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조가 일어날 때의 값만 순서대로 추적하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -465,7 +475,8 @@
       }
     ],
     "verificationNote": "복수 공개 복원자료에서 문자열, 길이 계산 반복문, str[a-2]와 정답 E가 일치합니다. main 서식만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조가 일어날 때의 값만 순서대로 추적하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -505,7 +516,8 @@
       }
     ],
     "verificationNote": "복수 공개 복원자료에서 노드 값 11→7→5, sum=sum*3+x, XOR 42, +100과 정답 187이 일치합니다. 선언 서식만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -546,7 +558,8 @@
       }
     ],
     "verificationNote": "복수 공개 복원자료에서 빈칸 위치와 정답 implements가 일치합니다. 식별자만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "참조 변수의 선언 타입과 실제 생성된 객체 타입을 따로 적고, 필드 접근과 메서드 호출의 규칙을 구분해서 추적하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -590,7 +603,8 @@
       }
     ],
     "verificationNote": "복수 공개 복원자료에서 네 내부 리스트의 값, enumerate, sum/len 결과와 최종 딕셔너리 출력이 일치합니다. 반복 변수명만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "자료구조가 변경되는 연산 직후의 상태를 매번 새로 적고, 반환되는 값과 남아 있는 값을 구분하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -632,7 +646,8 @@
       }
     ],
     "verificationNote": "복수 공개 복원자료에서 Rectangle/Square 상속 구조와 빈칸 super가 일치합니다. 불필요한 실행부만 생략했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "참조 변수의 선언 타입과 실제 생성된 객체 타입을 따로 적고, 필드 접근과 메서드 호출의 규칙을 구분해서 추적하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -673,7 +688,8 @@
       }
     ],
     "verificationNote": "복수 공개 복원자료에서 x=7, y=4, 두 삼항식과 비트식, 정답 0이 일치합니다. 공백·main 반환형만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -714,7 +730,8 @@
       }
     ],
     "verificationNote": "복수 공개 복원자료에서 enum 상수 A/B/C, code 문자열, values()[name().length()] 구조와 정답 AB가 일치합니다. 접근 제어자만 정리했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "객체마다 따로 가지는 값과 클래스 전체가 공유하는 값을 구분한 뒤, 호출 순서대로 공유 상태의 변화를 적어보세요."
   },
   {
     "sourceType": "reconstructed",
@@ -787,7 +804,8 @@
       }
     ],
     "verificationNote": "복수 공개 복원자료에서 A 테이블의 5개 행, WHERE의 두 IN 조건, COUNT(col2)와 정답 4가 일치합니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "원본 행에서 시작해 조건 적용, 그룹 또는 집계, 정렬 순으로 중간 결과가 어떻게 줄어드는지 단계별로 적어보세요."
   },
   {
     "id": "R-C-0011",
@@ -826,7 +844,8 @@
     "enabled": true,
     "createdAt": "2026-10-04",
     "updatedAt": "2026-10-04",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조가 일어날 때의 값만 순서대로 추적하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -868,7 +887,8 @@
       }
     ],
     "verificationNote": "복수 독립 복원자료에서 문자열 배열, equals 비교 구조와 정답 OOAAA가 일치합니다. 메서드명과 서식만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "객체마다 따로 가지는 값과 클래스 전체가 공유하는 값을 구분한 뒤, 호출 순서대로 공유 상태의 변화를 적어보세요."
   },
   {
     "sourceType": "reconstructed",
@@ -912,7 +932,8 @@
       }
     ],
     "verificationNote": "복수 복원자료에서 리스트 1~6, 역순 교환, 두 슬라이스 합의 차와 정답 3이 일치합니다. 함수명만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "슬라이스의 시작 위치, 끝 위치의 제외 여부, 이동 간격을 따로 적은 뒤 선택되는 인덱스만 순서대로 표시하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -1011,7 +1032,8 @@
       }
     ],
     "verificationNote": "독립 복원자료에서 테이블 구성, 중첩 GROUP BY/HAVING 구조와 정답 1을 교차 확인했습니다. 별칭만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "원본 행에서 시작해 조건 적용, 그룹 또는 집계, 정렬 순으로 중간 결과가 어떻게 줄어드는지 단계별로 적어보세요."
   },
   {
     "sourceType": "reconstructed",
@@ -1054,7 +1076,8 @@
       }
     ],
     "verificationNote": "여러 복원자료에서 static 변수 0부터 +2, 4회 호출과 정답 20이 일치합니다. 함수명만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -1098,7 +1121,8 @@
       }
     ],
     "verificationNote": "여러 복원자료에서 노드 값 1·2·3, 연결 순서 1→3→2, 인접 값 교환과 정답 312가 일치합니다. 함수명만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조가 일어날 때의 값만 순서대로 추적하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -1142,7 +1166,8 @@
       }
     ],
     "verificationNote": "복수 복원자료에서 입력 자료형과 정답 45가 일치합니다. 함수명만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "자료구조가 변경되는 연산 직후의 상태를 매번 새로 적고, 반환되는 값과 남아 있는 값을 구분하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -1185,7 +1210,8 @@
       }
     ],
     "verificationNote": "여러 복원자료에서 예외 종류, catch 순서, finally와 정답 101이 일치합니다. 서식만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "참조 변수의 선언 타입과 실제 생성된 객체 타입을 따로 적고, 필드 접근과 메서드 호출의 규칙을 구분해서 추적하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -1229,7 +1255,8 @@
       }
     ],
     "verificationNote": "복수 복원자료에서 Base/Derived 필드 3·7, 오버라이딩 메서드와 정답 52가 일치합니다. 클래스명만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "참조 변수의 선언 타입과 실제 생성된 객체 타입을 따로 적고, 필드 접근과 메서드 호출의 규칙을 구분해서 추적하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -1273,7 +1300,8 @@
       }
     ],
     "verificationNote": "복수 복원자료에서 Integer/Object/Number 오버로드, 제네릭 값 0과 정답 B0가 일치합니다. 제네릭 클래스명만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "실행 전에 전달되는 인자의 컴파일 시점 타입을 먼저 확인하고, 그 타입과 가장 잘 맞는 메서드 시그니처를 찾아보세요."
   },
   {
     "sourceType": "reconstructed",
@@ -1316,7 +1344,8 @@
       }
     ],
     "verificationNote": "독립 복원자료에서 배열 A, 문자열 B, change 호출과 정답 BB가 일치합니다. 변수명만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "객체마다 따로 가지는 값과 클래스 전체가 공유하는 값을 구분한 뒤, 호출 순서대로 공유 상태의 변화를 적어보세요."
   },
   {
     "sourceType": "reconstructed",
@@ -1359,7 +1388,8 @@
       }
     ],
     "verificationNote": "여러 복원자료에서 함수형 인터페이스, 입력 3, catch 반환 7, 두 번째 +9와 정답 19가 일치합니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "객체마다 따로 가지는 값과 클래스 전체가 공유하는 값을 구분한 뒤, 호출 순서대로 공유 상태의 변화를 적어보세요."
   },
   {
     "sourceType": "reconstructed",
@@ -1403,7 +1433,8 @@
       }
     ],
     "verificationNote": "복수 복원자료에서 +2/+3, static P/C 구조와 정답 5P가 일치합니다. 메서드명만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "참조 변수의 선언 타입과 실제 생성된 객체 타입을 따로 적고, 필드 접근과 메서드 호출의 규칙을 구분해서 추적하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -1452,7 +1483,8 @@
       }
     ],
     "verificationNote": "복수 복원자료에서 SIZE=3 원형 큐 연산 순서와 정답 2,3이 일치합니다. printf 인자 평가순서 문제를 피하도록 dequeue 결과를 변수에 저장해 제시합니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조가 일어날 때의 값만 순서대로 추적하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -1500,7 +1532,8 @@
       }
     ],
     "verificationNote": "여러 복원자료에서 구조체 값 {1,2},{3,4},{5,6}, 이중 포인터 대입과 정답 5,6이 일치합니다. 구조체명만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조가 일어날 때의 값만 순서대로 추적하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -1543,7 +1576,8 @@
       }
     ],
     "verificationNote": "여러 복원자료에서 객체 값 1·2·3, 배열 참조 교환, 필드 갱신과 정답 1a3b3이 일치합니다. 클래스명만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "객체마다 따로 가지는 값과 클래스 전체가 공유하는 값을 구분한 뒤, 호출 순서대로 공유 상태의 변화를 적어보세요."
   },
   {
     "sourceType": "reconstructed",
@@ -1585,7 +1619,8 @@
       }
     ],
     "verificationNote": "여러 복원자료에서 노드 1·2·3의 최종 연결 c→a→b와 정답 3 1 2가 일치합니다. 필드명만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조가 일어날 때의 값만 순서대로 추적하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -1629,7 +1664,8 @@
       }
     ],
     "verificationNote": "복수 복원자료에서 리스트 1,2,3, 딕셔너리 배수값, set 교집합 연산과 정답 2가 일치합니다. 변수명만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "각 원소가 함수에 들어갔을 때 만들어지는 값을 하나씩 적은 뒤, 최종 자료구조에 어떤 값만 남는지 확인하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -1673,7 +1709,8 @@
       }
     ],
     "verificationNote": "복수 복원자료에서 입력 문자열 BEST, 앞삽입 연결 리스트와 정답 TSEB가 일치합니다. 구조체명만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조가 일어날 때의 값만 순서대로 추적하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -1717,7 +1754,8 @@
       }
     ],
     "verificationNote": "여러 독립 자료에서 배열 10개 값, 두 평균 함수와 정답 106.00이 일치합니다. 함수명만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조가 일어날 때의 값만 순서대로 추적하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -1761,7 +1799,8 @@
       }
     ],
     "verificationNote": "복수 독립 자료에서 A/B 상속, f(Object)/f(String), g 호출과 정답 2가 일치합니다. 참조 변수명만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "참조 변수의 선언 타입과 실제 생성된 객체 타입을 따로 적고, 필드 접근과 메서드 호출의 규칙을 구분해서 추적하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -1806,7 +1845,8 @@
       }
     ],
     "verificationNote": "복수 자료에서 입력 HumanDev, 역순 처리, ong 문자 필터와 정답 veDamuH가 일치합니다. 변수명만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "슬라이스의 시작 위치, 끝 위치의 제외 여부, 이동 간격을 따로 적은 뒤 선택되는 인덱스만 순서대로 표시하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -1854,7 +1894,8 @@
       }
     ],
     "verificationNote": "복수 자료에서 학과별 50/100/50 조건과 세 SQL의 정답 200,3,1이 일치합니다. SQL 서식만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "원본 행에서 시작해 조건 적용, 그룹 또는 집계, 정렬 순으로 중간 결과가 어떻게 줄어드는지 단계별로 적어보세요."
   },
   {
     "sourceType": "reconstructed",
@@ -1902,7 +1943,8 @@
       }
     ],
     "verificationNote": "복수 자료에서 제약조건명 TEAM_TF, 자식 TEAM_ID, 부모 TEAM.TEAM_ID2와 정답 토큰 5개가 일치합니다.",
-    "grading": "sql_keywords"
+    "grading": "sql_keywords",
+    "hint": "빈칸마다 필요한 문법 요소를 바로 넣기보다, 먼저 해당 위치가 조회·조건·그룹·정렬·변경 중 어떤 역할인지 구분해 보세요."
   },
   {
     "sourceType": "reconstructed",
@@ -1946,7 +1988,8 @@
       }
     ],
     "verificationNote": "복수 자료에서 구조체 함수 포인터, 배열 16·32, %x와 정답 20이 일치합니다. 구조체·함수명만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조가 일어날 때의 값만 순서대로 추적하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -1989,7 +2032,8 @@
       }
     ],
     "verificationNote": "복수 자료에서 range(10), [::-2], end='A'와 정답 9A7A5A3A1A가 일치합니다. 변수명만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "슬라이스의 시작 위치, 끝 위치의 제외 여부, 이동 간격을 따로 적은 뒤 선택되는 인덱스만 순서대로 표시하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -2033,7 +2077,8 @@
       }
     ],
     "verificationNote": "복수 자료에서 [1,2,3,4], 얕은 복사, 내부 리스트 +=와 정답 10이 일치합니다. 함수·변수명만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "자료구조가 변경되는 연산 직후의 상태를 매번 새로 적고, 반환되는 값과 남아 있는 값을 구분하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -2075,7 +2120,8 @@
       }
     ],
     "verificationNote": "복수 자료에서 정수 9·2, 문자열 \"2\"와 \"3\", 정답 1123이 일치합니다. 변수명만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "객체마다 따로 가지는 값과 클래스 전체가 공유하는 값을 구분한 뒤, 호출 순서대로 공유 상태의 변화를 적어보세요."
   },
   {
     "sourceType": "reconstructed",
@@ -2159,7 +2205,8 @@
       }
     ],
     "verificationNote": "복수 자료에서 employee/dept 조건, 예산 100·300·200, AVG 서브쿼리와 정답 2가 일치합니다. 별칭만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "원본 행에서 시작해 조건 적용, 그룹 또는 집계, 정렬 순으로 중간 결과가 어떻게 줄어드는지 단계별로 적어보세요."
   },
   {
     "sourceType": "reconstructed",
@@ -2202,7 +2249,8 @@
       }
     ],
     "verificationNote": "복수 독립 복원자료에서 5/0, ArithmeticException, finally와 출력1출력5가 일치합니다. 불필요한 catch 한 개만 생략해 학습용으로 정리했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "객체마다 따로 가지는 값과 클래스 전체가 공유하는 값을 구분한 뒤, 호출 순서대로 공유 상태의 변화를 적어보세요."
   },
   {
     "sourceType": "reconstructed",
@@ -2302,7 +2350,8 @@
       }
     ],
     "verificationNote": "여러 복원자료에서 조인 조건, incentive>=500과 결과 이순신 1000이 일치합니다. 자료별 사번 표기가 달라 다수 자료에 공통인 결과·조건을 기준으로 구성했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "원본 행에서 시작해 조건 적용, 그룹 또는 집계, 정렬 순으로 중간 결과가 어떻게 줄어드는지 단계별로 적어보세요."
   },
   {
     "sourceType": "reconstructed",
@@ -2349,7 +2398,8 @@
       }
     ],
     "verificationNote": "복수 독립 자료에서 B,A,D,E 배열, target C, 첫 출력 4와 최종 BACDE가 일치합니다. main 반환형만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -2392,7 +2442,8 @@
       }
     ],
     "verificationNote": "복수 자료에서 values 9개, 인덱스 재배치 식, 부호 교대 누적과 정답 13이 일치합니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -2436,7 +2487,8 @@
       }
     ],
     "verificationNote": "복수 자료에서 Base/Derived 필드 초기값, update 동적 바인딩과 정답 54가 일치합니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "참조 변수의 선언 타입과 실제 생성된 객체 타입을 따로 적고, 필드 접근과 메서드 호출의 규칙을 구분해서 추적하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -2486,7 +2538,8 @@
       }
     ],
     "verificationNote": "복원자료와 응시자 후기에서 실행 경로 1234526이 일치합니다. 문장 번호 표기는 ①~⑥으로 통일했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -2530,7 +2583,8 @@
       }
     ],
     "verificationNote": "복수 자료에서 배열 3,5,8,12,17, 재귀식과 정답 20이 일치합니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "객체마다 따로 가지는 값과 클래스 전체가 공유하는 값을 구분한 뒤, 호출 순서대로 공유 상태의 변화를 적어보세요."
   },
   {
     "sourceType": "reconstructed",
@@ -2574,7 +2628,8 @@
       }
     ],
     "verificationNote": "복수 자료에서 노드 값과 완전 이진트리 구성, 홀수 레벨 합과 정답 13이 일치합니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "자료구조가 변경되는 연산 직후의 상태를 매번 새로 적고, 반환되는 값과 남아 있는 값을 구분하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -2617,7 +2672,8 @@
       }
     ],
     "verificationNote": "복수 독립 자료에서 앞삽입 1~5, 노드 3의 재연결과 정답 35421이 일치합니다. 구조체·함수명만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조가 일어날 때의 값만 순서대로 추적하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -2660,7 +2716,8 @@
       }
     ],
     "verificationNote": "복수 자료에서 두 학생의 복원 상수와 0xA5 AND 누적, 정답 908이 일치합니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -2703,7 +2760,8 @@
       }
     ],
     "verificationNote": "복수 독립 자료에서 String/int 오버로드 재귀식, 입력 \"5\"와 정답 4가 일치합니다. 메서드명만 통일했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "실행 전에 전달되는 인자의 컴파일 시점 타입을 먼저 확인하고, 그 타입과 가장 잘 맞는 메서드 시그니처를 찾아보세요."
   },
   {
     "sourceType": "reconstructed",
@@ -2790,7 +2848,8 @@
       }
     ],
     "verificationNote": "독립 자료에서 실제 시험 번호 8번, RIGHT OUTER JOIN 뒤 A.id IS NULL 조건과 정답 2를 확인했습니다. 테이블은 문어CBT 복원값을 기준으로 합니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "원본 행에서 시작해 조건 적용, 그룹 또는 집계, 정렬 순으로 중간 결과가 어떻게 줄어드는지 단계별로 적어보세요."
   },
   {
     "sourceType": "reconstructed",
@@ -2833,7 +2892,8 @@
       }
     ],
     "verificationNote": "복수 자료에서 원문 문자열, 세 슬라이스 범위와 정답 _THIISING이 일치합니다. 변수명만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "슬라이스의 시작 위치, 끝 위치의 제외 여부, 이동 간격을 따로 적은 뒤 선택되는 인덱스만 순서대로 표시하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -2879,7 +2939,8 @@
       }
     ],
     "verificationNote": "복수 자료에서 실제 시험 번호 11번, CREATE DOMAIN SEASON과 정답 CHECK가 일치합니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "빈칸마다 필요한 문법 요소를 바로 넣기보다, 먼저 해당 위치가 조회·조건·그룹·정렬·변경 중 어떤 역할인지 구분해 보세요."
   },
   {
     "sourceType": "reconstructed",
@@ -2922,7 +2983,8 @@
       }
     ],
     "verificationNote": "복수 자료에서 실제 시험 번호 13번, compute(n-1)+compute(n-3), 기저조건 n<=1과 정답 1이 일치합니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "객체마다 따로 가지는 값과 클래스 전체가 공유하는 값을 구분한 뒤, 호출 순서대로 공유 상태의 변화를 적어보세요."
   },
   {
     "sourceType": "reconstructed",
@@ -2972,7 +3034,8 @@
       }
     ],
     "verificationNote": "복수 자료에서 실제 시험 번호 14번, LIKE 이%와 DESC 두 빈칸이 일치합니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "빈칸마다 필요한 문법 요소를 바로 넣기보다, 먼저 해당 위치가 조회·조건·그룹·정렬·변경 중 어떤 역할인지 구분해 보세요."
   },
   {
     "sourceType": "reconstructed",
@@ -3016,7 +3079,8 @@
       }
     ],
     "verificationNote": "코드 복원자료에서 노드 값과 후위 순회 정답 12가 일치하고, 응시자 복원 인덱스에서 실제 시험 15번으로 매핑됩니다. 함수명만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조가 일어날 때의 값만 순서대로 추적하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -3061,7 +3125,8 @@
       }
     ],
     "verificationNote": "복수 코드 복원자료에서 딕셔너리 내용과 정답 CNNLRPYT가 일치하며, 응시자 복원 인덱스에서 실제 시험 18번으로 매핑됩니다. Python 3.7 이상 조건을 명시했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "키와 값을 표로 정리하고, 조회·추가·변경 연산이 실행될 때 해당 키의 상태만 순서대로 추적하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -3109,7 +3174,8 @@
       }
     ],
     "verificationNote": "초기 복원 중 sizeof 변형도 있었으나, 응시자 복원과 문어CBT가 일치하는 포인터 배열 버전을 채택했습니다. 실제 시험 번호 19번과 정답 네 줄을 교차 확인했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조가 일어날 때의 값만 순서대로 추적하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -3152,7 +3218,8 @@
       }
     ],
     "verificationNote": "복수 자료에서 필드값 1,5,3 및 10,30,50, hap 오버라이딩과 정답 509가 일치합니다. 실제 시험 번호 20번을 문어CBT·응시자 복원 인덱스로 확인했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "참조 변수의 선언 타입과 실제 생성된 객체 타입을 따로 적고, 필드 접근과 메서드 호출의 규칙을 구분해서 추적하세요."
   },
   {
     "id": "R-JAVA-0026",
@@ -3194,7 +3261,8 @@
     "createdAt": "2026-10-04",
     "updatedAt": "2026-10-04",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "객체마다 따로 가지는 값과 클래스 전체가 공유하는 값을 구분한 뒤, 호출 순서대로 공유 상태의 변화를 적어보세요."
   },
   {
     "id": "R-C-0027",
@@ -3236,7 +3304,8 @@
     "createdAt": "2026-10-04",
     "updatedAt": "2026-10-04",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조가 일어날 때의 값만 순서대로 추적하세요."
   },
   {
     "id": "R-C-0028",
@@ -3277,7 +3346,8 @@
     "createdAt": "2026-10-04",
     "updatedAt": "2026-10-04",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요."
   },
   {
     "id": "R-SQL-0019",
@@ -3314,7 +3384,8 @@
     "createdAt": "2026-10-04",
     "updatedAt": "2026-10-04",
     "grading": "self",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "요구사항을 대상 데이터, 조건, 계산 또는 그룹 처리, 결과 형태로 나눈 뒤 각 조각을 순서대로 SQL 문장에 배치해 보세요."
   },
   {
     "id": "R-SQL-0020",
@@ -3358,7 +3429,8 @@
     "createdAt": "2026-10-04",
     "updatedAt": "2026-10-04",
     "grading": "self",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "요구사항을 대상 데이터, 조건, 계산 또는 그룹 처리, 결과 형태로 나눈 뒤 각 조각을 순서대로 SQL 문장에 배치해 보세요."
   },
   {
     "id": "R-JAVA-0027",
@@ -3403,7 +3475,8 @@
     "acceptedAnswers": [
       "Vehicle name : Spark",
       "Vehicle name:Spark"
-    ]
+    ],
+    "hint": "참조 변수의 선언 타입과 실제 생성된 객체 타입을 따로 적고, 필드 접근과 메서드 호출의 규칙을 구분해서 추적하세요."
   },
   {
     "id": "R-JAVA-0028",
@@ -3446,7 +3519,8 @@
     "createdAt": "2026-10-04",
     "updatedAt": "2026-10-04",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "참조 변수의 선언 타입과 실제 생성된 객체 타입을 따로 적고, 필드 접근과 메서드 호출의 규칙을 구분해서 추적하세요."
   },
   {
     "id": "R-C-0029",
@@ -3490,7 +3564,8 @@
     "acceptedAnswers": [
       "(i + 1) % 5",
       "(i+1) % 5"
-    ]
+    ],
+    "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요."
   },
   {
     "id": "R-JAVA-0029",
@@ -3531,7 +3606,8 @@
     "createdAt": "2026-10-04",
     "updatedAt": "2026-10-04",
     "grading": "self",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "각 문장이 실행된 직후 변수와 객체의 상태를 한 줄씩 적고, 마지막 출력문이 참조하는 값을 확인하세요."
   },
   {
     "id": "R-C-0030",
@@ -3568,7 +3644,8 @@
     "createdAt": "2026-10-04",
     "updatedAt": "2026-10-04",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요."
   },
   {
     "id": "R-C-0031",
@@ -3610,7 +3687,8 @@
     "createdAt": "2026-10-04",
     "updatedAt": "2026-10-04",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요."
   },
   {
     "id": "R-C-0032",
@@ -3653,7 +3731,8 @@
     "createdAt": "2026-10-04",
     "updatedAt": "2026-10-04",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "조건식의 참·거짓을 먼저 결정한 뒤 실제로 선택되는 분기만 따라가고, 실행되지 않는 분기는 계산하지 마세요."
   },
   {
     "id": "R-JAVA-0030",
@@ -3695,7 +3774,8 @@
     "createdAt": "2026-10-04",
     "updatedAt": "2026-10-04",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "객체마다 따로 가지는 값과 클래스 전체가 공유하는 값을 구분한 뒤, 호출 순서대로 공유 상태의 변화를 적어보세요."
   },
   {
     "id": "R-SQL-0021",
@@ -3738,7 +3818,8 @@
     "acceptedAnswers": [
       "cascade",
       "Cascade"
-    ]
+    ],
+    "hint": "빈칸마다 필요한 문법 요소를 바로 넣기보다, 먼저 해당 위치가 조회·조건·그룹·정렬·변경 중 어떤 역할인지 구분해 보세요."
   },
   {
     "id": "R-C-0033",
@@ -3778,7 +3859,8 @@
     "createdAt": "2026-10-04",
     "updatedAt": "2026-10-04",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요."
   },
   {
     "id": "R-PY-0018",
@@ -3819,7 +3901,8 @@
     "createdAt": "2026-10-04",
     "updatedAt": "2026-10-04",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "슬라이스의 시작 위치, 끝 위치의 제외 여부, 이동 간격을 따로 적은 뒤 선택되는 인덱스만 순서대로 표시하세요."
   },
   {
     "id": "R-JAVA-0031",
@@ -3861,7 +3944,8 @@
     "createdAt": "2026-10-04",
     "updatedAt": "2026-10-04",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "참조 변수의 선언 타입과 실제 생성된 객체 타입을 따로 적고, 필드 접근과 메서드 호출의 규칙을 구분해서 추적하세요."
   },
   {
     "id": "R-C-0034",
@@ -3899,7 +3983,8 @@
     "createdAt": "2026-10-04",
     "updatedAt": "2026-10-04",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요."
   },
   {
     "id": "R-C-0035",
@@ -3940,7 +4025,8 @@
     "createdAt": "2026-10-04",
     "updatedAt": "2026-10-04",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조가 일어날 때의 값만 순서대로 추적하세요."
   },
   {
     "id": "R-SQL-0022",
@@ -3978,7 +4064,8 @@
     "createdAt": "2026-10-04",
     "updatedAt": "2026-10-04",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "원본 행에서 시작해 조건 적용, 그룹 또는 집계, 정렬 순으로 중간 결과가 어떻게 줄어드는지 단계별로 적어보세요."
   },
   {
     "id": "R-C-0036",
@@ -4019,7 +4106,8 @@
     "createdAt": "2026-10-04",
     "updatedAt": "2026-10-04",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "종료 조건을 먼저 찾은 뒤 호출이 깊어지는 순서와 반환되면서 계산되는 순서를 분리해서 적어보세요."
   },
   {
     "id": "R-C-0037",
@@ -4057,7 +4145,8 @@
     "createdAt": "2026-10-04",
     "updatedAt": "2026-10-04",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조가 일어날 때의 값만 순서대로 추적하세요."
   },
   {
     "id": "R-JAVA-0032",
@@ -4095,7 +4184,8 @@
     "createdAt": "2026-10-04",
     "updatedAt": "2026-10-04",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "참조 변수의 선언 타입과 실제 생성된 객체 타입을 따로 적고, 필드 접근과 메서드 호출의 규칙을 구분해서 추적하세요."
   },
   {
     "id": "R-JAVA-0033",
@@ -4136,7 +4226,8 @@
     "acceptedAnswers": [
       "7번",
       "7번 줄"
-    ]
+    ],
+    "hint": "객체마다 따로 가지는 값과 클래스 전체가 공유하는 값을 구분한 뒤, 호출 순서대로 공유 상태의 변화를 적어보세요."
   },
   {
     "id": "R-PY-0019",
@@ -4174,7 +4265,8 @@
     "grading": "exact",
     "acceptedAnswers": [
       "split()"
-    ]
+    ],
+    "hint": "표현식을 한 번에 계산하지 말고 안쪽 연산부터 값과 자료형의 변화를 차례대로 적어보세요."
   },
   {
     "sourceType": "reconstructed",
@@ -4217,7 +4309,8 @@
       }
     ],
     "verificationNote": "복수 독립 자료에서 2022년 1회 3번, a=100에서 두 메서드를 거쳐 2000이 출력되는 구조가 일치합니다. 식별자만 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "객체마다 따로 가지는 값과 클래스 전체가 공유하는 값을 구분한 뒤, 호출 순서대로 공유 상태의 변화를 적어보세요."
   },
   {
     "sourceType": "reconstructed",
@@ -4263,7 +4356,8 @@
       }
     ],
     "verificationNote": "복수 자료에서 2022년 1회 11번 Runnable/Thread 빈칸의 정답 Car가 일치합니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "객체마다 따로 가지는 값과 클래스 전체가 공유하는 값을 구분한 뒤, 호출 순서대로 공유 상태의 변화를 적어보세요."
   },
   {
     "sourceType": "reconstructed",
@@ -4305,7 +4399,8 @@
       }
     ],
     "verificationNote": "복수 자료에서 2022년 1회 14번, 입력 5의 재귀 factorial 출력 120이 일치합니다. 입력 부분만 학습용으로 고정했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "종료 조건을 먼저 찾은 뒤 호출이 깊어지는 순서와 반환되면서 계산되는 순서를 분리해서 적어보세요."
   },
   {
     "sourceType": "reconstructed",
@@ -4353,7 +4448,8 @@
       }
     ],
     "verificationNote": "복수 자료에서 2022년 1회 15번의 세 연산자 >, %, /와 결과 4321이 일치합니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "문자열을 인덱스별 문자로 펼쳐 적고, 포인터나 반복문이 실제로 방문하거나 바꾸는 위치만 표시하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -4395,7 +4491,8 @@
       }
     ],
     "verificationNote": "복수 자료에서 2022년 1회 19번, 13195의 최대 소인수 29가 일치합니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -4440,7 +4537,8 @@
       }
     ],
     "verificationNote": "복수 자료에서 2022년 2회 3번 SQL의 정답 ALL이 일치합니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "빈칸마다 필요한 문법 요소를 바로 넣기보다, 먼저 해당 위치가 조회·조건·그룹·정렬·변경 중 어떤 역할인지 구분해 보세요."
   },
   {
     "sourceType": "reconstructed",
@@ -4514,7 +4612,8 @@
       }
     ],
     "verificationNote": "복수 자료에서 2022년 2회 4번 SQL과 정답 4를 확인했습니다. 테이블 값은 공개 복원표의 공통값을 사용했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "원본 행에서 시작해 조건 적용, 그룹 또는 집계, 정렬 순으로 중간 결과가 어떻게 줄어드는지 단계별로 적어보세요."
   },
   {
     "sourceType": "reconstructed",
@@ -4556,7 +4655,8 @@
       }
     ],
     "verificationNote": "복수 독립 자료에서 2022년 2회 7번 switch 코드와 정답 -8이 일치합니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "객체마다 따로 가지는 값과 클래스 전체가 공유하는 값을 구분한 뒤, 호출 순서대로 공유 상태의 변화를 적어보세요."
   },
   {
     "sourceType": "reconstructed",
@@ -4599,7 +4699,8 @@
       }
     ],
     "verificationNote": "복수 자료에서 2022년 2회 13번 코드와 정답 REMEMBER AND STR이 일치합니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "슬라이스의 시작 위치, 끝 위치의 제외 여부, 이동 간격을 따로 적은 뒤 선택되는 인덱스만 순서대로 표시하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -4641,7 +4742,8 @@
       }
     ],
     "verificationNote": "복수 자료에서 2022년 2회 15번 문자열 길이 함수와 정답 10이 일치합니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조가 일어날 때의 값만 순서대로 추적하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -4685,7 +4787,8 @@
       }
     ],
     "verificationNote": "복수 자료에서 2022년 2회 16번 배열 값 0,2,4,8과 정답 22가 일치합니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조가 일어날 때의 값만 순서대로 추적하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -4729,7 +4832,8 @@
       }
     ],
     "verificationNote": "복수 자료의 코드 추적 결과가 61로 일치합니다. 일부 블로그의 제목/타이포에 -61 표기가 있으나 해당 블로그 자체 풀이와 다른 독립 자료는 61로 일치해 61을 채택했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "객체마다 따로 가지는 값과 클래스 전체가 공유하는 값을 구분한 뒤, 호출 순서대로 공유 상태의 변화를 적어보세요."
   },
   {
     "sourceType": "reconstructed",
@@ -4770,7 +4874,8 @@
       }
     ],
     "verificationNote": "복수 자료에서 2022년 3회 Python map/lambda 문제와 출력 [101,102,103,104,105]가 일치합니다. 일부 자료는 전체 문항 번호를 9 또는 20으로 재배열해 번호는 미확정 처리합니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "자료구조가 변경되는 연산 직후의 상태를 매번 새로 적고, 반환되는 값과 남아 있는 값을 구분하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -4816,7 +4921,8 @@
       }
     ],
     "verificationNote": "복수 자료에서 2022년 3회 12번 SQL의 결과 200,3,1이 일치합니다. 학과명은 복원자료별 차이가 있어 결과에 영향을 주지 않는 대표값으로 정리했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "원본 행에서 시작해 조건 적용, 그룹 또는 집계, 정렬 순으로 중간 결과가 어떻게 줄어드는지 단계별로 적어보세요."
   },
   {
     "sourceType": "reconstructed",
@@ -4858,7 +4964,8 @@
       }
     ],
     "verificationNote": "복수 자료에서 2022년 3회 13번 완전수 개수의 정답 2가 일치합니다. 일부 자료의 코드 언어 표기가 혼재해 표준 C 형태로 정규화했습니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요."
   },
   {
     "sourceType": "reconstructed",
@@ -4900,7 +5007,8 @@
       }
     ],
     "verificationNote": "복수 자료에서 2022년 3회 19번 배열 생성 Java 코드와 정답 0123이 일치합니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "객체마다 따로 가지는 값과 클래스 전체가 공유하는 값을 구분한 뒤, 호출 순서대로 공유 상태의 변화를 적어보세요."
   },
   {
     "sourceType": "reconstructed",
@@ -4942,7 +5050,8 @@
       }
     ],
     "verificationNote": "복수 독립 자료에서 2022년 3회 20번 코드와 정답 993이 일치합니다.",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "객체마다 따로 가지는 값과 클래스 전체가 공유하는 값을 구분한 뒤, 호출 순서대로 공유 상태의 변화를 적어보세요."
   },
   {
     "id": "R-IND-C-0001",
@@ -4979,7 +5088,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요."
   },
   {
     "id": "R-IND-C-0002",
@@ -5016,7 +5126,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요."
   },
   {
     "id": "R-IND-C-0003",
@@ -5054,7 +5165,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요."
   },
   {
     "id": "R-IND-C-0004",
@@ -5091,7 +5203,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요."
   },
   {
     "id": "R-IND-SQL-0001",
@@ -5130,7 +5243,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "sql_keywords",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "빈칸마다 필요한 문법 요소를 바로 넣기보다, 먼저 해당 위치가 조회·조건·그룹·정렬·변경 중 어떤 역할인지 구분해 보세요."
   },
   {
     "id": "R-IND-JAVA-0001",
@@ -5168,7 +5282,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "반복마다 인덱스와 배열 값이 어떻게 바뀌는지 표로 적고, 출력문이 실행되는 시점만 따로 표시하세요."
   },
   {
     "id": "R-IND-JAVA-0002",
@@ -5205,7 +5320,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "각 문장이 실행된 직후 변수와 객체의 상태를 한 줄씩 적고, 마지막 출력문이 참조하는 값을 확인하세요."
   },
   {
     "id": "R-IND-C-0005",
@@ -5243,7 +5359,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요."
   },
   {
     "id": "R-IND-JAVA-0003",
@@ -5279,7 +5396,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "각 문장이 실행된 직후 변수와 객체의 상태를 한 줄씩 적고, 마지막 출력문이 참조하는 값을 확인하세요."
   },
   {
     "id": "R-IND-C-0006",
@@ -5318,7 +5436,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요."
   },
   {
     "id": "R-IND-C-0007",
@@ -5356,7 +5475,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요."
   },
   {
     "id": "R-IND-JAVA-0004",
@@ -5392,7 +5512,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "반복마다 인덱스와 배열 값이 어떻게 바뀌는지 표로 적고, 출력문이 실행되는 시점만 따로 표시하세요."
   },
   {
     "id": "R-IND-C-0008",
@@ -5428,7 +5549,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조가 일어날 때의 값만 순서대로 추적하세요."
   },
   {
     "id": "R-IND-JAVA-0005",
@@ -5466,7 +5588,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "반복마다 인덱스와 배열 값이 어떻게 바뀌는지 표로 적고, 출력문이 실행되는 시점만 따로 표시하세요."
   },
   {
     "id": "R-IND-C-0009",
@@ -5502,7 +5625,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요."
   },
   {
     "id": "R-IND-C-0010",
@@ -5539,7 +5663,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "반복마다 조건식, 핵심 변수, 출력 여부를 표로 적고, 건너뛰기나 종료가 발생한 지점을 별도로 표시하세요."
   },
   {
     "id": "R-IND-JAVA-0006",
@@ -5576,7 +5701,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "반복마다 인덱스와 배열 값이 어떻게 바뀌는지 표로 적고, 출력문이 실행되는 시점만 따로 표시하세요."
   },
   {
     "id": "R-IND-C-0011",
@@ -5613,7 +5739,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "배열을 반복 단계별로 한 줄씩 다시 적고, 비교나 교환이 일어난 위치만 표시하면 마지막 상태를 쉽게 확인할 수 있습니다."
   },
   {
     "id": "R-IND-C-0012",
@@ -5649,7 +5776,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "종료 조건을 먼저 찾은 뒤 호출이 깊어지는 순서와 반환되면서 계산되는 순서를 분리해서 적어보세요."
   },
   {
     "id": "R-IND-C-0013",
@@ -5682,7 +5810,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "반복마다 조건식, 핵심 변수, 출력 여부를 표로 적고, 건너뛰기나 종료가 발생한 지점을 별도로 표시하세요."
   },
   {
     "id": "R-IND-SQL-0002",
@@ -5720,7 +5849,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "sql_keywords",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "빈칸마다 필요한 문법 요소를 바로 넣기보다, 먼저 해당 위치가 조회·조건·그룹·정렬·변경 중 어떤 역할인지 구분해 보세요."
   },
   {
     "id": "R-IND-PY-0001",
@@ -5753,7 +5883,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "표현식을 한 번에 계산하지 말고 안쪽 연산부터 값과 자료형의 변화를 차례대로 적어보세요."
   },
   {
     "id": "R-IND-C-0014",
@@ -5793,7 +5924,8 @@
     "acceptedAnswers": [
       "13 3",
       "13, 3"
-    ]
+    ],
+    "hint": "반복마다 조건식, 핵심 변수, 출력 여부를 표로 적고, 건너뛰기나 종료가 발생한 지점을 별도로 표시하세요."
   },
   {
     "id": "R-IND-JAVA-0007",
@@ -5831,7 +5963,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "반복마다 인덱스와 배열 값이 어떻게 바뀌는지 표로 적고, 출력문이 실행되는 시점만 따로 표시하세요."
   },
   {
     "id": "R-IND-C-0015",
@@ -5867,7 +6000,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요."
   },
   {
     "id": "R-IND-C-0016",
@@ -5905,7 +6039,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "문자열을 인덱스별 문자로 펼쳐 적고, 포인터나 반복문이 실제로 방문하거나 바꾸는 위치만 표시하세요."
   },
   {
     "id": "R-IND-SQL-0003",
@@ -5941,7 +6076,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "빈칸마다 필요한 문법 요소를 바로 넣기보다, 먼저 해당 위치가 조회·조건·그룹·정렬·변경 중 어떤 역할인지 구분해 보세요."
   },
   {
     "id": "R-IND-C-0017",
@@ -5977,7 +6113,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요."
   },
   {
     "id": "R-IND-C-0018",
@@ -6013,7 +6150,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "종료 조건을 먼저 찾은 뒤 호출이 깊어지는 순서와 반환되면서 계산되는 순서를 분리해서 적어보세요."
   },
   {
     "id": "R-IND-JAVA-0008",
@@ -6051,7 +6189,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "참조 변수의 선언 타입과 실제 생성된 객체 타입을 따로 적고, 필드 접근과 메서드 호출의 규칙을 구분해서 추적하세요."
   },
   {
     "id": "R-IND-C-0019",
@@ -6088,7 +6227,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조가 일어날 때의 값만 순서대로 추적하세요."
   },
   {
     "id": "R-IND-JAVA-0009",
@@ -6125,7 +6265,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "객체마다 따로 가지는 값과 클래스 전체가 공유하는 값을 구분한 뒤, 호출 순서대로 공유 상태의 변화를 적어보세요."
   },
   {
     "id": "R-IND-JAVA-0010",
@@ -6161,7 +6302,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "각 문장이 실행된 직후 변수와 객체의 상태를 한 줄씩 적고, 마지막 출력문이 참조하는 값을 확인하세요."
   },
   {
     "id": "R-IND-C-0020",
@@ -6198,7 +6340,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "비트 연산이 있는 식은 각 피연산자를 이진 형태로 생각하고, 연산 우선순위에 따라 한 단계씩 결과를 갱신하세요."
   },
   {
     "id": "R-IND-JAVA-0011",
@@ -6235,7 +6378,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "반복마다 인덱스와 배열 값이 어떻게 바뀌는지 표로 적고, 출력문이 실행되는 시점만 따로 표시하세요."
   },
   {
     "id": "R-IND-SQL-0004",
@@ -6274,7 +6418,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "sql_keywords",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "빈칸마다 필요한 문법 요소를 바로 넣기보다, 먼저 해당 위치가 조회·조건·그룹·정렬·변경 중 어떤 역할인지 구분해 보세요."
   },
   {
     "id": "R-IND-SQL-0005",
@@ -6312,7 +6457,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "sql_keywords",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "빈칸마다 필요한 문법 요소를 바로 넣기보다, 먼저 해당 위치가 조회·조건·그룹·정렬·변경 중 어떤 역할인지 구분해 보세요."
   },
   {
     "id": "R-IND-JAVA-0012",
@@ -6350,7 +6496,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "반복마다 인덱스와 배열 값이 어떻게 바뀌는지 표로 적고, 출력문이 실행되는 시점만 따로 표시하세요."
   },
   {
     "id": "R-IND-SQL-0006",
@@ -6383,7 +6530,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "self",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "빈칸마다 필요한 문법 요소를 바로 넣기보다, 먼저 해당 위치가 조회·조건·그룹·정렬·변경 중 어떤 역할인지 구분해 보세요."
   },
   {
     "id": "R-IND-C-0021",
@@ -6423,7 +6571,8 @@
     "grading": "exact",
     "acceptedAnswers": [
       "2번 출력:tset\n1번 출력:gnirts"
-    ]
+    ],
+    "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조가 일어날 때의 값만 순서대로 추적하세요."
   },
   {
     "id": "R-IND-C-0022",
@@ -6460,7 +6609,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "반복마다 조건식, 핵심 변수, 출력 여부를 표로 적고, 건너뛰기나 종료가 발생한 지점을 별도로 표시하세요."
   },
   {
     "id": "R-IND-SQL-0007",
@@ -6498,7 +6648,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "sql_keywords",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "빈칸마다 필요한 문법 요소를 바로 넣기보다, 먼저 해당 위치가 조회·조건·그룹·정렬·변경 중 어떤 역할인지 구분해 보세요."
   },
   {
     "id": "R-IND-JAVA-0013",
@@ -6536,7 +6687,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "각 문장이 실행된 직후 변수와 객체의 상태를 한 줄씩 적고, 마지막 출력문이 참조하는 값을 확인하세요."
   },
   {
     "id": "R-IND-C-0023",
@@ -6573,7 +6725,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조가 일어날 때의 값만 순서대로 추적하세요."
   },
   {
     "id": "R-IND-SQL-0008",
@@ -6614,7 +6767,8 @@
     "acceptedAnswers": [
       "200, 3, 1",
       "200\n3\n1"
-    ]
+    ],
+    "hint": "원본 행에서 시작해 조건 적용, 그룹 또는 집계, 정렬 순으로 중간 결과가 어떻게 줄어드는지 단계별로 적어보세요."
   },
   {
     "id": "R-IND-SQL-0009",
@@ -6651,7 +6805,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "sql_keywords",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "빈칸마다 필요한 문법 요소를 바로 넣기보다, 먼저 해당 위치가 조회·조건·그룹·정렬·변경 중 어떤 역할인지 구분해 보세요."
   },
   {
     "id": "R-IND-SQL-0010",
@@ -6689,7 +6844,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "sql_keywords",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "빈칸마다 필요한 문법 요소를 바로 넣기보다, 먼저 해당 위치가 조회·조건·그룹·정렬·변경 중 어떤 역할인지 구분해 보세요."
   },
   {
     "id": "R-IND-PY-0002",
@@ -6726,7 +6882,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "자료구조가 변경되는 연산 직후의 상태를 매번 새로 적고, 반환되는 값과 남아 있는 값을 구분하세요."
   },
   {
     "id": "R-IND-C-0024",
@@ -6763,7 +6920,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조가 일어날 때의 값만 순서대로 추적하세요."
   },
   {
     "id": "R-IND-C-0025",
@@ -6801,7 +6959,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조가 일어날 때의 값만 순서대로 추적하세요."
   },
   {
     "id": "R-IND-SQL-0011",
@@ -6837,7 +6996,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "빈칸마다 필요한 문법 요소를 바로 넣기보다, 먼저 해당 위치가 조회·조건·그룹·정렬·변경 중 어떤 역할인지 구분해 보세요."
   },
   {
     "id": "R-IND-C-0026",
@@ -6874,7 +7034,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조가 일어날 때의 값만 순서대로 추적하세요."
   },
   {
     "id": "R-IND-C-0027",
@@ -6911,7 +7072,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "종료 조건을 먼저 찾은 뒤 호출이 깊어지는 순서와 반환되면서 계산되는 순서를 분리해서 적어보세요."
   },
   {
     "id": "R-IND-C-0028",
@@ -6948,7 +7110,8 @@
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
     "grading": "exact",
-    "acceptedAnswers": []
+    "acceptedAnswers": [],
+    "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조가 일어날 때의 값만 순서대로 추적하세요."
   },
   {
     "id": "R-IND-PY-0003",
@@ -6986,7 +7149,8 @@
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "키와 값을 표로 정리하고, 조회·추가·변경 연산이 실행될 때 해당 키의 상태만 순서대로 추적하세요."
   },
   {
     "id": "R-IND-SQL-0012",
@@ -7029,7 +7193,8 @@
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "빈칸마다 필요한 문법 요소를 바로 넣기보다, 먼저 해당 위치가 조회·조건·그룹·정렬·변경 중 어떤 역할인지 구분해 보세요."
   },
   {
     "id": "R-IND-C-0029",
@@ -7067,6 +7232,7 @@
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-05",
-    "grading": "exact"
+    "grading": "exact",
+    "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조가 일어날 때의 값만 순서대로 추적하세요."
   }
 ]
