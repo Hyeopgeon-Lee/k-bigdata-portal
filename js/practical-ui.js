@@ -1,8 +1,8 @@
-import {loadPracticalBank} from "./practical-data.js?v=20261005-solution-2";
+import {loadPracticalBank} from "./practical-data.js?v=20261006-stored-trace-1";
 import {HINT_SECONDS,ANSWER_SECONDS,examLabels,typeLabels,languages,escapeHTML as esc,remainingSeconds,remainingAnswerSeconds,hintAvailable,answerDeadlineReached,canSubmit,canReveal,gradeAnswer,questionText,shuffle,recommendFive,matchesExam,localDay,summarizeAttempts,highlightCode,formatCodeForDisplay} from "./practical-core.js?v=20261005-browser-1";
 import {getAttempts,saveAttempt,getSession,saveSession,clearLocalLearning,storageAvailable,getPreferences,savePreferences,exportLearning,importLearning} from "./practical-store.js";
 import {matches} from "./search-core.js?v=20261005-perf-1";
-import {beginnerSteps,beginnerExplanation,examMemory,lineByLineExplanation} from "./practical-explanation.js?v=20261005-solution-2";
+import {beginnerExplanation,examMemory,solutionTrace} from "./practical-explanation.js?v=20261006-stored-trace-1";
 
 const $=selector=>document.querySelector(selector),root=$("#bank-content"),status=$("#bank-status");
 let bank=[],view="home",current=null,attempt=null,timer=null,queue=[],queueIndex=0,aliases={},pageLimit=24,queueKind="random",solveActionsObserver=null;
@@ -318,18 +318,17 @@ function revealAnswer(reason="resume",now=Date.now()){
  const hintPanel=$("#solve-hint");if(hintPanel)hintPanel.hidden=true;
  const q=current,similar=bank.filter(item=>item.originalQuestionId===q.id||q.originalQuestionId&&item.originalQuestionId===q.originalQuestionId&&item.id!==q.id);
  const extraExplanation=beginnerExplanation(q);
- const steps=beginnerSteps(q);
- const lineNotes=lineByLineExplanation(q,displayCode(q));
- const lineByLine=lineNotes.length?'<section class="beginner-section beginner-line-by-line"><p class="beginner-kicker">1 · 코드 한 줄씩 값으로 이해하기</p><p class="line-guide">문법 이름만 외우지 않고, 이 문제에서 실제로 어떤 값이 들어가고 어떻게 바뀌는지 함께 확인합니다.</p><div class="line-explanation-list">'+lineNotes.map(item=>'<div class="line-explanation-row"><div class="line-code"><span class="line-no" aria-hidden="true">'+item.line+'</span><code>'+highlightCode(item.code)+'</code></div><div class="line-detail"><p class="line-action"><strong>이 줄에서 하는 일</strong><span>'+esc(item.explanation)+'</span></p><p class="line-trace"><strong>값 추적</strong><span>'+esc(item.trace)+'</span></p></div></div>').join("")+'</div></section>':'';
+ const traceItems=solutionTrace(q);
+ const traceTitle=String(q.solution?.traceTitle||"실행 순서와 값 변화");
+ const traceBlock=traceItems.length?'<section class="beginner-section beginner-trace"><p class="beginner-kicker">1 · '+esc(traceTitle)+'</p><p class="line-guide">앞 단계에서 나온 값을 다음 단계의 현재 값으로 이어서 확인합니다.</p><ol class="bank-steps trace-steps">'+traceItems.map(item=>'<li>'+esc(item)+'</li>').join("")+'</ol></section>':'';
  const sourceDetails=q.history.length||q.sources.length?'<details class="bank-sources"><summary>출제 이력 · 출처</summary>'+(q.history.length?'<ul>'+q.history.map(h=>'<li>'+esc(historyLabel(h))+'</li>').join("")+'</ul>':'')+(q.sources.length?'<ul>'+q.sources.map(s=>'<li><a href="'+esc(s.url)+'" target="_blank" rel="noopener noreferrer">'+esc(s.name==="데이터셋 참고 출처 (문항·회차 일치 미검증)"?"학습 자료":s.name)+' ↗<span class="sr-only"> 외부 자료, 새 창</span></a></li>').join("")+'</ul>':'')+'</details>':'';
  const resultTitle=attempt.autoRevealed?ANSWER_SECONDS+"초가 지나 정답을 공개했습니다":attempt.correct===true?'정답입니다':attempt.correct===false?'오답입니다 · 오답노트에 저장했습니다':'예시 답안과 직접 비교하세요';
  const learnerLabel=attempt.autoRevealed?ANSWER_SECONDS+"초 시점 작성 중인 답":'내 답';
  const learnerAnswer=attempt.answer?.trim()?attempt.answer:'미제출';
  const selfJudge=q.grading==="self"&&!attempt.autoRevealed?'<p>동등한 SQL은 정답으로 기록할 수 있습니다.</p><div class="practice-actions">'+button("self-correct","정답으로 기록")+button("self-wrong","오답으로 기록")+'</div>':'';
- const stepNo=lineNotes.length?2:1,whyNo=stepNo+1,memoryNo=whyNo+1;
+ const whyNo=traceItems.length?2:1,memoryNo=whyNo+1;
  const learningGuide='<div class="beginner-flow" aria-label="기초부터 보는 문제 풀이">'
-   +lineByLine
-   +'<section class="beginner-section"><p class="beginner-kicker">'+stepNo+' · 실행 흐름 따라가기</p><ol class="bank-steps">'+steps.map(step=>'<li>'+esc(step)+'</li>').join("")+'</ol></section>'
+   +traceBlock
    +'<section class="beginner-section beginner-why"><p class="beginner-kicker">'+whyNo+' · 왜 이 답인가?</p><p class="beginner-explanation">'+esc(extraExplanation)+'</p></section>'
    +'<section class="beginner-section beginner-memory"><p class="beginner-kicker">'+memoryNo+' · 시험에서 꼭 기억할 것</p><p>'+esc(examMemory(q))+'</p></section>'
    +'</div>';
