@@ -43,7 +43,7 @@ for(const term of ['실기','SQL','정보처리산업기사','오답노트'])ass
 assert.ok(read('js/certifications-ui.js').includes('실기 문제 연습'));
 assert.ok(read('js/certifications-ui.js').includes('practical.html?exam='));
 const html=read('practical.html');assert.match(html,/<meta name="robots" content="noindex, nofollow">/);assert.ok(!html.includes('258'));assert.ok(html.includes('value="reconstructed"'));
-const ui=read('js/practical-ui.js');assert.ok(ui.includes('if(!canSubmit(attempt,answer,now))'));assert.ok(ui.includes('answerDeadlineReached(attempt,now)'));assert.ok(ui.includes('hintAvailable(attempt,now)'));assert.ok(ui.includes('autoRevealAnswer'));assert.ok(ui.includes('rel="noopener noreferrer"'));
+const ui=read('js/practical-ui.js');assert.ok(ui.includes('if(!canSubmit(attempt,answer,now))'));assert.ok(ui.includes('answerDeadlineReached(attempt,now)'));assert.ok(ui.includes('hintAvailable(attempt,now)'));assert.ok(ui.includes('autoRevealAnswer'));assert.ok(ui.includes('attempt.submittedAt&&!attempt.viewedExplanation'));assert.ok(ui.includes('rel="noopener noreferrer"'));
 // Storage adapter: reload continuity, attempts idempotency, blocked storage fallback.
 const fake=()=>{const data=new Map();return {getItem:k=>data.get(k)||null,setItem:(k,v)=>data.set(k,v),removeItem:k=>data.delete(k)};};
 globalThis.localStorage=fake();globalThis.sessionStorage=fake();
