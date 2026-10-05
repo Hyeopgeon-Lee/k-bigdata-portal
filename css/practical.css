@@ -18,7 +18,7 @@
 .practical-page .study-header{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;position:sticky;top:var(--portal-header-height);z-index:90;padding:6px 16px;min-height:56px;border-bottom:1px solid var(--color-border);background:#fff}
 .practical-page .study-header strong{text-align:center;font-size:16px}
 .practical-page .study-header a,.practical-page .study-header button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;font:inherit;font-size:14px;color:var(--color-primary);background:none;border:0;padding:6px;cursor:pointer}
-.practical-page .container{width:min(calc(100% - 24px),920px)}
+.practical-page .study-intro,.practical-page .learning-content{width:min(calc(100% - 24px),920px);margin-inline:auto}
 .practical-page .study-intro{padding:22px 0 8px}
 .practical-page .study-intro h1{font-size:22px;line-height:1.45;letter-spacing:-.035em;margin:0 0 8px}
 .practical-page .study-intro p{font-size:16px;line-height:1.7;color:var(--color-text-muted);margin:0}
