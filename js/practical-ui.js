@@ -1,5 +1,5 @@
-import {loadPracticalBank} from "./practical-data.js?v=20261005-hintflow-2";
-import {HINT_SECONDS,ANSWER_SECONDS,examLabels,typeLabels,languages,escapeHTML as esc,remainingSeconds,remainingAnswerSeconds,hintAvailable,answerDeadlineReached,canSubmit,canReveal,gradeAnswer,questionText,shuffle,recommendFive,matchesExam,localDay,summarizeAttempts,highlightCode} from "./practical-core.js?v=20261005-hintflow-2";
+import {loadPracticalBank} from "./practical-data.js?v=20261005-hintflow-3";
+import {HINT_SECONDS,ANSWER_SECONDS,examLabels,typeLabels,languages,escapeHTML as esc,remainingSeconds,remainingAnswerSeconds,hintAvailable,answerDeadlineReached,canSubmit,canReveal,gradeAnswer,questionText,shuffle,recommendFive,matchesExam,localDay,summarizeAttempts,highlightCode} from "./practical-core.js?v=20261005-hintflow-3";
 import {getAttempts,saveAttempt,getSession,saveSession,clearLocalLearning,storageAvailable,getPreferences,savePreferences,exportLearning,importLearning} from "./practical-store.js";
 import {matches} from "./search.js";
 
@@ -166,15 +166,16 @@ function formatClock(seconds){
  return String(Math.floor(safe/60)).padStart(2,"0")+":"+String(safe%60).padStart(2,"0");
 }
 function renderQuestion(){
- const q=current,revealed=!!attempt.viewedExplanation;
- const multiline=q.questionType==="sql_write"||q.answer.includes("\n"),attributes='id="my-answer" required maxlength="10000" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-describedby="answer-hint gate-status" '+(revealed?'disabled':'');
+ const q=current,revealed=!!attempt.viewedExplanation,submitted=!!attempt.submittedAt;
+ const multiline=q.questionType==="sql_write"||q.answer.includes("\n"),attributes='id="my-answer" required maxlength="10000" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-describedby="answer-hint gate-status" '+(revealed||submitted?'disabled':'');
  const input=multiline?'<textarea '+attributes+' rows="'+(q.questionType==="sql_write"?7:4)+'">'+esc(attempt.answer||"")+'</textarea>':'<input '+attributes+' type="text" enterkeyhint="done" value="'+esc(attempt.answer||"")+'">';
  const shownCode=displayCode(q);
  root.innerHTML='<article class="bank-solve"><div class="solve-progress">'+button("back","← 학습 시작")+'<strong>'+(queue.length?(queueIndex+1)+' / '+queue.length:'문제풀이')+'</strong>'+button("answer-jump","답 입력 ↓",'aria-label="정답 입력란으로 이동"')+'</div><h2 id="solve-title" tabindex="-1">'+esc(solveHeading(q))+'</h2>'+metadata(q)+'<p class="solve-question">'+formatQuestion(q.question)+'</p>'+tablesHTML(q)+(q.code?'<div class="code-scroll'+(q.language==="SQL"?' code-scroll--sql':'')+(codeNeedsFocus(q)?' code-scroll--complex':'')+'" tabindex="0" role="region" aria-label="'+esc(q.language)+' 문제 코드'+(q.language==="SQL"?'':' · 좌우 스크롤 가능')+'" data-scroll-hint="code-scroll-hint"><pre><code>'+highlightCode(shownCode)+'</code></pre></div><p id="code-scroll-hint" class="scroll-hint code-scroll-hint" hidden aria-hidden="true">← 좌우로 밀어 코드 보기 →</p>'+codeToolsHTML(q,shownCode):'')+(q.inputData?'<h3>입력 데이터</h3><pre class="input-data">'+esc(q.inputData)+'</pre>':'')+'<form id="answer-form"><label for="my-answer">내가 생각한 정답</label>'+input+'<p class="hint" id="answer-hint">'+(q.grading==="self"?'SQL은 예시답과 직접 비교해 판정합니다.':'출력의 대소문자와 줄바꿈을 확인하세요.')+'</p></form><aside id="solve-hint" class="solve-hint" aria-live="polite" hidden><p class="solve-hint-kicker">'+HINT_SECONDS+'초 힌트</p><h3>풀이 방향</h3><p>'+esc(q.hint||"문제의 실행 흐름을 단계별로 추적해 보세요.")+'</p></aside><p id="gate-status" role="status"></p><div id="answer-result"></div><div class="solve-actions"><p class="bank-timer" id="solve-timer" role="timer" aria-live="off"></p><button id="submit-answer" class="button button-primary" form="answer-form" type="submit" disabled>답 제출하고 풀이 보기</button><button id="next-answer" class="button button-primary" type="button" data-action="next" hidden>다음 문제</button></div></article>';
  requestAnimationFrame(()=>{updateHorizontalScrollHints();observeSolveActions();});
  $("#answer-form").addEventListener("submit",submitAnswer);
  $("#my-answer").addEventListener("input",()=>{if(!attempt.viewedExplanation&&!attempt.submittedAt){attempt.answer=$("#my-answer").value;saveSession(q.id,attempt);updateGate();}});
- if(attempt.viewedExplanation&&canReveal(attempt))revealAnswer("resume");
+ if(attempt.submittedAt&&!attempt.viewedExplanation)revealAnswer("submitted");
+ else if(attempt.viewedExplanation&&canReveal(attempt))revealAnswer("resume");
  else{
   updateGate();
   if(!attempt.viewedExplanation)timer=setInterval(updateGate,500);
