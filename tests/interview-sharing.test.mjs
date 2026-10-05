@@ -41,6 +41,6 @@ assert.match(css,/grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
 assert.match(css,/min-height:44px/);
 
 assert.ok(html.includes('css/interview.css?v=20261005-browser-1'));
-assert.ok(html.includes('js/learning-ui.js?v=20261005-perf-2'));
+assert.ok(html.includes('js/learning-ui.js?v=20261005-perf-3'));
 
 console.log('PASS: active technical interview questions support native card sharing and link copy without exposing answers.');
