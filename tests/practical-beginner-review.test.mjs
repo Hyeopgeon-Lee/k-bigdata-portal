@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {beginnerFocus,beginnerConcepts,beginnerSteps,beginnerExplanation,solutionFlow,solutionSummary,examMemory,lineByLineExplanation} from '../js/practical-explanation.js';
+import {beginnerFocus,beginnerConcepts,beginnerSteps,beginnerExplanation,solutionFlow,solutionSummary,solutionTrace,examMemory,lineByLineExplanation} from '../js/practical-explanation.js';
 
 const root=new URL('../',import.meta.url);
 const read=p=>JSON.parse(readFileSync(new URL(p,root),'utf8'));
@@ -38,6 +38,9 @@ review('초급교육',questions,q=>{
   assert.ok(solutionSummary(q).length>=12,q.id+' explanation');
   assert.ok(Array.isArray(q.solution?.flow)&&q.solution.flow.length>=1,q.id+' steps');
   assert.ok(solutionFlow(q).every(s=>String(s).trim().length>=8),q.id+' short step');
+  assert.ok(String(q.solution?.traceTitle||'').trim(),q.id+' trace title');
+  assert.ok(solutionTrace(q).length>=1,q.id+' stored trace');
+  solutionTrace(q).forEach((item,index)=>assert.ok(String(item).trim().length>=4,q.id+' trace '+index));
   assert.ok(beginnerFocus(q).length>=35,q.id+' focus');
   assert.ok(examMemory(q).length>=30,q.id+' memory');
   const topic=[q.title,...(q.concepts||[])].join(' ');
@@ -114,12 +117,12 @@ review('UI가독성',questions,q=>{
   assert.ok(solutionFlow(q).every(s=>String(s).length<=320),q.id+' step too long');
   assert.ok(solutionSummary(q).length<=900,q.id+' explanation too long');
 });
-assert.match(ui,/1 · 코드 한 줄씩 값으로 이해하기/);
-assert.match(ui,/실행 흐름 따라가기/);
+assert.match(ui,/solutionTrace\(q\)/);
+assert.match(ui,/traceTitle/);
+assert.match(ui,/앞 단계에서 나온 값을 다음 단계의 현재 값으로 이어서 확인합니다/);
 assert.match(ui,/왜 이 답인가\?/);
 assert.match(ui,/시험에서 꼭 기억할 것/);
-assert.match(ui,/lineByLineExplanation\(q,displayCode\(q\)\)/);
-assert.match(ui,/beginnerSteps\(q\)/);
+assert.doesNotMatch(ui,/lineByLineExplanation\(q,displayCode\(q\)\)/);
 assert.doesNotMatch(ui,/beginnerConcepts\(q\)/);
 assert.doesNotMatch(ui,/1 · 문제에서 먼저 볼 것/);
 
