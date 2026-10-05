@@ -148,6 +148,12 @@ if(isMainThread){
   const history=read('data/practical/exam-history.json');
   const role=workerData.role;
   const items=roleItems(role,all);
+  if(role==='힌트'){
+    const freq=new Map();
+    for(const q of all){const h=String(q.hint||'').trim();freq.set(h,(freq.get(h)||0)+1);}
+    const repeated=[...freq.entries()].filter(([,count])=>count>=10);
+    assert.deepEqual(repeated,[],JSON.stringify(repeated,null,2));
+  }
   let checked=0;
   for(let round=0;round<30;round++){
     const sample=bucket(items,round);
