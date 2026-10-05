@@ -235,6 +235,7 @@ export const services = [
 ];
 
 export const serviceKind = service => service.id === "tech-blog" ? "EXTERNAL" : /^https:\/\//.test(service.url) ? "SERVICE" : "GUIDE";
+export const serviceAudience = service => ["ready","apply","room","help"].includes(service.id) ? "학생 운영" : service.id === "alumni" ? "동문 네트워크" : ["portfolio","tech-blog"].includes(service.id) ? "공개 참고자료" : "포털 학습";
 export const isExternal = url => /^https:\/\//.test(url);
 export const studentJourney = [
   {id:"jobs", title:"직무 탐색", description:"어떤 일을 하고 무엇을 준비할지 찾기"},
