@@ -19,6 +19,17 @@ const pass=(name,fn)=>{fn();passes.push(name);console.log('PASS '+String(passes.
 
 pass('bank baseline is preserved',()=>assert.ok(questions.length>=386));
 pass('question ids are unique',()=>assert.equal(ids.size,questions.length));
+pass('R-IND-SQL-0005 keeps reconstructed source conditions',()=>{
+ const q=questions.find(item=>item.id==='R-IND-SQL-0005');
+ assert.ok(q,'R-IND-SQL-0005 missing');
+ assert.match(q.question,/3학년 이상의 전자계산과 학생들의 이름/);
+ assert.match(q.question,/프로젝트번호\(PNO\).*1, 2, 3/);
+ assert.match(q.question,/주민등록번호\(JUNO\).*중복 없이/);
+ assert.match(q.code,/학년\s*>=\s*3\s*\(가\)\s*학과/);
+ assert.match(q.code,/SELECT\s*\(나\)\s*JUNO\s*FROM\s*WORKS\s*WHERE\s*PNO\s*\(다\)\s*\(1, 2, 3\)/i);
+ assert.equal(q.answer,'AND DISTINCT IN');
+});
+
 pass('every question has an id',()=>questions.forEach(q=>assert.ok(q.id)));
 pass('supported languages only',()=>questions.forEach(q=>assert.ok(['C','Java','Python','SQL'].includes(q.language),q.id)));
 pass('supported source types only',()=>questions.forEach(q=>assert.ok(['reconstructed','normalized','transformed','practice'].includes(q.sourceType),q.id)));
@@ -185,5 +196,5 @@ pass('line explanations avoid vague fallback comments',()=>{
  assert.deepEqual(vague,[],JSON.stringify(vague.slice(0,80),null,2));
 });
 
-assert.equal(passes.length,52);
-console.log('FINAL: 52/52 practical solution + value-trace QA passes.');
+assert.equal(passes.length,53);
+console.log('FINAL: 53/53 practical solution + value-trace QA passes.');
