@@ -6,8 +6,67 @@ const external=s=>'<a href="'+esc(s.url)+'" target="_blank" rel="noopener norefe
 const action=(key,text,primary=false,extra="")=>'<button type="button" class="button button-'+(primary?'primary':'secondary')+'" data-action="'+key+'" '+extra+'>'+esc(text)+'</button>';
 const meta=q=>'<div class="question-meta"><span class="badge">'+esc(q.group)+'</span><span class="badge">'+esc(q.difficulty)+'</span><span class="question-code">'+esc(q.code)+'</span></div>';
 const roles=q=>'<p class="question-role">관련 직무 · '+q.jobTags.map(t=>'<a href="'+esc(interviewRoleLinks[t])+'">'+esc(t)+'<span class="sr-only"> 직무 가이드</span></a>').join(' · ')+'</p>';
+export function interviewShareUrl(q){
+ if(!q)return "";
+ const url=new URL(location.pathname,location.origin);
+ url.searchParams.set("id",q.id);
+ return url.href;
+}
+export function interviewShareText(q){
+ if(!q)return "";
+ return ["기술면접 문제",q.group+" · "+q.difficulty,q.question].join("\n");
+}
+async function copyText(text){
+ if(navigator.clipboard?.writeText){
+  await navigator.clipboard.writeText(text);
+  return;
+ }
+ const area=document.createElement("textarea");
+ area.value=text;
+ area.setAttribute("readonly","");
+ area.style.position="fixed";
+ area.style.opacity="0";
+ document.body.append(area);
+ area.select();
+ const ok=document.execCommand("copy");
+ area.remove();
+ if(!ok)throw new Error("copy failed");
+}
+function setShareStatus(message){
+ const el=document.querySelector("#interview-share-status");
+ if(el)el.textContent=message;
+}
+async function shareInterviewQuestion(q){
+ if(!q)return;
+ const url=interviewShareUrl(q),text=interviewShareText(q);
+ if(navigator.share){
+  try{
+   await navigator.share({title:"기술면접 문제 · "+q.group,text,url});
+   setShareStatus("문제를 공유했습니다.");
+   return;
+  }catch(error){
+   if(error?.name==="AbortError")return;
+  }
+ }
+ try{
+  await copyText(text+"\n문제 풀기: "+url);
+  setShareStatus("문제 카드와 링크를 복사했습니다.");
+ }catch{
+  setShareStatus("공유할 수 없습니다. 다시 시도해 주세요.");
+ }
+}
+async function copyInterviewQuestionLink(q){
+ if(!q)return;
+ try{
+  await copyText(interviewShareUrl(q));
+  setShareStatus("문제 링크를 복사했습니다.");
+ }catch{
+  setShareStatus("링크를 복사할 수 없습니다. 다시 시도해 주세요.");
+ }
+}
 export function renderInterviewQuestion(q,practice=false){
- return '<article class="question" data-question-id="'+esc(q.id)+'">'+meta(q)+'<h2'+(practice?' tabindex="-1" id="practice-question-heading"':'')+'>'+esc(q.question)+'</h2>'+roles(q)+'<p class="hint">30초 정도 머릿속으로 답을 정리한 뒤 확인하세요.</p><details class="question-answer"><summary><span class="answer-toggle">답변 확인</span><span class="sr-only"> · '+esc(q.code)+'</span></summary><div class="answer-content"><h3>핵심 답변</h3><p class="short-answer">'+esc(q.shortAnswer)+'</p><h3>핵심 키워드</h3><div class="tags">'+q.keywords.map(t=>'<span>'+esc(t)+'</span>').join('')+'</div><details class="answer-extra"><summary>상세 설명 보기</summary><p>'+esc(q.detailedAnswer)+'</p></details><details class="answer-extra"><summary>꼬리질문 '+q.followUps.length+'개 보기<span class="sr-only"> · 면접관이 이어서 물어볼 수 있는 질문</span></summary><ol class="follow-ups">'+q.followUps.map(t=>'<li>'+esc(t)+'</li>').join('')+'</ol></details><details class="question-sources"><summary>공식문서 확인</summary><ul>'+q.sourceIds.map(id=>interviewSources[id]).filter(Boolean).map(s=>'<li>'+external(s)+'</li>').join('')+'</ul></details></div></details></article>';
+ const share=practice?'<div class="interview-share-row" aria-label="문제 공유">'+action("share-problem","문제 공유",false,'aria-label="현재 기술면접 문제 공유"')+action("copy-problem-link","링크 복사",false,'aria-label="현재 기술면접 문제 링크 복사"')+'</div><p id="interview-share-status" class="interview-share-status" role="status" aria-live="polite"></p>':"";
+ return '<article class="question" data-question-id="'+esc(q.id)+'">'+meta(q)+'<h2'+(practice?' tabindex="-1" id="practice-question-heading"':'')+'>'+esc(q.question)+'</h2>'+roles(q)+share+'<p class="hint">30초 정도 머릿속으로 답을 정리한 뒤 확인하세요.</p><details class="question-answer"><summary><span class="answer-toggle">답변 확인</span><span class="sr-only"> · '+esc(q.code)+'</span></summary><div class="answer-content"><h3>핵심 답변</h3><p class="short-answer">'+esc(q.shortAnswer)+'</p><h3>핵심 키워드</h3><div class="tags">'+q.keywords.map(t=>'<span>'+esc(t)+'</span>').join('')+'</div><details class="answer-extra"><summary>상세 설명 보기</summary><p>'+esc(q.detailedAnswer)+'</p></details><details class="answer-extra"><summary>꼬리질문 '+q.followUps.length+'개 보기<span class="sr-only"> · 면접관이 이어서 물어볼 수 있는 질문</span></summary><ol class="follow-ups">'+q.followUps.map(t=>'<li>'+esc(t)+'</li>').join('')+'</ol></details><details class="question-sources"><summary>공식문서 확인</summary><ul>'+q.sourceIds.map(id=>interviewSources[id]).filter(Boolean).map(s=>'<li>'+external(s)+'</li>').join('')+'</ul></details></div></details></article>';
 }
 export const practiceModeButtonId=(session,direct)=>direct?null:session?(session.mode==="one"?"random-one":"random-ten"):"show-all";
 export const filterInterviewQuestions=(items,{category="전체",job="전체",difficulty="전체",query=""}={})=>items.filter(q=>matchesInterviewCategory(q,category)&&(job==="전체"||q.jobTags.includes(job))&&(difficulty==="전체"||q.difficulty===difficulty)&&matches(questionSearchText(q),query));
@@ -42,6 +101,8 @@ export function initInterview(){
   if(key==="more"){limit+=20;render();root.querySelectorAll('.question')[limit-20]?.querySelector('button')?.focus({preventScroll:true});}
   if(key==="select"){direct=questions.find(q=>q.id===b.dataset.id);lastRandom=direct.id;session=null;mode="PRACTICE_ONE";syncURL();render(true);}
   if(key==="remove-filter"){filters[b.dataset.key]=b.dataset.key==="query"?"":"전체";input.value=filters.query;limit=20;syncURL();render();$("#filter-panel summary").focus({preventScroll:true});}
+  if(key==="share-problem"){const q=direct||session?.items?.[session.index];if(q)void shareInterviewQuestion(q);}
+  if(key==="copy-problem-link"){const q=direct||session?.items?.[session.index];if(q)void copyInterviewQuestionLink(q);}
   if(key==="previous"&&session&&session.index>0){session.index--;render(true);}
   if(key==="next"){if(mode==="PRACTICE_ONE")start(1);else if(session){session.index++;mode=session.index>=session.items.length?"COMPLETE":"PRACTICE_TEN";render(true);}}
  });
