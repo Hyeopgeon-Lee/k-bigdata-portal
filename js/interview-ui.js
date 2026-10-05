@@ -39,9 +39,10 @@ function setShareStatus(message){
 async function shareInterviewQuestion(q){
  if(!q)return;
  const url=interviewShareUrl(q),text=interviewShareText(q);
- if(navigator.share){
+ const shareData={title:"기술면접 문제 · "+q.group,text,url};
+ if(navigator.share&&(!navigator.canShare||navigator.canShare(shareData))){
   try{
-   await navigator.share({title:"기술면접 문제 · "+q.group,text,url});
+   await navigator.share(shareData);
    setShareStatus("문제를 공유했습니다.");
    return;
   }catch(error){
