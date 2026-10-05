@@ -1,14 +1,13 @@
-import {initJobGuide} from "./job-guide-ui.js";
-import {initPortalUX} from "./portal-ux.js?v=20261005-7";
-import {initGroupedSearch} from "./search-ui.js";
-import {certifications,certificationPaths} from "./certifications.js";
-import {renderCertificateCard,renderCertificateDetail} from "./certifications-ui.js";
-import {jobs,jobComparisons,jobGuidance,jobGroups,jobLearningDocs} from "./jobs.js";
-import {docs,docCategories,docFlows,findDocForSkill} from "./docs.js";
-import {questions} from "./interview.js?v=20261005-accuracy-1";
-import {initInterview} from "./interview-ui.js?v=20261005-browser-1";
-import {matches,searchIndex,jobSearchText,docSearchText,certificationSearchText} from "./search.js";
-import {services,footerLinks,isExternal} from "./services.js";
+import {initPortalUX} from "./portal-ux.js?v=20261005-perf-1";
+import {initGroupedSearch} from "./search-ui.js?v=20261005-perf-1";
+import {matches,jobSearchText,docSearchText,certificationSearchText} from "./search-core.js?v=20261005-perf-1";
+import {services,footerLinks} from "./services.js";
+
+let certifications=[],certificationPaths=[],renderCertificateCard=null,renderCertificateDetail=null;
+let jobs=[],jobComparisons=[],jobGuidance={},jobGroups=[],jobLearningDocs=null;
+let docs=[],docCategories=[],docFlows=[],findDocForSkill=null;
+let questions=[],initInterview=null;
+
 const esc=v=>String(v??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
 const list=items=>"<ul>"+items.map(v=>"<li>"+esc(v)+"</li>").join("")+"</ul>";
 const tags=items=>'<div class="tags">'+items.map(v=>"<span>"+esc(v)+"</span>").join("")+"</div>";
@@ -21,9 +20,6 @@ toggle?.addEventListener("click",()=>{const open=toggle.getAttribute("aria-expan
 nav?.addEventListener("click",e=>{if(e.target.closest("a"))closeMenu();});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&toggle?.getAttribute("aria-expanded")==="true"){closeMenu();toggle.focus();}});
 document.addEventListener("click",e=>{if(!e.target.closest(".site-header"))closeMenu();});
-initPortalUX();
-initGroupedSearch();
-
 const docLink = doc => '<a href="docs.html?id='+esc(doc.id)+'">'+esc(doc.name)+'</a>';
 const skillTags = values => '<div class="tags doc-related">'+values.map(value=>{const doc=findDocForSkill(value);return doc?'<a href="docs.html?id='+esc(doc.id)+'">'+esc(value)+'<span class="sr-only"> 공식문서 학습 안내</span></a>':'<span>'+esc(value)+'</span>';}).join("")+'</div>';
 const relatedDocs = item => '<div class="doc-related">'+item.related.map(name=>{const doc=findDocForSkill(name);return doc?docLink(doc):'<span>'+esc(name)+'</span>';}).join("")+'</div>';
@@ -67,9 +63,57 @@ function renderJobDetail(job) {
 }
 
 const page=document.body.dataset.page;
-if(page==="interview"){
+
+async function loadPageModules(){
+ const id=new URLSearchParams(location.search).get("id");
+ if(page==="interview"){
+  ({initInterview}=await import("./interview-ui.js?v=20261005-perf-1"));
+  return;
+ }
+ if(page==="certifications"){
+  const [certModule,certUI]=await Promise.all([
+   import("./certifications.js"),
+   import("./certifications-ui.js")
+  ]);
+  ({certifications,certificationPaths}=certModule);
+  ({renderCertificateCard,renderCertificateDetail}=certUI);
+  if(id&&certifications.some(item=>item.id===id))({jobs}=await import("./jobs.js"));
+  return;
+ }
+ if(page==="jobs"){
+  const jobModule=await import("./jobs.js");
+  ({jobs,jobComparisons,jobGuidance,jobGroups,jobLearningDocs}=jobModule);
+  if(id&&jobs.some(item=>item.id===id)){
+   const [docModule,certModule,interviewModule]=await Promise.all([
+    import("./docs.js"),
+    import("./certifications.js"),
+    import("./interview.js?v=20261005-accuracy-1")
+   ]);
+   ({docs,findDocForSkill}=docModule);
+   ({certifications}=certModule);
+   ({questions}=interviewModule);
+  }
+  return;
+ }
+ if(page==="docs"){
+  const docModule=await import("./docs.js");
+  ({docs,docCategories,docFlows,findDocForSkill}=docModule);
+  if(id&&docs.some(item=>item.id===id)){
+   const [jobModule,interviewModule]=await Promise.all([
+    import("./jobs.js"),
+    import("./interview.js?v=20261005-accuracy-1")
+   ]);
+   ({jobs}=jobModule);
+   ({questions}=interviewModule);
+  }
+ }
+}
+
+async function bootstrap(){
+ await loadPageModules();
+ if(page==="interview"){
   initInterview();
-}else if(["certifications","jobs","docs"].includes(page)){
+ }else if(["certifications","jobs","docs"].includes(page)){
 const data={certifications,jobs,docs}[page];
 const params=new URLSearchParams(location.search),id=params.get("id");
 const selected=data.find(item=>item.id===id);
@@ -104,4 +148,16 @@ document.querySelector("#show-all")?.addEventListener("click",()=>{random=null;r
 render();
 }
 }
-if(page==="jobs")initJobGuide();
+ if(page==="jobs"){
+  const {initJobGuide}=await import("./job-guide-ui.js?v=20261005-perf-1");
+  initJobGuide();
+ }
+ await initPortalUX();
+ initGroupedSearch();
+}
+
+bootstrap().catch(error=>{
+ console.error("Portal page initialization failed",error);
+ const status=document.querySelector("#list-status, #interview-status, #search-status");
+ if(status)status.textContent="페이지 데이터를 불러오지 못했습니다. 새로고침해 주세요.";
+});
