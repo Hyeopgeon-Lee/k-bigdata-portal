@@ -201,3 +201,79 @@
   .practical-page .study-segment{gap:3px}
   .practical-page .study-segment button{font-size:13px;line-height:1.35;padding-inline:4px}
 }
+
+
+/* 2026-10-05 mobile readability pass: one-hand solving, viewport economy, SQL wrapping. */
+.practical-page .solve-progress{
+  display:grid;
+  grid-template-columns:auto minmax(44px,1fr) auto;
+  align-items:center;
+}
+.practical-page .solve-progress>strong{
+  min-width:0;
+  text-align:center;
+}
+.practical-page .solve-progress [data-action="answer-jump"]{
+  white-space:nowrap;
+  min-width:72px;
+}
+.practical-page .code-scroll pre{
+  font-variant-ligatures:none;
+}
+.practical-page .code-scroll--sql pre{
+  min-width:0;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  word-break:normal;
+}
+.practical-page .code-scroll--sql + .code-scroll-hint{
+  display:none !important;
+}
+.practical-page .solve-question{
+  max-width:72ch;
+}
+.practical-page #answer-form label{
+  font-size:16px;
+}
+@media(max-width:900px){
+  .practical-page.is-solving{
+    --study-header-height:0px;
+  }
+  .practical-page.is-solving .study-header{
+    display:none;
+  }
+  .practical-page.is-solving .solve-progress{
+    top:0;
+  }
+  .practical-page.is-solving .bank-solve h2,
+  .practical-page.is-solving .bank-result #result-heading{
+    scroll-margin-top:68px;
+  }
+}
+@media(max-width:480px){
+  .practical-page .solve-progress{
+    gap:4px;
+    padding-block:6px;
+  }
+  .practical-page .solve-progress .button{
+    min-height:42px;
+    padding:7px 8px;
+    font-size:13px;
+  }
+  .practical-page .solve-progress [data-action="answer-jump"]{
+    min-width:68px;
+  }
+  .practical-page .bank-solve h2{
+    margin-top:14px;
+  }
+  .practical-page .solve-question{
+    font-size:17px;
+    line-height:1.78;
+  }
+  .practical-page .code-scroll pre{
+    line-height:1.76;
+  }
+  .practical-page #my-answer{
+    min-height:52px;
+  }
+}
