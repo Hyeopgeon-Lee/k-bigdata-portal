@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {readFileSync,existsSync} from 'node:fs';
-import {learningLinks,quickActions,studentJourney,services} from '../js/services.js';
+import {learningLinks,portalNavLinks,quickActions,studentJourney,services} from '../js/services.js';
 import {groupSearchResults} from '../js/search.js';
 const root=new URL('../',import.meta.url);
 const read=path=>readFileSync(new URL(path,root),'utf8');
@@ -15,8 +15,14 @@ for(const page of pages){
  for(const [,url] of html.matchAll(/(?:href|src)="([^"]+)"/g))if(!/^(https?:|#|mailto:)/.test(url))assert.ok(existsSync(new URL(url.split(/[?#]/)[0],root)),page+' '+url);
 }
 assert.deepEqual(quickActions,['practical','interview','ready','apply']);
-assert.equal(learningLinks.length,6);
-for(const item of learningLinks)assert.ok(services.some(s=>s.id===item.id));
+assert.equal(portalNavLinks.length,13);
+assert.equal(learningLinks.length,13);
+for(const item of portalNavLinks)assert.ok(services.some(s=>s.id===item.id));
+for(const page of pages.filter(page=>page!=='index')){
+ const html=read(page+'.html');
+ const nav=html.match(/<nav class="container learning-cross-nav portal-service-nav"[\s\S]*?<\/nav>/)?.[0]||'';
+ assert.equal([...nav.matchAll(/<a /g)].length,13,page+' complete portal nav');
+}
 assert.equal(studentJourney.find(s=>s.id==='certifications').companion,'practical');
 assert.ok(read('index.html').includes('id="quick-actions"'));
 assert.equal([...read('project-guide.html').matchAll(/<details class="step">/g)].length,11);
