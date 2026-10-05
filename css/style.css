@@ -22,7 +22,7 @@ svg { display: block; }
 .skip-link:focus { transform: translateY(0); }
 :focus-visible { outline: 3px solid #1ba7d4; outline-offset: 4px; }
 
-.site-header { position: sticky; z-index: 100; top: 0; height: 76px; border-bottom: 1px solid rgba(210, 220, 238, .8); background: rgba(255, 255, 255, .88); backdrop-filter: blur(16px); }
+.site-header { position: sticky; z-index: 100; top: 0; height: 76px; border-bottom: 1px solid rgba(210, 220, 238, .8); background: rgba(255, 255, 255, .88); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); }
 .header-inner { height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 28px; }
 .brand, .footer-brand { display: flex; align-items: center; gap: 13px; min-width: 0; }
 .brand-mark { position: relative; width: 40px; height: 40px; flex: 0 0 40px; border-radius: 10px; background: var(--color-primary-dark); box-shadow: 0 8px 20px rgba(11, 23, 57, .18); }
