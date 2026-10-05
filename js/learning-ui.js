@@ -1,5 +1,5 @@
 import {initJobGuide} from "./job-guide-ui.js";
-import {initPortalUX} from "./portal-ux.js?v=20261005-5";
+import {initPortalUX} from "./portal-ux.js?v=20261005-6";
 import {initGroupedSearch} from "./search-ui.js";
 import {certifications,certificationPaths} from "./certifications.js";
 import {renderCertificateCard,renderCertificateDetail} from "./certifications-ui.js";
