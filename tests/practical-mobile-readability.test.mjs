@@ -25,7 +25,7 @@ const ui=read('js/practical-ui.js');
 const css=read('css/practical.css');
 assert.ok(ui.includes('function formatQuestion(text)'),'long prompts need sentence-aware rendering');
 assert.ok(ui.includes('function codeNeedsFocus(q)'),'complex code needs mobile focus classification');
-assert.ok(ui.includes('data-action="code-focus"'),'complex code needs a full-screen reader trigger');
+assert.ok(ui.includes('button("code-focus"')&&ui.includes('action==="code-focus"'),'complex code needs a full-screen reader trigger and handler');
 assert.ok(ui.includes('code-scroll--complex'),'complex code needs bounded mobile height');
 assert.match(ui,/CROSS JOIN\|JOIN\|ON\|FROM/,'SQL formatter must break plain JOIN and ON as well as FROM');
 assert.ok(css.includes('.code-dialog'),'full-screen code dialog styles must exist');
