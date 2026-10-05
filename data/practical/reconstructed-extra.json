@@ -5,7 +5,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-JAVA-0003",
     "language": "Java",
     "title": "싱글톤 객체의 static 값 누적",
@@ -20,6 +20,7 @@
     "answer": "4",
     "explanation": "getInstance()은 같은 Counter 객체를 반환하므로 a와 b가 동일한 value를 공유합니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "첫 호출에서 Counter 객체가 한 번 생성됩니다.",
       "a와 b는 같은 객체를 참조합니다.",
       "add()가 총 네 번 호출되어 value는 4가 됩니다."
@@ -44,7 +45,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-C-0004",
     "language": "C",
     "title": "삼항 연산자와 비트 시프트",
@@ -87,7 +88,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-C-0005",
     "language": "C",
     "title": "문자열 역순 뒤 홀수 인덱스 출력",
@@ -103,6 +104,7 @@
     "answer": "GECA",
     "explanation": "문자열을 뒤집으면 HGFEDCBA이고, 인덱스 1·3·5·7의 문자는 G·E·C·A입니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "ABCDEFGH를 뒤집어 HGFEDCBA를 만듭니다.",
       "홀수 인덱스 1,3,5,7을 선택합니다.",
       "G, E, C, A가 차례로 출력됩니다."
@@ -127,7 +129,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-C-0006",
     "language": "C",
     "title": "문자 종류별 변환",
@@ -168,7 +170,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-PY-0006",
     "language": "Python",
     "title": "리스트 문자열의 두 번째 문자 누적",
@@ -211,7 +213,7 @@
     "difficulty": "기본",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-SQL-0007",
     "language": "SQL",
     "title": "INSERT·SELECT·FROM·SET 빈칸",
@@ -285,7 +287,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-JAVA-0004",
     "language": "Java",
     "title": "오버라이딩 메서드의 동적 호출",
@@ -300,6 +302,7 @@
     "answer": "9",
     "explanation": "실제 객체가 Child이므로 오버라이딩된 print()가 호출되고, po=3이므로 3×3=9가 출력됩니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "Parent 타입 변수에 Child 객체를 저장합니다.",
       "인스턴스 메서드는 실제 객체 타입 기준으로 동적 바인딩됩니다.",
       "Child.print()의 po*po=9가 출력됩니다."
@@ -324,7 +327,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-JAVA-0005",
     "language": "Java",
     "title": "배열 참조 비교",
@@ -364,7 +367,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-PY-0007",
     "language": "Python",
     "title": "부분 문자열 출현 횟수와 f-string",
@@ -405,7 +408,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-C-0007",
     "language": "C",
     "title": "구조체 포인터와 문자열 인덱스",
@@ -445,7 +448,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-C-0008",
     "language": "C",
     "title": "문자열 포인터 산술",
@@ -460,6 +463,7 @@
     "answer": "E",
     "explanation": "문자열 길이가 15이므로 반복 종료 시 a=15입니다. str[13]은 E입니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "널 문자를 만날 때까지 a가 증가하여 15가 됩니다.",
       "a-2는 13입니다.",
       "0-based 인덱스 13의 문자는 E입니다."
@@ -484,7 +488,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-C-0009",
     "language": "C",
     "title": "연결 노드 누적과 XOR",
@@ -525,7 +529,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-JAVA-0006",
     "language": "Java",
     "title": "인터페이스 구현 키워드",
@@ -544,6 +548,8 @@
     ],
     "explanation": "Java 클래스가 인터페이스를 구현할 때 implements 키워드를 사용합니다.",
     "steps": [
+      "먼저 빈칸 앞뒤 코드를 읽고, 그 위치에 필요한 자료형·연산자·문법 요소가 무엇인지 확인합니다.",
+      "이 문제의 핵심 개념은 interface · implements · 상속 관계입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "Calc는 interface입니다.",
       "클래스가 인터페이스의 추상 메서드를 구현하려면 implements를 사용합니다."
     ],
@@ -567,7 +573,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-PY-0008",
     "language": "Python",
     "title": "enumerate로 딕셔너리 구성",
@@ -582,8 +588,9 @@
     "question": "다음 Python 3 코드의 출력 결과를 쓰세요.",
     "code": "data = [\n    [3, 5, 2, 4, 1],\n    [4, 5, 1],\n    [4, 4, 1, 5, 4],\n    [4, 5]\n]\nresult = {}\nfor index, values in enumerate(data):\n    result[index] = (sum(values), len(values))\nprint(result)",
     "answer": "{0: (15, 5), 1: (10, 3), 2: (18, 5), 3: (9, 2)}",
-    "explanation": "각 내부 리스트의 합과 길이를 튜플로 만들어 인덱스를 키로 저장합니다.",
+    "explanation": "이 문제에서는 enumerate로 딕셔너리 구성의 흐름을 이해하는 것이 핵심입니다. 첫 리스트는 합 15, 길이 5입니다. 둘째는 (10,3), 셋째는 (18,5), 넷째는 (9,2)입니다. enumerate의 인덱스 0~3을 키로 저장합니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "첫 리스트는 합 15, 길이 5입니다.",
       "둘째는 (10,3), 셋째는 (18,5), 넷째는 (9,2)입니다.",
       "enumerate의 인덱스 0~3을 키로 저장합니다."
@@ -612,7 +619,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-JAVA-0007",
     "language": "Java",
     "title": "자식 생성자의 부모 생성자 호출",
@@ -631,6 +638,7 @@
     ],
     "explanation": "Square 생성자에서 Rectangle(int,int) 부모 생성자를 호출해야 하므로 super가 들어갑니다.",
     "steps": [
+      "먼저 빈칸 앞뒤 코드를 읽고, 그 위치에 필요한 자료형·연산자·문법 요소가 무엇인지 확인합니다.",
       "Square는 Rectangle을 상속합니다.",
       "Rectangle 생성자는 int 인자 두 개를 요구합니다.",
       "부모 생성자 호출은 super(a,a) 형태이므로 빈칸은 super입니다."
@@ -655,7 +663,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-C-0010",
     "language": "C",
     "title": "삼항·비트·논리 연산 순서",
@@ -697,7 +705,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-JAVA-0008",
     "language": "Java",
     "title": "enum 상수 조건 분기",
@@ -739,7 +747,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-SQL-0009",
     "language": "SQL",
     "title": "COUNT(열)의 NULL 제외",
@@ -785,6 +793,7 @@
     "answer": "4",
     "explanation": "WHERE 조건을 만족하는 행은 5개지만 COUNT(col2)는 col2가 NULL인 행을 제외하므로 4입니다.",
     "steps": [
+      "먼저 주어진 테이블과 SQL을 따로 보고, FROM의 원본 행에서 시작해 조건과 집계가 적용될 때마다 남는 행을 적습니다.",
       "col1 IN(2,3) 또는 col2 IN(3,5)를 만족하는 행은 모두 5개입니다.",
       "(2,NULL) 행도 WHERE에는 포함됩니다.",
       "COUNT(col2)는 NULL을 세지 않으므로 결과는 4입니다."
@@ -843,7 +852,7 @@
     "verificationNote": "복수 공개 복원자료에서 배열 값, 포인터 배열 초기화, 식과 정답 21이 일치합니다. main 반환형과 공백만 정규화했습니다.",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "grading": "exact",
     "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
   },
@@ -853,7 +862,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-JAVA-0009",
     "language": "Java",
     "title": "문자열 equals 비교와 배열 순회",
@@ -868,6 +877,7 @@
     "answer": "OOAAA",
     "explanation": "equals는 문자열 내용을 비교하므로 두 비교가 모두 참입니다. 이어서 배열의 A 세 개가 출력됩니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "A와 A의 equals는 참입니다.",
       "A와 new String(\"A\")도 내용이 같아 참입니다.",
       "OO 뒤에 배열 원소 AAA가 이어져 OOAAA입니다."
@@ -896,7 +906,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-PY-0009",
     "language": "Python",
     "title": "리스트 역순 교환과 슬라이스 합 차이",
@@ -941,7 +951,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-SQL-0010",
     "language": "SQL",
     "title": "중첩 서브쿼리와 GROUP BY HAVING",
@@ -1041,7 +1051,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-C-0012",
     "language": "C",
     "title": "static 지역변수 누적",
@@ -1085,7 +1095,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-C-0013",
     "language": "C",
     "title": "연결 리스트 인접 노드 값 교환",
@@ -1099,7 +1109,7 @@
     "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
     "code": "#include <stdio.h>\nstruct Node { int value; struct Node *next; };\nvoid swap_pairs(struct Node *node) {\n    while (node && node->next) {\n        int temp = node->value;\n        node->value = node->next->value;\n        node->next->value = temp;\n        node = node->next->next;\n    }\n}\nint main(void) {\n    struct Node n1={1,NULL}, n2={2,NULL}, n3={3,NULL};\n    n1.next=&n3; n3.next=&n2;\n    swap_pairs(&n1);\n    for (struct Node *p=&n1; p; p=p->next) printf(\"%d\", p->value);\n    return 0;\n}",
     "answer": "312",
-    "explanation": "연결 순서는 1→3→2이고 첫 두 노드의 값만 교환되어 3→1→2가 됩니다.",
+    "explanation": "이 문제에서는 연결 리스트 인접 노드 값 교환의 흐름을 이해하는 것이 핵심입니다. 초기 연결은 n1→n3→n2입니다. 첫 두 값 1과 3을 교환합니다. 포인터가 두 칸 이동하면 마지막 노드만 남아 교환하지 않습니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
       "초기 연결은 n1→n3→n2입니다.",
       "첫 두 값 1과 3을 교환합니다.",
@@ -1130,7 +1140,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-PY-0010",
     "language": "Python",
     "title": "type 비교와 문자열 길이",
@@ -1175,7 +1185,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-JAVA-0010",
     "language": "Java",
     "title": "try-catch-finally 예외 처리",
@@ -1219,7 +1229,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-JAVA-0011",
     "language": "Java",
     "title": "오버라이딩 메서드와 필드 숨김",
@@ -1264,7 +1274,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-JAVA-0012",
     "language": "Java",
     "title": "제네릭 타입 소거와 오버로딩",
@@ -1309,7 +1319,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-JAVA-0013",
     "language": "Java",
     "title": "배열 참조와 문자열 값 전달",
@@ -1353,7 +1363,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-JAVA-0014",
     "language": "Java",
     "title": "람다 예외 처리와 반환값 합산",
@@ -1397,7 +1407,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-JAVA-0015",
     "language": "Java",
     "title": "인스턴스 오버라이딩과 static 메서드 숨김",
@@ -1442,7 +1452,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-C-0014",
     "language": "C",
     "title": "원형 큐 enqueue/dequeue 추적",
@@ -1492,7 +1502,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-C-0015",
     "language": "C",
     "title": "이중 포인터를 통한 구조체 복사",
@@ -1541,7 +1551,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-JAVA-0016",
     "language": "Java",
     "title": "객체 배열 참조 교환과 필드 수정",
@@ -1585,7 +1595,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-C-0016",
     "language": "C",
     "title": "연결 리스트 재연결 후 다단계 포인터 접근",
@@ -1598,8 +1608,9 @@
     "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
     "code": "#include <stdio.h>\nstruct Node { int value; struct Node *next; };\nint main(void){\n    struct Node a={1,NULL}, b={2,NULL}, c={3,NULL};\n    a.next=&b; b.next=&c; c.next=NULL;\n    c.next=&a; a.next=&b; b.next=NULL;\n    struct Node *head=&c;\n    printf(\"%d %d %d\",head->value,head->next->value,head->next->next->value);\n    return 0;\n}",
     "answer": "3 1 2",
-    "explanation": "최종 연결은 c→a→b→NULL이며 head는 c를 가리킵니다.",
+    "explanation": "이 문제에서는 연결 리스트 재연결 후 다단계 포인터 접근의 흐름을 이해하는 것이 핵심입니다. 두 번째 재연결 후 c.next=&a입니다. a.next=&b, b.next=NULL입니다. head=&c이므로 값은 3,1,2 순서입니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "두 번째 재연결 후 c.next=&a입니다.",
       "a.next=&b, b.next=NULL입니다.",
       "head=&c이므로 값은 3,1,2 순서입니다."
@@ -1628,7 +1639,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-PY-0011",
     "language": "Python",
     "title": "딕셔너리 값 집합의 교집합",
@@ -1673,7 +1684,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-C-0017",
     "language": "C",
     "title": "앞삽입 연결 리스트로 문자열 역순 출력",
@@ -1687,7 +1698,7 @@
     "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
     "code": "#include <stdio.h>\n#include <stdlib.h>\nstruct Node { char ch; struct Node *next; };\nstruct Node *build(char *s){\n    struct Node *head=NULL;\n    while(*s){\n        struct Node *node=malloc(sizeof(struct Node));\n        node->ch=*s++;\n        node->next=head;\n        head=node;\n    }\n    return head;\n}\nint main(void){\n    struct Node *node=build(\"BEST\");\n    while(node){\n        putchar(node->ch);\n        struct Node *old=node;\n        node=node->next;\n        free(old);\n    }\n    return 0;\n}",
     "answer": "TSEB",
-    "explanation": "각 새 노드를 리스트 앞에 붙이므로 BEST가 T→S→E→B 순서로 저장됩니다.",
+    "explanation": "이 문제에서는 앞삽입 연결 리스트로 문자열 역순 출력의 흐름을 이해하는 것이 핵심입니다. B를 넣어 B가 됩니다. E,S,T를 차례로 앞에 삽입합니다. 최종 연결은 T→S→E→B입니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
       "B를 넣어 B가 됩니다.",
       "E,S,T를 차례로 앞에 삽입합니다.",
@@ -1718,7 +1729,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-C-0018",
     "language": "C",
     "title": "배열 표기와 포인터 표기의 평균 계산",
@@ -1763,7 +1774,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-JAVA-0017",
     "language": "Java",
     "title": "오버로딩 선택 후 오버라이딩 실행",
@@ -1808,7 +1819,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-PY-0012",
     "language": "Python",
     "title": "문자열 역순과 특정 문자 제거",
@@ -1854,7 +1865,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-SQL-0011",
     "language": "SQL",
     "title": "SELECT·DISTINCT·COUNT(DISTINCT) 반환 수",
@@ -1875,6 +1886,7 @@
     ],
     "explanation": "일반 SELECT는 전체 200행, DISTINCT는 학과 3종, 컴퓨터과만 남긴 COUNT(DISTINCT)는 1입니다.",
     "steps": [
+      "먼저 주어진 테이블과 SQL을 따로 보고, FROM의 원본 행에서 시작해 조건과 집계가 적용될 때마다 남는 행을 적습니다.",
       "학생 수 합은 50+100+50=200입니다.",
       "DISTINCT DEPT는 세 학과만 반환합니다.",
       "컴퓨터과로 제한하면 서로 다른 DEPT는 하나입니다."
@@ -1923,6 +1935,7 @@
     ],
     "explanation": "제약조건 이름은 TEAM_TF이므로 CONSTRAINT로 선언합니다. PLAYER의 TEAM_ID를 FOREIGN KEY로 지정하고 TEAM 테이블의 TEAM_ID2를 REFERENCES로 참조합니다.",
     "steps": [
+      "먼저 빈칸 앞뒤의 SQL을 읽고, 각 빈칸이 조회·조건·그룹·정렬·변경·제약 중 어떤 역할인지 구분합니다.",
       "제약조건 이름 TEAM_TF 앞에는 CONSTRAINT가 들어갑니다.",
       "PLAYER에서 외래키로 지정할 열은 TEAM_ID이므로 FOREIGN KEY (TEAM_ID)가 됩니다.",
       "참조 대상은 TEAM 테이블의 TEAM_ID2이므로 REFERENCES TEAM (TEAM_ID2)로 완성합니다."
@@ -1951,7 +1964,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-C-0019",
     "language": "C",
     "title": "구조체 함수 포인터와 16진수 출력",
@@ -1996,7 +2009,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-PY-0013",
     "language": "Python",
     "title": "역순 2칸 슬라이스 출력",
@@ -2012,6 +2025,7 @@
     "answer": "9A7A5A3A1A",
     "explanation": "[::-2]는 끝에서 두 칸씩 이동해 9,7,5,3,1을 선택하고 각 값 뒤에 A를 붙입니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "range(10)은 0~9입니다.",
       "[::-2] 결과는 9,7,5,3,1입니다.",
       "각 값 뒤에 A를 붙여 연속 출력합니다."
@@ -2040,7 +2054,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-PY-0014",
     "language": "Python",
     "title": "중첩 리스트 얕은 복사와 += 변경",
@@ -2085,7 +2099,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-JAVA-0018",
     "language": "Java",
     "title": "정수 덧셈 뒤 문자열 결합",
@@ -2100,6 +2114,7 @@
     "answer": "1123",
     "explanation": "9+2가 먼저 정수 덧셈으로 11이 되고, 이후 문자열 2와 3이 차례로 결합됩니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "a+b는 11입니다.",
       "다음 피연산자 \"2\"가 String이라 112가 됩니다.",
       "마지막 c=\"3\"이 붙어 1123입니다."
@@ -2128,7 +2143,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-SQL-0013",
     "language": "SQL",
     "title": "평균 초과 부서 JOIN 집계",
@@ -2213,7 +2228,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-JAVA-0019",
     "language": "Java",
     "title": "예외 catch 선택과 finally 실행",
@@ -2257,7 +2272,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-SQL-0014",
     "language": "SQL",
     "title": "구식 조인과 조건 필터 결과",
@@ -2330,6 +2345,7 @@
     ],
     "explanation": "id가 같은 행끼리 결합한 뒤 incentive가 500 이상인 행만 남기면 이순신 1000 한 건입니다.",
     "steps": [
+      "먼저 주어진 테이블과 SQL을 따로 보고, FROM의 원본 행에서 시작해 조건과 집계가 적용될 때마다 남는 행을 적습니다.",
       "emp.id=sal.id로 대응되는 행을 결합합니다.",
       "성과급이 500 이상인 결합 행만 남깁니다.",
       "이순신의 1000만 조건을 만족합니다."
@@ -2358,7 +2374,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-C-0020",
     "language": "C",
     "title": "문자 코드 차와 배열 삽입",
@@ -2406,7 +2422,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-C-0021",
     "language": "C",
     "title": "2차원 배열 재배치와 부호 교대 누적",
@@ -2422,6 +2438,7 @@
     "answer": "13",
     "explanation": "재배치 결과를 평탄화하면 9,5,2,7,4,1,8,3,6이고 부호를 번갈아 적용한 합이 13입니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "place 이후 배열은 9,5,2 / 7,4,1 / 8,3,6입니다.",
       "짝수 인덱스는 더하고 홀수 인덱스는 뺍니다.",
       "9-5+2-7+4-1+8-3+6=13입니다."
@@ -2450,7 +2467,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-JAVA-0020",
     "language": "Java",
     "title": "생성자에서의 동적 바인딩과 static 누적",
@@ -2495,7 +2512,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-C-0022",
     "language": "C",
     "title": "반복문 실행 문장 경로",
@@ -2546,7 +2563,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-JAVA-0021",
     "language": "Java",
     "title": "구간 재귀와 큰 반환값 선택",
@@ -2560,7 +2577,7 @@
     "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
     "code": "public class Main {\n    static int search(int[] data,int start,int end){\n        if(start>=end) return 0;\n        int middle=(start+end)/2;\n        return data[middle] + Math.max(\n            search(data,start,middle),\n            search(data,middle+1,end)\n        );\n    }\n    public static void main(String[] args){\n        int[] data={3,5,8,12,17};\n        System.out.println(search(data,0,data.length-1));\n    }\n}",
     "answer": "20",
-    "explanation": "최상위 middle 값 8에 좌우 재귀 중 큰 값 12를 더해 20이 됩니다.",
+    "explanation": "이 문제에서는 구간 재귀와 큰 반환값 선택의 흐름을 이해하는 것이 핵심입니다. 0~4의 middle은 2이고 data[2]=8입니다. 왼쪽 0~2 재귀는 8을 반환합니다. 오른쪽 3~4 재귀는 12를 반환합니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
       "0~4의 middle은 2이고 data[2]=8입니다.",
       "왼쪽 0~2 재귀는 8을 반환합니다.",
@@ -2591,7 +2608,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-PY-0015",
     "language": "Python",
     "title": "완전 이진트리의 홀수 레벨 합",
@@ -2605,7 +2622,7 @@
     "question": "다음 Python 3 코드의 출력 결과를 쓰세요.",
     "code": "class Node:\n    def __init__(self,value):\n        self.value=value\n        self.children=[]\n\ndef build(values):\n    nodes=[Node(value) for value in values]\n    for index in range(1,len(nodes)):\n        nodes[(index-1)//2].children.append(nodes[index])\n    return nodes[0]\n\ndef odd_level_sum(node,level=0):\n    own=node.value if level%2==1 else 0\n    return own + sum(odd_level_sum(child,level+1) for child in node.children)\n\nroot=build([3,5,8,12,15,18,21])\nprint(odd_level_sum(root))",
     "answer": "13",
-    "explanation": "홀수 레벨인 레벨 1의 값 5와 8만 합산하므로 13입니다.",
+    "explanation": "이 문제에서는 완전 이진트리의 홀수 레벨 합의 흐름을 이해하는 것이 핵심입니다. 루트 3은 레벨 0이라 제외합니다. 5와 8은 레벨 1이라 포함합니다. 12,15,18,21은 레벨 2라 제외합니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
       "루트 3은 레벨 0이라 제외합니다.",
       "5와 8은 레벨 1이라 포함합니다.",
@@ -2636,7 +2653,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-C-0023",
     "language": "C",
     "title": "앞삽입 후 특정 연결 노드를 맨 앞으로 이동",
@@ -2680,7 +2697,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-C-0024",
     "language": "C",
     "title": "16진수 점수의 비트 AND 누적",
@@ -2696,6 +2713,7 @@
     "answer": "908",
     "explanation": "각 16진수 점수에 0xA5를 AND한 결과를 두 학생에 대해 합산하면 908입니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "Kim의 AND 결과는 160,165,129로 합 454입니다.",
       "Lee의 세 결과도 160,165,129로 합 454입니다.",
       "454+454=908입니다."
@@ -2724,7 +2742,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-JAVA-0022",
     "language": "Java",
     "title": "오버로딩된 재귀 함수 호출",
@@ -2768,7 +2786,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-SQL-0015",
     "language": "SQL",
     "title": "RIGHT OUTER JOIN 뒤 NULL 행 개수",
@@ -2856,7 +2874,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-PY-0016",
     "language": "Python",
     "title": "문자열 세 구간 슬라이싱 결합",
@@ -2900,7 +2918,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-SQL-0017",
     "language": "SQL",
     "title": "CREATE DOMAIN의 허용값 CHECK 제약",
@@ -2918,8 +2936,10 @@
       "CHECK",
       "check"
     ],
-    "explanation": "도메인에 저장할 값이 조건을 만족하는지 제한하는 제약조건은 CHECK입니다.",
+    "explanation": "이 문제에서는 CREATE DOMAIN의 허용값 CHECK 제약의 흐름을 이해하는 것이 핵심입니다. VALUE IN(...)은 허용값 조건식입니다. 조건식을 도메인 제약으로 적용하는 키워드는 CHECK입니다. 마지막으로 빈칸을 앞에서부터 채워 전체 SQL 문장이 문법적으로 자연스럽게 이어지는지 확인합니다.",
     "steps": [
+      "먼저 빈칸 앞뒤의 SQL을 읽고, 각 빈칸이 조회·조건·그룹·정렬·변경·제약 중 어떤 역할인지 구분합니다.",
+      "이 문제의 핵심 개념은 CREATE DOMAIN · CHECK · VALUE입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "VALUE IN(...)은 허용값 조건식입니다.",
       "조건식을 도메인 제약으로 적용하는 키워드는 CHECK입니다."
     ],
@@ -2947,7 +2967,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-JAVA-0023",
     "language": "Java",
     "title": "두 갈래 재귀에서 음수 기저값 처리",
@@ -2991,7 +3011,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-SQL-0018",
     "language": "SQL",
     "title": "LIKE 접두 검색과 DESC 정렬 빈칸",
@@ -3015,6 +3035,8 @@
     ],
     "explanation": "이로 시작하는 문자열은 LIKE '이%'로 찾고 내림차순은 DESC를 사용합니다.",
     "steps": [
+      "먼저 빈칸 앞뒤의 SQL을 읽고, 각 빈칸이 조회·조건·그룹·정렬·변경·제약 중 어떤 역할인지 구분합니다.",
+      "이 문제의 핵심 개념은 LIKE · 와일드카드 · ORDER BY입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "문자열 앞부분이 '이'로 시작해야 하므로 '이%'입니다.",
       "이름 역순 정렬은 DESC입니다."
     ],
@@ -3042,7 +3064,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-C-0025",
     "language": "C",
     "title": "구조체 포인터 트리 후위 순회 세 번째 값",
@@ -3057,8 +3079,9 @@
     "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
     "code": "#include <stdio.h>\ntypedef struct N {\n    int v;\n    struct N *a;\n    struct N *b;\n} N;\nint count=0, result=0;\nvoid post(N *n){\n    if(!n) return;\n    post(n->a);\n    post(n->b);\n    if(++count==3) result=n->v;\n}\nint main(void){\n    N ne={35,0,0};\n    N nd={64,0,0};\n    N nc={53,0,0};\n    N nb={12,&ne,&nc};\n    N na={21,&nb,&nd};\n    post(&na);\n    printf(\"%d\",result);\n    return 0;\n}",
     "answer": "12",
-    "explanation": "후위 순회 순서는 35→53→12→64→21이며 세 번째 노드 값이 12입니다.",
+    "explanation": "이 문제에서는 구조체 포인터 트리 후위 순회 세 번째 값의 흐름을 이해하는 것이 핵심입니다. 왼쪽 서브트리에서 35,53,12 순으로 처리됩니다. 세 번째 처리 시 count가 3이 됩니다. 그 노드 nb의 값 12가 result에 저장됩니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "왼쪽 서브트리에서 35,53,12 순으로 처리됩니다.",
       "세 번째 처리 시 count가 3이 됩니다.",
       "그 노드 nb의 값 12가 result에 저장됩니다."
@@ -3087,7 +3110,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-PY-0017",
     "language": "Python",
     "title": "딕셔너리 삽입 순서와 문자열 양끝 인덱싱",
@@ -3133,7 +3156,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-C-0026",
     "language": "C",
     "title": "주소 전달·값 전달과 포인터 배열 접근",
@@ -3182,7 +3205,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-JAVA-0025",
     "language": "Java",
     "title": "상속 메서드 오버라이딩 결과 합산",
@@ -3198,6 +3221,7 @@
     "answer": "509",
     "explanation": "A.hap()은 1+5+3=9, B.hap()은 오버라이딩되어 10×50=500이므로 합은 509입니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "first.hap()은 A 구현으로 9입니다.",
       "second.hap()은 B 구현으로 a*c=500입니다.",
       "9+500=509입니다."
@@ -3238,6 +3262,8 @@
     "answer": "10\n11\n10\n20",
     "explanation": "count++는 10을 출력한 뒤 11이 됩니다. 지역 value는 10, item.value는 20입니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 static · 후위 증가 · 필드입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "count++는 10을 출력한 뒤 11이 됩니다.",
       "지역 value는 10, item.value는 20입니다."
     ],
@@ -3258,7 +3284,7 @@
     "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "grading": "exact",
     "acceptedAnswers": [],
     "hint": "객체마다 따로 존재하는 값과 클래스 전체가 공유하는 값을 구분한 뒤, 호출 순서대로 공유 상태의 변화를 적어보세요."
@@ -3281,6 +3307,8 @@
     "answer": "Art\nA\nA\nArt\nArt",
     "explanation": "word와 p는 같은 첫 문자를 가리킵니다. 역참조는 A이고 문자열 출력은 Art입니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 문자 배열 · 포인터 · 역참조입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "word와 p는 같은 첫 문자를 가리킵니다.",
       "역참조는 A이고 문자열 출력은 Art입니다."
     ],
@@ -3301,7 +3329,7 @@
     "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "grading": "exact",
     "acceptedAnswers": [],
     "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
@@ -3323,6 +3351,8 @@
     "answer": "qwe",
     "explanation": "q,w,e는 두 문자열에 모두 존재합니다. r은 두 번째 문자열에 없어 출력되지 않습니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 문자열 · 중첩 반복문입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "q,w,e는 두 문자열에 모두 존재합니다.",
       "r은 두 번째 문자열에 없어 출력되지 않습니다."
     ],
@@ -3343,7 +3373,7 @@
     "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "grading": "exact",
     "acceptedAnswers": [],
     "hint": "문자열을 인덱스별 문자로 펼쳐 적고, 포인터나 반복문이 실제로 방문하거나 바꾸는 위치만 표시하세요."
@@ -3365,6 +3395,8 @@
     "answer": "DELETE FROM 학생 WHERE 이름 = '민수';",
     "explanation": "DELETE FROM 뒤에 학생 테이블을 지정합니다. WHERE 이름='민수'로 삭제 대상을 제한합니다.",
     "steps": [
+      "먼저 문제에서 테이블명, 처리할 열, 값, 조건을 각각 표시한 뒤 어떤 SQL 명령이 필요한지 정합니다.",
+      "이 문제의 핵심 개념은 DELETE · WHERE입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "DELETE FROM 뒤에 학생 테이블을 지정합니다.",
       "WHERE 이름='민수'로 삭제 대상을 제한합니다."
     ],
@@ -3381,7 +3413,7 @@
     "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "grading": "self",
     "acceptedAnswers": [],
     "hint": "삭제 대상이 되는 행의 조건을 먼저 찾고, 조건을 만족하는 행과 남는 행을 작은 표로 나눠보세요."
@@ -3404,8 +3436,10 @@
     "question": "성적 테이블에서 과목별 평균이 90점 이상인 과목의 과목이름, 최소점수, 최대점수를 조회하세요. WHERE는 사용하지 않습니다.",
     "code": "-- 성적(과목이름, 점수)",
     "answer": "SELECT 과목이름, MIN(점수) AS 최소점수, MAX(점수) AS 최대점수\nFROM 성적\nGROUP BY 과목이름\nHAVING AVG(점수) >= 90;",
-    "explanation": "과목이름으로 그룹화합니다. 그룹 평균 조건은 HAVING에 둡니다.",
+    "explanation": "이 문제에서는 GROUP BY와 HAVING으로 평균 조건 조회의 흐름을 이해하는 것이 핵심입니다. 과목이름으로 그룹화합니다. 그룹 평균 조건은 HAVING에 둡니다. 마지막으로 테이블명·열 이름·조건 연산자와 SQL 문장의 순서를 다시 확인합니다.",
     "steps": [
+      "먼저 문제에서 테이블명, 처리할 열, 값, 조건을 각각 표시한 뒤 어떤 SQL 명령이 필요한지 정합니다.",
+      "이 문제의 핵심 개념은 GROUP BY · HAVING · AVG입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "과목이름으로 그룹화합니다.",
       "그룹 평균 조건은 HAVING에 둡니다."
     ],
@@ -3426,7 +3460,7 @@
     "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "grading": "self",
     "acceptedAnswers": [],
     "hint": "그룹을 나누는 기준과 각 그룹에서 계산할 값을 먼저 적고, 행 단위 조건과 그룹 단위 조건을 서로 분리해 보세요."
@@ -3449,6 +3483,8 @@
     "answer": "Vehicle name: Spark",
     "explanation": "Car 생성 시 name은 Spark가 됩니다. 인자 없는 getName은 Vehicle 메서드가 실행됩니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 상속 · 오버로딩 · 업캐스팅입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "Car 생성 시 name은 Spark가 됩니다.",
       "인자 없는 getName은 Vehicle 메서드가 실행됩니다."
     ],
@@ -3469,7 +3505,7 @@
     "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "grading": "exact",
     "acceptedAnswers": [
       "Vehicle name : Spark",
@@ -3496,6 +3532,8 @@
     "answer": "500",
     "explanation": "Child(int) 전에 암시적 super()가 실행됩니다. Parent()는 Parent.x를 500으로 만들고 getX는 그 값을 반환합니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 생성자 · this · super입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "Child(int) 전에 암시적 super()가 실행됩니다.",
       "Parent()는 Parent.x를 500으로 만들고 getX는 그 값을 반환합니다."
     ],
@@ -3516,7 +3554,7 @@
     "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "grading": "exact",
     "acceptedAnswers": [],
     "hint": "참조 변수의 선언 타입과 실제 객체 타입을 따로 적고, 필드 접근과 메서드 호출이 각각 어떤 타입을 기준으로 결정되는지 구분하세요."
@@ -3536,8 +3574,10 @@
     "question": "첫 원소를 맨 뒤로 보내 순환 출력할 때 [빈칸] 식을 쓰세요.",
     "code": "int n[5]={5,4,3,2,1};\nfor(int i=0;i<5;i++) printf(\"%d\",n[[빈칸]]);",
     "answer": "(i+1)%5",
-    "explanation": "필요한 인덱스는 1,2,3,4,0입니다. (i+1)%5가 이 순서를 만듭니다.",
+    "explanation": "이 문제에서는 배열 인덱스 순환 이동의 흐름을 이해하는 것이 핵심입니다. 필요한 인덱스는 1,2,3,4,0입니다. (i+1)%5가 이 순서를 만듭니다. 마지막으로 문제에서 요구한 값만 답에 적었는지 확인합니다.",
     "steps": [
+      "먼저 빈칸 앞뒤 코드를 읽고, 그 위치에 필요한 자료형·연산자·문법 요소가 무엇인지 확인합니다.",
+      "이 문제의 핵심 개념은 배열 · 모듈로 연산입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "필요한 인덱스는 1,2,3,4,0입니다.",
       "(i+1)%5가 이 순서를 만듭니다."
     ],
@@ -3558,7 +3598,7 @@
     "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "grading": "exact",
     "acceptedAnswers": [
       "(i + 1) % 5",
@@ -3581,8 +3621,10 @@
     "question": "4620원을 1000, 500, 100, 10원 단위 개수로 나누는 ①~④ 식을 순서대로 쓰세요.",
     "code": "int m=4620;\nint a=①;\nint b=②;\nint c=③;\nint d=④;",
     "answer": "m/1000 | (m%1000)/500 | (m%500)/100 | (m%100)/10",
-    "explanation": "큰 단위부터 몫을 구합니다. 다음 단위는 남은 금액의 나머지에서 구합니다.",
+    "explanation": "이 문제에서는 나눗셈·나머지로 화폐 단위 분해의 흐름을 이해하는 것이 핵심입니다. 큰 단위부터 몫을 구합니다. 다음 단위는 남은 금액의 나머지에서 구합니다. 마지막으로 문제에서 요구한 값만 답에 적었는지 확인합니다.",
     "steps": [
+      "먼저 빈칸 앞뒤 코드를 읽고, 그 위치에 필요한 자료형·연산자·문법 요소가 무엇인지 확인합니다.",
+      "이 문제의 핵심 개념은 정수 나눗셈 · 나머지입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "큰 단위부터 몫을 구합니다.",
       "다음 단위는 남은 금액의 나머지에서 구합니다."
     ],
@@ -3603,7 +3645,7 @@
     "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "grading": "self",
     "acceptedAnswers": [],
     "hint": "빈칸의 앞뒤 연산자와 자료형을 먼저 확인하고, 그 자리에 들어갈 표현식이 전체 문장의 역할과 맞는지 검토하세요."
@@ -3625,6 +3667,8 @@
     "answer": "BCD",
     "explanation": "합은 250이고 250/30은 8입니다. break가 없어 case 8부터 B,C,D가 이어집니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 switch · fall-through입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "합은 250이고 250/30은 8입니다.",
       "break가 없어 case 8부터 B,C,D가 이어집니다."
     ],
@@ -3641,7 +3685,7 @@
     "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "grading": "exact",
     "acceptedAnswers": [],
     "hint": "변수 값이 실제로 바뀌는 문장만 골라 실행 순서대로 상태를 적고, 마지막 출력문이 읽는 값을 확인하세요."
@@ -3662,8 +3706,10 @@
     "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
     "code": "#include <stdio.h>\nint main(void){\n int c=0;\n for(int i=1;i<=2023;i++) if(i%4==0)c++;\n printf(\"%d\",c); return 0;\n}",
     "answer": "505",
-    "explanation": "4×505=2020은 범위 안의 마지막 4의 배수입니다. 따라서 505개입니다.",
+    "explanation": "이 문제에서는 1부터 2023까지 4의 배수 개수의 흐름을 이해하는 것이 핵심입니다. 4×505=2020은 범위 안의 마지막 4의 배수입니다. 따라서 505개입니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 반복문 · 나머지 · 배수입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "4×505=2020은 범위 안의 마지막 4의 배수입니다.",
       "따라서 505개입니다."
     ],
@@ -3684,7 +3730,7 @@
     "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "grading": "exact",
     "acceptedAnswers": [],
     "hint": "반복마다 조건식, 핵심 변수, 출력 여부를 표로 적고, 건너뛰기나 종료가 발생한 지점을 별도로 표시하세요."
@@ -3708,6 +3754,8 @@
     "answer": "213465",
     "explanation": "LIFO에 따라 pop 값은 2,1,3,4,6,5 순입니다. 이를 붙이면 213465입니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 스택 · LIFO · push입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "LIFO에 따라 pop 값은 2,1,3,4,6,5 순입니다.",
       "이를 붙이면 213465입니다."
     ],
@@ -3728,7 +3776,7 @@
     "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "grading": "exact",
     "acceptedAnswers": [],
     "hint": "조건식의 참·거짓을 먼저 결정한 뒤 실제로 선택되는 분기만 따라가고, 실행되지 않는 분기는 계산하지 마세요."
@@ -3751,6 +3799,8 @@
     "answer": "true\nfalse\ntrue\ntrue",
     "explanation": "a와 b는 문자열 풀의 같은 객체를 참조합니다. c는 별도 객체지만 내용은 같으므로 equals는 true입니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 String pool · == · equals입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "a와 b는 문자열 풀의 같은 객체를 참조합니다.",
       "c는 별도 객체지만 내용은 같으므로 equals는 true입니다."
     ],
@@ -3771,7 +3821,7 @@
     "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "grading": "exact",
     "acceptedAnswers": [],
     "hint": "문자열 연산이 기존 값을 바꾸는지 새 값을 만드는지 구분하고, 각 호출 뒤 변수에 실제로 남는 값을 확인하세요."
@@ -3791,9 +3841,12 @@
     "question": "뷰와 이를 참조하는 다른 객체를 함께 삭제하려고 합니다. [빈칸] 키워드를 쓰세요.",
     "code": "DROP VIEW 성적요약 [빈칸];",
     "answer": "CASCADE",
-    "explanation": "의존 객체까지 연쇄 삭제하는 옵션은 CASCADE입니다.",
+    "explanation": "이 문제에서는 DROP VIEW 연쇄 삭제 옵션의 흐름을 이해하는 것이 핵심입니다. 의존 객체까지 연쇄 삭제하는 옵션은 CASCADE입니다. 마지막으로 빈칸을 앞에서부터 채워 전체 SQL 문장이 문법적으로 자연스럽게 이어지는지 확인합니다.",
     "steps": [
-      "의존 객체까지 연쇄 삭제하는 옵션은 CASCADE입니다."
+      "먼저 빈칸 앞뒤의 SQL을 읽고, 각 빈칸이 조회·조건·그룹·정렬·변경·제약 중 어떤 역할인지 구분합니다.",
+      "이 문제의 핵심 개념은 DROP VIEW · CASCADE입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
+      "의존 객체까지 연쇄 삭제하는 옵션은 CASCADE입니다.",
+      "마지막으로 빈칸을 앞에서부터 채워 전체 SQL 문장이 문법적으로 자연스럽게 이어지는지 확인합니다."
     ],
     "sources": [
       {
@@ -3812,7 +3865,7 @@
     "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "grading": "exact",
     "acceptedAnswers": [
       "cascade",
@@ -3835,9 +3888,12 @@
     "question": "오름차순 정렬을 위해 [빈칸]에 들어갈 비교 연산자를 쓰세요.",
     "code": "int v[]={64,25,12,22,11};\nfor(int i=0;i<4;i++)\n for(int j=i+1;j<5;j++)\n  if(v[i] [빈칸] v[j]){\n   int t=v[i];v[i]=v[j];v[j]=t;\n  }",
     "answer": ">",
-    "explanation": "앞 값이 더 클 때 교환하면 작은 값이 앞으로 이동합니다.",
+    "explanation": "이 문제에서는 선택 정렬 비교 연산자의 흐름을 이해하는 것이 핵심입니다. 앞 값이 더 클 때 교환하면 작은 값이 앞으로 이동합니다. 마지막으로 문제에서 요구한 값만 답에 적었는지 확인합니다.",
     "steps": [
-      "앞 값이 더 클 때 교환하면 작은 값이 앞으로 이동합니다."
+      "먼저 빈칸 앞뒤 코드를 읽고, 그 위치에 필요한 자료형·연산자·문법 요소가 무엇인지 확인합니다.",
+      "이 문제의 핵심 개념은 선택 정렬 · 오름차순입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
+      "앞 값이 더 클 때 교환하면 작은 값이 앞으로 이동합니다.",
+      "마지막으로 문제에서 요구한 값만 답에 적었는지 확인합니다."
     ],
     "sources": [
       {
@@ -3856,7 +3912,7 @@
     "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "grading": "exact",
     "acceptedAnswers": [],
     "hint": "빈칸의 앞뒤 연산자와 자료형을 먼저 확인하고, 그 자리에 들어갈 표현식이 전체 문장의 역할과 맞는지 검토하세요."
@@ -3876,8 +3932,10 @@
     "question": "다음 Python 코드의 출력 결과를 쓰세요.",
     "code": "a=\"engineer information processing\"\nb=a[:3]\nc=a[4:6]\nd=a[28:]\nprint(b+c+d)",
     "answer": "engneing",
-    "explanation": "슬라이스 결과는 eng, ne, ing입니다. 합치면 engneing입니다.",
+    "explanation": "이 문제에서는 문자열 구간 슬라이싱 결합의 흐름을 이해하는 것이 핵심입니다. 슬라이스 결과는 eng, ne, ing입니다. 합치면 engneing입니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 문자열 · 슬라이싱입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "슬라이스 결과는 eng, ne, ing입니다.",
       "합치면 engneing입니다."
     ],
@@ -3898,7 +3956,7 @@
     "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "grading": "exact",
     "acceptedAnswers": [],
     "hint": "시작 위치, 끝 위치의 제외 여부, 이동 간격을 따로 적은 뒤 실제로 선택되는 인덱스만 순서대로 표시하세요."
@@ -3921,6 +3979,8 @@
     "answer": "BDCDD",
     "explanation": "B.paint에서 super.draw가 B를 출력합니다. 그 내부 draw는 B.draw로 바인딩되어 D가 붙고 이후 C,D,D가 이어집니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 상속 · 오버라이딩 · super입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "B.paint에서 super.draw가 B를 출력합니다.",
       "그 내부 draw는 B.draw로 바인딩되어 D가 붙고 이후 C,D,D가 이어집니다."
     ],
@@ -3941,7 +4001,7 @@
     "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "grading": "exact",
     "acceptedAnswers": [],
     "hint": "참조 변수의 선언 타입과 실제 객체 타입을 따로 적고, 필드 접근과 메서드 호출이 각각 어떤 타입을 기준으로 결정되는지 구분하세요."
@@ -3962,8 +4022,10 @@
     "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
     "code": "#include <stdio.h>\nint perfect(int n){\n int s=0; for(int i=1;i<=n/2;i++) if(n%i==0)s+=i;\n return n==s;\n}\nint main(void){\n int s=0; for(int n=2;n<=100;n++) if(perfect(n))s+=n;\n printf(\"%d\",s); return 0;\n}",
     "answer": "34",
-    "explanation": "100 이하 완전수는 6과 28입니다. 합은 34입니다.",
+    "explanation": "이 문제에서는 100 이하 완전수의 합의 흐름을 이해하는 것이 핵심입니다. 100 이하 완전수는 6과 28입니다. 합은 34입니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 완전수 · 약수 · 반복문입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "100 이하 완전수는 6과 28입니다.",
       "합은 34입니다."
     ],
@@ -3980,7 +4042,7 @@
     "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "grading": "exact",
     "acceptedAnswers": [],
     "hint": "반복마다 조건식, 핵심 변수, 출력 여부를 표로 적고, 건너뛰기나 종료가 발생한 지점을 별도로 표시하세요."
@@ -4001,9 +4063,12 @@
     "question": "구조체 포인터 d2가 numPtr 멤버에 접근하도록 [빈칸] 연산자를 쓰세요.",
     "code": "Data *d2;\nd2 [빈칸] numPtr = &num;",
     "answer": "->",
-    "explanation": "구조체 포인터의 멤버 접근 연산자는 ->입니다.",
+    "explanation": "이 문제에서는 구조체 포인터 멤버 접근 연산자의 흐름을 이해하는 것이 핵심입니다. 구조체 포인터의 멤버 접근 연산자는 ->입니다. 마지막으로 문제에서 요구한 값만 답에 적었는지 확인합니다.",
     "steps": [
-      "구조체 포인터의 멤버 접근 연산자는 ->입니다."
+      "먼저 빈칸 앞뒤 코드를 읽고, 그 위치에 필요한 자료형·연산자·문법 요소가 무엇인지 확인합니다.",
+      "이 문제의 핵심 개념은 구조체 · 포인터 · ->입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
+      "구조체 포인터의 멤버 접근 연산자는 ->입니다.",
+      "마지막으로 문제에서 요구한 값만 답에 적었는지 확인합니다."
     ],
     "sources": [
       {
@@ -4022,7 +4087,7 @@
     "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "grading": "exact",
     "acceptedAnswers": [],
     "hint": "빈칸의 앞뒤 연산자와 자료형을 먼저 확인하고, 그 자리에 들어갈 표현식이 전체 문장의 역할과 맞는지 검토하세요."
@@ -4045,6 +4110,8 @@
     "answer": "4\n3\n2\n1",
     "explanation": "UNION은 중복을 제거합니다. 1,2,3,4를 내림차순 정렬하면 4,3,2,1입니다.",
     "steps": [
+      "먼저 주어진 테이블과 SQL을 따로 보고, FROM의 원본 행에서 시작해 조건과 집계가 적용될 때마다 남는 행을 적습니다.",
+      "이 문제의 핵심 개념은 UNION · ORDER BY · DESC입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "UNION은 중복을 제거합니다.",
       "1,2,3,4를 내림차순 정렬하면 4,3,2,1입니다."
     ],
@@ -4061,7 +4128,7 @@
     "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "grading": "exact",
     "acceptedAnswers": [],
     "hint": "조건을 만족하는 행을 먼저 만든 뒤, 최종 출력 단계에서 같은 값이 여러 번 나타나는지 확인하세요."
@@ -4081,8 +4148,10 @@
     "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
     "code": "#include <stdio.h>\nint f(int n){ if(n<=1)return 1; return n*f(n-1); }\nint main(void){printf(\"%d\",f(7));return 0;}",
     "answer": "5040",
-    "explanation": "7! = 7×6×5×4×3×2×1입니다. 결과는 5040입니다.",
+    "explanation": "이 문제에서는 재귀 팩토리얼 계산의 흐름을 이해하는 것이 핵심입니다. 7! = 7×6×5×4×3×2×1입니다. 결과는 5040입니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 재귀 · 팩토리얼입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "7! = 7×6×5×4×3×2×1입니다.",
       "결과는 5040입니다."
     ],
@@ -4103,7 +4172,7 @@
     "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "grading": "exact",
     "acceptedAnswers": [],
     "hint": "종료 조건을 먼저 찾은 뒤 호출이 깊어지는 순서와 반환되면서 계산되는 순서를 분리해서 적어보세요."
@@ -4126,6 +4195,8 @@
     "answer": "KOREA\nOREA\nK\nE\nO",
     "explanation": "p+1은 OREA를 가리킵니다. *p는 K, *(p+3)은 E, 'K'+4는 O입니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 문자열 포인터 · 포인터 산술 · ASCII입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "p+1은 OREA를 가리킵니다.",
       "*p는 K, *(p+3)은 E, 'K'+4는 O입니다."
     ],
@@ -4142,7 +4213,7 @@
     "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "grading": "exact",
     "acceptedAnswers": [],
     "hint": "포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요."
@@ -4165,6 +4236,8 @@
     "answer": "2",
     "explanation": "실제 객체가 Child라 Child.compute가 재귀적으로 적용됩니다. 계산 결과 C(7)=2입니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 상속 · 오버라이딩 · 재귀입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "실제 객체가 Child라 Child.compute가 재귀적으로 적용됩니다.",
       "계산 결과 C(7)=2입니다."
     ],
@@ -4181,7 +4254,7 @@
     "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "grading": "exact",
     "acceptedAnswers": [],
     "hint": "참조 변수의 선언 타입과 실제 객체 타입을 따로 적고, 필드 접근과 메서드 호출이 각각 어떤 타입을 기준으로 결정되는지 구분하세요."
@@ -4204,6 +4277,8 @@
     "answer": "7",
     "explanation": "name은 인스턴스 필드입니다. static 메서드에서 객체 없이 name을 참조한 7번 줄이 오류입니다.",
     "steps": [
+      "먼저 코드를 문법 오류와 실행 중 오류로 나누어 보고, 어느 줄에서 문제가 생기는지 찾습니다.",
+      "이 문제의 핵심 개념은 static · 인스턴스 변수 · 컴파일 오류입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "name은 인스턴스 필드입니다.",
       "static 메서드에서 객체 없이 name을 참조한 7번 줄이 오류입니다."
     ],
@@ -4220,7 +4295,7 @@
     "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "grading": "exact",
     "acceptedAnswers": [
       "7번",
@@ -4243,9 +4318,12 @@
     "question": "공백으로 구분한 두 값을 각각 저장하려고 합니다. [빈칸] 메서드 이름을 쓰세요.",
     "code": "first, second = input().[빈칸]()",
     "answer": "split",
-    "explanation": "input() 결과를 공백 기준으로 나누는 메서드는 split()입니다.",
+    "explanation": "이 문제에서는 공백 입력 분리 메서드의 흐름을 이해하는 것이 핵심입니다. input() 결과를 공백 기준으로 나누는 메서드는 split()입니다. 마지막으로 문제에서 요구한 값만 답에 적었는지 확인합니다.",
     "steps": [
-      "input() 결과를 공백 기준으로 나누는 메서드는 split()입니다."
+      "먼저 빈칸 앞뒤 코드를 읽고, 그 위치에 필요한 자료형·연산자·문법 요소가 무엇인지 확인합니다.",
+      "이 문제의 핵심 개념은 input · split입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
+      "input() 결과를 공백 기준으로 나누는 메서드는 split()입니다.",
+      "마지막으로 문제에서 요구한 값만 답에 적었는지 확인합니다."
     ],
     "sources": [
       {
@@ -4260,7 +4338,7 @@
     "verificationNote": "복수 공개 복원자료에서 문제 구조와 정답을 교차 확인했습니다.",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "grading": "exact",
     "acceptedAnswers": [
       "split()"
@@ -4273,7 +4351,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-JAVA-0034",
     "language": "Java",
     "title": "객체 참조 전달과 필드 누적",
@@ -4317,7 +4395,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-JAVA-0035",
     "language": "Java",
     "title": "Runnable 구현 객체를 Thread에 전달",
@@ -4336,6 +4414,7 @@
     ],
     "explanation": "Thread 생성자에 Runnable 구현 객체를 전달해야 하므로 Car 인스턴스를 생성합니다.",
     "steps": [
+      "먼저 빈칸 앞뒤 코드를 읽고, 그 위치에 필요한 자료형·연산자·문법 요소가 무엇인지 확인합니다.",
       "Car는 Runnable을 구현합니다.",
       "Thread에는 Runnable 객체를 전달할 수 있습니다.",
       "new Car()가 필요하므로 빈칸은 Car입니다."
@@ -4364,7 +4443,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-C-0038",
     "language": "C",
     "title": "재귀 팩토리얼 입력값 5",
@@ -4377,8 +4456,9 @@
     "question": "입력값으로 5가 주어질 때 다음 C 프로그램의 출력 숫자를 쓰세요.",
     "code": "#include <stdio.h>\nint factorial(int n){\n    if(n<=1) return 1;\n    return n*factorial(n-1);\n}\nint main(void){\n    int input=5;\n    printf(\"%d\",factorial(input));\n    return 0;\n}",
     "answer": "120",
-    "explanation": "5! = 5×4×3×2×1 = 120입니다.",
+    "explanation": "이 문제에서는 재귀 팩토리얼 입력값 5의 흐름을 이해하는 것이 핵심입니다. n<=1이면 1을 반환합니다. 5부터 2까지 재귀적으로 곱합니다. 결과는 120입니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "n<=1이면 1을 반환합니다.",
       "5부터 2까지 재귀적으로 곱합니다.",
       "결과는 120입니다."
@@ -4407,7 +4487,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-C-0039",
     "language": "C",
     "title": "정수를 역순으로 만드는 연산자",
@@ -4428,6 +4508,7 @@
     ],
     "explanation": "반복 조건은 number>0, 마지막 자리 추출은 %10, 마지막 자리 제거는 /10입니다.",
     "steps": [
+      "먼저 빈칸 앞뒤 코드를 읽고, 그 위치에 필요한 자료형·연산자·문법 요소가 무엇인지 확인합니다.",
       "number가 0보다 큰 동안 반복합니다.",
       "number%10으로 마지막 자릿수를 얻습니다.",
       "number/10으로 마지막 자릿수를 제거합니다."
@@ -4456,7 +4537,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-C-0040",
     "language": "C",
     "title": "13195의 가장 큰 소인수 탐색",
@@ -4469,8 +4550,9 @@
     "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
     "code": "#include <stdio.h>\nint prime(int n){\n    for(int i=2;i<n;i++)\n        if(n%i==0) return 0;\n    return 1;\n}\nint main(void){\n    int number=13195,max=0;\n    for(int i=2;i<number;i++)\n        if(prime(i) && number%i==0) max=i;\n    printf(\"%d\",max);\n    return 0;\n}",
     "answer": "29",
-    "explanation": "13195의 소인수 중 반복문에서 마지막으로 만나는 가장 큰 값은 29입니다.",
+    "explanation": "이 문제에서는 13195의 가장 큰 소인수 탐색의 흐름을 이해하는 것이 핵심입니다. 2부터 13194까지 소수인지 검사합니다. 13195를 나누는 소수일 때 max를 갱신합니다. 가장 큰 소인수 29가 최종 저장됩니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "2부터 13194까지 소수인지 검사합니다.",
       "13195를 나누는 소수일 때 max를 갱신합니다.",
       "가장 큰 소인수 29가 최종 저장됩니다."
@@ -4499,7 +4581,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-SQL-0023",
     "language": "SQL",
     "title": "ALL 서브쿼리 비교 조건",
@@ -4518,6 +4600,8 @@
     ],
     "explanation": "> ALL(subquery)은 서브쿼리가 반환한 모든 값보다 큰 경우만 참입니다.",
     "steps": [
+      "먼저 빈칸 앞뒤의 SQL을 읽고, 각 빈칸이 조회·조건·그룹·정렬·변경·제약 중 어떤 역할인지 구분합니다.",
+      "이 문제의 핵심 개념은 ALL · 서브쿼리 · 비교 연산입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "비교 대상은 H 회사 제품들의 여러 단가입니다.",
       "모든 단가보다 커야 하므로 ALL을 사용합니다."
     ],
@@ -4545,7 +4629,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-SQL-0024",
     "language": "SQL",
     "title": "OR·IN 조건과 COUNT(열)의 NULL 제외",
@@ -4592,6 +4676,7 @@
     "answer": "4",
     "explanation": "WHERE를 만족하는 다섯 행 가운데 col2가 NULL인 첫 행은 COUNT(col2)에서 제외되어 4입니다.",
     "steps": [
+      "먼저 주어진 테이블과 SQL을 따로 보고, FROM의 원본 행에서 시작해 조건과 집계가 적용될 때마다 남는 행을 적습니다.",
       "조건은 col1이 2/3이거나 col2가 3/5인 행을 선택합니다.",
       "다섯 행이 조건에 포함됩니다.",
       "COUNT(col2)는 NULL을 제외하므로 4입니다."
@@ -4620,7 +4705,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-JAVA-0036",
     "language": "Java",
     "title": "switch fall-through 누적",
@@ -4635,6 +4720,7 @@
     "answer": "-8",
     "explanation": "case 3부터 break 없이 case 4, 5, default까지 이어져 0→3→-7→-8이 됩니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "i=3이므로 case 3에서 시작합니다.",
       "k=0, 이어 k=3, k=-7이 됩니다.",
       "default에서 한 번 더 감소해 -8입니다."
@@ -4663,7 +4749,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-PY-0020",
     "language": "Python",
     "title": "문자열 슬라이싱과 포맷 문자열 결합",
@@ -4707,7 +4793,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-C-0041",
     "language": "C",
     "title": "포인터 이동으로 문자열 길이 합산",
@@ -4720,8 +4806,9 @@
     "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
     "code": "#include <stdio.h>\nint len(char *p){\n    int result=0;\n    while(*p!='\\0'){ p++; result++; }\n    return result;\n}\nint main(void){\n    char *a=\"2022\";\n    char *b=\"202207\";\n    printf(\"%d\",len(a)+len(b));\n    return 0;\n}",
     "answer": "10",
-    "explanation": "문자열 길이는 각각 4와 6이며 합은 10입니다.",
+    "explanation": "이 문제에서는 포인터 이동으로 문자열 길이 합산의 흐름을 이해하는 것이 핵심입니다. 2022의 길이는 4입니다. 202207의 길이는 6입니다. 4+6=10입니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "2022의 길이는 4입니다.",
       "202207의 길이는 6입니다.",
       "4+6=10입니다."
@@ -4750,7 +4837,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-C-0042",
     "language": "C",
     "title": "포인터 차분 배열의 누적 합",
@@ -4795,7 +4882,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-JAVA-0037",
     "language": "Java",
     "title": "객체 필드 변경 후 반복 누적",
@@ -4840,7 +4927,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-PY-0021",
     "language": "Python",
     "title": "map과 lambda로 리스트 전체에 100 더하기",
@@ -4853,8 +4940,10 @@
     "question": "다음 Python 3 코드의 출력 결과를 쓰세요.",
     "code": "values=[1,2,3,4,5]\nvalues=list(map(lambda n:n+100,values))\nprint(values)",
     "answer": "[101, 102, 103, 104, 105]",
-    "explanation": "각 원소에 100을 더한 결과를 list로 변환합니다.",
+    "explanation": "이 문제에서는 map과 lambda로 리스트 전체에 100 더하기의 흐름을 이해하는 것이 핵심입니다. 1~5 각각에 100을 더합니다. 결과 리스트는 101~105입니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 map · lambda · list입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "1~5 각각에 100을 더합니다.",
       "결과 리스트는 101~105입니다."
     ],
@@ -4882,7 +4971,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-SQL-0025",
     "language": "SQL",
     "title": "SELECT·DISTINCT·COUNT DISTINCT 결과",
@@ -4901,6 +4990,7 @@
     ],
     "explanation": "전체 행은 200, 서로 다른 학과는 3개, 인터넷과로 제한한 서로 다른 학과값은 1개입니다.",
     "steps": [
+      "먼저 주어진 테이블과 SQL을 따로 보고, FROM의 원본 행에서 시작해 조건과 집계가 적용될 때마다 남는 행을 적습니다.",
       "학생 총수는 200명입니다.",
       "DISTINCT DEPT는 세 학과를 반환합니다.",
       "인터넷과 조건에서는 DISTINCT DEPT가 하나입니다."
@@ -4929,7 +5019,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-C-0043",
     "language": "C",
     "title": "6부터 30까지 완전수 개수",
@@ -4942,8 +5032,9 @@
     "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
     "code": "#include <stdio.h>\nint main(void){\n    int count=0;\n    for(int n=6;n<=30;n++){\n        int sum=0;\n        for(int j=1;j<=n/2;j++)\n            if(n%j==0) sum+=j;\n        if(sum==n) count++;\n    }\n    printf(\"%d\",count);\n    return 0;\n}",
     "answer": "2",
-    "explanation": "6~30 사이 완전수는 6과 28 두 개입니다.",
+    "explanation": "이 문제에서는 6부터 30까지 완전수 개수의 흐름을 이해하는 것이 핵심입니다. 6의 진약수 합은 6입니다. 28의 진약수 합도 28입니다. 이 범위의 완전수는 두 개이므로 2입니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "6의 진약수 합은 6입니다.",
       "28의 진약수 합도 28입니다.",
       "이 범위의 완전수는 두 개이므로 2입니다."
@@ -4972,7 +5063,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-JAVA-0038",
     "language": "Java",
     "title": "배열 생성 메서드의 순차 출력",
@@ -4985,8 +5076,9 @@
     "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
     "code": "public class Main {\n    static int[] makeArray(){\n        int[] data=new int[4];\n        for(int i=0;i<data.length;i++) data[i]=i;\n        return data;\n    }\n    public static void main(String[] args){\n        for(int value:makeArray()) System.out.print(value);\n    }\n}",
     "answer": "0123",
-    "explanation": "길이 4 배열에 인덱스 값을 그대로 저장하므로 0,1,2,3이 연속 출력됩니다.",
+    "explanation": "이 문제에서는 배열 생성 메서드의 순차 출력의 흐름을 이해하는 것이 핵심입니다. 배열은 [0,1,2,3]으로 만들어집니다. 반복문이 앞에서부터 각 값을 출력합니다. 줄바꿈 없이 0123입니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "배열은 [0,1,2,3]으로 만들어집니다.",
       "반복문이 앞에서부터 각 값을 출력합니다.",
       "줄바꿈 없이 0123입니다."
@@ -5015,7 +5107,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-JAVA-0039",
     "language": "Java",
     "title": "3의 배수이면서 홀수인 최댓값",
@@ -5030,6 +5122,7 @@
     "answer": "993",
     "explanation": "1~998에서 3의 배수이면서 홀수인 가장 큰 값이 마지막으로 result에 저장됩니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "조건을 만족할 때마다 result가 갱신됩니다.",
       "998 이하에서 조건을 만족하는 가장 큰 값은 993입니다.",
       "최종 출력은 993입니다."
@@ -5067,8 +5160,9 @@
     "question": "입력으로 7이 주어질 때 다음 C 프로그램의 출력값을 쓰세요.",
     "code": "#include <stdio.h>\n\nint main(void) {\n    int n, count = 0;\n    scanf(\"%d\", &n);\n    for (int i = 2; i <= n / 2; i++) {\n        if (i % 1 == 0) count++;\n    }\n    printf(\"%d\", count);\n    return 0;\n}",
     "answer": "2",
-    "explanation": "n/2는 정수 3입니다. i=2,3 두 번 조건이 참이어서 count=2입니다.",
+    "explanation": "이 문제에서는 입력값 7의 반복 횟수의 흐름을 이해하는 것이 핵심입니다. 입력값 7에서 n/2는 정수 나눗셈으로 3입니다. 반복 변수 i는 2와 3 두 값을 가집니다. 모든 정수는 1로 나누어 나머지가 0이므로 count가 두 번 증가해 2가 됩니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "입력값 7에서 n/2는 정수 나눗셈으로 3입니다.",
       "반복 변수 i는 2와 3 두 값을 가집니다.",
       "모든 정수는 1로 나누어 나머지가 0이므로 count가 두 번 증가해 2가 됩니다."
@@ -5107,8 +5201,10 @@
     "question": "다음 C 코드의 출력값을 쓰세요.",
     "code": "int n=3,r=0;\nfor(int i=1;i<10;i=i+2) r=r+n*i;\nprintf(\"%d\",r);",
     "answer": "75",
-    "explanation": "i는 1,3,5,7,9입니다. 3×(1+3+5+7+9)=75입니다.",
+    "explanation": "이 문제에서는 홀수 가중치 누적합의 흐름을 이해하는 것이 핵심입니다. i는 1,3,5,7,9입니다. 3×(1+3+5+7+9)=75입니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 for · 누적합입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "i는 1,3,5,7,9입니다.",
       "3×(1+3+5+7+9)=75입니다."
     ],
@@ -5146,8 +5242,10 @@
     "question": "다음 C 코드의 출력값을 쓰세요.",
     "code": "int n1=15,n2=22;\nn1^=n2; n2^=n1; n1^=n2;\nprintf(\"%d %d\",n1,n2);",
     "answer": "22 15",
-    "explanation": "XOR 교환으로 임시변수 없이 두 값이 바뀝니다. 출력은 22 15입니다.",
+    "explanation": "이 문제에서는 XOR로 두 정수 교환의 흐름을 이해하는 것이 핵심입니다. XOR 교환으로 임시변수 없이 두 값이 바뀝니다. 출력은 22 15입니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 XOR · 비트 연산 · 값 교환입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "XOR 교환으로 임시변수 없이 두 값이 바뀝니다.",
       "출력은 22 15입니다."
     ],
@@ -5184,8 +5282,10 @@
     "question": "다음 C 코드의 출력값을 쓰세요.",
     "code": "int num=35,even=0,odd=0;\nfor(int i=1;i<=num;i++){\n if(i%2==0) even++; else odd++;\n}\nprintf(\"%d %d\",even,odd);",
     "answer": "17 18",
-    "explanation": "1~35의 짝수는 17개입니다. 홀수는 18개입니다.",
+    "explanation": "이 문제에서는 1부터 35까지 짝수·홀수 개수의 흐름을 이해하는 것이 핵심입니다. 1~35의 짝수는 17개입니다. 홀수는 18개입니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 반복문 · 나머지입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "1~35의 짝수는 17개입니다.",
       "홀수는 18개입니다."
     ],
@@ -5224,8 +5324,10 @@
     "question": "다음 SQL의 (가),(나)에 들어갈 집계 함수를 순서대로 쓰세요.",
     "code": "SELECT sub_Code AS 과목코드, (가)(mid) AS 중간평균\nFROM Students\nGROUP BY sub_Code\nHAVING (나)(*) >= 5;",
     "answer": "AVG COUNT",
-    "explanation": "평균은 AVG(mid)입니다. 행 수는 COUNT(*)로 셉니다.",
+    "explanation": "이 문제에서는 AVG와 COUNT 집계 함수 빈칸의 흐름을 이해하는 것이 핵심입니다. 평균은 AVG(mid)입니다. 행 수는 COUNT(*)로 셉니다. 마지막으로 빈칸을 앞에서부터 채워 전체 SQL 문장이 문법적으로 자연스럽게 이어지는지 확인합니다.",
     "steps": [
+      "먼저 빈칸 앞뒤의 SQL을 읽고, 각 빈칸이 조회·조건·그룹·정렬·변경·제약 중 어떤 역할인지 구분합니다.",
+      "이 문제의 핵심 개념은 AVG · COUNT · GROUP BY입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "평균은 AVG(mid)입니다.",
       "행 수는 COUNT(*)로 셉니다."
     ],
@@ -5265,6 +5367,8 @@
     "answer": "119",
     "explanation": "ss가 100을 넘을 때까지 a를 증가시키며 누적합니다. 종료 시 a=14, ss=105이므로 119입니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 while · 누적합 · break입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "ss가 100을 넘을 때까지 a를 증가시키며 누적합니다.",
       "종료 시 a=14, ss=105이므로 119입니다."
     ],
@@ -5301,8 +5405,10 @@
     "question": "다음 Java 코드의 출력값을 쓰세요.",
     "code": "int x=1,T_x=0,t_x=0;\nT_x=(x>=0)?x:-x;\nif(x>=0) t_x=x; else t_x=-x;\nSystem.out.println(T_x+\" \"+t_x);",
     "answer": "1 1",
-    "explanation": "두 식 모두 x의 절댓값을 계산합니다. x=1이므로 1 1입니다.",
+    "explanation": "이 문제에서는 삼항 연산자와 절댓값 분기의 흐름을 이해하는 것이 핵심입니다. 두 식 모두 x의 절댓값을 계산합니다. x=1이므로 1 1입니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 삼항 연산자 · 조건문입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "두 식 모두 x의 절댓값을 계산합니다.",
       "x=1이므로 1 1입니다."
     ],
@@ -5340,8 +5446,10 @@
     "question": "27과 12의 최대공약수와 최소공배수를 구해 더하는 다음 코드의 출력값을 쓰세요.",
     "code": "int a=27,b=12,l,g;\nfor(int i=b;i>0;i--){\n if(a%i==0 && b%i==0){g=i;break;}\n}\nl=a*b/g;\nprintf(\"%d\",g+l);",
     "answer": "111",
-    "explanation": "최대공약수는 3입니다. 최소공배수는 108이므로 합은 111입니다.",
+    "explanation": "이 문제에서는 최대공약수와 최소공배수의 합의 흐름을 이해하는 것이 핵심입니다. 최대공약수는 3입니다. 최소공배수는 108이므로 합은 111입니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 최대공약수 · 최소공배수 · 반복문입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "최대공약수는 3입니다.",
       "최소공배수는 108이므로 합은 111입니다."
     ],
@@ -5378,9 +5486,12 @@
     "question": "다음 Java 코드의 출력값을 쓰세요.",
     "code": "int i=17;\ni+=1; i-=2; i*=3; i/=4; i%=5;\nSystem.out.print(i);",
     "answer": "2",
-    "explanation": "17→18→16→48→12→2 순으로 계산됩니다.",
+    "explanation": "이 문제에서는 복합 대입 연산 순차 계산의 흐름을 이해하는 것이 핵심입니다. 17→18→16→48→12→2 순으로 계산됩니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
-      "17→18→16→48→12→2 순으로 계산됩니다."
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 복합 대입 · 나머지입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
+      "17→18→16→48→12→2 순으로 계산됩니다.",
+      "마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다."
     ],
     "sources": [
       {
@@ -5419,6 +5530,8 @@
     "answer": "7.50",
     "explanation": "배열은 0,1,4,9,16,25입니다. 합 55에서 25와 0을 빼고 4로 나누면 7.50입니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 배열 · 최댓값 · 최솟값입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "배열은 0,1,4,9,16,25입니다.",
       "합 55에서 25와 0을 빼고 4로 나누면 7.50입니다."
     ],
@@ -5456,8 +5569,9 @@
     "question": "다음 C 코드의 출력값을 쓰세요.",
     "code": "#include <stdio.h>\n#include <math.h>\n\nint check(int a) {\n    int n = (int)sqrt(a);\n    int i = 2;\n    while (i <= n) {\n        if (a % i == 0) return 0;\n        i++;\n    }\n    return 1;\n}\n\nint main(void) {\n    int arr[5];\n    for (int i = 0; i < 5; i++) arr[i] = (i + 2) + (i * 2);\n    for (int i = 0; i < 5; i++) printf(\"%d\", check(arr[i]));\n    return 0;\n}",
     "answer": "11010",
-    "explanation": "arr는 2,5,8,11,14입니다. 소수 여부는 1,1,0,1,0입니다.",
+    "explanation": "이 문제에서는 소수 판별 결과 연속 출력의 흐름을 이해하는 것이 핵심입니다. 배열 값은 2, 5, 8, 11, 14입니다. check는 2부터 각 수의 제곱근까지 나누어 떨어지는 수가 있으면 0, 없으면 1을 반환합니다. 각 반환값은 1, 1, 0, 1, 0이므로 연속 출력 결과는 11010입니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "배열 값은 2, 5, 8, 11, 14입니다.",
       "check는 2부터 각 수의 제곱근까지 나누어 떨어지는 수가 있으면 0, 없으면 1을 반환합니다.",
       "각 반환값은 1, 1, 0, 1, 0이므로 연속 출력 결과는 11010입니다."
@@ -5495,9 +5609,12 @@
     "question": "다음 Java 코드의 출력값을 쓰세요.",
     "code": "int a=26,b=91,g=0;\nint c=a<b?a:b;\nfor(int i=1;i<c;i++)\n if(a%i==0 && b%i==0) g=i;\nSystem.out.print(g);",
     "answer": "13",
-    "explanation": "26과 91의 공약수 중 가장 큰 값은 13입니다.",
+    "explanation": "이 문제에서는 26과 91의 최대공약수의 흐름을 이해하는 것이 핵심입니다. 26과 91의 공약수 중 가장 큰 값은 13입니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
-      "26과 91의 공약수 중 가장 큰 값은 13입니다."
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 삼항 연산자 · 최대공약수입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
+      "26과 91의 공약수 중 가장 큰 값은 13입니다.",
+      "마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다."
     ],
     "sources": [
       {
@@ -5532,9 +5649,12 @@
     "question": "다음 C 코드의 출력값을 쓰세요.",
     "code": "char a[3][5]={\"KOR\",\"HUM\",\"RES\"};\nchar *pa[]={a[0],a[1],a[2]};\nint n=sizeof(pa)/sizeof(pa[0]);\nfor(int i=0;i<n;i++) printf(\"%c\",pa[i][i]);",
     "answer": "KUS",
-    "explanation": "a[0][0]=K, a[1][1]=U, a[2][2]=S입니다.",
+    "explanation": "이 문제에서는 문자 포인터 배열의 대각 문자의 흐름을 이해하는 것이 핵심입니다. a[0][0]=K, a[1][1]=U, a[2][2]=S입니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
-      "a[0][0]=K, a[1][1]=U, a[2][2]=S입니다."
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 2차원 문자배열 · 포인터 배열입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
+      "a[0][0]=K, a[1][1]=U, a[2][2]=S입니다.",
+      "마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다."
     ],
     "sources": [
       {
@@ -5572,6 +5692,8 @@
     "answer": "00001011",
     "explanation": "11의 이진수는 1011입니다. 8자리로 앞을 0으로 채워 00001011입니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 배열 · 2진수 · while입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "11의 이진수는 1011입니다.",
       "8자리로 앞을 0으로 채워 00001011입니다."
     ],
@@ -5608,9 +5730,12 @@
     "question": "다음 C 코드의 출력값을 쓰세요.",
     "code": "int a[3][5]={{27,13,21,41,12},{11,20,17,35,15},{21,15,32,14,10}};\nint sum,ssum=0;\nfor(int i=0;i<3;i++){\n sum=0;\n for(int j=0;j<5;j++) sum+=a[i][j];\n ssum+=sum;\n}\nprintf(\"%d\",ssum);",
     "answer": "304",
-    "explanation": "세 행의 모든 원소 합은 304입니다.",
+    "explanation": "이 문제에서는 2차원 배열 전체 합의 흐름을 이해하는 것이 핵심입니다. 세 행의 모든 원소 합은 304입니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
-      "세 행의 모든 원소 합은 304입니다."
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 2차원 배열 · 누적합입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
+      "세 행의 모든 원소 합은 304입니다.",
+      "마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다."
     ],
     "sources": [
       {
@@ -5646,9 +5771,12 @@
     "question": "다음 C 코드의 출력값을 쓰세요.",
     "code": "int i=1,n=0;\nwhile(i<=50){\n if(i%7==0) n+=i;\n i++;\n}\nprintf(\"%d\",n);",
     "answer": "196",
-    "explanation": "7,14,21,28,35,42,49의 합은 196입니다.",
+    "explanation": "이 문제에서는 50 이하 7의 배수 합의 흐름을 이해하는 것이 핵심입니다. 7,14,21,28,35,42,49의 합은 196입니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
-      "7,14,21,28,35,42,49의 합은 196입니다."
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 while · 배수 · 누적합입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
+      "7,14,21,28,35,42,49의 합은 196입니다.",
+      "마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다."
     ],
     "sources": [
       {
@@ -5685,6 +5813,7 @@
     "answer": "123\n 45\n  6",
     "explanation": "첫 행은 1 2 3입니다. 둘째 행은 앞 한 칸이 비고 4 5, 셋째 행은 앞 두 칸이 비고 6입니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "첫 행의 (0,0)~(0,2)에 1,2,3이 저장됩니다.",
       "둘째 행은 (1,1),(1,2)에 4,5가 저장되고 첫 칸의 0은 공백으로 출력됩니다.",
       "셋째 행은 (2,2)에 6이 저장되고 앞의 두 0은 공백으로 출력됩니다."
@@ -5723,9 +5852,12 @@
     "question": "다음 퀵정렬 partition 코드의 (가)에 들어갈 값을 쓰세요.",
     "code": "int pivot = arr[(left + right) / (가)];",
     "answer": "2",
-    "explanation": "left와 right의 중간 인덱스를 사용하므로 2로 나눕니다.",
+    "explanation": "이 문제에서는 퀵정렬 pivot 중앙 인덱스의 흐름을 이해하는 것이 핵심입니다. left와 right의 중간 인덱스를 사용하므로 2로 나눕니다. 마지막으로 문제에서 요구한 값만 답에 적었는지 확인합니다.",
     "steps": [
-      "left와 right의 중간 인덱스를 사용하므로 2로 나눕니다."
+      "먼저 빈칸 앞뒤 코드를 읽고, 그 위치에 필요한 자료형·연산자·문법 요소가 무엇인지 확인합니다.",
+      "이 문제의 핵심 개념은 퀵정렬 · pivot · 정수 나눗셈입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
+      "left와 right의 중간 인덱스를 사용하므로 2로 나눕니다.",
+      "마지막으로 문제에서 요구한 값만 답에 적었는지 확인합니다."
     ],
     "sources": [
       {
@@ -5760,9 +5892,12 @@
     "question": "다음 재귀 함수의 (가)에 들어갈 식을 쓰세요.",
     "code": "int SumNTo1(int n){\n if(n<=1) return 1;\n else return n + (가);\n}",
     "answer": "SumNTo1(n-1)",
-    "explanation": "n보다 하나 작은 값으로 같은 함수를 재귀 호출해야 합니다.",
+    "explanation": "이 문제에서는 1부터 n까지 재귀 합의 흐름을 이해하는 것이 핵심입니다. n보다 하나 작은 값으로 같은 함수를 재귀 호출해야 합니다. 마지막으로 문제에서 요구한 값만 답에 적었는지 확인합니다.",
     "steps": [
-      "n보다 하나 작은 값으로 같은 함수를 재귀 호출해야 합니다."
+      "먼저 빈칸 앞뒤 코드를 읽고, 그 위치에 필요한 자료형·연산자·문법 요소가 무엇인지 확인합니다.",
+      "이 문제의 핵심 개념은 재귀 · 누적합입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
+      "n보다 하나 작은 값으로 같은 함수를 재귀 호출해야 합니다.",
+      "마지막으로 문제에서 요구한 값만 답에 적었는지 확인합니다."
     ],
     "sources": [
       {
@@ -5798,9 +5933,12 @@
     "question": "i=1로 시작하는 while/if 코드의 문장 커버리지 실행 순서를 쓰세요.",
     "code": "int i=1;\nwhile(i<=1){\n if(i%2==1) printf(\"%d\",i);\n i++;\n}\nreturn 0;",
     "answer": "1234526",
-    "explanation": "복원 문제에 부여된 문장 번호 순서대로 실행하면 1234526입니다.",
+    "explanation": "이 문제에서는 문장 커버리지 실행 순서의 흐름을 이해하는 것이 핵심입니다. 복원 문제에 부여된 문장 번호 순서대로 실행하면 1234526입니다. 마지막으로 문제에서 요구한 값만 답에 적었는지 확인합니다.",
     "steps": [
-      "복원 문제에 부여된 문장 번호 순서대로 실행하면 1234526입니다."
+      "먼저 문제에서 요구하는 최종 값과 주어진 초기값을 표시한 뒤, 코드가 실행되는 순서를 따라갑니다.",
+      "이 문제의 핵심 개념은 문장 커버리지 · while · if입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
+      "복원 문제에 부여된 문장 번호 순서대로 실행하면 1234526입니다.",
+      "마지막으로 문제에서 요구한 값만 답에 적었는지 확인합니다."
     ],
     "sources": [
       {
@@ -5834,6 +5972,8 @@
     "answer": "CHECK IN",
     "explanation": "허용값 검증은 CHECK 제약을 사용합니다. 목록 포함 여부는 IN을 사용합니다.",
     "steps": [
+      "먼저 빈칸 앞뒤의 SQL을 읽고, 각 빈칸이 조회·조건·그룹·정렬·변경·제약 중 어떤 역할인지 구분합니다.",
+      "이 문제의 핵심 개념은 CHECK · IN · CREATE TABLE입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "허용값 검증은 CHECK 제약을 사용합니다.",
       "목록 포함 여부는 IN을 사용합니다."
     ],
@@ -5871,9 +6011,12 @@
     "question": "현금이 없고 카드가 있을 때 버스를 출력하도록 (가)에 들어갈 키워드를 쓰세요.",
     "code": "if 'cash' in wallet:\n print('택시')\n(가)(card):\n print('버스')\nelse:\n print('도보')",
     "answer": "elif",
-    "explanation": "첫 if가 거짓일 때 추가 조건을 검사하는 키워드는 elif입니다.",
+    "explanation": "이 문제에서는 elif 빈칸의 흐름을 이해하는 것이 핵심입니다. 첫 if가 거짓일 때 추가 조건을 검사하는 키워드는 elif입니다. 마지막으로 문제에서 요구한 값만 답에 적었는지 확인합니다.",
     "steps": [
-      "첫 if가 거짓일 때 추가 조건을 검사하는 키워드는 elif입니다."
+      "먼저 빈칸 앞뒤 코드를 읽고, 그 위치에 필요한 자료형·연산자·문법 요소가 무엇인지 확인합니다.",
+      "이 문제의 핵심 개념은 if · elif · else입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
+      "첫 if가 거짓일 때 추가 조건을 검사하는 키워드는 elif입니다.",
+      "마지막으로 문제에서 요구한 값만 답에 적었는지 확인합니다."
     ],
     "sources": [
       {
@@ -5905,9 +6048,12 @@
     "question": "55에서 4를 반복해서 빼 몫과 나머지를 구하는 코드의 출력값을 쓰세요.",
     "code": "int d=55,n=4,r=d,q=0;\nwhile(r>=4){r=r-n;q++;}\nprintf(\"%d 그리고 %d\",q,r);",
     "answer": "13 그리고 3",
-    "explanation": "55=4×13+3이므로 몫 13, 나머지 3입니다.",
+    "explanation": "이 문제에서는 반복 뺄셈으로 몫과 나머지의 흐름을 이해하는 것이 핵심입니다. 55=4×13+3이므로 몫 13, 나머지 3입니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
-      "55=4×13+3이므로 몫 13, 나머지 3입니다."
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 while · 몫 · 나머지입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
+      "55=4×13+3이므로 몫 13, 나머지 3입니다.",
+      "마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다."
     ],
     "sources": [
       {
@@ -5946,8 +6092,10 @@
     "question": "다음 Java 코드의 출력값을 쓰세요.",
     "code": "int[] a={4,7,1,2};\nfor(int i=0;i<3;i++)\n for(int j=i+1;j<4;j++)\n  if(a[i]>a[j]){int t=a[j];a[j]=a[i];a[i]=t;}\nfor(int v:a) System.out.print(v+\"a\");",
     "answer": "1a2a4a7a",
-    "explanation": "배열이 1,2,4,7로 정렬됩니다. 각 값 뒤에 a가 붙습니다.",
+    "explanation": "이 문제에서는 배열 오름차순 정렬 후 구분자 출력의 흐름을 이해하는 것이 핵심입니다. 배열이 1,2,4,7로 정렬됩니다. 각 값 뒤에 a가 붙습니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 배열 · 정렬 · 중첩 반복문입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "배열이 1,2,4,7로 정렬됩니다.",
       "각 값 뒤에 a가 붙습니다."
     ],
@@ -5984,9 +6132,12 @@
     "question": "abcd를 역순으로 복사하는 C 코드의 출력값을 쓰세요.",
     "code": "char s1[5]=\"abcd\";\nchar s2[5];\nfor(int i=0;i<4;i++) s2[i]=s1[3-i];\ns2[4]='\\0';\nprintf(\"%s\",s2);",
     "answer": "dcba",
-    "explanation": "d,c,b,a 순서로 복사되어 dcba가 됩니다.",
+    "explanation": "이 문제에서는 문자열 역순 복사의 흐름을 이해하는 것이 핵심입니다. d,c,b,a 순서로 복사되어 dcba가 됩니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
-      "d,c,b,a 순서로 복사되어 dcba가 됩니다."
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 문자 배열 · 역순입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
+      "d,c,b,a 순서로 복사되어 dcba가 됩니다.",
+      "마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다."
     ],
     "sources": [
       {
@@ -6022,8 +6173,10 @@
     "question": "다음 C 코드의 출력값을 줄마다 쓰세요.",
     "code": "int a=10;\nchar b='a';\nprintf(\"%d\\n\",a);\nprintf(\"%d\\n\",b);\nprintf(\"%c\",b);",
     "answer": "10\n97\na",
-    "explanation": "문자 a의 ASCII 값은 97입니다. %c는 문자 a를 출력합니다.",
+    "explanation": "이 문제에서는 정수와 문자 코드 출력의 흐름을 이해하는 것이 핵심입니다. 문자 a의 ASCII 값은 97입니다. %c는 문자 a를 출력합니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 ASCII · char · printf입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "문자 a의 ASCII 값은 97입니다.",
       "%c는 문자 a를 출력합니다."
     ],
@@ -6060,9 +6213,12 @@
     "question": "특정 속성 값의 범위를 제한하는 SQL 제약조건을 쓰세요.",
     "code": "-- SQL 제약조건 이름",
     "answer": "CHECK",
-    "explanation": "허용 범위나 조건을 검사하는 제약조건은 CHECK입니다.",
+    "explanation": "이 문제에서는 CHECK 제약조건 이름의 흐름을 이해하는 것이 핵심입니다. 허용 범위나 조건을 검사하는 제약조건은 CHECK입니다. 마지막으로 빈칸을 앞에서부터 채워 전체 SQL 문장이 문법적으로 자연스럽게 이어지는지 확인합니다.",
     "steps": [
-      "허용 범위나 조건을 검사하는 제약조건은 CHECK입니다."
+      "먼저 빈칸 앞뒤의 SQL을 읽고, 각 빈칸이 조회·조건·그룹·정렬·변경·제약 중 어떤 역할인지 구분합니다.",
+      "이 문제의 핵심 개념은 CHECK · 도메인 무결성입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
+      "허용 범위나 조건을 검사하는 제약조건은 CHECK입니다.",
+      "마지막으로 빈칸을 앞에서부터 채워 전체 SQL 문장이 문법적으로 자연스럽게 이어지는지 확인합니다."
     ],
     "sources": [
       {
@@ -6097,9 +6253,12 @@
     "question": "다음 C 코드의 출력값을 쓰세요.",
     "code": "int result=1;\nfor(int i=1;i<=5;i++) result*=i;\nprintf(\"%d\",result);",
     "answer": "120",
-    "explanation": "1×2×3×4×5=120입니다.",
+    "explanation": "이 문제에서는 1부터 5까지 팩토리얼의 흐름을 이해하는 것이 핵심입니다. 1×2×3×4×5=120입니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
-      "1×2×3×4×5=120입니다."
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 for · 팩토리얼입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
+      "1×2×3×4×5=120입니다.",
+      "마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다."
     ],
     "sources": [
       {
@@ -6134,9 +6293,12 @@
     "question": "다음 C 코드의 출력값을 쓰세요.",
     "code": "void prin(int a){\n if(a>1) prin(a-1);\n printf(\"%d\",a);\n}\nprin(4);",
     "answer": "1234",
-    "explanation": "재귀가 1까지 내려간 뒤 반환되면서 1,2,3,4를 출력합니다.",
+    "explanation": "이 문제에서는 재귀 호출 후 오름차순 출력의 흐름을 이해하는 것이 핵심입니다. 재귀가 1까지 내려간 뒤 반환되면서 1,2,3,4를 출력합니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
-      "재귀가 1까지 내려간 뒤 반환되면서 1,2,3,4를 출력합니다."
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 재귀 · 호출 스택입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
+      "재귀가 1까지 내려간 뒤 반환되면서 1,2,3,4를 출력합니다.",
+      "마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다."
     ],
     "sources": [
       {
@@ -6174,6 +6336,8 @@
     "answer": "Berry\nApple",
     "explanation": "Apple.func가 호출됩니다. 부모 필드에는 Berry, 자식 필드에는 Apple이 저장되어 순서대로 출력됩니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 상속 · 오버라이딩 · super입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "Apple.func가 호출됩니다.",
       "부모 필드에는 Berry, 자식 필드에는 Apple이 저장되어 순서대로 출력됩니다."
     ],
@@ -6211,9 +6375,12 @@
     "question": "compare 함수에 max와 min의 주소를 전달하려면 (가),(나)에 무엇을 써야 하나요?",
     "code": "int max=0,min=0;\ncompare(3,7,(가),(나));",
     "answer": "&max &min",
-    "explanation": "포인터 매개변수에는 변수의 주소를 넘겨야 합니다.",
+    "explanation": "이 문제에서는 포인터 인자 빈칸의 흐름을 이해하는 것이 핵심입니다. 포인터 매개변수에는 변수의 주소를 넘겨야 합니다. 마지막으로 문제에서 요구한 값만 답에 적었는지 확인합니다.",
     "steps": [
-      "포인터 매개변수에는 변수의 주소를 넘겨야 합니다."
+      "먼저 빈칸 앞뒤 코드를 읽고, 그 위치에 필요한 자료형·연산자·문법 요소가 무엇인지 확인합니다.",
+      "이 문제의 핵심 개념은 포인터 · 주소 연산자 · 함수 인자입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
+      "포인터 매개변수에는 변수의 주소를 넘겨야 합니다.",
+      "마지막으로 문제에서 요구한 값만 답에 적었는지 확인합니다."
     ],
     "sources": [
       {
@@ -6249,9 +6416,12 @@
     "question": "다음 Java 코드의 출력값을 쓰세요.",
     "code": "static int a=0;\nstatic int func(int t){a=a+t;return a;}\nfor(int i=0;i<5;i++) func(i);\nSystem.out.print(a);",
     "answer": "10",
-    "explanation": "0+1+2+3+4=10입니다.",
+    "explanation": "이 문제에서는 static 누적 변수 합의 흐름을 이해하는 것이 핵심입니다. 0+1+2+3+4=10입니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
-      "0+1+2+3+4=10입니다."
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 static · for · 누적입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
+      "0+1+2+3+4=10입니다.",
+      "마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다."
     ],
     "sources": [
       {
@@ -6286,9 +6456,12 @@
     "question": "다음 Java 코드의 출력값을 쓰세요.",
     "code": "class A{int f(int a,int b){return a+b;}}\nSystem.out.print(new A().f(25,25));",
     "answer": "50",
-    "explanation": "25+25=50입니다.",
+    "explanation": "이 문제에서는 메서드 두 정수 합의 흐름을 이해하는 것이 핵심입니다. 25+25=50입니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
-      "25+25=50입니다."
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 메서드 · return입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
+      "25+25=50입니다.",
+      "마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다."
     ],
     "sources": [
       {
@@ -6324,9 +6497,12 @@
     "question": "문자열 abCDEfGh에서 대문자 개수를 출력하는 코드의 결과를 쓰세요.",
     "code": "char *str=\"abCDEfGh\";\nint count=0;\nfor(int i=0;i<strlen(str);i++)\n if(str[i]>='A'&&str[i]<='Z') count++;\nprintf(\"%d\",count);",
     "answer": "4",
-    "explanation": "대문자는 C,D,E,G 네 글자입니다.",
+    "explanation": "이 문제에서는 대문자 개수 세기의 흐름을 이해하는 것이 핵심입니다. 대문자는 C,D,E,G 네 글자입니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
-      "대문자는 C,D,E,G 네 글자입니다."
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 문자열 · 대문자 · strlen입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
+      "대문자는 C,D,E,G 네 글자입니다.",
+      "마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다."
     ],
     "sources": [
       {
@@ -6362,9 +6538,12 @@
     "question": "다음 Java 코드의 출력값을 쓰세요.",
     "code": "int[] a={1,2,3,4,5,6};\nint sum=0;\nfor(int v:a) sum+=v;\nSystem.out.print(sum);",
     "answer": "21",
-    "explanation": "1부터 6까지 합은 21입니다.",
+    "explanation": "이 문제에서는 향상된 for문 배열 합의 흐름을 이해하는 것이 핵심입니다. 1부터 6까지 합은 21입니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
-      "1부터 6까지 합은 21입니다."
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 배열 · 향상된 for · 누적합입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
+      "1부터 6까지 합은 21입니다.",
+      "마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다."
     ],
     "sources": [
       {
@@ -6403,6 +6582,8 @@
     "answer": "AND HAVING VALUES",
     "explanation": "BETWEEN 범위와 추가 조건 연결에 AND가 사용됩니다. 그룹 조건은 HAVING, 삽입 값은 VALUES입니다.",
     "steps": [
+      "먼저 빈칸 앞뒤의 SQL을 읽고, 각 빈칸이 조회·조건·그룹·정렬·변경·제약 중 어떤 역할인지 구분합니다.",
+      "이 문제의 핵심 개념은 BETWEEN · AND · HAVING입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "BETWEEN 범위와 추가 조건 연결에 AND가 사용됩니다.",
       "그룹 조건은 HAVING, 삽입 값은 VALUES입니다."
     ],
@@ -6442,6 +6623,8 @@
     "answer": "AND DISTINCT IN",
     "explanation": "두 조건 연결은 AND입니다. 중복 제거는 DISTINCT, 목록 조건은 IN입니다.",
     "steps": [
+      "먼저 빈칸 앞뒤의 SQL을 읽고, 각 빈칸이 조회·조건·그룹·정렬·변경·제약 중 어떤 역할인지 구분합니다.",
+      "이 문제의 핵심 개념은 AND · DISTINCT · IN입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "두 조건 연결은 AND입니다.",
       "중복 제거는 DISTINCT, 목록 조건은 IN입니다."
     ],
@@ -6481,6 +6664,8 @@
     "answer": "duckcnt pigcnt",
     "explanation": "돼지 수는 전체 수에서 오리 수를 빼 구합니다. 4를 곱할 변수는 pigcnt입니다.",
     "steps": [
+      "먼저 빈칸 앞뒤 코드를 읽고, 그 위치에 필요한 자료형·연산자·문법 요소가 무엇인지 확인합니다.",
+      "이 문제의 핵심 개념은 for · 연립 조건 · 변수입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "돼지 수는 전체 수에서 오리 수를 빼 구합니다.",
       "4를 곱할 변수는 pigcnt입니다."
     ],
@@ -6517,8 +6702,10 @@
     "question": "학생수가 30명 이하인 학과를 조회하는 SQL의 (가),(나)를 순서대로 쓰세요.",
     "code": "SELECT (가) FROM 학생 WHERE (나);",
     "answer": "학과 학생수<=30",
-    "explanation": "조회 열은 학과입니다. 조건은 학생수<=30입니다.",
+    "explanation": "이 문제에서는 학생 수 조건 SELECT 빈칸의 흐름을 이해하는 것이 핵심입니다. 조회 열은 학과입니다. 조건은 학생수<=30입니다. 마지막으로 빈칸을 앞에서부터 채워 전체 SQL 문장이 문법적으로 자연스럽게 이어지는지 확인합니다.",
     "steps": [
+      "먼저 빈칸 앞뒤의 SQL을 읽고, 각 빈칸이 조회·조건·그룹·정렬·변경·제약 중 어떤 역할인지 구분합니다.",
+      "이 문제의 핵심 개념은 SELECT · WHERE입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "조회 열은 학과입니다.",
       "조건은 학생수<=30입니다."
     ],
@@ -6554,6 +6741,7 @@
     "answer": "2번 출력 :tset\n1번 출력 :gnirts",
     "explanation": "두 번째 입력 test를 먼저 뒤집어 tset을 출력합니다. 그 다음 string을 뒤집어 gnirts를 출력합니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "n=2이므로 먼저 두 번째 입력 문자열 test를 선택합니다.",
       "각 문자열은 마지막 문자부터 첫 문자까지 역순으로 출력합니다.",
       "첫 줄 뒤에는 n이 1이 되어 첫 번째 입력 string을 같은 방식으로 출력합니다."
@@ -6596,6 +6784,8 @@
     "answer": "334",
     "explanation": "333에서 999%333이 0이 됩니다. 그 직후 i가 334로 증가된 상태로 출력됩니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 do-while · 나머지입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "333에서 999%333이 0이 됩니다.",
       "그 직후 i가 334로 증가된 상태로 출력됩니다."
     ],
@@ -6634,9 +6824,12 @@
     "question": "다음 UPDATE 문의 (가),(나)에 들어갈 키워드를 순서대로 쓰세요.",
     "code": "UPDATE 고객계좌 (가) 등급='우대고객' (나) 잔고 BETWEEN 1000000 AND 3000000;",
     "answer": "SET WHERE",
-    "explanation": "변경값 지정은 SET, 대상 조건은 WHERE입니다.",
+    "explanation": "이 문제에서는 UPDATE SET WHERE 빈칸의 흐름을 이해하는 것이 핵심입니다. 변경값 지정은 SET, 대상 조건은 WHERE입니다. 마지막으로 빈칸을 앞에서부터 채워 전체 SQL 문장이 문법적으로 자연스럽게 이어지는지 확인합니다.",
     "steps": [
-      "변경값 지정은 SET, 대상 조건은 WHERE입니다."
+      "먼저 빈칸 앞뒤의 SQL을 읽고, 각 빈칸이 조회·조건·그룹·정렬·변경·제약 중 어떤 역할인지 구분합니다.",
+      "이 문제의 핵심 개념은 UPDATE · SET · WHERE입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
+      "변경값 지정은 SET, 대상 조건은 WHERE입니다.",
+      "마지막으로 빈칸을 앞에서부터 채워 전체 SQL 문장이 문법적으로 자연스럽게 이어지는지 확인합니다."
     ],
     "sources": [
       {
@@ -6674,6 +6867,8 @@
     "answer": "1025",
     "explanation": "메서드 안에서 먼저 10이 출력됩니다. 반환값 25를 바깥 print가 이어서 출력해 1025입니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 메서드 · return · 출력 순서입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "메서드 안에서 먼저 10이 출력됩니다.",
       "반환값 25를 바깥 print가 이어서 출력해 1025입니다."
     ],
@@ -6710,8 +6905,10 @@
     "question": "다음 C 코드의 출력값을 쓰세요.",
     "code": "int n1=11,n2=0;\nint *p=&n1;\nn2=*p+n1;\nprintf(\"%d\",*p-n1+n2);",
     "answer": "22",
-    "explanation": "n2=22입니다. 11-11+22=22입니다.",
+    "explanation": "이 문제에서는 포인터 역참조 산술의 흐름을 이해하는 것이 핵심입니다. n2=22입니다. 11-11+22=22입니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 포인터 · 역참조입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "n2=22입니다.",
       "11-11+22=22입니다."
     ],
@@ -6749,8 +6946,10 @@
     "question": "전기과 50명, 전산과 100명, 전자과 50명이 있을 때 세 SQL의 결과 개수를 순서대로 쓰세요.",
     "code": "SELECT DEPT FROM STUDENT;\nSELECT DISTINCT DEPT FROM STUDENT;\nSELECT COUNT(DISTINCT DEPT) FROM STUDENT WHERE DEPT='전산과';",
     "answer": "200 3 1",
-    "explanation": "전체 행은 200입니다. 학과 종류는 3개, 전산과 조건에서는 1개입니다.",
+    "explanation": "이 문제에서는 SELECT·DISTINCT·COUNT DISTINCT 결과의 흐름을 이해하는 것이 핵심입니다. 전체 행은 200입니다. 학과 종류는 3개, 전산과 조건에서는 1개입니다. 마지막으로 SELECT에 남는 열과 ORDER BY의 정렬 순서를 확인하고, 결과를 문제에서 요구한 형식으로 옮깁니다.",
     "steps": [
+      "먼저 주어진 테이블과 SQL을 따로 보고, FROM의 원본 행에서 시작해 조건과 집계가 적용될 때마다 남는 행을 적습니다.",
+      "이 문제의 핵심 개념은 SELECT · DISTINCT · COUNT입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
       "전체 행은 200입니다.",
       "학과 종류는 3개, 전산과 조건에서는 1개입니다."
     ],
@@ -6791,9 +6990,12 @@
     "question": "다음 SQL의 세 빈칸을 순서대로 쓰세요.",
     "code": "INSERT (1) 사원(이름,부서,주소) (2) ('윤정희','영업부','마포구');\nUPDATE 사원 (3) 부서='기획부' WHERE 이름='임선호';",
     "answer": "INTO VALUES SET",
-    "explanation": "INSERT INTO, VALUES, UPDATE SET 구문을 사용합니다.",
+    "explanation": "이 문제에서는 INSERT·VALUES·SET 빈칸의 흐름을 이해하는 것이 핵심입니다. INSERT INTO, VALUES, UPDATE SET 구문을 사용합니다. 마지막으로 빈칸을 앞에서부터 채워 전체 SQL 문장이 문법적으로 자연스럽게 이어지는지 확인합니다.",
     "steps": [
-      "INSERT INTO, VALUES, UPDATE SET 구문을 사용합니다."
+      "먼저 빈칸 앞뒤의 SQL을 읽고, 각 빈칸이 조회·조건·그룹·정렬·변경·제약 중 어떤 역할인지 구분합니다.",
+      "이 문제의 핵심 개념은 INSERT INTO · VALUES · UPDATE SET입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
+      "INSERT INTO, VALUES, UPDATE SET 구문을 사용합니다.",
+      "마지막으로 빈칸을 앞에서부터 채워 전체 SQL 문장이 문법적으로 자연스럽게 이어지는지 확인합니다."
     ],
     "sources": [
       {
@@ -6832,7 +7034,10 @@
     "answer": "AND ASC NOT",
     "explanation": "두 조건은 AND, 오름차순은 ASC, '김'으로 시작하지 않음은 NOT LIKE입니다.",
     "steps": [
-      "두 조건은 AND, 오름차순은 ASC, '김'으로 시작하지 않음은 NOT LIKE입니다."
+      "먼저 빈칸 앞뒤의 SQL을 읽고, 각 빈칸이 조회·조건·그룹·정렬·변경·제약 중 어떤 역할인지 구분합니다.",
+      "이 문제의 핵심 개념은 AND · ORDER BY · ASC입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
+      "두 조건은 AND, 오름차순은 ASC, '김'으로 시작하지 않음은 NOT LIKE입니다.",
+      "마지막으로 빈칸을 앞에서부터 채워 전체 SQL 문장이 문법적으로 자연스럽게 이어지는지 확인합니다."
     ],
     "sources": [
       {
@@ -6868,9 +7073,12 @@
     "question": "다음 Python 코드의 출력값을 쓰세요.",
     "code": "x=[1,-1,0,1,-1]\nfor n in x:\n if n==-1: continue\n print(n,end=\"\")",
     "answer": "101",
-    "explanation": "-1은 모두 건너뛰고 1,0,1만 이어서 출력합니다.",
+    "explanation": "이 문제에서는 continue로 -1 제외 출력의 흐름을 이해하는 것이 핵심입니다. -1은 모두 건너뛰고 1,0,1만 이어서 출력합니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
-      "-1은 모두 건너뛰고 1,0,1만 이어서 출력합니다."
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
+      "이 문제의 핵심 개념은 for · continue · 리스트입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
+      "-1은 모두 건너뛰고 1,0,1만 이어서 출력합니다.",
+      "마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다."
     ],
     "sources": [
       {
@@ -6906,8 +7114,9 @@
     "question": "다음 C 코드의 정렬 후 출력 결과를 쓰세요.",
     "code": "#include <stdio.h>\n\nint main(void) {\n    int a[5] = {3, 4, 5, 10, 2};\n    int *p = a;\n    for (int i = 0; i < 5; i++) {\n        for (int j = i + 1; j < 5; j++) {\n            if (*(p + i) > *(p + j)) {\n                int temp = *(p + i);\n                *(p + i) = *(p + j);\n                *(p + j) = temp;\n            }\n        }\n        printf(\"%d \", *(p + i));\n    }\n    return 0;\n}",
     "answer": "2 3 4 5 10",
-    "explanation": "오름차순으로 정렬되어 2 3 4 5 10이 됩니다.",
+    "explanation": "이 문제에서는 포인터로 선택 정렬의 흐름을 이해하는 것이 핵심입니다. i=0에서 가장 작은 2가 첫 위치로 이동해 먼저 출력됩니다. 이후 각 바깥 반복이 남은 구간의 최솟값을 현재 위치로 옮깁니다. 각 단계 출력은 2, 3, 4, 5, 10 순서가 됩니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "i=0에서 가장 작은 2가 첫 위치로 이동해 먼저 출력됩니다.",
       "이후 각 바깥 반복이 남은 구간의 최솟값을 현재 위치로 옮깁니다.",
       "각 단계 출력은 2, 3, 4, 5, 10 순서가 됩니다."
@@ -6948,6 +7157,7 @@
     "answer": "8",
     "explanation": "isInt가 1이므로 intV 분기가 실행됩니다. 이 복원 코드에서 floatV의 실제 선언형도 int이므로 초기값 3.5는 정수 3으로 변환되어 저장됩니다. 따라서 5와 3을 더한 8이 출력됩니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "isInt=1이므로 func의 intV 덧셈 분기를 실행합니다.",
       "n1.intV는 5이고, int형인 n2.floatV에 3.5를 초기화하면 3으로 변환됩니다.",
       "union 저장공간을 intV로 읽어 5+3을 계산하므로 8이 출력됩니다."
@@ -6985,9 +7195,12 @@
     "question": "두 테이블의 학과코드가 같은 튜플을 JOIN할 때 빈칸 키워드를 쓰세요.",
     "code": "SELECT 학번,이름,학생.학과코드,학과명\nFROM 학생 JOIN 학과\n(가)(학과코드);",
     "answer": "USING",
-    "explanation": "동일 이름 열을 기준으로 조인할 때 USING(학과코드)를 사용할 수 있습니다.",
+    "explanation": "이 문제에서는 JOIN USING 빈칸의 흐름을 이해하는 것이 핵심입니다. 동일 이름 열을 기준으로 조인할 때 USING(학과코드)를 사용할 수 있습니다. 마지막으로 빈칸을 앞에서부터 채워 전체 SQL 문장이 문법적으로 자연스럽게 이어지는지 확인합니다.",
     "steps": [
-      "동일 이름 열을 기준으로 조인할 때 USING(학과코드)를 사용할 수 있습니다."
+      "먼저 빈칸 앞뒤의 SQL을 읽고, 각 빈칸이 조회·조건·그룹·정렬·변경·제약 중 어떤 역할인지 구분합니다.",
+      "이 문제의 핵심 개념은 JOIN · USING입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
+      "동일 이름 열을 기준으로 조인할 때 USING(학과코드)를 사용할 수 있습니다.",
+      "마지막으로 빈칸을 앞에서부터 채워 전체 SQL 문장이 문법적으로 자연스럽게 이어지는지 확인합니다."
     ],
     "sources": [
       {
@@ -7023,8 +7236,9 @@
     "question": "1,2,3,4,5 배열을 양끝부터 교환해 뒤집은 뒤 arr[2]를 출력하면 무엇인가요?",
     "code": "#include <stdio.h>\n\nvoid swap(int *a, int *b) {\n    int temp = *a;\n    *a = *b;\n    *b = temp;\n}\n\nvoid reverse(int *arr, int n) {\n    int *left = &arr[0];\n    int *right = &arr[n - 1];\n    while (left < right) {\n        swap(left, right);\n        left++;\n        right--;\n    }\n}\n\nint main(void) {\n    int arr[] = {1, 2, 3, 4, 5};\n    reverse(arr, 5);\n    printf(\"%d\", arr[2]);\n    return 0;\n}",
     "answer": "3",
-    "explanation": "역순 배열은 5,4,3,2,1이고 가운데 값은 3입니다.",
+    "explanation": "이 문제에서는 배열 뒤집기 후 가운데 값의 흐름을 이해하는 것이 핵심입니다. 1과 5, 이어서 2와 4가 서로 교환됩니다. 배열은 5,4,3,2,1이 됩니다. 가운데 인덱스 2의 값은 그대로 3이므로 3이 출력됩니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "1과 5, 이어서 2와 4가 서로 교환됩니다.",
       "배열은 5,4,3,2,1이 됩니다.",
       "가운데 인덱스 2의 값은 그대로 3이므로 3이 출력됩니다."
@@ -7062,8 +7276,9 @@
     "question": "n=3일 때 다음 재귀 함수가 반환하는 값을 쓰세요.",
     "code": "#include <stdio.h>\n\nint move_count(int n, int from, int to, int temp) {\n    if (n == 0) return 0;\n    return move_count(n - 1, from, temp, to) + 1\n         + move_count(n - 1, temp, to, from);\n}\n\nint main(void) {\n    int n = 3;\n    printf(\"%d\", move_count(n, 3, 2, 1));\n    return 0;\n}",
     "answer": "7",
-    "explanation": "점화식은 T(n)=2T(n-1)+1입니다. T(3)=7입니다.",
+    "explanation": "이 문제에서는 하노이 이동 횟수 재귀 계산의 흐름을 이해하는 것이 핵심입니다. n=0이면 0을 반환합니다. 각 단계는 이전 단계의 반환값을 두 번 더하고 1을 추가하므로 T(n)=2T(n-1)+1입니다. T(1)=1, T(2)=3, T(3)=7이므로 7이 출력됩니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "n=0이면 0을 반환합니다.",
       "각 단계는 이전 단계의 반환값을 두 번 더하고 1을 추가하므로 T(n)=2T(n-1)+1입니다.",
       "T(1)=1, T(2)=3, T(3)=7이므로 7이 출력됩니다."
@@ -7102,8 +7317,9 @@
     "question": "다음 C 코드의 출력값을 쓰세요.",
     "code": "#include <stdio.h>\n\nvoid transform(int **arr, int size) {\n    for (int i = 0; i < size; i++)\n        *(*arr + i) = (*(*arr + i) + i) % size;\n}\n\nint main(void) {\n    int arr[] = {3, 1, 4, 1, 5};\n    int *p = arr;\n    int **pp = &p;\n    transform(pp, 5);\n    printf(\"%d\", arr[2]);\n    return 0;\n}",
     "answer": "1",
-    "explanation": "arr[2]=(4+2)%5=1입니다.",
+    "explanation": "이 문제에서는 이중 포인터 배열 변환의 흐름을 이해하는 것이 핵심입니다. **pp를 통해 p가 가리키는 arr의 각 원소를 차례로 수정합니다. 인덱스 2에서는 (4+2)%5를 계산합니다. 그 값이 1이므로 arr[2]에는 1이 저장되어 출력됩니다. 마지막으로 출력문을 다시 보고 공백·줄바꿈·대소문자·숫자 형식까지 정답과 맞는지 확인합니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "**pp를 통해 p가 가리키는 arr의 각 원소를 차례로 수정합니다.",
       "인덱스 2에서는 (4+2)%5를 계산합니다.",
       "그 값이 1이므로 arr[2]에는 1이 저장되어 출력됩니다."
@@ -7144,6 +7360,7 @@
     "answer": "none",
     "explanation": "grade 키가 딕셔너리에 없으므로 get의 두 번째 인수로 지정한 기본값 none이 반환됩니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "딕셔너리에는 name, phone, birth 키만 있습니다.",
       "grade 키는 존재하지 않습니다.",
       "get(key, default)는 키가 없으면 default를 반환하므로 none이 출력됩니다."
@@ -7186,8 +7403,9 @@
       "check",
       "Check"
     ],
-    "explanation": "특정 열의 허용값을 조건식으로 제한할 때 CHECK 제약조건을 사용합니다.",
+    "explanation": "이 문제에서는 CHECK 제약조건으로 성별 허용값 제한의 흐름을 이해하는 것이 핵심입니다. const_gd는 제약조건 이름입니다. gender 값은 m 또는 f 중 하나여야 합니다. 조건식 검증 제약조건은 CHECK이므로 빈칸은 CHECK입니다. 마지막으로 빈칸을 앞에서부터 채워 전체 SQL 문장이 문법적으로 자연스럽게 이어지는지 확인합니다.",
     "steps": [
+      "먼저 빈칸 앞뒤의 SQL을 읽고, 각 빈칸이 조회·조건·그룹·정렬·변경·제약 중 어떤 역할인지 구분합니다.",
       "const_gd는 제약조건 이름입니다.",
       "gender 값은 m 또는 f 중 하나여야 합니다.",
       "조건식 검증 제약조건은 CHECK이므로 빈칸은 CHECK입니다."
@@ -7227,6 +7445,7 @@
     "answer": "3",
     "explanation": "p는 배열의 두 번째 원소 2를 가리키고 p-1은 첫 번째 원소 1을 가리키므로 합은 3입니다.",
     "steps": [
+      "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "k+1은 k[1]의 주소이므로 *p는 2입니다.",
       "p-1은 k[0]을 가리키므로 *(p-1)은 1입니다.",
       "2+1=3입니다."
