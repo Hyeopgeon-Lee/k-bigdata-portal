@@ -2,7 +2,7 @@ import {loadPracticalBank} from "./practical-data.js?v=20261005-browser-1";
 import {HINT_SECONDS,ANSWER_SECONDS,examLabels,typeLabels,languages,escapeHTML as esc,remainingSeconds,remainingAnswerSeconds,hintAvailable,answerDeadlineReached,canSubmit,canReveal,gradeAnswer,questionText,shuffle,recommendFive,matchesExam,localDay,summarizeAttempts,highlightCode,formatCodeForDisplay} from "./practical-core.js?v=20261005-browser-1";
 import {getAttempts,saveAttempt,getSession,saveSession,clearLocalLearning,storageAvailable,getPreferences,savePreferences,exportLearning,importLearning} from "./practical-store.js";
 import {matches} from "./search-core.js?v=20261005-perf-1";
-import {beginnerSteps,beginnerExplanation,examMemory,lineByLineExplanation} from "./practical-explanation.js?v=20261005-clean-2";
+import {beginnerSteps,beginnerExplanation,examMemory,lineByLineExplanation} from "./practical-explanation.js?v=20261005-solution-1";
 
 const $=selector=>document.querySelector(selector),root=$("#bank-content"),status=$("#bank-status");
 let bank=[],view="home",current=null,attempt=null,timer=null,queue=[],queueIndex=0,aliases={},pageLimit=24,queueKind="random",solveActionsObserver=null;
@@ -320,8 +320,7 @@ function revealAnswer(reason="resume",now=Date.now()){
  const extraExplanation=beginnerExplanation(q);
  const steps=beginnerSteps(q);
  const lineNotes=lineByLineExplanation(q,displayCode(q));
- const commentMark=q.language==="Python"?"#":q.language==="SQL"?"--":"//";
- const lineByLine=lineNotes.length?'<section class="beginner-section beginner-line-by-line"><p class="beginner-kicker">1 · 코드 한 줄씩 해석</p><p class="line-guide">코드를 위에서 아래로 한 줄씩 읽습니다. 각 줄 아래 주석은 그 줄이 실제로 하는 일을 설명합니다.</p><div class="line-explanation-list">'+lineNotes.map(item=>'<div class="line-explanation-row"><div class="line-code"><span class="line-no" aria-hidden="true">'+item.line+'</span><code>'+highlightCode(item.code)+'</code></div><p class="line-comment"><span aria-hidden="true">'+esc(commentMark)+'</span> '+esc(item.explanation)+'</p></div>').join("")+'</div></section>':'';
+ const lineByLine=lineNotes.length?'<section class="beginner-section beginner-line-by-line"><p class="beginner-kicker">1 · 코드 한 줄씩 값으로 이해하기</p><p class="line-guide">문법 이름만 외우지 않고, 이 문제에서 실제로 어떤 값이 들어가고 어떻게 바뀌는지 함께 확인합니다.</p><div class="line-explanation-list">'+lineNotes.map(item=>'<div class="line-explanation-row"><div class="line-code"><span class="line-no" aria-hidden="true">'+item.line+'</span><code>'+highlightCode(item.code)+'</code></div><div class="line-detail"><p class="line-action"><strong>이 줄에서 하는 일</strong><span>'+esc(item.explanation)+'</span></p><p class="line-trace"><strong>값 추적</strong><span>'+esc(item.trace)+'</span></p></div></div>').join("")+'</div></section>':'';
  const sourceDetails=q.history.length||q.sources.length?'<details class="bank-sources"><summary>출제 이력 · 출처</summary>'+(q.history.length?'<ul>'+q.history.map(h=>'<li>'+esc(historyLabel(h))+'</li>').join("")+'</ul>':'')+(q.sources.length?'<ul>'+q.sources.map(s=>'<li><a href="'+esc(s.url)+'" target="_blank" rel="noopener noreferrer">'+esc(s.name==="데이터셋 참고 출처 (문항·회차 일치 미검증)"?"학습 자료":s.name)+' ↗<span class="sr-only"> 외부 자료, 새 창</span></a></li>').join("")+'</ul>':'')+'</details>':'';
  const resultTitle=attempt.autoRevealed?ANSWER_SECONDS+"초가 지나 정답을 공개했습니다":attempt.correct===true?'정답입니다':attempt.correct===false?'오답입니다 · 오답노트에 저장했습니다':'예시 답안과 직접 비교하세요';
  const learnerLabel=attempt.autoRevealed?ANSWER_SECONDS+"초 시점 작성 중인 답":'내 답';
@@ -332,7 +331,7 @@ function revealAnswer(reason="resume",now=Date.now()){
    +lineByLine
    +'<section class="beginner-section"><p class="beginner-kicker">'+stepNo+' · 실행 흐름 따라가기</p><ol class="bank-steps">'+steps.map(step=>'<li>'+esc(step)+'</li>').join("")+'</ol></section>'
    +'<section class="beginner-section beginner-why"><p class="beginner-kicker">'+whyNo+' · 왜 이 답인가?</p><p class="beginner-explanation">'+esc(extraExplanation)+'</p></section>'
-   +'<section class="beginner-section beginner-memory"><p class="beginner-kicker">'+memoryNo+' · 시험에서 기억할 것</p><p>'+esc(examMemory(q))+'</p></section>'
+   +'<section class="beginner-section beginner-memory"><p class="beginner-kicker">'+memoryNo+' · 시험에서 꼭 기억할 것</p><p>'+esc(examMemory(q))+'</p></section>'
    +'</div>';
  $("#answer-result").innerHTML='<section class="bank-result"><h3 tabindex="-1" id="result-heading">'+esc(resultTitle)+'</h3>'+(attempt.autoRevealed?'<p class="timeout-note">권장 풀이 시간이 끝나 자동으로 정답과 풀이를 공개했습니다. 이 시도는 정답률에 포함하지 않습니다.</p>':'')+'<div class="answer-pair"><div><h4>'+esc(learnerLabel)+'</h4><pre>'+esc(learnerAnswer)+'</pre></div><div><h4>'+(q.grading==="self"?'예시 정답':'정답')+'</h4><pre>'+esc(q.answer)+'</pre></div></div>'+selfJudge+learningGuide+'<div class="practice-actions">'+button("retry","다시 풀기")+similar.slice(0,3).map(s=>button("similar","비슷한 문제",'data-id="'+esc(s.id)+'" aria-label="'+esc(s.title)+' 비슷한 문제"')).join("")+'</div>'+sourceDetails+'</section>';
  updateGate();
