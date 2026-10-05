@@ -23,8 +23,6 @@ export function initPortalUX(){
  const page=document.body.dataset.page,params=new URLSearchParams(location.search),id=params.get("id");
  for(const nav of document.querySelectorAll("[data-learning-nav]")){
   nav.innerHTML=learningLinks.map(item=>{const service=services.find(s=>s.id===item.id);return '<a href="'+esc(service.url)+'"'+(location.pathname.endsWith(service.url)?' aria-current="page"':'')+'>'+esc(item.label)+'</a>';}).join('');
-  // Practice focus keeps its compact app header, with navigation available below home content.
-  if(document.body.classList.contains("practical-page"))document.querySelector(".bank-disclaimer")?.before(nav);
  }
  if(!document.querySelector(".interview-home-link")&&!document.body.classList.contains("practical-page")){
   const home=document.createElement("a");home.href="index.html";home.className="portal-mobile-home";home.textContent="포털 홈";document.querySelector(".menu-toggle")?.before(home);
