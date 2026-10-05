@@ -59,13 +59,13 @@ pass('restored industrial code flows remain complete',()=>{
  const must={
   'R-IND-C-0001':['main(','scanf(','printf('],
   'R-IND-C-0007':['check(','main(','printf('],
-  'R-IND-JAVA-0006':['static void main','static void data','static void print'],
+  'R-IND-JAVA-0006':['static void main','static void data','static void prnt'],
   'R-IND-C-0021':['main(','malloc(','free('],
   'R-IND-C-0024':['main(','printf('],
   'R-IND-C-0025':['void func','func(&a)','printf('],
-  'R-IND-C-0026':['void reverse','reverse(arr, 5)','printf('],
-  'R-IND-C-0027':['move_count','main(','printf('],
-  'R-IND-C-0028':['transform(','main(','printf(']
+  'R-IND-C-0026':['void func','func(arr, 5)','printf('],
+  'R-IND-C-0027':['factorial','main(','printf('],
+  'R-IND-C-0028':['void func','num = arr[2]','printf(']
  };
  for(const [id,tokens] of Object.entries(must)){const q=questions.find(x=>x.id===id);assert.ok(q,id);for(const token of tokens)assert.ok(q.code.includes(token),id+' '+token);}
 });

@@ -1533,7 +1533,7 @@
       "컴파일 시점 타입"
     ],
     "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
-    "code": "class Printer {\n    void print(Integer v){ System.out.print(\"A\"+v); }\n    void print(Object v){ System.out.print(\"B\"+v); }\n    void print(Number v){ System.out.print(\"C\"+v); }\n}\nclass Box<T> {\n    T value;\n    Box(T value){ this.value=value; }\n    void show(){ new Printer().print(value); }\n}\npublic class Main {\n    public static void main(String[] args){ new Box<>(0).show(); }\n}",
+    "code": "class Printer {\n    void print(Integer a) {\n        System.out.print(\"A\" + a);\n    }\n    void print(Object a) {\n        System.out.print(\"B\" + a);\n    }\n    void print(Number a) {\n        System.out.print(\"C\" + a);\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        new Collection<>(0).print();\n    }\n\n    public static class Collection<T> {\n        T value;\n        public Collection(T t) {\n            value = t;\n        }\n        public void print() {\n            new Printer().print(value);\n        }\n    }\n}",
     "answer": "B0",
     "sources": [
       {
@@ -1547,13 +1547,17 @@
       {
         "name": "GrandLife · 2024년 3회 교차정리",
         "url": "https://grandlife.co.kr/2024-info-processing-practical-3/"
+      },
+      {
+        "name": "잡코딩 · 산업기사 2024-3 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/208"
       }
     ],
-    "verificationNote": "복수 복원자료에서 Integer/Object/Number 오버로드, 제네릭 값 0과 정답 B0가 일치합니다. 제네릭 클래스명만 정규화했습니다.",
+    "verificationNote": "복수 복원자료에서 Integer/Object/Number 오버로드, 제네릭 값 0과 정답 B0가 일치합니다. 제네릭 클래스명만 정규화했습니다. 2026-10-06 전수 대조에서 원 복원자료의 지문·코드/SQL·빈칸 위치·정답을 재확인하고, 풀이 가능성을 해치던 축약 또는 구조 변경을 원문 의미에 맞게 보정했습니다.",
     "grading": "exact",
-    "hint": "후보 메서드 print(Integer v), print(Object v), print(Number v), show()를 나란히 적고, 호출식에 전달되는 인자의 컴파일 시점 타입과 가장 정확히 맞는 매개변수 조합을 선택하세요.",
+    "hint": "Collection<Integer>로 생성되더라도 제네릭 T는 타입 소거 시 상한 Object로 취급됩니다. Collection.print() 안에서 value의 컴파일 시 타입이 무엇인지 확인한 뒤 Printer의 오버로드를 선택하세요.",
     "solution": {
-      "summary": "제네릭 T는 타입 소거 후 Object로 다뤄져 print(Object)가 선택됩니다.",
+      "summary": "Collection<T>의 T는 별도 상한이 없으므로 타입 소거 후 Object로 취급됩니다. 따라서 new Printer().print(value)는 print(Object)를 선택하고 B0를 출력합니다.",
       "flow": [
         "초기 변수·배열·객체 상태와 핵심 조건을 확인합니다.",
         "조건식·반복문·함수 호출을 실제 실행되는 순서대로 따라갑니다.",
@@ -1561,10 +1565,10 @@
       ],
       "traceTitle": "실행 순서와 값 변화",
       "trace": [
-        "시작 상태: new Box<>(0)이 생성되어 Box의 value에 정수값 0이 저장됩니다.",
-        "Box<Integer>로 생성되지만 타입 소거 후 T의 상한은 Object이므로 show()에서 value의 컴파일 시 타입은 Object입니다.",
-        "new Printer().print(value)에서 오버로딩은 컴파일 시 타입으로 결정되므로 print(Object)가 선택됩니다.",
-        "print(Object)의 매개변수 v에는 현재 값 0이 전달되고 System.out.print(\"B\"+v)가 B0를 만듭니다.",
+        "시작 상태: new Collection<>(0)으로 Collection<Integer> 객체를 만들고 value에 0을 저장합니다.",
+        "Collection<T>의 T는 별도 상한이 없으므로 타입 소거 후 Object로 취급됩니다.",
+        "Collection.print()에서 value의 컴파일 시 타입은 Object이므로 Printer.print(Object)가 선택됩니다.",
+        "print(Object)의 인자 값은 0이므로 \"B\"+0인 B0를 출력합니다.",
         "최종 출력: B0"
       ]
     }
@@ -6321,7 +6325,7 @@
       "GROUP BY",
       "HAVING"
     ],
-    "question": "다음 SQL의 (가),(나)에 들어갈 집계 함수를 순서대로 쓰세요.",
+    "question": "Students 테이블에서 학생 수가 5명 이상인 과목에 대해 과목코드와 중간고사 평균을 조회하려고 합니다. 다음 SQL의 (가), (나)에 들어갈 집계 함수를 순서대로 쓰세요.",
     "code": "SELECT sub_Code AS 과목코드, (가)(mid) AS 중간평균\nFROM Students\nGROUP BY sub_Code\nHAVING (나)(*) >= 5;",
     "answer": "AVG COUNT",
     "sources": [
@@ -6334,15 +6338,15 @@
         "url": "https://allen8524.tistory.com/92"
       }
     ],
-    "verificationNote": "산업기사 2022-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
+    "verificationNote": "산업기사 2022-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격. 2026-10-06 전수 대조에서 원 복원자료의 지문·코드/SQL·빈칸 위치·정답을 재확인하고, 풀이 가능성을 해치던 축약 또는 구조 변경을 원문 의미에 맞게 보정했습니다.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-06",
     "grading": "sql_keywords",
     "acceptedAnswers": [],
-    "hint": "각 빈칸이 SQL의 어느 역할(조회 열·대상 테이블·행 조건·그룹 조건·정렬·변경값)에 해당하는지 먼저 정하세요. 현재 보이는 SELECT, FROM, GROUP BY, HAVING 절의 순서를 기준으로 빠진 절을 찾으세요.",
+    "hint": "SELECT의 (가)는 mid의 평균을 계산해야 하고, HAVING의 (나)는 각 과목 그룹의 학생 수가 5명 이상인지 세어야 합니다. 평균과 행 수를 구하는 집계 함수를 각각 찾으세요.",
     "solution": {
-      "summary": "평균은 AVG(mid)입니다. 따라서 빈칸에 들어갈 정답은 AVG COUNT입니다.",
+      "summary": "과목별 중간고사 평균은 AVG(mid)로 계산하고, 학생 수가 5명 이상인지 확인하려면 HAVING COUNT(*) >= 5를 사용합니다. 정답은 AVG COUNT입니다.",
       "flow": [
         "빈칸 앞뒤 SQL 절을 읽어 빈칸의 역할을 결정합니다.",
         "해당 위치에 올 수 있는 SQL 키워드·열·조건식을 문제 요구사항과 대조합니다.",
@@ -6350,9 +6354,9 @@
       ],
       "traceTitle": "SQL 빈칸 판단 과정",
       "trace": [
-        "빈칸 위치: SELECT sub_Code AS 과목코드, (가)(mid) AS 중간평균",
-        "평균은 AVG(mid)입니다.",
-        "행 수는 COUNT(*)로 셉니다.",
+        "SELECT의 (가)는 mid의 평균을 계산해야 하므로 AVG가 들어갑니다.",
+        "GROUP BY sub_Code로 과목별 그룹을 만든 뒤 학생 수를 세어야 하므로 HAVING의 (나)는 COUNT입니다.",
+        "완성 SQL의 핵심은 AVG(mid)와 COUNT(*) >= 5입니다.",
         "완성 답: AVG COUNT"
       ]
     }
@@ -6527,6 +6531,10 @@
       {
         "name": "Logic & Coffee · 정보처리산업기사 실기 Java 기출문제 정리",
         "url": "https://allen8524.tistory.com/90"
+      },
+      {
+        "name": "잡코딩 · 산업기사 2024-3 복원자료",
+        "url": "https://complainrevolutionist.tistory.com/208"
       }
     ],
     "verificationNote": "산업기사 2022-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
@@ -6901,8 +6909,8 @@
       "2차원 배열",
       "중첩 반복문"
     ],
-    "question": "3×3 배열에서 i<=j 위치에 1부터 순서대로 저장하고 나머지는 공백으로 출력할 때 결과를 쓰세요.",
-    "code": "class Main {\n    public static void main(String[] args) {\n        int[][] a = new int[3][3];\n        init(a);\n        data(a);\n        print(a);\n    }\n\n    static void init(int[][] a) {\n        for (int i = 0; i < 3; i++)\n            for (int j = 0; j < 3; j++)\n                a[i][j] = 0;\n    }\n\n    static void data(int[][] a) {\n        int v = 1;\n        for (int i = 0; i < 3; i++)\n            for (int j = i; j < 3; j++)\n                a[i][j] = v++;\n    }\n\n    static void print(int[][] a) {\n        for (int i = 0; i < 3; i++) {\n            for (int j = 0; j < 3; j++) {\n                if (a[i][j] == 0) System.out.print(\" \");\n                else System.out.print(a[i][j]);\n            }\n            System.out.println();\n        }\n    }\n}",
+    "question": "다음 Java 프로그램을 분석하여 실행 결과를 줄바꿈과 공백을 포함해 그대로 쓰세요.",
+    "code": "class Main {\n    public static void main(String[] args) {\n        int[][] a = new int[3][3];\n        init(a);\n        data(a);\n        prnt(a);\n    }\n\n    static void init(int[][] a) {\n        for (int i = 0; i < 3; i++)\n            for (int j = 0; j < 3; j++)\n                a[i][j] = 0;\n    }\n\n    static void data(int[][] a) {\n        int v = 1;\n        for (int i = 0; i < 3; i++)\n            for (int j = i; j < 3; j++)\n                a[i][j] = v++;\n    }\n\n    static void prnt(int[][] a) {\n        for (int i = 0; i < 3; i++) {\n            for (int j = 0; j < 3; j++) {\n                if (a[i][j] == 0)\n                    System.out.printf(\" \");\n                else\n                    System.out.printf(\"%d\", a[i][j]);\n            }\n            System.out.println();\n        }\n    }\n}",
     "answer": "123\n 45\n  6",
     "sources": [
       {
@@ -6914,7 +6922,7 @@
         "url": "https://allen8524.tistory.com/90"
       }
     ],
-    "verificationNote": "산업기사 2022-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
+    "verificationNote": "산업기사 2022-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격. 2026-10-06 전수 대조에서 원 복원자료의 지문·코드/SQL·빈칸 위치·정답을 재확인하고, 풀이 가능성을 해치던 축약 또는 구조 변경을 원문 의미에 맞게 보정했습니다.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-06",
@@ -7046,8 +7054,8 @@
       "while",
       "if"
     ],
-    "question": "i=1로 시작하는 while/if 코드의 문장 커버리지 실행 순서를 쓰세요.",
-    "code": "int i=1;\nwhile(i<=1){\n if(i%2==1) printf(\"%d\",i);\n i++;\n}\nreturn 0;",
+    "question": "다음 C 코드의 ①~⑥ 번호는 원 복원자료 흐름도의 문장 번호입니다. i=1에서 시작할 때 문장 커버리지의 실제 실행 순서를 번호만 이어서 쓰세요.",
+    "code": "#include <stdio.h>\nint main(void) {\n    int i = 1;                 // ①\n    while (i <= 1) {           // ②\n        if (i % 2 == 1)        // ③\n            printf(\"%d\", i);  // ④\n        i++;                    // ⑤\n    }\n    return 0;                  // ⑥\n}",
     "answer": "1234526",
     "sources": [
       {
@@ -7055,24 +7063,32 @@
         "url": "https://complainrevolutionist.tistory.com/193"
       }
     ],
-    "verificationNote": "산업기사 2023-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 2026-10-05 추가 웹 교차검증을 수행했으나 동일 문항의 독립 출처를 확보하지 못해 C등급을 의도적으로 유지함.",
+    "verificationNote": "산업기사 2023-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 2026-10-05 추가 웹 교차검증을 수행했으나 동일 문항의 독립 출처를 확보하지 못해 C등급을 의도적으로 유지함. 2026-10-06 전수 대조에서 원 복원자료의 지문·코드/SQL·빈칸 위치·정답을 재확인하고, 풀이 가능성을 해치던 축약 또는 구조 변경을 원문 의미에 맞게 보정했습니다.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-06",
     "grading": "exact",
-    "acceptedAnswers": [],
-    "hint": "while(i<=1)에서 조건 'i<=1'을 회차마다 검사하세요. i 값을 각 회차 뒤에 기록하고, continue·break·return이 실행되면 그 회차에서 어느 문장이 생략되거나 반복이 끝나는지 표시하세요.",
+    "acceptedAnswers": [
+      "1 2 3 4 5 2 6",
+      "①②③④⑤②⑥"
+    ],
+    "hint": "①에서 i=1로 시작합니다. ②의 while 조건은 반복할 때마다 다시 검사합니다. 첫 번째 ②는 참이어서 ③→④→⑤가 실행되고, i=2가 된 뒤 ②를 다시 검사하면 거짓이 되어 ⑥으로 이동합니다.",
     "solution": {
-      "summary": "문장 커버리지 실행 순서에서 실제 실행 경로를 따라가면 1234526 순서가 됩니다.",
+      "summary": "i=1에서 ①을 실행한 뒤 ②가 참이므로 ③,④,⑤를 실행합니다. i=2가 되어 다시 ②를 검사하면 거짓이므로 ⑥으로 이동합니다. 실행 순서는 1234526입니다.",
       "flow": [
         "초기 상태와 실행 시작 위치를 확인합니다.",
         "상태가 바뀌는 문장을 실행 순서대로 따라갑니다.",
         "문제에서 요구한 실행 순서 또는 최종 상태를 정리합니다."
       ],
-      "traceTitle": "실행 순서와 값 변화",
+      "traceTitle": "문장 커버리지 실행 순서",
       "trace": [
-        "먼저 문제에서 요구하는 최종 값과 주어진 초기값을 표시한 뒤, 코드가 실행되는 순서를 따라갑니다.",
-        "복원 문제에 부여된 문장 번호 순서대로 실행하면 1234526입니다.",
+        "①: i=1로 초기화합니다.",
+        "②: 1<=1은 참이므로 while 본문으로 들어갑니다.",
+        "③: 1%2==1은 참이므로 ④를 실행합니다.",
+        "④: printf가 1을 출력합니다.",
+        "⑤: i++로 i=2가 됩니다.",
+        "②: 다시 검사한 2<=1은 거짓이므로 반복문을 종료합니다.",
+        "⑥: return 0을 실행합니다.",
         "해석 결과: 1234526"
       ]
     }
@@ -7139,8 +7155,8 @@
       "elif",
       "else"
     ],
-    "question": "현금이 없고 카드가 있을 때 버스를 출력하도록 (가)에 들어갈 키워드를 쓰세요.",
-    "code": "if 'cash' in wallet:\n print('택시')\n(가)(card):\n print('버스')\nelse:\n print('도보')",
+    "question": "지갑에는 'credit'과 'id'가 있고 card=True입니다. 현금(cash)이 있으면 택시, 현금이 없고 카드가 있으면 버스, 둘 다 없으면 도보를 출력하도록 할 때 (가)에 들어갈 Python 키워드를 쓰세요.",
+    "code": "wallet=['credit','id']\ncard=True\nif 'cash' in wallet:\n    print('택시')\n(가)(card):\n    print('버스')\nelse:\n    print('도보')",
     "answer": "elif",
     "sources": [
       {
@@ -7148,13 +7164,13 @@
         "url": "https://complainrevolutionist.tistory.com/193"
       }
     ],
-    "verificationNote": "산업기사 2023-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 2026-10-05 추가 웹 교차검증을 수행했으나 동일 문항의 독립 출처를 확보하지 못해 C등급을 의도적으로 유지함.",
+    "verificationNote": "산업기사 2023-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 2026-10-05 추가 웹 교차검증을 수행했으나 동일 문항의 독립 출처를 확보하지 못해 C등급을 의도적으로 유지함. 2026-10-06 전수 대조에서 원 복원자료의 지문·코드/SQL·빈칸 위치·정답을 재확인하고, 풀이 가능성을 해치던 축약 또는 구조 변경을 원문 의미에 맞게 보정했습니다.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-06",
     "grading": "exact",
     "acceptedAnswers": [],
-    "hint": "빈칸의 바로 앞뒤 토큰과 자료형을 확인하세요. 빈칸이 만들어야 하는 값·주소·객체 관계를 먼저 정한 뒤 표현식을 채우세요.",
+    "hint": "첫 if는 wallet에 cash가 있는지 검사합니다. 그 조건이 거짓일 때 card라는 추가 조건을 검사해야 하므로 if와 else 사이에 추가 조건을 붙이는 키워드가 필요합니다.",
     "solution": {
       "summary": "elif 빈칸의 빈칸은 elif 순서로 채워집니다. if·elif의 위치와 역할을 구분하면 됩니다.",
       "flow": [
@@ -7572,8 +7588,8 @@
       "주소 연산자",
       "함수 인자"
     ],
-    "question": "compare 함수에 max와 min의 주소를 전달하려면 (가),(나)에 무엇을 써야 하나요?",
-    "code": "int max=0,min=0;\ncompare(3,7,(가),(나));",
+    "question": "다음 C 프로그램의 compare 호출에서 (가), (나)에 들어갈 표현식을 순서대로 쓰세요.",
+    "code": "#include <stdio.h>\nint compare(int i, int j, int *ma, int *in) {\n    if (i > j) {\n        *ma = j;\n        *in = i;\n    } else {\n        *ma = i;\n        *in = j;\n    }\n    return 0;\n}\n\nint main(void) {\n    int max = 0;\n    int min = 0;\n    compare(3, 7, (가), (나));\n    printf(\"작은수:%d 큰수:%d\", max, min);\n    return 0;\n}",
     "answer": "&max &min",
     "sources": [
       {
@@ -7585,15 +7601,15 @@
         "url": "https://www.redplus.net/docs/industrial-engineer-information-processing/max-min-value-comparison/"
       }
     ],
-    "verificationNote": "산업기사 2023-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
+    "verificationNote": "산업기사 2023-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격. 2026-10-06 전수 대조에서 원 복원자료의 지문·코드/SQL·빈칸 위치·정답을 재확인하고, 풀이 가능성을 해치던 축약 또는 구조 변경을 원문 의미에 맞게 보정했습니다.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-06",
     "grading": "exact",
     "acceptedAnswers": [],
-    "hint": "빈칸의 바로 앞뒤 토큰과 자료형을 확인하세요. 빈칸이 만들어야 하는 값·주소·객체 관계를 먼저 정한 뒤 표현식을 채우세요.",
+    "hint": "compare의 세 번째와 네 번째 매개변수 형식은 int*입니다. 함수 안에서 *ma와 *in을 통해 main의 변수 값을 바꾸므로 max와 min 자체가 아니라 각각의 주소를 전달해야 합니다.",
     "solution": {
-      "summary": "포인터 인자 빈칸의 빈칸은 &max &min 순서로 채워집니다. 포인터·주소 연산자의 위치와 역할을 구분하면 됩니다.",
+      "summary": "compare의 ma와 in은 int* 포인터 매개변수이므로 main의 max와 min을 변경하려면 &max와 &min을 전달해야 합니다. 정답은 &max &min입니다.",
       "flow": [
         "빈칸 앞뒤 코드와 자료형·연산자 관계를 확인합니다.",
         "문제에서 요구하는 역할에 맞는 값·연산자·키워드를 결정합니다.",
@@ -7601,8 +7617,9 @@
       ],
       "traceTitle": "빈칸 판단 과정",
       "trace": [
-        "빈칸 위치: compare(3,7,(가),(나));",
-        "포인터 매개변수에는 변수의 주소를 넘겨야 합니다.",
+        "compare의 세 번째 매개변수 ma는 int*이므로 max의 주소가 필요합니다. (가)는 &max입니다.",
+        "네 번째 매개변수 in도 int*이므로 min의 주소가 필요합니다. (나)는 &min입니다.",
+        "compare(3,7,&max,&min)이 되면 함수에서 포인터 역참조를 통해 두 변수 값을 변경할 수 있습니다.",
         "완성 답: &max &min"
       ]
     }
@@ -7715,7 +7732,7 @@
       "strlen"
     ],
     "question": "문자열 abCDEfGh에서 대문자 개수를 출력하는 코드의 결과를 쓰세요.",
-    "code": "char *str=\"abCDEfGh\";\nint count=0;\nfor(int i=0;i<strlen(str);i++)\n if(str[i]>='A'&&str[i]<='Z') count++;\nprintf(\"%d\",count);",
+    "code": "#include <stdio.h>\n#include <string.h>\nint main(void) {\n    char *str = \"abCDEfGh\";\n    int count = 0;\n    for (int i = 0; i < (int)strlen(str); i++) {\n        char ch = str[i];\n        if (ch >= 'A' && ch <= 'Z') {\n            count++;\n        }\n    }\n    printf(\"%d\", count);\n    return 0;\n}",
     "answer": "4",
     "sources": [
       {
@@ -7727,7 +7744,7 @@
         "url": "https://bhher.tistory.com/99"
       }
     ],
-    "verificationNote": "산업기사 2024-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 기출·해설 자료에서 동일 코드 구조와 정답을 재확인하여 신뢰도 B로 승격.",
+    "verificationNote": "산업기사 2024-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 기출·해설 자료에서 동일 코드 구조와 정답을 재확인하여 신뢰도 B로 승격. 2026-10-06 전수 대조에서 원 복원자료의 지문·코드/SQL·빈칸 위치·정답을 재확인하고, 풀이 가능성을 해치던 축약 또는 구조 변경을 원문 의미에 맞게 보정했습니다.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-06",
@@ -7800,20 +7817,21 @@
   {
     "id": "R-IND-SQL-0004",
     "language": "SQL",
-    "title": "BETWEEN·HAVING·VALUES 빈칸",
+    "title": "릴레이션·도메인·AND·HAVING·VALUES 빈칸",
     "sourceType": "reconstructed",
     "confidence": "B",
     "questionType": "blank",
     "difficulty": "실전",
     "concepts": [
-      "BETWEEN",
+      "릴레이션",
+      "도메인",
       "AND",
       "HAVING",
       "VALUES"
     ],
-    "question": "다음 SQL 빈칸 중 SQL 키워드만 순서대로 쓰세요.",
-    "code": "WHERE 봉급 BETWEEN 5000 (가) 7000 (가) 이름 LIKE '김%';\nGROUP BY 부서명 (나) AVG(봉급)>6900;\nINSERT INTO 종업원 (다) (400,'정몽주','생산부',5000);",
-    "answer": "AND HAVING VALUES",
+    "question": "다음 설명과 SQL문의 (가)~(마)에 들어갈 용어 또는 SQL 예약어를 순서대로 쓰세요.\n1. 관계형 데이터베이스에서 데이터를 표(table) 형태로 표현하여 저장하는 기본 단위를 (가)라고 합니다.\n2. 특정 속성이 가질 수 있는 모든 가능한 값의 집합을 (나)라고 합니다.\n3. 봉급이 5000 이상 7000 이하이고 이름이 '김'으로 시작하는 종업원을 검색합니다.\n4. 부서별 평균 봉급이 6900보다 큰 부서의 부서명과 평균 봉급을 검색합니다.\n5. 번호 400, 이름 '정몽주', 부서명 '생산부', 봉급 5000인 종업원을 삽입합니다.",
+    "code": "SELECT * FROM 종업원\nWHERE 봉급 BETWEEN 5000 (다) 7000 (다) 이름 LIKE '김%';\n\nSELECT 부서명, AVG(봉급) FROM 종업원\nGROUP BY 부서명 (라) AVG(봉급) > 6900;\n\nINSERT INTO 종업원 (마) (400, '정몽주', '생산부', 5000);",
+    "answer": "릴레이션 도메인 AND HAVING VALUES",
     "sources": [
       {
         "name": "잡코딩 · 산업기사 2024-1 복원자료",
@@ -7824,15 +7842,15 @@
         "url": "https://allen8524.tistory.com/92"
       }
     ],
-    "verificationNote": "산업기사 2024-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
+    "verificationNote": "산업기사 2024-1 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격. 2026-10-06 전수 대조에서 원 복원자료의 지문·코드/SQL·빈칸 위치·정답을 재확인하고, 풀이 가능성을 해치던 축약 또는 구조 변경을 원문 의미에 맞게 보정했습니다.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-06",
     "grading": "sql_keywords",
     "acceptedAnswers": [],
-    "hint": "각 빈칸이 SQL의 어느 역할(조회 열·대상 테이블·행 조건·그룹 조건·정렬·변경값)에 해당하는지 먼저 정하세요. 현재 보이는 WHERE, GROUP BY, INSERT 절의 순서를 기준으로 빠진 절을 찾으세요.",
+    "hint": "(가)는 관계형 데이터의 표 형태 기본 단위, (나)는 한 속성이 가질 수 있는 값의 집합입니다. SQL 부분은 범위 조건을 완성하는 연결 예약어, 그룹 결과에 적용하는 조건 절, INSERT의 값 목록을 시작하는 예약어를 각각 구분해 보세요.",
     "solution": {
-      "summary": "BETWEEN·HAVING·VALUES 빈칸의 빈칸은 AND HAVING VALUES 순서로 채워집니다. BETWEEN·AND의 위치와 역할을 구분하면 됩니다.",
+      "summary": "(가)는 릴레이션, (나)는 도메인입니다. SQL에서는 BETWEEN ... AND ..., GROUP BY 뒤 그룹 조건의 HAVING, INSERT 값 목록의 VALUES를 사용합니다. 정답은 릴레이션 도메인 AND HAVING VALUES입니다.",
       "flow": [
         "빈칸 앞뒤 SQL 절을 읽어 빈칸의 역할을 결정합니다.",
         "해당 위치에 올 수 있는 SQL 키워드·열·조건식을 문제 요구사항과 대조합니다.",
@@ -7840,10 +7858,12 @@
       ],
       "traceTitle": "SQL 빈칸 판단 과정",
       "trace": [
-        "빈칸 위치: WHERE 봉급 BETWEEN 5000 (가) 7000 (가) 이름 LIKE '김%';",
-        "BETWEEN 범위와 추가 조건 연결에 AND가 사용됩니다.",
-        "그룹 조건은 HAVING, 삽입 값은 VALUES입니다.",
-        "완성 답: AND HAVING VALUES"
+        "(가): 관계형 데이터베이스의 표 형태 기본 단위이므로 릴레이션입니다.",
+        "(나): 특정 속성이 가질 수 있는 값의 집합이므로 도메인입니다.",
+        "(다): BETWEEN 5000 AND 7000과 이름 조건을 함께 연결해야 하므로 AND입니다.",
+        "(라): GROUP BY로 만든 그룹의 평균 봉급 조건을 검사하므로 HAVING입니다.",
+        "(마): INSERT INTO 뒤 실제 삽입 값 목록을 지정하므로 VALUES입니다.",
+        "완성 답: 릴레이션 도메인 AND HAVING VALUES"
       ]
     }
   },
@@ -8304,7 +8324,7 @@
       "VALUES",
       "UPDATE SET"
     ],
-    "question": "다음 SQL의 세 빈칸을 순서대로 쓰세요.",
+    "question": "다음 처리 조건을 만족하도록 SQL문의 (1)~(3)에 들어갈 예약어를 순서대로 쓰세요.\n1. 사원 테이블에 이름 '윤정희', 부서 '영업부', 주소 '마포구'인 사원의 정보를 입력합니다.\n2. 사원 테이블에서 이름이 '임선호'인 사원의 부서를 '기획부'로 변경합니다.",
     "code": "INSERT (1) 사원(이름,부서,주소) (2) ('윤정희','영업부','마포구');\nUPDATE 사원 (3) 부서='기획부' WHERE 이름='임선호';",
     "answer": "INTO VALUES SET",
     "sources": [
@@ -8317,15 +8337,15 @@
         "url": "https://allen8524.tistory.com/92"
       }
     ],
-    "verificationNote": "산업기사 2024-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
+    "verificationNote": "산업기사 2024-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격. 2026-10-06 전수 대조에서 원 복원자료의 지문·코드/SQL·빈칸 위치·정답을 재확인하고, 풀이 가능성을 해치던 축약 또는 구조 변경을 원문 의미에 맞게 보정했습니다.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-06",
     "grading": "sql_keywords",
     "acceptedAnswers": [],
-    "hint": "(1), (2), (3) 각각이 SQL의 어느 역할(조회 열·대상 테이블·행 조건·그룹 조건·정렬·변경값)에 해당하는지 먼저 정하세요. 빈칸이 있는 'INSERT (1) 사원(이름,부서,주소) (2) ('윤정희','영업부','마포구');' 줄의 앞뒤 토큰을 이어 읽으세요.",
+    "hint": "첫 문장은 새 행을 입력하는 INSERT 문입니다. 테이블명 앞 위치와 실제 값 목록 앞 위치의 예약어를 구분하세요. 두 번째 문장은 UPDATE에서 변경할 열과 값을 지정하는 위치의 예약어를 찾으면 됩니다.",
     "solution": {
-      "summary": "INSERT·VALUES·SET 빈칸의 빈칸은 INTO VALUES SET 순서로 채워집니다. INSERT INTO·VALUES의 위치와 역할을 구분하면 됩니다.",
+      "summary": "INSERT 문에는 INTO와 VALUES가 필요하고, UPDATE 문에서 변경할 열과 값을 지정할 때 SET을 사용합니다. 정답은 INTO VALUES SET입니다.",
       "flow": [
         "빈칸 앞뒤 SQL 절을 읽어 빈칸의 역할을 결정합니다.",
         "해당 위치에 올 수 있는 SQL 키워드·열·조건식을 문제 요구사항과 대조합니다.",
@@ -8333,7 +8353,9 @@
       ],
       "traceTitle": "SQL 빈칸 판단 과정",
       "trace": [
-        "INSERT INTO, VALUES, UPDATE SET 구문을 사용합니다.",
+        "첫 번째 처리 조건은 사원 테이블에 새 행을 입력하는 것이므로 INSERT INTO 사원 ... 형태가 됩니다. (1)은 INTO입니다.",
+        "입력할 실제 값 ('윤정희','영업부','마포구') 앞에는 VALUES가 필요하므로 (2)는 VALUES입니다.",
+        "두 번째 처리 조건은 임선호의 부서를 변경하는 UPDATE 문이므로 변경값 앞 (3)은 SET입니다.",
         "완성 답: INTO VALUES SET"
       ]
     }
@@ -8352,7 +8374,7 @@
       "ASC",
       "NOT LIKE"
     ],
-    "question": "다음 세 SQL 조건의 빈칸을 순서대로 쓰세요.",
+    "question": "다음 처리 조건을 만족하도록 SQL문의 (1)~(3)에 들어갈 예약어를 순서대로 쓰세요.\n1. 회원 테이블에서 성별이 '여'이면서 등급이 'GOLD'인 회원을 검색합니다.\n2. 회원의 구매내역을 가입년도를 기준으로 오름차순 정렬하여 검색합니다.\n3. 이름이 '김'으로 시작하지 않는 회원을 검색합니다.",
     "code": "WHERE 성별='여' (1) 등급='GOLD';\nORDER BY 가입년도 (2);\nWHERE 이름 (3) LIKE '김%';",
     "answer": "AND ASC NOT",
     "sources": [
@@ -8365,15 +8387,15 @@
         "url": "https://allen8524.tistory.com/92"
       }
     ],
-    "verificationNote": "산업기사 2024-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격.",
+    "verificationNote": "산업기사 2024-2 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 출처에서 동일 회차의 문제 구조·핵심 상수·정답을 추가 확인하여 신뢰도 B로 승격. 2026-10-06 전수 대조에서 원 복원자료의 지문·코드/SQL·빈칸 위치·정답을 재확인하고, 풀이 가능성을 해치던 축약 또는 구조 변경을 원문 의미에 맞게 보정했습니다.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-06",
     "grading": "sql_keywords",
     "acceptedAnswers": [],
-    "hint": "(1), (2), (3) 각각이 SQL의 어느 역할(조회 열·대상 테이블·행 조건·그룹 조건·정렬·변경값)에 해당하는지 먼저 정하세요. 빈칸이 있는 'WHERE 성별='여' (1) 등급='GOLD';' 줄의 앞뒤 토큰을 이어 읽으세요.",
+    "hint": "첫 조건은 두 조건을 동시에 만족해야 합니다. 오름차순 정렬 예약어와 LIKE 조건을 부정하는 예약어도 각각 확인하세요.",
     "solution": {
-      "summary": "AND·ASC·NOT 빈칸의 빈칸은 AND ASC NOT 순서로 채워집니다. AND·ORDER BY의 위치와 역할을 구분하면 됩니다.",
+      "summary": "성별과 등급 조건을 동시에 만족하므로 AND, 가입년도 오름차순은 ASC, '김%' 패턴에 해당하지 않는 조건은 NOT LIKE이므로 빈칸은 NOT입니다. 정답은 AND ASC NOT입니다.",
       "flow": [
         "빈칸 앞뒤 SQL 절을 읽어 빈칸의 역할을 결정합니다.",
         "해당 위치에 올 수 있는 SQL 키워드·열·조건식을 문제 요구사항과 대조합니다.",
@@ -8381,7 +8403,9 @@
       ],
       "traceTitle": "SQL 빈칸 판단 과정",
       "trace": [
-        "두 조건은 AND, 오름차순은 ASC, '김'으로 시작하지 않음은 NOT LIKE입니다.",
+        "성별='여'와 등급='GOLD'를 동시에 만족해야 하므로 (1)은 AND입니다.",
+        "가입년도 기준 오름차순 정렬이므로 ORDER BY 가입년도 뒤 (2)는 ASC입니다.",
+        "이름이 '김'으로 시작하지 않아야 하므로 NOT LIKE '김%'가 되어 (3)은 NOT입니다.",
         "완성 답: AND ASC NOT"
       ]
     }
@@ -8594,8 +8618,8 @@
       "swap",
       "배열 역순"
     ],
-    "question": "1,2,3,4,5 배열을 양끝부터 교환해 뒤집은 뒤 arr[2]를 출력하면 무엇인가요?",
-    "code": "#include <stdio.h>\n\nvoid swap(int *a, int *b) {\n    int temp = *a;\n    *a = *b;\n    *b = temp;\n}\n\nvoid reverse(int *arr, int n) {\n    int *left = &arr[0];\n    int *right = &arr[n - 1];\n    while (left < right) {\n        swap(left, right);\n        left++;\n        right--;\n    }\n}\n\nint main(void) {\n    int arr[] = {1, 2, 3, 4, 5};\n    reverse(arr, 5);\n    printf(\"%d\", arr[2]);\n    return 0;\n}",
+    "question": "다음 C 프로그램을 분석하여 실행 결과를 쓰세요.",
+    "code": "#include <stdio.h>\n\nvoid swap(int *ptr1, int *ptr2) {\n    int temp = *ptr1;\n    *ptr1 = *ptr2;\n    *ptr2 = temp;\n}\n\nvoid func(int *arr, int n) {\n    int *ptr1 = &arr[0];\n    int *ptr2 = &arr[n - 1];\n    while (ptr1 < ptr2) {\n        swap(ptr1, ptr2);\n        ptr1++;\n        ptr2--;\n    }\n}\n\nint main(void) {\n    int arr[] = {1, 2, 3, 4, 5};\n    func(arr, 5);\n    printf(\"%d\", arr[2]);\n    return 0;\n}",
     "answer": "3",
     "sources": [
       {
@@ -8607,15 +8631,15 @@
         "url": "https://bhher.tistory.com/99"
       }
     ],
-    "verificationNote": "산업기사 2024-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 독립 C 기출 해설 자료에서 동일 회차의 코드·상수·정답을 재검증하여 신뢰도 B로 승격.",
+    "verificationNote": "산업기사 2024-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 독립 C 기출 해설 자료에서 동일 회차의 코드·상수·정답을 재검증하여 신뢰도 B로 승격. 2026-10-06 전수 대조에서 원 복원자료의 지문·코드/SQL·빈칸 위치·정답을 재확인하고, 풀이 가능성을 해치던 축약 또는 구조 변경을 원문 의미에 맞게 보정했습니다.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-06",
     "grading": "exact",
     "acceptedAnswers": [],
-    "hint": "양끝 포인터가 서로 만날 때까지 어떤 두 원소가 교환되는지 적고, 홀수 길이 배열의 가운데 원소가 교환 대상이 되는지 확인하세요.",
+    "hint": "ptr1은 배열의 앞에서, ptr2는 뒤에서 시작합니다. 두 포인터가 만날 때까지 가리키는 값을 서로 교환한 뒤 가운데 원소 arr[2]가 어떻게 되는지 확인하세요.",
     "solution": {
-      "summary": "배열 뒤집기 후 가운데 값에서 포인터·swap의 실행 순서를 따라 값을 계산하면 최종 출력은 3입니다.",
+      "summary": "양끝 원소를 교환하며 배열을 뒤집어도 홀수 길이 배열의 가운데 원소 3은 그대로입니다. 최종 출력은 3입니다.",
       "flow": [
         "초기 변수·배열·객체 상태와 핵심 조건을 확인합니다.",
         "조건식·반복문·함수 호출을 실제 실행되는 순서대로 따라갑니다.",
@@ -8623,10 +8647,10 @@
       ],
       "traceTitle": "실행 순서와 값 변화",
       "trace": [
-        "시작 상태: temp = *a, *left = &arr[0], *right = &arr[n - 1], arr[] = {1, 2, 3, 4, 5}.",
-        "1과 5, 이어서 2와 4가 서로 교환됩니다.",
-        "배열은 5,4,3,2,1이 됩니다.",
-        "가운데 인덱스 2의 값은 그대로 3이므로 3이 출력됩니다.",
+        "시작 상태: arr={1,2,3,4,5}, ptr1은 arr[0], ptr2는 arr[4]를 가리킵니다.",
+        "첫 교환 후 arr={5,2,3,4,1}이고 ptr1은 arr[1], ptr2는 arr[3]으로 이동합니다.",
+        "두 번째 교환 후 arr={5,4,3,2,1}이고 두 포인터는 가운데 arr[2]에서 만납니다.",
+        "가운데 원소 arr[2]는 3으로 유지됩니다.",
         "최종 출력: 3"
       ]
     }
@@ -8643,8 +8667,8 @@
       "재귀",
       "하노이 탑"
     ],
-    "question": "n=3일 때 다음 재귀 함수가 반환하는 값을 쓰세요.",
-    "code": "#include <stdio.h>\n\nint move_count(int n, int from, int to, int temp) {\n    if (n == 0) return 0;\n    return move_count(n - 1, from, temp, to) + 1\n         + move_count(n - 1, temp, to, from);\n}\n\nint main(void) {\n    int n = 3;\n    printf(\"%d\", move_count(n, 3, 2, 1));\n    return 0;\n}",
+    "question": "다음 C 프로그램을 분석하여 실행 결과를 쓰세요.",
+    "code": "#include <stdio.h>\n\nint factorial(int n, int from, int to, int temp) {\n    if (n == 0) {\n        return 0;\n    } else {\n        return factorial(n - 1, from, temp, to) + 1\n             + factorial(n - 1, temp, to, from);\n    }\n}\n\nint main(void) {\n    int n = 3;\n    printf(\"%d\", factorial(n, 3, 2, 1));\n    return 0;\n}",
     "answer": "7",
     "sources": [
       {
@@ -8656,13 +8680,13 @@
         "url": "https://bhher.tistory.com/99"
       }
     ],
-    "verificationNote": "산업기사 2024-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 독립 C 기출 해설 자료에서 동일 회차의 코드·상수·정답을 재검증하여 신뢰도 B로 승격.",
+    "verificationNote": "산업기사 2024-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 독립 C 기출 해설 자료에서 동일 회차의 코드·상수·정답을 재검증하여 신뢰도 B로 승격. 2026-10-06 전수 대조에서 원 복원자료의 지문·코드/SQL·빈칸 위치·정답을 재확인하고, 풀이 가능성을 해치던 축약 또는 구조 변경을 원문 의미에 맞게 보정했습니다.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-06",
     "grading": "exact",
     "acceptedAnswers": [],
-    "hint": "매개변수의 막대 번호보다 n에 따른 반환값만 추적하세요. n=0의 값을 기준으로 n=1, n=2, n=3 순서로 점화식을 계산하면 됩니다.",
+    "hint": "함수 이름과 막대 번호에 끌려가지 말고 n에 따른 반환값만 보세요. n=0이면 0이고, 그 외에는 n-1 호출 결과 두 개에 1을 더합니다.",
     "solution": {
       "summary": "n=0이면 0을 반환합니다. 따라서 최종 출력은 7입니다.",
       "flow": [
@@ -8694,7 +8718,7 @@
       "나머지"
     ],
     "question": "다음 C 코드의 출력값을 쓰세요.",
-    "code": "#include <stdio.h>\n\nvoid transform(int **arr, int size) {\n    for (int i = 0; i < size; i++)\n        *(*arr + i) = (*(*arr + i) + i) % size;\n}\n\nint main(void) {\n    int arr[] = {3, 1, 4, 1, 5};\n    int *p = arr;\n    int **pp = &p;\n    transform(pp, 5);\n    printf(\"%d\", arr[2]);\n    return 0;\n}",
+    "code": "#include <stdio.h>\n\nvoid func(int **arr, int size) {\n    for (int i = 0; i < size; i++) {\n        *(*arr + i) = (*(*arr + i) + i) % size;\n    }\n}\n\nint main(void) {\n    int arr[] = {3, 1, 4, 1, 5};\n    int *p = arr;\n    int **pp = &p;\n    int num = 6;\n    func(pp, 5);\n    num = arr[2];\n    printf(\"%d\", num);\n    return 0;\n}",
     "answer": "1",
     "sources": [
       {
@@ -8706,7 +8730,7 @@
         "url": "https://bhher.tistory.com/121"
       }
     ],
-    "verificationNote": "산업기사 2024-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 기출·해설 자료에서 동일 코드 구조와 정답을 재확인하여 신뢰도 B로 승격.",
+    "verificationNote": "산업기사 2024-3 공개 복원자료에서 회차·문항번호·정답을 확인했습니다. 독립 교차출처 미확보로 신뢰도 C이며, 변수명·공백·명백한 문법 오탈자만 학습용으로 정규화했습니다. 별도 공개 기출·해설 자료에서 동일 코드 구조와 정답을 재확인하여 신뢰도 B로 승격. 2026-10-06 전수 대조에서 원 복원자료의 지문·코드/SQL·빈칸 위치·정답을 재확인하고, 풀이 가능성을 해치던 축약 또는 구조 변경을 원문 의미에 맞게 보정했습니다.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-06",
@@ -8722,10 +8746,11 @@
       ],
       "traceTitle": "실행 순서와 값 변화",
       "trace": [
-        "시작 상태: arr[] = {3, 1, 4, 1, 5}, *p = arr, **pp = &p.",
-        "**pp를 통해 p가 가리키는 arr의 각 원소를 차례로 수정합니다.",
-        "인덱스 2에서는 (4+2)%5를 계산합니다.",
-        "그 값이 1이므로 arr[2]에는 1이 저장되어 출력됩니다.",
+        "시작 상태: arr={3,1,4,1,5}, p는 arr를 가리키고 pp는 p의 주소를 가리키며 num=6입니다.",
+        "func(pp,5)는 각 i에서 arr[i]=(arr[i]+i)%5로 배열을 수정합니다.",
+        "i=2일 때 arr[2]=(4+2)%5=1이 됩니다.",
+        "func 호출 뒤 num=arr[2]가 실행되어 num=1이 됩니다.",
+        "printf가 현재 num 값 1을 출력합니다.",
         "최종 출력: 1"
       ]
     }
@@ -8744,7 +8769,7 @@
       "기본값"
     ],
     "question": "다음 Python 코드에서 존재하지 않는 키를 기본값과 함께 조회했을 때 출력 결과를 쓰세요.",
-    "code": "data={\"name\":\"ted\",\"phone\":\"0101234\",\"birth\":\"0909\"}\nprint(data.get(\"grade\",\"none\"))",
+    "code": "a={\"name\":\"ted\",\"phone\":\"0101234\",\"birth\":\"0909\"}\nprint(a.get(\"grade\",\"none\"))",
     "answer": "none",
     "sources": [
       {
@@ -8756,7 +8781,7 @@
         "url": "https://gfile.gilbut.co.kr/gilbut/bookdata/BN004729/preview/files/basic-html/page25.html"
       }
     ],
-    "verificationNote": "출판사 공개 미리보기에서 2025년 3회 1번 문제 코드와 정답 none을 직접 확인. 동일 출판사 자료이므로 독립 교차출처로 보지 않고 신뢰도 C 유지. 2026-10-05 추가 웹 교차검증을 수행했으나 동일 문항의 독립 출처를 확보하지 못해 C등급을 의도적으로 유지함.",
+    "verificationNote": "출판사 공개 미리보기에서 2025년 3회 1번 문제 코드와 정답 none을 직접 확인. 동일 출판사 자료이므로 독립 교차출처로 보지 않고 신뢰도 C 유지. 2026-10-05 추가 웹 교차검증을 수행했으나 동일 문항의 독립 출처를 확보하지 못해 C등급을 의도적으로 유지함. 2026-10-06 전수 대조에서 원 복원자료의 지문·코드/SQL·빈칸 위치·정답을 재확인하고, 풀이 가능성을 해치던 축약 또는 구조 변경을 원문 의미에 맞게 보정했습니다.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-06",
@@ -8771,8 +8796,8 @@
       ],
       "traceTitle": "실행 순서와 값 변화",
       "trace": [
-        "시작 상태: data={'name':'ted','phone':'0101234','birth':'0909'}이며 'grade' 키는 없습니다.",
-        "data.get('grade','none')에서 먼저 'grade' 키를 찾지만 존재하지 않습니다.",
+        "시작 상태: a={'name':'ted','phone':'0101234','birth':'0909'}이며 'grade' 키는 없습니다.",
+        "a.get('grade','none')에서 먼저 'grade' 키를 찾지만 존재하지 않습니다.",
         "키가 없으므로 두 번째 인수인 기본값 'none'을 반환합니다.",
         "최종 출력: none"
       ]
@@ -8846,7 +8871,7 @@
       "역참조"
     ],
     "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
-    "code": "#include <stdio.h>\nint main(void){\n    int k[]={1,2,3};\n    int *p=k+1;\n    printf(\"%d\", *p + *(p-1));\n    return 0;\n}",
+    "code": "#include <stdio.h>\nint main(void) {\n    int k[] = {1, 2, 3};\n    int *p = k + 1;\n    printf(\"%d \", *p + *(p - 1));\n    return 0;\n}",
     "answer": "3",
     "sources": [
       {
@@ -8858,7 +8883,7 @@
         "url": "https://gfile.gilbut.co.kr/gilbut/bookdata/BN004729/preview/files/basic-html/page26.html"
       }
     ],
-    "verificationNote": "출판사 공개 미리보기에서 2025년 3회 6번 C 코드와 정답 3을 직접 확인. 공백과 main 반환형만 정규화했으며 신뢰도 C. 2026-10-05 추가 웹 교차검증을 수행했으나 동일 문항의 독립 출처를 확보하지 못해 C등급을 의도적으로 유지함.",
+    "verificationNote": "출판사 공개 미리보기에서 2025년 3회 6번 C 코드와 정답 3을 직접 확인. 공백과 main 반환형만 정규화했으며 신뢰도 C. 2026-10-05 추가 웹 교차검증을 수행했으나 동일 문항의 독립 출처를 확보하지 못해 C등급을 의도적으로 유지함. 2026-10-06 전수 대조에서 원 복원자료의 지문·코드/SQL·빈칸 위치·정답을 재확인하고, 풀이 가능성을 해치던 축약 또는 구조 변경을 원문 의미에 맞게 보정했습니다.",
     "enabled": true,
     "createdAt": "2026-10-05",
     "updatedAt": "2026-10-06",
