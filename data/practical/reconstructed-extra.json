@@ -968,7 +968,7 @@
       "flow": [
         "원본 테이블과 FROM/JOIN으로 만들어지는 행 집합을 확인합니다.",
         "WHERE·GROUP BY·HAVING·집계 조건을 SQL 실행 순서에 맞춰 적용합니다.",
-        "SELECT와 ORDER BY까지 적용한 뒤 최종 결과를 확인합니다."
+        "SELECT와 ORDER BY까지 적용한 뒤 실제로 반환되는 행과 값을 정리합니다."
       ],
       "traceTitle": "SQL 실행 결과 추적",
       "trace": [
@@ -1232,7 +1232,7 @@
       "flow": [
         "원본 테이블과 FROM/JOIN으로 만들어지는 행 집합을 확인합니다.",
         "WHERE·GROUP BY·HAVING·집계 조건을 SQL 실행 순서에 맞춰 적용합니다.",
-        "SELECT와 ORDER BY까지 적용한 뒤 최종 결과를 확인합니다."
+        "SELECT와 ORDER BY까지 적용한 뒤 실제로 반환되는 행과 값을 정리합니다."
       ],
       "traceTitle": "SQL 실행 결과 추적",
       "trace": [
@@ -2274,7 +2274,7 @@
       "flow": [
         "원본 테이블과 FROM/JOIN으로 만들어지는 행 집합을 확인합니다.",
         "WHERE·GROUP BY·HAVING·집계 조건을 SQL 실행 순서에 맞춰 적용합니다.",
-        "SELECT와 ORDER BY까지 적용한 뒤 최종 결과를 확인합니다."
+        "SELECT와 ORDER BY까지 적용한 뒤 실제로 반환되는 행과 값을 정리합니다."
       ],
       "traceTitle": "SQL 실행 결과 추적",
       "trace": [
@@ -2641,7 +2641,7 @@
       "flow": [
         "원본 테이블과 FROM/JOIN으로 만들어지는 행 집합을 확인합니다.",
         "WHERE·GROUP BY·HAVING·집계 조건을 SQL 실행 순서에 맞춰 적용합니다.",
-        "SELECT와 ORDER BY까지 적용한 뒤 최종 결과를 확인합니다."
+        "SELECT와 ORDER BY까지 적용한 뒤 실제로 반환되는 행과 값을 정리합니다."
       ],
       "traceTitle": "SQL 실행 결과 추적",
       "trace": [
@@ -2806,7 +2806,7 @@
       "flow": [
         "원본 테이블과 FROM/JOIN으로 만들어지는 행 집합을 확인합니다.",
         "WHERE·GROUP BY·HAVING·집계 조건을 SQL 실행 순서에 맞춰 적용합니다.",
-        "SELECT와 ORDER BY까지 적용한 뒤 최종 결과를 확인합니다."
+        "SELECT와 ORDER BY까지 적용한 뒤 실제로 반환되는 행과 값을 정리합니다."
       ],
       "traceTitle": "SQL 실행 결과 추적",
       "trace": [
@@ -3400,7 +3400,7 @@
       "flow": [
         "원본 테이블과 FROM/JOIN으로 만들어지는 행 집합을 확인합니다.",
         "WHERE·GROUP BY·HAVING·집계 조건을 SQL 실행 순서에 맞춰 적용합니다.",
-        "SELECT와 ORDER BY까지 적용한 뒤 최종 결과를 확인합니다."
+        "SELECT와 ORDER BY까지 적용한 뒤 실제로 반환되는 행과 값을 정리합니다."
       ],
       "traceTitle": "SQL 실행 결과 추적",
       "trace": [
@@ -4900,7 +4900,7 @@
       "flow": [
         "원본 테이블과 FROM/JOIN으로 만들어지는 행 집합을 확인합니다.",
         "WHERE·GROUP BY·HAVING·집계 조건을 SQL 실행 순서에 맞춰 적용합니다.",
-        "SELECT와 ORDER BY까지 적용한 뒤 최종 결과를 확인합니다."
+        "SELECT와 ORDER BY까지 적용한 뒤 실제로 반환되는 행과 값을 정리합니다."
       ],
       "traceTitle": "SQL 실행 결과 추적",
       "trace": [
@@ -5565,7 +5565,7 @@
       "flow": [
         "원본 테이블과 FROM/JOIN으로 만들어지는 행 집합을 확인합니다.",
         "WHERE·GROUP BY·HAVING·집계 조건을 SQL 실행 순서에 맞춰 적용합니다.",
-        "SELECT와 ORDER BY까지 적용한 뒤 최종 결과를 확인합니다."
+        "SELECT와 ORDER BY까지 적용한 뒤 실제로 반환되는 행과 값을 정리합니다."
       ],
       "traceTitle": "SQL 실행 결과 추적",
       "trace": [
@@ -5943,7 +5943,7 @@
       "flow": [
         "원본 테이블과 FROM/JOIN으로 만들어지는 행 집합을 확인합니다.",
         "WHERE·GROUP BY·HAVING·집계 조건을 SQL 실행 순서에 맞춰 적용합니다.",
-        "SELECT와 ORDER BY까지 적용한 뒤 최종 결과를 확인합니다."
+        "SELECT와 ORDER BY까지 적용한 뒤 실제로 반환되는 행과 값을 정리합니다."
       ],
       "traceTitle": "SQL 실행 결과 추적",
       "trace": [
@@ -8281,7 +8281,7 @@
       "flow": [
         "원본 테이블과 FROM/JOIN으로 만들어지는 행 집합을 확인합니다.",
         "WHERE·GROUP BY·HAVING·집계 조건을 SQL 실행 순서에 맞춰 적용합니다.",
-        "SELECT와 ORDER BY까지 적용한 뒤 최종 결과를 확인합니다."
+        "SELECT와 ORDER BY까지 적용한 뒤 실제로 반환되는 행과 값을 정리합니다."
       ],
       "traceTitle": "SQL 실행 결과 추적",
       "trace": [
