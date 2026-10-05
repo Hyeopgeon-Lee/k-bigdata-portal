@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {beginnerSteps,beginnerExplanation,solutionFlow,solutionSummary,lineByLineExplanation} from '../js/practical-explanation.js';
+import {beginnerSteps,beginnerExplanation,solutionFlow,solutionSummary,solutionTrace,lineByLineExplanation} from '../js/practical-explanation.js';
 
 const root=new URL('../',import.meta.url);
 const read=p=>JSON.parse(readFileSync(new URL(p,root),'utf8'));
@@ -106,10 +106,11 @@ pass('C and Java line explanations identify control flow',()=>{
  assert.match(cNotes,/main/);assert.match(cNotes,/조건/);assert.match(cNotes,/출력/);
  assert.match(jNotes,/main/);assert.match(jNotes,/반복/);assert.match(jNotes,/출력/);
 });
-pass('practical UI uses line-by-line explanation renderer',()=>{
+pass('practical UI renders stored trace data only',()=>{
  const ui=readFileSync(new URL('js/practical-ui.js',root),'utf8');
- assert.match(ui,/lineByLineExplanation/);
- assert.match(ui,/코드 한 줄씩 값으로 이해하기/);
+ assert.match(ui,/solutionTrace\(q\)/);
+ assert.match(ui,/q\.solution\?\.traceTitle/);
+ assert.doesNotMatch(ui,/lineByLineExplanation\(q,displayCode\(q\)\)/);
  assert.doesNotMatch(ui,/beginnerConcepts\(q\)/);
 });
 pass('mobile CSS contains dedicated line annotation layout',()=>{
@@ -141,13 +142,17 @@ pass('rendered explanations do not invent pointers',()=>questions.forEach(q=>{
  if(!/포인터|역참조|이중 포인터|연결 리스트|->|\*\s*[A-Za-z_]\w*/.test(topic))assert.doesNotMatch(rendered,/포인터/,q.id);
 }));
 pass('every question keeps at least one problem-specific execution step',()=>questions.forEach(q=>assert.ok(beginnerSteps(q).length>=1,q.id)));
-pass('R-IND-C-0022 has exact C execution flow with no SQL leakage',()=>{
+pass('R-IND-C-0022 stored trace keeps cumulative execution values',()=>{
  const q=questions.find(q=>q.id==='R-IND-C-0022');assert.ok(q);
- const rendered=[beginnerExplanation(q),...beginnerSteps(q)].join(' ');
+ const rendered=solutionTrace(q).join(' ');
+ assert.match(rendered,/999 % 329 = 12/);
+ assert.match(rendered,/999 % 330 = 9/);
+ assert.match(rendered,/999 % 331 = 6/);
+ assert.match(rendered,/999 % 332 = 3/);
  assert.match(rendered,/999 % 333 = 0/);
- assert.match(rendered,/i는 334/);
- assert.match(rendered,/printf.*334/);
- assert.doesNotMatch(rendered,/SQL|핵심 개념은|먼저 변수의 초기값/);
+ assert.match(rendered,/i=334/);
+ assert.match(rendered,/334를 출력/);
+ assert.doesNotMatch(rendered,/SQL|값 변화가 있는 줄이면|이 줄에서 확인할 실제 값/);
 });
 pass('all stored explanations remain nonempty after cleanup',()=>questions.forEach(q=>assert.ok(solutionSummary(q).trim().length>=12,q.id)));
 
@@ -159,11 +164,16 @@ pass('solution schema is the single explanation source',()=>questions.forEach(q=
  assert.ok(q.solution&&typeof q.solution==='object',q.id);
  assert.ok(solutionSummary(q).length>=12,q.id+' summary');
  assert.ok(solutionFlow(q).length>=1,q.id+' flow');
+ assert.ok(String(q.solution.traceTitle||'').trim(),q.id+' traceTitle');
+ assert.ok(solutionTrace(q).length>=1,q.id+' stored trace');
 }));
-pass('line explanations include value traces',()=>questions.filter(q=>String(q.code||'').trim()).forEach(q=>{
- lineByLineExplanation(q).forEach(item=>{
-  assert.ok(String(item.trace||'').trim().length>=12,q.id+' trace line '+item.line);
-  assert.match(item.trace,/[가-힣]/,q.id+' Korean trace '+item.line);
+pass('stored UI traces are complete Korean learning text',()=>questions.forEach(q=>{
+ const trace=solutionTrace(q);
+ assert.ok(trace.length>=1,q.id+' stored trace');
+ trace.forEach((item,index)=>{
+  assert.ok(String(item||'').trim().length>=4,q.id+' trace '+index);
+  assert.match(item,/[가-힣]/,q.id+' Korean trace '+index);
+  assert.doesNotMatch(item,/값 변화가 있는 줄이면 바로 앞 실행 흐름|이 줄에서 확인할 실제 값/,q.id+' fallback trace '+index);
  });
 }));
 
