@@ -39,6 +39,14 @@ review('초급교육',questions,q=>{
   assert.ok(q.steps.every(s=>String(s).trim().length>=8),q.id+' short step');
   assert.ok(beginnerFocus(q).length>=35,q.id+' focus');
   assert.ok(examMemory(q).length>=30,q.id+' memory');
+  const topic=[q.title,...(q.concepts||[])].join(' ');
+  if(!/포인터|역참조|이중 포인터|연결 리스트/.test(topic)){
+    assert.doesNotMatch(beginnerFocus(q),/포인터/,q.id+' unrelated pointer in focus');
+    assert.doesNotMatch(examMemory(q),/포인터/,q.id+' unrelated pointer in memory');
+  }
+  if(!/상속|오버라이딩|동적 바인딩|super|필드 숨김/.test(topic)){
+    assert.doesNotMatch(beginnerFocus(q),/실제 생성된 객체 타입/,q.id+' unrelated inheritance guidance');
+  }
   const concepts=beginnerConcepts(q);
   assert.ok(concepts.length>=1&&concepts.length<=3,q.id+' concepts');
   concepts.forEach(c=>{assert.ok(c.title.length>=2);assert.ok(c.text.length>=35);});
@@ -110,6 +118,9 @@ assert.match(css,/grid-template-columns:1fr/);
 assert.match(css,/font-size:16\.5px|font-size:16px/);
 assert.match(css,/line-height:1\.8|line-height:1\.85|line-height:1\.9/);
 assert.match(css,/word-break:keep-all/);
+assert.match(css,/\.beginner-focus,\s*\n\.practical-page \.beginner-memory\{/);
+assert.doesNotMatch(css,/\.beginner-focus\{\s*border-left:5px/);
+assert.doesNotMatch(css,/\.beginner-memory\{\s*border-left:5px/);
 
 review('품질검증',questions,q=>{
   assert.ok(q.id&&q.title&&q.question&&q.answer,q.id||'missing id');
