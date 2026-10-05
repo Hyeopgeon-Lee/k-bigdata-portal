@@ -114,8 +114,64 @@ export function examMemory(q){
   return matchedText(q,MEMORY_RULES)||"답을 쓰기 전에 마지막 출력문과 문제에서 요구한 값이 같은 대상인지 확인하세요. 공백·줄바꿈·대소문자도 최종 답의 일부일 수 있습니다.";
 }
 
+const STEP_BOILERPLATE=[
+  /먼저 변수의 초기값과 실제 출력문을 표시합니다/,
+  /이 문제의 핵심 개념은/,
+  /코드나 SQL에서/,
+  /^먼저 문제에서 테이블명, 처리할 열, 값, 조건을/,
+  /^먼저 빈칸 앞뒤의 SQL을/,
+  /^먼저 주어진 테이블과 SQL을/,
+  /^먼저 빈칸 앞뒤 코드를/,
+  /^마지막으로 출력문을 다시 보고/,
+  /^마지막으로 문제에서 요구한 값만/,
+  /^마지막으로 SELECT에 남는 열/,
+  /^마지막으로 빈칸을 앞에서부터/
+];
+
+const EXPLANATION_BOILERPLATE=[
+  /^먼저 변수의 초기값과 실제 출력문을 표시합니다\.$/,
+  /^반복문·조건문·함수 호출이 있으면/,
+  /^이 문제의 핵심 개념은 .*입니다\.$/,
+  /^코드나 SQL에서 이 개념이 사용되는 부분을/,
+  /^C 코드는 한 문장이/,
+  /^Java 코드는 변수값과 객체 상태를/,
+  /^Python 코드는 연산 전후의/,
+  /^SQL은 각 절을 한 번에 읽기보다/,
+  /^마지막으로 출력문을 다시 보고/,
+  /^마지막으로 테이블명·열 이름·조건 연산자/,
+  /^마지막으로 문제에서 요구한 값만/,
+  /^마지막으로 SELECT에 남는 열/,
+  /^마지막으로 빈칸을 앞에서부터/,
+  /^이 문제에서는 .*의 흐름을 이해하는 것이 핵심입니다\.$/
+];
+
+function languageMismatch(q,text){
+  const value=String(text||"");
+  if(q.language!=="SQL"&&/\bSQL\b/.test(value))return true;
+  if(q.language==="SQL"&&/(?:C 코드는|Java 코드는|Python 코드는)/.test(value))return true;
+  return false;
+}
+
 export function beginnerSteps(q){
-  return (q.steps||[]).filter(Boolean);
+  const seen=new Set();
+  return (q.steps||[])
+    .map(step=>String(step||"").trim())
+    .filter(Boolean)
+    .filter(step=>!STEP_BOILERPLATE.some(pattern=>pattern.test(step)))
+    .filter(step=>!languageMismatch(q,step))
+    .filter(step=>{const key=step.normalize("NFKC").replace(/\s+/g," ");if(seen.has(key))return false;seen.add(key);return true;});
+}
+
+export function beginnerExplanation(q){
+  const seen=new Set();
+  return String(q.explanation||"")
+    .split(/(?<=[.!?])\s+/)
+    .map(sentence=>sentence.trim())
+    .filter(Boolean)
+    .filter(sentence=>!EXPLANATION_BOILERPLATE.some(pattern=>pattern.test(sentence)))
+    .filter(sentence=>!languageMismatch(q,sentence))
+    .filter(sentence=>{const key=sentence.normalize("NFKC").replace(/\s+/g," ");if(seen.has(key))return false;seen.add(key);return true;})
+    .join(" ");
 }
 
 // 2026-10-05: beginner-first line-by-line code interpretation.
