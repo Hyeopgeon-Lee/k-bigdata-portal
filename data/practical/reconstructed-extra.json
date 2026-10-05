@@ -1423,7 +1423,7 @@
       "모듈로 연산"
     ],
     "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
-    "code": "#include <stdio.h>\n#define SIZE 3\ntypedef struct { int data[SIZE]; int front; int rear; } Queue;\nvoid enq(Queue *q,int v){ q->data[q->rear]=v; q->rear=(q->rear+1)%SIZE; }\nint deq(Queue *q){ int v=q->data[q->front]; q->front=(q->front+1)%SIZE; return v; }\nint main(void){\n    Queue q={{0},0,0};\n    enq(&q,1); enq(&q,2); deq(&q); enq(&q,3);\n    int first=deq(&q), second=deq(&q);\n    printf(\"%d 그리고 %d\",first,second);\n    return 0;\n}",
+    "code": "#include <stdio.h>\n#define SIZE 3\n\ntypedef struct {\n    int data[SIZE];\n    int front;\n    int rear;\n} Queue;\n\nvoid enq(Queue *q, int v){\n    q->data[q->rear]=v;\n    q->rear=(q->rear+1)%SIZE;\n}\n\nint deq(Queue *q){\n    int v=q->data[q->front];\n    q->front=(q->front+1)%SIZE;\n    return v;\n}\n\nint main(void){\n    Queue q={{0},0,0};\n    enq(&q,1);\n    enq(&q,2);\n    deq(&q);\n    enq(&q,3);\n\n    int first=deq(&q);\n    int second=deq(&q);\n    printf(\"%d 그리고 %d\",first,second);\n    return 0;\n}",
     "answer": "2 그리고 3",
     "acceptedAnswers": [
       "2 3",
@@ -4073,7 +4073,7 @@
       "재귀"
     ],
     "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
-    "code": "class Parent{\n int compute(int n){if(n<=1)return n;return compute(n-1)+compute(n-2);}\n}\nclass Child extends Parent{\n int compute(int n){if(n<=1)return n;return compute(n-1)+compute(n-3);}\n}\npublic class Main{\n public static void main(String[] args){Parent x=new Child();System.out.print(x.compute(7));}\n}",
+    "code": "class Parent{\n int compute(int n){\n  if(n<=1) return n;\n  return compute(n-1)+compute(n-2);\n }\n}\nclass Child extends Parent{\n int compute(int n){\n  if(n<=1) return n;\n  return compute(n-1)+compute(n-3);\n }\n}\npublic class Main{\n public static void main(String[] args){\n  Parent x=new Child();\n  System.out.print(x.compute(7));\n }\n}",
     "answer": "2",
     "explanation": "실제 객체가 Child라 Child.compute가 재귀적으로 적용됩니다. 계산 결과 C(7)=2입니다.",
     "steps": [
