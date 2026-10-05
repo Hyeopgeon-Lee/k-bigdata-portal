@@ -5,7 +5,7 @@ const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const base=JSON.parse(read('data/practical/questions.json')),imported=JSON.parse(read('data/practical/normalized.json'));
 const bank=buildBank([...base,...imported.questions],JSON.parse(read('data/practical/exam-history.json')));
 assert.equal(bank.length,220);assert.equal(new Set(bank.map(q=>q.id)).size,220);
-for(const q of bank){assert.ok(q.answer&&q.steps.length>=3);if(q.sourceType==='reconstructed')assert.ok(q.history.length&&q.sources.length);if(q.originalQuestionId)assert.ok(bank.some(p=>p.id===q.originalQuestionId));}
+for(const q of bank){assert.ok(q.answer&&q.solution?.summary&&q.solution?.flow?.length>=1);if(q.sourceType==='reconstructed')assert.ok(q.history.length&&q.sources.length);if(q.originalQuestionId)assert.ok(bank.some(p=>p.id===q.originalQuestionId));}
 const startedAt=100000,a={startedAt,submittedAt:null,answer:'20'};
 for(const offset of [0,20000,30000,59999]){
  assert.equal(canSubmit(a,a.answer,startedAt+offset),true);
