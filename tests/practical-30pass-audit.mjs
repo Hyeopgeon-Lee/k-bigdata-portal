@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {lineByLineExplanation} from '../js/practical-explanation.js';
+import {beginnerSteps,beginnerExplanation,lineByLineExplanation} from '../js/practical-explanation.js';
 
 const root=new URL('../',import.meta.url);
 const read=p=>JSON.parse(readFileSync(new URL(p,root),'utf8'));
@@ -118,5 +118,37 @@ pass('mobile CSS contains dedicated line annotation layout',()=>{
  assert.match(css,/@media\(max-width:767px\)/);
 });
 
-assert.equal(passes.length,40);
-console.log('FINAL: 40/40 practical content + line-explanation QA passes.');
+pass('stored steps contain no generic solve boilerplate',()=>questions.forEach(q=>{
+ const s=(q.steps||[]).join(' ');
+ assert.doesNotMatch(s,/먼저 변수의 초기값과 실제 출력문을 표시합니다|이 문제의 핵심 개념은|코드나 SQL에서/,q.id);
+}));
+pass('stored explanations contain no generic language boilerplate',()=>questions.forEach(q=>{
+ const e=String(q.explanation||'');
+ assert.doesNotMatch(e,/C 코드는 한 문장이|Java 코드는 변수값과 객체 상태를|Python 코드는 연산 전후의|SQL은 각 절을 한 번에 읽기보다/,q.id);
+ assert.doesNotMatch(e,/먼저 주어진 테이블과 SQL을|먼저 빈칸 앞뒤 코드를|먼저 빈칸 앞뒤의 SQL을|먼저 문제에서 테이블명, 처리할 열, 값, 조건을/,q.id);
+}));
+pass('non-SQL explanations never mention SQL',()=>questions.filter(q=>q.language!=='SQL').forEach(q=>{
+ assert.doesNotMatch([q.explanation,...(q.steps||[])].join(' '),/\bSQL\b/,q.id);
+}));
+pass('rendered explanation sanitizer removes boilerplate',()=>questions.forEach(q=>{
+ const rendered=[beginnerExplanation(q),...beginnerSteps(q)].join(' ');
+ assert.doesNotMatch(rendered,/먼저 변수의 초기값과 실제 출력문을 표시합니다|이 문제의 핵심 개념은|코드나 SQL에서/,q.id);
+}));
+pass('rendered explanations do not invent pointers',()=>questions.forEach(q=>{
+ const topic=[q.title,...(q.concepts||[]),q.code||'',q.question||''].join(' ');
+ const rendered=[beginnerExplanation(q),...beginnerSteps(q)].join(' ');
+ if(!/포인터|역참조|이중 포인터|연결 리스트|->|\*\s*[A-Za-z_]\w*/.test(topic))assert.doesNotMatch(rendered,/포인터/,q.id);
+}));
+pass('every question keeps at least one problem-specific execution step',()=>questions.forEach(q=>assert.ok(beginnerSteps(q).length>=1,q.id)));
+pass('R-IND-C-0022 has exact C execution flow with no SQL leakage',()=>{
+ const q=questions.find(q=>q.id==='R-IND-C-0022');assert.ok(q);
+ const rendered=[beginnerExplanation(q),...beginnerSteps(q)].join(' ');
+ assert.match(rendered,/999 % 333 = 0/);
+ assert.match(rendered,/i는 334/);
+ assert.match(rendered,/printf.*334/);
+ assert.doesNotMatch(rendered,/SQL|핵심 개념은|먼저 변수의 초기값/);
+});
+pass('all stored explanations remain nonempty after cleanup',()=>questions.forEach(q=>assert.ok(String(q.explanation||'').trim().length>=12,q.id)));
+
+assert.equal(passes.length,48);
+console.log('FINAL: 48/48 practical content + explanation integrity QA passes.');
