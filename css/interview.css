@@ -60,3 +60,40 @@ body[data-page="interview"] #local-query{margin-bottom:12px}
     max-width:none;
   }
 }
+
+
+/* Current technical-interview question sharing */
+body[data-page="interview"] .interview-share-row{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+  gap:8px;
+  margin:12px 0 4px;
+}
+body[data-page="interview"] .interview-share-row .button{
+  min-height:42px;
+  padding:8px 12px;
+  font-size:13px;
+}
+body[data-page="interview"] .interview-share-status{
+  margin:4px 0 10px;
+  color:#53627a;
+  font-size:13px;
+  line-height:1.55;
+  text-align:right;
+}
+body[data-page="interview"] .interview-share-status:empty{display:none}
+@media(max-width:480px){
+  body[data-page="interview"] .interview-share-row{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  body[data-page="interview"] .interview-share-row .button{
+    width:100%;
+    min-height:44px;
+    padding-inline:8px;
+  }
+  body[data-page="interview"] .interview-share-status{
+    text-align:left;
+  }
+}
