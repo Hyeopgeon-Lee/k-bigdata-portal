@@ -137,6 +137,7 @@
 .practical-page .code-scroll,
 .practical-page .table-scroll{
   -webkit-overflow-scrolling:touch;
+  overscroll-behavior-x:contain;
   overscroll-behavior-inline:contain;
   scrollbar-width:thin;
 }
@@ -347,12 +348,14 @@
 
 @media(max-width:767px){
   .practical-page .code-scroll--complex{
+    max-height:52vh;
     max-height:52svh;
     overflow:auto;
   }
   .practical-page .code-dialog{
     width:100%;
     max-width:none;
+    height:100vh;
     height:100dvh;
     max-height:none;
     margin:0;
@@ -364,6 +367,7 @@
   }
   .practical-page .code-dialog-scroll{
     max-height:none;
+    height:calc(100vh - 58px - env(safe-area-inset-top));
     height:calc(100dvh - 58px - env(safe-area-inset-top));
   }
   .practical-page .code-dialog pre{
@@ -577,6 +581,7 @@
     margin:-10px -8px 18px;
     padding:10px 8px;
     background:rgba(255,255,255,.96);
+    -webkit-backdrop-filter:blur(12px);
     backdrop-filter:blur(12px);
     border-bottom:1px solid var(--color-border);
   }
