@@ -2,6 +2,7 @@ import {loadPracticalBank} from "./practical-data.js?v=20261005-browser-1";
 import {HINT_SECONDS,ANSWER_SECONDS,examLabels,typeLabels,languages,escapeHTML as esc,remainingSeconds,remainingAnswerSeconds,hintAvailable,answerDeadlineReached,canSubmit,canReveal,gradeAnswer,questionText,shuffle,recommendFive,matchesExam,localDay,summarizeAttempts,highlightCode,formatCodeForDisplay} from "./practical-core.js?v=20261005-browser-1";
 import {getAttempts,saveAttempt,getSession,saveSession,clearLocalLearning,storageAvailable,getPreferences,savePreferences,exportLearning,importLearning} from "./practical-store.js";
 import {matches} from "./search-core.js?v=20261005-perf-1";
+import {beginnerFocus,beginnerConcepts,beginnerSteps,examMemory} from "./practical-explanation.js?v=20261005-beginner-1";
 
 const $=selector=>document.querySelector(selector),root=$("#bank-content"),status=$("#bank-status");
 let bank=[],view="home",current=null,attempt=null,timer=null,queue=[],queueIndex=0,aliases={},pageLimit=24,queueKind="random",solveActionsObserver=null;
@@ -316,13 +317,22 @@ function revealAnswer(reason="resume",now=Date.now()){
  const answerInput=$("#my-answer");if(answerInput)answerInput.disabled=true;
  const hintPanel=$("#solve-hint");if(hintPanel)hintPanel.hidden=true;
  const q=current,similar=bank.filter(item=>item.originalQuestionId===q.id||q.originalQuestionId&&item.originalQuestionId===q.originalQuestionId&&item.id!==q.id);
- const extraExplanation=q.explanation==="공개 복원자료의 출제 범위를 참고해 새로 구성한 학습문제입니다. 특정 회차의 실제 문제와 일치함을 검증한 자료가 아닙니다."?"":q.explanation;
+ const extraExplanation=q.explanation||"";
+ const concepts=beginnerConcepts(q),steps=beginnerSteps(q);
+ const conceptCards=concepts.map(item=>'<article class="beginner-concept"><h4>'+esc(item.title)+'</h4><p>'+esc(item.text)+'</p></article>').join("");
  const sourceDetails=q.history.length||q.sources.length?'<details class="bank-sources"><summary>출제 이력 · 출처</summary>'+(q.history.length?'<ul>'+q.history.map(h=>'<li>'+esc(historyLabel(h))+'</li>').join("")+'</ul>':'')+(q.sources.length?'<ul>'+q.sources.map(s=>'<li><a href="'+esc(s.url)+'" target="_blank" rel="noopener noreferrer">'+esc(s.name==="데이터셋 참고 출처 (문항·회차 일치 미검증)"?"학습 자료":s.name)+' ↗<span class="sr-only"> 외부 자료, 새 창</span></a></li>').join("")+'</ul>':'')+'</details>':'';
  const resultTitle=attempt.autoRevealed?ANSWER_SECONDS+"초가 지나 정답을 공개했습니다":attempt.correct===true?'정답입니다':attempt.correct===false?'오답입니다 · 오답노트에 저장했습니다':'예시 답안과 직접 비교하세요';
  const learnerLabel=attempt.autoRevealed?ANSWER_SECONDS+"초 시점 작성 중인 답":'내 답';
  const learnerAnswer=attempt.answer?.trim()?attempt.answer:'미제출';
  const selfJudge=q.grading==="self"&&!attempt.autoRevealed?'<p>동등한 SQL은 정답으로 기록할 수 있습니다.</p><div class="practice-actions">'+button("self-correct","정답으로 기록")+button("self-wrong","오답으로 기록")+'</div>':'';
- $("#answer-result").innerHTML='<section class="bank-result"><h3 tabindex="-1" id="result-heading">'+esc(resultTitle)+'</h3>'+(attempt.autoRevealed?'<p class="timeout-note">권장 풀이 시간이 끝나 자동으로 정답과 풀이를 공개했습니다. 이 시도는 정답률에 포함하지 않습니다.</p>':'')+'<div class="answer-pair"><div><h4>'+esc(learnerLabel)+'</h4><pre>'+esc(learnerAnswer)+'</pre></div><div><h4>'+(q.grading==="self"?'예시 정답':'정답')+'</h4><pre>'+esc(q.answer)+'</pre></div></div>'+selfJudge+'<div class="concept-reveal"><h3>핵심 개념</h3><p>'+esc(q.title)+'</p></div><h3>왜 이런 답인가?</h3><ol class="bank-steps">'+q.steps.map(step=>'<li>'+esc(step)+'</li>').join("")+'</ol>'+(extraExplanation?'<details><summary>추가 설명</summary><p>'+esc(extraExplanation)+'</p></details>':'')+'<div class="practice-actions">'+button("retry","다시 풀기")+similar.slice(0,3).map(s=>button("similar","비슷한 문제",'data-id="'+esc(s.id)+'" aria-label="'+esc(s.title)+' 비슷한 문제"')).join("")+'</div>'+sourceDetails+'</section>';
+ const learningGuide='<div class="beginner-flow" aria-label="기초부터 보는 문제 풀이">'
+   +'<section class="beginner-section beginner-focus"><p class="beginner-kicker">1 · 문제에서 먼저 볼 것</p><p>'+esc(beginnerFocus(q))+'</p></section>'
+   +'<section class="beginner-section"><p class="beginner-kicker">2 · 기초 개념</p><div class="beginner-concepts">'+conceptCards+'</div></section>'
+   +'<section class="beginner-section"><p class="beginner-kicker">3 · 한 단계씩 풀이</p><ol class="bank-steps">'+steps.map(step=>'<li>'+esc(step)+'</li>').join("")+'</ol></section>'
+   +'<section class="beginner-section beginner-why"><p class="beginner-kicker">4 · 왜 이 답인가?</p><p class="beginner-explanation">'+esc(extraExplanation)+'</p></section>'
+   +'<section class="beginner-section beginner-memory"><p class="beginner-kicker">5 · 시험에서 기억할 것</p><p>'+esc(examMemory(q))+'</p></section>'
+   +'</div>';
+ $("#answer-result").innerHTML='<section class="bank-result"><h3 tabindex="-1" id="result-heading">'+esc(resultTitle)+'</h3>'+(attempt.autoRevealed?'<p class="timeout-note">권장 풀이 시간이 끝나 자동으로 정답과 풀이를 공개했습니다. 이 시도는 정답률에 포함하지 않습니다.</p>':'')+'<div class="answer-pair"><div><h4>'+esc(learnerLabel)+'</h4><pre>'+esc(learnerAnswer)+'</pre></div><div><h4>'+(q.grading==="self"?'예시 정답':'정답')+'</h4><pre>'+esc(q.answer)+'</pre></div></div>'+selfJudge+learningGuide+'<div class="practice-actions">'+button("retry","다시 풀기")+similar.slice(0,3).map(s=>button("similar","비슷한 문제",'data-id="'+esc(s.id)+'" aria-label="'+esc(s.title)+' 비슷한 문제"')).join("")+'</div>'+sourceDetails+'</section>';
  updateGate();
  if(attempt.autoRevealed){
   $("#gate-status").textContent=ANSWER_SECONDS+"초가 지나 정답과 풀이를 자동 공개했습니다.";
