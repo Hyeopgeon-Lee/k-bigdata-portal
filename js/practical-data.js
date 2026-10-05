@@ -1,4 +1,4 @@
-import {buildBank} from "./practical-core.js?v=20261005-codefmt-1";
+import {buildBank} from "./practical-core.js?v=20261005-codefmt-2";
 
 const DATA_VERSION="20261005-hintflow-3";
 
