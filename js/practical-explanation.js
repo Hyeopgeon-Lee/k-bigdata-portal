@@ -321,8 +321,10 @@ function explainCJavaLine(line,language){
   }
   m=t.match(/^(?:public\s+|private\s+|protected\s+)?([A-Z][A-Za-z_]\w*)\s*\(([^)]*)\)\s*\{?(.*)$/);
   if(m)return m[1]+" 생성자를 정의합니다. 객체가 만들어질 때 매개변수 "+(m[2].trim()||"없이")+" 초기화 코드를 실행합니다.";
+  m=t.match(/^new\s+([A-Za-z_]\w*)(?:<[^>]*>)?\s*\((.*?)\)\.([A-Za-z_]\w*)\s*\((.*?)\)\s*;?$/);
+  if(m)return m[1]+" 객체를 "+(m[2].trim()?shortExpr(m[2])+" 인자로 ":"")+"생성한 뒤 "+m[3]+" 메서드를 호출합니다.";
   if(/\bnew\s+[A-Za-z_]\w*\s*\(/.test(t)&&/=/.test(t))return "new로 객체를 생성하고 그 참조값을 왼쪽 변수에 저장합니다.";
-  if(/^new\s+[A-Za-z_]\w*\s*\(.*\)\s*;?$/.test(t))return "new로 객체를 생성하고 생성자를 실행합니다.";
+  if(/^new\s+[A-Za-z_]\w*(?:<[^>]*>)?\s*\(.*\)\s*;?$/.test(t))return "new로 객체를 생성하고 생성자를 실행합니다.";
   m=t.match(/^(.+?)\s+([A-Za-z_]\w*)\s*\[\s*([^\]]*)\s*\]\s*=\s*(.+);$/);
   if(m)return m[2]+" 배열을 만들고 "+shortExpr(m[4])+"의 값으로 초기화합니다.";
   m=t.match(/^(.+?)\s+([A-Za-z_]\w*)\s*\[\s*([^\]]*)\s*\]\s*=\s*\{$/);
