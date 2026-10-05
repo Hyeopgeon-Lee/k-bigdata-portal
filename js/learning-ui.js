@@ -5,7 +5,7 @@ import {services} from "./services.js";
 let certifications=[],certificationPaths=[],renderCertificateCard=null,renderCertificateDetail=null;
 let jobs=[],jobComparisons=[],jobGuidance={},jobGroups=[],jobLearningDocs=null;
 let docs=[],docCategories=[],docFlows=[],findDocForSkill=null;
-let questions=[],initInterview=null;
+let initInterview=null;
 
 const esc=v=>String(v??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
 const list=items=>"<ul>"+items.map(v=>"<li>"+esc(v)+"</li>").join("")+"</ul>";
@@ -21,7 +21,7 @@ function renderDocCard(item){
 }
 function renderDocDetail(item){
  const roles=item.jobIds.map(id=>jobs.find(j=>j.id===id)).filter(Boolean);
- const categories=item.interviewCategories.filter(category=>questions.some(q=>q.category===category));
+ const categories=item.interviewCategories||[];
  return '<p>'+esc(item.description)+'</p>'+(item.note?'<aside class="notice"><h3>학습 전에 확인하세요</h3><p>'+esc(item.note)+'</p></aside>':'')+'<div class="doc-detail-grid"><section class="job-info-card"><h3>무엇을 공부하나요?</h3>'+list(item.learn)+'</section><section class="job-info-card"><h3>프로젝트에서 어떻게 활용하나요?</h3>'+list(item.useCases)+'</section></div><section class="job-section"><h3>함께 배우는 연관 기술</h3>'+relatedDocs(item)+'</section><section class="job-section"><h3>연결되는 IT 직무</h3><div class="job-topic-links">'+roles.map(role=>'<a href="jobs.html?id='+esc(role.id)+'">'+esc(role.name)+' →</a>').join("")+'</div></section>'+(categories.length?'<section class="job-section"><h3>관련 기술면접 학습</h3><div class="job-topic-links">'+categories.map(category=>'<a href="interview.html?category='+esc(encodeURIComponent(category))+'">'+esc(category)+' 문제 →</a>').join("")+'</div></section>':'')+(item.category.startsWith("Open API")?'<aside class="notice"><h3>API 사용 전 체크</h3><p>앱 등록·API Key·호출 한도·요금·이용 약관을 확인하세요. 서버용 Secret은 HTML이나 GitHub 공개 저장소에 넣지 않습니다. 위치·개인정보는 동의와 최소 수집 원칙을 적용하세요.</p></aside>':'')+'<p class="hint">공식문서의 버전과 프로젝트 버전을 맞춰 읽으세요.</p><div class="detail-actions">'+officialLink(item)+'<a class="button button-secondary" href="project-guide.html">프로젝트 제작 가이드</a></div>';
 }
 
@@ -31,7 +31,7 @@ function renderJobDetail(job) {
   const learningDocs = jobLearningDocs(job,docs);
   const blog = services.find(service => service.id === "tech-blog");
   const certs = certifications.filter(cert => job.certifications.includes(cert.id) || (cert.relatedJobIds || []).includes(job.id));
-  const interviewLinks = job.interviewCategories.filter(category => questions.some(q => q.category === category));
+  const interviewLinks = job.interviewCategories||[];
   const related = job.relatedRoles.map(role => '<li>'+(role.id?'<a href="jobs.html?id='+esc(role.id)+'">'+esc(role.name)+'</a>':'<strong>'+esc(role.name)+'</strong>')+'<p>'+esc(role.description)+'</p></li>').join("");
   const checklist = '<ul class="job-checklist">'+job.readinessChecklist.map((text,i)=>'<li><label><input type="checkbox" id="ready-'+esc(job.id)+'-'+i+'"><span>'+esc(text)+'</span></label></li>').join("")+'</ul>';
   const projectCards = '<div class="job-projects">'+job.projectIdeas.map(project=>'<article class="job-info-card"><h4>'+esc(project.title)+'</h4><p>'+esc(project.description)+'</p></article>').join("")+'</div>';
@@ -75,14 +75,12 @@ async function loadPageModules(){
   const jobModule=await import("./jobs.js");
   ({jobs,jobComparisons,jobGuidance,jobGroups,jobLearningDocs}=jobModule);
   if(id&&jobs.some(item=>item.id===id)){
-   const [docModule,certModule,interviewModule]=await Promise.all([
+   const [docModule,certModule]=await Promise.all([
     import("./docs.js"),
-    import("./certifications.js"),
-    import("./interview.js?v=20261005-accuracy-1")
+    import("./certifications.js")
    ]);
    ({docs,findDocForSkill}=docModule);
    ({certifications}=certModule);
-   ({questions}=interviewModule);
   }
   return;
  }
@@ -90,12 +88,7 @@ async function loadPageModules(){
   const docModule=await import("./docs.js");
   ({docs,docCategories,docFlows,findDocForSkill}=docModule);
   if(id&&docs.some(item=>item.id===id)){
-   const [jobModule,interviewModule]=await Promise.all([
-    import("./jobs.js"),
-    import("./interview.js?v=20261005-accuracy-1")
-   ]);
-   ({jobs}=jobModule);
-   ({questions}=interviewModule);
+   ({jobs}=await import("./jobs.js"));
   }
  }
 }
