@@ -1903,7 +1903,7 @@
     "difficulty": "실전",
     "enabled": true,
     "createdAt": "2026-10-04",
-    "updatedAt": "2026-10-04",
+    "updatedAt": "2026-10-05",
     "id": "R-SQL-0012",
     "language": "SQL",
     "title": "외래키 제약조건 DDL 빈칸",
@@ -1914,19 +1914,18 @@
       "REFERENCES",
       "외래키"
     ],
-    "question": "다음 CREATE TABLE의 ①~⑤에 들어갈 토큰을 순서대로 쓰세요.",
+    "question": "다음 조건을 만족하도록 PLAYER 테이블의 외래키 제약조건을 완성합니다. 제약조건 이름은 TEAM_TF이고, PLAYER.TEAM_ID가 외래키이며, TEAM.TEAM_ID2를 참조합니다. ①~⑤에 들어갈 토큰을 순서대로 쓰세요.",
     "code": "CREATE TABLE PLAYER (\n    PLAYER_ID CHAR(7) NOT NULL,\n    PLAYER_NAME VARCHAR2(20) NOT NULL,\n    TEAM_ID CHAR(3) NOT NULL,\n    PRIMARY KEY (PLAYER_ID),\n    ① TEAM_TF ② KEY (③) ④ TEAM (⑤)\n);",
     "answer": "CONSTRAINT FOREIGN TEAM_ID REFERENCES TEAM_ID2",
     "acceptedAnswers": [
       "CONSTRAINT FOREIGN TEAM_ID REFERENCES TEAM_ID2",
       "① CONSTRAINT ② FOREIGN ③ TEAM_ID ④ REFERENCES ⑤ TEAM_ID2"
     ],
-    "explanation": "완성 구문은 CONSTRAINT TEAM_TF FOREIGN KEY (TEAM_ID) REFERENCES TEAM (TEAM_ID2)입니다.",
+    "explanation": "제약조건 이름은 TEAM_TF이므로 CONSTRAINT로 선언합니다. PLAYER의 TEAM_ID를 FOREIGN KEY로 지정하고 TEAM 테이블의 TEAM_ID2를 REFERENCES로 참조합니다.",
     "steps": [
-      "제약조건 이름 앞에는 CONSTRAINT가 옵니다.",
-      "외래키 선언은 FOREIGN KEY입니다.",
-      "자식 열은 TEAM_ID입니다.",
-      "부모 테이블 참조에는 REFERENCES TEAM (TEAM_ID2)를 씁니다."
+      "제약조건 이름 TEAM_TF 앞에는 CONSTRAINT가 들어갑니다.",
+      "PLAYER에서 외래키로 지정할 열은 TEAM_ID이므로 FOREIGN KEY (TEAM_ID)가 됩니다.",
+      "참조 대상은 TEAM 테이블의 TEAM_ID2이므로 REFERENCES TEAM (TEAM_ID2)로 완성합니다."
     ],
     "sources": [
       {
@@ -1944,7 +1943,7 @@
     ],
     "verificationNote": "복수 자료에서 제약조건명 TEAM_TF, 자식 TEAM_ID, 부모 TEAM.TEAM_ID2와 정답 토큰 5개가 일치합니다.",
     "grading": "sql_keywords",
-    "hint": "빈칸의 앞뒤 문장을 먼저 읽고, 각 위치가 데이터 선택·조건·집계·정렬·변경 중 어떤 역할인지 문장으로 바꿔 보세요."
+    "hint": "제약조건 이름을 선언하는 키워드부터 시작해, FOREIGN KEY 괄호에는 PLAYER의 외래키 열을, REFERENCES 뒤에는 부모 테이블과 참조 열을 순서대로 넣어 보세요."
   },
   {
     "sourceType": "reconstructed",
