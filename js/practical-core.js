@@ -171,6 +171,7 @@ export function formatCodeForDisplay(code,language){
 
  return out.join("\n")
   .replace(/}\n\s*(else|catch|finally)\b/g,"} $1")
+  .replace(/}\n\s*(while\s*\([^\n;]+\);)/g,"} $1")
   .replace(/}\n\s*;/g,"};")
   .replace(/[ \t]+$/gm,"")
   .trim();
