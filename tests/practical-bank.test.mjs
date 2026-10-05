@@ -10,7 +10,7 @@ assert.equal(new Set(history.map(h=>h.id)).size,history.length);
 const instances=new Set();
 for(const h of history){assert.ok(bank.some(q=>q.id===h.questionId&&q.sourceType==='reconstructed'));assert.ok(['engineer','industrial_engineer'].includes(h.examType));assert.ok(h.year>=2020&&h.year<=2026);assert.ok(h.round>=1&&h.round<=4);assert.match(h.sourceUrl,/^https:\/\//);assert.ok(h.verificationNote);const key=[h.examType,h.year,h.round,h.questionId].join(':');assert.ok(!instances.has(key));instances.add(key);}
 for(const q of bank){
- for(const field of ['title','question','code','answer','explanation','language','difficulty'])assert.ok(q[field],q.id+' '+field);
+ for(const field of ['title','question','code','answer','explanation','hint','language','difficulty'])assert.ok(q[field],q.id+' '+field);
  assert.ok(['C','Java','Python','SQL'].includes(q.language));assert.ok(sourceLabels[q.sourceType]);assert.ok(typeLabels[q.questionType]);assert.ok(['기본','실전','고난도'].includes(q.difficulty));assert.ok(q.concepts.length&&q.steps.length>=3);
  if(q.sourceType==='reconstructed'){assert.ok(q.history.length);assert.ok(q.sources.length);assert.ok(['A','B','C'].includes(q.confidence));if(q.confidence==='B')assert.ok(new Set(q.sources.map(s=>s.url)).size>=2);}
  else {assert.equal(q.history.length,0);assert.equal(q.confidence,null);}
