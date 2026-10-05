@@ -1,8 +1,5 @@
 /* Mobile-first interview-only overrides; shared portal components stay intact. */
-body[data-page="interview"] .page-hero,body[data-page="interview"] .learning-content{width:min(calc(100% - 24px),880px);margin-inline:auto}
-body[data-page="interview"] .page-hero{padding:24px 0 20px}
-body[data-page="interview"] .page-hero h1{font-size:28px;line-height:1.35;margin:6px 0 12px;word-break:keep-all}
-body[data-page="interview"] .page-hero p{font-size:16px;line-height:1.8;margin:8px 0;color:var(--color-text-muted)}
+body[data-page="interview"] .learning-content{width:min(calc(100% - 24px),1040px);margin-inline:auto}
 body[data-page="interview"] .interview-stats{background:none;border:0;padding:0;font-size:14px!important}
 body[data-page="interview"] .interview-home-link{display:none}
 body[data-page="interview"] #interview-home>.button{width:100%;min-height:56px;font-size:17px}
@@ -37,8 +34,6 @@ body[data-page="interview"] .practice-complete{padding:20px}
  body[data-page="interview"] .brand-copy{display:none}
 }
 @media(min-width:768px){
- body[data-page="interview"] .page-hero{padding-top:40px}
- body[data-page="interview"] .page-hero h1{font-size:36px}
  body[data-page="interview"] .question{padding:26px}
  body[data-page="interview"][data-interview-mode="BROWSE"] .question-list{grid-template-columns:repeat(2,minmax(0,1fr))}
  body[data-page="interview"] .question-list>.button{grid-column:1/-1}
