@@ -747,3 +747,43 @@
     font-size:13px;
   }
 }
+
+
+/* Current-problem sharing: secondary controls that stay compact on PC and touch-friendly on mobile. */
+.practical-page .solve-share-row{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+  gap:8px;
+  margin:10px 0 2px;
+}
+.practical-page .solve-share-row .button{
+  min-height:42px;
+  padding:8px 12px;
+  font-size:13px;
+  font-weight:700;
+}
+.practical-page .share-status{
+  min-height:0;
+  margin:4px 0 8px;
+  color:#53627a;
+  font-size:13px;
+  line-height:1.55;
+  text-align:right;
+}
+.practical-page .share-status:empty{display:none}
+@media(max-width:480px){
+  .practical-page .solve-share-row{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    margin-top:10px;
+  }
+  .practical-page .solve-share-row .button{
+    width:100%;
+    min-height:44px;
+    padding-inline:8px;
+  }
+  .practical-page .share-status{
+    text-align:left;
+  }
+}
