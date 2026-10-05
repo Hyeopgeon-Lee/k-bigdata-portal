@@ -659,3 +659,19 @@
     grid-template-columns:1fr;
   }
 }
+
+
+/* 2026-10-05 desktop alignment correction: use the same horizontal grid as the shared portal hero. */
+@media(min-width:901px){
+  .practical-page .learning-content{
+    width:min(calc(100% - 40px),var(--container));
+    max-width:var(--container);
+  }
+  .practical-page .study-home-grid{
+    width:100%;
+  }
+  .practical-page .study-start{
+    width:100%;
+    max-width:none;
+  }
+}
