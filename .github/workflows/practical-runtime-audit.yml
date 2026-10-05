@@ -9,6 +9,7 @@ on:
       - "tests/practical-30pass-audit.mjs"
       - "tests/practical-beginner-review.test.mjs"
       - "tests/practical-dataset-deep-audit.mjs"
+      - "tests/practical-parallel-expert-audit.mjs"
       - "js/practical-explanation.js"
       - "js/practical-ui.js"
       - "css/practical.css"
@@ -36,5 +37,7 @@ jobs:
         run: node tests/practical-beginner-review.test.mjs
       - name: Run 360-round dataset deep audit
         run: node tests/practical-dataset-deep-audit.mjs
+      - name: Run parallel expert audit workers
+        run: node tests/practical-parallel-expert-audit.mjs
       - name: Verify all executable answers
         run: python tests/practical-runtime-audit.py
