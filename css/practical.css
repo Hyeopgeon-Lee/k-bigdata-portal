@@ -377,3 +377,285 @@
     display:none;
   }
 }
+
+
+/* 2026-10-05 desktop reconstruction: keep mobile behavior, give PC its own layout system. */
+@media(min-width:901px){
+  .practical-page .study-header{display:none}
+
+  .practical-page .learning-cross-nav{
+    width:min(calc(100% - 40px),var(--container));
+    margin-inline:auto;
+  }
+
+  .practical-page .study-intro{
+    width:min(calc(100% - 40px),var(--container));
+    margin-inline:auto;
+    padding:42px 0 22px;
+  }
+  .practical-page .study-intro h1{
+    margin:0 0 10px;
+    font-size:clamp(34px,3.2vw,46px);
+    line-height:1.25;
+    letter-spacing:-.045em;
+  }
+  .practical-page .study-intro p{
+    margin:0;
+    max-width:720px;
+    font-size:17px;
+    line-height:1.75;
+  }
+
+  .practical-page .learning-content{
+    width:min(calc(100% - 40px),1200px);
+    max-width:1200px;
+    margin-inline:auto;
+    padding-bottom:72px;
+  }
+
+  .practical-page #quick-filters{
+    display:grid;
+    grid-template-columns:minmax(360px,520px) minmax(420px,1fr);
+    gap:18px;
+    align-items:center;
+    margin:8px 0 26px;
+    padding:18px 20px;
+    border:1px solid var(--color-border);
+    border-radius:14px;
+    background:#fff;
+  }
+  .practical-page #quick-filters .study-segment,
+  .practical-page #quick-filters .study-chips{
+    margin:0;
+  }
+  .practical-page #quick-filters .study-chips{
+    padding:0;
+    gap:8px;
+  }
+  .practical-page #quick-filters .study-chips button{
+    min-height:44px;
+  }
+
+  .practical-page .study-home-grid{
+    display:grid;
+    grid-template-columns:minmax(0,1.45fr) minmax(320px,.85fr);
+    gap:20px;
+    align-items:stretch;
+  }
+  .practical-page .study-start{
+    min-height:278px;
+    margin:0;
+    padding:30px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    border-radius:18px;
+    box-shadow:0 10px 30px rgba(11,23,57,.05);
+  }
+  .practical-page .study-kicker{
+    margin:0 0 8px;
+    color:var(--color-primary);
+    font-size:12px;
+    font-weight:800;
+    letter-spacing:.14em;
+  }
+  .practical-page .study-start h2{
+    font-size:28px;
+    letter-spacing:-.035em;
+  }
+  .practical-page .study-start>p:not(.study-kicker){
+    margin:8px 0 12px;
+    font-size:16px;
+  }
+  .practical-page .study-start progress{
+    margin:6px 0 22px;
+  }
+  .practical-page .study-primary{
+    width:auto;
+    min-width:220px;
+    align-self:flex-start;
+    padding-inline:28px;
+  }
+
+  .practical-page .study-side{
+    display:grid;
+    grid-template-rows:1fr auto;
+    gap:12px;
+  }
+  .practical-page .study-resume{
+    margin:0;
+    min-height:168px;
+    padding:24px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    border-radius:16px;
+  }
+  .practical-page .study-resume h2{
+    font-size:20px;
+  }
+  .practical-page .study-resume p{
+    line-height:1.7;
+  }
+  .practical-page .study-resume .button{
+    width:auto;
+    align-self:flex-start;
+    margin-top:4px;
+  }
+  .practical-page .study-resume-empty{
+    background:#f8fafe;
+  }
+
+  .practical-page .study-quick-menu{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px;
+  }
+  .practical-page .study-quick-menu .button{
+    min-height:50px;
+    font-size:14px;
+    background:#fff;
+  }
+  .practical-page .study-paper-hint{
+    margin:16px 2px 30px;
+  }
+
+  .practical-page .bank-nav{
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:10px;
+    margin:8px 0 18px;
+    padding:0;
+  }
+
+  .practical-page .bank-controls{
+    padding:24px;
+    margin:0 0 22px;
+    border-radius:16px;
+  }
+  .practical-page .bank-filter-grid{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:14px 16px;
+  }
+
+  .practical-page .bank-card-grid{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:16px;
+  }
+  .practical-page .bank-card{
+    min-height:230px;
+    padding:22px;
+    border-radius:14px;
+  }
+  .practical-page .bank-card h2{
+    font-size:20px;
+    line-height:1.5;
+  }
+
+  .practical-page .bank-empty{
+    padding:28px;
+    border-radius:16px;
+  }
+  .practical-page .bank-progress-grid{
+    grid-template-columns:repeat(4,minmax(0,1fr));
+  }
+
+  .practical-page.is-solving .learning-content{
+    width:min(calc(100% - 40px),1040px);
+    max-width:1040px;
+    padding-bottom:72px;
+  }
+  .practical-page .bank-solve{
+    padding:36px 42px 40px;
+    border:1px solid #c8d6ee;
+    border-radius:18px;
+    background:#fff;
+    box-shadow:0 12px 36px rgba(11,23,57,.06);
+  }
+  .practical-page .solve-progress{
+    position:sticky;
+    top:76px;
+    z-index:40;
+    margin:-10px -8px 18px;
+    padding:10px 8px;
+    background:rgba(255,255,255,.96);
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--color-border);
+  }
+  .practical-page .bank-solve h2{
+    margin:20px 0 10px;
+    font-size:28px;
+    line-height:1.45;
+    scroll-margin-top:150px;
+  }
+  .practical-page .solve-question{
+    max-width:78ch;
+    font-size:18px;
+    line-height:1.85;
+  }
+  .practical-page .code-scroll{
+    margin:20px 0 26px;
+    border-radius:12px;
+  }
+  .practical-page .code-scroll pre{
+    padding:22px 24px;
+    font-size:15px;
+    line-height:1.85;
+  }
+  .practical-page #answer-form{
+    margin-top:30px;
+    padding-top:24px;
+    border-top:1px solid var(--color-border);
+  }
+  .practical-page #my-answer{
+    min-height:54px;
+  }
+  .practical-page .solve-actions{
+    position:static;
+    max-width:none;
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+    gap:12px;
+    margin-top:22px;
+    padding:20px 0 0;
+    border-top:1px solid var(--color-border);
+    background:transparent;
+    box-shadow:none;
+  }
+  .practical-page .solve-actions .bank-timer{
+    margin:0 auto 0 0;
+    text-align:left;
+  }
+  .practical-page .solve-actions .button{
+    width:auto;
+    min-width:190px;
+  }
+
+  .practical-page .bank-result{
+    margin-top:30px;
+    padding:28px;
+    border-radius:14px;
+  }
+
+  .practical-page .study-footer{
+    display:block;
+    padding:0;
+    color:rgba(255,255,255,.76);
+    background:var(--color-primary-dark);
+    border-top:0;
+  }
+}
+
+@media(min-width:901px) and (max-width:1180px){
+  .practical-page .study-home-grid{
+    grid-template-columns:minmax(0,1.2fr) minmax(300px,.8fr);
+  }
+  .practical-page .bank-card-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .practical-page .bank-progress-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .practical-page #quick-filters{
+    grid-template-columns:1fr;
+  }
+}
