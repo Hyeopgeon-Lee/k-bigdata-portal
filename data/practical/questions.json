@@ -559,7 +559,7 @@
     "createdAt": "2026-10-04",
     "updatedAt": "2026-10-05",
     "grading": "self",
-    "hint": "UPDATE 문에서 변경 대상 행을 먼저 표시하세요. 변경되는 열과 새 값을 따로 적으세요.",
+    "hint": "문제에 제시된 사원번호 2073 행을 먼저 찾고, 그 행의 salary가 2500으로 바뀌는 상황을 표로 적으세요. 그 다음 '어느 테이블을 바꾸는가 → 어떤 열을 어떤 값으로 바꾸는가 → 어떤 행만 선택하는가' 순서로 SQL 구조를 조립하세요.",
     "solution": {
       "summary": "조건에 맞는 사원 급여 갱신에서 UPDATE·SET를 조합하면 UPDATE salaries SET salary = 2500 WHERE emp_num = 2073;로 작성할 수 있습니다.",
       "flow": [
@@ -1116,7 +1116,7 @@
     "updatedAt": "2026-10-05",
     "grading": "self",
     "originalQuestionId": "R-SQL-0002",
-    "hint": "UPDATE 문에서 변경 대상 행을 먼저 표시하세요. 변경되는 열과 새 값을 따로 적으세요.",
+    "hint": "문제에 제시된 사원번호 2073 행을 먼저 찾고, 추가 급여 조건까지 만족하는지 확인한 뒤 그 행의 salary가 2000으로 바뀌는 상황을 표로 적으세요. 그 다음 '어느 테이블을 바꾸는가 → 어떤 열을 어떤 값으로 바꾸는가 → 어떤 행만 선택하는가' 순서로 SQL 구조를 조립하세요.",
     "solution": {
       "summary": "급여 갱신에 추가 조건 적용에서 UPDATE·AND를 조합하면 UPDATE salaries SET salary = 2500 WHERE emp_num = 2073 AND salary < 2000;로 작성할 수 있습니다.",
       "flow": [
