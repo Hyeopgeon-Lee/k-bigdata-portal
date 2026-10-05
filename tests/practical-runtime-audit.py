@@ -48,7 +48,7 @@ for q in questions:
         with tempfile.TemporaryDirectory() as td:
             p=pathlib.Path(td)
             (p/"main.c").write_text(src,encoding="utf-8")
-            c=run(["gcc","-std=c11","-O0","-w","main.c","-o","main"],p)
+            c=run(["gcc","-std=c11","-O0","-w","main.c","-lm","-o","main"],p)
             if c.returncode!=0:
                 compile_failures.append((q["id"],"C compile",c.stderr[-1000:])); continue
             try:r=run([str(p/"main")],p,stdin)
