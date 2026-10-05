@@ -6,6 +6,7 @@ const root=new URL('../',import.meta.url);
 const read=p=>JSON.parse(readFileSync(new URL(p,root),'utf8'));
 const normalize=v=>String(v??'').normalize('NFKC').trim().replace(/\s+/g,' ').toLowerCase();
 const compact=v=>normalize(v).replace(/[\s`'"“”‘’;,(){}\[\].!?/:_-]+/g,'');
+const tokenText=v=>String(v??'').normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}_]+/gu,' ').trim().replace(/\s+/g,' ');
 const oldGenericHints=new Set([
   '포인터가 현재 어느 위치를 가리키는지 인덱스나 노드 이름으로 바꿔 적고, 역참조할 때 읽히는 값만 순서대로 추적하세요.',
   '반복마다 조건식, 핵심 변수, 출력 여부를 표로 적고, 건너뛰기나 종료가 발생한 지점을 별도로 표시하세요.',
