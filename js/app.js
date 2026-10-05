@@ -1,4 +1,4 @@
-import { categories, services, serviceKind, isExternal, studentJourney,quickActions } from "./services.js";
+import { categories, services, serviceAudience, isExternal, studentJourney,quickActions } from "./services.js";
 
 const icons = {
   book: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h7l2 2 2-2h7v16h-7l-2 2-2-2H3ZM12 6v16M6 9h3M15 9h3M6 13h3M15 13h3"/></svg>',
@@ -17,7 +17,7 @@ function serviceCard(service, index) {
   return `<a class="service-card accent-${escapeHTML(service.accent)}" href="${escapeHTML(service.url)}" ${external ? 'target="_blank" rel="noopener noreferrer"' : ''} aria-label="${escapeHTML(service.name)} ${external ? '외부 사이트, 새 창' : '안내로 이동'}" style="--delay:${index * 70}ms">
     <span class="card-decoration" aria-hidden="true"></span>
     <span class="service-icon">${icons[service.icon] || icons.clipboard}</span>
-    <span class="service-kind">${serviceKind(service)}</span>
+    <span class="service-kind">${escapeHTML(serviceAudience(service))}</span>
     <span class="service-meta">${escapeHTML(service.englishName)}</span>
     <h3>${escapeHTML(service.name)}</h3>
     <p>${escapeHTML(service.shortDescription)}</p>
