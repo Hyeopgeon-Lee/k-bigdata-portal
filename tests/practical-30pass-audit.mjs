@@ -196,5 +196,5 @@ pass('line explanations avoid vague fallback comments',()=>{
  assert.deepEqual(vague,[],JSON.stringify(vague.slice(0,80),null,2));
 });
 
-assert.equal(passes.length,52);
-console.log('FINAL: 52/52 practical solution + value-trace QA passes.');
+assert.equal(passes.length,53);
+console.log('FINAL: 53/53 practical solution + value-trace QA passes.');
