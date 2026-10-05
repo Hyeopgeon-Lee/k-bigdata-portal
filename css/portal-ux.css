@@ -53,7 +53,6 @@ body[data-guide-page] .checklist .ux-disclosure{margin:0}
 body[data-guide-page] .checklist-card{border:0;padding:0}
 body[data-guide-page] .ux-disclosure:not([open])>.checklist-card{display:none}
 body[data-guide-page] .guide-cta{margin-top:24px;background:#f5f7fb}
-.practical-page.is-solving .learning-cross-nav,body[data-interview-mode^=PRACTICE] .learning-cross-nav{display:none}
 .practical-page .study-footer{display:block;padding:0;color:#fff;background:var(--color-primary-dark)}
 .practical-page .study-footer a{color:inherit}
 .detail-panel>h1{font-size:28px;line-height:1.4;margin:18px 0 12px;overflow-wrap:anywhere}
