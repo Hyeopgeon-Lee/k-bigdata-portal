@@ -21,6 +21,7 @@ toggle?.addEventListener("click",()=>{const open=toggle.getAttribute("aria-expan
 nav?.addEventListener("click",e=>{if(e.target.closest("a"))closeMenu();});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&toggle?.getAttribute("aria-expanded")==="true"){closeMenu();toggle.focus();}});
 document.addEventListener("click",e=>{if(!e.target.closest(".site-header"))closeMenu();});
+initPortalUX();
 initGroupedSearch();
 
 const docLink = doc => '<a href="docs.html?id='+esc(doc.id)+'">'+esc(doc.name)+'</a>';
@@ -68,8 +69,8 @@ function renderJobDetail(job) {
 const page=document.body.dataset.page;
 if(page==="interview"){
   initInterview();
-}else if(page){
-const data={certifications,jobs,docs,interview:questions}[page];
+}else if(["certifications","jobs","docs"].includes(page)){
+const data={certifications,jobs,docs}[page];
 const params=new URLSearchParams(location.search),id=params.get("id");
 const selected=data.find(item=>item.id===id);
 const flowRoot=document.querySelector("#doc-flows");
@@ -103,5 +104,4 @@ document.querySelector("#show-all")?.addEventListener("click",()=>{random=null;r
 render();
 }
 }
-initPortalUX();
 if(page==="jobs")initJobGuide();
