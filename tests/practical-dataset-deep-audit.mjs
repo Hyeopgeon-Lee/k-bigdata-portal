@@ -13,10 +13,11 @@ const ids=new Set(questions.map(q=>q.id));
 const roles=[];
 const normalize=v=>String(v??'').normalize('NFKC').trim().replace(/\s+/g,' ').toLowerCase();
 const compact=v=>normalize(v).replace(/[\s`'"“”‘’;,(){}\[\].!?/:_-]+/g,'');
+const tokenText=v=>String(v??'').normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}_]+/gu,' ').trim().replace(/\s+/g,' ');
 const topic=q=>[q.title,q.question,q.code,...(q.concepts||[])].join(' ');
 const solutionText=q=>[q.solution?.summary,...(q.solution?.flow||[]),q.solution?.keyPoint||''].join(' ');
-const answerCompact=q=>compact(q.answer);
-const hintCompact=q=>compact(q.hint);
+const answerCompact=q=>tokenText(q.answer);
+const hintCompact=q=>tokenText(q.hint);
 
 function bucket(items,round){return items.filter((_,i)=>i%30===round);}
 function review(name,items,check){
