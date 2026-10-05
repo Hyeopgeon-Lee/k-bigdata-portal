@@ -13,6 +13,7 @@ const enabled=questions.filter(q=>q.enabled!==false);
 const ids=new Set(questions.map(q=>q.id));
 const normalize=v=>String(v??'').normalize('NFKC').trim().replace(/\s+/g,' ').toLowerCase();
 const compact=v=>normalize(v).replace(/[\s`'";,(){}\[\]]+/g,'');
+const tokenText=v=>String(v??'').normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}_]+/gu,' ').trim().replace(/\s+/g,' ');
 const passes=[];
 const pass=(name,fn)=>{fn();passes.push(name);console.log('PASS '+String(passes.length).padStart(2,'0')+' '+name);};
 
@@ -27,7 +28,7 @@ pass('titles are present',()=>questions.forEach(q=>assert.ok(String(q.title||'')
 pass('question prompts are present',()=>questions.forEach(q=>assert.ok(String(q.question||'').trim(),q.id)));
 pass('canonical answers are present',()=>questions.forEach(q=>assert.ok(String(q.answer||'').trim(),q.id)));
 pass('learner hints are present and Korean',()=>questions.forEach(q=>{assert.ok(String(q.hint||'').trim(),q.id);assert.match(q.hint,/[가-힣]/,q.id);}));
-pass('hints do not reveal canonical answers',()=>questions.forEach(q=>{const a=compact(q.answer),h=compact(q.hint);if(a.length>=3)assert.ok(!h.includes(a),q.id);}));
+pass('hints do not reveal canonical answers',()=>questions.forEach(q=>{const a=tokenText(q.answer),h=tokenText(q.hint);if(a.length>=3)assert.ok(!h.includes(a),q.id);}));
 pass('solution summaries are present',()=>questions.forEach(q=>assert.ok(String(q.solution?.summary||'').trim(),q.id)));
 pass('solution flows are present',()=>questions.forEach(q=>assert.ok(Array.isArray(q.solution?.flow)&&q.solution.flow.length>=1,q.id)));
 pass('solution flows contain text',()=>questions.forEach(q=>q.solution.flow.forEach((s,i)=>assert.ok(String(s||'').trim(),q.id+' flow '+i))));
