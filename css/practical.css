@@ -929,3 +929,115 @@
     font-size:16px;
   }
 }
+
+/* 2026-10-05 line-by-line practical solution annotations. */
+.practical-page .beginner-line-by-line{
+  padding:0;
+  overflow:hidden;
+}
+.practical-page .beginner-line-by-line>.beginner-kicker,
+.practical-page .beginner-line-by-line>.line-guide{
+  margin-left:22px;
+  margin-right:22px;
+}
+.practical-page .beginner-line-by-line>.beginner-kicker{
+  margin-top:20px;
+}
+.practical-page .beginner-line-by-line>.line-guide{
+  margin-bottom:16px;
+  color:#53627a;
+  font-size:15px;
+  line-height:1.7;
+}
+.practical-page .line-explanation-list{
+  border-top:1px solid #e0e6ef;
+}
+.practical-page .line-explanation-row{
+  padding:14px 18px 15px;
+  border-bottom:1px solid #e7ecf3;
+  background:#fff;
+}
+.practical-page .line-explanation-row:last-child{
+  border-bottom:0;
+}
+.practical-page .line-code{
+  display:grid;
+  grid-template-columns:36px minmax(0,1fr);
+  align-items:start;
+  gap:10px;
+  min-width:0;
+}
+.practical-page .line-no{
+  padding-top:2px;
+  color:#7a879b;
+  font:12px/1.75 ui-monospace,SFMono-Regular,Consolas,monospace;
+  text-align:right;
+  user-select:none;
+}
+.practical-page .line-code code{
+  min-width:0;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  word-break:normal;
+  color:#1e2c43;
+  font:15px/1.75 ui-monospace,SFMono-Regular,Consolas,monospace;
+  font-variant-ligatures:none;
+}
+.practical-page .line-comment{
+  margin:7px 0 0 46px !important;
+  padding:8px 10px;
+  border-left:3px solid #b7c8e4;
+  background:#f6f8fc;
+  color:#42536e !important;
+  font:14px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace !important;
+  word-break:keep-all;
+  overflow-wrap:anywhere;
+}
+.practical-page .line-comment>span{
+  color:#59719a;
+  font-weight:800;
+}
+@media(max-width:767px){
+  .practical-page .beginner-line-by-line>.beginner-kicker,
+  .practical-page .beginner-line-by-line>.line-guide{
+    margin-left:16px;
+    margin-right:16px;
+  }
+  .practical-page .beginner-line-by-line>.beginner-kicker{
+    margin-top:17px;
+  }
+  .practical-page .line-explanation-row{
+    padding:12px 12px 13px;
+  }
+  .practical-page .line-code{
+    grid-template-columns:28px minmax(0,1fr);
+    gap:8px;
+  }
+  .practical-page .line-code code{
+    font-size:14.5px;
+    line-height:1.72;
+  }
+  .practical-page .line-no{
+    font-size:11.5px;
+  }
+  .practical-page .line-comment{
+    margin-left:36px !important;
+    padding:8px 9px;
+    font-size:13.5px !important;
+    line-height:1.68 !important;
+  }
+}
+@media(max-width:400px){
+  .practical-page .line-explanation-row{
+    padding-left:10px;
+    padding-right:10px;
+  }
+  .practical-page .line-code{
+    grid-template-columns:24px minmax(0,1fr);
+    gap:7px;
+  }
+  .practical-page .line-comment{
+    margin-left:31px !important;
+  }
+}
+
