@@ -122,3 +122,82 @@
 @media(max-width:767px){
  .practical-page .code-scroll-hint{font-size:12px}
 }
+
+
+/* Mobile readability hardening for the expanded practical bank (386 questions). */
+.practical-page{--solve-actions-height:96px}
+.practical-page .solve-question{
+  line-height:1.78;
+  word-break:keep-all;
+  overflow-wrap:anywhere;
+}
+.practical-page .solve-progress>strong,
+.practical-page .solve-progress>span{white-space:nowrap}
+.practical-page .solve-progress>span{font-size:13px;color:var(--color-text-muted)}
+.practical-page .code-scroll,
+.practical-page .table-scroll{
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior-inline:contain;
+  scrollbar-width:thin;
+}
+.practical-page .code-scroll pre{tab-size:2}
+.practical-page .scroll-hint{
+  margin:-12px 0 16px;
+  text-align:center;
+  color:#59647a;
+  font-size:12px;
+  line-height:1.5;
+}
+.practical-page .table-scroll-hint{margin-top:-16px}
+.practical-page .has-horizontal-overflow{border-bottom-color:#b9c9e2}
+.practical-page #my-answer{scroll-margin-block:140px}
+.practical-page .bank-result p,
+.practical-page .bank-result li{
+  word-break:keep-all;
+  overflow-wrap:anywhere;
+}
+.practical-page .bank-result pre{
+  max-width:100%;
+  overflow-x:auto;
+}
+.practical-page.is-solving .learning-content{
+  padding-bottom:calc(var(--solve-actions-height) + 32px);
+}
+
+@media(max-width:767px){
+  .practical-page .code-scroll,
+  .practical-page .table-scroll{
+    margin-left:-12px;
+    margin-right:-12px;
+    border-left:0;
+    border-right:0;
+    border-radius:0;
+  }
+  .practical-page .code-scroll pre{
+    padding:14px 16px;
+    font-size:15px;
+    line-height:1.72;
+  }
+  .practical-page .table-scroll table{font-size:14px}
+  .practical-page .table-scroll th,
+  .practical-page .table-scroll td{padding:10px 12px}
+  .practical-page .bank-result{padding:16px 14px}
+  .practical-page .bank-result pre{font-size:15px;line-height:1.7;padding:12px}
+  .practical-page .bank-steps{padding-left:20px}
+  .practical-page .bank-steps li{line-height:1.72;padding:5px 0}
+  .practical-page .practice-actions{gap:8px;margin-top:18px}
+  .practical-page .practice-actions .button{min-height:48px}
+}
+
+@media(max-width:480px){
+  .practical-page .solve-progress{gap:6px;font-size:13px;padding-block:6px}
+  .practical-page .solve-progress .button{font-size:13px;padding:7px 8px}
+  .practical-page .bank-solve h2{font-size:20px;line-height:1.45}
+  .practical-page .solve-question{font-size:16.5px;line-height:1.75}
+  .practical-page .bank-badges{gap:5px}
+  .practical-page .badge{padding:4px 7px;font-size:11.5px}
+  .practical-page #quick-filters .study-chips{gap:4px}
+  .practical-page #quick-filters .study-chips button{font-size:13px;padding:8px 2px;min-height:44px}
+  .practical-page .study-segment{gap:3px}
+  .practical-page .study-segment button{font-size:13px;line-height:1.35;padding-inline:4px}
+}
