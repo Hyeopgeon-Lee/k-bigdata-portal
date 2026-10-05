@@ -7,7 +7,7 @@ assert.equal(questions.length,184);assert.equal(Object.keys(aliases).length,516)
 assert.equal(new Set(questions.map(q=>q.id)).size,184);
 assert.equal(questions.filter(q=>q.sourceType==='normalized').length,142);
 assert.equal(questions.filter(q=>q.sourceType==='transformed').length,42);
-for(const q of questions){assert.ok(sourceLabels[q.sourceType]);assert.equal(q.confidence,null);assert.ok(q.answer&&q.steps.length>=3);assert.ok(q.code||q.inputData);assert.equal(gradeAnswer(q,q.answer),true);for(const id of q.importIds)assert.equal(aliases[id],q.id);if(q.originalQuestionId)assert.ok(questions.some(p=>p.id===q.originalQuestionId&&p.sourceType==='normalized'));}
+for(const q of questions){assert.ok(sourceLabels[q.sourceType]);assert.equal(q.confidence,null);assert.ok(q.answer&&q.hint&&q.steps.length>=3);assert.ok(q.code||q.inputData);assert.equal(gradeAnswer(q,q.answer),true);for(const id of q.importIds)assert.equal(aliases[id],q.id);if(q.originalQuestionId)assert.ok(questions.some(p=>p.id===q.originalQuestionId&&p.sourceType==='normalized'));}
 for(const id of Object.values(aliases))assert.ok(questions.some(q=>q.id===id));
 const bank=buildBank([...read('questions.json'),...questions],read('exam-history.json'));
 assert.equal(bank.length,220);assert.equal(bankStats(bank).history,18);
