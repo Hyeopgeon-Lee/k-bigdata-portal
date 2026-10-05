@@ -1,4 +1,4 @@
-import {questions, interviewGroups, interviewJobTags, questionSearchText, matchesInterviewCategory, selectRandomQuestions, interviewSources} from "./interview.js";
+import {questions, interviewGroups, interviewJobTags, questionSearchText, matchesInterviewCategory, selectRandomQuestions, interviewSources} from "./interview.js?v=20261005-accuracy-1";
 import {matches} from "./search.js";
 import {interviewRoleLinks} from "./jobs.js";
 const esc=value=>String(value??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
