@@ -214,7 +214,14 @@ function explainSqlLine(line){
   if(/^(CREATE\s+TABLE)\b/.test(upper))return "새 테이블의 이름과 구조를 정의하기 시작합니다.";
   if(/^(CREATE\s+(UNIQUE\s+)?INDEX)\b/.test(upper))return "검색이나 제약에 사용할 인덱스를 생성합니다.";
   if(/^(ALTER\s+TABLE)\b/.test(upper))return "기존 테이블의 구조나 제약조건을 변경합니다.";
+  if(/^(DROP\s+(TABLE|VIEW|INDEX|DOMAIN))\b/.test(upper))return "지정한 데이터베이스 객체를 삭제하는 DROP 문입니다.";
+  if(/^(CREATE\s+DOMAIN)\b/.test(upper))return "재사용할 도메인 자료형의 이름과 기본 자료형을 정의합니다.";
+  if(/^(UNION(?:\s+ALL)?)\b/.test(upper))return "앞 SELECT 결과와 뒤 SELECT 결과를 하나로 합칩니다. UNION은 중복 행을 제거합니다.";
+  if(/^(INNER|LEFT|RIGHT|FULL)(?:\s+OUTER)?\s+JOIN\b/.test(upper))return "지정한 방향의 외부/내부 조인으로 다른 테이블의 행을 연결합니다.";
   if(/^(CONSTRAINT|PRIMARY\s+KEY|FOREIGN\s+KEY|REFERENCES|UNIQUE|CHECK)\b/.test(upper))return "테이블에 적용할 무결성 제약조건과 참조 대상을 지정합니다.";
+  if(/^[A-Za-z가-힣_][\w가-힣]*\s+(CHAR|VARCHAR2?|NUMBER|INT|INTEGER|DATE|FLOAT|DECIMAL)\b/i.test(t))return "테이블의 한 열을 선언하고 열 이름, 자료형, NULL 허용 여부 같은 속성을 지정합니다.";
+  if(/^\[[^\]]+\]/.test(t)||/\[빈칸\]|[①②③④⑤]/.test(t))return "빈칸 또는 번호로 표시된 SQL 요소를 문맥에 맞는 키워드·식별자·값으로 채우는 부분입니다.";
+  if(/^['"].*['"],?$/.test(t))return "SQL 문장이나 조건에 사용할 문자열 값을 제시한 줄입니다.";
   if(/^(AND|OR)\b/.test(upper))return "앞의 조건에 조건을 하나 더 연결합니다.";
   if(/^\)$/.test(t)||/^\);$/.test(t))return "앞에서 시작한 SQL 괄호 또는 정의를 닫습니다.";
   return "이 SQL 조각이 앞뒤 절과 어떤 역할로 연결되는지 확인합니다.";
@@ -248,7 +255,18 @@ function explainPythonLine(line){
     if(m[2]==="=")return m[1]+"에 "+shortExpr(m[3])+"의 결과를 저장합니다.";
     return m[1]+"의 기존 값에 "+m[2][0]+" 연산을 적용한 결과를 다시 "+m[1]+"에 저장합니다.";
   }
-  if(/^[A-Za-z_]\w*\.(append|extend|insert|remove|pop|sort|reverse)\s*\(/.test(t))return "리스트 메서드를 실행해 자료의 내용이나 순서를 변경합니다.";
+  m=t.match(/^(.+?)\s*([+\-*/%]?=)\s*(.+)$/);
+  if(m&&!/[=!<>]=/.test(t)){
+    const target=shortExpr(m[1]),value=shortExpr(m[3]);
+    if(m[2]==="=")return target+" 위치에 "+value+"의 결과를 저장합니다.";
+    return target+"의 기존 값에 "+m[2][0]+" 연산을 적용한 결과를 다시 저장합니다.";
+  }
+  m=t.match(/^for\s+(.+?)\s+in\s+(.+):\s*$/);
+  if(m)return shortExpr(m[1])+"에 "+shortExpr(m[2])+"의 원소를 하나씩 넣으며 아래 블록을 반복합니다.";
+  if(/^[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)+\.(append|extend|insert|remove|pop|sort|reverse|add)\s*\(/.test(t)||/\.(append|extend|insert|remove|pop|sort|reverse|add)\s*\(/.test(t))return "앞의 객체나 자료구조 메서드를 호출해 원소를 추가·삭제하거나 상태를 변경합니다.";
+  if(/^[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*\s*\(.*\)\s*$/.test(t))return shortExpr(t)+" 함수를 호출하고 반환값 또는 함수 내부의 상태 변화를 확인합니다.";
+  if(/^\[.*\],?$/.test(t)||/^\{.*\},?$/.test(t)||/^['"].*['"]\s*:\s*.+,?$/.test(t))return "리스트나 딕셔너리 리터럴에 들어갈 원소를 정의하는 줄입니다.";
+  if(/^[\]\}]\s*,?$/.test(t))return "앞에서 시작한 리스트나 딕셔너리 리터럴을 닫습니다.";
   return "이 Python 문장을 실행한 뒤 변수나 자료구조의 값이 어떻게 달라지는지 확인합니다.";
 }
 
@@ -294,13 +312,34 @@ function explainCJavaLine(line,language){
   if(/\b(printf|puts|putchar)\s*\(/.test(t))return "괄호 안의 형식과 값을 계산해 화면에 출력합니다.";
   if(/\b(scanf|gets|fgets)\s*\(/.test(t))return "입력값을 읽어 지정한 변수나 메모리 공간에 저장합니다.";
   if(/\bSystem\.out\.(print|println|printf)\s*\(/.test(t))return "괄호 안의 값이나 계산 결과를 화면에 출력합니다.";
+  if(/^@\w+/.test(t))return "바로 아래 선언에 적용할 Java 어노테이션입니다. @Override라면 부모의 메서드를 재정의한다는 뜻입니다.";
+  if(/^#define\s+([A-Za-z_]\w*)\s+(.+)/.test(t)){m=t.match(/^#define\s+([A-Za-z_]\w*)\s+(.+)/);return m[1]+" 매크로를 "+shortExpr(m[2])+"로 정의합니다.";}
+  if(/^typedef\s+struct\b/.test(t))return "구조체 정의를 시작하고 typedef로 새 자료형 이름을 만들 준비를 합니다.";
+  if(/^}\s*[A-Za-z_]\w*\s*;?$/.test(t)){m=t.match(/^}\s*([A-Za-z_]\w*)/);return "구조체 정의를 끝내고 "+m[1]+"이라는 자료형 이름을 사용하도록 합니다.";}
+  if(/^\d+\s*$/.test(t))return "문제 원문에 표시된 줄 번호입니다. 실행되는 코드 자체는 아닙니다.";
+  const withoutLineNo=t.replace(/^\d+\s+(?=(?:public|private|protected|static|final|abstract|class|interface|enum|int|char|float|double|long|short|boolean|String|void)\b)/,"");
+  if(withoutLineNo!==t)return explainCJavaLine(withoutLineNo,language);
+  m=t.match(/^(?:public\s+|private\s+|protected\s+|static\s+|final\s+|abstract\s+|synchronized\s+|native\s+)*(?:[A-Za-z_]\w*(?:<[^>]+>)?(?:\[\])?|void|int|char|float|double|long|short|boolean)\s+([A-Za-z_]\w*)\s*\(([^)]*)\)\s*(?:throws\s+[^\{;]+)?([\{;])(.*)$/);
+  if(m){
+    const kind=m[3]===";"?"선언":"정의";
+    const tail=String(m[4]||"").trim();
+    return m[1]+" 함수/메서드를 "+kind+"합니다. 매개변수는 "+(m[2].trim()||"없음")+"입니다."+(tail?" 같은 줄의 본문도 이어서 실행합니다.":"");
+  }
+  m=t.match(/^(?:public\s+|private\s+|protected\s+)?([A-Z][A-Za-z_]\w*)\s*\(([^)]*)\)\s*\{?(.*)$/);
+  if(m)return m[1]+" 생성자를 정의합니다. 객체가 만들어질 때 매개변수 "+(m[2].trim()||"없이")+" 초기화 코드를 실행합니다.";
   if(/\bnew\s+[A-Za-z_]\w*\s*\(/.test(t)&&/=/.test(t))return "new로 객체를 생성하고 그 참조값을 왼쪽 변수에 저장합니다.";
+  if(/^new\s+[A-Za-z_]\w*\s*\(.*\)\s*;?$/.test(t))return "new로 객체를 생성하고 생성자를 실행합니다.";
   m=t.match(/^(.+?)\s+([A-Za-z_]\w*)\s*\[\s*([^\]]*)\s*\]\s*=\s*(.+);$/);
   if(m)return m[2]+" 배열을 만들고 "+shortExpr(m[4])+"의 값으로 초기화합니다.";
   m=t.match(/^(.+?)\s*\*\s*([A-Za-z_]\w*)\s*=\s*(.+);$/);
   if(m)return m[2]+" 포인터를 선언하고 "+shortExpr(m[3])+"이 가리키는 주소를 저장합니다.";
-  m=t.match(/^(?:const\s+)?(?:unsigned\s+|signed\s+|long\s+|short\s+)?(?:int|char|float|double|long|short|boolean|bool|String|Integer|Double|Character)\s+([A-Za-z_]\w*)\s*=\s*(.+);$/);
-  if(m)return m[1]+" 변수를 선언하고 "+shortExpr(m[2])+"의 계산 결과로 초기화합니다.";
+  m=t.match(/^(?:public\s+|private\s+|protected\s+|static\s+|final\s+|const\s+)*(?:unsigned\s+|signed\s+|long\s+|short\s+)?([A-Za-z_]\w*(?:<[^>]+>)?(?:\[\])?)\s+([A-Za-z_]\w*)\s*=\s*(.+);$/);
+  if(m)return m[2]+" 변수를 "+m[1]+" 형식으로 선언하고 "+shortExpr(m[3])+"의 결과로 초기화합니다.";
+  m=t.match(/^(?:public\s+|private\s+|protected\s+|static\s+|final\s+|const\s+)*(?:unsigned\s+|signed\s+|long\s+|short\s+)?([A-Za-z_]\w*(?:<[^>]+>)?(?:\[\])?)\s+(.+);$/);
+  if(m&&!/\(/.test(t)){
+    const vars=shortExpr(m[2]);
+    return vars+" 변수를 "+m[1]+" 형식으로 선언합니다. 초기값이 함께 있으면 그 값도 이 줄에서 저장됩니다.";
+  }
   m=t.match(/^([A-Za-z_]\w*)\s*(\^=|\+=|-=|\*=|\/=|%=)\s*(.+);$/);
   if(m){
     const names={"^=":"XOR","+=":"덧셈","-=":"뺄셈","*=":"곱셈","/=":"나눗셈","%=":"나머지"};
@@ -308,8 +347,12 @@ function explainCJavaLine(line,language){
   }
   m=t.match(/^([A-Za-z_]\w*)\s*=\s*(.+);$/);
   if(m)return m[1]+"에 "+shortExpr(m[2])+"의 계산 결과를 저장합니다.";
-  if(/(\+\+|--)\s*;?$/.test(t))return "증가 또는 감소 연산으로 해당 변수의 값을 1만큼 바꿉니다.";
+  m=t.match(/^(.+?)\s*=\s*(.+);$/);
+  if(m&&!/[=!<>]=/.test(t))return shortExpr(m[1])+" 위치에 "+shortExpr(m[2])+"의 계산 결과를 저장합니다.";
+  if(/^\+\+|^--/.test(t)||(\/(\+\+|--)\s*;?$\/.test(t)))return "증가 또는 감소 연산으로 해당 변수의 값을 1만큼 바꿉니다.";
+  if(/^\[빈칸\]|\[빈칸\]/.test(t))return "빈칸에 들어갈 키워드·연산자·호출 구문을 주변 코드와 맞춰 완성하는 줄입니다.";
   if(/^[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)?\s*\(.*\)\s*;?$/.test(t))return "함수나 메서드를 호출하고, 전달한 인자에 따라 실행 결과나 부수 효과를 확인합니다.";
+  if(/^\);?$/.test(t)||/^\),?$/.test(t))return "앞 줄에서 시작한 함수 호출이나 식의 괄호를 닫습니다.";
   if(/^[{}].*[{}];?$/.test(t))return "자료형이나 블록의 범위를 한 줄에서 정의합니다. 중괄호 안의 선언과 값을 함께 확인합니다.";
   return (language==="Java"?"이 Java 문장을":"이 C 문장을")+" 실행한 뒤 변수·배열·객체의 값이 어떻게 달라지는지 확인합니다.";
 }
