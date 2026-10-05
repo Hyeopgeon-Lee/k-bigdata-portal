@@ -1,5 +1,5 @@
 /* Mobile-first interview-only overrides; shared portal components stay intact. */
-body[data-page="interview"] .container{width:min(calc(100% - 24px),880px)}
+body[data-page="interview"] .page-hero,body[data-page="interview"] .learning-content{width:min(calc(100% - 24px),880px);margin-inline:auto}
 body[data-page="interview"] .page-hero{padding:24px 0 20px}
 body[data-page="interview"] .page-hero h1{font-size:28px;line-height:1.35;margin:6px 0 12px;word-break:keep-all}
 body[data-page="interview"] .page-hero p{font-size:16px;line-height:1.8;margin:8px 0;color:var(--color-text-muted)}
