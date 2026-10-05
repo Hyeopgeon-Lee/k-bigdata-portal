@@ -1,5 +1,5 @@
-import {loadPracticalBank} from "./practical-data.js?v=20261005-hintflow-3";
-import {HINT_SECONDS,ANSWER_SECONDS,examLabels,typeLabels,languages,escapeHTML as esc,remainingSeconds,remainingAnswerSeconds,hintAvailable,answerDeadlineReached,canSubmit,canReveal,gradeAnswer,questionText,shuffle,recommendFive,matchesExam,localDay,summarizeAttempts,highlightCode} from "./practical-core.js?v=20261005-hintflow-3";
+import {loadPracticalBank} from "./practical-data.js?v=20261005-codefmt-1";
+import {HINT_SECONDS,ANSWER_SECONDS,examLabels,typeLabels,languages,escapeHTML as esc,remainingSeconds,remainingAnswerSeconds,hintAvailable,answerDeadlineReached,canSubmit,canReveal,gradeAnswer,questionText,shuffle,recommendFive,matchesExam,localDay,summarizeAttempts,highlightCode,formatCodeForDisplay} from "./practical-core.js?v=20261005-codefmt-1";
 import {getAttempts,saveAttempt,getSession,saveSession,clearLocalLearning,storageAvailable,getPreferences,savePreferences,exportLearning,importLearning} from "./practical-store.js";
 import {matches} from "./search.js";
 
@@ -32,9 +32,7 @@ function solveHeading(q){
  return q.language+" · "+(typeLabels[q.questionType]||"실기")+" 문제";
 }
 function displayCode(q){
- const code=String(q.code||"");
- if(q.language!=="SQL")return code;
- return code.replace(/\s+(INNER JOIN|LEFT JOIN|RIGHT JOIN|FULL JOIN|CROSS JOIN|JOIN|ON|FROM|WHERE|GROUP BY|HAVING|ORDER BY|UNION ALL|UNION|SET|VALUES)\s+/gi,"\n$1 ");
+ return formatCodeForDisplay(q.code,q.language);
 }
 function formatQuestion(text){
  const value=String(text||"").replace(" 공개 복원자료 간 초기 배열 순서 차이가 있어 아래 코드의 초기값을 기준으로 풀이합니다.","");
@@ -42,7 +40,7 @@ function formatQuestion(text){
  return value.length>=80?safe.replace(/([.!?])\s+/g,"$1<br>"):safe;
 }
 function codeNeedsFocus(q){
- const code=String(q.code||"");
+ const code=displayCode(q);
  if(!code)return false;
  const lines=code.split(/\r?\n/);
  const maxLine=Math.max(...lines.map(line=>line.length));
