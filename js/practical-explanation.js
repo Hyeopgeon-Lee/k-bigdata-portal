@@ -330,6 +330,8 @@ function explainCJavaLine(line,language){
   m=t.match(/^(.+?)\s+([A-Za-z_]\w*)\s*\[\s*([^\]]*)\s*\]\s*=\s*\{$/);
   if(m)return m[2]+" 배열을 선언하고 여러 초기값을 넣기 위한 중괄호 블록을 시작합니다.";
   if(/^\{.*\},?$/.test(t))return "배열이나 구조체 초기화 블록에 들어갈 한 원소의 값을 정의합니다.";
+  m=t.match(/^(.+?)\s*\(\s*\*\s*([A-Za-z_]\w*)\s*\)\s*\((.*)\)\s*;$/);
+  if(m)return m[2]+"은 "+shortExpr(m[3]||"인자 없음")+"을 받는 함수를 가리키는 함수 포인터 멤버이며, 그 함수의 반환 형식은 "+shortExpr(m[1])+"입니다.";
   m=t.match(/^(.+?)\s*\*\s*([A-Za-z_]\w*)\s*=\s*(.+);$/);
   if(m)return m[2]+" 포인터를 선언하고 "+shortExpr(m[3])+"이 가리키는 주소를 저장합니다.";
   m=t.match(/^(?:public\s+|private\s+|protected\s+|static\s+|final\s+|const\s+)*(?:unsigned\s+|signed\s+|long\s+|short\s+)?([A-Za-z_]\w*(?:<[^>]+>)?(?:\[\])?)\s+([A-Za-z_]\w*)\s*=\s*(.+);$/);
