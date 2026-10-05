@@ -102,6 +102,8 @@ export function beginnerConcepts(q){
 }
 
 export function examMemory(q){
+  const stored=String(q?.solution?.keyPoint||"").trim();
+  if(stored)return stored;
   if(q.language==="SQL"){
     const source=topicSource(q);
     if(/GROUP BY|HAVING|COUNT|AVG|SUM|MIN|MAX/.test(source))return "집계 SQL에서는 WHERE와 HAVING의 적용 시점을 구분하세요. WHERE는 행을 먼저 거르고, HAVING은 그룹 계산 후 조건을 적용합니다.";
@@ -117,36 +119,7 @@ export function examMemory(q){
 const STEP_BOILERPLATE=[
   /먼저 변수의 초기값과 실제 출력문을 표시합니다/,
   /이 문제의 핵심 개념은/,
-  /코드나 SQL에서/,
-  /^먼저 문제에서 테이블명, 처리할 열, 값, 조건을/,
-  /^먼저 빈칸 앞뒤의 SQL을/,
-  /^먼저 주어진 테이블과 SQL을/,
-  /^먼저 빈칸 앞뒤 코드를/,
-  /^마지막으로 출력문을 다시 보고/,
-  /^마지막으로 문제에서 요구한 값만/,
-  /^마지막으로 SELECT에 남는 열/,
-  /^마지막으로 빈칸을 앞에서부터/
-];
-
-const EXPLANATION_BOILERPLATE=[
-  /^먼저 변수의 초기값과 실제 출력문을 표시합니다\.$/,
-  /^반복문·조건문·함수 호출이 있으면/,
-  /^이 문제의 핵심 개념은 .*입니다\.$/,
-  /^코드나 SQL에서 이 개념이 사용되는 부분을/,
-  /^C 코드는 한 문장이/,
-  /^Java 코드는 변수값과 객체 상태를/,
-  /^Python 코드는 연산 전후의/,
-  /^SQL은 각 절을 한 번에 읽기보다/,
-  /^먼저 주어진 테이블과 SQL을/,
-  /^먼저 빈칸 앞뒤 코드를/,
-  /^먼저 빈칸 앞뒤의 SQL을/,
-  /^먼저 문제에서 테이블명, 처리할 열, 값, 조건을/,
-  /^마지막으로 출력문을 다시 보고/,
-  /^마지막으로 테이블명·열 이름·조건 연산자/,
-  /^마지막으로 문제에서 요구한 값만/,
-  /^마지막으로 SELECT에 남는 열/,
-  /^마지막으로 빈칸을 앞에서부터/,
-  /^이 문제에서는 .*의 흐름을 이해하는 것이 핵심입니다\.$/
+  /코드나 SQL에서/
 ];
 
 function languageMismatch(q,text){
@@ -156,9 +129,10 @@ function languageMismatch(q,text){
   return false;
 }
 
-export function beginnerSteps(q){
+export function solutionFlow(q){
+  const source=Array.isArray(q?.solution?.flow)?q.solution.flow:(q?.steps||[]);
   const seen=new Set();
-  return (q.steps||[])
+  return source
     .map(step=>String(step||"").trim())
     .filter(Boolean)
     .filter(step=>!STEP_BOILERPLATE.some(pattern=>pattern.test(step)))
@@ -166,16 +140,17 @@ export function beginnerSteps(q){
     .filter(step=>{const key=step.normalize("NFKC").replace(/\s+/g," ");if(seen.has(key))return false;seen.add(key);return true;});
 }
 
+export function solutionSummary(q){
+  const value=String(q?.solution?.summary||q?.explanation||"").trim();
+  return languageMismatch(q,value)?"":value;
+}
+
+export function beginnerSteps(q){
+  return solutionFlow(q);
+}
+
 export function beginnerExplanation(q){
-  const seen=new Set();
-  return String(q.explanation||"")
-    .split(/(?<=[.!?])\s+/)
-    .map(sentence=>sentence.trim())
-    .filter(Boolean)
-    .filter(sentence=>!EXPLANATION_BOILERPLATE.some(pattern=>pattern.test(sentence)))
-    .filter(sentence=>!languageMismatch(q,sentence))
-    .filter(sentence=>{const key=sentence.normalize("NFKC").replace(/\s+/g," ");if(seen.has(key))return false;seen.add(key);return true;})
-    .join(" ");
+  return solutionSummary(q);
 }
 
 // 2026-10-05: beginner-first line-by-line code interpretation.
@@ -375,6 +350,80 @@ function explainCJavaLine(line,language){
   return (language==="Java"?"이 Java 문장을":"이 C 문장을")+" 실행한 뒤 변수·배열·객체의 값이 어떻게 달라지는지 확인합니다.";
 }
 
+function compactTraceText(value,max=150){
+  const text=String(value||"").replace(/\s+/g," ").trim();
+  return text.length>max?text.slice(0,max-1)+"…":text;
+}
+
+function lineTokens(line){
+  const ignored=new Set(["int","char","float","double","long","short","void","boolean","bool","String","public","private","protected","static","final","const","return","class","interface","enum","new","if","else","for","while","do","switch","case","break","continue","printf","println","print","System","out","main","SELECT","FROM","WHERE","GROUP","BY","ORDER","HAVING","JOIN","ON","UPDATE","INSERT","INTO","VALUES","SET","DELETE","CREATE","ALTER","DROP"]);
+  return [...String(line||"").matchAll(/[A-Za-z_]\w*|-?\d+(?:\.\d+)?|'[^']*'|"[^"]*"/g)]
+    .map(m=>m[0])
+    .filter(token=>!ignored.has(token)&&token.length>0);
+}
+
+function bestFlowTrace(q,line){
+  const flow=solutionFlow(q);
+  const tokens=lineTokens(line);
+  if(!flow.length||!tokens.length)return "";
+  let best="",bestScore=0;
+  for(const step of flow){
+    let score=0;
+    for(const token of tokens){
+      const bare=token.replace(/^['"]|['"]$/g,"");
+      if(!bare)continue;
+      if(step.includes(token)||step.includes(bare))score+=/^-?\d|^['"]/.test(token)?4:2;
+    }
+    if(/\+\+|--/.test(line)&&/증가|감소|\+\+|--/.test(step))score+=4;
+    if(/%/.test(line)&&/%|나머지/.test(step))score+=4;
+    if(/while|if|case/.test(line)&&/조건|참|거짓|반복|종료/.test(step))score+=2;
+    if(/print|printf|println/.test(line)&&/출력/.test(step))score+=4;
+    if(score>bestScore){bestScore=score;best=step;}
+  }
+  return bestScore>=4?compactTraceText(best):"";
+}
+
+function declarationTrace(line){
+  const t=String(line||"").replace(/\/\/.*$/,"").trim();
+  if(!/^(?:public\s+|private\s+|protected\s+|static\s+|final\s+|const\s+|unsigned\s+|signed\s+)*(?:int|char|float|double|long|short|boolean|bool|String|Integer|Double|Character)\b/.test(t))return "";
+  const pairs=[];
+  const re=/([A-Za-z_]\w*)\s*=\s*([^,;]+)/g;
+  let m;
+  while((m=re.exec(t)))pairs.push(m[1]+"="+compactTraceText(m[2],40));
+  return pairs.length?"시작값: "+pairs.join(", ")+".":"";
+}
+
+function valueTraceForLine(q,line,explanation){
+  const t=cleanCodeLine(line);
+  const declared=declarationTrace(t);
+  if(declared)return declared;
+
+  const flowTrace=bestFlowTrace(q,t);
+  if(flowTrace)return flowTrace;
+
+  if(q.questionType==="output"&&/\b(?:printf|puts|putchar|System\.out\.(?:print|println|printf)|print)\s*\(/.test(t)){
+    const answer=String(q.answer||"").trim();
+    if(answer&&answer.length<=100)return "최종 출력 예: "+answer.replace(/\n/g," / ");
+  }
+
+  if(/^[{}]+[;]?$/.test(t)||/^(?:class|interface|enum|struct|union)\b/.test(t)||/\)\s*\{\s*$/.test(t)){
+    return "값 변화 없음: 이 줄은 실행 범위나 구조를 정합니다.";
+  }
+
+  if(/^#include|^import\b|^package\b|^#define/.test(t)){
+    return "값 변화 없음: 실행 전에 사용할 기능이나 상수를 준비합니다.";
+  }
+
+  if(/^(?:return\b|break\b|continue\b)/.test(t)){
+    return "이 줄에서는 계산값보다 다음 실행 위치가 바뀌는 것이 핵심입니다.";
+  }
+
+  const literals=[...t.matchAll(/-?\d+(?:\.\d+)?|'[^']*'|"[^"]*"/g)].map(m=>m[0]);
+  if(literals.length)return "이 줄에서 확인할 실제 값: "+literals.slice(0,4).join(", ")+". "+compactTraceText(explanation,90);
+
+  return "값 변화가 있는 줄이면 바로 앞 실행 흐름의 현재 값을 대입해 확인합니다.";
+}
+
 export function lineByLineExplanation(q,codeOverride=""){
   const language=String(q?.language||"");
   const source=String(codeOverride||q?.code||"");
@@ -389,7 +438,8 @@ export function lineByLineExplanation(q,codeOverride=""){
       :language==="Python"
         ?explainPythonLine(trimmed)
         :explainCJavaLine(trimmed,language);
-    return {line:index+1,code,explanation};
+    const trace=valueTraceForLine(q,trimmed,explanation);
+    return {line:index+1,code,explanation,trace};
   }).filter(Boolean);
 }
 
