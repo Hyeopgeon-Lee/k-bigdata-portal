@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
+import {lineByLineExplanation} from '../js/practical-explanation.js';
 
 const root=new URL('../',import.meta.url);
 const read=p=>JSON.parse(readFileSync(new URL(p,root),'utf8'));
@@ -67,5 +68,55 @@ pass('foreign-key DDL hint matches the task',()=>{
  assert.doesNotMatch(q.hint,/정렬|앞에 와야/);
 });
 
-assert.equal(passes.length,30);
-console.log('FINAL: 30/30 practical content QA passes.');
+pass('every code line receives one explanation',()=>{
+ questions.filter(q=>String(q.code||'').trim()).forEach(q=>{
+  const expected=String(q.code).replace(/\r\n?/g,'\n').split('\n').filter(line=>line.trim()).length;
+  assert.equal(lineByLineExplanation(q).length,expected,q.id);
+ });
+});
+pass('line explanations are never empty',()=>questions.filter(q=>String(q.code||'').trim()).forEach(q=>lineByLineExplanation(q).forEach(item=>assert.ok(String(item.explanation||'').trim(),q.id+' line '+item.line))));
+pass('line explanations are written for Korean beginners',()=>questions.filter(q=>String(q.code||'').trim()).forEach(q=>lineByLineExplanation(q).forEach(item=>assert.match(item.explanation,/[가-힣]/,q.id+' line '+item.line))));
+pass('annotated code preserves original non-empty lines',()=>questions.filter(q=>String(q.code||'').trim()).forEach(q=>{
+ const expected=String(q.code).replace(/\r\n?/g,'\n').split('\n').map((line,index)=>({line:index+1,code:line.replace(/\s+$/,'')})).filter(item=>item.code.trim());
+ const actual=lineByLineExplanation(q).map(({line,code})=>({line,code}));
+ assert.deepEqual(actual,expected,q.id);
+}));
+pass('line explanations support all four practical languages',()=>{
+ for(const language of ['C','Java','Python','SQL'])assert.ok(questions.filter(q=>q.language===language&&String(q.code||'').trim()).some(q=>lineByLineExplanation(q).length>0),language);
+});
+pass('SQL line explanations identify common clauses',()=>{
+ const samples=[
+  [{language:'SQL',code:'SELECT name'},/결과|열/],
+  [{language:'SQL',code:'FROM EMP'},/테이블|원본/],
+  [{language:'SQL',code:'WHERE sal > 1000'},/조건/],
+  [{language:'SQL',code:'GROUP BY dept'},/그룹/],
+  [{language:'SQL',code:'ORDER BY sal DESC'},/정렬/]
+ ];
+ for(const [q,pattern] of samples)assert.match(lineByLineExplanation(q)[0].explanation,pattern);
+});
+pass('Python line explanations identify assignment and loops',()=>{
+ const q={language:'Python',code:'x = 1\nfor i in range(3):\n    x += i\nprint(x)'};
+ const notes=lineByLineExplanation(q).map(x=>x.explanation).join(' ');
+ assert.match(notes,/저장/);assert.match(notes,/반복/);assert.match(notes,/출력/);
+});
+pass('C and Java line explanations identify control flow',()=>{
+ const cNotes=lineByLineExplanation({language:'C',code:'int main(void) {\nif (a > 0) {\nprintf("%d", a);\n}\nreturn 0;\n}'}).map(x=>x.explanation).join(' ');
+ const jNotes=lineByLineExplanation({language:'Java',code:'public static void main(String[] args) {\nwhile (x < 3) {\nSystem.out.println(x);\nx++;\n}\n}'}).map(x=>x.explanation).join(' ');
+ assert.match(cNotes,/main/);assert.match(cNotes,/조건/);assert.match(cNotes,/출력/);
+ assert.match(jNotes,/main/);assert.match(jNotes,/반복/);assert.match(jNotes,/출력/);
+});
+pass('practical UI uses line-by-line explanation renderer',()=>{
+ const ui=readFileSync(new URL('js/practical-ui.js',root),'utf8');
+ assert.match(ui,/lineByLineExplanation/);
+ assert.match(ui,/코드 한 줄씩 해석/);
+ assert.doesNotMatch(ui,/beginnerConcepts\(q\)/);
+});
+pass('mobile CSS contains dedicated line annotation layout',()=>{
+ const css=readFileSync(new URL('css/practical.css',root),'utf8');
+ assert.match(css,/\.line-explanation-list/);
+ assert.match(css,/\.line-comment/);
+ assert.match(css,/@media\(max-width:767px\)/);
+});
+
+assert.equal(passes.length,40);
+console.log('FINAL: 40/40 practical content + line-explanation QA passes.');
