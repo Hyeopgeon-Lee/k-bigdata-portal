@@ -1,4 +1,4 @@
-import {initPortalUX} from "./portal-ux.js?v=20261005-perf-1";
+import {initPortalUX} from "./portal-ux.js?v=20261005-perf-2";
 import {initGroupedSearch} from "./search-ui.js?v=20261005-perf-1";
 import {matches,jobSearchText,docSearchText,certificationSearchText} from "./search-core.js?v=20261005-perf-1";
 import {services,footerLinks} from "./services.js";
@@ -67,7 +67,7 @@ const page=document.body.dataset.page;
 async function loadPageModules(){
  const id=new URLSearchParams(location.search).get("id");
  if(page==="interview"){
-  ({initInterview}=await import("./interview-ui.js?v=20261005-perf-1"));
+  ({initInterview}=await import("./interview-ui.js?v=20261005-perf-2"));
   return;
  }
  if(page==="certifications"){
