@@ -153,6 +153,11 @@ export function beginnerExplanation(q){
   return solutionSummary(q);
 }
 
+export function solutionTrace(q){
+  const source=Array.isArray(q?.solution?.trace)?q.solution.trace:[];
+  return source.map(item=>String(item??"").trim()).filter(Boolean);
+}
+
 // 2026-10-05: beginner-first line-by-line code interpretation.
 // The UI calls this only after the learner has submitted or the answer timer has expired.
 const BLOCK_ONLY=/^[{}]+[;]?$/;
