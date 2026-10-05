@@ -61,8 +61,8 @@ review('초급교육',questions,q=>{
   assert.doesNotMatch(rendered,/이 문제의 핵심 개념은/,q.id+' concept boilerplate');
   assert.doesNotMatch(rendered,/코드나 SQL에서/,q.id+' cross-domain boilerplate');
   if(q.language!=='SQL')assert.doesNotMatch(rendered,/\bSQL\b/,q.id+' unrelated SQL');
-  const topic=[q.title,...(q.concepts||[]),q.code||'',q.question||''].join(' ');
-  if(!/포인터|역참조|이중 포인터|연결 리스트|->|\*\s*[A-Za-z_]\w*/.test(topic))assert.doesNotMatch(rendered,/포인터/,q.id+' phantom pointer');
+  const topicFull=[q.title,...(q.concepts||[]),q.code||'',q.question||''].join(' ');
+  if(!/포인터|역참조|이중 포인터|연결 리스트|->|\*\s*[A-Za-z_]\w*/.test(topicFull))assert.doesNotMatch(rendered,/포인터/,q.id+' phantom pointer');
 });
 
 review('C전문가',questions.filter(q=>q.language==='C'),q=>{
