@@ -12,6 +12,7 @@ on:
       - "tests/practical-parallel-expert-audit.mjs"
       - "tests/practical-code-formatting.test.mjs"
       - "tests/practical-industrial-source-fidelity.test.mjs"
+      - "tests/practical-engineer-source-fidelity.test.mjs"
       - "js/practical-core.js"
       - "js/practical-explanation.js"
       - "js/practical-ui.js"
@@ -46,5 +47,7 @@ jobs:
         run: node tests/practical-code-formatting.test.mjs
       - name: Verify industrial source fidelity
         run: node tests/practical-industrial-source-fidelity.test.mjs
+      - name: Verify engineer source fidelity
+        run: node tests/practical-engineer-source-fidelity.test.mjs
       - name: Verify all executable answers
         run: python tests/practical-runtime-audit.py
