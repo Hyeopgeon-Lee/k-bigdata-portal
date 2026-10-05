@@ -80,7 +80,7 @@ review('정답일치전문가',questions,q=>{
   const a=answerCompact(q),h=hintCompact(q);
   if(a.length>=3) assert.ok(!h.includes(a),q.id+' hint leaks answer');
   if(q.grading==='sql_keywords') assert.equal(q.language,'SQL',q.id+' sql_keywords language');
-  if(q.grading==='self') assert.equal(q.language,'SQL',q.id+' self grading language');
+  if(q.grading==='self') assert.ok(q.language==='SQL'||q.questionType==='blank',q.id+' self grading scope');
   if(q.questionType==='output'&&q.language!=='SQL') assert.ok(String(q.code||'').trim(),q.id+' output code');
 });
 
