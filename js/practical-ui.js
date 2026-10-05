@@ -108,7 +108,7 @@ function startQueue(items,kind){
 function renderHome(){
  const plan=planToday(),done=new Set(getAttempts().filter(a=>a.viewedExplanation&&localDay(new Date(a.submittedAt))===localDay()).map(a=>a.questionId));
  const completed=plan.filter(q=>done.has(q.id)).length,last=bank.find(q=>q.id===getPreferences().lastQuestionId),session=last&&getSession(last.id);
- root.innerHTML='<section class="study-start"><h2>오늘 조금씩, 꾸준히</h2><p>오늘 '+completed+' / '+plan.length+' 완료</p><progress max="'+Math.max(1,plan.length)+'" value="'+completed+'" aria-label="오늘 추천 문제 진행"></progress><button class="button button-primary study-primary" type="button" data-action="start-today">'+(completed===plan.length&&plan.length?'오늘 문제 다시 연습':'오늘 5문제 시작')+'</button>'+(plan.length<5?'<p class="hint">선택한 조건에서 '+plan.length+'문제를 연습할 수 있습니다.</p>':'')+'</section>'+(last&&session?'<section class="study-resume"><h2>이어서 풀기</h2><p>'+esc(last.language+' · '+last.title)+'</p>'+button("resume",session.viewedExplanation?"마지막 풀이 이어보기":session.submittedAt?"답 확정 · 이어서 보기":"진행 중 · 이어서 풀기",'data-id="'+esc(last.id)+'"')+'</section>':'')+'<div class="study-quick-menu">'+button("quick-random","랜덤 5문제")+button("wrong-view","오답노트")+button("bank-view","전체 문제")+'</div><p class="hint study-paper-hint">가능하면 종이에, 이동 중에는 머릿속으로 실행 흐름을 먼저 추적하세요.</p>';
+ root.innerHTML='<div class="study-home-grid"><section class="study-start"><p class="study-kicker">TODAY PRACTICE</p><h2>오늘 조금씩, 꾸준히</h2><p>오늘 '+completed+' / '+plan.length+' 완료</p><progress max="'+Math.max(1,plan.length)+'" value="'+completed+'" aria-label="오늘 추천 문제 진행"></progress><button class="button button-primary study-primary" type="button" data-action="start-today">'+(completed===plan.length&&plan.length?'오늘 문제 다시 연습':'오늘 5문제 시작')+'</button>'+(plan.length<5?'<p class="hint">선택한 조건에서 '+plan.length+'문제를 연습할 수 있습니다.</p>':'')+'</section><aside class="study-side">'+(last&&session?'<section class="study-resume"><h2>이어서 풀기</h2><p>'+esc(last.language+' · '+last.title)+'</p>'+button("resume",session.viewedExplanation?"마지막 풀이 이어보기":session.submittedAt?"답 확정 · 이어서 보기":"진행 중 · 이어서 풀기",'data-id="'+esc(last.id)+'"')+'</section>':'<section class="study-resume study-resume-empty"><h2>학습 시작</h2><p>오늘의 추천 5문제로 바로 시작하거나 원하는 문제를 찾아보세요.</p></section>')+'<div class="study-quick-menu">'+button("quick-random","랜덤 5문제")+button("wrong-view","오답노트")+button("bank-view","전체 문제")+button("progress-view","학습현황")+'</div></aside></div><p class="hint study-paper-hint">가능하면 종이에, 이동 중에는 머릿속으로 실행 흐름을 먼저 추적하세요.</p>';
 }
 function syncFilters(){
  document.querySelectorAll("[data-filter]").forEach(b=>b.setAttribute("aria-pressed",String(filters[b.dataset.filter]===b.dataset.value)));
@@ -213,6 +213,7 @@ root.addEventListener("click",event=>{
  if(action==="quick-random")startQueue(shuffle(basicPool().filter(q=>q.sourceType==="reconstructed")).slice(0,5),"random");
  if(action==="bank-view")selectView("bank");
  if(action==="wrong-view")selectView("wrong");
+ if(action==="progress-view")selectView("progress");
  if(action==="load-more"){pageLimit+=24;render();}
  if(action==="open")openQuestion(b.dataset.id,true);
  if(action==="resume"){
