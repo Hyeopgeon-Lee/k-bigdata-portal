@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {buildBank,canSubmit,canReveal,remainingSeconds,recommendFive,matchesExam,shuffle,escapeHTML,gradeAnswer} from '../js/practical-core.js';
+import {buildBank,canSubmit,canReveal,remainingSeconds,remainingAnswerSeconds,hintAvailable,answerDeadlineReached,recommendFive,matchesExam,shuffle,escapeHTML,gradeAnswer} from '../js/practical-core.js';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const base=JSON.parse(read('data/practical/questions.json')),imported=JSON.parse(read('data/practical/normalized.json'));
 const bank=buildBank([...base,...imported.questions],JSON.parse(read('data/practical/exam-history.json')));
@@ -9,10 +9,17 @@ for(const q of bank){assert.ok(q.answer&&q.steps.length>=3);if(q.sourceType==='r
 const startedAt=100000,a={startedAt,submittedAt:null,answer:'20'};
 for(const offset of [0,20000,30000,59999]){
  assert.equal(canSubmit(a,a.answer,startedAt+offset),true);
- assert.equal(canReveal({...a,submittedAt:startedAt+1},startedAt+offset),false);
+ assert.equal(hintAvailable(a,startedAt+offset),false);
 }
-assert.equal(canReveal(a,startedAt+60000),false);
-assert.equal(canReveal({...a,submittedAt:startedAt+20000},startedAt+60000),true);
+assert.equal(hintAvailable(a,startedAt+60000),true);
+assert.equal(remainingAnswerSeconds(startedAt,startedAt+60000),60);
+assert.equal(canSubmit(a,a.answer,startedAt+119999),true);
+assert.equal(answerDeadlineReached(a,startedAt+119999),false);
+assert.equal(answerDeadlineReached(a,startedAt+120000),true);
+assert.equal(canSubmit(a,a.answer,startedAt+120000),false);
+assert.equal(canReveal(a,startedAt+119999),false);
+assert.equal(canReveal(a,startedAt+120000),true);
+assert.equal(canReveal({...a,submittedAt:startedAt+20000},startedAt+20000),true);
 assert.equal(canSubmit({...a,submittedAt:startedAt+20000},'21',startedAt+60000),false);
 assert.equal(canSubmit(a,'',startedAt),false);
 const fake=()=>{const data=new Map();return {getItem:k=>data.get(k)||null,setItem:(k,v)=>data.set(k,v),removeItem:k=>data.delete(k)};};
@@ -23,8 +30,8 @@ store.saveSession(confirmed.questionId,confirmed);store.saveAttempt(confirmed);
 globalThis.sessionStorage=fake();
 const resumed=store.getSession(confirmed.questionId);
 assert.equal(resumed.startedAt,startedAt);assert.equal(resumed.answer,'20');assert.equal(resumed.submittedAt,startedAt+20000);
-assert.equal(canReveal(resumed,startedAt+59999),false);assert.equal(canReveal(resumed,startedAt+60000),true);
-assert.equal(store.getAttempts()[0].correct,null,'no correctness side-channel during wait');
+assert.equal(canReveal(resumed,startedAt+20000),true,'submitted answers reveal immediately');
+assert.equal(store.getAttempts()[0].correct,null,'stored confirmation does not pre-grade outside UI');
 store.saveSession(confirmed.questionId,{...a,id:'retry',questionId:confirmed.questionId,startedAt:startedAt+70000,answer:''});
 assert.equal(remainingSeconds(store.getSession(confirmed.questionId).startedAt,startedAt+70000),60);
 assert.equal(canReveal(store.getSession(confirmed.questionId),startedAt+70000),false);
@@ -42,9 +49,9 @@ assert.equal(gradeAnswer(bank.find(q=>q.grading==='self'),'alternative SQL'),nul
 assert.ok(!escapeHTML('<img src=x onerror=alert(1)>').includes('<img'));
 const ui=read('js/practical-ui.js'),html=read('practical.html');
 assert.match(html,/<meta name="robots" content="noindex, nofollow">/);
-assert.ok(ui.includes('if(!canReveal(attempt))'));assert.ok(ui.includes('correct:null'));
+assert.ok(ui.includes('answerDeadlineReached(attempt,now)'));assert.ok(ui.includes('hintAvailable(attempt,now)'));assert.ok(ui.includes('autoRevealAnswer'));assert.ok(ui.includes('correct:null'));
 assert.ok(ui.includes('aliases[id]||id'));assert.ok(ui.includes('params.get("exam")'));
 assert.ok(ui.includes('rel="noopener noreferrer"'));assert.ok(ui.includes('slice(0,pageLimit)'));
 assert.ok(!ui.includes('첨부 데이터 516'));
 assert.ok(html.includes('data-filter="language"')&&html.includes('study-header'));
-console.log('PASS: immediate confirmation / delayed reveal boundaries, persistence, retry, 15 exam-language pools, deterministic five, grading privacy, aliases, paging, noindex, escaping and links.');
+console.log('PASS: immediate submit reveal, 60s hint / 120s auto-answer boundaries, persistence, retry, exam-language pools, grading, aliases, paging, noindex, escaping and links.');
