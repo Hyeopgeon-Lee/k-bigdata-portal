@@ -1,4 +1,4 @@
-import {services,learningLinks} from "./services.js";
+import {services,portalNavLinks} from "./services.js?v=20261005-6";
 import {jobs} from "./jobs.js";
 import {certifications} from "./certifications.js";
 import {docs,findDocForSkill} from "./docs.js";
@@ -22,7 +22,9 @@ function revealHash(){
 export function initPortalUX(){
  const page=document.body.dataset.page,params=new URLSearchParams(location.search),id=params.get("id");
  for(const nav of document.querySelectorAll("[data-learning-nav]")){
-  nav.innerHTML=learningLinks.map(item=>{const service=services.find(s=>s.id===item.id);return '<a href="'+esc(service.url)+'"'+(location.pathname.endsWith(service.url)?' aria-current="page"':'')+'>'+esc(item.label)+'</a>';}).join('');
+  nav.classList.add("portal-service-nav");
+  nav.setAttribute("aria-label","포털 서비스 바로가기");
+  nav.innerHTML=portalNavLinks.map(item=>{const service=services.find(s=>s.id===item.id);if(!service)return "";const current=!/^https?:\/\//.test(service.url)&&location.pathname.endsWith(service.url);return '<a href="'+esc(service.url)+'" data-nav-group="'+esc(item.group)+'"'+(current?' aria-current="page"':'')+'>'+esc(item.label)+'</a>';}).join('');
  }
  if(!document.querySelector(".interview-home-link")&&!document.body.classList.contains("practical-page")){
   const home=document.createElement("a");home.href="index.html";home.className="portal-mobile-home";home.textContent="포털 홈";document.querySelector(".menu-toggle")?.before(home);
