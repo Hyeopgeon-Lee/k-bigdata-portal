@@ -117,3 +117,158 @@ export function examMemory(q){
 export function beginnerSteps(q){
   return (q.steps||[]).filter(Boolean);
 }
+
+// 2026-10-05: beginner-first line-by-line code interpretation.
+// The UI calls this only after the learner has submitted or the answer timer has expired.
+const BLOCK_ONLY=/^[{}]+[;]?$/;
+
+function cleanCodeLine(line){
+  return String(line??"").replace(/\t/g,"    ").trim();
+}
+
+function shortExpr(value,max=64){
+  const text=String(value??"").replace(/\s+/g," ").trim();
+  return text.length>max?text.slice(0,max-1)+"…":text;
+}
+
+function explainSqlLine(line){
+  const t=cleanCodeLine(line);
+  const upper=t.toUpperCase();
+  if(!t)return "";
+  if(/^--/.test(t))return "작성자가 남긴 SQL 주석입니다.";
+  if(/^(WITH)\b/.test(upper))return "뒤에서 사용할 임시 조회 결과(CTE)를 정의하기 시작합니다.";
+  if(/^(SELECT)\b/.test(upper))return "최종 결과에서 어떤 열이나 계산값을 보여줄지 정합니다.";
+  if(/^(DISTINCT)\b/.test(upper))return "중복되는 결과 행을 제거합니다.";
+  if(/^(FROM)\b/.test(upper))return "조회할 원본 테이블이나 서브쿼리를 정합니다.";
+  if(/^(INNER\s+|LEFT\s+|RIGHT\s+|FULL\s+|CROSS\s+)?JOIN\b/.test(upper))return "다른 테이블을 연결합니다. 어떤 행이 연결되는지는 이어지는 ON 조건으로 판단합니다.";
+  if(/^(ON)\b/.test(upper))return "JOIN에서 두 테이블의 행을 어떤 조건으로 연결할지 정합니다.";
+  if(/^(WHERE)\b/.test(upper))return "원본 행 중 조건을 만족하는 행만 남깁니다.";
+  if(/^(GROUP\s+BY)\b/.test(upper))return "같은 값을 가진 행끼리 그룹으로 묶어 집계할 준비를 합니다.";
+  if(/^(HAVING)\b/.test(upper))return "GROUP BY로 만든 그룹 중 집계 조건을 만족하는 그룹만 남깁니다.";
+  if(/^(ORDER\s+BY)\b/.test(upper))return "최종 결과 행의 정렬 기준과 방향을 정합니다.";
+  if(/^(INSERT\s+INTO)\b/.test(upper))return "새 행을 추가할 대상 테이블과 열을 지정합니다.";
+  if(/^(VALUES)\b/.test(upper))return "INSERT로 넣을 실제 값을 지정합니다.";
+  if(/^(UPDATE)\b/.test(upper))return "기존 행을 수정할 대상 테이블을 지정합니다.";
+  if(/^(SET)\b/.test(upper))return "UPDATE에서 어떤 열을 어떤 값으로 바꿀지 지정합니다.";
+  if(/^(DELETE\s+FROM)\b/.test(upper))return "조건에 맞는 행을 삭제할 대상 테이블을 지정합니다.";
+  if(/^(CREATE\s+TABLE)\b/.test(upper))return "새 테이블의 이름과 구조를 정의하기 시작합니다.";
+  if(/^(CREATE\s+(UNIQUE\s+)?INDEX)\b/.test(upper))return "검색이나 제약에 사용할 인덱스를 생성합니다.";
+  if(/^(ALTER\s+TABLE)\b/.test(upper))return "기존 테이블의 구조나 제약조건을 변경합니다.";
+  if(/^(CONSTRAINT|PRIMARY\s+KEY|FOREIGN\s+KEY|REFERENCES|UNIQUE|CHECK)\b/.test(upper))return "테이블에 적용할 무결성 제약조건과 참조 대상을 지정합니다.";
+  if(/^(AND|OR)\b/.test(upper))return "앞의 조건에 조건을 하나 더 연결합니다.";
+  if(/^\)$/.test(t)||/^\);$/.test(t))return "앞에서 시작한 SQL 괄호 또는 정의를 닫습니다.";
+  return "이 SQL 조각이 앞뒤 절과 어떤 역할로 연결되는지 확인합니다.";
+}
+
+function explainPythonLine(line){
+  const t=cleanCodeLine(line);
+  if(!t)return "";
+  if(/^#/.test(t))return "작성자가 남긴 Python 주석입니다.";
+  if(/^(from\s+\S+\s+import|import\s+)/.test(t))return "문제에서 사용할 모듈이나 기능을 불러옵니다.";
+  let m=t.match(/^class\s+([A-Za-z_]\w*)/);
+  if(m)return m[1]+" 클래스를 정의하기 시작합니다.";
+  m=t.match(/^def\s+([A-Za-z_]\w*)\s*\((.*)\)\s*:/);
+  if(m)return m[1]+" 함수를 정의합니다. 괄호 안의 값은 함수가 받을 매개변수입니다.";
+  if(/^if\s+.+:\s*$/.test(t))return "if 뒤의 조건을 계산해 참이면 아래 들여쓰기 블록을 실행합니다.";
+  if(/^elif\s+.+:\s*$/.test(t))return "앞 조건이 거짓일 때 이 조건을 다시 검사하고, 참이면 아래 블록을 실행합니다.";
+  if(/^else\s*:/.test(t))return "앞의 if/elif 조건이 모두 거짓일 때 아래 블록을 실행합니다.";
+  m=t.match(/^for\s+([A-Za-z_]\w*)\s+in\s+(.+):\s*$/);
+  if(m)return m[1]+"에 "+shortExpr(m[2])+"의 값을 하나씩 넣으면서 아래 블록을 반복합니다.";
+  if(/^while\s+.+:\s*$/.test(t))return "while 뒤의 조건이 참인 동안 아래 블록을 반복합니다.";
+  if(/^try\s*:/.test(t))return "예외가 발생할 수 있는 코드를 실행하기 시작합니다.";
+  if(/^except\b/.test(t))return "try에서 예외가 발생했을 때 처리할 블록입니다.";
+  if(/^finally\s*:/.test(t))return "예외 발생 여부와 관계없이 마지막에 실행할 블록입니다.";
+  if(/^break\b/.test(t))return "현재 반복문을 즉시 끝냅니다.";
+  if(/^continue\b/.test(t))return "이번 반복의 남은 문장을 건너뛰고 다음 반복으로 이동합니다.";
+  m=t.match(/^return(?:\s+(.+))?$/);
+  if(m)return m[1]?"계산한 "+shortExpr(m[1])+" 값을 호출한 곳으로 돌려줍니다.":"함수 실행을 끝내고 호출한 곳으로 돌아갑니다.";
+  if(/^print\s*\(/.test(t))return "괄호 안의 값이나 계산 결과를 화면에 출력합니다.";
+  m=t.match(/^([A-Za-z_]\w*)\s*([+\-*/%]?=)\s*(.+)$/);
+  if(m){
+    if(m[2]==="=")return m[1]+"에 "+shortExpr(m[3])+"의 결과를 저장합니다.";
+    return m[1]+"의 기존 값에 "+m[2][0]+" 연산을 적용한 결과를 다시 "+m[1]+"에 저장합니다.";
+  }
+  if(/^[A-Za-z_]\w*\.(append|extend|insert|remove|pop|sort|reverse)\s*\(/.test(t))return "리스트 메서드를 실행해 자료의 내용이나 순서를 변경합니다.";
+  return "이 Python 문장을 실행한 뒤 변수나 자료구조의 값이 어떻게 달라지는지 확인합니다.";
+}
+
+function explainCJavaLine(line,language){
+  const t=cleanCodeLine(line);
+  if(!t)return "";
+  if(/^\/\//.test(t)||/^\/\*/.test(t)||/^\*/.test(t))return "작성자가 남긴 코드 주석입니다.";
+  let m=t.match(/^#include\s*[<"]([^>"]+)[>"]/);
+  if(m)return m[1]+" 헤더를 포함해 필요한 함수나 자료형을 사용할 수 있게 합니다.";
+  if(/^package\s+/.test(t))return "이 Java 클래스가 속한 패키지를 선언합니다.";
+  if(/^import\s+/.test(t))return "Java에서 사용할 클래스나 기능을 불러옵니다.";
+  m=t.match(/^(?:public\s+|private\s+|protected\s+|static\s+|final\s+|abstract\s+)*(class|interface|enum)\s+([A-Za-z_]\w*)/);
+  if(m)return m[2]+" "+(m[1]==="class"?"클래스":m[1]==="interface"?"인터페이스":"열거형")+"를 정의하기 시작합니다.";
+  m=t.match(/^struct\s+([A-Za-z_]\w*)\b/);
+  if(m)return m[1]+" 구조체를 정의해 여러 값을 하나의 자료형으로 묶습니다.";
+  if(/\bmain\s*\(/.test(t)&&/[{]?\s*$/.test(t))return "프로그램 실행이 시작되는 main 함수(메서드)를 선언하고 실행 블록을 시작합니다.";
+  if(BLOCK_ONLY.test(t)){
+    if(t.startsWith("{"))return "바로 앞에서 선언하거나 선택한 코드 블록을 시작합니다.";
+    return "현재 함수·조건문·반복문·클래스의 코드 블록을 끝냅니다.";
+  }
+  if(/^else\s+if\s*\(/.test(t))return "앞 조건이 거짓일 때 이 조건을 다시 검사하고, 참이면 해당 블록을 실행합니다.";
+  if(/^if\s*\(/.test(t))return "괄호 안의 조건식을 계산해 참이면 if 블록을 실행합니다.";
+  if(/^else\b/.test(t))return "앞의 if 조건이 거짓일 때 else 블록을 실행합니다.";
+  if(/^switch\s*\(/.test(t))return "괄호 안의 값을 계산한 뒤 일치하는 case 분기로 이동합니다.";
+  m=t.match(/^case\s+(.+):/);
+  if(m)return "switch 값이 "+shortExpr(m[1])+"와 같을 때 이 지점부터 실행합니다.";
+  if(/^default\s*:/.test(t))return "어떤 case와도 일치하지 않을 때 실행하는 기본 분기입니다.";
+  if(/^for\s*\(/.test(t)){
+    const body=t.slice(t.indexOf("(")+1,t.lastIndexOf(")"));
+    const parts=body.split(";");
+    if(parts.length===3)return "반복문입니다. 처음 "+shortExpr(parts[0])+"을 실행하고, "+shortExpr(parts[1])+"가 참인 동안 반복하며, 매 반복 뒤 "+shortExpr(parts[2])+"를 실행합니다.";
+    return "괄호 안의 범위나 조건에 따라 아래 블록을 반복 실행합니다.";
+  }
+  if(/^while\s*\(/.test(t))return "괄호 안의 조건이 참인 동안 아래 블록을 반복합니다.";
+  if(/^do\b/.test(t))return "아래 블록을 먼저 한 번 실행한 뒤 while 조건을 검사하는 반복문을 시작합니다.";
+  if(/^break\s*;/.test(t))return "현재 반복문이나 switch를 즉시 끝냅니다.";
+  if(/^continue\s*;/.test(t))return "이번 반복의 남은 문장을 건너뛰고 다음 반복으로 이동합니다.";
+  if(/^try\b/.test(t))return "예외가 발생할 수 있는 코드를 실행하기 시작합니다.";
+  if(/^catch\s*\(/.test(t))return "try에서 발생한 예외 중 괄호의 형식과 맞는 예외를 처리합니다.";
+  if(/^finally\b/.test(t))return "예외 발생 여부와 관계없이 마지막에 실행할 블록입니다.";
+  m=t.match(/^return(?:\s+(.+?))?;?\s*$/);
+  if(m)return m[1]&&m[1]!=="0"?"계산한 "+shortExpr(m[1])+" 값을 호출한 곳으로 돌려주고 현재 함수를 끝냅니다.":"현재 함수를 끝냅니다.";
+  if(/\b(printf|puts|putchar)\s*\(/.test(t))return "괄호 안의 형식과 값을 계산해 화면에 출력합니다.";
+  if(/\b(scanf|gets|fgets)\s*\(/.test(t))return "입력값을 읽어 지정한 변수나 메모리 공간에 저장합니다.";
+  if(/\bSystem\.out\.(print|println|printf)\s*\(/.test(t))return "괄호 안의 값이나 계산 결과를 화면에 출력합니다.";
+  if(/\bnew\s+[A-Za-z_]\w*\s*\(/.test(t)&&/=/.test(t))return "new로 객체를 생성하고 그 참조값을 왼쪽 변수에 저장합니다.";
+  m=t.match(/^(.+?)\s+([A-Za-z_]\w*)\s*\[\s*([^\]]*)\s*\]\s*=\s*(.+);$/);
+  if(m)return m[2]+" 배열을 만들고 "+shortExpr(m[4])+"의 값으로 초기화합니다.";
+  m=t.match(/^(.+?)\s*\*\s*([A-Za-z_]\w*)\s*=\s*(.+);$/);
+  if(m)return m[2]+" 포인터를 선언하고 "+shortExpr(m[3])+"이 가리키는 주소를 저장합니다.";
+  m=t.match(/^(?:const\s+)?(?:unsigned\s+|signed\s+|long\s+|short\s+)?(?:int|char|float|double|long|short|boolean|bool|String|Integer|Double|Character)\s+([A-Za-z_]\w*)\s*=\s*(.+);$/);
+  if(m)return m[1]+" 변수를 선언하고 "+shortExpr(m[2])+"의 계산 결과로 초기화합니다.";
+  m=t.match(/^([A-Za-z_]\w*)\s*(\^=|\+=|-=|\*=|\/=|%=)\s*(.+);$/);
+  if(m){
+    const names={"^=":"XOR","+=":"덧셈","-=":"뺄셈","*=":"곱셈","/=":"나눗셈","%=":"나머지"};
+    return m[1]+"의 현재 값과 "+shortExpr(m[3])+"을 "+names[m[2]]+"한 결과를 다시 "+m[1]+"에 저장합니다.";
+  }
+  m=t.match(/^([A-Za-z_]\w*)\s*=\s*(.+);$/);
+  if(m)return m[1]+"에 "+shortExpr(m[2])+"의 계산 결과를 저장합니다.";
+  if(/(\+\+|--)\s*;?$/.test(t))return "증가 또는 감소 연산으로 해당 변수의 값을 1만큼 바꿉니다.";
+  if(/^[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)?\s*\(.*\)\s*;?$/.test(t))return "함수나 메서드를 호출하고, 전달한 인자에 따라 실행 결과나 부수 효과를 확인합니다.";
+  if(/^[{}].*[{}];?$/.test(t))return "자료형이나 블록의 범위를 한 줄에서 정의합니다. 중괄호 안의 선언과 값을 함께 확인합니다.";
+  return (language==="Java"?"이 Java 문장을":"이 C 문장을")+" 실행한 뒤 변수·배열·객체의 값이 어떻게 달라지는지 확인합니다.";
+}
+
+export function lineByLineExplanation(q,codeOverride=""){
+  const language=String(q?.language||"");
+  const source=String(codeOverride||q?.code||"");
+  if(!source.trim())return [];
+  const lines=source.replace(/\r\n?/g,"\n").split("\n");
+  return lines.map((raw,index)=>{
+    const code=String(raw).replace(/\s+$/,"");
+    const trimmed=cleanCodeLine(code);
+    if(!trimmed)return null;
+    const explanation=language==="SQL"
+      ?explainSqlLine(trimmed)
+      :language==="Python"
+        ?explainPythonLine(trimmed)
+        :explainCJavaLine(trimmed,language);
+    return {line:index+1,code,explanation};
+  }).filter(Boolean);
+}
+
