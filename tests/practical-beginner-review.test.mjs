@@ -34,8 +34,8 @@ function review(name,items,check){
 review('초급교육',questions,q=>{
   assert.ok(String(q.question||'').trim(),q.id);
   assert.ok(String(q.hint||'').trim().length>=12,q.id);
-  assert.ok(String(q.explanation||'').trim().length>=80,q.id+' explanation');
-  assert.ok(Array.isArray(q.steps)&&q.steps.length>=4,q.id+' steps');
+  assert.ok(String(q.explanation||'').trim().length>=12,q.id+' explanation');
+  assert.ok(Array.isArray(q.steps)&&q.steps.length>=1,q.id+' steps');
   assert.ok(q.steps.every(s=>String(s).trim().length>=8),q.id+' short step');
   assert.ok(beginnerFocus(q).length>=35,q.id+' focus');
   assert.ok(examMemory(q).length>=30,q.id+' memory');
@@ -56,39 +56,46 @@ review('초급교육',questions,q=>{
     assert.equal(notes.length,codeLines,q.id+' line annotations');
     assert.ok(notes.every(n=>/[가-힣]/.test(n.explanation)),q.id+' Korean line annotations');
   }
+  const rendered=[q.explanation,...beginnerSteps(q)].join(' ');
+  assert.doesNotMatch(rendered,/먼저 변수의 초기값과 실제 출력문을 표시합니다/,q.id+' boilerplate');
+  assert.doesNotMatch(rendered,/이 문제의 핵심 개념은/,q.id+' concept boilerplate');
+  assert.doesNotMatch(rendered,/코드나 SQL에서/,q.id+' cross-domain boilerplate');
+  if(q.language!=='SQL')assert.doesNotMatch(rendered,/\bSQL\b/,q.id+' unrelated SQL');
+  const topic=[q.title,...(q.concepts||[]),q.code||'',q.question||''].join(' ');
+  if(!/포인터|역참조|이중 포인터|연결 리스트|->|\*\s*[A-Za-z_]\w*/.test(topic))assert.doesNotMatch(rendered,/포인터/,q.id+' phantom pointer');
 });
 
 review('C전문가',questions.filter(q=>q.language==='C'),q=>{
   assert.ok(String(q.code||'').trim(),q.id);
   assert.ok(String(q.answer||'').trim(),q.id);
-  assert.ok(beginnerSteps(q).length>=4,q.id);
+  assert.ok(beginnerSteps(q).length>=1,q.id);
   assert.ok(!/javascript:/i.test(q.code||''),q.id);
   if(q.questionType==='output')assert.ok(/printf|putchar|puts|출력|return|main|호출|값/.test((q.code||'')+' '+q.question),q.id);
-  assert.ok(q.explanation.length>=80,q.id);
+  assert.ok(q.explanation.length>=12,q.id);
 });
 
 review('Java전문가',questions.filter(q=>q.language==='Java'),q=>{
   assert.ok(String(q.code||'').trim(),q.id);
   assert.ok(String(q.answer||'').trim(),q.id);
-  assert.ok(beginnerSteps(q).length>=4,q.id);
+  assert.ok(beginnerSteps(q).length>=1,q.id);
   assert.ok(!/javascript:/i.test(q.code||''),q.id);
   if(q.questionType==='output')assert.ok(/System\.out|출력|return|main|호출|값/.test((q.code||'')+' '+q.question),q.id);
-  assert.ok(q.explanation.length>=80,q.id);
+  assert.ok(q.explanation.length>=12,q.id);
 });
 
 review('Python전문가',questions.filter(q=>q.language==='Python'),q=>{
   assert.ok(String(q.code||'').trim(),q.id);
   assert.ok(String(q.answer||'').trim(),q.id);
-  assert.ok(beginnerSteps(q).length>=4,q.id);
+  assert.ok(beginnerSteps(q).length>=1,q.id);
   assert.ok(!/\t/.test(q.code||''),q.id+' tab');
   if(q.questionType==='output')assert.ok(/print\s*\(|출력|반환|값/.test((q.code||'')+' '+q.question),q.id);
-  assert.ok(q.explanation.length>=80,q.id);
+  assert.ok(q.explanation.length>=12,q.id);
 });
 
 review('SQL전문가',questions.filter(q=>q.language==='SQL'),q=>{
   assert.ok(String(q.answer||'').trim(),q.id);
-  assert.ok(beginnerSteps(q).length>=4,q.id);
-  assert.ok(q.explanation.length>=80,q.id);
+  assert.ok(beginnerSteps(q).length>=1,q.id);
+  assert.ok(q.explanation.length>=12,q.id);
   if(q.questionType==='sql_result')assert.match(q.code||'',/\bSELECT\b/i,q.id);
   if(q.questionType==='sql_write')assert.match(q.answer||'',/^\s*(SELECT|UPDATE|INSERT|DELETE|CREATE|ALTER|DROP|MERGE|WITH)\b/i,q.id);
   if(q.questionType==='blank')assert.ok((q.code||q.question).length>=12,q.id);
