@@ -10,7 +10,7 @@ questions=[
     *load(pathlib.Path("data/practical/reconstructed-extra.json")),
     *load(pathlib.Path("data/practical/normalized.json"))["questions"],
 ]
-questions=[q for q in questions if q.get("sourceType") in {"reconstructed","normalized"} and q.get("enabled",True)]
+questions=[q for q in questions if q.get("enabled",True)]
 
 def norm(v):
     s=str(v).replace("\r","").strip()
