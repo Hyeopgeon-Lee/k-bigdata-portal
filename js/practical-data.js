@@ -1,6 +1,6 @@
-import {buildBank} from "./practical-core.js?v=20261005-hintflow-2";
+import {buildBank} from "./practical-core.js?v=20261005-hintflow-3";
 
-const DATA_VERSION="20261005-hintflow-2";
+const DATA_VERSION="20261005-hintflow-3";
 
 export async function loadPracticalBank(){
  const load=async path=>{
