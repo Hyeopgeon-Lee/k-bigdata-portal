@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
+import {formatCodeForDisplay} from '../js/practical-core.js';
 
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const base=JSON.parse(read('data/practical/questions.json'));
@@ -19,11 +20,16 @@ const longAnswers=questions.filter(q=>String(q.answer||'').length>=80);
 
 assert.equal(wideNonSql.length,0,'C/Java/Python code lines >=80 chars must be reformatted for phone reading');
 assert.ok(Math.max(...questions.map(q=>maxLine(q.code)))<=120,'no practical source line should exceed 120 chars');
+const formatted=questions.map(q=>({...q,displayCode:formatCodeForDisplay(q.code,q.language)}));
+assert.equal(formatted.filter(q=>['C','Java'].includes(q.language)&&/\)\{/.test(q.displayCode)).length,0,'display formatter must separate structural braces');
+assert.equal(formatted.filter(q=>['C','Java'].includes(q.language)&&/\)\s*\{\s*[^}\n]+\}/.test(q.displayCode)).length,0,'display formatter must expand one-line function/method bodies');
+assert.ok(Math.max(...formatted.filter(q=>q.language!=='SQL').map(q=>maxLine(q.displayCode)))<=100,'formatted non-SQL code must fit mobile-friendly line width');
 assert.ok(Math.max(...questions.map(q=>String(q.question||'').length))<=120,'question prompts should remain concise enough for sentence formatting');
 
 const ui=read('js/practical-ui.js');
 const css=read('css/practical.css');
 assert.ok(ui.includes('function formatQuestion(text)'),'long prompts need sentence-aware rendering');
+assert.ok(ui.includes('formatCodeForDisplay'),'all practical code must pass through the shared display formatter');
 assert.ok(ui.includes('function codeNeedsFocus(q)'),'complex code needs mobile focus classification');
 assert.ok(ui.includes('button("code-focus"')&&ui.includes('action==="code-focus"'),'complex code needs a full-screen reader trigger and handler');
 assert.ok(ui.includes('code-scroll--complex'),'complex code needs bounded mobile height');
