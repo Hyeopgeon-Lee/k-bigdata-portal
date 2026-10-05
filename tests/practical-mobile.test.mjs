@@ -49,7 +49,7 @@ assert.equal(gradeAnswer(bank.find(q=>q.grading==='self'),'alternative SQL'),nul
 assert.ok(!escapeHTML('<img src=x onerror=alert(1)>').includes('<img'));
 const ui=read('js/practical-ui.js'),html=read('practical.html');
 assert.match(html,/<meta name="robots" content="noindex, nofollow">/);
-assert.ok(ui.includes('answerDeadlineReached(attempt,now)'));assert.ok(ui.includes('hintAvailable(attempt,now)'));assert.ok(ui.includes('autoRevealAnswer'));assert.ok(ui.includes('correct:null'));
+assert.ok(ui.includes('answerDeadlineReached(attempt,now)'));assert.ok(ui.includes('hintAvailable(attempt,now)'));assert.ok(ui.includes('autoRevealAnswer'));assert.ok(ui.includes('attempt.submittedAt&&!attempt.viewedExplanation'));assert.ok(ui.includes('correct:null'));
 assert.ok(ui.includes('aliases[id]||id'));assert.ok(ui.includes('params.get("exam")'));
 assert.ok(ui.includes('rel="noopener noreferrer"'));assert.ok(ui.includes('slice(0,pageLimit)'));
 assert.ok(!ui.includes('첨부 데이터 516'));
