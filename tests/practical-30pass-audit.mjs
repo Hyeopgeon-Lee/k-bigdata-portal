@@ -150,5 +150,13 @@ pass('R-IND-C-0022 has exact C execution flow with no SQL leakage',()=>{
 });
 pass('all stored explanations remain nonempty after cleanup',()=>questions.forEach(q=>assert.ok(String(q.explanation||'').trim().length>=12,q.id)));
 
-assert.equal(passes.length,48);
-console.log('FINAL: 48/48 practical content + explanation integrity QA passes.');
+pass('line explanations avoid vague fallback comments',()=>{
+ const vague=[];
+ questions.filter(q=>String(q.code||'').trim()).forEach(q=>lineByLineExplanation(q).forEach(item=>{
+  if(/이 (?:C|Java|Python) 문장을|이 SQL 조각이/.test(item.explanation))vague.push({id:q.id,line:item.line,code:item.code.trim(),explanation:item.explanation});
+ }));
+ assert.deepEqual(vague,[],JSON.stringify(vague.slice(0,80),null,2));
+});
+
+assert.equal(passes.length,49);
+console.log('FINAL: 49/49 practical content + explanation integrity QA passes.');
