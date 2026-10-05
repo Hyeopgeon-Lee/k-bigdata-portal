@@ -248,10 +248,23 @@ export const studentJourney = [
   {id:"alumni", title:"졸업생 네트워크", description:"선배의 경험과 채용 정보 나누기"}
 ];
 export const quickActions = ["practical","interview","ready","apply"];
-export const learningLinks = [
-  {id:"jobs",label:"직무"}, {id:"certifications",label:"자격증"}, {id:"practical",label:"실기"},
-  {id:"interview",label:"기술면접"}, {id:"docs",label:"공식문서"}, {id:"project-guide",label:"프로젝트"}
+export const portalNavLinks = [
+  {id:"jobs",label:"직무",group:"career"},
+  {id:"ready",label:"취업준비",group:"career"},
+  {id:"apply",label:"입사지원",group:"career"},
+  {id:"alumni",label:"졸업생",group:"career"},
+  {id:"certifications",label:"자격증",group:"learning"},
+  {id:"practical",label:"실기",group:"learning"},
+  {id:"interview",label:"기술면접",group:"learning"},
+  {id:"docs",label:"공식문서",group:"learning"},
+  {id:"tech-blog",label:"기술블로그 ↗",group:"learning"},
+  {id:"project-guide",label:"프로젝트가이드",group:"project"},
+  {id:"portfolio",label:"포트폴리오 ↗",group:"project"},
+  {id:"room",label:"프로젝트실 ↗",group:"campus"},
+  {id:"help",label:"학과요청 ↗",group:"campus"}
 ];
+// Backward-compatible alias for older code/tests.
+export const learningLinks = portalNavLinks;
 export const footerLinks = [
   {name:"학과 공식 홈페이지", url:"https://www.kopo.ac.kr/kangseo/content.do?menu=1547"},
   {name:"학과 홍보 홈페이지", url:"https://ai.k-bigdata.kr/"},
