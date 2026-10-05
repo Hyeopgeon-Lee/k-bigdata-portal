@@ -1,8 +1,8 @@
-import {loadPracticalBank} from "./practical-data.js?v=20261005-solution-1";
+import {loadPracticalBank} from "./practical-data.js?v=20261005-solution-2";
 import {HINT_SECONDS,ANSWER_SECONDS,examLabels,typeLabels,languages,escapeHTML as esc,remainingSeconds,remainingAnswerSeconds,hintAvailable,answerDeadlineReached,canSubmit,canReveal,gradeAnswer,questionText,shuffle,recommendFive,matchesExam,localDay,summarizeAttempts,highlightCode,formatCodeForDisplay} from "./practical-core.js?v=20261005-browser-1";
 import {getAttempts,saveAttempt,getSession,saveSession,clearLocalLearning,storageAvailable,getPreferences,savePreferences,exportLearning,importLearning} from "./practical-store.js";
 import {matches} from "./search-core.js?v=20261005-perf-1";
-import {beginnerSteps,beginnerExplanation,examMemory,lineByLineExplanation} from "./practical-explanation.js?v=20261005-solution-1";
+import {beginnerSteps,beginnerExplanation,examMemory,lineByLineExplanation} from "./practical-explanation.js?v=20261005-solution-2";
 
 const $=selector=>document.querySelector(selector),root=$("#bank-content"),status=$("#bank-status");
 let bank=[],view="home",current=null,attempt=null,timer=null,queue=[],queueIndex=0,aliases={},pageLimit=24,queueKind="random",solveActionsObserver=null;
