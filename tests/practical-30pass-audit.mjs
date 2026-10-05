@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {beginnerSteps,beginnerExplanation,lineByLineExplanation} from '../js/practical-explanation.js';
+import {beginnerSteps,beginnerExplanation,solutionFlow,solutionSummary,lineByLineExplanation} from '../js/practical-explanation.js';
 
 const root=new URL('../',import.meta.url);
 const read=p=>JSON.parse(readFileSync(new URL(p,root),'utf8'));
@@ -28,9 +28,9 @@ pass('question prompts are present',()=>questions.forEach(q=>assert.ok(String(q.
 pass('canonical answers are present',()=>questions.forEach(q=>assert.ok(String(q.answer||'').trim(),q.id)));
 pass('learner hints are present and Korean',()=>questions.forEach(q=>{assert.ok(String(q.hint||'').trim(),q.id);assert.match(q.hint,/[가-힣]/,q.id);}));
 pass('hints do not reveal canonical answers',()=>questions.forEach(q=>{const a=compact(q.answer),h=compact(q.hint);if(a.length>=3)assert.ok(!h.includes(a),q.id);}));
-pass('explanations are present',()=>questions.forEach(q=>assert.ok(String(q.explanation||'').trim(),q.id)));
-pass('solution steps are present',()=>questions.forEach(q=>assert.ok(Array.isArray(q.steps)&&q.steps.length>=1,q.id)));
-pass('solution steps contain text',()=>questions.forEach(q=>q.steps.forEach((s,i)=>assert.ok(String(s||'').trim(),q.id+' step '+i))));
+pass('solution summaries are present',()=>questions.forEach(q=>assert.ok(String(q.solution?.summary||'').trim(),q.id)));
+pass('solution flows are present',()=>questions.forEach(q=>assert.ok(Array.isArray(q.solution?.flow)&&q.solution.flow.length>=1,q.id)));
+pass('solution flows contain text',()=>questions.forEach(q=>q.solution.flow.forEach((s,i)=>assert.ok(String(s||'').trim(),q.id+' flow '+i))));
 pass('enabled questions remain available',()=>assert.ok(enabled.length>=386));
 pass('reconstructed questions keep confidence labels',()=>questions.filter(q=>q.sourceType==='reconstructed').forEach(q=>assert.ok(['A','B','C'].includes(q.confidence),q.id)));
 pass('normalized questions do not claim exam confidence',()=>questions.filter(q=>q.sourceType==='normalized').forEach(q=>assert.equal(q.confidence,null,q.id)));
@@ -119,16 +119,16 @@ pass('mobile CSS contains dedicated line annotation layout',()=>{
 });
 
 pass('stored steps contain no generic solve boilerplate',()=>questions.forEach(q=>{
- const s=(q.steps||[]).join(' ');
+ const s=solutionFlow(q).join(' ');
  assert.doesNotMatch(s,/먼저 변수의 초기값과 실제 출력문을 표시합니다|이 문제의 핵심 개념은|코드나 SQL에서/,q.id);
 }));
 pass('stored explanations contain no generic language boilerplate',()=>questions.forEach(q=>{
- const e=String(q.explanation||'');
+ const e=solutionSummary(q);
  assert.doesNotMatch(e,/C 코드는 한 문장이|Java 코드는 변수값과 객체 상태를|Python 코드는 연산 전후의|SQL은 각 절을 한 번에 읽기보다/,q.id);
  assert.doesNotMatch(e,/먼저 주어진 테이블과 SQL을|먼저 빈칸 앞뒤 코드를|먼저 빈칸 앞뒤의 SQL을|먼저 문제에서 테이블명, 처리할 열, 값, 조건을/,q.id);
 }));
 pass('non-SQL explanations never mention SQL',()=>questions.filter(q=>q.language!=='SQL').forEach(q=>{
- assert.doesNotMatch([q.explanation,...(q.steps||[])].join(' '),/\bSQL\b/,q.id);
+ assert.doesNotMatch([solutionSummary(q),...solutionFlow(q)].join(' '),/\bSQL\b/,q.id);
 }));
 pass('rendered explanation sanitizer removes boilerplate',()=>questions.forEach(q=>{
  const rendered=[beginnerExplanation(q),...beginnerSteps(q)].join(' ');
@@ -148,7 +148,23 @@ pass('R-IND-C-0022 has exact C execution flow with no SQL leakage',()=>{
  assert.match(rendered,/printf.*334/);
  assert.doesNotMatch(rendered,/SQL|핵심 개념은|먼저 변수의 초기값/);
 });
-pass('all stored explanations remain nonempty after cleanup',()=>questions.forEach(q=>assert.ok(String(q.explanation||'').trim().length>=12,q.id)));
+pass('all stored explanations remain nonempty after cleanup',()=>questions.forEach(q=>assert.ok(solutionSummary(q).trim().length>=12,q.id)));
+
+pass('legacy explanation and steps fields are removed',()=>questions.forEach(q=>{
+ assert.ok(!Object.prototype.hasOwnProperty.call(q,'explanation'),q.id+' explanation');
+ assert.ok(!Object.prototype.hasOwnProperty.call(q,'steps'),q.id+' steps');
+}));
+pass('solution schema is the single explanation source',()=>questions.forEach(q=>{
+ assert.ok(q.solution&&typeof q.solution==='object',q.id);
+ assert.ok(solutionSummary(q).length>=12,q.id+' summary');
+ assert.ok(solutionFlow(q).length>=1,q.id+' flow');
+}));
+pass('line explanations include value traces',()=>questions.filter(q=>String(q.code||'').trim()).forEach(q=>{
+ lineByLineExplanation(q).forEach(item=>{
+  assert.ok(String(item.trace||'').trim().length>=12,q.id+' trace line '+item.line);
+  assert.match(item.trace,/[가-힣]/,q.id+' Korean trace '+item.line);
+ });
+}));
 
 pass('line explanations avoid vague fallback comments',()=>{
  const vague=[];
@@ -158,5 +174,5 @@ pass('line explanations avoid vague fallback comments',()=>{
  assert.deepEqual(vague,[],JSON.stringify(vague.slice(0,80),null,2));
 });
 
-assert.equal(passes.length,49);
-console.log('FINAL: 49/49 practical content + explanation integrity QA passes.');
+assert.equal(passes.length,52);
+console.log('FINAL: 52/52 practical solution + value-trace QA passes.');
