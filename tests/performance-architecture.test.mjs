@@ -11,6 +11,7 @@ const shell=read('js/portal-shell.js');
 const portalUx=read('js/portal-ux.js');
 const searchUi=read('js/search-ui.js');
 const practicalUi=read('js/practical-ui.js');
+const practicalData=read('js/practical-data.js');
 const interviewUi=read('js/interview-ui.js');
 const jobs=read('js/jobs.js');
 
@@ -49,6 +50,8 @@ const passes=[
    assert.ok(!practicalUi.includes('from "./search.js"'));
    assert.ok(practicalUi.includes('bankSearchTimer'));
    assert.ok(practicalUi.includes('setTimeout(()=>{filters.query=value;pageLimit=24;render();},80)'));
+   assert.ok(practicalData.includes('const [questions,extraReconstructed,history,coverage,imported]=await Promise.all(['));
+   assert.ok(!practicalData.includes('const imported=await load("../data/practical/normalized.json")'));
  }],
  ['07 interview practice avoids jobs/search payloads',()=>{
    assert.ok(interviewUi.includes('from "./search-core.js?v=20261005-perf-1"'));
