@@ -1,5 +1,5 @@
-import {loadPracticalBank} from "./practical-data.js?v=20261005-codefmt-2";
-import {HINT_SECONDS,ANSWER_SECONDS,examLabels,typeLabels,languages,escapeHTML as esc,remainingSeconds,remainingAnswerSeconds,hintAvailable,answerDeadlineReached,canSubmit,canReveal,gradeAnswer,questionText,shuffle,recommendFive,matchesExam,localDay,summarizeAttempts,highlightCode,formatCodeForDisplay} from "./practical-core.js?v=20261005-codefmt-2";
+import {loadPracticalBank} from "./practical-data.js?v=20261005-share-1";
+import {HINT_SECONDS,ANSWER_SECONDS,examLabels,typeLabels,languages,escapeHTML as esc,remainingSeconds,remainingAnswerSeconds,hintAvailable,answerDeadlineReached,canSubmit,canReveal,gradeAnswer,questionText,shuffle,recommendFive,matchesExam,localDay,summarizeAttempts,highlightCode,formatCodeForDisplay} from "./practical-core.js?v=20261005-share-1";
 import {getAttempts,saveAttempt,getSession,saveSession,clearLocalLearning,storageAvailable,getPreferences,savePreferences,exportLearning,importLearning} from "./practical-store.js";
 import {matches} from "./search.js";
 
@@ -88,6 +88,67 @@ function card(q,extra=""){
 }
 function stopTimer(){if(timer)clearInterval(timer);timer=null;solveActionsObserver?.disconnect();solveActionsObserver=null;}
 function setUrl(id=null){const url=new URL(location.href);if(id)url.searchParams.set("id",id);else url.searchParams.delete("id");history.replaceState(null,"",url);}
+function problemShareUrl(q=current){
+ if(!q)return "";
+ const url=new URL(location.pathname,location.origin);
+ url.searchParams.set("id",q.id);
+ url.searchParams.set("share","1");
+ return url.href;
+}
+function problemShareText(q=current){
+ if(!q)return "";
+ const prompt=String(q.question||"").replace(/\s+/g," ").trim();
+ const preview=prompt.length>150?prompt.slice(0,147)+"...":prompt;
+ return [solveHeading(q),q.language+" · "+q.title,preview].filter(Boolean).join("\n");
+}
+async function copyText(text){
+ if(navigator.clipboard?.writeText){
+  await navigator.clipboard.writeText(text);
+  return;
+ }
+ const area=document.createElement("textarea");
+ area.value=text;
+ area.setAttribute("readonly","");
+ area.style.position="fixed";
+ area.style.opacity="0";
+ document.body.append(area);
+ area.select();
+ const ok=document.execCommand("copy");
+ area.remove();
+ if(!ok)throw new Error("복사할 수 없습니다.");
+}
+function setShareStatus(message){
+ const el=$("#share-status");
+ if(el)el.textContent=message;
+}
+async function shareCurrentProblem(){
+ if(!current)return;
+ const url=problemShareUrl(current),text=problemShareText(current);
+ if(navigator.share){
+  try{
+   await navigator.share({title:solveHeading(current)+" · "+current.title,text,url});
+   setShareStatus("문제를 공유했습니다.");
+   return;
+  }catch(error){
+   if(error?.name==="AbortError")return;
+  }
+ }
+ try{
+  await copyText(text+"\n문제 풀기: "+url);
+  setShareStatus("문제 카드와 링크를 복사했습니다.");
+ }catch{
+  setShareStatus("공유할 수 없습니다. 다시 시도해 주세요.");
+ }
+}
+async function copyCurrentProblemLink(){
+ if(!current)return;
+ try{
+  await copyText(problemShareUrl(current));
+  setShareStatus("문제 링크를 복사했습니다.");
+ }catch{
+  setShareStatus("링크를 복사할 수 없습니다. 다시 시도해 주세요.");
+ }
+}
 function selectView(next){stopTimer();current=null;attempt=null;queue=[];view=next;pageLimit=24;setUrl();render();window.scrollTo({top:0,behavior:"auto"});}
 function planToday(){
  const key=[localDay(),filters.exam,filters.language].join(":");
@@ -168,7 +229,7 @@ function renderQuestion(){
  const multiline=q.questionType==="sql_write"||q.answer.includes("\n"),attributes='id="my-answer" required maxlength="10000" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-describedby="answer-hint gate-status" '+(revealed||submitted?'disabled':'');
  const input=multiline?'<textarea '+attributes+' rows="'+(q.questionType==="sql_write"?7:4)+'">'+esc(attempt.answer||"")+'</textarea>':'<input '+attributes+' type="text" enterkeyhint="done" value="'+esc(attempt.answer||"")+'">';
  const shownCode=displayCode(q);
- root.innerHTML='<article class="bank-solve"><div class="solve-progress">'+button("back","← 학습 시작")+'<strong>'+(queue.length?(queueIndex+1)+' / '+queue.length:'문제풀이')+'</strong>'+button("answer-jump","답 입력 ↓",'aria-label="정답 입력란으로 이동"')+'</div><h2 id="solve-title" tabindex="-1">'+esc(solveHeading(q))+'</h2>'+metadata(q)+'<p class="solve-question">'+formatQuestion(q.question)+'</p>'+tablesHTML(q)+(q.code?'<div class="code-scroll'+(q.language==="SQL"?' code-scroll--sql':'')+(codeNeedsFocus(q)?' code-scroll--complex':'')+'" tabindex="0" role="region" aria-label="'+esc(q.language)+' 문제 코드'+(q.language==="SQL"?'':' · 좌우 스크롤 가능')+'" data-scroll-hint="code-scroll-hint"><pre><code>'+highlightCode(shownCode)+'</code></pre></div><p id="code-scroll-hint" class="scroll-hint code-scroll-hint" hidden aria-hidden="true">← 좌우로 밀어 코드 보기 →</p>'+codeToolsHTML(q,shownCode):'')+(q.inputData?'<h3>입력 데이터</h3><pre class="input-data">'+esc(q.inputData)+'</pre>':'')+'<form id="answer-form"><label for="my-answer">내가 생각한 정답</label>'+input+'<p class="hint" id="answer-hint">'+(q.grading==="self"?'SQL은 예시답과 직접 비교해 판정합니다.':'출력의 대소문자와 줄바꿈을 확인하세요.')+'</p></form><aside id="solve-hint" class="solve-hint" aria-live="polite" hidden><p class="solve-hint-kicker">'+HINT_SECONDS+'초 힌트</p><h3>풀이 방향</h3><p>'+esc(q.hint||"문제의 실행 흐름을 단계별로 추적해 보세요.")+'</p></aside><p id="gate-status" role="status"></p><div id="answer-result"></div><div class="solve-actions"><p class="bank-timer" id="solve-timer" role="timer" aria-live="off"></p><button id="submit-answer" class="button button-primary" form="answer-form" type="submit" disabled>답 제출하고 풀이 보기</button><button id="next-answer" class="button button-primary" type="button" data-action="next" hidden>다음 문제</button></div></article>';
+ root.innerHTML='<article class="bank-solve"><div class="solve-progress">'+button("back","← 학습 시작")+'<strong>'+(queue.length?(queueIndex+1)+' / '+queue.length:'문제풀이')+'</strong>'+button("answer-jump","답 입력 ↓",'aria-label="정답 입력란으로 이동"')+'</div><h2 id="solve-title" tabindex="-1">'+esc(solveHeading(q))+'</h2>'+metadata(q)+'<div class="solve-share-row" aria-label="문제 공유">'+button("share-problem","문제 공유",'aria-label="현재 문제 카드 공유"')+button("copy-problem-link","링크 복사",'aria-label="현재 문제 링크 복사"')+'</div><p id="share-status" class="share-status" role="status" aria-live="polite"></p><p class="solve-question">'+formatQuestion(q.question)+'</p>'+tablesHTML(q)+(q.code?'<div class="code-scroll'+(q.language==="SQL"?' code-scroll--sql':'')+(codeNeedsFocus(q)?' code-scroll--complex':'')+'" tabindex="0" role="region" aria-label="'+esc(q.language)+' 문제 코드'+(q.language==="SQL"?'':' · 좌우 스크롤 가능')+'" data-scroll-hint="code-scroll-hint"><pre><code>'+highlightCode(shownCode)+'</code></pre></div><p id="code-scroll-hint" class="scroll-hint code-scroll-hint" hidden aria-hidden="true">← 좌우로 밀어 코드 보기 →</p>'+codeToolsHTML(q,shownCode):'')+(q.inputData?'<h3>입력 데이터</h3><pre class="input-data">'+esc(q.inputData)+'</pre>':'')+'<form id="answer-form"><label for="my-answer">내가 생각한 정답</label>'+input+'<p class="hint" id="answer-hint">'+(q.grading==="self"?'SQL은 예시답과 직접 비교해 판정합니다.':'출력의 대소문자와 줄바꿈을 확인하세요.')+'</p></form><aside id="solve-hint" class="solve-hint" aria-live="polite" hidden><p class="solve-hint-kicker">'+HINT_SECONDS+'초 힌트</p><h3>풀이 방향</h3><p>'+esc(q.hint||"문제의 실행 흐름을 단계별로 추적해 보세요.")+'</p></aside><p id="gate-status" role="status"></p><div id="answer-result"></div><div class="solve-actions"><p class="bank-timer" id="solve-timer" role="timer" aria-live="off"></p><button id="submit-answer" class="button button-primary" form="answer-form" type="submit" disabled>답 제출하고 풀이 보기</button><button id="next-answer" class="button button-primary" type="button" data-action="next" hidden>다음 문제</button></div></article>';
  requestAnimationFrame(()=>{updateHorizontalScrollHints();observeSolveActions();});
  $("#answer-form").addEventListener("submit",submitAnswer);
  $("#my-answer").addEventListener("input",()=>{if(!attempt.viewedExplanation&&!attempt.submittedAt){attempt.answer=$("#my-answer").value;saveSession(q.id,attempt);updateGate();}});
@@ -286,6 +347,8 @@ root.addEventListener("click",event=>{
  if(action==="export-learning"){const url=URL.createObjectURL(new Blob([JSON.stringify(exportLearning(),null,2)],{type:"application/json"})),link=document.createElement("a");link.href=url;link.download="kbigdata-learning-"+localDay()+".json";link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
  if(action==="back")selectView("home");
  if(action==="answer-jump"){const answer=$("#my-answer");if(answer){answer.focus({preventScroll:true});answer.scrollIntoView({block:"center",behavior:"smooth"});}}
+ if(action==="share-problem")void shareCurrentProblem();
+ if(action==="copy-problem-link")void copyCurrentProblemLink();
  if(action==="code-focus"){const dialog=$("#code-dialog");if(dialog){if(typeof dialog.showModal==="function")dialog.showModal();else dialog.setAttribute("open","");}}
  if(action==="code-close"){const dialog=$("#code-dialog");if(dialog){if(typeof dialog.close==="function")dialog.close();else dialog.removeAttribute("open");}}
  if(action==="reset")resetFilters();
@@ -332,10 +395,10 @@ loadPracticalBank().then(result=>{
   for(const key of ["exam","language","source","difficulty","type","sort","completion","year","round"]){const select=$("#"+key+"-filter");if([...select.options].some(o=>o.value===saved[key])){filters[key]=saved[key];select.value=saved[key];}}
   if(typeof saved.query==="string"){filters.query=saved.query.slice(0,200);$("#bank-query").value=filters.query;}
  }
- const params=new URLSearchParams(location.search),id=params.get("id"),exam=params.get("exam");if(Object.keys(examLabels).includes(exam)){filters.exam=exam;$("#exam-filter").value=exam;}
+ const params=new URLSearchParams(location.search),id=params.get("id"),exam=params.get("exam"),shared=params.get("share")==="1";if(Object.keys(examLabels).includes(exam)){filters.exam=exam;$("#exam-filter").value=exam;}if(shared){const canonical=new URL(location.href);canonical.searchParams.delete("share");history.replaceState(null,"",canonical);}
  const savedQueue=getPreferences().learningQueue;
  if(id&&savedQueue&&Array.isArray(savedQueue.ids)&&savedQueue.ids[savedQueue.index]===(aliases[id]||id)&&savedQueue.ids.every(id=>bank.some(q=>q.id===id))){queue=savedQueue.ids.map(id=>bank.find(q=>q.id===id));queueIndex=savedQueue.index;queueKind=savedQueue.kind;}
- if(id&&bank.some(q=>q.id===(aliases[id]||id)))openQuestion(id);else{if(id)view="bank";render();if(id)status.textContent="요청한 문제를 찾을 수 없습니다. 목록에서 선택하세요.";}
+ if(id&&bank.some(q=>q.id===(aliases[id]||id)))openQuestion(id,shared);else{if(id)view="bank";render();if(id)status.textContent="요청한 문제를 찾을 수 없습니다. 목록에서 선택하세요.";}
 }).catch(()=>{root.innerHTML='<div class="bank-empty"><h2>문제 데이터를 불러오지 못했습니다.</h2><p>네트워크 연결을 확인하고 페이지를 새로고침하세요.</p></div>';status.textContent="데이터 로딩 오류";});
 window.addEventListener("pagehide",stopTimer);
 window.addEventListener("pageshow",()=>{if(current){updateGate();if(!attempt.viewedExplanation&&!timer)timer=setInterval(updateGate,500);}});
