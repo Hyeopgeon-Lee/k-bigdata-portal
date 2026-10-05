@@ -18,7 +18,7 @@
     "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
     "code": "class Counter {\n    private static Counter instance;\n    private int value = 0;\n    private Counter() {}\n    static Counter getInstance() {\n        if (instance == null) instance = new Counter();\n        return instance;\n    }\n    void add() { value++; }\n    int value() { return value; }\n}\npublic class Main {\n    public static void main(String[] args) {\n        Counter a = Counter.getInstance();\n        Counter b = Counter.getInstance();\n        a.add(); b.add(); a.add(); b.add();\n        System.out.print(a.value());\n    }\n}",
     "answer": "4",
-    "explanation": "getInstance()은 같은 Counter 객체를 반환하므로 a와 b가 동일한 value를 공유합니다.",
+    "explanation": "getInstance()은 같은 Counter 객체를 반환하므로 a와 b가 동일한 value를 공유합니다. 먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다. 첫 호출에서 Counter 객체가 한 번 생성됩니다. Java 코드는 변수값과 객체 상태를 구분하고, 메서드가 호출되는 순서대로 한 단계씩 값을 갱신하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "첫 호출에서 Counter 객체가 한 번 생성됩니다.",
@@ -61,7 +61,7 @@
     "acceptedAnswers": [
       "151"
     ],
-    "explanation": "삼항식의 결과는 0이므로 else가 실행됩니다. v3는 29<<2로 116이 되고, v2 35와 더해 151이 됩니다.",
+    "explanation": "삼항식의 결과는 0이므로 else가 실행됩니다. v3는 29<<2로 116이 되고, v2 35와 더해 151이 됩니다. v1>v2는 거짓이므로 삼항식 결과는 v1인 0입니다. if(0)은 거짓이므로 else가 실행됩니다. C 코드는 한 문장이 실행될 때마다 변수값과 배열 인덱스, 포인터가 가리키는 위치를 따로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "v1>v2는 거짓이므로 삼항식 결과는 v1인 0입니다.",
       "if(0)은 거짓이므로 else가 실행됩니다.",
@@ -102,7 +102,7 @@
     "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
     "code": "#include <stdio.h>\n#include <string.h>\nint main(void) {\n    char text[] = \"ABCDEFGH\";\n    char *left = text;\n    char *right = text + strlen(text) - 1;\n    while (left < right) {\n        char temp = *left;\n        *left++ = *right;\n        *right-- = temp;\n    }\n    for (int i = 1; i < (int)strlen(text); i += 2)\n        putchar(text[i]);\n    return 0;\n}",
     "answer": "GECA",
-    "explanation": "문자열을 뒤집으면 HGFEDCBA이고, 인덱스 1·3·5·7의 문자는 G·E·C·A입니다.",
+    "explanation": "문자열을 뒤집으면 HGFEDCBA이고, 인덱스 1·3·5·7의 문자는 G·E·C·A입니다. 먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다. ABCDEFGH를 뒤집어 HGFEDCBA를 만듭니다. C 코드는 한 문장이 실행될 때마다 변수값과 배열 인덱스, 포인터가 가리키는 위치를 따로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "ABCDEFGH를 뒤집어 HGFEDCBA를 만듭니다.",
@@ -143,7 +143,7 @@
     "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
     "code": "#include <stdio.h>\n#include <ctype.h>\nint main(void) {\n    char *p = \"It is 8\";\n    char result[100];\n    int i;\n    for (i = 0; p[i] != '\\0'; i++) {\n        if (isupper((unsigned char)p[i]))\n            result[i] = (p[i] - 'A' + 5) % 25 + 'A';\n        else if (islower((unsigned char)p[i]))\n            result[i] = (p[i] - 'a' + 10) % 26 + 'a';\n        else if (isdigit((unsigned char)p[i]))\n            result[i] = (p[i] - '0' + 3) % 10 + '0';\n        else\n            result[i] = p[i];\n    }\n    result[i] = '\\0';\n    printf(\"%s\", result);\n    return 0;\n}",
     "answer": "Nd sc 1",
-    "explanation": "I는 대문자 규칙으로 N, t·i·s는 소문자 규칙으로 d·s·c, 숫자 8은 1로 바뀝니다. 공백은 그대로 유지됩니다.",
+    "explanation": "I는 대문자 규칙으로 N, t·i·s는 소문자 규칙으로 d·s·c, 숫자 8은 1로 바뀝니다. 공백은 그대로 유지됩니다. I: (8+5)%25=13 → N. t, i, s는 각각 d, s, c로 변환됩니다. C 코드는 한 문장이 실행될 때마다 변수값과 배열 인덱스, 포인터가 가리키는 위치를 따로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "I: (8+5)%25=13 → N.",
       "t, i, s는 각각 d, s, c로 변환됩니다.",
@@ -186,7 +186,7 @@
     "acceptedAnswers": [
       "Soyaaar"
     ],
-    "explanation": "초기 S 뒤에 각 도시 문자열의 인덱스 1 문자를 e, y, n, a, a, u 순서로 붙입니다.",
+    "explanation": "초기 S 뒤에 각 도시 문자열의 인덱스 1 문자를 e, y, n, a, a, u 순서로 붙입니다. Seoul[1]=e, Kyeonggi[1]=y입니다. Incheon[1]=n, Daejun[1]=a입니다. Python 코드는 연산 전후의 자료형과 리스트·문자열 상태가 어떻게 바뀌는지 한 단계씩 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "Seoul[1]=e, Kyeonggi[1]=y입니다.",
       "Incheon[1]=n, Daejun[1]=a입니다.",
@@ -256,7 +256,7 @@
     ],
     "code": "INSERT INTO 사원(사원번호, 이름, 주소, 부서)\n[1] (32431, '정실기', '서울', '영업');\n\nINSERT INTO 부서(사원번호, 이름, 나이, 부서)\n[2] 사원번호, 이름, 나이, 23 FROM 사원 WHERE 이름 = '정실기';\n\nSELECT * [3] 사원;\n\nUPDATE 사원 [4] 부서 = '퇴사' WHERE 사원번호 = 32431;",
     "answer": "VALUES SELECT FROM SET",
-    "explanation": "직접 값을 삽입할 때 VALUES, 조회 결과를 삽입할 때 SELECT, 조회 대상은 FROM, 갱신 값 지정은 SET을 사용합니다.",
+    "explanation": "직접 값을 삽입할 때 VALUES, 조회 결과를 삽입할 때 SELECT, 조회 대상은 FROM, 갱신 값 지정은 SET을 사용합니다. INSERT에 직접 값을 넣으므로 VALUES입니다. 다른 조회 결과를 INSERT하므로 SELECT입니다. SQL은 각 절을 한 번에 읽기보다 데이터가 선택되고 가공되는 순서를 중간 결과로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "INSERT에 직접 값을 넣으므로 VALUES입니다.",
       "다른 조회 결과를 INSERT하므로 SELECT입니다.",
@@ -300,7 +300,7 @@
     "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
     "code": "class Parent {\n    int a, b;\n    Parent(int a, int b) {\n        this.a = a;\n        this.b = b;\n    }\n    void print() {\n        System.out.println(a + b);\n    }\n}\nclass Child extends Parent {\n    int po = 3;\n    Child(int i) {\n        super(i, i + 1);\n    }\n    @Override\n    void print() {\n        System.out.println(po * po);\n    }\n}\npublic class Main {\n    public static void main(String[] args) {\n        Parent one = new Child(10);\n        one.print();\n    }\n}",
     "answer": "9",
-    "explanation": "실제 객체가 Child이므로 오버라이딩된 print()가 호출되고, po=3이므로 3×3=9가 출력됩니다.",
+    "explanation": "실제 객체가 Child이므로 오버라이딩된 print()가 호출되고, po=3이므로 3×3=9가 출력됩니다. 먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다. Parent 타입 변수에 Child 객체를 저장합니다. Java 코드는 변수값과 객체 상태를 구분하고, 메서드가 호출되는 순서대로 한 단계씩 값을 갱신하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "Parent 타입 변수에 Child 객체를 저장합니다.",
@@ -340,7 +340,7 @@
     "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
     "code": "public class Main {\n    public static void main(String[] args) {\n        int[] a = new int[]{1, 2, 3, 4};\n        int[] b = new int[]{1, 2, 3, 4};\n        int[] c = new int[]{1, 2, 3};\n        check(a, b);\n        check(a, c);\n        check(b, c);\n    }\n    static void check(int[] a, int[] b) {\n        System.out.print(a == b ? \"O\" : \"N\");\n    }\n}",
     "answer": "NNN",
-    "explanation": "a, b, c는 각각 new로 만든 서로 다른 배열 객체이므로 세 번의 참조 비교가 모두 거짓입니다.",
+    "explanation": "a, b, c는 각각 new로 만든 서로 다른 배열 객체이므로 세 번의 참조 비교가 모두 거짓입니다. a와 b는 값이 같아도 서로 다른 객체입니다. a와 c도 다른 객체입니다. Java 코드는 변수값과 객체 상태를 구분하고, 메서드가 호출되는 순서대로 한 단계씩 값을 갱신하면 이해하기 쉽습니다.",
     "steps": [
       "a와 b는 값이 같아도 서로 다른 객체입니다.",
       "a와 c도 다른 객체입니다.",
@@ -381,7 +381,7 @@
     "question": "다음 Python 3 코드의 출력 결과를 쓰세요.",
     "code": "def cnt(text, pattern):\n    result = 0\n    for i in range(len(text) - len(pattern) + 1):\n        sub = text[i:i + len(pattern)]\n        if sub == pattern:\n            result += 1\n    return result\n\ntext = \"abdcabcabca\"\np1 = \"ca\"\np2 = \"ab\"\nprint(f'ab{cnt(text, p2)}ca{cnt(text, p1)}')",
     "answer": "ab3ca3",
-    "explanation": "문자열에서 ab와 ca가 각각 3번 등장하므로 f-string 결과는 ab3ca3입니다.",
+    "explanation": "문자열에서 ab와 ca가 각각 3번 등장하므로 f-string 결과는 ab3ca3입니다. ab는 시작 인덱스 0,4,7에서 3번 나타납니다. ca는 시작 인덱스 3,6,9에서 3번 나타납니다. Python 코드는 연산 전후의 자료형과 리스트·문자열 상태가 어떻게 바뀌는지 한 단계씩 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "ab는 시작 인덱스 0,4,7에서 3번 나타납니다.",
       "ca는 시작 인덱스 3,6,9에서 3번 나타납니다.",
@@ -421,7 +421,7 @@
     "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
     "code": "#include <stdio.h>\nstruct Test {\n    int i;\n    const char *g;\n};\nint main(void) {\n    struct Test test[] = {{1,\"AB\"},{2,\"DC\"},{3,\"EB\"}};\n    struct Test *p = &test[1];\n    printf(\"%s\", p->g + (p->i - 1));\n    return 0;\n}",
     "answer": "C",
-    "explanation": "p는 test[1]을 가리켜 i=2, g=\"DC\"입니다. g+(2-1)은 문자열의 C 위치를 가리키고 %s는 그 위치부터 출력합니다.",
+    "explanation": "p는 test[1]을 가리켜 i=2, g=\"DC\"입니다. g+(2-1)은 문자열의 C 위치를 가리키고 %s는 그 위치부터 출력합니다. p->i는 2이고 p->g는 DC입니다. p->i-1은 1입니다. C 코드는 한 문장이 실행될 때마다 변수값과 배열 인덱스, 포인터가 가리키는 위치를 따로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "p->i는 2이고 p->g는 DC입니다.",
       "p->i-1은 1입니다.",
@@ -461,7 +461,7 @@
     "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
     "code": "#include <stdio.h>\nint main(void) {\n    char str[] = \"REPUBLICOFKOREA\";\n    int a = 0;\n    while (str[a] != '\\0')\n        ++a;\n    putchar(str[a - 2]);\n    return 0;\n}",
     "answer": "E",
-    "explanation": "문자열 길이가 15이므로 반복 종료 시 a=15입니다. str[13]은 E입니다.",
+    "explanation": "문자열 길이가 15이므로 반복 종료 시 a=15입니다. str[13]은 E입니다. 먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다. 널 문자를 만날 때까지 a가 증가하여 15가 됩니다. C 코드는 한 문장이 실행될 때마다 변수값과 배열 인덱스, 포인터가 가리키는 위치를 따로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "널 문자를 만날 때까지 a가 증가하여 15가 됩니다.",
@@ -502,7 +502,7 @@
     "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
     "code": "#include <stdio.h>\nstruct Node {\n    struct Node *next;\n    unsigned int x;\n};\nint main(void) {\n    struct Node t1 = {0, 5u};\n    struct Node t2 = {0, 7u};\n    struct Node t3 = {0, 11u};\n    t3.next = &t2;\n    t2.next = &t1;\n    struct Node *curr = &t3;\n    unsigned int sum = 0;\n    while (curr) {\n        sum = sum * 3 + curr->x;\n        curr = curr->next;\n    }\n    sum = (sum ^ 42u) + 100u;\n    printf(\"%u\", sum);\n    return 0;\n}",
     "answer": "187",
-    "explanation": "누적값은 11 → 40 → 125가 됩니다. 125 XOR 42는 87이고 100을 더하면 187입니다.",
+    "explanation": "누적값은 11 → 40 → 125가 됩니다. 125 XOR 42는 87이고 100을 더하면 187입니다. 첫 노드: 0×3+11=11입니다. 둘째 노드: 11×3+7=40입니다. C 코드는 한 문장이 실행될 때마다 변수값과 배열 인덱스, 포인터가 가리키는 위치를 따로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "첫 노드: 0×3+11=11입니다.",
       "둘째 노드: 11×3+7=40입니다.",
@@ -546,7 +546,7 @@
       "implements",
       "IMPLEMENTS"
     ],
-    "explanation": "Java 클래스가 인터페이스를 구현할 때 implements 키워드를 사용합니다.",
+    "explanation": "Java 클래스가 인터페이스를 구현할 때 implements 키워드를 사용합니다. 먼저 빈칸 앞뒤 코드를 읽고, 그 위치에 필요한 자료형·연산자·문법 요소가 무엇인지 확인합니다. 이 문제의 핵심 개념은 interface · implements · 상속 관계입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다. Java 코드는 변수값과 객체 상태를 구분하고, 메서드가 호출되는 순서대로 한 단계씩 값을 갱신하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 빈칸 앞뒤 코드를 읽고, 그 위치에 필요한 자료형·연산자·문법 요소가 무엇인지 확인합니다.",
       "이 문제의 핵심 개념은 interface · implements · 상속 관계입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
@@ -636,7 +636,7 @@
       "super",
       "super(a, a)"
     ],
-    "explanation": "Square 생성자에서 Rectangle(int,int) 부모 생성자를 호출해야 하므로 super가 들어갑니다.",
+    "explanation": "Square 생성자에서 Rectangle(int,int) 부모 생성자를 호출해야 하므로 super가 들어갑니다. 먼저 빈칸 앞뒤 코드를 읽고, 그 위치에 필요한 자료형·연산자·문법 요소가 무엇인지 확인합니다. Square는 Rectangle을 상속합니다. Java 코드는 변수값과 객체 상태를 구분하고, 메서드가 호출되는 순서대로 한 단계씩 값을 갱신하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 빈칸 앞뒤 코드를 읽고, 그 위치에 필요한 자료형·연산자·문법 요소가 무엇인지 확인합니다.",
       "Square는 Rectangle을 상속합니다.",
@@ -678,7 +678,7 @@
     "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
     "code": "#include <stdio.h>\nint main(void) {\n    int x = 7, y = 4, z;\n    z = y % 3 < 3 ? 2 : 1;\n    z = z & z >> 1;\n    z = x > 5 && z <= 3 ? z * x : z / x;\n    printf(\"%d\", z);\n    return 0;\n}",
     "answer": "0",
-    "explanation": "첫 식에서 z=2, 두 번째 식에서 2 & (2>>1)=0, 마지막 식은 조건이 참이지만 0×7이므로 0입니다.",
+    "explanation": "첫 식에서 z=2, 두 번째 식에서 2 & (2>>1)=0, 마지막 식은 조건이 참이지만 0×7이므로 0입니다. 4%3=1이고 1<3이므로 z=2입니다. >>가 &보다 먼저 계산되어 2&(2>>1)=2&1=0입니다. C 코드는 한 문장이 실행될 때마다 변수값과 배열 인덱스, 포인터가 가리키는 위치를 따로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "4%3=1이고 1<3이므로 z=2입니다.",
       ">>가 &보다 먼저 계산되어 2&(2>>1)=2&1=0입니다.",
@@ -720,7 +720,7 @@
     "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
     "code": "enum Tri {\n    A(\"A\"), B(\"AB\"), C(\"ABC\");\n    private final String code;\n    Tri(String code) { this.code = code; }\n    String code() { return code; }\n}\npublic class Main {\n    public static void main(String[] args) {\n        Tri t = Tri.values()[Tri.A.name().length()];\n        System.out.print(t.code());\n    }\n}",
     "answer": "AB",
-    "explanation": "Tri.A.name()은 A이고 길이는 1입니다. Tri.values()[1]은 B이며 B의 code는 AB입니다.",
+    "explanation": "Tri.A.name()은 A이고 길이는 1입니다. Tri.values()[1]은 B이며 B의 code는 AB입니다. Tri.A.name()은 \"A\"입니다. \"A\".length()는 1입니다. Java 코드는 변수값과 객체 상태를 구분하고, 메서드가 호출되는 순서대로 한 단계씩 값을 갱신하면 이해하기 쉽습니다.",
     "steps": [
       "Tri.A.name()은 \"A\"입니다.",
       "\"A\".length()는 1입니다.",
@@ -791,7 +791,7 @@
     ],
     "code": "SELECT COUNT(col2)\nFROM A\nWHERE col1 IN (2, 3)\n   OR col2 IN (3, 5);",
     "answer": "4",
-    "explanation": "WHERE 조건을 만족하는 행은 5개지만 COUNT(col2)는 col2가 NULL인 행을 제외하므로 4입니다.",
+    "explanation": "WHERE 조건을 만족하는 행은 5개지만 COUNT(col2)는 col2가 NULL인 행을 제외하므로 4입니다. 먼저 주어진 테이블과 SQL을 따로 보고, FROM의 원본 행에서 시작해 조건과 집계가 적용될 때마다 남는 행을 적습니다. col1 IN(2,3) 또는 col2 IN(3,5)를 만족하는 행은 모두 5개입니다. SQL은 각 절을 한 번에 읽기보다 데이터가 선택되고 가공되는 순서를 중간 결과로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 주어진 테이블과 SQL을 따로 보고, FROM의 원본 행에서 시작해 조건과 집계가 적용될 때마다 남는 행을 적습니다.",
       "col1 IN(2,3) 또는 col2 IN(3,5)를 만족하는 행은 모두 5개입니다.",
@@ -832,7 +832,7 @@
     "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
     "code": "#include <stdio.h>\nint main(void) {\n    int arr[3][3] = {1,2,3,4,5,6,7,8,9};\n    int *parr[2] = {arr[1], arr[2]};\n    printf(\"%d\", parr[1][1] + *(parr[1] + 2) + **parr);\n    return 0;\n}",
     "answer": "21",
-    "explanation": "parr[1]은 arr[2]를, parr[0]은 arr[1]을 가리킵니다. 8+9+4=21입니다.",
+    "explanation": "parr[1]은 arr[2]를, parr[0]은 arr[1]을 가리킵니다. 8+9+4=21입니다. parr[1][1]은 arr[2][1]이므로 8입니다. *(parr[1]+2)는 arr[2][2]이므로 9입니다. C 코드는 한 문장이 실행될 때마다 변수값과 배열 인덱스, 포인터가 가리키는 위치를 따로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "parr[1][1]은 arr[2][1]이므로 8입니다.",
       "*(parr[1]+2)는 arr[2][2]이므로 9입니다.",
@@ -875,7 +875,7 @@
     "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
     "code": "public class Main {\n    static void show(String[] values) {\n        for (int i=1; i<values.length; i++)\n            System.out.print(values[i-1].equals(values[i]) ? \"O\" : \"N\");\n        for (String value : values) System.out.print(value);\n    }\n    public static void main(String[] args) {\n        String[] values = {\"A\", \"A\", new String(\"A\")};\n        show(values);\n    }\n}",
     "answer": "OOAAA",
-    "explanation": "equals는 문자열 내용을 비교하므로 두 비교가 모두 참입니다. 이어서 배열의 A 세 개가 출력됩니다.",
+    "explanation": "equals는 문자열 내용을 비교하므로 두 비교가 모두 참입니다. 이어서 배열의 A 세 개가 출력됩니다. 먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다. A와 A의 equals는 참입니다. Java 코드는 변수값과 객체 상태를 구분하고, 메서드가 호출되는 순서대로 한 단계씩 값을 갱신하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "A와 A의 equals는 참입니다.",
@@ -920,7 +920,7 @@
     "question": "다음 Python 3 코드의 출력 결과를 쓰세요.",
     "code": "def reverse_in_place(values):\n    for i in range(len(values)//2):\n        values[i], values[-i-1] = values[-i-1], values[i]\n\nvalues = [1,2,3,4,5,6]\nreverse_in_place(values)\nprint(sum(values[::2]) - sum(values[1::2]))",
     "answer": "3",
-    "explanation": "리스트는 [6,5,4,3,2,1]이 되고 짝수 인덱스 합 12에서 홀수 인덱스 합 9를 빼면 3입니다.",
+    "explanation": "리스트는 [6,5,4,3,2,1]이 되고 짝수 인덱스 합 12에서 홀수 인덱스 합 9를 빼면 3입니다. 리스트를 제자리에서 뒤집어 6,5,4,3,2,1로 만듭니다. values[::2]의 합은 6+4+2=12입니다. Python 코드는 연산 전후의 자료형과 리스트·문자열 상태가 어떻게 바뀌는지 한 단계씩 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "리스트를 제자리에서 뒤집어 6,5,4,3,2,1로 만듭니다.",
       "values[::2]의 합은 6+4+2=12입니다.",
@@ -1024,7 +1024,7 @@
     ],
     "code": "SELECT COUNT(*)\nFROM employee e\nJOIN project p ON e.project_id = p.project_id\nWHERE p.name IN (\n    SELECT name\n    FROM project\n    WHERE project_id IN (\n        SELECT project_id\n        FROM employee\n        GROUP BY project_id\n        HAVING COUNT(*) < 2\n    )\n);",
     "answer": "1",
-    "explanation": "직원이 2명 미만인 프로젝트는 102 하나이며, 해당 프로젝트에 속한 직원도 한 명이므로 결과는 1입니다.",
+    "explanation": "직원이 2명 미만인 프로젝트는 102 하나이며, 해당 프로젝트에 속한 직원도 한 명이므로 결과는 1입니다. 프로젝트별 직원 수는 101=2, 102=1, 103=2입니다. HAVING COUNT(*)<2에 해당하는 project_id는 102입니다. SQL은 각 절을 한 번에 읽기보다 데이터가 선택되고 가공되는 순서를 중간 결과로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "프로젝트별 직원 수는 101=2, 102=1, 103=2입니다.",
       "HAVING COUNT(*)<2에 해당하는 project_id는 102입니다.",
@@ -1064,7 +1064,7 @@
     "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
     "code": "#include <stdio.h>\nint next_value(void) {\n    static int value = 0;\n    value += 2;\n    return value;\n}\nint main(void) {\n    int value = 1;\n    int sum = 0;\n    for (int i=0; i<4; i++) {\n        value++;\n        sum += next_value();\n    }\n    printf(\"%d\", sum);\n    return 0;\n}",
     "answer": "20",
-    "explanation": "static 변수는 호출 사이에 값을 유지해 2,4,6,8을 반환하고 합은 20입니다.",
+    "explanation": "static 변수는 호출 사이에 값을 유지해 2,4,6,8을 반환하고 합은 20입니다. 첫 호출은 2를 반환합니다. 이후 4,6,8로 누적됩니다. C 코드는 한 문장이 실행될 때마다 변수값과 배열 인덱스, 포인터가 가리키는 위치를 따로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "첫 호출은 2를 반환합니다.",
       "이후 4,6,8로 누적됩니다.",
@@ -1154,7 +1154,7 @@
     "question": "다음 Python 3 코드의 출력 결과를 쓰세요.",
     "code": "def value_of(v):\n    if type(v) == type(100):\n        return 100\n    elif type(v) == type(\"\"):\n        return len(v)\n    return 20\n\na = \"100.0\"\nb = 100.0\nc = (100, 200)\nprint(value_of(a) + value_of(b) + value_of(c))",
     "answer": "45",
-    "explanation": "a는 길이 5인 문자열이고, b와 c는 int도 str도 아니므로 각각 20을 반환합니다.",
+    "explanation": "a는 길이 5인 문자열이고, b와 c는 int도 str도 아니므로 각각 20을 반환합니다. a는 str이므로 len(\"100.0\")=5입니다. b는 float라서 20입니다. Python 코드는 연산 전후의 자료형과 리스트·문자열 상태가 어떻게 바뀌는지 한 단계씩 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "a는 str이므로 len(\"100.0\")=5입니다.",
       "b는 float라서 20입니다.",
@@ -1198,7 +1198,7 @@
     "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
     "code": "public class Main {\n    static void fail() throws Exception { throw new NullPointerException(); }\n    public static void main(String[] args) {\n        int sum=0;\n        try { fail(); }\n        catch (NullPointerException e) { sum += 1; }\n        catch (Exception e) { sum += 10; }\n        finally { sum += 100; }\n        System.out.print(sum);\n    }\n}",
     "answer": "101",
-    "explanation": "NullPointerException 전용 catch에서 1을 더하고 finally에서 100을 더해 101입니다.",
+    "explanation": "NullPointerException 전용 catch에서 1을 더하고 finally에서 100을 더해 101입니다. fail()이 NullPointerException을 던집니다. 첫 번째 catch가 실행되어 sum=1입니다. Java 코드는 변수값과 객체 상태를 구분하고, 메서드가 호출되는 순서대로 한 단계씩 값을 갱신하면 이해하기 쉽습니다.",
     "steps": [
       "fail()이 NullPointerException을 던집니다.",
       "첫 번째 catch가 실행되어 sum=1입니다.",
@@ -1243,7 +1243,7 @@
     "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
     "code": "class Base {\n    int x=3;\n    int getX(){ return x*2; }\n}\nclass Derived extends Base {\n    int x=7;\n    @Override int getX(){ return x*3; }\n}\npublic class Main {\n    public static void main(String[] args) {\n        Base a=new Derived();\n        Derived b=new Derived();\n        System.out.print(a.getX()+a.x+b.getX()+b.x);\n    }\n}",
     "answer": "52",
-    "explanation": "메서드는 실제 객체를 따라 Derived.getX()가 호출되지만 필드는 참조 타입을 따릅니다.",
+    "explanation": "메서드는 실제 객체를 따라 Derived.getX()가 호출되지만 필드는 참조 타입을 따릅니다. a.getX()=21입니다. a.x는 Base.x라서 3입니다. Java 코드는 변수값과 객체 상태를 구분하고, 메서드가 호출되는 순서대로 한 단계씩 값을 갱신하면 이해하기 쉽습니다.",
     "steps": [
       "a.getX()=21입니다.",
       "a.x는 Base.x라서 3입니다.",
@@ -1288,7 +1288,7 @@
     "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
     "code": "class Printer {\n    void print(Integer v){ System.out.print(\"A\"+v); }\n    void print(Object v){ System.out.print(\"B\"+v); }\n    void print(Number v){ System.out.print(\"C\"+v); }\n}\nclass Box<T> {\n    T value;\n    Box(T value){ this.value=value; }\n    void show(){ new Printer().print(value); }\n}\npublic class Main {\n    public static void main(String[] args){ new Box<>(0).show(); }\n}",
     "answer": "B0",
-    "explanation": "제네릭 T는 타입 소거 후 Object로 다뤄져 print(Object)가 선택됩니다.",
+    "explanation": "제네릭 T는 타입 소거 후 Object로 다뤄져 print(Object)가 선택됩니다. Box<Integer>로 생성되지만 T의 상한은 Object입니다. show 내부의 value는 컴파일 시 Object로 해석됩니다. Java 코드는 변수값과 객체 상태를 구분하고, 메서드가 호출되는 순서대로 한 단계씩 값을 갱신하면 이해하기 쉽습니다.",
     "steps": [
       "Box<Integer>로 생성되지만 T의 상한은 Object입니다.",
       "show 내부의 value는 컴파일 시 Object로 해석됩니다.",
@@ -1332,7 +1332,7 @@
     "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
     "code": "public class Main {\n    static void change(String[] data, String text) {\n        data[0]=text;\n        text=\"Z\";\n    }\n    public static void main(String[] args) {\n        String[] data={\"A\"};\n        String text=\"B\";\n        change(data,text);\n        System.out.print(data[0]+text);\n    }\n}",
     "answer": "BB",
-    "explanation": "배열 참조값의 복사본을 통해 원본 배열 원소는 B로 바뀌지만, 문자열 변수 재대입은 호출자 변수에 영향을 주지 않습니다.",
+    "explanation": "배열 참조값의 복사본을 통해 원본 배열 원소는 B로 바뀌지만, 문자열 변수 재대입은 호출자 변수에 영향을 주지 않습니다. data[0]은 A, text는 B로 시작합니다. change 안에서 data[0]이 B로 바뀝니다. Java 코드는 변수값과 객체 상태를 구분하고, 메서드가 호출되는 순서대로 한 단계씩 값을 갱신하면 이해하기 쉽습니다.",
     "steps": [
       "data[0]은 A, text는 B로 시작합니다.",
       "change 안에서 data[0]이 B로 바뀝니다.",
@@ -1376,7 +1376,7 @@
     "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
     "code": "public class Main {\n    interface F { int apply(int x) throws Exception; }\n    static int run(F f) {\n        try { return f.apply(3); }\n        catch(Exception e){ return 7; }\n    }\n    public static void main(String[] args) {\n        F first = x -> {\n            if (x>2) throw new Exception();\n            return x*2;\n        };\n        System.out.print(run(first)+run(n->n+9));\n    }\n}",
     "answer": "19",
-    "explanation": "첫 람다는 예외가 발생해 7을 반환하고, 두 번째는 3+9=12를 반환하므로 합은 19입니다.",
+    "explanation": "첫 람다는 예외가 발생해 7을 반환하고, 두 번째는 3+9=12를 반환하므로 합은 19입니다. 첫 run은 3>2라 예외가 발생합니다. catch에서 7을 반환합니다. Java 코드는 변수값과 객체 상태를 구분하고, 메서드가 호출되는 순서대로 한 단계씩 값을 갱신하면 이해하기 쉽습니다.",
     "steps": [
       "첫 run은 3>2라 예외가 발생합니다.",
       "catch에서 7을 반환합니다.",
@@ -1421,7 +1421,7 @@
     "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
     "code": "public class Main {\n    static class Parent {\n        int calc(int n){ return n+2; }\n        static String tag(){ return \"P\"; }\n    }\n    static class Child extends Parent {\n        @Override int calc(int n){ return n+3; }\n        static String tag(){ return \"C\"; }\n    }\n    public static void main(String[] args) {\n        Parent ref=new Child();\n        System.out.print(ref.calc(2)+ref.tag());\n    }\n}",
     "answer": "5P",
-    "explanation": "인스턴스 메서드는 Child의 calc가 호출되어 5, static 메서드는 참조 타입 Parent 기준이라 P가 붙습니다.",
+    "explanation": "인스턴스 메서드는 Child의 calc가 호출되어 5, static 메서드는 참조 타입 Parent 기준이라 P가 붙습니다. ref.calc(2)는 Child.calc로 5입니다. tag는 static이라 동적 바인딩되지 않습니다. Java 코드는 변수값과 객체 상태를 구분하고, 메서드가 호출되는 순서대로 한 단계씩 값을 갱신하면 이해하기 쉽습니다.",
     "steps": [
       "ref.calc(2)는 Child.calc로 5입니다.",
       "tag는 static이라 동적 바인딩되지 않습니다.",
@@ -1471,7 +1471,7 @@
       "2, 3",
       "2 그리고 3"
     ],
-    "explanation": "1과 2를 넣고 1을 꺼낸 뒤 3을 넣으므로 남은 두 dequeue는 2와 3입니다.",
+    "explanation": "1과 2를 넣고 1을 꺼낸 뒤 3을 넣으므로 남은 두 dequeue는 2와 3입니다. enqueue 1,2 후 큐는 1,2입니다. 첫 dequeue에서 1이 제거됩니다. C 코드는 한 문장이 실행될 때마다 변수값과 배열 인덱스, 포인터가 가리키는 위치를 따로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "enqueue 1,2 후 큐는 1,2입니다.",
       "첫 dequeue에서 1이 제거됩니다.",
@@ -1520,7 +1520,7 @@
       "5, 6",
       "5 그리고 6"
     ],
-    "explanation": "*pptr는 data의 시작을 가리키므로 두 번째 구조체에 세 번째 구조체 전체가 복사됩니다.",
+    "explanation": "*pptr는 data의 시작을 가리키므로 두 번째 구조체에 세 번째 구조체 전체가 복사됩니다. *pptr는 ptr이고 ptr은 data입니다. (*pptr)[1]은 data[1]입니다. C 코드는 한 문장이 실행될 때마다 변수값과 배열 인덱스, 포인터가 가리키는 위치를 따로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "*pptr는 ptr이고 ptr은 data입니다.",
       "(*pptr)[1]은 data[1]입니다.",
@@ -1564,7 +1564,7 @@
     "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
     "code": "public class Main {\n    static class Box { int v; Box(int v){this.v=v;} }\n    public static void main(String[] args) {\n        Box a=new Box(1), b=new Box(2), c=new Box(3);\n        Box[] arr={a,b,c};\n        Box temp=arr[0];\n        arr[0]=arr[2];\n        arr[2]=temp;\n        arr[1].v=arr[0].v;\n        System.out.print(a.v+\"a\"+b.v+\"b\"+c.v);\n    }\n}",
     "answer": "1a3b3",
-    "explanation": "배열의 참조를 교환한 뒤 b.v가 c.v인 3으로 바뀝니다. a와 c의 필드는 그대로입니다.",
+    "explanation": "배열의 참조를 교환한 뒤 b.v가 c.v인 3으로 바뀝니다. a와 c의 필드는 그대로입니다. 초기 값은 a=1,b=2,c=3입니다. 배열 참조를 바꿔 arr=[c,b,a]가 됩니다. Java 코드는 변수값과 객체 상태를 구분하고, 메서드가 호출되는 순서대로 한 단계씩 값을 갱신하면 이해하기 쉽습니다.",
     "steps": [
       "초기 값은 a=1,b=2,c=3입니다.",
       "배열 참조를 바꿔 arr=[c,b,a]가 됩니다.",
@@ -1653,7 +1653,7 @@
     "question": "다음 Python 3 코드의 출력 결과를 쓰세요.",
     "code": "values=[1,2,3]\nmapping={i:i*2 for i in values}\nsaved=set(mapping.values())\nvalues[0]=99\nmapping[2]=7\nsaved.add(99)\nprint(len(saved & set(mapping.values())))",
     "answer": "2",
-    "explanation": "saved는 {2,4,6,99}, 변경된 mapping 값 집합은 {2,7,6}이므로 교집합은 {2,6}입니다.",
+    "explanation": "saved는 {2,4,6,99}, 변경된 mapping 값 집합은 {2,7,6}이므로 교집합은 {2,6}입니다. 초기 mapping은 {1:2,2:4,3:6}입니다. saved는 {2,4,6}입니다. Python 코드는 연산 전후의 자료형과 리스트·문자열 상태가 어떻게 바뀌는지 한 단계씩 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "초기 mapping은 {1:2,2:4,3:6}입니다.",
       "saved는 {2,4,6}입니다.",
@@ -1743,7 +1743,7 @@
     "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
     "code": "#include <stdio.h>\ndouble mean1(int values[], int n){\n    double sum=0;\n    for(int i=0;i<n;i++) sum+=(double)values[i];\n    return sum/n;\n}\ndouble mean2(int *values, int n){\n    double sum=0;\n    for(int i=0;i<n;i++) sum+=(double)*(values+i);\n    return sum/n;\n}\nint main(void){\n    int data[10]={80,20,50,55,45,95,55,10,40,80};\n    printf(\"%.2f\",mean1(data,10)+mean2(data,10));\n    return 0;\n}",
     "answer": "106.00",
-    "explanation": "두 함수 모두 같은 배열의 평균 53.0을 계산하므로 합은 106.0이며 %.2f로 106.00이 출력됩니다.",
+    "explanation": "두 함수 모두 같은 배열의 평균 53.0을 계산하므로 합은 106.0이며 %.2f로 106.00이 출력됩니다. 배열 합은 530입니다. 각 함수의 평균은 530/10=53.0입니다. C 코드는 한 문장이 실행될 때마다 변수값과 배열 인덱스, 포인터가 가리키는 위치를 따로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "배열 합은 530입니다.",
       "각 함수의 평균은 530/10=53.0입니다.",
@@ -1788,7 +1788,7 @@
     "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
     "code": "class A {\n    String f(Object x){ return \"1\"; }\n    String g(){ return f(\"a\"); }\n}\nclass B extends A {\n    @Override String f(Object x){ return \"2\"; }\n    String f(String x){ return \"3\"; }\n}\npublic class Main {\n    public static void main(String[] args){\n        A ref=new B();\n        System.out.print(ref.g());\n    }\n}",
     "answer": "2",
-    "explanation": "A.g 안의 f 호출은 컴파일 시 A.f(Object)로 선택되고, 실행 시 B가 오버라이딩한 f(Object)가 호출됩니다.",
+    "explanation": "A.g 안의 f 호출은 컴파일 시 A.f(Object)로 선택되고, 실행 시 B가 오버라이딩한 f(Object)가 호출됩니다. g는 A에 정의되어 있습니다. g 내부 f(\"a\")는 A의 후보 중 f(Object)로 결정됩니다. Java 코드는 변수값과 객체 상태를 구분하고, 메서드가 호출되는 순서대로 한 단계씩 값을 갱신하면 이해하기 쉽습니다.",
     "steps": [
       "g는 A에 정의되어 있습니다.",
       "g 내부 f(\"a\")는 A의 후보 중 f(Object)로 결정됩니다.",
@@ -1834,7 +1834,7 @@
     "code": "text=input()\nparts=[]\nfor word in text.split():\n    parts.append(word)\njoined=''.join(parts)\nresult=''.join(ch for ch in joined[::-1] if ch not in 'ong')\nprint(result)",
     "inputData": "HumanDev",
     "answer": "veDamuH",
-    "explanation": "HumanDev를 뒤집으면 veDnamuH이고, o·n·g 중 n 하나가 제거되어 veDamuH가 됩니다.",
+    "explanation": "HumanDev를 뒤집으면 veDnamuH이고, o·n·g 중 n 하나가 제거되어 veDamuH가 됩니다. 입력에는 공백이 없어 joined는 HumanDev입니다. 역순은 veDnamuH입니다. Python 코드는 연산 전후의 자료형과 리스트·문자열 상태가 어떻게 바뀌는지 한 단계씩 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "입력에는 공백이 없어 joined는 HumanDev입니다.",
       "역순은 veDnamuH입니다.",
@@ -1884,7 +1884,7 @@
       "200\n3\n1",
       "① 200 ② 3 ③ 1"
     ],
-    "explanation": "일반 SELECT는 전체 200행, DISTINCT는 학과 3종, 컴퓨터과만 남긴 COUNT(DISTINCT)는 1입니다.",
+    "explanation": "일반 SELECT는 전체 200행, DISTINCT는 학과 3종, 컴퓨터과만 남긴 COUNT(DISTINCT)는 1입니다. 먼저 주어진 테이블과 SQL을 따로 보고, FROM의 원본 행에서 시작해 조건과 집계가 적용될 때마다 남는 행을 적습니다. 학생 수 합은 50+100+50=200입니다. SQL은 각 절을 한 번에 읽기보다 데이터가 선택되고 가공되는 순서를 중간 결과로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 주어진 테이블과 SQL을 따로 보고, FROM의 원본 행에서 시작해 조건과 집계가 적용될 때마다 남는 행을 적습니다.",
       "학생 수 합은 50+100+50=200입니다.",
@@ -1978,7 +1978,7 @@
     "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
     "code": "#include <stdio.h>\nstruct Fns { int *(*fn)(int *); };\nint *next(int *p){ return p+1; }\nint main(void){\n    struct Fns f;\n    int data[]={16,32};\n    f.fn=next;\n    printf(\"%x\",*f.fn(data));\n    return 0;\n}",
     "answer": "20",
-    "explanation": "함수 포인터가 data+1을 반환해 값 32를 얻고, %x는 32를 16진수 20으로 출력합니다.",
+    "explanation": "함수 포인터가 data+1을 반환해 값 32를 얻고, %x는 32를 16진수 20으로 출력합니다. f.fn은 next 함수를 가리킵니다. next(data)는 data+1을 반환합니다. C 코드는 한 문장이 실행될 때마다 변수값과 배열 인덱스, 포인터가 가리키는 위치를 따로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "f.fn은 next 함수를 가리킵니다.",
       "next(data)는 data+1을 반환합니다.",
@@ -2023,7 +2023,7 @@
     "question": "다음 Python 3 코드의 출력 결과를 쓰세요.",
     "code": "values=list(range(10))\nfor value in values[::-2]:\n    print(value,end='A')\nprint()",
     "answer": "9A7A5A3A1A",
-    "explanation": "[::-2]는 끝에서 두 칸씩 이동해 9,7,5,3,1을 선택하고 각 값 뒤에 A를 붙입니다.",
+    "explanation": "[::-2]는 끝에서 두 칸씩 이동해 9,7,5,3,1을 선택하고 각 값 뒤에 A를 붙입니다. 먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다. range(10)은 0~9입니다. Python 코드는 연산 전후의 자료형과 리스트·문자열 상태가 어떻게 바뀌는지 한 단계씩 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "range(10)은 0~9입니다.",
@@ -2068,7 +2068,7 @@
     "question": "다음 Python 3 코드의 출력 결과를 쓰세요.",
     "code": "def calc(values):\n    nested=[[x] for x in values]\n    copied=nested[:]\n    for i in range(len(copied)-1):\n        copied[i+1] += copied[i]\n    return sum(len(x) for x in nested)\n\nprint(calc([1,2,3,4]))",
     "answer": "10",
-    "explanation": "바깥 리스트만 얕게 복사하므로 내부 리스트가 공유되고, +=로 길이가 1,2,3,4가 되어 합은 10입니다.",
+    "explanation": "바깥 리스트만 얕게 복사하므로 내부 리스트가 공유되고, +=로 길이가 1,2,3,4가 되어 합은 10입니다. 초기 내부 리스트 길이는 모두 1입니다. copied와 nested는 같은 내부 리스트 객체를 공유합니다. Python 코드는 연산 전후의 자료형과 리스트·문자열 상태가 어떻게 바뀌는지 한 단계씩 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "초기 내부 리스트 길이는 모두 1입니다.",
       "copied와 nested는 같은 내부 리스트 객체를 공유합니다.",
@@ -2112,7 +2112,7 @@
     "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
     "code": "public class Main {\n    public static void main(String[] args){\n        int a=9;\n        int b=2;\n        String c=\"3\";\n        System.out.print(a+b+\"2\"+c);\n    }\n}",
     "answer": "1123",
-    "explanation": "9+2가 먼저 정수 덧셈으로 11이 되고, 이후 문자열 2와 3이 차례로 결합됩니다.",
+    "explanation": "9+2가 먼저 정수 덧셈으로 11이 되고, 이후 문자열 2와 3이 차례로 결합됩니다. 먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다. a+b는 11입니다. Java 코드는 변수값과 객체 상태를 구분하고, 메서드가 호출되는 순서대로 한 단계씩 값을 갱신하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "a+b는 11입니다.",
@@ -2197,7 +2197,7 @@
     ],
     "code": "SELECT COUNT(*)\nFROM employee e\nJOIN dept d ON e.dep_id = d.dept_id\nWHERE d.budget > (\n    SELECT AVG(budget) FROM dept\n);",
     "answer": "2",
-    "explanation": "부서 예산 평균은 200이고 이를 초과하는 부서는 20번입니다. 20번 직원이 두 명이므로 결과는 2입니다.",
+    "explanation": "부서 예산 평균은 200이고 이를 초과하는 부서는 20번입니다. 20번 직원이 두 명이므로 결과는 2입니다. 예산 평균은 (100+300+200)/3=200입니다. 200보다 큰 부서는 dept_id 20입니다. SQL은 각 절을 한 번에 읽기보다 데이터가 선택되고 가공되는 순서를 중간 결과로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "예산 평균은 (100+300+200)/3=200입니다.",
       "200보다 큰 부서는 dept_id 20입니다.",
@@ -2241,7 +2241,7 @@
     "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
     "code": "public class Main {\n    public static void main(String[] args) {\n        int a=5, b=0;\n        try {\n            System.out.print(a/b);\n        } catch (ArithmeticException e) {\n            System.out.print(\"출력1\");\n        } catch (ArrayIndexOutOfBoundsException e) {\n            System.out.print(\"출력2\");\n        } catch (Exception e) {\n            System.out.print(\"출력4\");\n        } finally {\n            System.out.print(\"출력5\");\n        }\n    }\n}",
     "answer": "출력1출력5",
-    "explanation": "정수 5를 0으로 나누면 ArithmeticException이 발생해 첫 catch가 실행되고, finally가 이어서 실행됩니다.",
+    "explanation": "정수 5를 0으로 나누면 ArithmeticException이 발생해 첫 catch가 실행되고, finally가 이어서 실행됩니다. 5/0에서 ArithmeticException이 발생합니다. ArithmeticException catch가 출력1을 출력합니다. Java 코드는 변수값과 객체 상태를 구분하고, 메서드가 호출되는 순서대로 한 단계씩 값을 갱신하면 이해하기 쉽습니다.",
     "steps": [
       "5/0에서 ArithmeticException이 발생합니다.",
       "ArithmeticException catch가 출력1을 출력합니다.",
@@ -2343,7 +2343,7 @@
       "이순신\n1000",
       "이순신 | 1000"
     ],
-    "explanation": "id가 같은 행끼리 결합한 뒤 incentive가 500 이상인 행만 남기면 이순신 1000 한 건입니다.",
+    "explanation": "id가 같은 행끼리 결합한 뒤 incentive가 500 이상인 행만 남기면 이순신 1000 한 건입니다. 먼저 주어진 테이블과 SQL을 따로 보고, FROM의 원본 행에서 시작해 조건과 집계가 적용될 때마다 남는 행을 적습니다. emp.id=sal.id로 대응되는 행을 결합합니다. SQL은 각 절을 한 번에 읽기보다 데이터가 선택되고 가공되는 순서를 중간 결과로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 주어진 테이블과 SQL을 따로 보고, FROM의 원본 행에서 시작해 조건과 집계가 적용될 때마다 남는 행을 적습니다.",
       "emp.id=sal.id로 대응되는 행을 결합합니다.",
@@ -2391,7 +2391,7 @@
     "acceptedAnswers": [
       "4 BACDE"
     ],
-    "explanation": "E-A의 문자 코드 차는 4이며, C를 D 앞에 삽입하면서 뒤 값을 밀면 BACDE가 됩니다.",
+    "explanation": "E-A의 문자 코드 차는 4이며, C를 D 앞에 삽입하면서 뒤 값을 밀면 BACDE가 됩니다. data[3]-data[1]은 'E'-'A'=4입니다. C보다 큰 첫 문자는 D이므로 삽입 위치는 인덱스 2입니다. C 코드는 한 문장이 실행될 때마다 변수값과 배열 인덱스, 포인터가 가리키는 위치를 따로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "data[3]-data[1]은 'E'-'A'=4입니다.",
       "C보다 큰 첫 문자는 D이므로 삽입 위치는 인덱스 2입니다.",
@@ -2436,7 +2436,7 @@
     "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
     "code": "#include <stdio.h>\nvoid place(int grid[3][3], const int values[9]){\n    for(int i=0;i<9;i++)\n        grid[((i+1)/3)%3][(i+1)%3]=values[i];\n}\nint main(void){\n    int grid[3][3];\n    int values[9]={5,2,7,4,1,8,3,6,9};\n    int total=0;\n    place(grid,values);\n    for(int i=0;i<9;i++)\n        total += grid[i/3][i%3] * (i%2==0 ? 1 : -1);\n    printf(\"%d\",total);\n    return 0;\n}",
     "answer": "13",
-    "explanation": "재배치 결과를 평탄화하면 9,5,2,7,4,1,8,3,6이고 부호를 번갈아 적용한 합이 13입니다.",
+    "explanation": "재배치 결과를 평탄화하면 9,5,2,7,4,1,8,3,6이고 부호를 번갈아 적용한 합이 13입니다. 먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다. place 이후 배열은 9,5,2 / 7,4,1 / 8,3,6입니다. C 코드는 한 문장이 실행될 때마다 변수값과 배열 인덱스, 포인터가 가리키는 위치를 따로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "place 이후 배열은 9,5,2 / 7,4,1 / 8,3,6입니다.",
@@ -2531,7 +2531,7 @@
       "①→②→③→④→⑤→②→⑥",
       "① → ② → ③ → ④ → ⑤ → ② → ⑥"
     ],
-    "explanation": "첫 while 진입 후 음수 조건이 참이라 ④까지 실행되고, index 증가 뒤 while 조건을 한 번 더 검사한 후 종료합니다.",
+    "explanation": "첫 while 진입 후 음수 조건이 참이라 ④까지 실행되고, index 증가 뒤 while 조건을 한 번 더 검사한 후 종료합니다. ①에서 index=0입니다. ②가 참이고 ③도 참이라 ④를 실행합니다. C 코드는 한 문장이 실행될 때마다 변수값과 배열 인덱스, 포인터가 가리키는 위치를 따로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "①에서 index=0입니다.",
       "②가 참이고 ③도 참이라 ④를 실행합니다.",
@@ -2666,7 +2666,7 @@
     "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
     "code": "#include <stdio.h>\n#include <stdlib.h>\ntypedef struct Node { int value; struct Node *next; } Node;\nNode *push(Node *head,int value){\n    Node *node=malloc(sizeof(Node));\n    node->value=value; node->next=head; return node;\n}\nNode *move_front(Node *head,int target){\n    if(!head || head->value==target) return head;\n    Node *prev=NULL,*cur=head;\n    while(cur && cur->value!=target){ prev=cur; cur=cur->next; }\n    if(cur){\n        prev->next=cur->next;\n        cur->next=head;\n        head=cur;\n    }\n    return head;\n}\nint main(void){\n    Node *head=NULL;\n    for(int i=1;i<=5;i++) head=push(head,i);\n    head=move_front(head,3);\n    for(Node *p=head;p;p=p->next) printf(\"%d\",p->value);\n    return 0;\n}",
     "answer": "35421",
-    "explanation": "1~5를 앞삽입하면 5→4→3→2→1이고, 값 3인 노드를 맨 앞으로 옮기면 3→5→4→2→1입니다.",
+    "explanation": "1~5를 앞삽입하면 5→4→3→2→1이고, 값 3인 노드를 맨 앞으로 옮기면 3→5→4→2→1입니다. 앞삽입 결과는 5→4→3→2→1입니다. 값 3의 이전 노드 4를 2에 연결해 3을 분리합니다. C 코드는 한 문장이 실행될 때마다 변수값과 배열 인덱스, 포인터가 가리키는 위치를 따로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "앞삽입 결과는 5→4→3→2→1입니다.",
       "값 3의 이전 노드 4를 2에 연결해 3을 분리합니다.",
@@ -2711,7 +2711,7 @@
     "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
     "code": "#include <stdio.h>\ntypedef struct {\n    const char *name;\n    int score[3];\n} Student;\nint decode(int value){ return value & 0xA5; }\nint total(const Student *s){\n    return decode(s->score[0]) + decode(s->score[1]) + decode(s->score[2]);\n}\nint main(void){\n    Student students[2]={\n        {\"Kim\",{0xA0,0xA5,0xDB}},\n        {\"Lee\",{0xA0,0xED,0x81}}\n    };\n    int result=0;\n    for(int i=0;i<2;i++) result += total(&students[i]);\n    printf(\"%d\",result);\n    return 0;\n}",
     "answer": "908",
-    "explanation": "각 16진수 점수에 0xA5를 AND한 결과를 두 학생에 대해 합산하면 908입니다.",
+    "explanation": "각 16진수 점수에 0xA5를 AND한 결과를 두 학생에 대해 합산하면 908입니다. 먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다. Kim의 AND 결과는 160,165,129로 합 454입니다. C 코드는 한 문장이 실행될 때마다 변수값과 배열 인덱스, 포인터가 가리키는 위치를 따로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "Kim의 AND 결과는 160,165,129로 합 454입니다.",
@@ -2755,7 +2755,7 @@
     "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
     "code": "public class Main {\n    static int calc(int value){\n        if(value<=1) return value;\n        return calc(value-1)+calc(value-2);\n    }\n    static int calc(String text){\n        int value=Integer.parseInt(text);\n        if(value<=1) return value;\n        return calc(value-1)+calc(value-3);\n    }\n    public static void main(String[] args){\n        System.out.println(calc(\"5\"));\n    }\n}",
     "answer": "4",
-    "explanation": "문자열 버전은 처음 한 번만 호출되고 그 안에서 int 버전 calc(4)+calc(2)를 호출해 3+1=4가 됩니다.",
+    "explanation": "문자열 버전은 처음 한 번만 호출되고 그 안에서 int 버전 calc(4)+calc(2)를 호출해 3+1=4가 됩니다. calc(\"5\")는 문자열 오버로드를 선택합니다. 5>1이므로 calc(4)+calc(2)를 int 오버로드로 호출합니다. Java 코드는 변수값과 객체 상태를 구분하고, 메서드가 호출되는 순서대로 한 단계씩 값을 갱신하면 이해하기 쉽습니다.",
     "steps": [
       "calc(\"5\")는 문자열 오버로드를 선택합니다.",
       "5>1이므로 calc(4)+calc(2)를 int 오버로드로 호출합니다.",
@@ -2843,7 +2843,7 @@
     ],
     "code": "SELECT COUNT(*)\nFROM A\nRIGHT OUTER JOIN B ON A.id=B.id\nWHERE A.id IS NULL;",
     "answer": "2",
-    "explanation": "오른쪽 B의 id 3과 4는 A에 대응 행이 없어 A.id가 NULL이 되고, 두 행이 조건을 만족합니다.",
+    "explanation": "오른쪽 B의 id 3과 4는 A에 대응 행이 없어 A.id가 NULL이 되고, 두 행이 조건을 만족합니다. RIGHT OUTER JOIN은 B의 모든 행을 보존합니다. B.id=1은 A와 매칭되어 A.id가 NULL이 아닙니다. SQL은 각 절을 한 번에 읽기보다 데이터가 선택되고 가공되는 순서를 중간 결과로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "RIGHT OUTER JOIN은 B의 모든 행을 보존합니다.",
       "B.id=1은 A와 매칭되어 A.id가 NULL이 아닙니다.",
@@ -2887,7 +2887,7 @@
     "question": "다음 Python 3 코드의 출력 결과를 쓰세요.",
     "code": "text=\"_THIS_IS_KIM_SPEAKING\"\na=text[:4]\nb=text[6:8]\nc=text[18:]\nprint(a+b+c)",
     "answer": "_THIISING",
-    "explanation": "[:4]는 _THI, [6:8]은 IS, [18:]은 ING이므로 이어 붙이면 _THIISING입니다.",
+    "explanation": "[:4]는 _THI, [6:8]은 IS, [18:]은 ING이므로 이어 붙이면 _THIISING입니다. text[:4]는 _THI입니다. text[6:8]은 IS입니다. Python 코드는 연산 전후의 자료형과 리스트·문자열 상태가 어떻게 바뀌는지 한 단계씩 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "text[:4]는 _THI입니다.",
       "text[6:8]은 IS입니다.",
@@ -2980,7 +2980,7 @@
     "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
     "code": "public class Main {\n    static int compute(int num){\n        if(num<=1) return num;\n        return compute(num-1)+compute(num-3);\n    }\n    public static void main(String[] args){\n        System.out.print(compute(5));\n    }\n}",
     "answer": "1",
-    "explanation": "num<=1이면 num 자체를 반환하므로 compute(-1)=-1입니다. 점화식을 따라 compute(5)는 1이 됩니다.",
+    "explanation": "num<=1이면 num 자체를 반환하므로 compute(-1)=-1입니다. 점화식을 따라 compute(5)는 1이 됩니다. compute(2)=compute(1)+compute(-1)=1-1=0입니다. compute(3)=0+0=0입니다. Java 코드는 변수값과 객체 상태를 구분하고, 메서드가 호출되는 순서대로 한 단계씩 값을 갱신하면 이해하기 쉽습니다.",
     "steps": [
       "compute(2)=compute(1)+compute(-1)=1-1=0입니다.",
       "compute(3)=0+0=0입니다.",
@@ -3033,7 +3033,7 @@
       "① '이%' ② DESC",
       "① 이% ② DESC"
     ],
-    "explanation": "이로 시작하는 문자열은 LIKE '이%'로 찾고 내림차순은 DESC를 사용합니다.",
+    "explanation": "이로 시작하는 문자열은 LIKE '이%'로 찾고 내림차순은 DESC를 사용합니다. 먼저 빈칸 앞뒤의 SQL을 읽고, 각 빈칸이 조회·조건·그룹·정렬·변경·제약 중 어떤 역할인지 구분합니다. 이 문제의 핵심 개념은 LIKE · 와일드카드 · ORDER BY입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다. SQL은 각 절을 한 번에 읽기보다 데이터가 선택되고 가공되는 순서를 중간 결과로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 빈칸 앞뒤의 SQL을 읽고, 각 빈칸이 조회·조건·그룹·정렬·변경·제약 중 어떤 역할인지 구분합니다.",
       "이 문제의 핵심 개념은 LIKE · 와일드카드 · ORDER BY입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
@@ -3124,7 +3124,7 @@
     "question": "Python 3.7 이상에서 다음 코드의 출력 결과를 쓰세요.",
     "code": "class LocationDict:\n    locations={\n        \"NYC\":\"New York\",\n        \"LON\":\"London\",\n        \"PAR\":\"Paris\",\n        \"TKY\":\"Tokyo\"\n    }\n\nresult=\"\"\nfor key,location in LocationDict().locations.items():\n    result += key[-1] + location[0]\nprint(result,end=\"\")",
     "answer": "CNNLRPYT",
-    "explanation": "각 항목에서 키의 마지막 문자와 값의 첫 문자를 결합하면 CN, NL, RP, YT가 되고 순서대로 붙습니다.",
+    "explanation": "각 항목에서 키의 마지막 문자와 값의 첫 문자를 결합하면 CN, NL, RP, YT가 되고 순서대로 붙습니다. NYC/New York → CN입니다. LON/London → NL입니다. Python 코드는 연산 전후의 자료형과 리스트·문자열 상태가 어떻게 바뀌는지 한 단계씩 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "NYC/New York → CN입니다.",
       "LON/London → NL입니다.",
@@ -3174,7 +3174,7 @@
       "1.50\n2.50\n3.2\n4.8",
       "1. 50 2. 50 3. 2 4. 8"
     ],
-    "explanation": "fn1은 원본 value를 50으로 바꾸지만 fn2는 복사본만 변경합니다. 배열 포인터의 첫 값은 2, 세 칸 뒤 값은 8입니다.",
+    "explanation": "fn1은 원본 value를 50으로 바꾸지만 fn2는 복사본만 변경합니다. 배열 포인터의 첫 값은 2, 세 칸 뒤 값은 8입니다. fn1(&value)로 value가 50이 됩니다. fn2(value)는 값 전달이라 원본은 50입니다. C 코드는 한 문장이 실행될 때마다 변수값과 배열 인덱스, 포인터가 가리키는 위치를 따로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "fn1(&value)로 value가 50이 됩니다.",
       "fn2(value)는 값 전달이라 원본은 50입니다.",
@@ -3219,7 +3219,7 @@
     "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
     "code": "class A {\n    int a;\n    private int b;\n    protected int c;\n    void set(int aa,int bb,int cc){ a=aa; b=bb; c=cc; }\n    int hap(){ return a+b+c; }\n}\nclass B extends A {\n    @Override public int hap(){ return a*c; }\n}\npublic class Main {\n    public static void main(String[] args){\n        A first=new A();\n        B second=new B();\n        first.set(1,5,3);\n        second.set(10,30,50);\n        System.out.print(first.hap()+second.hap());\n    }\n}",
     "answer": "509",
-    "explanation": "A.hap()은 1+5+3=9, B.hap()은 오버라이딩되어 10×50=500이므로 합은 509입니다.",
+    "explanation": "A.hap()은 1+5+3=9, B.hap()은 오버라이딩되어 10×50=500이므로 합은 509입니다. 먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다. first.hap()은 A 구현으로 9입니다. Java 코드는 변수값과 객체 상태를 구분하고, 메서드가 호출되는 순서대로 한 단계씩 값을 갱신하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "first.hap()은 A 구현으로 9입니다.",
@@ -3260,7 +3260,7 @@
     "question": "다음 Java 프로그램의 출력 결과를 줄마다 쓰세요.",
     "code": "class StaticData { public int value=20; static int count=0; }\npublic class Main {\n public static void main(String[] args){\n  int value=10; StaticData.count=value;\n  StaticData item=new StaticData();\n  System.out.println(StaticData.count++);\n  System.out.println(item.count);\n  System.out.println(value);\n  System.out.print(item.value);\n }\n}",
     "answer": "10\n11\n10\n20",
-    "explanation": "count++는 10을 출력한 뒤 11이 됩니다. 지역 value는 10, item.value는 20입니다.",
+    "explanation": "count++는 10을 출력한 뒤 11이 됩니다. 지역 value는 10, item.value는 20입니다. 먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다. 이 문제의 핵심 개념은 static · 후위 증가 · 필드입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다. Java 코드는 변수값과 객체 상태를 구분하고, 메서드가 호출되는 순서대로 한 단계씩 값을 갱신하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "이 문제의 핵심 개념은 static · 후위 증가 · 필드입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
@@ -3305,7 +3305,7 @@
     "question": "다음 C 프로그램의 출력 결과를 줄마다 쓰세요.",
     "code": "#include <stdio.h>\nint main(void){\n char word[]=\"Art\"; char *p=word;\n printf(\"%s\\n\",word); printf(\"%c\\n\",*p); printf(\"%c\\n\",*word);\n printf(\"%s\\n\",p);\n for(int i=0;word[i]!='\\0';i++) printf(\"%c\",word[i]);\n return 0;\n}",
     "answer": "Art\nA\nA\nArt\nArt",
-    "explanation": "word와 p는 같은 첫 문자를 가리킵니다. 역참조는 A이고 문자열 출력은 Art입니다.",
+    "explanation": "word와 p는 같은 첫 문자를 가리킵니다. 역참조는 A이고 문자열 출력은 Art입니다. 먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다. 이 문제의 핵심 개념은 문자 배열 · 포인터 · 역참조입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다. C 코드는 한 문장이 실행될 때마다 변수값과 배열 인덱스, 포인터가 가리키는 위치를 따로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "이 문제의 핵심 개념은 문자 배열 · 포인터 · 역참조입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
@@ -3349,7 +3349,7 @@
     "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
     "code": "#include <stdio.h>\nint main(void){\n char *a=\"qwer\",*b=\"qwtety\";\n for(int i=0;a[i]!='\\0';i++)\n  for(int j=0;b[j]!='\\0';j++)\n   if(a[i]==b[j]) printf(\"%c\",a[i]);\n return 0;\n}",
     "answer": "qwe",
-    "explanation": "q,w,e는 두 문자열에 모두 존재합니다. r은 두 번째 문자열에 없어 출력되지 않습니다.",
+    "explanation": "q,w,e는 두 문자열에 모두 존재합니다. r은 두 번째 문자열에 없어 출력되지 않습니다. 먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다. 이 문제의 핵심 개념은 문자열 · 중첩 반복문입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다. C 코드는 한 문장이 실행될 때마다 변수값과 배열 인덱스, 포인터가 가리키는 위치를 따로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "이 문제의 핵심 개념은 문자열 · 중첩 반복문입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
@@ -3393,7 +3393,7 @@
     "question": "학생 테이블에서 이름이 '민수'인 행만 삭제하는 SQL을 작성하세요.",
     "code": "-- 테이블: 학생\n-- 조건: 이름 = '민수'",
     "answer": "DELETE FROM 학생 WHERE 이름 = '민수';",
-    "explanation": "DELETE FROM 뒤에 학생 테이블을 지정합니다. WHERE 이름='민수'로 삭제 대상을 제한합니다.",
+    "explanation": "DELETE FROM 뒤에 학생 테이블을 지정합니다. WHERE 이름='민수'로 삭제 대상을 제한합니다. 먼저 문제에서 테이블명, 처리할 열, 값, 조건을 각각 표시한 뒤 어떤 SQL 명령이 필요한지 정합니다. 이 문제의 핵심 개념은 DELETE · WHERE입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다. SQL은 각 절을 한 번에 읽기보다 데이터가 선택되고 가공되는 순서를 중간 결과로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 문제에서 테이블명, 처리할 열, 값, 조건을 각각 표시한 뒤 어떤 SQL 명령이 필요한지 정합니다.",
       "이 문제의 핵심 개념은 DELETE · WHERE입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
@@ -3481,7 +3481,7 @@
     "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
     "code": "abstract class Vehicle {\n String name;\n abstract public String getName(String v);\n public String getName(){ return \"Vehicle name: \"+name; }\n}\nclass Car extends Vehicle {\n Car(String v){ name=v; }\n public String getName(String v){ return \"Car name: \"+v; }\n}\npublic class Main {\n public static void main(String[] args){\n  Vehicle v=new Car(\"Spark\");\n  System.out.println(v.getName());\n }\n}",
     "answer": "Vehicle name: Spark",
-    "explanation": "Car 생성 시 name은 Spark가 됩니다. 인자 없는 getName은 Vehicle 메서드가 실행됩니다.",
+    "explanation": "Car 생성 시 name은 Spark가 됩니다. 인자 없는 getName은 Vehicle 메서드가 실행됩니다. 먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다. 이 문제의 핵심 개념은 상속 · 오버로딩 · 업캐스팅입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다. Java 코드는 변수값과 객체 상태를 구분하고, 메서드가 호출되는 순서대로 한 단계씩 값을 갱신하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "이 문제의 핵심 개념은 상속 · 오버로딩 · 업캐스팅입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
@@ -3665,7 +3665,7 @@
     "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
     "code": "#include <stdio.h>\nint main(void){\n int n[3]={73,95,82},sum=0;\n for(int i=0;i<3;i++) sum+=n[i];\n switch(sum/30){\n  case 10:\n  case 9: printf(\"A\");\n  case 8: printf(\"B\");\n  case 7:\n  case 6: printf(\"C\");\n  default: printf(\"D\");\n }\n return 0;\n}",
     "answer": "BCD",
-    "explanation": "합은 250이고 250/30은 8입니다. break가 없어 case 8부터 B,C,D가 이어집니다.",
+    "explanation": "합은 250이고 250/30은 8입니다. break가 없어 case 8부터 B,C,D가 이어집니다. 먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다. 이 문제의 핵심 개념은 switch · fall-through입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다. C 코드는 한 문장이 실행될 때마다 변수값과 배열 인덱스, 포인터가 가리키는 위치를 따로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "이 문제의 핵심 개념은 switch · fall-through입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
@@ -3752,7 +3752,7 @@
     "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
     "code": "#include <stdio.h>\nint st[10],top=-1;\nvoid push(int v){st[++top]=v;}\nint pop(void){return st[top--];}\nint main(void){\n push(5);push(2);printf(\"%d\",pop());\n push(4);push(1);printf(\"%d\",pop());\n push(3);printf(\"%d\",pop());printf(\"%d\",pop());\n push(6);printf(\"%d\",pop());printf(\"%d\",pop());\n return 0;\n}",
     "answer": "213465",
-    "explanation": "LIFO에 따라 pop 값은 2,1,3,4,6,5 순입니다. 이를 붙이면 213465입니다.",
+    "explanation": "LIFO에 따라 pop 값은 2,1,3,4,6,5 순입니다. 이를 붙이면 213465입니다. 먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다. 이 문제의 핵심 개념은 스택 · LIFO · push입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다. C 코드는 한 문장이 실행될 때마다 변수값과 배열 인덱스, 포인터가 가리키는 위치를 따로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "이 문제의 핵심 개념은 스택 · LIFO · push입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
@@ -3797,7 +3797,7 @@
     "question": "다음 Java 프로그램의 출력 결과를 줄마다 쓰세요.",
     "code": "public class Main{\n public static void main(String[] args){\n  String a=\"Programming\",b=\"Programming\",c=new String(\"Programming\");\n  System.out.println(a==b);\n  System.out.println(a==c);\n  System.out.println(a.equals(c));\n  System.out.println(b.equals(c));\n }\n}",
     "answer": "true\nfalse\ntrue\ntrue",
-    "explanation": "a와 b는 문자열 풀의 같은 객체를 참조합니다. c는 별도 객체지만 내용은 같으므로 equals는 true입니다.",
+    "explanation": "a와 b는 문자열 풀의 같은 객체를 참조합니다. c는 별도 객체지만 내용은 같으므로 equals는 true입니다. 먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다. 이 문제의 핵심 개념은 String pool · == · equals입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다. Java 코드는 변수값과 객체 상태를 구분하고, 메서드가 호출되는 순서대로 한 단계씩 값을 갱신하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "이 문제의 핵심 개념은 String pool · == · equals입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
@@ -3977,7 +3977,7 @@
     "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
     "code": "class A{\n public void paint(){System.out.print(\"A\");draw();}\n public void draw(){System.out.print(\"B\");draw();}\n}\nclass B extends A{\n public void paint(){super.draw();System.out.print(\"C\");this.draw();}\n public void draw(){System.out.print(\"D\");}\n}\npublic class Main{\n public static void main(String[] args){A b=new B();b.paint();b.draw();}\n}",
     "answer": "BDCDD",
-    "explanation": "B.paint에서 super.draw가 B를 출력합니다. 그 내부 draw는 B.draw로 바인딩되어 D가 붙고 이후 C,D,D가 이어집니다.",
+    "explanation": "B.paint에서 super.draw가 B를 출력합니다. 그 내부 draw는 B.draw로 바인딩되어 D가 붙고 이후 C,D,D가 이어집니다. 먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다. 이 문제의 핵심 개념은 상속 · 오버라이딩 · super입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다. Java 코드는 변수값과 객체 상태를 구분하고, 메서드가 호출되는 순서대로 한 단계씩 값을 갱신하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "이 문제의 핵심 개념은 상속 · 오버라이딩 · super입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
@@ -4108,7 +4108,7 @@
     "question": "다음 SQL의 결과를 위에서부터 쓰세요.",
     "code": "-- T1.A: 3,1,4\n-- T2.A: 2,4,3\nSELECT A FROM T1\nUNION\nSELECT A FROM T2\nORDER BY A DESC;",
     "answer": "4\n3\n2\n1",
-    "explanation": "UNION은 중복을 제거합니다. 1,2,3,4를 내림차순 정렬하면 4,3,2,1입니다.",
+    "explanation": "UNION은 중복을 제거합니다. 1,2,3,4를 내림차순 정렬하면 4,3,2,1입니다. 먼저 주어진 테이블과 SQL을 따로 보고, FROM의 원본 행에서 시작해 조건과 집계가 적용될 때마다 남는 행을 적습니다. 이 문제의 핵심 개념은 UNION · ORDER BY · DESC입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다. SQL은 각 절을 한 번에 읽기보다 데이터가 선택되고 가공되는 순서를 중간 결과로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 주어진 테이블과 SQL을 따로 보고, FROM의 원본 행에서 시작해 조건과 집계가 적용될 때마다 남는 행을 적습니다.",
       "이 문제의 핵심 개념은 UNION · ORDER BY · DESC입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
@@ -4193,7 +4193,7 @@
     "question": "다음 C 프로그램의 출력 결과를 줄마다 쓰세요.",
     "code": "#include <stdio.h>\nint main(void){\n char *p=\"KOREA\";\n printf(\"%s\\n\",p); printf(\"%s\\n\",p+1);\n printf(\"%c\\n\",*p); printf(\"%c\\n\",*(p+3)); printf(\"%c\",*p+4);\n return 0;\n}",
     "answer": "KOREA\nOREA\nK\nE\nO",
-    "explanation": "p+1은 OREA를 가리킵니다. *p는 K, *(p+3)은 E, 'K'+4는 O입니다.",
+    "explanation": "p+1은 OREA를 가리킵니다. *p는 K, *(p+3)은 E, 'K'+4는 O입니다. 먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다. 이 문제의 핵심 개념은 문자열 포인터 · 포인터 산술 · ASCII입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다. C 코드는 한 문장이 실행될 때마다 변수값과 배열 인덱스, 포인터가 가리키는 위치를 따로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "이 문제의 핵심 개념은 문자열 포인터 · 포인터 산술 · ASCII입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
@@ -4234,7 +4234,7 @@
     "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
     "code": "class Parent{\n int compute(int n){\n  if(n<=1) return n;\n  return compute(n-1)+compute(n-2);\n }\n}\nclass Child extends Parent{\n int compute(int n){\n  if(n<=1) return n;\n  return compute(n-1)+compute(n-3);\n }\n}\npublic class Main{\n public static void main(String[] args){\n  Parent x=new Child();\n  System.out.print(x.compute(7));\n }\n}",
     "answer": "2",
-    "explanation": "실제 객체가 Child라 Child.compute가 재귀적으로 적용됩니다. 계산 결과 C(7)=2입니다.",
+    "explanation": "실제 객체가 Child라 Child.compute가 재귀적으로 적용됩니다. 계산 결과 C(7)=2입니다. 먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다. 이 문제의 핵심 개념은 상속 · 오버라이딩 · 재귀입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다. Java 코드는 변수값과 객체 상태를 구분하고, 메서드가 호출되는 순서대로 한 단계씩 값을 갱신하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "이 문제의 핵심 개념은 상속 · 오버라이딩 · 재귀입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
@@ -4275,7 +4275,7 @@
     "question": "다음 Java 코드에서 컴파일 오류가 발생하는 줄 번호를 쓰세요.",
     "code": "1 class Person {\n2  private String name;\n3  Person(String v){name=v;}\n4\n5  public static String getName(){\n6   String prefix=\"\";\n7   return prefix + name;\n8  }\n9 }",
     "answer": "7",
-    "explanation": "name은 인스턴스 필드입니다. static 메서드에서 객체 없이 name을 참조한 7번 줄이 오류입니다.",
+    "explanation": "name은 인스턴스 필드입니다. static 메서드에서 객체 없이 name을 참조한 7번 줄이 오류입니다. 먼저 코드를 문법 오류와 실행 중 오류로 나누어 보고, 어느 줄에서 문제가 생기는지 찾습니다. 이 문제의 핵심 개념은 static · 인스턴스 변수 · 컴파일 오류입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다. Java 코드는 변수값과 객체 상태를 구분하고, 메서드가 호출되는 순서대로 한 단계씩 값을 갱신하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 코드를 문법 오류와 실행 중 오류로 나누어 보고, 어느 줄에서 문제가 생기는지 찾습니다.",
       "이 문제의 핵심 개념은 static · 인스턴스 변수 · 컴파일 오류입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
@@ -4364,7 +4364,7 @@
     "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
     "code": "class A { int a; int b; }\npublic class Main {\n    static void multiply(A value){ value.a *= 10; }\n    static void add(A value){ value.a += value.b; }\n    public static void main(String[] args){\n        A item=new A();\n        item.a=100;\n        multiply(item);\n        item.b=item.a;\n        add(item);\n        System.out.print(item.a);\n    }\n}",
     "answer": "2000",
-    "explanation": "같은 객체를 참조하므로 메서드 내부의 필드 변경이 유지됩니다. 100→1000, b=1000, 다시 더해 2000입니다.",
+    "explanation": "같은 객체를 참조하므로 메서드 내부의 필드 변경이 유지됩니다. 100→1000, b=1000, 다시 더해 2000입니다. item.a는 100에서 시작합니다. multiply에서 10배가 되어 1000입니다. Java 코드는 변수값과 객체 상태를 구분하고, 메서드가 호출되는 순서대로 한 단계씩 값을 갱신하면 이해하기 쉽습니다.",
     "steps": [
       "item.a는 100에서 시작합니다.",
       "multiply에서 10배가 되어 1000입니다.",
@@ -4412,7 +4412,7 @@
     "acceptedAnswers": [
       "Car()"
     ],
-    "explanation": "Thread 생성자에 Runnable 구현 객체를 전달해야 하므로 Car 인스턴스를 생성합니다.",
+    "explanation": "Thread 생성자에 Runnable 구현 객체를 전달해야 하므로 Car 인스턴스를 생성합니다. 먼저 빈칸 앞뒤 코드를 읽고, 그 위치에 필요한 자료형·연산자·문법 요소가 무엇인지 확인합니다. Car는 Runnable을 구현합니다. Java 코드는 변수값과 객체 상태를 구분하고, 메서드가 호출되는 순서대로 한 단계씩 값을 갱신하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 빈칸 앞뒤 코드를 읽고, 그 위치에 필요한 자료형·연산자·문법 요소가 무엇인지 확인합니다.",
       "Car는 Runnable을 구현합니다.",
@@ -4506,7 +4506,7 @@
       "> % /",
       ">|%|/"
     ],
-    "explanation": "반복 조건은 number>0, 마지막 자리 추출은 %10, 마지막 자리 제거는 /10입니다.",
+    "explanation": "반복 조건은 number>0, 마지막 자리 추출은 %10, 마지막 자리 제거는 /10입니다. 먼저 빈칸 앞뒤 코드를 읽고, 그 위치에 필요한 자료형·연산자·문법 요소가 무엇인지 확인합니다. number가 0보다 큰 동안 반복합니다. C 코드는 한 문장이 실행될 때마다 변수값과 배열 인덱스, 포인터가 가리키는 위치를 따로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 빈칸 앞뒤 코드를 읽고, 그 위치에 필요한 자료형·연산자·문법 요소가 무엇인지 확인합니다.",
       "number가 0보다 큰 동안 반복합니다.",
@@ -4598,7 +4598,7 @@
       "all",
       "All"
     ],
-    "explanation": "> ALL(subquery)은 서브쿼리가 반환한 모든 값보다 큰 경우만 참입니다.",
+    "explanation": "> ALL(subquery)은 서브쿼리가 반환한 모든 값보다 큰 경우만 참입니다. 먼저 빈칸 앞뒤의 SQL을 읽고, 각 빈칸이 조회·조건·그룹·정렬·변경·제약 중 어떤 역할인지 구분합니다. 이 문제의 핵심 개념은 ALL · 서브쿼리 · 비교 연산입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다. SQL은 각 절을 한 번에 읽기보다 데이터가 선택되고 가공되는 순서를 중간 결과로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 빈칸 앞뒤의 SQL을 읽고, 각 빈칸이 조회·조건·그룹·정렬·변경·제약 중 어떤 역할인지 구분합니다.",
       "이 문제의 핵심 개념은 ALL · 서브쿼리 · 비교 연산입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
@@ -4674,7 +4674,7 @@
     ],
     "code": "SELECT COUNT(col2)\nFROM T\nWHERE col1 IN (2,3)\n   OR col2 IN (3,5);",
     "answer": "4",
-    "explanation": "WHERE를 만족하는 다섯 행 가운데 col2가 NULL인 첫 행은 COUNT(col2)에서 제외되어 4입니다.",
+    "explanation": "WHERE를 만족하는 다섯 행 가운데 col2가 NULL인 첫 행은 COUNT(col2)에서 제외되어 4입니다. 먼저 주어진 테이블과 SQL을 따로 보고, FROM의 원본 행에서 시작해 조건과 집계가 적용될 때마다 남는 행을 적습니다. 조건은 col1이 2/3이거나 col2가 3/5인 행을 선택합니다. SQL은 각 절을 한 번에 읽기보다 데이터가 선택되고 가공되는 순서를 중간 결과로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 주어진 테이블과 SQL을 따로 보고, FROM의 원본 행에서 시작해 조건과 집계가 적용될 때마다 남는 행을 적습니다.",
       "조건은 col1이 2/3이거나 col2가 3/5인 행을 선택합니다.",
@@ -4718,7 +4718,7 @@
     "question": "다음 Java 코드의 출력 결과를 쓰세요.",
     "code": "public class Main {\n    public static void main(String[] args){\n        int i=3, k=1;\n        switch(i){\n            case 1: k+=1;\n            case 2: k++;\n            case 3: k=0;\n            case 4: k+=3;\n            case 5: k-=10;\n            default: k--;\n        }\n        System.out.print(k);\n    }\n}",
     "answer": "-8",
-    "explanation": "case 3부터 break 없이 case 4, 5, default까지 이어져 0→3→-7→-8이 됩니다.",
+    "explanation": "case 3부터 break 없이 case 4, 5, default까지 이어져 0→3→-7→-8이 됩니다. 먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다. i=3이므로 case 3에서 시작합니다. Java 코드는 변수값과 객체 상태를 구분하고, 메서드가 호출되는 순서대로 한 단계씩 값을 갱신하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "i=3이므로 case 3에서 시작합니다.",
@@ -4762,7 +4762,7 @@
     "question": "다음 Python 3 코드의 출력 결과를 쓰세요.",
     "code": "a=\"REMEMBER NOVEMBER\"\nb=a[:3] + a[12:16]\nc=\"R AND %s\" % \"STR\"\nprint(b+c)",
     "answer": "REMEMBER AND STR",
-    "explanation": "b는 REMEMBE, c는 R AND STR이므로 이어 붙이면 REMEMBER AND STR입니다.",
+    "explanation": "b는 REMEMBE, c는 R AND STR이므로 이어 붙이면 REMEMBER AND STR입니다. a[:3]은 REM입니다. a[12:16]은 EMBE라서 b는 REMEMBE입니다. Python 코드는 연산 전후의 자료형과 리스트·문자열 상태가 어떻게 바뀌는지 한 단계씩 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "a[:3]은 REM입니다.",
       "a[12:16]은 EMBE라서 b는 REMEMBE입니다.",
@@ -4851,7 +4851,7 @@
     "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
     "code": "#include <stdio.h>\nint main(void){\n    int a[4]={0,2,4,8};\n    int b[3]={0};\n    int sum=0;\n    for(int i=1;i<4;i++){\n        int *p=a+i;\n        b[i-1]=*p-a[i-1];\n        sum += b[i-1]+a[i];\n    }\n    printf(\"%d\",sum);\n    return 0;\n}",
     "answer": "22",
-    "explanation": "각 반복에서 (2-0)+2=4, (4-2)+4=6, (8-4)+8=12를 더해 총 22입니다.",
+    "explanation": "각 반복에서 (2-0)+2=4, (4-2)+4=6, (8-4)+8=12를 더해 총 22입니다. i=1에서 4를 더합니다. i=2에서 6을 더합니다. C 코드는 한 문장이 실행될 때마다 변수값과 배열 인덱스, 포인터가 가리키는 위치를 따로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "i=1에서 4를 더합니다.",
       "i=2에서 6을 더합니다.",
@@ -4896,7 +4896,7 @@
     "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
     "code": "public class Main {\n    int a;\n    Main(int a){ this.a=a; }\n    int calc(){\n        int b=1;\n        for(int i=1;i<a;i++) b=a*i+b;\n        return a+b;\n    }\n    public static void main(String[] args){\n        Main obj=new Main(3);\n        obj.a=5;\n        int b=obj.calc();\n        System.out.print(obj.a+b);\n    }\n}",
     "answer": "61",
-    "explanation": "obj.a를 5로 바꾼 뒤 calc에서 b가 1→6→16→31→51이 되고 56을 반환합니다. 5+56=61입니다.",
+    "explanation": "obj.a를 5로 바꾼 뒤 calc에서 b가 1→6→16→31→51이 되고 56을 반환합니다. 5+56=61입니다. 생성자 값 3은 main에서 a=5로 덮어씁니다. 반복 결과 b는 51입니다. Java 코드는 변수값과 객체 상태를 구분하고, 메서드가 호출되는 순서대로 한 단계씩 값을 갱신하면 이해하기 쉽습니다.",
     "steps": [
       "생성자 값 3은 main에서 a=5로 덮어씁니다.",
       "반복 결과 b는 51입니다.",
@@ -4988,7 +4988,7 @@
       "200, 3, 1",
       "200\n3\n1"
     ],
-    "explanation": "전체 행은 200, 서로 다른 학과는 3개, 인터넷과로 제한한 서로 다른 학과값은 1개입니다.",
+    "explanation": "전체 행은 200, 서로 다른 학과는 3개, 인터넷과로 제한한 서로 다른 학과값은 1개입니다. 먼저 주어진 테이블과 SQL을 따로 보고, FROM의 원본 행에서 시작해 조건과 집계가 적용될 때마다 남는 행을 적습니다. 학생 총수는 200명입니다. SQL은 각 절을 한 번에 읽기보다 데이터가 선택되고 가공되는 순서를 중간 결과로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 주어진 테이블과 SQL을 따로 보고, FROM의 원본 행에서 시작해 조건과 집계가 적용될 때마다 남는 행을 적습니다.",
       "학생 총수는 200명입니다.",
@@ -5120,7 +5120,7 @@
     "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
     "code": "public class Main {\n    public static void main(String[] args){\n        int result=0;\n        for(int i=1;i<999;i++)\n            if(i%3==0 && i%2!=0) result=i;\n        System.out.print(result);\n    }\n}",
     "answer": "993",
-    "explanation": "1~998에서 3의 배수이면서 홀수인 가장 큰 값이 마지막으로 result에 저장됩니다.",
+    "explanation": "1~998에서 3의 배수이면서 홀수인 가장 큰 값이 마지막으로 result에 저장됩니다. 먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다. 조건을 만족할 때마다 result가 갱신됩니다. Java 코드는 변수값과 객체 상태를 구분하고, 메서드가 호출되는 순서대로 한 단계씩 값을 갱신하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "조건을 만족할 때마다 result가 갱신됩니다.",
@@ -5365,7 +5365,7 @@
     "question": "다음 Java 코드의 출력값을 쓰세요.",
     "code": "int a=0,ss=0;\nwhile(true){\n if(ss>100) break;\n ++a;\n ss+=a;\n}\nSystem.out.print(a+ss);",
     "answer": "119",
-    "explanation": "ss가 100을 넘을 때까지 a를 증가시키며 누적합니다. 종료 시 a=14, ss=105이므로 119입니다.",
+    "explanation": "ss가 100을 넘을 때까지 a를 증가시키며 누적합니다. 종료 시 a=14, ss=105이므로 119입니다. 먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다. 이 문제의 핵심 개념은 while · 누적합 · break입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다. Java 코드는 변수값과 객체 상태를 구분하고, 메서드가 호출되는 순서대로 한 단계씩 값을 갱신하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "이 문제의 핵심 개념은 while · 누적합 · break입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
@@ -5528,7 +5528,7 @@
     "question": "다음 C 코드의 출력값을 쓰세요.",
     "code": "int arr[6],max=0,min=99,sum=0;\nfor(int i=0;i<6;i++){arr[i]=i*i;sum+=arr[i];}\nfor(int i=0;i<6;i++){\n if(max<arr[i]) max=arr[i];\n if(min>arr[i]) min=arr[i];\n}\nprintf(\"%.2f\",(sum-max-min)/4.0);",
     "answer": "7.50",
-    "explanation": "배열은 0,1,4,9,16,25입니다. 합 55에서 25와 0을 빼고 4로 나누면 7.50입니다.",
+    "explanation": "배열은 0,1,4,9,16,25입니다. 합 55에서 25와 0을 빼고 4로 나누면 7.50입니다. 먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다. 이 문제의 핵심 개념은 배열 · 최댓값 · 최솟값입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다. C 코드는 한 문장이 실행될 때마다 변수값과 배열 인덱스, 포인터가 가리키는 위치를 따로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "이 문제의 핵심 개념은 배열 · 최댓값 · 최솟값입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
@@ -5690,7 +5690,7 @@
     "question": "정수 11을 8비트 이진수로 저장해 역순 출력하는 Java 코드의 결과를 쓰세요.",
     "code": "int[] a=new int[8];\nint i=0,n=11;\nwhile(n>0){a[i++]=n%2;n/=2;}\nfor(i=7;i>=0;i--) System.out.print(a[i]);",
     "answer": "00001011",
-    "explanation": "11의 이진수는 1011입니다. 8자리로 앞을 0으로 채워 00001011입니다.",
+    "explanation": "11의 이진수는 1011입니다. 8자리로 앞을 0으로 채워 00001011입니다. 먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다. 이 문제의 핵심 개념은 배열 · 2진수 · while입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다. Java 코드는 변수값과 객체 상태를 구분하고, 메서드가 호출되는 순서대로 한 단계씩 값을 갱신하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "이 문제의 핵심 개념은 배열 · 2진수 · while입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
@@ -5811,7 +5811,7 @@
     "question": "3×3 배열에서 i<=j 위치에 1부터 순서대로 저장하고 나머지는 공백으로 출력할 때 결과를 쓰세요.",
     "code": "class Main {\n    public static void main(String[] args) {\n        int[][] a = new int[3][3];\n        init(a);\n        data(a);\n        print(a);\n    }\n\n    static void init(int[][] a) {\n        for (int i = 0; i < 3; i++)\n            for (int j = 0; j < 3; j++)\n                a[i][j] = 0;\n    }\n\n    static void data(int[][] a) {\n        int v = 1;\n        for (int i = 0; i < 3; i++)\n            for (int j = i; j < 3; j++)\n                a[i][j] = v++;\n    }\n\n    static void print(int[][] a) {\n        for (int i = 0; i < 3; i++) {\n            for (int j = 0; j < 3; j++) {\n                if (a[i][j] == 0) System.out.print(\" \");\n                else System.out.print(a[i][j]);\n            }\n            System.out.println();\n        }\n    }\n}",
     "answer": "123\n 45\n  6",
-    "explanation": "첫 행은 1 2 3입니다. 둘째 행은 앞 한 칸이 비고 4 5, 셋째 행은 앞 두 칸이 비고 6입니다.",
+    "explanation": "첫 행은 1 2 3입니다. 둘째 행은 앞 한 칸이 비고 4 5, 셋째 행은 앞 두 칸이 비고 6입니다. 먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다. 첫 행의 (0,0)~(0,2)에 1,2,3이 저장됩니다. Java 코드는 변수값과 객체 상태를 구분하고, 메서드가 호출되는 순서대로 한 단계씩 값을 갱신하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "첫 행의 (0,0)~(0,2)에 1,2,3이 저장됩니다.",
@@ -5970,7 +5970,7 @@
     "question": "TITLE에 지정한 다섯 값만 허용하려 할 때 (가),(나)를 순서대로 쓰세요.",
     "code": "TITLE VARCHAR(20) (가) (TITLE (나) ('Intern','Staff','Manager','Director','President'))",
     "answer": "CHECK IN",
-    "explanation": "허용값 검증은 CHECK 제약을 사용합니다. 목록 포함 여부는 IN을 사용합니다.",
+    "explanation": "허용값 검증은 CHECK 제약을 사용합니다. 목록 포함 여부는 IN을 사용합니다. 먼저 빈칸 앞뒤의 SQL을 읽고, 각 빈칸이 조회·조건·그룹·정렬·변경·제약 중 어떤 역할인지 구분합니다. 이 문제의 핵심 개념은 CHECK · IN · CREATE TABLE입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다. SQL은 각 절을 한 번에 읽기보다 데이터가 선택되고 가공되는 순서를 중간 결과로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 빈칸 앞뒤의 SQL을 읽고, 각 빈칸이 조회·조건·그룹·정렬·변경·제약 중 어떤 역할인지 구분합니다.",
       "이 문제의 핵심 개념은 CHECK · IN · CREATE TABLE입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
@@ -6334,7 +6334,7 @@
     "question": "다음 Java 코드의 출력 결과를 줄마다 쓰세요.",
     "code": "class Berry{\n String Str;\n void meth(){func();}\n void func(){System.out.println(Str);}\n}\nclass Apple extends Berry{\n String Str;\n void func(){\n  Str=\"Apple\";\n  super.Str=\"Berry\";\n  super.func();\n  System.out.println(Str);\n }\n}\nBerry a=new Apple();\na.meth();",
     "answer": "Berry\nApple",
-    "explanation": "Apple.func가 호출됩니다. 부모 필드에는 Berry, 자식 필드에는 Apple이 저장되어 순서대로 출력됩니다.",
+    "explanation": "Apple.func가 호출됩니다. 부모 필드에는 Berry, 자식 필드에는 Apple이 저장되어 순서대로 출력됩니다. 먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다. 이 문제의 핵심 개념은 상속 · 오버라이딩 · super입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다. Java 코드는 변수값과 객체 상태를 구분하고, 메서드가 호출되는 순서대로 한 단계씩 값을 갱신하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "이 문제의 핵심 개념은 상속 · 오버라이딩 · super입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
@@ -6580,7 +6580,7 @@
     "question": "다음 SQL 빈칸 중 SQL 키워드만 순서대로 쓰세요.",
     "code": "WHERE 봉급 BETWEEN 5000 (가) 7000 (가) 이름 LIKE '김%';\nGROUP BY 부서명 (나) AVG(봉급)>6900;\nINSERT INTO 종업원 (다) (400,'정몽주','생산부',5000);",
     "answer": "AND HAVING VALUES",
-    "explanation": "BETWEEN 범위와 추가 조건 연결에 AND가 사용됩니다. 그룹 조건은 HAVING, 삽입 값은 VALUES입니다.",
+    "explanation": "BETWEEN 범위와 추가 조건 연결에 AND가 사용됩니다. 그룹 조건은 HAVING, 삽입 값은 VALUES입니다. 먼저 빈칸 앞뒤의 SQL을 읽고, 각 빈칸이 조회·조건·그룹·정렬·변경·제약 중 어떤 역할인지 구분합니다. 이 문제의 핵심 개념은 BETWEEN · AND · HAVING입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다. SQL은 각 절을 한 번에 읽기보다 데이터가 선택되고 가공되는 순서를 중간 결과로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 빈칸 앞뒤의 SQL을 읽고, 각 빈칸이 조회·조건·그룹·정렬·변경·제약 중 어떤 역할인지 구분합니다.",
       "이 문제의 핵심 개념은 BETWEEN · AND · HAVING입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
@@ -6621,7 +6621,7 @@
     "question": "다음 SQL의 세 빈칸을 순서대로 쓰세요.",
     "code": "SELECT 이름 FROM 학생 WHERE 학년>=3 (가) 학과='전자계산';\nSELECT (나) JUNO FROM WORKS WHERE PNO (다) (1,2,3);",
     "answer": "AND DISTINCT IN",
-    "explanation": "두 조건 연결은 AND입니다. 중복 제거는 DISTINCT, 목록 조건은 IN입니다.",
+    "explanation": "두 조건 연결은 AND입니다. 중복 제거는 DISTINCT, 목록 조건은 IN입니다. 먼저 빈칸 앞뒤의 SQL을 읽고, 각 빈칸이 조회·조건·그룹·정렬·변경·제약 중 어떤 역할인지 구분합니다. 이 문제의 핵심 개념은 AND · DISTINCT · IN입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다. SQL은 각 절을 한 번에 읽기보다 데이터가 선택되고 가공되는 순서를 중간 결과로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 빈칸 앞뒤의 SQL을 읽고, 각 빈칸이 조회·조건·그룹·정렬·변경·제약 중 어떤 역할인지 구분합니다.",
       "이 문제의 핵심 개념은 AND · DISTINCT · IN입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
@@ -6662,7 +6662,7 @@
     "question": "총 10마리, 다리 26개 조건을 만족하도록 (가),(나)에 들어갈 변수를 쓰세요.",
     "code": "pigcnt=totalcnt-(가);\nif((2*duckcnt)+(4*(나))==totalleg)",
     "answer": "duckcnt pigcnt",
-    "explanation": "돼지 수는 전체 수에서 오리 수를 빼 구합니다. 4를 곱할 변수는 pigcnt입니다.",
+    "explanation": "돼지 수는 전체 수에서 오리 수를 빼 구합니다. 4를 곱할 변수는 pigcnt입니다. 먼저 빈칸 앞뒤 코드를 읽고, 그 위치에 필요한 자료형·연산자·문법 요소가 무엇인지 확인합니다. 이 문제의 핵심 개념은 for · 연립 조건 · 변수입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다. Java 코드는 변수값과 객체 상태를 구분하고, 메서드가 호출되는 순서대로 한 단계씩 값을 갱신하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 빈칸 앞뒤 코드를 읽고, 그 위치에 필요한 자료형·연산자·문법 요소가 무엇인지 확인합니다.",
       "이 문제의 핵심 개념은 for · 연립 조건 · 변수입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
@@ -6739,7 +6739,7 @@
     "question": "입력으로 string과 test가 순서대로 주어질 때 다음 C 프로그램의 출력 결과를 쓰세요.",
     "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\nint main(void) {\n    int n = 2;\n    char *str[2];\n    for (int i = 0; i < n; i++) {\n        char input[100];\n        scanf(\"%99s\", input);\n        str[i] = malloc(strlen(input) + 1);\n        strcpy(str[i], input);\n    }\n\n    while (n > 0) {\n        printf(\"%d번 출력 :\", n);\n        for (int i = (int)strlen(str[n - 1]) - 1; i >= 0; i--)\n            printf(\"%c\", str[n - 1][i]);\n        printf(\"\\n\");\n        free(str[n - 1]);\n        n--;\n    }\n    return 0;\n}",
     "answer": "2번 출력 :tset\n1번 출력 :gnirts",
-    "explanation": "두 번째 입력 test를 먼저 뒤집어 tset을 출력합니다. 그 다음 string을 뒤집어 gnirts를 출력합니다.",
+    "explanation": "두 번째 입력 test를 먼저 뒤집어 tset을 출력합니다. 그 다음 string을 뒤집어 gnirts를 출력합니다. 먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다. n=2이므로 먼저 두 번째 입력 문자열 test를 선택합니다. C 코드는 한 문장이 실행될 때마다 변수값과 배열 인덱스, 포인터가 가리키는 위치를 따로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "n=2이므로 먼저 두 번째 입력 문자열 test를 선택합니다.",
@@ -6782,7 +6782,7 @@
     "question": "다음 C 코드의 출력값을 쓰세요.",
     "code": "int sum=0,i=329;\ndo{\n sum=999%i;\n i++;\n}while(sum!=0);\nprintf(\"%d\",i);",
     "answer": "334",
-    "explanation": "333에서 999%333이 0이 됩니다. 그 직후 i가 334로 증가된 상태로 출력됩니다.",
+    "explanation": "333에서 999%333이 0이 됩니다. 그 직후 i가 334로 증가된 상태로 출력됩니다. 먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다. 이 문제의 핵심 개념은 do-while · 나머지입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다. C 코드는 한 문장이 실행될 때마다 변수값과 배열 인덱스, 포인터가 가리키는 위치를 따로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "이 문제의 핵심 개념은 do-while · 나머지입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
@@ -6865,7 +6865,7 @@
     "question": "다음 Java 코드의 출력값을 쓰세요.",
     "code": "int A(int a,int b){\n System.out.print(a+b);\n return a*b;\n}\nSystem.out.print(new Test().A(5,5));",
     "answer": "1025",
-    "explanation": "메서드 안에서 먼저 10이 출력됩니다. 반환값 25를 바깥 print가 이어서 출력해 1025입니다.",
+    "explanation": "메서드 안에서 먼저 10이 출력됩니다. 반환값 25를 바깥 print가 이어서 출력해 1025입니다. 먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다. 이 문제의 핵심 개념은 메서드 · return · 출력 순서입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다. Java 코드는 변수값과 객체 상태를 구분하고, 메서드가 호출되는 순서대로 한 단계씩 값을 갱신하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "이 문제의 핵심 개념은 메서드 · return · 출력 순서입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
@@ -7032,7 +7032,7 @@
     "question": "다음 세 SQL 조건의 빈칸을 순서대로 쓰세요.",
     "code": "WHERE 성별='여' (1) 등급='GOLD';\nORDER BY 가입년도 (2);\nWHERE 이름 (3) LIKE '김%';",
     "answer": "AND ASC NOT",
-    "explanation": "두 조건은 AND, 오름차순은 ASC, '김'으로 시작하지 않음은 NOT LIKE입니다.",
+    "explanation": "두 조건은 AND, 오름차순은 ASC, '김'으로 시작하지 않음은 NOT LIKE입니다. 먼저 빈칸 앞뒤의 SQL을 읽고, 각 빈칸이 조회·조건·그룹·정렬·변경·제약 중 어떤 역할인지 구분합니다. 이 문제의 핵심 개념은 AND · ORDER BY · ASC입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다. SQL은 각 절을 한 번에 읽기보다 데이터가 선택되고 가공되는 순서를 중간 결과로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 빈칸 앞뒤의 SQL을 읽고, 각 빈칸이 조회·조건·그룹·정렬·변경·제약 중 어떤 역할인지 구분합니다.",
       "이 문제의 핵심 개념은 AND · ORDER BY · ASC입니다. 코드나 SQL에서 이 개념이 사용되는 부분을 먼저 찾습니다.",
@@ -7358,7 +7358,7 @@
     "question": "다음 Python 코드에서 존재하지 않는 키를 기본값과 함께 조회했을 때 출력 결과를 쓰세요.",
     "code": "data={\"name\":\"ted\",\"phone\":\"0101234\",\"birth\":\"0909\"}\nprint(data.get(\"grade\",\"none\"))",
     "answer": "none",
-    "explanation": "grade 키가 딕셔너리에 없으므로 get의 두 번째 인수로 지정한 기본값 none이 반환됩니다.",
+    "explanation": "grade 키가 딕셔너리에 없으므로 get의 두 번째 인수로 지정한 기본값 none이 반환됩니다. 먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다. 딕셔너리에는 name, phone, birth 키만 있습니다. Python 코드는 연산 전후의 자료형과 리스트·문자열 상태가 어떻게 바뀌는지 한 단계씩 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "딕셔너리에는 name, phone, birth 키만 있습니다.",
@@ -7443,7 +7443,7 @@
     "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
     "code": "#include <stdio.h>\nint main(void){\n    int k[]={1,2,3};\n    int *p=k+1;\n    printf(\"%d\", *p + *(p-1));\n    return 0;\n}",
     "answer": "3",
-    "explanation": "p는 배열의 두 번째 원소 2를 가리키고 p-1은 첫 번째 원소 1을 가리키므로 합은 3입니다.",
+    "explanation": "p는 배열의 두 번째 원소 2를 가리키고 p-1은 첫 번째 원소 1을 가리키므로 합은 3입니다. 먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다. k+1은 k[1]의 주소이므로 *p는 2입니다. C 코드는 한 문장이 실행될 때마다 변수값과 배열 인덱스, 포인터가 가리키는 위치를 따로 적어 확인하면 이해하기 쉽습니다.",
     "steps": [
       "먼저 변수의 초기값과 실제 출력문을 표시합니다. 반복문·조건문·함수 호출이 있으면 실행되는 순서대로 값의 변화를 적습니다.",
       "k+1은 k[1]의 주소이므로 *p는 2입니다.",
