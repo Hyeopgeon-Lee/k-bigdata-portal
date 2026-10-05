@@ -1,7 +1,6 @@
-import {initPortalUX} from "./portal-ux.js?v=20261005-perf-2";
-import {initGroupedSearch} from "./search-ui.js?v=20261005-perf-1";
+import {initPortalShell} from "./portal-shell.js?v=20261005-perf-3";
 import {matches,jobSearchText,docSearchText,certificationSearchText} from "./search-core.js?v=20261005-perf-1";
-import {services,footerLinks} from "./services.js";
+import {services} from "./services.js";
 
 let certifications=[],certificationPaths=[],renderCertificateCard=null,renderCertificateDetail=null;
 let jobs=[],jobComparisons=[],jobGuidance={},jobGroups=[],jobLearningDocs=null;
@@ -12,14 +11,6 @@ const esc=v=>String(v??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&
 const list=items=>"<ul>"+items.map(v=>"<li>"+esc(v)+"</li>").join("")+"</ul>";
 const tags=items=>'<div class="tags">'+items.map(v=>"<span>"+esc(v)+"</span>").join("")+"</div>";
 const icon='<span class="resource-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6l2 2 2-2h6v16h-6l-2 2-2-2H4ZM12 6v16M7 9h2M15 9h2M7 13h2M15 13h2"/></svg></span>';
-document.querySelectorAll(".footer-links").forEach(root=>{root.innerHTML='<p>학과 대표 사이트</p>'+footerLinks.map(link=>'<a href="'+esc(link.url)+'" target="_blank" rel="noopener noreferrer">'+esc(link.name)+' ↗<span class="sr-only"> 외부 사이트, 새 창</span></a>').join('');});
-document.querySelectorAll("#current-year").forEach(el=>el.textContent=new Date().getFullYear());
-const toggle=document.querySelector(".menu-toggle"),nav=document.querySelector("#portal-nav");
-function closeMenu(){nav?.classList.remove("is-open");toggle?.setAttribute("aria-expanded","false");}
-toggle?.addEventListener("click",()=>{const open=toggle.getAttribute("aria-expanded")!=="true";toggle.setAttribute("aria-expanded",String(open));nav.classList.toggle("is-open",open);});
-nav?.addEventListener("click",e=>{if(e.target.closest("a"))closeMenu();});
-document.addEventListener("keydown",e=>{if(e.key==="Escape"&&toggle?.getAttribute("aria-expanded")==="true"){closeMenu();toggle.focus();}});
-document.addEventListener("click",e=>{if(!e.target.closest(".site-header"))closeMenu();});
 const docLink = doc => '<a href="docs.html?id='+esc(doc.id)+'">'+esc(doc.name)+'</a>';
 const skillTags = values => '<div class="tags doc-related">'+values.map(value=>{const doc=findDocForSkill(value);return doc?'<a href="docs.html?id='+esc(doc.id)+'">'+esc(value)+'<span class="sr-only"> 공식문서 학습 안내</span></a>':'<span>'+esc(value)+'</span>';}).join("")+'</div>';
 const relatedDocs = item => '<div class="doc-related">'+item.related.map(name=>{const doc=findDocForSkill(name);return doc?docLink(doc):'<span>'+esc(name)+'</span>';}).join("")+'</div>';
@@ -148,12 +139,11 @@ document.querySelector("#show-all")?.addEventListener("click",()=>{random=null;r
 render();
 }
 }
- await initPortalUX();
+ await initPortalShell();
  if(page==="jobs"){
   const {initJobGuide}=await import("./job-guide-ui.js?v=20261005-perf-1");
   initJobGuide();
  }
- initGroupedSearch();
 }
 
 bootstrap().catch(error=>{
