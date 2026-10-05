@@ -197,3 +197,13 @@ body[data-page="practical"] .portal-page-hero p{
     line-height:1.7;
   }
 }
+
+
+/* Desktop header fit and project-page background consistency. */
+@media(min-width:901px) and (max-width:1240px){
+  .site-header .brand-copy{display:none}
+  .site-header .main-nav{gap:12px;font-size:14px}
+}
+body[data-page="project-guide"] .guide-main{
+  background:var(--color-background,#f5f7fb);
+}
