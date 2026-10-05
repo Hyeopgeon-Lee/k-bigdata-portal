@@ -277,3 +277,103 @@
     min-height:52px;
   }
 }
+
+
+/* 2026-10-05 practical bank readability audit: long-code focus mode and sentence breaks. */
+.practical-page .solve-question br{
+  display:block;
+  content:"";
+  margin-top:.38em;
+}
+.practical-page .code-mobile-tools{
+  display:flex;
+  justify-content:flex-end;
+  margin:-10px 0 16px;
+}
+.practical-page .code-mobile-tools .button{
+  min-height:42px;
+  padding:8px 12px;
+  font-size:13px;
+}
+.practical-page .code-dialog{
+  width:min(960px,calc(100% - 24px));
+  max-width:960px;
+  max-height:min(88vh,900px);
+  padding:0;
+  border:1px solid #c8d6ee;
+  border-radius:14px;
+  background:#fff;
+  color:var(--color-text);
+  box-shadow:0 24px 80px rgba(11,23,57,.22);
+}
+.practical-page .code-dialog::backdrop{
+  background:rgba(11,23,57,.5);
+}
+.practical-page .code-dialog-head{
+  position:sticky;
+  top:0;
+  z-index:2;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:10px 12px;
+  background:#fff;
+  border-bottom:1px solid var(--color-border);
+}
+.practical-page .code-dialog-head .button{
+  min-height:42px;
+  padding:7px 12px;
+  font-size:14px;
+}
+.practical-page .code-dialog-scroll{
+  overflow:auto;
+  max-height:calc(min(88vh,900px) - 64px);
+  -webkit-overflow-scrolling:touch;
+}
+.practical-page .code-dialog pre{
+  margin:0;
+  min-width:max-content;
+  padding:18px;
+  font:15px/1.75 ui-monospace,SFMono-Regular,Consolas,monospace;
+  font-variant-ligatures:none;
+  tab-size:2;
+}
+.practical-page .code-dialog--sql pre{
+  min-width:0;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+}
+
+@media(max-width:767px){
+  .practical-page .code-scroll--complex{
+    max-height:52svh;
+    overflow:auto;
+  }
+  .practical-page .code-dialog{
+    width:100%;
+    max-width:none;
+    height:100dvh;
+    max-height:none;
+    margin:0;
+    border:0;
+    border-radius:0;
+  }
+  .practical-page .code-dialog-head{
+    padding:calc(8px + env(safe-area-inset-top)) 12px 8px;
+  }
+  .practical-page .code-dialog-scroll{
+    max-height:none;
+    height:calc(100dvh - 58px - env(safe-area-inset-top));
+  }
+  .practical-page .code-dialog pre{
+    padding:16px;
+    font-size:15px;
+    line-height:1.78;
+  }
+}
+@media(min-width:768px){
+  .practical-page .code-mobile-tools{
+    display:none;
+  }
+}
