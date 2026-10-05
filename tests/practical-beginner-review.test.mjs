@@ -15,6 +15,7 @@ const ui=text('js/practical-ui.js');
 const roles=[];
 const normalize=v=>String(v??'').normalize('NFKC').trim().replace(/\s+/g,' ').toLowerCase();
 const compact=v=>normalize(v).replace(/[\s`'";,(){}\[\]]+/g,'');
+const tokenText=v=>String(v??'').normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}_]+/gu,' ').trim().replace(/\s+/g,' ');
 
 function bucket(items,round){
   return items.filter((_,i)=>i%30===round);
@@ -148,7 +149,7 @@ review('품질검증',questions,q=>{
   assert.ok(['C','Java','Python','SQL'].includes(q.language),q.id);
   assert.ok(['exact','sql_keywords','self'].includes(q.grading),q.id);
   assert.ok(['output','blank','sql_result','sql_write','interpret','error'].includes(q.questionType),q.id);
-  const a=compact(q.answer),h=compact(q.hint);
+  const a=tokenText(q.answer),h=tokenText(q.hint);
   if(a.length>=3)assert.ok(!h.includes(a),q.id+' hint leaks answer');
   assert.ok(!/<script|javascript:|onerror=/i.test((q.hint||'')+solutionSummary(q)),q.id);
 });
