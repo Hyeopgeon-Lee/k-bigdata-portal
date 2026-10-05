@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {beginnerFocus,beginnerConcepts,beginnerSteps,examMemory} from '../js/practical-explanation.js';
+import {beginnerFocus,beginnerConcepts,beginnerSteps,examMemory,lineByLineExplanation} from '../js/practical-explanation.js';
 
 const root=new URL('../',import.meta.url);
 const read=p=>JSON.parse(readFileSync(new URL(p,root),'utf8'));
@@ -50,6 +50,12 @@ review('초급교육',questions,q=>{
   const concepts=beginnerConcepts(q);
   assert.ok(concepts.length>=1&&concepts.length<=3,q.id+' concepts');
   concepts.forEach(c=>{assert.ok(c.title.length>=2);assert.ok(c.text.length>=35);});
+  if(String(q.code||'').trim()){
+    const notes=lineByLineExplanation(q);
+    const codeLines=String(q.code).replace(/\r\n?/g,'\n').split('\n').filter(line=>line.trim()).length;
+    assert.equal(notes.length,codeLines,q.id+' line annotations');
+    assert.ok(notes.every(n=>/[가-힣]/.test(n.explanation)),q.id+' Korean line annotations');
+  }
 });
 
 review('C전문가',questions.filter(q=>q.language==='C'),q=>{
@@ -96,13 +102,14 @@ review('UI가독성',questions,q=>{
   assert.ok(q.steps.every(s=>String(s).length<=320),q.id+' step too long');
   assert.ok(q.explanation.length<=900,q.id+' explanation too long');
 });
-assert.match(ui,/1 · 문제에서 먼저 볼 것/);
-assert.match(ui,/2 · 기초 개념/);
-assert.match(ui,/3 · 한 단계씩 풀이/);
-assert.match(ui,/4 · 왜 이 답인가\?/);
-assert.match(ui,/5 · 시험에서 기억할 것/);
-assert.match(ui,/beginnerConcepts\(q\)/);
+assert.match(ui,/1 · 코드 한 줄씩 해석/);
+assert.match(ui,/실행 흐름 따라가기/);
+assert.match(ui,/왜 이 답인가\?/);
+assert.match(ui,/시험에서 기억할 것/);
+assert.match(ui,/lineByLineExplanation\(q,displayCode\(q\)\)/);
 assert.match(ui,/beginnerSteps\(q\)/);
+assert.doesNotMatch(ui,/beginnerConcepts\(q\)/);
+assert.doesNotMatch(ui,/1 · 문제에서 먼저 볼 것/);
 
 review('모바일가독성',questions,q=>{
   assert.ok(beginnerConcepts(q).length<=3,q.id);
@@ -112,14 +119,17 @@ review('모바일가독성',questions,q=>{
 });
 assert.match(css,/\.beginner-flow/);
 assert.match(css,/\.beginner-section/);
-assert.match(css,/\.beginner-concepts/);
+assert.match(css,/\.line-explanation-list/);
+assert.match(css,/\.line-explanation-row/);
+assert.match(css,/\.line-comment/);
 assert.match(css,/@media\(max-width:767px\)/);
 assert.match(css,/grid-template-columns:1fr/);
 assert.match(css,/font-size:16\.5px|font-size:16px/);
 assert.match(css,/line-height:1\.8|line-height:1\.85|line-height:1\.9/);
 assert.match(css,/word-break:keep-all/);
-assert.match(css,/\.beginner-focus,\s*\n\.practical-page \.beginner-memory\{/);
-assert.doesNotMatch(css,/\.beginner-focus\{\s*border-left:5px/);
+assert.match(css,/\.beginner-memory/);
+assert.match(css,/\.line-code code/);
+assert.match(css,/white-space:pre-wrap/);
 assert.doesNotMatch(css,/\.beginner-memory\{\s*border-left:5px/);
 
 review('품질검증',questions,q=>{
