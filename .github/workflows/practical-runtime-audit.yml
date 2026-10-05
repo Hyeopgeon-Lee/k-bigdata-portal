@@ -10,6 +10,8 @@ on:
       - "tests/practical-beginner-review.test.mjs"
       - "tests/practical-dataset-deep-audit.mjs"
       - "tests/practical-parallel-expert-audit.mjs"
+      - "tests/practical-code-formatting.test.mjs"
+      - "js/practical-core.js"
       - "js/practical-explanation.js"
       - "js/practical-ui.js"
       - "css/practical.css"
@@ -39,5 +41,7 @@ jobs:
         run: node tests/practical-dataset-deep-audit.mjs
       - name: Run parallel expert audit workers
         run: node tests/practical-parallel-expert-audit.mjs
+      - name: Verify C/Java display indentation
+        run: node tests/practical-code-formatting.test.mjs
       - name: Verify all executable answers
         run: python tests/practical-runtime-audit.py
