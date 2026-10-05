@@ -51,3 +51,12 @@ body[data-page="interview"] #local-query{margin-bottom:12px}
  body[data-page="interview"] .learning-content{width:min(calc(100% - 24px),var(--container))}
  body[data-page="interview"] #interview-home{width:100%}
 }
+
+
+/* 2026-10-05 desktop CTA correction: align interview actions to the shared portal content width. */
+@media(min-width:901px){
+  body[data-page="interview"] #interview-home{
+    width:100%;
+    max-width:none;
+  }
+}
