@@ -41,8 +41,9 @@ for(const type of ['IT 직무','IT 자격증','개발 공식문서','기술면�
 assert.equal(matches('JavaScript','Java'),false);assert.equal(matches('Storage','RAG'),false);
 assert.equal(readFileSync(new URL('CNAME',root),'utf8').trim(),'portal.k-bigdata.kr');
 const ui=readFileSync(new URL('js/learning-ui.js',root),'utf8');
+const shell=readFileSync(new URL('js/portal-shell.js',root),'utf8');
 assert.ok(ui.includes('jobLearningDocs(job,docs)'));
-assert.ok(ui.includes('footerLinks.map'));
-assert.ok(ui.includes('rel="noopener noreferrer"'));
-assert.ok(ui.includes('closeMenu();toggle.focus()'));
+assert.ok(shell.includes('footerLinks.map'));
+assert.ok(shell.includes('rel="noopener noreferrer"'));
+assert.ok(shell.includes('closeMenu();')&&shell.includes('toggle.focus()'));
 console.log('PASS: all stable IDs/URLs, 4 ordered categories / 13 services, 8-step journey, blog multi-domain search, cross-links, all HTML noindex, local resources, CNAME and common footer/menu.');
