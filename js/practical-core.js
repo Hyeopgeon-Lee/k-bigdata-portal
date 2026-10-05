@@ -79,6 +79,18 @@ export function formatCodeForDisplay(code,language){
  }
  if(language!=="C"&&language!=="Java")return source.split("\n").map(line=>line.replace(/\s+$/,"")).join("\n").trim();
 
+ // Multiline C/Java questions already carry intentional teaching indentation in the dataset.
+ // Preserve that authored structure instead of reformatting it and accidentally flattening
+ // brace-less control bodies such as nested for/if/while statements.
+ const sourceLines=source.split("\n");
+ const hasAuthoredIndentation=sourceLines.length>1&&sourceLines.some(line=>/^[ \t]+[^\s]/.test(line));
+ if(hasAuthoredIndentation){
+  return sourceLines
+   .map(line=>line.replace(/\t/g,"    ").replace(/[ \t]+$/,""))
+   .join("\n")
+   .trim();
+ }
+
  const out=[],braces=[];
  let buffer="",indent=0,parenDepth=0,bracketDepth=0,quote="",escaped=false,lineComment=false,blockComment=false;
  const emit=()=>{
