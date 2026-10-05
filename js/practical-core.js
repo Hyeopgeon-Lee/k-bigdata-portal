@@ -14,7 +14,7 @@ export const remainingRevealSeconds = (startedAt, now=Date.now()) => Math.max(0,
 export const hintAvailable = (attempt,now=Date.now()) => !!attempt && !attempt.submittedAt && !attempt.viewedExplanation && Number.isFinite(attempt.startedAt) && now-attempt.startedAt>=HINT_SECONDS*1000;
 export const shouldAutoReveal = (attempt,now=Date.now()) => !!attempt && !attempt.submittedAt && !attempt.viewedExplanation && Number.isFinite(attempt.startedAt) && now-attempt.startedAt>=REVEAL_SECONDS*1000;
 export const canSubmit = (attempt, answer, now=Date.now()) => !!attempt && !attempt.submittedAt && !attempt.viewedExplanation && Number.isFinite(attempt.startedAt) && now>=attempt.startedAt && now-attempt.startedAt<REVEAL_SECONDS*1000 && !!String(answer||"").trim();
-export const canReveal = (attempt,now=Date.now()) => !!attempt && !attempt.viewedExplanation && Number.isFinite(attempt.startedAt) && (!!attempt.submittedAt || now-attempt.startedAt>=REVEAL_SECONDS*1000);
+export const canReveal = (attempt,now=Date.now()) => !!attempt && Number.isFinite(attempt.startedAt) && (!!attempt.submittedAt || now-attempt.startedAt>=REVEAL_SECONDS*1000);
 export function gradeAnswer(question, answer) {
   const normalize = value => String(value).normalize("NFKC").trim().replace(/\r/g,"").replace(/[\t ]+/g," ").replace(/ *\n */g,"\n");
   if(question.grading==="sql_keywords") return normalize(question.answer).toUpperCase()===normalize(answer).replace(/,/g," ").replace(/ +/g," ").toUpperCase();
