@@ -1,5 +1,5 @@
-import {loadPracticalBank} from "./practical-data.js?v=20261005-share-2";
-import {HINT_SECONDS,ANSWER_SECONDS,examLabels,typeLabels,languages,escapeHTML as esc,remainingSeconds,remainingAnswerSeconds,hintAvailable,answerDeadlineReached,canSubmit,canReveal,gradeAnswer,questionText,shuffle,recommendFive,matchesExam,localDay,summarizeAttempts,highlightCode,formatCodeForDisplay} from "./practical-core.js?v=20261005-share-2";
+import {loadPracticalBank} from "./practical-data.js?v=20261005-browser-1";
+import {HINT_SECONDS,ANSWER_SECONDS,examLabels,typeLabels,languages,escapeHTML as esc,remainingSeconds,remainingAnswerSeconds,hintAvailable,answerDeadlineReached,canSubmit,canReveal,gradeAnswer,questionText,shuffle,recommendFive,matchesExam,localDay,summarizeAttempts,highlightCode,formatCodeForDisplay} from "./practical-core.js?v=20261005-browser-1";
 import {getAttempts,saveAttempt,getSession,saveSession,clearLocalLearning,storageAvailable,getPreferences,savePreferences,exportLearning,importLearning} from "./practical-store.js";
 import {matches} from "./search.js";
 
@@ -101,6 +101,15 @@ function problemShareText(q=current){
  const preview=prompt.length>150?prompt.slice(0,147)+"...":prompt;
  return [solveHeading(q),q.language+" · "+q.title,preview].filter(Boolean).join("\n");
 }
+async function readFileText(file){
+ if(typeof file.text==="function")return file.text();
+ return new Promise((resolve,reject)=>{
+  const reader=new FileReader();
+  reader.onload=()=>resolve(String(reader.result??""));
+  reader.onerror=()=>reject(reader.error||new Error("파일을 읽을 수 없습니다."));
+  reader.readAsText(file);
+ });
+}
 async function copyText(text){
  if(navigator.clipboard?.writeText){
   await navigator.clipboard.writeText(text);
@@ -124,9 +133,10 @@ function setShareStatus(message){
 async function shareCurrentProblem(){
  if(!current)return;
  const url=problemShareUrl(current),text=problemShareText(current);
- if(navigator.share){
+ const shareData={title:solveHeading(current)+" · "+current.title,text,url};
+ if(navigator.share&&(!navigator.canShare||navigator.canShare(shareData))){
   try{
-   await navigator.share({title:solveHeading(current)+" · "+current.title,text,url});
+   await navigator.share(shareData);
    setShareStatus("문제를 공유했습니다.");
    return;
   }catch(error){
@@ -414,6 +424,6 @@ root.addEventListener("focusin",adjustKeyboard);root.addEventListener("focusout"
 root.addEventListener("change",async event=>{
  if(event.target.id!=="import-learning")return;
  const message=$("#import-status"),file=event.target.files[0];if(!file)return;
- try{if(file.size>5*1024*1024)throw Error("5MB 이하 JSON 파일만 가져올 수 있습니다.");const count=importLearning(JSON.parse(await file.text()));renderProgress();$("#import-status").textContent=count+"건을 확인하고 기존 기록과 병합했습니다.";storageNotice();}
+ try{if(file.size>5*1024*1024)throw Error("5MB 이하 JSON 파일만 가져올 수 있습니다.");const count=importLearning(JSON.parse(await readFileText(file)));renderProgress();$("#import-status").textContent=count+"건을 확인하고 기존 기록과 병합했습니다.";storageNotice();}
  catch(error){message.textContent=error instanceof SyntaxError?"JSON 파일을 확인하세요.":error.message;}
 });
