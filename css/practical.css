@@ -983,19 +983,43 @@
   font:15px/1.75 ui-monospace,SFMono-Regular,Consolas,monospace;
   font-variant-ligatures:none;
 }
-.practical-page .line-comment{
-  margin:7px 0 0 46px !important;
-  padding:8px 10px;
-  border-left:3px solid #b7c8e4;
-  background:#f6f8fc;
-  color:#42536e !important;
-  font:14px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace !important;
+.practical-page .line-detail{
+  display:grid;
+  gap:7px;
+  margin:9px 0 0 46px;
+}
+.practical-page .line-action,
+.practical-page .line-trace{
+  display:grid;
+  grid-template-columns:max-content minmax(0,1fr);
+  gap:9px;
+  margin:0 !important;
+  padding:9px 11px;
+  border-radius:10px;
   word-break:keep-all;
   overflow-wrap:anywhere;
 }
-.practical-page .line-comment>span{
-  color:#59719a;
-  font-weight:800;
+.practical-page .line-action{
+  background:#f6f8fc;
+  color:#42536e !important;
+  font-size:14px !important;
+  line-height:1.68 !important;
+}
+.practical-page .line-trace{
+  background:#eef6ff;
+  border:1px solid #d4e6fb;
+  color:#213c60 !important;
+  font-size:14px !important;
+  line-height:1.7 !important;
+}
+.practical-page .line-action strong,
+.practical-page .line-trace strong{
+  white-space:nowrap;
+  font-size:12px;
+  line-height:1.8;
+}
+.practical-page .line-trace strong{
+  color:#245f9e;
 }
 @media(max-width:767px){
   .practical-page .beginner-line-by-line>.beginner-kicker,
@@ -1020,11 +1044,16 @@
   .practical-page .line-no{
     font-size:11.5px;
   }
-  .practical-page .line-comment{
-    margin-left:36px !important;
+  .practical-page .line-detail{
+    margin-left:36px;
+    gap:6px;
+  }
+  .practical-page .line-action,
+  .practical-page .line-trace{
+    grid-template-columns:1fr;
+    gap:2px;
     padding:8px 9px;
     font-size:13.5px !important;
-    line-height:1.68 !important;
   }
 }
 @media(max-width:400px){
@@ -1036,8 +1065,8 @@
     grid-template-columns:24px minmax(0,1fr);
     gap:7px;
   }
-  .practical-page .line-comment{
-    margin-left:31px !important;
+  .practical-page .line-detail{
+    margin-left:31px;
   }
 }
 
