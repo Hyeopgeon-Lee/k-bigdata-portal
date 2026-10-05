@@ -1,6 +1,6 @@
 import {buildBank} from "./practical-core.js?v=20261005-browser-1";
 
-const DATA_VERSION="20261005-browser-1";
+const DATA_VERSION="20261005-solution-1";
 
 export async function loadPracticalBank(){
  const load=async path=>{
