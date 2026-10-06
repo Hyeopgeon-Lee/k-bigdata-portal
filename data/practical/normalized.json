@@ -296,7 +296,7 @@
         "필드 숨김과 메서드 오버라이딩"
       ],
       "question": "다음 Java 프로그램을 종이로 추적하여 실행 결과를 쓰시오.",
-      "code": "class Parent {\n  int value=11;\n  int get() { return value; }\n}\nclass Child extends Parent {\n  int value=21;\n  @Override int get() { return value+1; }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Parent x=new Child();\n    System.out.print(x.value+\" \"+x.get());\n  }\n}",
+      "code": "class Parent {\n    int value=11;\n    int get() {\n        return value;\n    }\n}\nclass Child extends Parent {\n    int value=21;\n    @Override\n    int get() {\n        return value+1;\n    }\n}\npublic class Main {\n    public static void main(String[] args) {\n        Parent x=new Child();\n        System.out.print(x.value+\" \"+x.get());\n    }\n}",
       "inputData": "",
       "answer": "11 22",
       "sources": [
@@ -347,7 +347,7 @@
         "static 싱글톤과 공유 상태"
       ],
       "question": "다음 Java 프로그램을 종이로 추적하여 실행 결과를 쓰시오.",
-      "code": "class Counter {\n  private static Counter one=new Counter();\n  private int n=0;\n  static Counter get() { return one; }\n  void inc() { n++; }\n  int value() { return n; }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Counter.get().inc();\n    Counter.get().inc();\n    Counter.get().inc();\n    Counter.get().inc();\n    Counter.get().inc();\n    System.out.print(Counter.get().value());\n  }\n}",
+      "code": "class Counter {\n    private static Counter one=new Counter();\n    private int n=0;\n    static Counter get() {\n        return one;\n    }\n    void inc() {\n        n++;\n    }\n    int value() {\n        return n;\n    }\n}\npublic class Main {\n    public static void main(String[] args) {\n        Counter.get().inc();\n        Counter.get().inc();\n        Counter.get().inc();\n        Counter.get().inc();\n        Counter.get().inc();\n        System.out.print(Counter.get().value());\n    }\n}",
       "inputData": "",
       "answer": "5",
       "sources": [
@@ -402,7 +402,7 @@
         "메서드 오버로딩과 인자 타입"
       ],
       "question": "다음 Java 프로그램을 종이로 추적하여 실행 결과를 쓰시오.",
-      "code": "public class Main {\n  static int f(int x) { return x+2; }\n  static int f(double x) { return (int)x+5; }\n  public static void main(String[] args) {\n    System.out.print(f(10)+\" \"+f(10.5));\n  }\n}",
+      "code": "public class Main {\n    static int f(int x) {\n        return x+2;\n    }\n    static int f(double x) {\n        return (int)x+5;\n    }\n    public static void main(String[] args) {\n        System.out.print(f(10)+\" \"+f(10.5));\n    }\n}",
       "inputData": "",
       "answer": "12 15",
       "sources": [
@@ -746,7 +746,7 @@
         "인터페이스와 동적 바인딩"
       ],
       "question": "다음 Java 프로그램을 종이로 추적하여 실행 결과를 쓰시오.",
-      "code": "interface P { int f(int x); }\nclass A implements P { public int f(int x) { return x+1; } }\nclass B implements P { public int f(int x) { return x*2; } }\npublic class Main {\n  public static void main(String[] args) {\n    P p=new B();\n    System.out.print(p.f(3));\n  }\n}",
+      "code": "interface P {\n    int f(int x);\n}\nclass A implements P {\n    public int f(int x) {\n        return x+1;\n    }\n}\nclass B implements P {\n    public int f(int x) {\n        return x*2;\n    }\n}\npublic class Main {\n    public static void main(String[] args) {\n        P p=new B();\n        System.out.print(p.f(3));\n    }\n}",
       "inputData": "",
       "answer": "6",
       "sources": [
@@ -1644,7 +1644,7 @@
         "생성자와 super 호출 순서"
       ],
       "question": "다음 Java 프로그램을 종이로 추적하여 실행 결과를 쓰시오.",
-      "code": "class A {\n  A(int x) { System.out.print(x+\" \"); }\n}\nclass B extends A {\n  B() { super(4); System.out.print(7); }\n}\npublic class Main {\n  public static void main(String[] args) { new B(); }\n}",
+      "code": "class A {\n    A(int x) {\n        System.out.print(x+\" \");\n    }\n}\nclass B extends A {\n    B() {\n        super(4);\n        System.out.print(7);\n    }\n}\npublic class Main {\n    public static void main(String[] args) {\n        new B();\n    }\n}",
       "inputData": "",
       "answer": "4 7",
       "sources": [
@@ -1700,7 +1700,7 @@
         "static 필드의 누적 상태"
       ],
       "question": "다음 Java 프로그램을 종이로 추적하여 실행 결과를 쓰시오.",
-      "code": "public class Main {\n  static int total=0;\n  static void add(int x) { total+=x; }\n  public static void main(String[] args) {\n    add(5); add(7); add(9);\n    System.out.print(total);\n  }\n}",
+      "code": "public class Main {\n    static int total=0;\n    static void add(int x) {\n        total+=x;\n    }\n    public static void main(String[] args) {\n        add(5);\n        add(7);\n        add(9);\n        System.out.print(total);\n    }\n}",
       "inputData": "",
       "answer": "21",
       "sources": [
@@ -1832,7 +1832,7 @@
         "오버로딩과 컴파일타임 타입"
       ],
       "question": "다음 Java 프로그램을 종이로 추적하여 실행 결과를 쓰시오.",
-      "code": "class Printer {\n  void print(Integer x) { System.out.print(\"I\"+x); }\n  void print(Number x) { System.out.print(\"N\"+x); }\n  void print(Object x) { System.out.print(\"O\"+x); }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Object x=Integer.valueOf(10);\n    new Printer().print(x);\n  }\n}",
+      "code": "class Printer {\n    void print(Integer x) {\n        System.out.print(\"I\"+x);\n    }\n    void print(Number x) {\n        System.out.print(\"N\"+x);\n    }\n    void print(Object x) {\n        System.out.print(\"O\"+x);\n    }\n}\npublic class Main {\n    public static void main(String[] args) {\n        Object x=Integer.valueOf(10);\n        new Printer().print(x);\n    }\n}",
       "inputData": "",
       "answer": "O10",
       "sources": [
@@ -1882,7 +1882,7 @@
         "추상 클래스와 오버라이딩 호출"
       ],
       "question": "다음 Java 프로그램을 종이로 추적하여 실행 결과를 쓰시오.",
-      "code": "abstract class Base {\n  abstract int f(int x);\n  int g(int x) { return f(x)+1; }\n}\nclass Sub extends Base {\n  int f(int x) { return x*2; }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Base b=new Sub();\n    System.out.print(b.g(7));\n  }\n}",
+      "code": "abstract class Base {\n    abstract int f(int x);\n    int g(int x) {\n        return f(x)+1;\n    }\n}\nclass Sub extends Base {\n    int f(int x) {\n        return x*2;\n    }\n}\npublic class Main {\n    public static void main(String[] args) {\n        Base b=new Sub();\n        System.out.print(b.g(7));\n    }\n}",
       "inputData": "",
       "answer": "15",
       "sources": [
@@ -3046,7 +3046,7 @@
         "필드 숨김과 메서드 오버라이딩"
       ],
       "question": "다음 Java 프로그램을 종이로 추적하여 실행 결과를 쓰시오.",
-      "code": "class Parent {\n  int value=12;\n  int get() { return value; }\n}\nclass Child extends Parent {\n  int value=22;\n  @Override int get() { return value+1; }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Parent x=new Child();\n    System.out.print(x.value+\" \"+x.get());\n  }\n}",
+      "code": "class Parent {\n    int value=12;\n    int get() {\n        return value;\n    }\n}\nclass Child extends Parent {\n    int value=22;\n    @Override\n    int get() {\n        return value+1;\n    }\n}\npublic class Main {\n    public static void main(String[] args) {\n        Parent x=new Child();\n        System.out.print(x.value+\" \"+x.get());\n    }\n}",
       "inputData": "",
       "answer": "12 23",
       "sources": [
@@ -3097,7 +3097,7 @@
         "static 싱글톤과 공유 상태"
       ],
       "question": "다음 Java 프로그램을 종이로 추적하여 실행 결과를 쓰시오.",
-      "code": "class Counter {\n  private static Counter one=new Counter();\n  private int n=0;\n  static Counter get() { return one; }\n  void inc() { n++; }\n  int value() { return n; }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Counter.get().inc();\n    Counter.get().inc();\n    Counter.get().inc();\n    System.out.print(Counter.get().value());\n  }\n}",
+      "code": "class Counter {\n    private static Counter one=new Counter();\n    private int n=0;\n    static Counter get() {\n        return one;\n    }\n    void inc() {\n        n++;\n    }\n    int value() {\n        return n;\n    }\n}\npublic class Main {\n    public static void main(String[] args) {\n        Counter.get().inc();\n        Counter.get().inc();\n        Counter.get().inc();\n        System.out.print(Counter.get().value());\n    }\n}",
       "inputData": "",
       "answer": "3",
       "sources": [
@@ -3154,7 +3154,7 @@
         "메서드 오버로딩과 인자 타입"
       ],
       "question": "다음 Java 프로그램을 종이로 추적하여 실행 결과를 쓰시오.",
-      "code": "public class Main {\n  static int f(int x) { return x+2; }\n  static int f(double x) { return (int)x+5; }\n  public static void main(String[] args) {\n    System.out.print(f(11)+\" \"+f(11.5));\n  }\n}",
+      "code": "public class Main {\n    static int f(int x) {\n        return x+2;\n    }\n    static int f(double x) {\n        return (int)x+5;\n    }\n    public static void main(String[] args) {\n        System.out.print(f(11)+\" \"+f(11.5));\n    }\n}",
       "inputData": "",
       "answer": "13 16",
       "sources": [
@@ -4466,7 +4466,7 @@
         "생성자와 super 호출 순서"
       ],
       "question": "다음 Java 프로그램을 종이로 추적하여 실행 결과를 쓰시오.",
-      "code": "class A {\n  A(int x) { System.out.print(x+\" \"); }\n}\nclass B extends A {\n  B() { super(5); System.out.print(7); }\n}\npublic class Main {\n  public static void main(String[] args) { new B(); }\n}",
+      "code": "class A {\n    A(int x) {\n        System.out.print(x+\" \");\n    }\n}\nclass B extends A {\n    B() {\n        super(5);\n        System.out.print(7);\n    }\n}\npublic class Main {\n    public static void main(String[] args) {\n        new B();\n    }\n}",
       "inputData": "",
       "answer": "5 7",
       "sources": [
@@ -4522,7 +4522,7 @@
         "오버로딩과 컴파일타임 타입"
       ],
       "question": "다음 Java 프로그램을 종이로 추적하여 실행 결과를 쓰시오.",
-      "code": "class Printer {\n  void print(Integer x) { System.out.print(\"I\"+x); }\n  void print(Number x) { System.out.print(\"N\"+x); }\n  void print(Object x) { System.out.print(\"O\"+x); }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Object x=Integer.valueOf(11);\n    new Printer().print(x);\n  }\n}",
+      "code": "class Printer {\n    void print(Integer x) {\n        System.out.print(\"I\"+x);\n    }\n    void print(Number x) {\n        System.out.print(\"N\"+x);\n    }\n    void print(Object x) {\n        System.out.print(\"O\"+x);\n    }\n}\npublic class Main {\n    public static void main(String[] args) {\n        Object x=Integer.valueOf(11);\n        new Printer().print(x);\n    }\n}",
       "inputData": "",
       "answer": "O11",
       "sources": [
@@ -4576,7 +4576,7 @@
         "추상 클래스와 오버라이딩 호출"
       ],
       "question": "다음 Java 프로그램을 종이로 추적하여 실행 결과를 쓰시오.",
-      "code": "abstract class Base {\n  abstract int f(int x);\n  int g(int x) { return f(x)+1; }\n}\nclass Sub extends Base {\n  int f(int x) { return x*2; }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Base b=new Sub();\n    System.out.print(b.g(3));\n  }\n}",
+      "code": "abstract class Base {\n    abstract int f(int x);\n    int g(int x) {\n        return f(x)+1;\n    }\n}\nclass Sub extends Base {\n    int f(int x) {\n        return x*2;\n    }\n}\npublic class Main {\n    public static void main(String[] args) {\n        Base b=new Sub();\n        System.out.print(b.g(3));\n    }\n}",
       "inputData": "",
       "answer": "7",
       "sources": [
@@ -5309,7 +5309,7 @@
         "필드 숨김과 메서드 오버라이딩"
       ],
       "question": "다음 Java 프로그램을 종이로 추적하여 실행 결과를 쓰시오.",
-      "code": "class Parent {\n  int value=13;\n  int get() { return value; }\n}\nclass Child extends Parent {\n  int value=23;\n  @Override int get() { return value+1; }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Parent x=new Child();\n    System.out.print(x.value+\" \"+x.get());\n  }\n}",
+      "code": "class Parent {\n    int value=13;\n    int get() {\n        return value;\n    }\n}\nclass Child extends Parent {\n    int value=23;\n    @Override\n    int get() {\n        return value+1;\n    }\n}\npublic class Main {\n    public static void main(String[] args) {\n        Parent x=new Child();\n        System.out.print(x.value+\" \"+x.get());\n    }\n}",
       "inputData": "",
       "answer": "13 24",
       "sources": [
@@ -5364,7 +5364,7 @@
         "static 싱글톤과 공유 상태"
       ],
       "question": "다음 Java 프로그램을 종이로 추적하여 실행 결과를 쓰시오.",
-      "code": "class Counter {\n  private static Counter one=new Counter();\n  private int n=0;\n  static Counter get() { return one; }\n  void inc() { n++; }\n  int value() { return n; }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Counter.get().inc();\n    Counter.get().inc();\n    Counter.get().inc();\n    Counter.get().inc();\n    System.out.print(Counter.get().value());\n  }\n}",
+      "code": "class Counter {\n    private static Counter one=new Counter();\n    private int n=0;\n    static Counter get() {\n        return one;\n    }\n    void inc() {\n        n++;\n    }\n    int value() {\n        return n;\n    }\n}\npublic class Main {\n    public static void main(String[] args) {\n        Counter.get().inc();\n        Counter.get().inc();\n        Counter.get().inc();\n        Counter.get().inc();\n        System.out.print(Counter.get().value());\n    }\n}",
       "inputData": "",
       "answer": "4",
       "sources": [
@@ -5420,7 +5420,7 @@
         "메서드 오버로딩과 인자 타입"
       ],
       "question": "다음 Java 프로그램을 종이로 추적하여 실행 결과를 쓰시오.",
-      "code": "public class Main {\n  static int f(int x) { return x+2; }\n  static int f(double x) { return (int)x+5; }\n  public static void main(String[] args) {\n    System.out.print(f(7)+\" \"+f(7.5));\n  }\n}",
+      "code": "public class Main {\n    static int f(int x) {\n        return x+2;\n    }\n    static int f(double x) {\n        return (int)x+5;\n    }\n    public static void main(String[] args) {\n        System.out.print(f(7)+\" \"+f(7.5));\n    }\n}",
       "inputData": "",
       "answer": "9 12",
       "sources": [
@@ -6147,7 +6147,7 @@
         "생성자와 super 호출 순서"
       ],
       "question": "다음 Java 프로그램을 종이로 추적하여 실행 결과를 쓰시오.",
-      "code": "class A {\n  A(int x) { System.out.print(x+\" \"); }\n}\nclass B extends A {\n  B() { super(3); System.out.print(7); }\n}\npublic class Main {\n  public static void main(String[] args) { new B(); }\n}",
+      "code": "class A {\n    A(int x) {\n        System.out.print(x+\" \");\n    }\n}\nclass B extends A {\n    B() {\n        super(3);\n        System.out.print(7);\n    }\n}\npublic class Main {\n    public static void main(String[] args) {\n        new B();\n    }\n}",
       "inputData": "",
       "answer": "3 7",
       "sources": [
@@ -6201,7 +6201,7 @@
         "오버로딩과 컴파일타임 타입"
       ],
       "question": "다음 Java 프로그램을 종이로 추적하여 실행 결과를 쓰시오.",
-      "code": "class Printer {\n  void print(Integer x) { System.out.print(\"I\"+x); }\n  void print(Number x) { System.out.print(\"N\"+x); }\n  void print(Object x) { System.out.print(\"O\"+x); }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Object x=Integer.valueOf(7);\n    new Printer().print(x);\n  }\n}",
+      "code": "class Printer {\n    void print(Integer x) {\n        System.out.print(\"I\"+x);\n    }\n    void print(Number x) {\n        System.out.print(\"N\"+x);\n    }\n    void print(Object x) {\n        System.out.print(\"O\"+x);\n    }\n}\npublic class Main {\n    public static void main(String[] args) {\n        Object x=Integer.valueOf(7);\n        new Printer().print(x);\n    }\n}",
       "inputData": "",
       "answer": "O7",
       "sources": [
@@ -6255,7 +6255,7 @@
         "추상 클래스와 오버라이딩 호출"
       ],
       "question": "다음 Java 프로그램을 종이로 추적하여 실행 결과를 쓰시오.",
-      "code": "abstract class Base {\n  abstract int f(int x);\n  int g(int x) { return f(x)+1; }\n}\nclass Sub extends Base {\n  int f(int x) { return x*2; }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Base b=new Sub();\n    System.out.print(b.g(5));\n  }\n}",
+      "code": "abstract class Base {\n    abstract int f(int x);\n    int g(int x) {\n        return f(x)+1;\n    }\n}\nclass Sub extends Base {\n    int f(int x) {\n        return x*2;\n    }\n}\npublic class Main {\n    public static void main(String[] args) {\n        Base b=new Sub();\n        System.out.print(b.g(5));\n    }\n}",
       "inputData": "",
       "answer": "11",
       "sources": [
@@ -6310,7 +6310,7 @@
         "필드 숨김과 메서드 오버라이딩"
       ],
       "question": "다음 Java 프로그램을 종이로 추적하여 실행 결과를 쓰시오.",
-      "code": "class Parent {\n  int value=14;\n  int get() { return value; }\n}\nclass Child extends Parent {\n  int value=24;\n  @Override int get() { return value+1; }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Parent x=new Child();\n    System.out.print(x.value+\" \"+x.get());\n  }\n}",
+      "code": "class Parent {\n    int value=14;\n    int get() {\n        return value;\n    }\n}\nclass Child extends Parent {\n    int value=24;\n    @Override\n    int get() {\n        return value+1;\n    }\n}\npublic class Main {\n    public static void main(String[] args) {\n        Parent x=new Child();\n        System.out.print(x.value+\" \"+x.get());\n    }\n}",
       "inputData": "",
       "answer": "14 25",
       "sources": [
@@ -6365,7 +6365,7 @@
         "메서드 오버로딩과 인자 타입"
       ],
       "question": "다음 Java 프로그램을 종이로 추적하여 실행 결과를 쓰시오.",
-      "code": "public class Main {\n  static int f(int x) { return x+2; }\n  static int f(double x) { return (int)x+5; }\n  public static void main(String[] args) {\n    System.out.print(f(8)+\" \"+f(8.5));\n  }\n}",
+      "code": "public class Main {\n    static int f(int x) {\n        return x+2;\n    }\n    static int f(double x) {\n        return (int)x+5;\n    }\n    public static void main(String[] args) {\n        System.out.print(f(8)+\" \"+f(8.5));\n    }\n}",
       "inputData": "",
       "answer": "10 13",
       "sources": [
@@ -7155,7 +7155,7 @@
         "오버로딩과 컴파일타임 타입"
       ],
       "question": "다음 Java 프로그램을 종이로 추적하여 실행 결과를 쓰시오.",
-      "code": "class Printer {\n  void print(Integer x) { System.out.print(\"I\"+x); }\n  void print(Number x) { System.out.print(\"N\"+x); }\n  void print(Object x) { System.out.print(\"O\"+x); }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Object x=Integer.valueOf(8);\n    new Printer().print(x);\n  }\n}",
+      "code": "class Printer {\n    void print(Integer x) {\n        System.out.print(\"I\"+x);\n    }\n    void print(Number x) {\n        System.out.print(\"N\"+x);\n    }\n    void print(Object x) {\n        System.out.print(\"O\"+x);\n    }\n}\npublic class Main {\n    public static void main(String[] args) {\n        Object x=Integer.valueOf(8);\n        new Printer().print(x);\n    }\n}",
       "inputData": "",
       "answer": "O8",
       "sources": [
@@ -7458,7 +7458,7 @@
         "필드 숨김과 메서드 오버라이딩"
       ],
       "question": "다음 Java 프로그램을 종이로 추적하여 실행 결과를 쓰시오.",
-      "code": "class Parent {\n  int value=10;\n  int get() { return value; }\n}\nclass Child extends Parent {\n  int value=20;\n  @Override int get() { return value+1; }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Parent x=new Child();\n    System.out.print(x.value+\" \"+x.get());\n  }\n}",
+      "code": "class Parent {\n    int value=10;\n    int get() {\n        return value;\n    }\n}\nclass Child extends Parent {\n    int value=20;\n    @Override\n    int get() {\n        return value+1;\n    }\n}\npublic class Main {\n    public static void main(String[] args) {\n        Parent x=new Child();\n        System.out.print(x.value+\" \"+x.get());\n    }\n}",
       "inputData": "",
       "answer": "10 21",
       "sources": [
@@ -7509,7 +7509,7 @@
         "메서드 오버로딩과 인자 타입"
       ],
       "question": "다음 Java 프로그램을 종이로 추적하여 실행 결과를 쓰시오.",
-      "code": "public class Main {\n  static int f(int x) { return x+2; }\n  static int f(double x) { return (int)x+5; }\n  public static void main(String[] args) {\n    System.out.print(f(9)+\" \"+f(9.5));\n  }\n}",
+      "code": "public class Main {\n    static int f(int x) {\n        return x+2;\n    }\n    static int f(double x) {\n        return (int)x+5;\n    }\n    public static void main(String[] args) {\n        System.out.print(f(9)+\" \"+f(9.5));\n    }\n}",
       "inputData": "",
       "answer": "11 14",
       "sources": [
