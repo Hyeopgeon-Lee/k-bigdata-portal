@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="css/style.css?v=20261005-browser-1">
   <link rel="stylesheet" href="css/learning.css?v=20261006-resume-1">
   <link rel="stylesheet" href="css/portal-ux.css?v=20261005-7">
-  <link rel="stylesheet" href="css/resume.css?v=20261006-resume-1">
+  <link rel="stylesheet" href="css/resume.css?v=20261006-resume-2">
 </head>
 <body data-page="resume">
 <a class="skip-link" href="#content">본문으로 건너뛰기</a>
@@ -114,68 +114,57 @@
         <p>오타 수정, 주소 변경, 포트 수정, 라이브러리 설치처럼 한 번의 설정 변경으로 끝나는 문제는 대표 사례로는 약합니다. 가능하면 <b>원인 분석 → 기술적 판단 → 해결 → 재발 방지 또는 구조 개선</b>까지 이어진 경험을 선택하세요.</p>
       </aside>
 
-      <div class="weak-case-grid">
-        <article>
+      <div class="weak-case-grid"><article>
           <span>01</span>
           <h3>DB 주소가 localhost로 설정됨</h3>
           <p>배포 서버에서 DB 접속이 되지 않아 확인해 보니 환경변수의 DB 주소가 <code>localhost</code>로 되어 있었고, 실제 DB 주소로 변경해 해결한 경우입니다.</p>
           <small>설정값 하나를 수정한 수준으로 보이기 쉽습니다.</small>
-        </article>
-        <article>
+        </article><article>
           <span>02</span>
           <h3>포트 번호를 잘못 입력함</h3>
           <p>서버가 실행되지 않아 설정 파일을 확인했고, 잘못된 포트 번호를 올바르게 수정해 정상 실행한 경우입니다.</p>
           <small>기본 설정 확인에 가까워 문제해결 역량을 보여주기 어렵습니다.</small>
-        </article>
-        <article>
+        </article><article>
           <span>03</span>
           <h3>라이브러리가 설치되지 않음</h3>
           <p>실행 오류가 발생해 확인한 결과 필요한 패키지가 설치되지 않았고, <code>npm install</code> 또는 <code>pip install</code>로 해결한 경우입니다.</p>
           <small>개발환경 구성의 기본 작업만으로는 대표 경험이 되기 어렵습니다.</small>
-        </article>
-        <article>
+        </article><article>
           <span>04</span>
           <h3>파일 경로를 잘못 지정함</h3>
           <p>이미지나 파일을 불러오지 못해 경로를 확인하고 잘못된 상대경로 또는 절대경로를 수정한 경우입니다.</p>
           <small>단순 경로 수정만 있다면 기술적 깊이가 약합니다.</small>
-        </article>
-        <article>
+        </article><article>
           <span>05</span>
           <h3>SQL 컬럼명을 잘못 입력함</h3>
           <p>SQL이 실행되지 않아 스키마를 확인했고, 오타가 난 컬럼명을 실제 컬럼명으로 수정한 경우입니다.</p>
           <small>오타 수정은 디버깅 과정의 일부이지 핵심 성과로 보기 어렵습니다.</small>
-        </article>
-        <article>
+        </article></div><details class="weak-more"><summary>약한 사례 더 보기</summary><div class="weak-case-grid weak-extra"><article>
           <span>06</span>
           <h3>API URL이 잘못되어 404가 발생함</h3>
           <p>API 호출 시 404 오류가 발생해 엔드포인트 주소를 확인하고 올바른 URL로 변경한 경우입니다.</p>
           <small>주소 확인과 수정만으로 끝나면 직무역량을 충분히 보여주기 어렵습니다.</small>
-        </article>
-        <article>
+        </article><article>
           <span>07</span>
           <h3>CORS 허용 도메인을 추가함</h3>
           <p>프론트엔드 호출에서 CORS 오류가 발생해 허용 도메인을 추가하여 요청이 정상 처리되도록 한 경우입니다.</p>
           <small>원인과 보안 기준 없이 단순 허용 설정만 했다면 강한 사례가 아닙니다.</small>
-        </article>
-        <article>
+        </article><article>
           <span>08</span>
           <h3>Docker 포트 매핑을 수정함</h3>
           <p>컨테이너에 접속되지 않아 확인해 보니 포트 매핑이 잘못되어 있었고, 올바른 포트로 수정한 경우입니다.</p>
           <small>단순 설정 실수 수정이라면 대표 문제해결 사례로는 약합니다.</small>
-        </article>
-        <article>
+        </article><article>
           <span>09</span>
           <h3>Git 충돌 후 다시 pull함</h3>
           <p>최신 소스를 받지 않고 작업해 충돌이 발생했고, pull 후 충돌 부분을 수정해 다시 반영한 경우입니다.</p>
           <small>일상적인 협업 작업만으로는 협업 역량을 충분히 설명하기 어렵습니다.</small>
-        </article>
-        <article>
+        </article><article>
           <span>10</span>
           <h3>변수명·오타를 수정함</h3>
           <p>Java 또는 JavaScript 코드에서 변수명이나 메서드명을 잘못 작성해 오류가 발생했고, 오타를 수정한 경우입니다.</p>
           <small>오타 발견 자체보다 더 복잡한 분석이나 개선 경험을 선택하는 것이 좋습니다.</small>
-        </article>
-      </div>
+        </article></div></details>
 
       <div class="weak-to-strong">
         <h3>같은 경험도 이렇게 발전시키면 달라집니다</h3>
@@ -316,10 +305,14 @@
         <p>채용공고에서 요구하는 역할과 역량을 먼저 확인하고, 문장 속 경험은 반드시 본인이 실제로 수행한 프로젝트·기술·활동으로 바꾸어 작성하세요.</p>
       </aside>
 
-      <div class="role-picker" aria-label="직무별 샘플 바로가기">
-        <a href="#role-backend">백엔드 개발자</a>
-        <a href="#role-system">시스템엔지니어</a>
-        <a href="#role-qa">QA 엔지니어</a>
+      <div class="sample-source">
+        <strong>샘플 기준 채용공고</strong>
+        <p>시스원 채용공고를 분석해 직무별로 어떤 경험을 선택하고 강조하는지 보여주는 교육용 예시입니다. <a href="https://m.saramin.co.kr/job-search/view?rec_idx=52362930&is_apply_statics_auto_focus=&proposal_idx=0#seq=0" target="_blank" rel="noopener noreferrer">사람인 공고 보기 ↗</a></p>
+      </div>
+      <div class="role-picker" role="tablist" aria-label="직무별 자기소개서 샘플">
+        <button type="button" id="tab-backend" role="tab" aria-selected="true" aria-controls="role-backend" data-role-target="role-backend">백엔드 개발자</button>
+        <button type="button" id="tab-system" role="tab" aria-selected="false" aria-controls="role-system" data-role-target="role-system">시스템엔지니어</button>
+        <button type="button" id="tab-qa" role="tab" aria-selected="false" aria-controls="role-qa" data-role-target="role-qa">QA 엔지니어</button>
       </div>
 
       <div class="legend-box" aria-label="문장 역할 태그 설명">
@@ -332,30 +325,34 @@
           <span class="sample-tag tag-plan">입사 후 계획</span>
           <span class="sample-tag tag-result">근거·결과</span>
         </div>
-        <p>문장을 펼치면 “왜 이 문장을 썼는지”를 확인할 수 있습니다.</p>
+        <p>기본 화면에서는 자기소개서처럼 읽고, 필요할 때 해설 모드를 켜서 문장의 역할을 확인하세요.</p>
+      </div>
+      <div class="annotation-controls" role="group" aria-label="실전 샘플 표시 방식">
+        <button type="button" class="annotation-mode is-active" data-annotation-mode="clean" aria-pressed="true">완성본 보기</button>
+        <button type="button" class="annotation-mode" data-annotation-mode="explain" aria-pressed="false">문장 해설 보기</button>
       </div>
 
-      <article id="role-backend" class="role-sample-card" aria-labelledby="backend-title">
+      <article id="role-backend" class="role-sample-card" role="tabpanel" aria-labelledby="tab-backend" tabindex="0">
         <header class="role-sample-header">
           <p class="role-number">ROLE 01</p>
           <h3 id="backend-title">백엔드 개발자</h3>
           <p>서버·네트워크·DB 모니터링 솔루션 개발 직무를 백엔드 관점으로 연결한 예시입니다.</p>
         </header>
         <div class="job-analysis">
-          <h4>채용공고에서 먼저 찾은 내용</h4>
+          <h4>채용공고 분석 → 내 경험 연결</h4>
           <ul>
-            <li><strong>직무 연결:</strong> 서버·네트워크·DB 및 서비스 성능 모니터링 솔루션 개발</li>
-            <li><strong>강조할 역량:</strong> API, 데이터베이스, 로그, 성능, 장애 원인 분석</li>
-            <li><strong>선택할 경험:</strong> Spring Boot 프로젝트, SQL 개선, 인증·예외처리, 로그 분석</li>
+            <li><strong>공고에서 확인:</strong> 서버·네트워크·DB 및 서비스 성능 모니터링 솔루션 개발</li>
+            <li><strong>공고에서 읽을 핵심:</strong> API, 데이터베이스, 로그, 성능, 장애 원인 분석</li>
+            <li><strong>자소서에서 연결:</strong> Spring Boot 프로젝트, SQL 개선, 인증·예외처리, 로그 분석</li>
           </ul>
         </div>
 
         <details class="sample-item" open>
           <summary><strong>지원동기</strong><small>채용공고 → 관련 경험 → 지원 이유</small></summary>
           <div class="sentence-stack">
-            <details class="sample-sentence"><summary><span>시스원이 서버·네트워크·DB와 애플리케이션의 상태를 모니터링하고 서비스 성능을 분석하는 솔루션을 개발한다는 점에 관심을 갖고 지원했습니다.</span><span class="sentence-tags"><i class="sample-tag tag-job">채용공고 반영</i></span></summary><p><b>왜 이 문장을 썼나요?</b> 막연한 기업 칭찬 대신 채용공고의 실제 업무를 지원 이유의 출발점으로 사용합니다.</p></details>
-            <details class="sample-sentence"><summary><span>저는 팀 프로젝트에서 Spring Boot 기반 REST API와 데이터베이스를 개발하면서 기능 구현뿐 아니라 서비스의 성능과 안정성을 함께 고려한 경험이 있습니다.</span><span class="sentence-tags"><i class="sample-tag tag-exp">본인 경험</i><i class="sample-tag tag-skill">직무역량</i></span></summary><p><b>왜 이 문장을 썼나요?</b> 회사가 요구하는 업무와 연결되는 실제 경험을 제시해 “관심이 있다”에서 끝나지 않도록 합니다.</p></details>
-            <details class="sample-sentence"><summary><span>이 경험을 바탕으로 서비스 상태와 성능을 지속적으로 확인하고 개선하는 백엔드 개발자로 성장하고 싶습니다.</span><span class="sentence-tags"><i class="sample-tag tag-job">채용공고 반영</i><i class="sample-tag tag-plan">입사 후 계획</i></span></summary><p><b>왜 이 문장을 썼나요?</b> 자신의 경험을 지원 직무의 역할과 다시 연결하면서 지원동기를 마무리합니다.</p></details>
+            <div class="sample-sentence"><p class="sample-copy">시스원이 서버·네트워크·DB와 애플리케이션의 상태를 모니터링하고 서비스 성능을 분석하는 솔루션을 개발한다는 점에 관심을 갖고 지원했습니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-job">채용공고 반영</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> 막연한 기업 칭찬 대신 채용공고의 실제 업무를 지원 이유의 출발점으로 사용합니다.</p></div>
+            <div class="sample-sentence"><p class="sample-copy">저는 팀 프로젝트에서 Spring Boot 기반 REST API와 데이터베이스를 개발하면서 기능 구현뿐 아니라 서비스의 성능과 안정성을 함께 고려한 경험이 있습니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-exp">본인 경험</i><i class="sample-tag tag-skill">직무역량</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> 회사가 요구하는 업무와 연결되는 실제 경험을 제시해 “관심이 있다”에서 끝나지 않도록 합니다.</p></div>
+            <div class="sample-sentence"><p class="sample-copy">이 경험을 바탕으로 서비스 상태와 성능을 지속적으로 확인하고 개선하는 백엔드 개발자로 성장하고 싶습니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-job">채용공고 반영</i><i class="sample-tag tag-plan">입사 후 계획</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> 자신의 경험을 지원 직무의 역할과 다시 연결하면서 지원동기를 마무리합니다.</p></div>
           </div>
           <p class="sample-formula"><strong>작성 구조</strong> 채용공고의 업무 → 관련된 내 경험 → 해당 직무로 성장하려는 이유</p>
         </details>
@@ -363,9 +360,9 @@
         <details class="sample-item">
           <summary><strong>직무역량</strong><small>기술 나열보다 사용 맥락과 수준을 보여줍니다.</small></summary>
           <div class="sentence-stack">
-            <details class="sample-sentence"><summary><span>Spring Boot 기반 팀 프로젝트에서 회원·인증 API와 데이터 조회 기능을 담당했습니다.</span><span class="sentence-tags"><i class="sample-tag tag-exp">본인 경험</i><i class="sample-tag tag-skill">직무역량</i></span></summary><p><b>왜 이 문장을 썼나요?</b> 어떤 기술을 “안다”가 아니라 실제로 어떤 기능을 담당했는지 먼저 보여줍니다.</p></details>
-            <details class="sample-sentence"><summary><span>REST API를 설계하고 MySQL과 연동했으며 JWT 기반 인증을 구현하면서 예외 처리와 로그 기록도 함께 확인했습니다.</span><span class="sentence-tags"><i class="sample-tag tag-skill">직무역량</i></span></summary><p><b>왜 이 문장을 썼나요?</b> 백엔드 직무에서 필요한 API·DB·인증·로그 경험을 하나의 작업 흐름으로 보여줍니다.</p></details>
-            <details class="sample-sentence"><summary><span>조회 속도가 느린 기능에서는 SQL 실행 계획을 확인하고 인덱스 적용 전후를 비교하며 데이터베이스 성능 개선 과정을 경험했습니다.</span><span class="sentence-tags"><i class="sample-tag tag-problem">문제해결</i><i class="sample-tag tag-result">근거·결과</i></span></summary><p><b>왜 이 문장을 썼나요?</b> 단순 기술명보다 분석과 비교 과정을 통해 실제 사용 경험의 깊이를 보여줍니다.</p></details>
+            <div class="sample-sentence"><p class="sample-copy">Spring Boot 기반 팀 프로젝트에서 회원·인증 API와 데이터 조회 기능을 담당했습니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-exp">본인 경험</i><i class="sample-tag tag-skill">직무역량</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> 어떤 기술을 “안다”가 아니라 실제로 어떤 기능을 담당했는지 먼저 보여줍니다.</p></div>
+            <div class="sample-sentence"><p class="sample-copy">REST API를 설계하고 MySQL과 연동했으며 JWT 기반 인증을 구현하면서 예외 처리와 로그 기록도 함께 확인했습니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-skill">직무역량</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> 백엔드 직무에서 필요한 API·DB·인증·로그 경험을 하나의 작업 흐름으로 보여줍니다.</p></div>
+            <div class="sample-sentence"><p class="sample-copy">조회 속도가 느린 기능에서는 SQL 실행 계획을 확인하고 인덱스 적용 전후를 비교하며 데이터베이스 성능 개선 과정을 경험했습니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-problem">문제해결</i><i class="sample-tag tag-result">근거·결과</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> 단순 기술명보다 분석과 비교 과정을 통해 실제 사용 경험의 깊이를 보여줍니다.</p></div>
           </div>
           <p class="sample-formula"><strong>작성 구조</strong> 담당 기능 → 사용 기술 → 실제 적용 과정 → 확인한 결과</p>
         </details>
@@ -373,8 +370,8 @@
         <details class="sample-item">
           <summary><strong>성격의 장단점</strong><small>업무 방식과 연결되는 성향을 선택합니다.</small></summary>
           <div class="sentence-stack">
-            <details class="sample-sentence"><summary><span>문제가 발생했을 때 바로 수정하기보다 먼저 로그와 입력값을 확인해 원인을 정리한 뒤 해결하는 편입니다.</span><span class="sentence-tags"><i class="sample-tag tag-skill">직무역량</i><i class="sample-tag tag-exp">본인 경험</i></span></summary><p><b>왜 이 문장을 썼나요?</b> “꼼꼼하다”라고 주장하는 대신 백엔드 업무에서 실제로 나타나는 행동으로 성향을 설명합니다.</p></details>
-            <details class="sample-sentence"><summary><span>다만 간단한 문제에도 확인 과정이 길어지는 경우가 있어, 문제의 영향도와 난이도를 먼저 판단하고 단순 오류와 복잡한 오류의 확인 절차를 구분하고 있습니다.</span><span class="sentence-tags"><i class="sample-tag tag-problem">문제해결</i><i class="sample-tag tag-result">근거·결과</i></span></summary><p><b>왜 이 문장을 썼나요?</b> 자신을 부정적으로 규정하지 않으면서 보완할 점과 현재의 개선 행동을 함께 보여줍니다.</p></details>
+            <div class="sample-sentence"><p class="sample-copy">문제가 발생했을 때 바로 수정하기보다 먼저 로그와 입력값을 확인해 원인을 정리한 뒤 해결하는 편입니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-skill">직무역량</i><i class="sample-tag tag-exp">본인 경험</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> “꼼꼼하다”라고 주장하는 대신 백엔드 업무에서 실제로 나타나는 행동으로 성향을 설명합니다.</p></div>
+            <div class="sample-sentence"><p class="sample-copy">다만 간단한 문제에도 확인 과정이 길어지는 경우가 있어, 문제의 영향도와 난이도를 먼저 판단하고 단순 오류와 복잡한 오류의 확인 절차를 구분하고 있습니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-problem">문제해결</i><i class="sample-tag tag-result">근거·결과</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> 자신을 부정적으로 규정하지 않으면서 보완할 점과 현재의 개선 행동을 함께 보여줍니다.</p></div>
           </div>
           <p class="sample-formula"><strong>작성 구조</strong> 업무에서 드러나는 성향 → 불편했던 점 → 개선 행동 → 현재의 변화</p>
         </details>
@@ -382,9 +379,9 @@
         <details class="sample-item">
           <summary><strong>문제해결</strong><small>추측보다 근거를 확인하며 원인을 좁힙니다.</small></summary>
           <div class="sentence-stack">
-            <details class="sample-sentence"><summary><span>프로젝트에서 데이터가 증가하면서 특정 목록 조회 API의 응답 시간이 점차 길어졌습니다.</span><span class="sentence-tags"><i class="sample-tag tag-problem">문제해결</i></span></summary><p><b>왜 이 문장을 썼나요?</b> 해결책보다 먼저 실제 문제 상황을 명확하게 제시합니다.</p></details>
-            <details class="sample-sentence"><summary><span>로그를 확인한 결과 DB 조회 과정에서 시간이 많이 소요되고 있었고, SQL 실행 계획과 JOIN 구조를 확인해 불필요한 조회를 줄이고 검색 조건에 맞는 인덱스를 적용했습니다.</span><span class="sentence-tags"><i class="sample-tag tag-problem">문제해결</i><i class="sample-tag tag-skill">직무역량</i></span></summary><p><b>왜 이 문장을 썼나요?</b> “검색해서 해결했다”가 아니라 분석 근거와 기술적 조치를 보여줍니다.</p></details>
-            <details class="sample-sentence"><summary><span>이후 같은 데이터로 응답 시간을 다시 비교하며 개선 여부를 확인했습니다.</span><span class="sentence-tags"><i class="sample-tag tag-result">근거·결과</i></span></summary><p><b>왜 이 문장을 썼나요?</b> 해결했다고 주장하는 데서 끝내지 않고 동일 조건으로 검증했다는 점을 보여줍니다.</p></details>
+            <div class="sample-sentence"><p class="sample-copy">프로젝트에서 데이터가 증가하면서 특정 목록 조회 API의 응답 시간이 점차 길어졌습니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-problem">문제해결</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> 해결책보다 먼저 실제 문제 상황을 명확하게 제시합니다.</p></div>
+            <div class="sample-sentence"><p class="sample-copy">로그를 확인한 결과 DB 조회 과정에서 시간이 많이 소요되고 있었고, SQL 실행 계획과 JOIN 구조를 확인해 불필요한 조회를 줄이고 검색 조건에 맞는 인덱스를 적용했습니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-problem">문제해결</i><i class="sample-tag tag-skill">직무역량</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> “검색해서 해결했다”가 아니라 분석 근거와 기술적 조치를 보여줍니다.</p></div>
+            <div class="sample-sentence"><p class="sample-copy">이후 같은 데이터로 응답 시간을 다시 비교하며 개선 여부를 확인했습니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-result">근거·결과</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> 해결했다고 주장하는 데서 끝내지 않고 동일 조건으로 검증했다는 점을 보여줍니다.</p></div>
           </div>
           <p class="sample-formula"><strong>작성 구조</strong> 문제 발생 → 측정·로그 확인 → 원인 분석 → 기술적 조치 → 결과 검증</p>
         </details>
@@ -392,35 +389,35 @@
         <details class="sample-item">
           <summary><strong>입사 후 포부</strong><small>초기 적응 → 역량 확장 → 장기 역할</small></summary>
           <div class="sentence-stack">
-            <details class="sample-sentence"><summary><span>입사 초기에는 서비스 구조와 모니터링 솔루션이 서버·네트워크·DB 데이터를 어떻게 수집하고 처리하는지 정확하게 이해하겠습니다.</span><span class="sentence-tags"><i class="sample-tag tag-job">채용공고 반영</i><i class="sample-tag tag-plan">입사 후 계획</i></span></summary><p><b>왜 이 문장을 썼나요?</b> 신입이 먼저 해야 할 실제 업무 이해를 공고의 업무 내용과 연결합니다.</p></details>
-            <details class="sample-sentence"><summary><span>이후 Java와 Spring 기반 개발 역량과 SQL·데이터베이스 성능, Linux·네트워크 이해를 함께 넓히겠습니다.</span><span class="sentence-tags"><i class="sample-tag tag-plan">입사 후 계획</i><i class="sample-tag tag-skill">직무역량</i></span></summary><p><b>왜 이 문장을 썼나요?</b> 현재 역량에서 다음 단계로 무엇을 학습할지 구체적으로 제시합니다.</p></details>
-            <details class="sample-sentence"><summary><span>장기적으로는 기능 개발뿐 아니라 성능 저하와 장애 원인을 분석하고 안정적인 운영까지 고려할 수 있는 백엔드 개발자로 성장하겠습니다.</span><span class="sentence-tags"><i class="sample-tag tag-plan">입사 후 계획</i></span></summary><p><b>왜 이 문장을 썼나요?</b> 지원 직무 안에서 현실적인 장기 성장 방향을 제시합니다.</p></details>
+            <div class="sample-sentence"><p class="sample-copy">입사 초기에는 서비스 구조와 모니터링 솔루션이 서버·네트워크·DB 데이터를 어떻게 수집하고 처리하는지 정확하게 이해하겠습니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-job">채용공고 반영</i><i class="sample-tag tag-plan">입사 후 계획</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> 신입이 먼저 해야 할 실제 업무 이해를 공고의 업무 내용과 연결합니다.</p></div>
+            <div class="sample-sentence"><p class="sample-copy">이후 Java와 Spring 기반 개발 역량과 SQL·데이터베이스 성능, Linux·네트워크 이해를 함께 넓히겠습니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-plan">입사 후 계획</i><i class="sample-tag tag-skill">직무역량</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> 현재 역량에서 다음 단계로 무엇을 학습할지 구체적으로 제시합니다.</p></div>
+            <div class="sample-sentence"><p class="sample-copy">장기적으로는 기능 개발뿐 아니라 성능 저하와 장애 원인을 분석하고 안정적인 운영까지 고려할 수 있는 백엔드 개발자로 성장하겠습니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-plan">입사 후 계획</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> 지원 직무 안에서 현실적인 장기 성장 방향을 제시합니다.</p></div>
           </div>
           <p class="sample-formula"><strong>작성 구조</strong> 입사 초기 업무 이해 → 필요한 기술 확장 → 장기적으로 맡고 싶은 역할</p>
         </details>
-      </article>
+      <div class="my-experience-box"><h4>내 경험으로 바꿔보기</h4><p>샘플 문장을 복사하기보다 아래 다섯 가지를 먼저 자신의 경험으로 채우세요.</p><ol><li>내가 맡은 역할은 무엇이었는가?</li><li>어떤 문제나 요구사항이 있었는가?</li><li>원인을 어떻게 확인하고 무엇을 직접 했는가?</li><li>결과를 어떻게 확인했는가?</li><li>이 경험이 지원 직무와 어떻게 연결되는가?</li></ol></div></article>
 
-      <article id="role-system" class="role-sample-card" aria-labelledby="system-title">
+      <article id="role-system" class="role-sample-card" role="tabpanel" aria-labelledby="tab-system" tabindex="0">
         <header class="role-sample-header">
           <p class="role-number">ROLE 02</p>
           <h3 id="system-title">시스템엔지니어</h3>
           <p>서버·스토리지·인프라 운영 직무에 맞춰 시스템 상태 확인과 장애 대응, 재발 방지를 강조한 예시입니다.</p>
         </header>
         <div class="job-analysis">
-          <h4>채용공고에서 먼저 찾은 내용</h4>
+          <h4>채용공고 분석 → 내 경험 연결</h4>
           <ul>
-            <li><strong>직무 연결:</strong> 스토리지 및 기업 IT 인프라 구축·운영</li>
-            <li><strong>강조할 역량:</strong> Linux, 서버, 네트워크, 스토리지, 로그, 장애 대응</li>
-            <li><strong>선택할 경험:</strong> 서버 배포·운영, 시스템 상태 확인, 환경 분리, 장애 재현·기록</li>
+            <li><strong>공고에서 확인:</strong> 스토리지 및 기업 IT 인프라 구축·운영</li>
+            <li><strong>공고에서 읽을 핵심:</strong> Linux, 서버, 네트워크, 스토리지, 로그, 장애 대응</li>
+            <li><strong>자소서에서 연결:</strong> 서버 배포·운영, 시스템 상태 확인, 환경 분리, 장애 재현·기록</li>
           </ul>
         </div>
 
         <details class="sample-item" open>
           <summary><strong>지원동기</strong><small>인프라 업무와 서버 운영 경험을 연결합니다.</small></summary>
           <div class="sentence-stack">
-            <details class="sample-sentence"><summary><span>시스원이 기업의 서버, 네트워크, 스토리지 등 IT 인프라 구축과 운영을 담당한다는 점에 관심을 갖고 지원했습니다.</span><span class="sentence-tags"><i class="sample-tag tag-job">채용공고 반영</i></span></summary><p><b>왜 이 문장을 썼나요?</b> 기업의 실제 인프라 업무를 지원 이유로 명확하게 제시합니다.</p></details>
-            <details class="sample-sentence"><summary><span>학교 프로젝트에서 Linux 서버에 애플리케이션과 데이터베이스를 설치하고 배포하면서 개발환경과 실제 서버환경의 차이를 경험했습니다.</span><span class="sentence-tags"><i class="sample-tag tag-exp">본인 경험</i><i class="sample-tag tag-skill">직무역량</i></span></summary><p><b>왜 이 문장을 썼나요?</b> 시스템 직무와 연결되는 실제 서버 경험을 근거로 제시합니다.</p></details>
-            <details class="sample-sentence"><summary><span>이후 CPU·메모리·디스크·네트워크·프로세스 상태를 함께 확인하는 시스템 운영에 관심을 갖게 되었고, 이를 기업 인프라 환경에서 확장하고 싶습니다.</span><span class="sentence-tags"><i class="sample-tag tag-skill">직무역량</i><i class="sample-tag tag-plan">입사 후 계획</i></span></summary><p><b>왜 이 문장을 썼나요?</b> 단순 배포 경험이 시스템 운영 직무 관심으로 이어진 과정을 보여줍니다.</p></details>
+            <div class="sample-sentence"><p class="sample-copy">시스원이 기업의 서버, 네트워크, 스토리지 등 IT 인프라 구축과 운영을 담당한다는 점에 관심을 갖고 지원했습니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-job">채용공고 반영</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> 기업의 실제 인프라 업무를 지원 이유로 명확하게 제시합니다.</p></div>
+            <div class="sample-sentence"><p class="sample-copy">학교 프로젝트에서 Linux 서버에 애플리케이션과 데이터베이스를 설치하고 배포하면서 개발환경과 실제 서버환경의 차이를 경험했습니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-exp">본인 경험</i><i class="sample-tag tag-skill">직무역량</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> 시스템 직무와 연결되는 실제 서버 경험을 근거로 제시합니다.</p></div>
+            <div class="sample-sentence"><p class="sample-copy">이후 CPU·메모리·디스크·네트워크·프로세스 상태를 함께 확인하는 시스템 운영에 관심을 갖게 되었고, 이를 기업 인프라 환경에서 확장하고 싶습니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-skill">직무역량</i><i class="sample-tag tag-plan">입사 후 계획</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> 단순 배포 경험이 시스템 운영 직무 관심으로 이어진 과정을 보여줍니다.</p></div>
           </div>
           <p class="sample-formula"><strong>작성 구조</strong> 기업 인프라 업무 → 내 서버 운영 경험 → 시스템 직무 관심으로 연결</p>
         </details>
@@ -428,9 +425,9 @@
         <details class="sample-item">
           <summary><strong>직무역량</strong><small>제품명보다 시스템 기본기를 보여줍니다.</small></summary>
           <div class="sentence-stack">
-            <details class="sample-sentence"><summary><span>Linux 환경에서 웹 애플리케이션과 데이터베이스를 설치하고 서비스 상태를 확인하는 경험을 했습니다.</span><span class="sentence-tags"><i class="sample-tag tag-exp">본인 경험</i><i class="sample-tag tag-skill">직무역량</i></span></summary><p><b>왜 이 문장을 썼나요?</b> 시스템엔지니어가 다루는 환경에서 실제 작업한 경험을 먼저 제시합니다.</p></details>
-            <details class="sample-sentence"><summary><span>프로세스, 포트, CPU·메모리 사용량, 디스크 용량과 로그를 확인하며 문제가 애플리케이션인지 시스템 환경인지 구분하는 연습을 했습니다.</span><span class="sentence-tags"><i class="sample-tag tag-skill">직무역량</i><i class="sample-tag tag-problem">문제해결</i></span></summary><p><b>왜 이 문장을 썼나요?</b> 단순 명령어 사용이 아니라 상태 확인과 원인 분리 능력을 보여줍니다.</p></details>
-            <details class="sample-sentence"><summary><span>Docker로 실행 환경을 구성하고 개발환경과 서버환경의 설정값을 분리해 관리하면서 운영환경의 차이를 이해했습니다.</span><span class="sentence-tags"><i class="sample-tag tag-skill">직무역량</i><i class="sample-tag tag-result">근거·결과</i></span></summary><p><b>왜 이 문장을 썼나요?</b> 환경 관리 경험을 통해 운영 관점의 기본기를 보여줍니다.</p></details>
+            <div class="sample-sentence"><p class="sample-copy">Linux 환경에서 웹 애플리케이션과 데이터베이스를 설치하고 서비스 상태를 확인하는 경험을 했습니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-exp">본인 경험</i><i class="sample-tag tag-skill">직무역량</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> 시스템엔지니어가 다루는 환경에서 실제 작업한 경험을 먼저 제시합니다.</p></div>
+            <div class="sample-sentence"><p class="sample-copy">프로세스, 포트, CPU·메모리 사용량, 디스크 용량과 로그를 확인하며 문제가 애플리케이션인지 시스템 환경인지 구분하는 연습을 했습니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-skill">직무역량</i><i class="sample-tag tag-problem">문제해결</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> 단순 명령어 사용이 아니라 상태 확인과 원인 분리 능력을 보여줍니다.</p></div>
+            <div class="sample-sentence"><p class="sample-copy">Docker로 실행 환경을 구성하고 개발환경과 서버환경의 설정값을 분리해 관리하면서 운영환경의 차이를 이해했습니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-skill">직무역량</i><i class="sample-tag tag-result">근거·결과</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> 환경 관리 경험을 통해 운영 관점의 기본기를 보여줍니다.</p></div>
           </div>
           <p class="sample-formula"><strong>작성 구조</strong> 운영환경 경험 → 상태 확인 방법 → 환경 관리 경험 → 직무 기본기로 연결</p>
         </details>
@@ -438,8 +435,8 @@
         <details class="sample-item">
           <summary><strong>성격의 장단점</strong><small>운영 직무에 필요한 기록·확인 습관을 보여줍니다.</small></summary>
           <div class="sentence-stack">
-            <details class="sample-sentence"><summary><span>서버 설정이나 배포 작업을 시작하기 전에 변경할 항목과 기존 설정값을 먼저 기록하는 편입니다.</span><span class="sentence-tags"><i class="sample-tag tag-exp">본인 경험</i><i class="sample-tag tag-skill">직무역량</i></span></summary><p><b>왜 이 문장을 썼나요?</b> “꼼꼼하다”라는 추상적 표현을 운영 업무에서 실제로 보이는 행동으로 설명합니다.</p></details>
-            <details class="sample-sentence"><summary><span>처음에는 사소한 작업까지 지나치게 자세히 기록해 시간이 오래 걸리기도 했지만, 현재는 서비스 중단 가능성이 있는 변경과 반복 작업을 중심으로 기록 수준을 구분하고 있습니다.</span><span class="sentence-tags"><i class="sample-tag tag-problem">문제해결</i><i class="sample-tag tag-result">근거·결과</i></span></summary><p><b>왜 이 문장을 썼나요?</b> 장점을 과장하지 않고 실제 보완점과 개선된 업무 방식을 함께 보여줍니다.</p></details>
+            <div class="sample-sentence"><p class="sample-copy">서버 설정이나 배포 작업을 시작하기 전에 변경할 항목과 기존 설정값을 먼저 기록하는 편입니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-exp">본인 경험</i><i class="sample-tag tag-skill">직무역량</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> “꼼꼼하다”라는 추상적 표현을 운영 업무에서 실제로 보이는 행동으로 설명합니다.</p></div>
+            <div class="sample-sentence"><p class="sample-copy">처음에는 사소한 작업까지 지나치게 자세히 기록해 시간이 오래 걸리기도 했지만, 현재는 서비스 중단 가능성이 있는 변경과 반복 작업을 중심으로 기록 수준을 구분하고 있습니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-problem">문제해결</i><i class="sample-tag tag-result">근거·결과</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> 장점을 과장하지 않고 실제 보완점과 개선된 업무 방식을 함께 보여줍니다.</p></div>
           </div>
           <p class="sample-formula"><strong>작성 구조</strong> 업무 습관 → 효율 문제 → 기준을 만들어 개선 → 현재 방식</p>
         </details>
@@ -447,9 +444,9 @@
         <details class="sample-item">
           <summary><strong>문제해결</strong><small>재시작으로 끝내지 않고 장애 원인을 추적합니다.</small></summary>
           <div class="sentence-stack">
-            <details class="sample-sentence"><summary><span>프로젝트 서버에서 애플리케이션이 간헐적으로 정상 동작하지 않는 문제가 발생했습니다.</span><span class="sentence-tags"><i class="sample-tag tag-problem">문제해결</i></span></summary><p><b>왜 이 문장을 썼나요?</b> 운영 상황에서 발생한 실제 문제를 구체적으로 제시합니다.</p></details>
-            <details class="sample-sentence"><summary><span>재시작으로 일시 복구됐지만 같은 문제가 반복돼 애플리케이션 로그와 CPU·메모리 사용량, 프로세스 상태를 함께 확인했습니다.</span><span class="sentence-tags"><i class="sample-tag tag-problem">문제해결</i><i class="sample-tag tag-skill">직무역량</i></span></summary><p><b>왜 이 문장을 썼나요?</b> 단순 복구보다 원인 분석을 위해 시스템 상태를 확인했다는 점을 보여줍니다.</p></details>
-            <details class="sample-sentence"><summary><span>특정 작업 이후 메모리 사용량이 계속 증가하는 조건을 확인해 발생 조건과 로그를 개발 담당자와 공유하고 재현했습니다.</span><span class="sentence-tags"><i class="sample-tag tag-result">근거·결과</i><i class="sample-tag tag-problem">문제해결</i></span></summary><p><b>왜 이 문장을 썼나요?</b> 시스템엔지니어가 다른 담당자와 협업할 수 있도록 재현 가능한 정보를 제공한 점을 보여줍니다.</p></details>
+            <div class="sample-sentence"><p class="sample-copy">프로젝트 서버에서 애플리케이션이 간헐적으로 정상 동작하지 않는 문제가 발생했습니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-problem">문제해결</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> 운영 상황에서 발생한 실제 문제를 구체적으로 제시합니다.</p></div>
+            <div class="sample-sentence"><p class="sample-copy">재시작으로 일시 복구됐지만 같은 문제가 반복돼 애플리케이션 로그와 CPU·메모리 사용량, 프로세스 상태를 함께 확인했습니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-problem">문제해결</i><i class="sample-tag tag-skill">직무역량</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> 단순 복구보다 원인 분석을 위해 시스템 상태를 확인했다는 점을 보여줍니다.</p></div>
+            <div class="sample-sentence"><p class="sample-copy">특정 작업 이후 메모리 사용량이 계속 증가하는 조건을 확인해 발생 조건과 로그를 개발 담당자와 공유하고 재현했습니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-result">근거·결과</i><i class="sample-tag tag-problem">문제해결</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> 시스템엔지니어가 다른 담당자와 협업할 수 있도록 재현 가능한 정보를 제공한 점을 보여줍니다.</p></div>
           </div>
           <p class="sample-formula"><strong>작성 구조</strong> 장애 발생 → 임시 복구의 한계 확인 → 시스템 지표 확인 → 재현 조건 정리 → 협업</p>
         </details>
@@ -457,35 +454,35 @@
         <details class="sample-item">
           <summary><strong>입사 후 포부</strong><small>기본기 → 제품·환경 이해 → 안정적 운영</small></summary>
           <div class="sentence-stack">
-            <details class="sample-sentence"><summary><span>입사 후에는 먼저 서버, 네트워크, 스토리지와 운영체제의 기본기를 실제 업무와 연결해 익히겠습니다.</span><span class="sentence-tags"><i class="sample-tag tag-plan">입사 후 계획</i><i class="sample-tag tag-job">채용공고 반영</i></span></summary><p><b>왜 이 문장을 썼나요?</b> 시스템 직무의 기초 영역을 공고와 직접 연결합니다.</p></details>
-            <details class="sample-sentence"><summary><span>특히 회사가 다루는 스토리지와 기업 인프라 환경을 이해하고 장애 발생 시 로그와 시스템 상태를 근거로 원인을 판단하는 능력을 키우겠습니다.</span><span class="sentence-tags"><i class="sample-tag tag-job">채용공고 반영</i><i class="sample-tag tag-plan">입사 후 계획</i></span></summary><p><b>왜 이 문장을 썼나요?</b> 회사에서 실제 다루는 인프라 영역을 학습 계획에 반영합니다.</p></details>
-            <details class="sample-sentence"><summary><span>장기적으로는 반복 운영 작업을 자동화하고 모니터링 체계를 활용해 장애를 사전에 발견할 수 있는 시스템엔지니어로 성장하겠습니다.</span><span class="sentence-tags"><i class="sample-tag tag-plan">입사 후 계획</i></span></summary><p><b>왜 이 문장을 썼나요?</b> 단순 운영 인력보다 예방과 자동화까지 확장되는 성장 방향을 보여줍니다.</p></details>
+            <div class="sample-sentence"><p class="sample-copy">입사 후에는 먼저 서버, 네트워크, 스토리지와 운영체제의 기본기를 실제 업무와 연결해 익히겠습니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-plan">입사 후 계획</i><i class="sample-tag tag-job">채용공고 반영</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> 시스템 직무의 기초 영역을 공고와 직접 연결합니다.</p></div>
+            <div class="sample-sentence"><p class="sample-copy">특히 회사가 다루는 스토리지와 기업 인프라 환경을 이해하고 장애 발생 시 로그와 시스템 상태를 근거로 원인을 판단하는 능력을 키우겠습니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-job">채용공고 반영</i><i class="sample-tag tag-plan">입사 후 계획</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> 회사에서 실제 다루는 인프라 영역을 학습 계획에 반영합니다.</p></div>
+            <div class="sample-sentence"><p class="sample-copy">장기적으로는 반복 운영 작업을 자동화하고 모니터링 체계를 활용해 장애를 사전에 발견할 수 있는 시스템엔지니어로 성장하겠습니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-plan">입사 후 계획</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> 단순 운영 인력보다 예방과 자동화까지 확장되는 성장 방향을 보여줍니다.</p></div>
           </div>
           <p class="sample-formula"><strong>작성 구조</strong> 기본기 확보 → 회사 환경 이해 → 장애 판단 역량 → 자동화·예방으로 확장</p>
         </details>
-      </article>
+      <div class="my-experience-box"><h4>내 경험으로 바꿔보기</h4><p>샘플 문장을 복사하기보다 아래 다섯 가지를 먼저 자신의 경험으로 채우세요.</p><ol><li>내가 맡은 역할은 무엇이었는가?</li><li>어떤 문제나 요구사항이 있었는가?</li><li>원인을 어떻게 확인하고 무엇을 직접 했는가?</li><li>결과를 어떻게 확인했는가?</li><li>이 경험이 지원 직무와 어떻게 연결되는가?</li></ol></div></article>
 
-      <article id="role-qa" class="role-sample-card" aria-labelledby="qa-title">
+      <article id="role-qa" class="role-sample-card" role="tabpanel" aria-labelledby="tab-qa" tabindex="0">
         <header class="role-sample-header">
           <p class="role-number">ROLE 03</p>
           <h3 id="qa-title">QA 엔지니어</h3>
           <p>품질관리 직무에 맞춰 테스트 설계, 재현 가능한 결함 정보, 수정 후 재검증을 강조한 예시입니다.</p>
         </header>
         <div class="job-analysis">
-          <h4>채용공고에서 먼저 찾은 내용</h4>
+          <h4>채용공고 분석 → 내 경험 연결</h4>
           <ul>
-            <li><strong>직무 연결:</strong> 솔루션 품질관리 및 안정적인 제품 제공</li>
-            <li><strong>강조할 역량:</strong> 테스트 설계, 예외 조건, 결함 재현, 개발자와의 협업, 재검증</li>
-            <li><strong>선택할 경험:</strong> 기능 테스트, 테스트케이스 작성, 오류 재현, API·DB 기본 이해</li>
+            <li><strong>공고에서 확인:</strong> 솔루션 품질관리 및 안정적인 제품 제공</li>
+            <li><strong>공고에서 읽을 핵심:</strong> 테스트 설계, 예외 조건, 결함 재현, 개발자와의 협업, 재검증</li>
+            <li><strong>자소서에서 연결:</strong> 기능 테스트, 테스트케이스 작성, 오류 재현, API·DB 기본 이해</li>
           </ul>
         </div>
 
         <details class="sample-item" open>
           <summary><strong>지원동기</strong><small>제품 품질과 실제 테스트 경험을 연결합니다.</small></summary>
           <div class="sentence-stack">
-            <details class="sample-sentence"><summary><span>다양한 IT 솔루션을 제공하는 환경에서는 기능 구현뿐 아니라 여러 조건에서 안정적으로 동작하는지를 검증하는 과정이 중요하다고 생각합니다.</span><span class="sentence-tags"><i class="sample-tag tag-job">채용공고 반영</i></span></summary><p><b>왜 이 문장을 썼나요?</b> QA 직무가 기업의 제품과 서비스에 왜 필요한지부터 연결합니다.</p></details>
-            <details class="sample-sentence"><summary><span>팀 프로젝트에서 기능 개발 후 정상 동작만 확인했을 때는 특정 입력과 사용 순서에서 오류가 반복됐고, 이후 정상·예외 조건을 나눠 테스트하는 경험을 했습니다.</span><span class="sentence-tags"><i class="sample-tag tag-exp">본인 경험</i><i class="sample-tag tag-problem">문제해결</i></span></summary><p><b>왜 이 문장을 썼나요?</b> QA 관심이 실제 프로젝트 문제에서 시작됐다는 근거를 제시합니다.</p></details>
-            <details class="sample-sentence"><summary><span>이 경험을 바탕으로 제품의 안정성과 완성도를 높이는 QA 업무를 수행하고 싶어 지원했습니다.</span><span class="sentence-tags"><i class="sample-tag tag-plan">입사 후 계획</i><i class="sample-tag tag-job">채용공고 반영</i></span></summary><p><b>왜 이 문장을 썼나요?</b> 본인의 경험과 지원 직무를 직접 연결해 지원동기를 마무리합니다.</p></details>
+            <div class="sample-sentence"><p class="sample-copy">다양한 IT 솔루션을 제공하는 환경에서는 기능 구현뿐 아니라 여러 조건에서 안정적으로 동작하는지를 검증하는 과정이 중요하다고 생각합니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-job">채용공고 반영</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> QA 직무가 기업의 제품과 서비스에 왜 필요한지부터 연결합니다.</p></div>
+            <div class="sample-sentence"><p class="sample-copy">팀 프로젝트에서 기능 개발 후 정상 동작만 확인했을 때는 특정 입력과 사용 순서에서 오류가 반복됐고, 이후 정상·예외 조건을 나눠 테스트하는 경험을 했습니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-exp">본인 경험</i><i class="sample-tag tag-problem">문제해결</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> QA 관심이 실제 프로젝트 문제에서 시작됐다는 근거를 제시합니다.</p></div>
+            <div class="sample-sentence"><p class="sample-copy">이 경험을 바탕으로 제품의 안정성과 완성도를 높이는 QA 업무를 수행하고 싶어 지원했습니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-plan">입사 후 계획</i><i class="sample-tag tag-job">채용공고 반영</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> 본인의 경험과 지원 직무를 직접 연결해 지원동기를 마무리합니다.</p></div>
           </div>
           <p class="sample-formula"><strong>작성 구조</strong> 품질의 중요성 → 테스트 경험 → QA 직무 지원 이유</p>
         </details>
@@ -493,9 +490,9 @@
         <details class="sample-item">
           <summary><strong>직무역량</strong><small>테스트 기준과 재현 가능한 정보를 보여줍니다.</small></summary>
           <div class="sentence-stack">
-            <details class="sample-sentence"><summary><span>팀 프로젝트에서 기능별 테스트 항목을 작성하고 정상 조건과 예외 조건을 구분해 테스트했습니다.</span><span class="sentence-tags"><i class="sample-tag tag-exp">본인 경험</i><i class="sample-tag tag-skill">직무역량</i></span></summary><p><b>왜 이 문장을 썼나요?</b> 단순히 “테스트했다”가 아니라 테스트 기준을 만들었다는 점을 보여줍니다.</p></details>
-            <details class="sample-sentence"><summary><span>로그인 기능에서는 잘못된 비밀번호, 권한이 없는 사용자, 토큰 만료를 확인했고 입력 기능에서는 빈 값, 최대 길이, 잘못된 형식과 중복 요청을 테스트했습니다.</span><span class="sentence-tags"><i class="sample-tag tag-skill">직무역량</i><i class="sample-tag tag-result">근거·결과</i></span></summary><p><b>왜 이 문장을 썼나요?</b> 구체적인 테스트 조건을 제시해 실제 QA 수준을 판단할 근거를 만듭니다.</p></details>
-            <details class="sample-sentence"><summary><span>오류 발견 시 발생 환경, 재현 절차, 입력값, 예상 결과와 실제 결과를 정리해 개발 담당자에게 전달했습니다.</span><span class="sentence-tags"><i class="sample-tag tag-skill">직무역량</i><i class="sample-tag tag-problem">문제해결</i></span></summary><p><b>왜 이 문장을 썼나요?</b> QA에게 중요한 재현 가능성과 개발자 협업 역량을 보여줍니다.</p></details>
+            <div class="sample-sentence"><p class="sample-copy">팀 프로젝트에서 기능별 테스트 항목을 작성하고 정상 조건과 예외 조건을 구분해 테스트했습니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-exp">본인 경험</i><i class="sample-tag tag-skill">직무역량</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> 단순히 “테스트했다”가 아니라 테스트 기준을 만들었다는 점을 보여줍니다.</p></div>
+            <div class="sample-sentence"><p class="sample-copy">로그인 기능에서는 잘못된 비밀번호, 권한이 없는 사용자, 토큰 만료를 확인했고 입력 기능에서는 빈 값, 최대 길이, 잘못된 형식과 중복 요청을 테스트했습니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-skill">직무역량</i><i class="sample-tag tag-result">근거·결과</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> 구체적인 테스트 조건을 제시해 실제 QA 수준을 판단할 근거를 만듭니다.</p></div>
+            <div class="sample-sentence"><p class="sample-copy">오류 발견 시 발생 환경, 재현 절차, 입력값, 예상 결과와 실제 결과를 정리해 개발 담당자에게 전달했습니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-skill">직무역량</i><i class="sample-tag tag-problem">문제해결</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> QA에게 중요한 재현 가능성과 개발자 협업 역량을 보여줍니다.</p></div>
           </div>
           <p class="sample-formula"><strong>작성 구조</strong> 테스트 기준 → 구체적 케이스 → 결함 기록 → 개발자에게 재현 가능한 정보 전달</p>
         </details>
@@ -503,8 +500,8 @@
         <details class="sample-item">
           <summary><strong>성격의 장단점</strong><small>관찰력과 우선순위 조정 능력을 연결합니다.</small></summary>
           <div class="sentence-stack">
-            <details class="sample-sentence"><summary><span>예상 결과와 실제 결과가 조금이라도 다르면 어떤 조건에서 차이가 생겼는지 확인하는 편입니다.</span><span class="sentence-tags"><i class="sample-tag tag-skill">직무역량</i><i class="sample-tag tag-exp">본인 경험</i></span></summary><p><b>왜 이 문장을 썼나요?</b> “꼼꼼하다” 대신 QA 업무에 직접 연결되는 행동으로 장점을 설명합니다.</p></details>
-            <details class="sample-sentence"><summary><span>처음에는 모든 경우를 확인하려다 테스트 범위가 지나치게 넓어지는 경우가 있었지만, 현재는 핵심 기능과 장애 영향도, 사용 빈도를 기준으로 우선순위를 정해 테스트하고 있습니다.</span><span class="sentence-tags"><i class="sample-tag tag-problem">문제해결</i><i class="sample-tag tag-result">근거·결과</i></span></summary><p><b>왜 이 문장을 썼나요?</b> 단점을 부정적으로 규정하지 않고 실제 개선 기준을 만들어 적용한 모습을 보여줍니다.</p></details>
+            <div class="sample-sentence"><p class="sample-copy">예상 결과와 실제 결과가 조금이라도 다르면 어떤 조건에서 차이가 생겼는지 확인하는 편입니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-skill">직무역량</i><i class="sample-tag tag-exp">본인 경험</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> “꼼꼼하다” 대신 QA 업무에 직접 연결되는 행동으로 장점을 설명합니다.</p></div>
+            <div class="sample-sentence"><p class="sample-copy">처음에는 모든 경우를 확인하려다 테스트 범위가 지나치게 넓어지는 경우가 있었지만, 현재는 핵심 기능과 장애 영향도, 사용 빈도를 기준으로 우선순위를 정해 테스트하고 있습니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-problem">문제해결</i><i class="sample-tag tag-result">근거·결과</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> 단점을 부정적으로 규정하지 않고 실제 개선 기준을 만들어 적용한 모습을 보여줍니다.</p></div>
           </div>
           <p class="sample-formula"><strong>작성 구조</strong> QA에 도움이 되는 성향 → 과도하게 적용됐던 문제 → 우선순위 기준 → 현재 방식</p>
         </details>
@@ -512,9 +509,9 @@
         <details class="sample-item">
           <summary><strong>문제해결</strong><small>오류 발견보다 재현 조건을 찾는 과정이 중요합니다.</small></summary>
           <div class="sentence-stack">
-            <details class="sample-sentence"><summary><span>회원정보 수정 기능은 일반적인 경우에는 정상 동작했지만 특정 순서로 기능을 사용할 때 기존 정보가 사라지는 문제가 발생했습니다.</span><span class="sentence-tags"><i class="sample-tag tag-problem">문제해결</i></span></summary><p><b>왜 이 문장을 썼나요?</b> QA에서 중요한 “특정 조건에서만 발생하는 오류” 상황을 제시합니다.</p></details>
-            <details class="sample-sentence"><summary><span>여러 조건을 반복 테스트해 일부 필드를 수정하지 않은 상태에서 요청하면 해당 값이 null로 전달되는 상황에서 문제가 재현된다는 것을 확인했습니다.</span><span class="sentence-tags"><i class="sample-tag tag-problem">문제해결</i><i class="sample-tag tag-result">근거·결과</i></span></summary><p><b>왜 이 문장을 썼나요?</b> 오류를 발견했다는 사실보다 재현 조건을 좁혀가는 과정을 보여줍니다.</p></details>
-            <details class="sample-sentence"><summary><span>재현 절차와 요청 데이터를 백엔드 담당자에게 전달했고, 수정 후 같은 조건과 유사 기능을 다시 테스트했습니다.</span><span class="sentence-tags"><i class="sample-tag tag-skill">직무역량</i><i class="sample-tag tag-result">근거·결과</i></span></summary><p><b>왜 이 문장을 썼나요?</b> 결함 전달과 수정 후 회귀 확인까지 QA의 실제 업무 흐름을 보여줍니다.</p></details>
+            <div class="sample-sentence"><p class="sample-copy">회원정보 수정 기능은 일반적인 경우에는 정상 동작했지만 특정 순서로 기능을 사용할 때 기존 정보가 사라지는 문제가 발생했습니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-problem">문제해결</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> QA에서 중요한 “특정 조건에서만 발생하는 오류” 상황을 제시합니다.</p></div>
+            <div class="sample-sentence"><p class="sample-copy">여러 조건을 반복 테스트해 일부 필드를 수정하지 않은 상태에서 요청하면 해당 값이 null로 전달되는 상황에서 문제가 재현된다는 것을 확인했습니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-problem">문제해결</i><i class="sample-tag tag-result">근거·결과</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> 오류를 발견했다는 사실보다 재현 조건을 좁혀가는 과정을 보여줍니다.</p></div>
+            <div class="sample-sentence"><p class="sample-copy">재현 절차와 요청 데이터를 백엔드 담당자에게 전달했고, 수정 후 같은 조건과 유사 기능을 다시 테스트했습니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-skill">직무역량</i><i class="sample-tag tag-result">근거·결과</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> 결함 전달과 수정 후 회귀 확인까지 QA의 실제 업무 흐름을 보여줍니다.</p></div>
           </div>
           <p class="sample-formula"><strong>작성 구조</strong> 특이 조건의 오류 → 재현 조건 탐색 → 결함 정보 전달 → 수정 후 재검증</p>
         </details>
@@ -522,13 +519,13 @@
         <details class="sample-item">
           <summary><strong>입사 후 포부</strong><small>제품 이해 → 기술 이해 → 자동화·품질관리로 확장합니다.</small></summary>
           <div class="sentence-stack">
-            <details class="sample-sentence"><summary><span>입사 초기에는 제품의 기능과 업무 흐름을 정확히 이해하고 요구사항을 기준으로 테스트 항목을 설계할 수 있는 QA 엔지니어가 되겠습니다.</span><span class="sentence-tags"><i class="sample-tag tag-plan">입사 후 계획</i><i class="sample-tag tag-job">채용공고 반영</i></span></summary><p><b>왜 이 문장을 썼나요?</b> 신입 QA가 가장 먼저 해야 할 제품·요구사항 이해를 현실적으로 제시합니다.</p></details>
-            <details class="sample-sentence"><summary><span>이후 서버, 네트워크, 데이터베이스와 API에 대한 기술 이해를 높여 화면에서 나타나는 현상뿐 아니라 오류 원인까지 추적할 수 있는 역량을 갖추겠습니다.</span><span class="sentence-tags"><i class="sample-tag tag-plan">입사 후 계획</i><i class="sample-tag tag-skill">직무역량</i></span></summary><p><b>왜 이 문장을 썼나요?</b> QA가 개발·인프라 기술을 이해하면 더 정확한 결함 분석이 가능하다는 성장 방향을 보여줍니다.</p></details>
-            <details class="sample-sentence"><summary><span>장기적으로는 반복 테스트의 자동화와 품질 지표 관리까지 경험하며 개발팀과 함께 제품 품질을 높이는 QA 엔지니어로 성장하겠습니다.</span><span class="sentence-tags"><i class="sample-tag tag-plan">입사 후 계획</i></span></summary><p><b>왜 이 문장을 썼나요?</b> 수동 테스트에서 자동화와 품질관리까지 이어지는 장기 성장 방향을 제시합니다.</p></details>
+            <div class="sample-sentence"><p class="sample-copy">입사 초기에는 제품의 기능과 업무 흐름을 정확히 이해하고 요구사항을 기준으로 테스트 항목을 설계할 수 있는 QA 엔지니어가 되겠습니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-plan">입사 후 계획</i><i class="sample-tag tag-job">채용공고 반영</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> 신입 QA가 가장 먼저 해야 할 제품·요구사항 이해를 현실적으로 제시합니다.</p></div>
+            <div class="sample-sentence"><p class="sample-copy">이후 서버, 네트워크, 데이터베이스와 API에 대한 기술 이해를 높여 화면에서 나타나는 현상뿐 아니라 오류 원인까지 추적할 수 있는 역량을 갖추겠습니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-plan">입사 후 계획</i><i class="sample-tag tag-skill">직무역량</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> QA가 개발·인프라 기술을 이해하면 더 정확한 결함 분석이 가능하다는 성장 방향을 보여줍니다.</p></div>
+            <div class="sample-sentence"><p class="sample-copy">장기적으로는 반복 테스트의 자동화와 품질 지표 관리까지 경험하며 개발팀과 함께 제품 품질을 높이는 QA 엔지니어로 성장하겠습니다.</p><div class="sentence-tags" aria-label="문장 역할"><i class="sample-tag tag-plan">입사 후 계획</i></div><p class="sentence-why"><b>왜 이 문장을 썼나요?</b> 수동 테스트에서 자동화와 품질관리까지 이어지는 장기 성장 방향을 제시합니다.</p></div>
           </div>
           <p class="sample-formula"><strong>작성 구조</strong> 제품·요구사항 이해 → 기술적 결함 분석 → 자동화·품질 지표로 확장</p>
         </details>
-      </article>
+      <div class="my-experience-box"><h4>내 경험으로 바꿔보기</h4><p>샘플 문장을 복사하기보다 아래 다섯 가지를 먼저 자신의 경험으로 채우세요.</p><ol><li>내가 맡은 역할은 무엇이었는가?</li><li>어떤 문제나 요구사항이 있었는가?</li><li>원인을 어떻게 확인하고 무엇을 직접 했는가?</li><li>결과를 어떻게 확인했는가?</li><li>이 경험이 지원 직무와 어떻게 연결되는가?</li></ol></div></article>
     </section>
 
     <section id="prompts" class="resume-section" aria-labelledby="prompts-title">
@@ -538,12 +535,10 @@
         <p>빈칸을 실제 경험으로 채운 뒤 사용하세요. AI에게 없는 경험을 만들게 하지 말고, 초안은 반드시 본인이 다시 읽고 수정해야 합니다.</p>
       </div>
       <aside class="ai-rule"><strong>AI 사용 원칙</strong><p>AI는 경험을 대신 만들어주는 도구가 아니라, 내가 가진 경험을 정리하고 문장을 검토하는 도구로 사용합니다.</p></aside>
-      <aside class="fit-prompt-rule"><strong>AI에게 요청하기 전에</strong><p>기업명만 입력하지 말고 <b>지원 직무와 채용공고 내용</b>을 함께 입력하세요. 채용공고에 나온 역할·필요 역량과 관련된 실제 경험을 중심으로 작성하도록 요청해야 합니다.</p></aside>
+      <aside class="fit-prompt-rule"><strong>AI에게 요청하기 전에</strong><p>기업명만 입력하지 말고 <b>지원 직무와 채용공고의 주요 내용 또는 원문</b>을 함께 입력하세요. URL만 주는 것보다 역할·필요 역량을 직접 제공하는 편이 정확합니다. 정보가 부족하면 사실을 추측하지 말고 먼저 필요한 정보를 질문하도록 요청하세요.</p></aside>
 
       <div class="prompt-list">
-        <article class="prompt-card">
-          <div class="prompt-head"><div><span>01</span><h3>경험 정리하기</h3></div><button type="button" class="copy-prompt" data-copy-target="prompt-experience">프롬프트 복사</button></div>
-          <pre id="prompt-experience"><code>나는 신입 IT 직무 취업을 준비하고 있다.
+        <details class="prompt-card"><summary class="prompt-summary"><span class="prompt-number">01</span><strong>경험 정리하기</strong><span class="prompt-open-label" aria-hidden="true">열기</span></summary><div class="prompt-body"><button type="button" class="copy-prompt" data-copy-target="prompt-experience">프롬프트 복사</button><pre id="prompt-experience"><code>나는 신입 IT 직무 취업을 준비하고 있다.
 
 지원 직무:
 [직무명]
@@ -577,12 +572,9 @@
 7. 지원 직무와 연결할 수 있는 부분
 
 내가 제공하지 않은 경험, 기술, 성과는 만들지 마.
-추상적인 표현보다 실제 행동을 중심으로 정리해줘.</code></pre>
-        </article>
+추상적인 표현보다 실제 행동을 중심으로 정리해줘.</code></pre></div></details>
 
-        <article class="prompt-card">
-          <div class="prompt-head"><div><span>02</span><h3>자기소개서 항목 초안 만들기</h3></div><button type="button" class="copy-prompt" data-copy-target="prompt-draft">프롬프트 복사</button></div>
-          <pre id="prompt-draft"><code>아래 정보를 바탕으로 신입 IT 직무 자기소개서 초안을 작성해줘.
+        <details class="prompt-card"><summary class="prompt-summary"><span class="prompt-number">02</span><strong>자기소개서 항목 초안 만들기</strong><span class="prompt-open-label" aria-hidden="true">열기</span></summary><div class="prompt-body"><button type="button" class="copy-prompt" data-copy-target="prompt-draft">프롬프트 복사</button><pre id="prompt-draft"><code>아래 정보를 바탕으로 신입 IT 직무 자기소개서 초안을 작성해줘.
 
 지원 기업:
 [기업명]
@@ -628,12 +620,9 @@
 - 팀 전체가 한 일과 내가 직접 한 일을 구분해줘.
 - 기술 이름만 나열하지 말고 어떤 상황에서 어떻게 사용했는지 설명해줘.
 - 지원 직무와 경험의 연결이 자연스럽게 나타나도록 작성해줘.
-- 과장된 문장과 광고 문구 같은 표현은 사용하지 마.</code></pre>
-        </article>
+- 과장된 문장과 광고 문구 같은 표현은 사용하지 마.</code></pre></div></details>
 
-        <article class="prompt-card">
-          <div class="prompt-head"><div><span>03</span><h3>기업 · 직무에 맞게 수정하기</h3></div><button type="button" class="copy-prompt" data-copy-target="prompt-fit">프롬프트 복사</button></div>
-          <pre id="prompt-fit"><code>아래 자기소개서를 지원 기업과 직무에 맞게 수정해줘.
+        <details class="prompt-card"><summary class="prompt-summary"><span class="prompt-number">03</span><strong>기업 · 직무에 맞게 수정하기</strong><span class="prompt-open-label" aria-hidden="true">열기</span></summary><div class="prompt-body"><button type="button" class="copy-prompt" data-copy-target="prompt-fit">프롬프트 복사</button><pre id="prompt-fit"><code>아래 자기소개서를 지원 기업과 직무에 맞게 수정해줘.
 
 기업명:
 [기업명]
@@ -657,12 +646,9 @@
 - 기업 홈페이지 문구를 그대로 복사하지 마.
 - 지원 직무와 관련성이 낮은 내용은 줄여줘.
 - 내가 하지 않은 경험이나 기술은 추가하지 마.
-- 지원자를 부정적으로 규정하는 표현은 사용하지 마.</code></pre>
-        </article>
+- 지원자를 부정적으로 규정하는 표현은 사용하지 마.</code></pre></div></details>
 
-        <article class="prompt-card">
-          <div class="prompt-head"><div><span>04</span><h3>부정적인 표현 찾고 고치기</h3></div><button type="button" class="copy-prompt" data-copy-target="prompt-negative">프롬프트 복사</button></div>
-          <pre id="prompt-negative"><code>아래 자기소개서에서 지원자 본인을 부정적으로 규정하거나 채용에 불리하게 보일 수 있는 표현을 찾아줘.
+        <details class="prompt-card"><summary class="prompt-summary"><span class="prompt-number">04</span><strong>부정적인 표현 찾고 고치기</strong><span class="prompt-open-label" aria-hidden="true">열기</span></summary><div class="prompt-body"><button type="button" class="copy-prompt" data-copy-target="prompt-negative">프롬프트 복사</button><pre id="prompt-negative"><code>아래 자기소개서에서 지원자 본인을 부정적으로 규정하거나 채용에 불리하게 보일 수 있는 표현을 찾아줘.
 
 [자기소개서 입력]
 
@@ -684,12 +670,9 @@
 순서로 보여줘.
 
 약점이나 실패를 숨기지는 말되, 지원자를 부정적으로 단정하지 말고 개선 행동과 변화된 결과가 드러나게 수정해줘.
-원문에 없는 경험이나 성과는 만들지 마.</code></pre>
-        </article>
+원문에 없는 경험이나 성과는 만들지 마.</code></pre></div></details>
 
-        <article class="prompt-card">
-          <div class="prompt-head"><div><span>05</span><h3>AI 티 나는 문장 점검하기</h3></div><button type="button" class="copy-prompt" data-copy-target="prompt-natural">프롬프트 복사</button></div>
-          <pre id="prompt-natural"><code>아래 자기소개서를 신입 IT 직무 지원자가 직접 작성한 것처럼 자연스럽게 다듬어줘.
+        <details class="prompt-card"><summary class="prompt-summary"><span class="prompt-number">05</span><strong>AI 티 나는 문장 점검하기</strong><span class="prompt-open-label" aria-hidden="true">열기</span></summary><div class="prompt-body"><button type="button" class="copy-prompt" data-copy-target="prompt-natural">프롬프트 복사</button><pre id="prompt-natural"><code>아래 자기소개서를 신입 IT 직무 지원자가 직접 작성한 것처럼 자연스럽게 다듬어줘.
 
 [자기소개서 입력]
 
@@ -703,12 +686,9 @@
 - 지나치게 완벽하게 보이는 문장
 
 구체적인 경험과 사실은 유지하고, 원문에 없는 새로운 경험은 추가하지 마.
-지원자를 부정적으로 규정하는 표현도 사용하지 마.</code></pre>
-        </article>
+지원자를 부정적으로 규정하는 표현도 사용하지 마.</code></pre></div></details>
 
-        <article class="prompt-card">
-          <div class="prompt-head"><div><span>06</span><h3>자기소개서 기반 면접 준비하기</h3></div><button type="button" class="copy-prompt" data-copy-target="prompt-interview">프롬프트 복사</button></div>
-          <pre id="prompt-interview"><code>아래 자기소개서를 기반으로 신입 IT 직무 면접에서 나올 가능성이 높은 질문을 만들어줘.
+        <details class="prompt-card"><summary class="prompt-summary"><span class="prompt-number">06</span><strong>자기소개서 기반 면접 준비하기</strong><span class="prompt-open-label" aria-hidden="true">열기</span></summary><div class="prompt-body"><button type="button" class="copy-prompt" data-copy-target="prompt-interview">프롬프트 복사</button><pre id="prompt-interview"><code>아래 자기소개서를 기반으로 신입 IT 직무 면접에서 나올 가능성이 높은 질문을 만들어줘.
 
 자기소개서:
 [자기소개서 입력]
@@ -726,9 +706,8 @@
 7. 꼬리 질문
 
 자기소개서에 적힌 기술은 실제로 사용해봤는지 확인할 수 있는 구체적인 질문을 만들어줘.
-각 질문에 어떤 내용을 준비해야 하는지도 한 줄로 알려줘.</code></pre>
-        </article>
-      </div>
+각 질문에 어떤 내용을 준비해야 하는지도 한 줄로 알려줘.</code></pre></div></details>
+      </div><p id="copy-status" class="sr-only" aria-live="polite"></p>
     </section>
 
     <section class="resume-final-check" aria-labelledby="final-check-title">
@@ -756,7 +735,7 @@
   </div>
   <div class="container footer-bottom"><p>학생용 학습·프로젝트·취업 통합 포털입니다.</p><p>© <span id="current-year"></span> K-BigData Service Portal</p></div>
 </footer>
-<script type="module" src="js/portal-shell-entry.js?v=20261006-resume-1"></script>
-<script src="js/resume.js?v=20261006-resume-1" defer></script>
+<script type="module" src="js/portal-shell-entry.js?v=20261006-resume-2"></script>
+<script src="js/resume.js?v=20261006-resume-2" defer></script>
 </body>
 </html>
