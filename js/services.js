@@ -182,6 +182,21 @@ export const services = [
     "featured": false
   },
   {
+    "id": "resume",
+    "name": "자기소개서 작성 가이드",
+    "englishName": "Cover Letter Guide",
+    "category": "career",
+    "shortDescription": "항목별 좋은·나쁜 예시와 AI 프롬프트로 자기소개서를 준비하세요.",
+    "description": "신입 IT 직무 자기소개서 작성 원칙, 항목별 좋은 예시·나쁜 예시, AI 프롬프트 템플릿을 제공합니다.",
+    "icon": "clipboard",
+    "order": 0.5,
+    "url": "resume.html",
+    "accent": "indigo",
+    "tags": ["자기소개서", "좋은 예시", "나쁜 예시", "AI 프롬프트"],
+    "aliases": "자소서 자기소개서 작성법 지원동기 성장과정 성격 장단점 직무역량 프로젝트 협업 입사 후 포부 AI 프롬프트",
+    "featured": false
+  },
+  {
     "id": "certifications",
     "name": "IT 자격증",
     "englishName": "IT Certifications",
@@ -242,6 +257,7 @@ export const studentJourney = [
   {id:"docs", title:"기술 학습", description:"공식 Reference와 실무 흐름 함께 읽기", companion:"tech-blog"},
   {id:"certifications", title:"자격증·실기 준비", description:"목표 직무에 맞는 자격과 실기 연습", companion:"practical"},
   {id:"project-guide", title:"프로젝트", description:"사용자 문제를 발견하고 구현·검증하기", companion:"portfolio"},
+  {id:"resume", title:"자기소개서", description:"내 경험을 직무와 연결해 설득력 있게 정리하기"},
   {id:"interview", title:"기술면접", description:"자신의 말로 설명하고 꼬리질문 연습하기"},
   {id:"ready", title:"취업 준비 점검", description:"GitHub·포트폴리오·이력서 확인하기"},
   {id:"apply", title:"입사지원", description:"실제 지원 기업과 진행 상황 관리하기"},
@@ -250,6 +266,7 @@ export const studentJourney = [
 export const quickActions = ["practical","interview","ready","apply"];
 export const portalNavLinks = [
   {id:"jobs",label:"직무",group:"career"},
+  {id:"resume",label:"자소서",group:"career"},
   {id:"ready",label:"취업준비",group:"career"},
   {id:"apply",label:"입사지원",group:"career"},
   {id:"alumni",label:"졸업생",group:"career"},
