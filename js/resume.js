@@ -65,7 +65,8 @@
         activateRole(roleTabs[next], true);
       });
     });
-    activateRole(roleTabs.find(tab => tab.getAttribute("aria-selected") === "true") || roleTabs[0]);
+    const hashTarget = location.hash && roleTabs.find(tab => "#" + tab.dataset.roleTarget === location.hash);
+    activateRole(hashTarget || roleTabs.find(tab => tab.getAttribute("aria-selected") === "true") || roleTabs[0]);
   }
 
   const modeButtons = [...document.querySelectorAll("[data-annotation-mode]")];
