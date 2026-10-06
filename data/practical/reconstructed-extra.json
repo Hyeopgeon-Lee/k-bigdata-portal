@@ -1732,7 +1732,7 @@
       "다형성"
     ],
     "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
-    "code": "public class Main {\n    static class Parent {\n        int calc(int n){ return n+2; }\n        static String tag(){ return \"P\"; }\n    }\n    static class Child extends Parent {\n        @Override int calc(int n){ return n+3; }\n        static String tag(){ return \"C\"; }\n    }\n    public static void main(String[] args) {\n        Parent ref=new Child();\n        System.out.print(ref.calc(2)+ref.tag());\n    }\n}",
+    "code": "public class Main {\n    static class Parent {\n        int calc(int n) {\n            return n+2;\n        }\n        static String tag() {\n            return \"P\";\n        }\n    }\n    static class Child extends Parent {\n        @Override\n        int calc(int n) {\n            return n+3;\n        }\n        static String tag() {\n            return \"C\";\n        }\n    }\n    public static void main(String[] args) {\n        Parent ref=new Child();\n        System.out.print(ref.calc(2)+ref.tag());\n    }\n}",
     "answer": "5P",
     "sources": [
       {
@@ -2985,7 +2985,7 @@
       "static"
     ],
     "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
-    "code": "public class Main {\n    public static void main(String[] args){\n        new Derived();\n        System.out.println(Base.total);\n    }\n}\nclass Base {\n    static int total=0;\n    int value=1;\n    Base(){\n        total += ++value;\n        update();\n    }\n    void update(){ total += total; }\n}\nclass Derived extends Base {\n    int value=10;\n    Derived(){\n        value += 2;\n        total += value++;\n        update();\n    }\n    @Override void update(){ total += total*2; }\n}",
+    "code": "public class Main {\n    public static void main(String[] args) {\n        new Derived();\n        System.out.println(Base.total);\n    }\n}\nclass Base {\n    static int total=0;\n    int value=1;\n    Base() {\n        total += ++value;\n        update();\n    }\n    void update() {\n        total += total;\n    }\n}\nclass Derived extends Base {\n    int value=10;\n    Derived() {\n        value += 2;\n        total += value++;\n        update();\n    }\n    @Override\n    void update() {\n        total += total*2;\n    }\n}",
     "answer": "54",
     "sources": [
       {
@@ -3263,7 +3263,7 @@
       "함수"
     ],
     "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
-    "code": "#include <stdio.h>\ntypedef struct {\n    const char *name;\n    int score[3];\n} Student;\nint decode(int value){ return value & 0xA5; }\nint total(const Student *s){\n    return decode(s->score[0]) + decode(s->score[1]) + decode(s->score[2]);\n}\nint main(void){\n    Student students[2]={\n        {\"Kim\",{0xA0,0xA5,0xDB}},\n        {\"Lee\",{0xA0,0xED,0x81}}\n    };\n    int result=0;\n    for(int i=0;i<2;i++) result += total(&students[i]);\n    printf(\"%d\",result);\n    return 0;\n}",
+    "code": "#include <stdio.h>\ntypedef struct {\n    const char *name;\n    int score[3];\n}\nStudent;\nint decode(int value) {\n    return value & 0xA5;\n}\nint total(const Student *s) {\n    return decode(s->score[0]) + decode(s->score[1]) + decode(s->score[2]);\n}\nint main(void) {\n    Student students[2]={\n    {\n        \"Kim\",{0xA0,0xA5,0xDB}\n    }\n    ,\n    {\n        \"Lee\",{0xA0,0xED,0x81}\n    }\n    };\n    int result=0;\n    for(int i=0;i<2;i++) result += total(&students[i]);\n    printf(\"%d\",result);\n    return 0;\n}",
     "answer": "908",
     "sources": [
       {
@@ -3823,7 +3823,7 @@
       "배열 포인터 산술"
     ],
     "question": "다음 C 프로그램의 출력 결과를 네 줄로 쓰세요.",
-    "code": "#include <stdio.h>\nvoid fn1(int *p){ *p=50; }\nvoid fn2(int p){ p=60; }\nvoid fn34(int *p){\n    printf(\"3. %d\\n\",*p);\n    printf(\"4. %d\\n\",*(p+3));\n}\nint main(void){\n    int value=30;\n    int list[]={2,4,6,8,10};\n    fn1(&value);\n    printf(\"1. %d\\n\",value);\n    fn2(value);\n    printf(\"2. %d\\n\",value);\n    fn34(list);\n    return 0;\n}",
+    "code": "#include <stdio.h>\nvoid fn1(int *p) {\n    *p=50;\n}\nvoid fn2(int p) {\n    p=60;\n}\nvoid fn34(int *p) {\n    printf(\"3. %d\\n\",*p);\n    printf(\"4. %d\\n\",*(p+3));\n}\nint main(void) {\n    int value=30;\n    int list[]={2,4,6,8,10};\n    fn1(&value);\n    printf(\"1. %d\\n\",value);\n    fn2(value);\n    printf(\"2. %d\\n\",value);\n    fn34(list);\n    return 0;\n}",
     "answer": "1. 50\n2. 50\n3. 2\n4. 8",
     "acceptedAnswers": [
       "1.50\n2.50\n3.2\n4.8",
@@ -3882,7 +3882,7 @@
       "메서드 호출"
     ],
     "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
-    "code": "class A {\n    int a;\n    private int b;\n    protected int c;\n    void set(int aa,int bb,int cc){ a=aa; b=bb; c=cc; }\n    int hap(){ return a+b+c; }\n}\nclass B extends A {\n    @Override public int hap(){ return a*c; }\n}\npublic class Main {\n    public static void main(String[] args){\n        A first=new A();\n        B second=new B();\n        first.set(1,5,3);\n        second.set(10,30,50);\n        System.out.print(first.hap()+second.hap());\n    }\n}",
+    "code": "class A {\n    int a;\n    private int b;\n    protected int c;\n    void set(int aa,int bb,int cc) {\n        a=aa;\n        b=bb;\n        c=cc;\n    }\n    int hap() {\n        return a+b+c;\n    }\n}\nclass B extends A {\n    @Override\n    public int hap() {\n        return a*c;\n    }\n}\npublic class Main {\n    public static void main(String[] args) {\n        A first=new A();\n        B second=new B();\n        first.set(1,5,3);\n        second.set(10,30,50);\n        System.out.print(first.hap()+second.hap());\n    }\n}",
     "answer": "509",
     "sources": [
       {
@@ -4193,7 +4193,7 @@
       "업캐스팅"
     ],
     "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
-    "code": "abstract class Vehicle {\n String name;\n abstract public String getName(String v);\n public String getName(){ return \"Vehicle name: \"+name; }\n}\nclass Car extends Vehicle {\n Car(String v){ name=v; }\n public String getName(String v){ return \"Car name: \"+v; }\n}\npublic class Main {\n public static void main(String[] args){\n  Vehicle v=new Car(\"Spark\");\n  System.out.println(v.getName());\n }\n}",
+    "code": "abstract class Vehicle {\n    String name;\n    abstract public String getName(String v);\n    public String getName() {\n        return \"Vehicle name: \"+name;\n    }\n}\nclass Car extends Vehicle {\n    Car(String v) {\n        name=v;\n    }\n    public String getName(String v) {\n        return \"Car name: \"+v;\n    }\n}\npublic class Main {\n    public static void main(String[] args) {\n        Vehicle v=new Car(\"Spark\");\n        System.out.println(v.getName());\n    }\n}",
     "answer": "Vehicle name: Spark",
     "sources": [
       {
@@ -4251,7 +4251,7 @@
       "필드 숨김"
     ],
     "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
-    "code": "class Parent {\n int x=100; Parent(){this(500);} Parent(int x){this.x=x;}\n int getX(){return x;}\n}\nclass Child extends Parent {\n int x=4000; Child(){this(5000);} Child(int x){this.x=x;}\n}\npublic class Main {\n public static void main(String[] args){\n  Child c=new Child(); System.out.println(c.getX());\n }\n}",
+    "code": "class Parent {\n    int x=100;\n    Parent() {\n        this(500);\n    }\n    Parent(int x) {\n        this.x=x;\n    }\n    int getX() {\n        return x;\n    }\n}\nclass Child extends Parent {\n    int x=4000;\n    Child() {\n        this(5000);\n    }\n    Child(int x) {\n        this.x=x;\n    }\n}\npublic class Main {\n    public static void main(String[] args) {\n        Child c=new Child();\n        System.out.println(c.getX());\n    }\n}",
     "answer": "500",
     "sources": [
       {
@@ -4517,7 +4517,7 @@
       "pop"
     ],
     "question": "다음 C 프로그램의 출력 결과를 쓰세요.",
-    "code": "#include <stdio.h>\nint st[10],top=-1;\nvoid push(int v){st[++top]=v;}\nint pop(void){return st[top--];}\nint main(void){\n push(5);push(2);printf(\"%d\",pop());\n push(4);push(1);printf(\"%d\",pop());\n push(3);printf(\"%d\",pop());printf(\"%d\",pop());\n push(6);printf(\"%d\",pop());printf(\"%d\",pop());\n return 0;\n}",
+    "code": "#include <stdio.h>\nint st[10],top=-1;\nvoid push(int v) {\n    st[++top]=v;\n}\nint pop(void) {\n    return st[top--];\n}\nint main(void) {\n    push(5);\n    push(2);\n    printf(\"%d\",pop());\n    push(4);\n    push(1);\n    printf(\"%d\",pop());\n    push(3);\n    printf(\"%d\",pop());\n    printf(\"%d\",pop());\n    push(6);\n    printf(\"%d\",pop());\n    printf(\"%d\",pop());\n    return 0;\n}",
     "answer": "213465",
     "sources": [
       {
@@ -4782,7 +4782,7 @@
       "super"
     ],
     "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
-    "code": "class A{\n public void paint(){System.out.print(\"A\");draw();}\n public void draw(){System.out.print(\"B\");draw();}\n}\nclass B extends A{\n public void paint(){super.draw();System.out.print(\"C\");this.draw();}\n public void draw(){System.out.print(\"D\");}\n}\npublic class Main{\n public static void main(String[] args){A b=new B();b.paint();b.draw();}\n}",
+    "code": "class A {\n    public void paint() {\n        System.out.print(\"A\");\n        draw();\n    }\n    public void draw() {\n        System.out.print(\"B\");\n        draw();\n    }\n}\nclass B extends A {\n    public void paint() {\n        super.draw();\n        System.out.print(\"C\");\n        this.draw();\n    }\n    public void draw() {\n        System.out.print(\"D\");\n    }\n}\npublic class Main {\n    public static void main(String[] args) {\n        A b=new B();\n        b.paint();\n        b.draw();\n    }\n}",
     "answer": "BDCDD",
     "sources": [
       {
@@ -5870,7 +5870,7 @@
       "메서드"
     ],
     "question": "다음 Java 프로그램의 출력 결과를 쓰세요.",
-    "code": "public class Main {\n    int a;\n    Main(int a){ this.a=a; }\n    int calc(){\n        int b=1;\n        for(int i=1;i<a;i++) b=a*i+b;\n        return a+b;\n    }\n    public static void main(String[] args){\n        Main obj=new Main(3);\n        obj.a=5;\n        int b=obj.calc();\n        System.out.print(obj.a+b);\n    }\n}",
+    "code": "public class Main {\n    int a;\n    Main(int a) {\n        this.a=a;\n    }\n    int calc() {\n        int b=1;\n        for(int i=1;i<a;i++) b=a*i+b;\n        return a+b;\n    }\n    public static void main(String[] args) {\n        Main obj=new Main(3);\n        obj.a=5;\n        int b=obj.calc();\n        System.out.print(obj.a+b);\n    }\n}",
     "answer": "61",
     "sources": [
       {
@@ -7595,7 +7595,7 @@
       "super"
     ],
     "question": "다음 Java 코드의 출력 결과를 줄마다 쓰세요.",
-    "code": "class Berry{\n String Str;\n void meth(){func();}\n void func(){System.out.println(Str);}\n}\nclass Apple extends Berry{\n String Str;\n void func(){\n  Str=\"Apple\";\n  super.Str=\"Berry\";\n  super.func();\n  System.out.println(Str);\n }\n}\nBerry a=new Apple();\na.meth();",
+    "code": "class Berry {\n    String Str;\n    void meth() {\n        func();\n    }\n    void func() {\n        System.out.println(Str);\n    }\n}\nclass Apple extends Berry {\n    String Str;\n    void func() {\n        Str=\"Apple\";\n        super.Str=\"Berry\";\n        super.func();\n        System.out.println(Str);\n    }\n}\nBerry a=new Apple();\na.meth();",
     "answer": "Berry\nApple",
     "sources": [
       {
