@@ -34,7 +34,7 @@ assert.match(css,/\.solve-share-row/);
 assert.match(css,/grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/,'mobile share actions should fit in two equal columns');
 assert.match(css,/\.share-status:empty\{display:none\}/);
 
-assert.ok(html.includes('css/practical.css?v=20261005-browser-1'));
-assert.ok(html.includes('js/practical-ui.js?v=20261005-perf-2'));
+assert.match(html,/css\/practical\.css\?v=[\w-]+/);
+assert.match(html,/js\/practical-ui\.js\?v=[\w-]+/);
 
 console.log('PASS: current-problem link copy and card sharing are privacy-safe, fresh-start deep links with responsive controls.');

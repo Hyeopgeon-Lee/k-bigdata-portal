@@ -1,0 +1,37 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {createHash} from 'node:crypto';
+import {solutionTrace,solutionSummary,solutionFlow,examMemory} from '../js/practical-explanation.js';
+import {formatCodeForDisplay} from '../js/practical-core.js';
+const read=p=>JSON.parse(fs.readFileSync(new URL('../'+p,import.meta.url),'utf8'));
+const questions=[...read('data/practical/questions.json'),...read('data/practical/reconstructed-extra.json'),...read('data/practical/normalized.json').questions];
+const baseline=read('tests/fixtures/practical-continuation-baseline.json');
+const hash=v=>createHash('sha256').update(JSON.stringify(v)).digest('hex');
+const tokens=code=>String(code||'').match(/"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\/\/[^\n]*|\/\*[\s\S]*?\*\/|[A-Za-z_$][\w$]*|[^\s]/g)||[];
+assert.deepEqual(questions.map(q=>q.id),baseline.questions.map(q=>q.id),'IDs and bank order must stay compatible');
+assert.equal(hash(read('data/practical/exam-history.json')),baseline.historyHash,'exam years, rounds, slots and URLs must remain stable');
+assert.equal(hash(read('data/practical/normalized.json').aliases),baseline.aliasHash,'old deep links must retain aliases');
+for(let i=0;i<questions.length;i++){
+ const q=questions[i],b=baseline.questions[i];
+ assert.equal(hash(tokens(q.code)),b.codeHash,q.id+' formatting changed source tokens or literals');
+ assert.equal(hash([q.question,q.answer,q.acceptedAnswers,q.sources]),b.contentHash,q.id+' source conditions, answers or URLs changed');
+ for(const key of ['summary','keyPoint'])assert.ok(typeof q.solution[key]==='string'&&q.solution[key].trim(),q.id+' '+key);
+ for(const key of ['flow','trace'])assert.ok(Array.isArray(q.solution[key])&&q.solution[key].length,q.id+' '+key);
+ assert.ok(!('explanation' in q)&&!('steps' in q),q.id+' legacy schema');
+ assert.deepEqual(solutionTrace(q),q.solution.trace.map(x=>x.trim()),q.id+' stored trace takes priority');
+ assert.equal(examMemory(q),q.solution.keyPoint,q.id+' stored keyPoint takes priority');
+ assert.ok(!q.solution.flow.some(x=>/초기 변수·배열·객체 상태와 핵심 조건|조건식·반복문·함수 호출을 실제 실행/.test(x)),q.id+' generic flow');
+ assert.equal(formatCodeForDisplay(q.code,q.language),formatCodeForDisplay(formatCodeForDisplay(q.code,q.language),q.language),q.id+' display formatting must be stable');
+ assert.deepEqual(tokens(formatCodeForDisplay(q.code,q.language)),tokens(q.code),q.id+' display must preserve source tokens and quoted values');
+}
+assert.equal(solutionSummary({explanation:'legacy'}),'');
+assert.deepEqual(solutionFlow({steps:['legacy']}),[]);
+assert.deepEqual(solutionTrace({solution:{trace:['실제 저장값: x=7'],flow:['다른 값: x=99']}}),['실제 저장값: x=7']);
+const q=questions.find(q=>q.id==='R-PY-0010');
+assert.match(q.hint,/func/);assert.doesNotMatch(q.hint,/value_of/);
+const quotedSql="SELECT 'text FROM value WHERE filter' AS label, 'O''Brien JOIN x' AS name FROM t -- GROUP BY fake";
+const shown=formatCodeForDisplay(quotedSql,'SQL');
+assert.ok(shown.includes("'text FROM value WHERE filter'"));
+assert.ok(shown.includes("'O''Brien JOIN x'"));
+assert.ok(shown.includes('-- GROUP BY fake'));
+console.log('PASS: 386 questions retain source tokens, answers, IDs, aliases and history; stored solution schema and traces are used first.');

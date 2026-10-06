@@ -6,6 +6,7 @@ on:
     paths:
       - "data/practical/**"
       - "tests/practical-runtime-audit.py"
+      - "tests/practical-sql-runtime.py"
       - "tests/practical-30pass-audit.mjs"
       - "tests/practical-beginner-review.test.mjs"
       - "tests/practical-dataset-deep-audit.mjs"
@@ -13,6 +14,8 @@ on:
       - "tests/practical-code-formatting.test.mjs"
       - "tests/practical-industrial-source-fidelity.test.mjs"
       - "tests/practical-engineer-source-fidelity.test.mjs"
+      - "tests/practical*.mjs"
+      - "tests/fixtures/practical-continuation-baseline.json"
       - "js/practical-core.js"
       - "js/practical-explanation.js"
       - "js/practical-ui.js"
@@ -35,19 +38,12 @@ jobs:
         with:
           distribution: temurin
           java-version: "21"
-      - name: Run 30-pass content QA
-        run: node tests/practical-30pass-audit.mjs
-      - name: Run beginner expert review
-        run: node tests/practical-beginner-review.test.mjs
-      - name: Run 360-round dataset deep audit
-        run: node tests/practical-dataset-deep-audit.mjs
-      - name: Run parallel expert audit workers
-        run: node tests/practical-parallel-expert-audit.mjs
-      - name: Verify C/Java display indentation
-        run: node tests/practical-code-formatting.test.mjs
-      - name: Verify industrial source fidelity
-        run: node tests/practical-industrial-source-fidelity.test.mjs
-      - name: Verify engineer source fidelity
-        run: node tests/practical-engineer-source-fidelity.test.mjs
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+      - name: Run complete practical regression suite
+        run: node tests/practical-suite.mjs
       - name: Verify all executable answers
         run: python tests/practical-runtime-audit.py
+      - name: Verify every SQL result and count scenario
+        run: python tests/practical-sql-runtime.py

@@ -1,8 +1,8 @@
-import {loadPracticalBank} from "./practical-data.js?v=20261006-engineer-fidelity-1";
-import {HINT_SECONDS,ANSWER_SECONDS,examLabels,typeLabels,languages,escapeHTML as esc,remainingSeconds,remainingAnswerSeconds,hintAvailable,answerDeadlineReached,canSubmit,canReveal,gradeAnswer,questionText,shuffle,recommendFive,matchesExam,localDay,summarizeAttempts,highlightCode,formatCodeForDisplay} from "./practical-core.js?v=20261006-indent-1";
+import {loadPracticalBank} from "./practical-data.js?v=20261006-audit-2";
+import {HINT_SECONDS,ANSWER_SECONDS,examLabels,typeLabels,languages,escapeHTML as esc,remainingSeconds,remainingAnswerSeconds,hintAvailable,answerDeadlineReached,canSubmit,canReveal,gradeAnswer,questionText,shuffle,recommendFive,matchesExam,localDay,summarizeAttempts,highlightCode,formatCodeForDisplay} from "./practical-core.js?v=20261006-audit-2";
 import {getAttempts,saveAttempt,getSession,saveSession,clearLocalLearning,storageAvailable,getPreferences,savePreferences,exportLearning,importLearning} from "./practical-store.js";
 import {matches} from "./search-core.js?v=20261005-perf-1";
-import {beginnerExplanation,examMemory,solutionTrace} from "./practical-explanation.js?v=20261006-stored-trace-1";
+import {beginnerExplanation,examMemory,solutionTrace} from "./practical-explanation.js?v=20261006-audit-2";
 
 const $=selector=>document.querySelector(selector),root=$("#bank-content"),status=$("#bank-status");
 let bank=[],view="home",current=null,attempt=null,timer=null,queue=[],queueIndex=0,aliases={},pageLimit=24,queueKind="random",solveActionsObserver=null;
@@ -38,7 +38,7 @@ function displayCode(q){
 function formatQuestion(text){
  const value=String(text||"").replace(" 공개 복원자료 간 초기 배열 순서 차이가 있어 아래 코드의 초기값을 기준으로 풀이합니다.","");
  const safe=esc(value);
- return value.length>=80?safe.replace(/([.!?])\s+/g,"$1<br>"):safe;
+ return value.length>=80?safe.replace(/\n/g,"<br>").replace(/(^|[^\d])([.!?])[ \t]+/g,"$1$2<br>"):safe;
 }
 function codeNeedsFocus(q){
  const code=displayCode(q);

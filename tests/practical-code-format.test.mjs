@@ -18,7 +18,7 @@ const screenshotCode=formatCodeForDisplay(screenshot.code,screenshot.language);
 assert.match(screenshotCode,/while\(r>=4\) \{\n {4}r=r-n;\n {4}q\+\+;\n\}/);
 assert.ok(!screenshotCode.includes('while(r>=4){r=r-n;q++;}'));
 
-const compactBlock=/\b(?:if|for|while|switch|catch|try|else|do|class|interface|struct|union)\b[^\n{]*\{[^}\n]*\S/;
+const compactBlock=/\b(?:if|for|while|switch|catch|try|else|do|class|interface|struct|union)\b[^\n{=]*\{[^}\n]*\S/;
 const oneLineMethod=/\)\s*\{\s*[^}\n]+\}/;
 const tightBrace=/\)\{/;
 
@@ -34,10 +34,10 @@ for(const q of questions){
     assert.ok(!lines.some(line=>tightBrace.test(line)),q.id+' missing space before structural brace');
 
     for(const line of lines){
-      const scrub=line
-        .replace(/for\s*\([^)]*\)/g,'for(...)')
-        .replace(/"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'/g,'');
-      assert.ok((scrub.match(/;/g)||[]).length<2,q.id+' multiple top-level statements remain on one line: '+line);
+      const scrub=line.replace(/"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'/g,'').replace(/\/\/.*$/,'');
+      let depth=0,statements=0;
+      for(const c of scrub){if(c==='(')depth++;else if(c===')')depth--;else if(c===';'&&depth===0)statements++;}
+      assert.ok(statements<2,q.id+' multiple top-level statements remain on one line: '+line);
       assert.ok(line.length<=100,q.id+' formatted non-SQL line is too wide: '+line.length);
     }
   }

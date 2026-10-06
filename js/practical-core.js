@@ -75,7 +75,8 @@ export function summarizeAttempts(attempts){const judged=attempts.filter(a=>type
 export function formatCodeForDisplay(code,language){
  const source=String(code??"").replace(/\r\n?/g,"\n");
  if(language==="SQL"){
-  return source.replace(/\s+(INNER JOIN|LEFT JOIN|RIGHT JOIN|FULL JOIN|CROSS JOIN|JOIN|ON|FROM|WHERE|GROUP BY|HAVING|ORDER BY|UNION ALL|UNION|SET|VALUES)\s+/gi,"\n$1 ").trim();
+  const literals=/('(?:''|[^'])*'|"(?:""|[^"])*"|--[^\n]*|\/\*[\s\S]*?\*\/)/g;
+  return source.split(literals).map((part,index)=>index%2?part:part.replace(/\s+(INNER JOIN|LEFT JOIN|RIGHT JOIN|FULL JOIN|CROSS JOIN|JOIN|ON|FROM|WHERE|GROUP BY|HAVING|ORDER BY|UNION ALL|UNION|SET|VALUES)\s+/gi,"\n$1 ")).join("").trim();
  }
  if(language!=="C"&&language!=="Java")return source.split("\n").map(line=>line.replace(/\s+$/,"")).join("\n").trim();
 
@@ -172,6 +173,9 @@ export function formatCodeForDisplay(code,language){
   const inInitializer=braces.some(value=>value===false);
   if(ch===";"&&parenDepth===0&&bracketDepth===0&&!inInitializer){
    buffer+=";";
+   // Keep a trailing line comment attached to its statement.
+   const tail=source.slice(i+1).match(/^[ \t]*(\/\/[^\n]*)/);
+   if(tail){buffer+=" "+tail[1];i+=tail[0].length;}
    emit();
    continue;
   }

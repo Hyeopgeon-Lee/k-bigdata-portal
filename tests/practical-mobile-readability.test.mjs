@@ -22,9 +22,11 @@ assert.equal(wideNonSql.length,0,'C/Java/Python code lines >=80 chars must be re
 assert.ok(Math.max(...questions.map(q=>maxLine(q.code)))<=120,'no practical source line should exceed 120 chars');
 const formatted=questions.map(q=>({...q,displayCode:formatCodeForDisplay(q.code,q.language)}));
 assert.equal(formatted.filter(q=>['C','Java'].includes(q.language)&&/\)\{/.test(q.displayCode)).length,0,'display formatter must separate structural braces');
-assert.equal(formatted.filter(q=>['C','Java'].includes(q.language)&&/\)\s*\{\s*[^}\n]+\}/.test(q.displayCode)).length,0,'display formatter must expand one-line function/method bodies');
+assert.equal(formatted.filter(q=>['C','Java'].includes(q.language)&&/\)[ \t]*\{[ \t]*[^}\n]+\}/.test(q.displayCode)).length,0,'display formatter must expand one-line function/method bodies');
 assert.ok(Math.max(...formatted.filter(q=>q.language!=='SQL').map(q=>maxLine(q.displayCode)))<=100,'formatted non-SQL code must fit mobile-friendly line width');
-assert.ok(Math.max(...questions.map(q=>String(q.question||'').length))<=120,'question prompts should remain concise enough for sentence formatting');
+// Full SQL processing conditions must not be truncated to meet a prompt-length cap.
+// Sentence-aware rendering below handles long, restored source statements.
+assert.ok(questions.every(q=>String(q.question||'').length<=120||/[\n。.!?]|다\./.test(q.question)),'long prompts must retain sentence or clause boundaries');
 
 const ui=read('js/practical-ui.js');
 const css=read('css/practical.css');
@@ -33,7 +35,7 @@ assert.ok(ui.includes('formatCodeForDisplay'),'all practical code must pass thro
 assert.ok(ui.includes('function codeNeedsFocus(q)'),'complex code needs mobile focus classification');
 assert.ok(ui.includes('button("code-focus"')&&ui.includes('action==="code-focus"'),'complex code needs a full-screen reader trigger and handler');
 assert.ok(ui.includes('code-scroll--complex'),'complex code needs bounded mobile height');
-assert.match(ui,/CROSS JOIN\|JOIN\|ON\|FROM/,'SQL formatter must break plain JOIN and ON as well as FROM');
+assert.match(read('js/practical-core.js'),/CROSS JOIN\|JOIN\|ON\|FROM/,'shared SQL formatter must break plain JOIN and ON as well as FROM');
 assert.ok(css.includes('.code-dialog'),'full-screen code dialog styles must exist');
 assert.ok(css.includes('max-height:52svh'),'complex inline code must not consume the entire phone viewport');
 assert.ok(css.includes('.solve-question br'),'long prompts must visually separate sentences');

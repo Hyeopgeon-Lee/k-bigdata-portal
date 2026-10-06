@@ -23,7 +23,7 @@ def accepted(q, out):
     return any(norm(v)==norm(out) for v in vals)
 
 def run(cmd,cwd,stdin=""):
-    return subprocess.run(cmd,cwd=cwd,input=stdin,text=True,capture_output=True,timeout=5)
+    return subprocess.run(cmd,cwd=cwd,input=stdin,text=True,encoding="utf-8",capture_output=True,timeout=5)
 
 results={"C":{"checked":0,"skipped":0},"Java":{"checked":0,"skipped":0},"Python":{"checked":0,"skipped":0},"SQL":{"checked":0,"skipped":0}}
 failures=[]
@@ -41,6 +41,12 @@ for q in questions:
         if re.search(r"\bscanf\s*\(",code) and not stdin.strip():
             results[lang]["skipped"]+=1; continue
         src=code
+        # Restored pre-standard exam code uses void main. Its exit status is
+        # unspecified on Windows; only the harness uses the standard entry point.
+        if re.search(r"\bvoid\s+main\s*\(",src):
+            src=re.sub(r"\bvoid\s+main\s*\(","int main(",src)
+            last=src.rfind("}")
+            src=src[:last]+"\nreturn 0;\n"+src[last:]
         if "#include <stdio.h>" not in src:
             src="#include <stdio.h>\n"+src
         if ("strlen(" in src or "strcmp(" in src or "strcpy(" in src) and "#include <string.h>" not in src:
@@ -75,7 +81,7 @@ for q in questions:
             c=run(["javac","-encoding","UTF-8",mainclass+".java"],p)
             if c.returncode!=0:
                 compile_failures.append((q["id"],"Java compile",c.stderr[-1000:])); continue
-            try:r=run(["java",mainclass],p,stdin)
+            try:r=run(["java","-Dstdout.encoding=UTF-8","-Dstderr.encoding=UTF-8",mainclass],p,stdin)
             except subprocess.TimeoutExpired:
                 failures.append((q["id"],"Java timeout","")); continue
             if r.returncode!=0:
@@ -119,7 +125,8 @@ for q in questions:
                     db.executemany('INSERT INTO "'+table["name"].replace('"','""')+'" VALUES ('+','.join("?" for _ in cols)+')',rows)
             cur=db.execute(code)
             rows=cur.fetchall()
-            actual="\n".join(" ".join("" if v is None else str(v) for v in row) for row in rows)
+            delimiters=q.get("sqlResultDelimiters") or {"row":"\n","column":" "}
+            actual=delimiters["row"].join(delimiters["column"].join("" if v is None else str(v) for v in row) for row in rows)
             results[lang]["checked"]+=1
             if not accepted(q,actual):
                 failures.append((q["id"],"SQL result mismatch",f"expected={q.get('answer')!r} actual={norm(actual)!r}"))
@@ -127,6 +134,8 @@ for q in questions:
             results[lang]["skipped"]+=1
         finally:
             db.close()
+    elif lang=="SQL" and qtype=="sql_result":
+        results[lang]["skipped"]+=1
 
 print("RUNTIME SUMMARY",json.dumps(results,ensure_ascii=False))
 if compile_failures:

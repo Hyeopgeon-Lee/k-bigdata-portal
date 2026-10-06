@@ -4,23 +4,23 @@ import {HINT_SECONDS,ANSWER_SECONDS,buildBank,bankStats,remainingSeconds,remaini
 import {services} from '../js/services.js';
 import {matches,searchIndex} from '../js/search.js';
 const root=new URL('../',import.meta.url),read=p=>readFileSync(new URL(p,root),'utf8');
-const questions=JSON.parse(read('data/practical/questions.json')),history=JSON.parse(read('data/practical/exam-history.json')),bank=buildBank(questions,history);
+const questions=[...JSON.parse(read('data/practical/questions.json')),...JSON.parse(read('data/practical/reconstructed-extra.json')),...JSON.parse(read('data/practical/normalized.json')).questions],history=JSON.parse(read('data/practical/exam-history.json')),bank=buildBank(questions,history);
 assert.equal(new Set(questions.map(q=>q.id)).size,questions.length);
 assert.equal(new Set(history.map(h=>h.id)).size,history.length);
 const instances=new Set();
 for(const h of history){assert.ok(bank.some(q=>q.id===h.questionId&&q.sourceType==='reconstructed'));assert.ok(['engineer','industrial_engineer'].includes(h.examType));assert.ok(h.year>=2020&&h.year<=2026);assert.ok(h.round>=1&&h.round<=4);assert.match(h.sourceUrl,/^https:\/\//);assert.ok(h.verificationNote);const key=[h.examType,h.year,h.round,h.questionId].join(':');assert.ok(!instances.has(key));instances.add(key);}
 for(const q of bank){
- for(const field of ['title','question','code','answer','hint','language','difficulty'])assert.ok(q[field],q.id+' '+field);assert.ok(q.solution?.summary,q.id+' solution.summary');
+ for(const field of ['title','question','answer','hint','language','difficulty'])assert.ok(q[field],q.id+' '+field);if(q.language!=='SQL'||q.questionType==='sql_result')assert.ok(q.code,q.id+' code');assert.ok(q.solution?.summary,q.id+' solution.summary');
  assert.ok(['C','Java','Python','SQL'].includes(q.language));assert.ok(sourceLabels[q.sourceType]);assert.ok(typeLabels[q.questionType]);assert.ok(['기본','실전','고난도'].includes(q.difficulty));assert.ok(q.concepts.length&&q.solution?.flow?.length>=1);assert.ok(!('explanation' in q)&&!('steps' in q),q.id+' legacy solution fields');
  if(q.sourceType==='reconstructed'){assert.ok(q.history.length);assert.ok(q.sources.length);assert.ok(['A','B','C'].includes(q.confidence));if(q.confidence==='B')assert.ok(new Set(q.sources.map(s=>s.url)).size>=2);}
  else {assert.equal(q.history.length,0);assert.equal(q.confidence,null);}
- if(q.sourceType==='transformed')assert.ok(bank.some(item=>item.id===q.originalQuestionId&&item.sourceType==='reconstructed'));
+ if(q.sourceType==='transformed')assert.ok(bank.some(item=>item.id===q.originalQuestionId&&['reconstructed','normalized'].includes(item.sourceType)));
  for(const s of q.sources)assert.match(s.url,/^https:\/\//);
  assert.equal(gradeAnswer(q,q.answer),true);
 }
-assert.deepEqual(bankStats(bank),{unique:16,history:18,repeated:2,languages:{C:4,Java:2,Python:5,SQL:7},exams:{engineer:4,industrial_engineer:14}});
+assert.deepEqual(bankStats(bank),{unique:182,history:186,repeated:4,languages:{C:73,Java:53,Python:24,SQL:36},exams:{engineer:113,industrial_engineer:73}});
 const repeated=buildBank(questions,[...history,{...history[0],id:'synthetic-test-only',year:2023,round:3}]);
-assert.equal(bankStats(repeated).unique,16);assert.equal(bankStats(repeated).history,19);assert.equal(bankStats(repeated).repeated,3);
+assert.equal(bankStats(repeated).unique,182);assert.equal(bankStats(repeated).history,187);assert.equal(bankStats(repeated).repeated,bankStats(bank).repeated+(bank[0].history.length===1?1:0));
 const startedAt=1000,attempt={startedAt,submittedAt:null};
 assert.equal(HINT_SECONDS,60);assert.equal(ANSWER_SECONDS,120);
 assert.equal(remainingSeconds(startedAt,1000),60);assert.equal(remainingSeconds(startedAt,60999),1);assert.equal(remainingSeconds(startedAt,61000),0);

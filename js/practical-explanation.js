@@ -130,7 +130,7 @@ function languageMismatch(q,text){
 }
 
 export function solutionFlow(q){
-  const source=Array.isArray(q?.solution?.flow)?q.solution.flow:(q?.steps||[]);
+  const source=Array.isArray(q?.solution?.flow)?q.solution.flow:[];
   const seen=new Set();
   return source
     .map(step=>String(step||"").trim())
@@ -141,7 +141,7 @@ export function solutionFlow(q){
 }
 
 export function solutionSummary(q){
-  const value=String(q?.solution?.summary||q?.explanation||"").trim();
+  const value=String(q?.solution?.summary||"").trim();
   return languageMismatch(q,value)?"":value;
 }
 
@@ -295,6 +295,7 @@ function explainCJavaLine(line,language){
   if(/^try\b/.test(t))return "예외가 발생할 수 있는 코드를 실행하기 시작합니다.";
   if(/^catch\s*\(/.test(t))return "try에서 발생한 예외 중 괄호의 형식과 맞는 예외를 처리합니다.";
   if(/^finally\b/.test(t))return "예외 발생 여부와 관계없이 마지막에 실행할 블록입니다.";
+  if(/^throw\s+new\s+/.test(t))return "새 예외 객체를 생성해 던지고, 현재 흐름을 중단해 일치하는 catch 처리로 이동합니다.";
   m=t.match(/^return(?:\s+(.+?))?;?\s*$/);
   if(m)return m[1]&&m[1]!=="0"?"계산한 "+shortExpr(m[1])+" 값을 호출한 곳으로 돌려주고 현재 함수를 끝냅니다.":"현재 함수를 끝냅니다.";
   if(/\b(printf|puts|putchar)\s*\(/.test(t))return "괄호 안의 형식과 값을 계산해 화면에 출력합니다.";
@@ -319,7 +320,7 @@ function explainCJavaLine(line,language){
     const tail=String(m[4]||"").trim();
     return m[1]+" 함수/메서드를 "+kind+"합니다. 매개변수는 "+(m[2].trim()||"없음")+"입니다."+(tail?" 같은 줄의 본문도 이어서 실행합니다.":"");
   }
-  m=t.match(/^(?:public\s+|private\s+|protected\s+)?([A-Z][A-Za-z_]\w*)\s*\(([^)]*)\)\s*\{?(.*)$/);
+  m=t.match(/^(?:public\s+|private\s+|protected\s+)?([A-Z][A-Za-z_0-9]*)\s*\(([^)]*)\)\s*\{?(.*)$/);
   if(m)return m[1]+" 생성자를 정의합니다. 객체가 만들어질 때 매개변수 "+(m[2].trim()||"없이")+" 초기화 코드를 실행합니다.";
   m=t.match(/^new\s+([A-Za-z_]\w*)(?:<[^>]*>)?\s*\((.*?)\)\.([A-Za-z_]\w*)\s*\((.*?)\)\s*;?$/);
   if(m)return m[1]+" 객체를 "+(m[2].trim()?shortExpr(m[2])+" 인자로 ":"")+"생성한 뒤 "+m[3]+" 메서드를 호출합니다.";
@@ -356,6 +357,9 @@ function explainCJavaLine(line,language){
   if(/^[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)?\s*\(.*\)\s*[,;]?$/.test(t))return "함수나 메서드를 호출하고, 전달한 인자에 따라 실행 결과나 부수 효과를 확인합니다.";
   if(/^\);?$/.test(t)||/^\),?$/.test(t))return "앞 줄에서 시작한 함수 호출이나 식의 괄호를 닫습니다.";
   if(/^[{}].*[{}];?$/.test(t))return "자료형이나 블록의 범위를 한 줄에서 정의합니다. 중괄호 안의 선언과 값을 함께 확인합니다.";
+  if(/^[A-Za-z_]\w*;$/.test(t))return "앞에서 정의한 자료형의 이름을 지정하고 선언을 마칩니다.";
+  if(t===",")return "초기화 목록에서 앞 원소와 다음 원소를 구분합니다.";
+  if(/^".*",\s*\{/.test(t))return "문자열과 숫자 배열을 구조체 멤버 순서에 맞춰 초기화합니다.";
   return (language==="Java"?"이 Java 문장을":"이 C 문장을")+" 실행한 뒤 변수·배열·객체의 값이 어떻게 달라지는지 확인합니다.";
 }
 

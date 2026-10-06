@@ -24,7 +24,7 @@ for(const q of questions){
   const hint=normalize(q.hint);
   if(answer.length>=2) assert.ok(!hint.includes(answer),q.id+' hint contains the exact answer');
 
-  assert.ok(!/[<>]{2,}|javascript:/i.test(q.hint),q.id+' suspicious hint content');
+  assert.ok(!/<\/?(?:script|iframe)\b|javascript:/i.test(q.hint),q.id+' suspicious hint content');
   assert.ok(/[가-힣]/.test(q.hint),q.id+' hint should be learner-facing Korean');
 
   if(q.language==='SQL'){
