@@ -1,4 +1,4 @@
-import {services,portalNavLinks} from "./services.js?v=20261005-6";
+import {services,portalNavLinks} from "./services.js?v=20261006-resume-2";
 
 const esc=v=>String(v??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
 const link=(url,text)=>'<a href="'+esc(url)+'">'+esc(text)+' →</a>';
