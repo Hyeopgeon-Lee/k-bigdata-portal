@@ -433,7 +433,7 @@
       "오버라이딩"
     ],
     "question": "프로그램 출력값을 쓰세요.",
-    "code": "class Parent { int value() { return 3; } }\nclass Child extends Parent { int value() { return 8; } }\nclass Main {\n    public static void main(String[] args) {\n        Parent p = new Child();\n        System.out.print(p.value());\n    }\n}",
+    "code": "class Parent {\n    int value() {\n        return 3;\n    }\n}\nclass Child extends Parent {\n    int value() {\n        return 8;\n    }\n}\nclass Main {\n    public static void main(String[] args) {\n        Parent p = new Child();\n        System.out.print(p.value());\n    }\n}",
     "answer": "8",
     "enabled": true,
     "createdAt": "2026-10-04",
