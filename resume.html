@@ -310,9 +310,9 @@
         <p>시스원 채용공고를 분석해 직무별로 어떤 경험을 선택하고 강조하는지 보여주는 교육용 예시입니다. <a href="https://m.saramin.co.kr/job-search/view?rec_idx=52362930&is_apply_statics_auto_focus=&proposal_idx=0#seq=0" target="_blank" rel="noopener noreferrer">사람인 공고 보기 ↗</a></p>
       </div>
       <div class="role-picker" role="tablist" aria-label="직무별 자기소개서 샘플">
-        <button type="button" role="tab" aria-selected="true" aria-controls="role-backend" data-role-target="role-backend">백엔드 개발자</button>
-        <button type="button" role="tab" aria-selected="false" aria-controls="role-system" data-role-target="role-system">시스템엔지니어</button>
-        <button type="button" role="tab" aria-selected="false" aria-controls="role-qa" data-role-target="role-qa">QA 엔지니어</button>
+        <button type="button" id="tab-backend" role="tab" aria-selected="true" aria-controls="role-backend" data-role-target="role-backend">백엔드 개발자</button>
+        <button type="button" id="tab-system" role="tab" aria-selected="false" aria-controls="role-system" data-role-target="role-system">시스템엔지니어</button>
+        <button type="button" id="tab-qa" role="tab" aria-selected="false" aria-controls="role-qa" data-role-target="role-qa">QA 엔지니어</button>
       </div>
 
       <div class="legend-box" aria-label="문장 역할 태그 설명">
@@ -332,7 +332,7 @@
         <button type="button" class="annotation-mode" data-annotation-mode="explain" aria-pressed="false">문장 해설 보기</button>
       </div>
 
-      <article id="role-backend" class="role-sample-card" aria-labelledby="backend-title">
+      <article id="role-backend" class="role-sample-card" role="tabpanel" aria-labelledby="tab-backend" tabindex="0">
         <header class="role-sample-header">
           <p class="role-number">ROLE 01</p>
           <h3 id="backend-title">백엔드 개발자</h3>
@@ -397,7 +397,7 @@
         </details>
       <div class="my-experience-box"><h4>내 경험으로 바꿔보기</h4><p>샘플 문장을 복사하기보다 아래 다섯 가지를 먼저 자신의 경험으로 채우세요.</p><ol><li>내가 맡은 역할은 무엇이었는가?</li><li>어떤 문제나 요구사항이 있었는가?</li><li>원인을 어떻게 확인하고 무엇을 직접 했는가?</li><li>결과를 어떻게 확인했는가?</li><li>이 경험이 지원 직무와 어떻게 연결되는가?</li></ol></div></article>
 
-      <article id="role-system" class="role-sample-card" aria-labelledby="system-title">
+      <article id="role-system" class="role-sample-card" role="tabpanel" aria-labelledby="tab-system" tabindex="0">
         <header class="role-sample-header">
           <p class="role-number">ROLE 02</p>
           <h3 id="system-title">시스템엔지니어</h3>
@@ -462,7 +462,7 @@
         </details>
       <div class="my-experience-box"><h4>내 경험으로 바꿔보기</h4><p>샘플 문장을 복사하기보다 아래 다섯 가지를 먼저 자신의 경험으로 채우세요.</p><ol><li>내가 맡은 역할은 무엇이었는가?</li><li>어떤 문제나 요구사항이 있었는가?</li><li>원인을 어떻게 확인하고 무엇을 직접 했는가?</li><li>결과를 어떻게 확인했는가?</li><li>이 경험이 지원 직무와 어떻게 연결되는가?</li></ol></div></article>
 
-      <article id="role-qa" class="role-sample-card" aria-labelledby="qa-title">
+      <article id="role-qa" class="role-sample-card" role="tabpanel" aria-labelledby="tab-qa" tabindex="0">
         <header class="role-sample-header">
           <p class="role-number">ROLE 03</p>
           <h3 id="qa-title">QA 엔지니어</h3>
