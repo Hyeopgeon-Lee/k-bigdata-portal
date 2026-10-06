@@ -8,6 +8,7 @@ const staticImports=source=>[...source.matchAll(/^import\s+[^;]+?from\s+["']([^"
 
 const learning=read('js/learning-ui.js');
 const shell=read('js/portal-shell.js');
+const shellEntry=read('js/portal-shell-entry.js');
 const portalUx=read('js/portal-ux.js');
 const searchUi=read('js/search-ui.js');
 const practicalUi=read('js/practical-ui.js');
@@ -19,7 +20,7 @@ const passes=[
  ['01 lightweight shell routes non-catalog pages',()=>{
    for(const page of ['index.html','practical.html','project-guide.html']){
     const html=read(page);
-    assert.ok(html.includes('js/portal-shell.js?v=20261005-perf-4'),page);
+    assert.ok(html.includes('js/portal-shell-entry.js?v=20261006-init-1'),page);
     assert.ok(!html.includes('js/learning-ui.js'),page);
    }
  }],
@@ -80,8 +81,12 @@ const passes=[
    assert.ok(learning.includes('const categories=item.interviewCategories||[]'));
    assert.ok(learning.includes('const interviewLinks = job.interviewCategories||[]'));
    assert.ok(jobs.startsWith('export {interviewRoleLinks} from "./interview-links.js";'));
+ }],
+ ['11 direct shell entry invokes portal initialization',()=>{
+   assert.ok(shellEntry.includes('import {initPortalShell} from "./portal-shell.js?v=20261005-perf-4"'));
+   assert.ok(shellEntry.includes('initPortalShell()'));
  }]
 ];
 
 for(const [name,run] of passes){run();console.log('PASS '+name);}
-console.log('FINAL: 10/10 portal performance architecture passes.');
+console.log('FINAL: 11/11 portal performance architecture passes.');
