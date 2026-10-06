@@ -44,3 +44,12 @@
  .prompt-summary{padding:13px 14px}
  .prompt-body .copy-prompt{margin:12px 14px 0}
 }
+
+/* Prominent source link for the real recruitment posting */
+.sample-source{display:flex;align-items:center;justify-content:space-between;gap:18px}
+.sample-source-copy{min-width:0}.sample-source-copy strong{font-size:17px}.sample-source-copy p{margin:0;color:var(--color-text-muted);line-height:1.7}
+.sample-source-button{flex:0 0 auto;min-height:48px;text-decoration:none!important;white-space:nowrap}
+@media(max-width:767px){
+  .sample-source{display:grid;gap:14px;padding:16px}
+  .sample-source-button{width:100%;justify-content:center;white-space:normal;text-align:center}
+}
