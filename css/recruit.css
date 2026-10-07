@@ -18,3 +18,7 @@ body[data-page="recruit"] .learning-content{max-width:1120px}
 @media(max-width:640px){.recruit-grid{grid-template-columns:1fr}.recruit-card{padding:20px}.recruit-actions{grid-template-columns:1fr}.recruit-overview{align-items:flex-start;flex-direction:column}.recruit-actions .button{width:100%}}
 
 .recruit-card .recruit-deadline{margin:0 0 8px;color:#142d70;font-size:14px;font-weight:800;line-height:1.5}
+
+.recruit-card .recruit-title{margin:0 0 10px;color:#253b60;font-size:15px;font-weight:750;line-height:1.65}
+.recruit-card .recruit-meta{margin-top:5px;color:#59647a;font-size:13px;line-height:1.65}
+.recruit-card .recruit-meta strong{margin-right:5px;color:#334d77;font-weight:800}
