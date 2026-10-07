@@ -43,7 +43,7 @@ function renderJobs(){
   const query = ($("#recruit-query")?.value || "").trim().toLocaleLowerCase("ko-KR");
   const filtered = jobs
     .filter(job => currentSite === "전체" || job.site === currentSite)
-    .filter(job => !query || (job.company + " " + job.site).toLocaleLowerCase("ko-KR").includes(query))
+    .filter(job => !query || [job.company, job.site, job.title, job.position, job.location].filter(Boolean).join(" ").toLocaleLowerCase("ko-KR").includes(query))
     .sort((a,b) => a.company.localeCompare(b.company, "ko"));
   if(status) status.textContent = filtered.length + "건의 채용공고";
   if(!filtered.length){
@@ -55,8 +55,12 @@ function renderJobs(){
     return '<article class="recruit-card">'+
       '<div class="recruit-card-head"><span class="badge recruit-open">채용중</span><span class="recruit-site">'+esc(job.site)+'</span></div>'+
       '<h2>'+esc(job.company)+'</h2>'+
+      (job.title ? '<p class="recruit-title">'+esc(job.title)+'</p>' : '')+
       '<p class="recruit-deadline">'+esc(deadlineText(job))+'</p>'+
-      '<p>지원직무와 상세 모집요건은 실제 채용공고에서 확인하세요.</p>'+
+      (job.position ? '<p class="recruit-meta"><strong>직종</strong> '+esc(job.position)+'</p>' : '')+
+      (job.location ? '<p class="recruit-meta"><strong>근무지</strong> '+esc(job.location)+'</p>' : '')+
+      (job.salary ? '<p class="recruit-meta"><strong>급여</strong> '+esc(job.salary)+'</p>' : '')+
+      (!job.title && !job.position ? '<p>지원직무와 상세 모집요건은 실제 채용공고에서 확인하세요.</p>' : '')+
       '<div class="recruit-actions">'+
         '<a class="button button-secondary" href="'+esc(job.url)+'" target="_blank" rel="noopener noreferrer">채용공고 보기 ↗</a>'+
         '<a class="button button-primary" href="'+esc(applyUrl)+'">지원현황 등록 →</a>'+
