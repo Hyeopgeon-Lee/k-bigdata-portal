@@ -53,6 +53,20 @@ export const services = [
     "order": 1
   },
   {
+    id:"recruit",
+    name:"추천 채용공고",
+    englishName:"Job Openings",
+    category:"career",
+    description:"학과에서 확인한 현재 채용공고를 한 곳에서 보고 지원현황 등록까지 바로 연결하는 서비스",
+    shortDescription:"추천 채용공고를 확인하고 바로 지원현황에 연결하세요.",
+    url:"recruit.html",
+    icon:"clipboard",
+    accent:"blue",
+    tags:["채용공고","기업","신입","입사지원"],
+    featured:true,
+    order:1.5
+  },
+  {
     "id": "apply",
     "name": "입사지원 현황",
     "englishName": "Job Apply",
