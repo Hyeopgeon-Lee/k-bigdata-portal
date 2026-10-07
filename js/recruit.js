@@ -70,7 +70,7 @@ function deadlineText(job){
   if(job.deadlineType === "UNTIL_FILLED") return "채용시 마감";
   if(job.deadlineType === "DATE" && job.deadline){
     const [y,m,d] = job.deadline.split("-");
-    const diff = Math.ceil((Date.parse(job.deadline+"T23:59:59+09:00") - Date.now()) / 86400000);
+    const diff = Math.round((Date.parse(job.deadline+"T00:00:00+09:00") - Date.parse(todayKst+"T00:00:00+09:00")) / 86400000);
     const dday = diff >= 0 ? " · D-" + diff : "";
     return "마감 " + y + "." + m + "." + d + dday;
   }
