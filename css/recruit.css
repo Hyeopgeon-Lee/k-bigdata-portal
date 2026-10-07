@@ -16,3 +16,5 @@ body[data-page="recruit"] .learning-content{max-width:1120px}
 .recruit-empty{grid-column:1/-1;padding:42px 20px;border:1px dashed #bdcbe0;border-radius:14px;background:#fff;color:#59647a;text-align:center}
 @media(max-width:980px){.recruit-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:640px){.recruit-grid{grid-template-columns:1fr}.recruit-card{padding:20px}.recruit-actions{grid-template-columns:1fr}.recruit-overview{align-items:flex-start;flex-direction:column}.recruit-actions .button{width:100%}}
+
+.recruit-card .recruit-deadline{margin:0 0 8px;color:#142d70;font-size:14px;font-weight:800;line-height:1.5}
