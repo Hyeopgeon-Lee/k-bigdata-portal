@@ -1,7 +1,9 @@
 const $ = selector => document.querySelector(selector);
 const esc = value => String(value ?? "").replace(/[&<>'"]/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[char]));
 
-const jobs = (window.K_BIGDATA_RECRUITMENTS || []).filter(job => job.active !== false);
+const todayKst = new Intl.DateTimeFormat('en-CA', { timeZone:'Asia/Seoul', year:'numeric', month:'2-digit', day:'2-digit' }).format(new Date());
+const isOpen = job => job.active !== false && (job.deadlineType !== "DATE" || !job.deadline || job.deadline >= todayKst);
+const jobs = (window.K_BIGDATA_RECRUITMENTS || []).filter(isOpen);
 let currentSite = "전체";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -53,6 +55,7 @@ function renderJobs(){
     return '<article class="recruit-card">'+
       '<div class="recruit-card-head"><span class="badge recruit-open">채용중</span><span class="recruit-site">'+esc(job.site)+'</span></div>'+
       '<h2>'+esc(job.company)+'</h2>'+
+      '<p class="recruit-deadline">'+esc(deadlineText(job))+'</p>'+
       '<p>지원직무와 상세 모집요건은 실제 채용공고에서 확인하세요.</p>'+
       '<div class="recruit-actions">'+
         '<a class="button button-secondary" href="'+esc(job.url)+'" target="_blank" rel="noopener noreferrer">채용공고 보기 ↗</a>'+
@@ -60,4 +63,16 @@ function renderJobs(){
       '</div>'+
     '</article>';
   }).join("");
+}
+
+
+function deadlineText(job){
+  if(job.deadlineType === "UNTIL_FILLED") return "채용시 마감";
+  if(job.deadlineType === "DATE" && job.deadline){
+    const [y,m,d] = job.deadline.split("-");
+    const diff = Math.ceil((Date.parse(job.deadline+"T23:59:59+09:00") - Date.now()) / 86400000);
+    const dday = diff >= 0 ? " · D-" + diff : "";
+    return "마감 " + y + "." + m + "." + d + dday;
+  }
+  return "마감일 확인 필요";
 }
