@@ -5,6 +5,8 @@ Vanilla HTML/CSS/JavaScript 기반 GitHub Pages 정적 사이트이며 로그인
 
 운영 주소: https://portal.k-bigdata.kr/
 
+GA4 접속 통계: 9개 페이지에 공통 분석 스크립트를 연결했습니다. 실제 데이터 수집은 관리자가 GA4 측정 ID를 발급해 `js/analytics.js`에 입력한 후 시작됩니다. [설치·개인정보 보호·보고서 안내](docs/analytics-setup.md)를 참고하세요.
+
 ## 메뉴 구조
 
 - 취업 · 진로: IT 직무 가이드, 취업 준비 점검, 입사지원 현황, 졸업생 네트워크
