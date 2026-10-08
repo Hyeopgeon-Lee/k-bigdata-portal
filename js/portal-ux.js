@@ -66,7 +66,7 @@ export async function initPortalUX(){
   nav.innerHTML=portalNavLinks.map(item=>{
    const service=services.find(s=>s.id===item.id);
    if(!service)return "";
-   const current=!/^https?:\/\//.test(service.url)&&location.pathname.endsWith(service.url);
+   const current=nav.dataset.navCurrent===item.id||!/^https?:\/\//.test(service.url)&&location.pathname.endsWith(service.url);
    return '<a href="'+esc(service.url)+'" data-nav-group="'+esc(item.group)+'"'+(current?' aria-current="page"':'')+'>'+esc(item.label)+'</a>';
   }).join("");
   const current=nav.querySelector('[aria-current="page"]');
