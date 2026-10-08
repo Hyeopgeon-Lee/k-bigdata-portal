@@ -23,3 +23,6 @@ body[data-page=courses] .site-footer{margin-top:0}
 .course-empty .course-actions{justify-content:center}
 .course-btn-disabled{opacity:.5;cursor:not-allowed;pointer-events:none;background:#f1f3f7}
 @media(max-width:620px){.course-empty{padding-block:28px!important}.course-empty .course-actions{flex-direction:column}.course-empty .course-actions .course-btn{width:100%}}
+
+/* Previously completed questions show answer inline without the locked button. */
+#show-answer[hidden]{display:none!important}
