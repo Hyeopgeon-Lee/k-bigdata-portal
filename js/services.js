@@ -25,6 +25,7 @@ export const categories = {
   }
 };
 export const services = [
+  {id:"course-bigdata",name:"빅데이터플랫폼실습 문제풀이",englishName:"COURSE PRACTICE",category:"learning",url:"courses.html",icon:"book",accent:"blue",order:9.3,description:"빅데이터플랫폼실습 중간고사 50문항 · Rocky Linux, Hadoop, HDFS",shortDescription:"중간고사 50문항을 단원별로 학습하고 60초 힌트·120초 해설을 확인하세요.",tags:["교과목","중간고사","Hadoop","HDFS"],aliases:"수업 교과목 빅데이터플랫폼실습 중간고사 Linux Rocky HDFS Hadoop 문제풀이",featured:true},
   {
     id:"practical", name:"실기 코딩·SQL 문제은행", englishName:"PAPER FIRST PRACTICE",
     category:"learning", url:"practical.html", icon:"book", accent:"blue", order:9.5,
@@ -285,6 +286,7 @@ export const portalNavLinks = [
   {id:"apply",label:"입사지원",group:"career"},
   {id:"alumni",label:"졸업생",group:"career"},
   {id:"certifications",label:"자격증",group:"learning"},
+  {id:"course-bigdata",label:"교과목",group:"learning"},
   {id:"practical",label:"실기",group:"learning"},
   {id:"interview",label:"기술면접",group:"learning"},
   {id:"docs",label:"공식문서",group:"learning"},
