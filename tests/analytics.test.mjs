@@ -31,10 +31,12 @@ function simulate({enabled = true, hostname = "portal.k-bigdata.kr",
       "?id=R-IND-SQL-0005&email=foo@example.com#answer"
   };
   const window = {location, dataLayer: []};
-  const code = enabled ? script.replace(
-    'const GA4_MEASUREMENT_ID = "";',
-    'const GA4_MEASUREMENT_ID = "G-TEST123456";'
-  ) : script;
+  const code = script.replace(
+    /const GA4_MEASUREMENT_ID = "[^"]*";/,
+    enabled
+      ? 'const GA4_MEASUREMENT_ID = "G-TEST123456";'
+      : 'const GA4_MEASUREMENT_ID = "";'
+  );
 
   runInNewContext(code, {
     window, document, URL, Date, Set, encodeURIComponent
@@ -46,10 +48,14 @@ function simulate({enabled = true, hostname = "portal.k-bigdata.kr",
   };
 }
 
+test("production GA4 measurement ID is configured", () => {
+  assert.match(script, /const GA4_MEASUREMENT_ID = "G-8PMMKFNRY7";/);
+});
+
 test("all nine production HTML pages load the common GA4 script exactly once", () => {
   for (const page of pages) {
     const html = readFileSync(new URL(page, root), "utf8");
-    assert.equal((html.match(/<script defer src="js\/analytics\.js\?v=20261008-1"><\/script>/g) || []).length, 1, page);
+    assert.equal((html.match(/<script defer src="js\/analytics\.js\?v=20261008-ga4-2"><\/script>/g) || []).length, 1, page);
     assert.match(html, /<head[\s>][\s\S]*?js\/analytics\.js/);
   }
 });
