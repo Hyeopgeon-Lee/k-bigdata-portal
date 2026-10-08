@@ -1,15 +1,15 @@
 /**
  * K-BigData Portal — GA4 traffic analytics
  *
- * Activation: replace the empty measurement ID below with your GA4 Web
- * data stream ID (G-XXXXXXXXXX). Only portal.k-bigdata.kr is measured.
+ * Measurement ID: dedicated GA4 Web data stream for the student portal.
+ * Only portal.k-bigdata.kr is measured.
  * No query strings, hashes, names, student IDs, search terms, or form data
  * are included in our page-view or navigation events.
  */
 (() => {
   "use strict";
 
-  const GA4_MEASUREMENT_ID = "";
+  const GA4_MEASUREMENT_ID = "G-8PMMKFNRY7";
   const PORTAL_HOST = "portal.k-bigdata.kr";
   const SUBDOMAIN_SERVICES = new Set([
     "apply", "ready", "room", "help", "alumni", "ai", "prof"
