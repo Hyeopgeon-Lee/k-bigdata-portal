@@ -26,3 +26,8 @@ body[data-page=courses] .site-footer{margin-top:0}
 
 /* Previously completed questions show answer inline without the locked button. */
 #show-answer[hidden]{display:none!important}
+
+/* Match practical problem share/link layout. */
+.course-share-actions{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto}
+.course-share-actions .course-btn{min-height:42px;padding:8px 12px;font-size:13px}
+@media(max-width:480px){.course-share-actions{width:100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));margin-left:0}.course-share-actions .course-btn{width:100%;min-height:44px}}
