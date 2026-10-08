@@ -13,3 +13,13 @@ body[data-page=courses] .course-wrap .back-link{display:inline-flex;align-items:
 body[data-page=courses] .course-reveal[hidden]{display:none}
 body[data-page=courses] .site-footer{margin-top:0}
 @media(max-width:767px){body[data-page=courses] .course-wrap>.portal-page-hero{padding:18px 0 14px}body[data-page=courses] .course-wrap>.portal-page-hero h1{font-size:28px}body[data-page=courses] .course-panel{padding:18px}}
+
+/* Empty review: separate informational state, never show inert quiz controls. */
+#quiz-panel[hidden],#empty-review[hidden]{display:none!important}
+.course-empty{text-align:center;padding-block:48px!important}
+.course-empty-icon{font-size:38px;color:#60749b;margin-bottom:12px}
+.course-empty h2{margin:0 0 12px!important;font-size:clamp(21px,3vw,26px)!important}
+.course-empty p{color:var(--color-text-muted);line-height:1.8}
+.course-empty .course-actions{justify-content:center}
+.course-btn-disabled{opacity:.5;cursor:not-allowed;pointer-events:none;background:#f1f3f7}
+@media(max-width:620px){.course-empty{padding-block:28px!important}.course-empty .course-actions{flex-direction:column}.course-empty .course-actions .course-btn{width:100%}}
