@@ -65,8 +65,10 @@
     page_title: document.title
   });
 
+  // Send all portal events only to the dedicated student GA4 stream.
   // Exactly one explicitly sanitized page_view per full page load.
   gtag("event", "page_view", {
+    send_to: GA4_MEASUREMENT_ID,
     page_location: safeLocation,
     page_referrer: referrer,
     page_title: document.title
@@ -93,6 +95,7 @@
       if (destination === "/other") return;
       if (destination === currentPage) return; // same-page or anchor navigation
       gtag("event", "portal_navigation", {
+        send_to: GA4_MEASUREMENT_ID,
         destination_page: destination
       });
       return;
@@ -102,6 +105,7 @@
       const service = url.hostname.slice(0, -".k-bigdata.kr".length);
       if (SUBDOMAIN_SERVICES.has(service)) {
         gtag("event", "portal_service_open", {
+          send_to: GA4_MEASUREMENT_ID,
           destination_service: service
         });
       }
