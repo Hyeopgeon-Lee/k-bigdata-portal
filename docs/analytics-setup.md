@@ -9,6 +9,7 @@
 - 사이트: https://portal.k-bigdata.kr/
 - 측정 ID: `G-8PMMKFNRY7`
 - 공통 태그: `js/analytics.js`; 모든 9개 HTML 페이지에 로드
+- 모든 이벤트(`page_view`, `portal_navigation`, `portal_service_open`)의 `send_to`를 `G-8PMMKFNRY7`로 명시해 기존 입시·홍보용 GA4와 데이터 경로를 분리합니다.
 - 기존 입시·홍보용 GA4 속성과 별도 운영
 
 ## 2. GA4 관리자 확인
