@@ -55,7 +55,7 @@ test("production GA4 measurement ID is configured", () => {
 test("all nine production HTML pages load the common GA4 script exactly once", () => {
   for (const page of pages) {
     const html = readFileSync(new URL(page, root), "utf8");
-    assert.equal((html.match(/<script defer src="js\/analytics\.js\?v=20261008-ga4-2"><\/script>/g) || []).length, 1, page);
+    assert.equal((html.match(/<script defer src="js\/analytics\.js\?v=20261008-ga4-3"><\/script>/g) || []).length, 1, page);
     assert.match(html, /<head[\s>][\s\S]*?js\/analytics\.js/);
   }
 });
@@ -86,6 +86,23 @@ test("config and page view strip query, hash, user identifiers, and referrer que
   assert.equal(pageViews[0][2].page_location, "https://portal.k-bigdata.kr/practical.html");
   assert.equal(pageViews[0][2].page_referrer, "https://portal.k-bigdata.kr/interview.html");
   assert.doesNotMatch(JSON.stringify(result.calls), /foo@example\.com|R-IND-SQL-0005|student=123/);
+});
+
+test("page views and click events route exclusively to the student GA4 stream", () => {
+  const result = simulate();
+  const click = href => result.listeners.click({
+    target: {closest: () => ({href})}
+  });
+  click("https://portal.k-bigdata.kr/jobs.html");
+  click("https://apply.k-bigdata.kr/");
+  const events = result.calls.filter(call => call[0] === "event");
+  assert.deepEqual(
+    events.map(call => call[1]),
+    ["page_view", "portal_navigation", "portal_service_open"]
+  );
+  for (const event of events) {
+    assert.equal(event[2].send_to, "G-TEST123456");
+  }
 });
 
 test("only safe internal pages and known K-BigData services are reported on clicks", () => {
