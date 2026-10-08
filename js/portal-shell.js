@@ -1,4 +1,4 @@
-import {initPortalUX} from "./portal-ux.js?v=20261006-resume-2";
+import {initPortalUX} from "./portal-ux.js?v=20261008-course-nav-1";
 import {initGroupedSearch} from "./search-ui.js?v=20261005-perf-1";
 import {footerLinks} from "./services.js?v=20261006-resume-2";
 
