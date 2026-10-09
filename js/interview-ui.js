@@ -1,4 +1,4 @@
-import {questions, interviewGroups, interviewJobTags, questionSearchText, matchesInterviewCategory, selectRandomQuestions, interviewSources, getInterviewGlossary} from "./interview.js?v=20261009-glossary-1";
+import {questions, interviewGroups, interviewJobTags, questionSearchText, matchesInterviewCategory, selectRandomQuestions, interviewSources, getInterviewGlossary} from "./interview.js?v=20261009-interview-ux-1";
 import {matches} from "./search-core.js?v=20261005-perf-1";
 import {interviewRoleLinks} from "./interview-links.js?v=20261005-perf-3";
 import {INTERVIEW_HISTORY_KEY,createInterviewSession,interviewSessionStats,serializeInterviewState,restoreInterviewState} from "./interview-session.js?v=20261009-interview-ux-1";
