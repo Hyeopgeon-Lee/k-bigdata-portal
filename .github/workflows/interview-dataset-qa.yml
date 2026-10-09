@@ -1,0 +1,29 @@
+name: Interview dataset QA
+on:
+  push:
+    branches: [main]
+    paths:
+      - "data/interview-questions.js"
+      - "data/interview-sources.js"
+      - "js/interview.js"
+      - "js/interview-ui.js"
+      - "js/learning-ui.js"
+      - "interview.html"
+      - "tests/interview-*.test.mjs"
+      - ".github/workflows/interview-dataset-qa.yml"
+  workflow_dispatch:
+jobs:
+  review:
+    name: Validate interview 150 dataset and UI
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Run interview data and UI checks
+        run: |
+          node tests/interview-bank.test.mjs
+          node tests/interview-accuracy.test.mjs
+          node tests/interview-mobile.test.mjs
+          node tests/interview-sharing.test.mjs
