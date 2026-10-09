@@ -9,6 +9,7 @@ on:
       - "data/interview-sources.js"
       - "js/interview.js"
       - "js/interview-ui.js"
+      - "js/interview-session.js"
       - "js/learning-ui.js"
       - "interview.html"
       - "tests/interview-*.test.mjs"
@@ -30,3 +31,4 @@ jobs:
           node tests/interview-mobile.test.mjs
           node tests/interview-sharing.test.mjs
           node tests/interview-glossary.test.mjs
+          node tests/interview-session.test.mjs
