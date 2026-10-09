@@ -1,4 +1,5 @@
 import {interviewEnrichment} from "./interview-enrichment.js?v=20261009-interview-coaching-1";
+import {interviewModelAnswers} from "./interview-model-answers.js?v=20261009-interview-coaching-1";
 // Edit named fields below. group is the visible learning field; category preserves existing deep links.
 const groups = [];
 const prefixes = ["DS", "JAVA", "DB", "OS", "NET", "SPR", "GIT", "DK", "CN", "AI"];
@@ -658,7 +659,7 @@ export const questions = groups.map(row => {
     throw new Error("Missing interview coaching content: " + row.id);
   }
   const [spokenContinuation, learningExample] = enrichment;
-  const shortAnswer = row.shortAnswer.trim() + " " + spokenContinuation.trim();
+  const shortAnswer = interviewModelAnswers[row.id] || (row.shortAnswer.trim() + " " + spokenContinuation.trim());
   return {
     ...row,
     shortAnswer, answer:shortAnswer, // Compatibility for existing search consumers.
