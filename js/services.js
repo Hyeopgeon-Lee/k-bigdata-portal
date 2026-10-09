@@ -25,7 +25,6 @@ export const categories = {
   }
 };
 export const services = [
-  {id:"course-bigdata",name:"교과목 안내",englishName:"COURSE INFORMATION",category:"learning",url:"courses.html",icon:"book",accent:"blue",order:9.3,description:"빅데이터플랫폼실습 교과목과 Rocky Linux·Hadoop·HDFS 학습 단원을 안내합니다.",shortDescription:"교과목 소개와 주요 학습 단원을 확인하세요.",tags:["교과목","Hadoop","HDFS"],aliases:"수업 교과목 빅데이터플랫폼실습 Linux Rocky HDFS Hadoop",featured:true},
   {
     id:"practical", name:"실기 코딩·SQL 문제은행", englishName:"PAPER FIRST PRACTICE",
     category:"learning", url:"practical.html", icon:"book", accent:"blue", order:9.5,
@@ -286,7 +285,6 @@ export const portalNavLinks = [
   {id:"apply",label:"입사지원",group:"career"},
   {id:"alumni",label:"졸업생",group:"career"},
   {id:"certifications",label:"자격증",group:"learning"},
-  {id:"course-bigdata",label:"교과목",group:"learning"},
   {id:"practical",label:"실기",group:"learning"},
   {id:"interview",label:"기술면접",group:"learning"},
   {id:"docs",label:"공식문서",group:"learning"},

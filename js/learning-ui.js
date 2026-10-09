@@ -1,6 +1,6 @@
 import {initPortalShell} from "./portal-shell.js?v=20261005-perf-4";
 import {matches,jobSearchText,docSearchText,certificationSearchText} from "./search-core.js?v=20261005-perf-1";
-import {services} from "./services.js?v=20261009-course-info-1";
+import {services} from "./services.js?v=20261009-course-removed-2";
 
 let certifications=[],certificationPaths=[],renderCertificateCard=null,renderCertificateDetail=null;
 let jobs=[],jobComparisons=[],jobGuidance={},jobGroups=[],jobLearningDocs=null;
