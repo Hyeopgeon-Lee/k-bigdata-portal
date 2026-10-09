@@ -7,7 +7,7 @@ export const interviewGroups = [...new Set(questions.map(q => q.group))];
 export const interviewJobTags = ["공통", "백엔드", "Java", "데이터엔지니어", "AI개발", "클라우드", "DevOps"];
 export const questionSearchText = q => [q.id, q.code, q.group, q.category, q.subCategory, q.question,
   q.shortAnswer, q.detailedAnswer, q.aliases, ...q.keywords, ...q.followUps, ...q.jobTags,
-  ...getInterviewGlossary(q).map(term=>term.title)].join(" ");
+  ...getInterviewGlossary(q).flatMap(term=>[term.title,term.definition,term.meaning])].join(" ");
 export function matchesInterviewCategory(question, category) {
   return category === "전체" || question.group === category || question.category === category;
 }
