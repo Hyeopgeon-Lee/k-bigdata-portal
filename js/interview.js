@@ -1,11 +1,13 @@
 import {questions} from "../data/interview-questions.js?v=20261009-reviewed-150-3";
-export {questions};
+import {getInterviewGlossary} from "../data/interview-glossary.js?v=20261009-glossary-1";
+export {questions, getInterviewGlossary};
 export {interviewSources} from "../data/interview-sources.js?v=20261009-reviewed-150-3";
 
 export const interviewGroups = [...new Set(questions.map(q => q.group))];
 export const interviewJobTags = ["공통", "백엔드", "Java", "데이터엔지니어", "AI개발", "클라우드", "DevOps"];
 export const questionSearchText = q => [q.id, q.code, q.group, q.category, q.subCategory, q.question,
-  q.shortAnswer, q.detailedAnswer, q.aliases, ...q.keywords, ...q.followUps, ...q.jobTags].join(" ");
+  q.shortAnswer, q.detailedAnswer, q.aliases, ...q.keywords, ...q.followUps, ...q.jobTags,
+  ...getInterviewGlossary(q).map(term=>term.title)].join(" ");
 export function matchesInterviewCategory(question, category) {
   return category === "전체" || question.group === category || question.category === category;
 }
