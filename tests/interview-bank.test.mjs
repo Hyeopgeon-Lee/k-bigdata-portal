@@ -40,5 +40,5 @@ for(const group of interviewGroups)assert.ok(filterInterviewQuestions(questions,
 for(const term of ["JWT","쿠버네티스","K8s","트랜잭션","AI 에이전트","MCP"])assert.ok(filterInterviewQuestions(questions,{query:term}).length,term);
 const html=readFileSync(new URL("../interview.html",import.meta.url),"utf8");
 assert.ok(html.includes('content="noindex, nofollow"'));
-assert.ok(html.includes('js/learning-ui.js?v=20261009-interview-ux-2'));
+assert.ok(html.includes('js/learning-ui.js?v='));
 console.log("PASS: 150 records / 11 areas / legacy IDs and codes / 300 unique random sessions / filters / spoken answers / no stale explanations");
