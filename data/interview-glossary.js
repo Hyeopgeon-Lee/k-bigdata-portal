@@ -451,6 +451,11 @@ const definitions = {
     "연결 수립·전달 보장을 기본 제공하지 않는 데이터그램 전송 프로토콜입니다.",
     "응용 계층에서 필요하면 재전송·순서 제어를 구현해야 합니다."
   ],
+  "tcpclose": [
+    "TCP 연결 종료",
+    "일반적인 TCP 연결 종료에서는 각 방향의 FIN·ACK 교환으로 송신 종료를 알립니다.",
+    "종료 절차가 항상 정확히 네 개의 독립 패킷으로 나타나는 것은 아닙니다."
+  ],
   "handshake": [
     "TCP 3-Way Handshake",
     "SYN → SYN-ACK → ACK를 주고받으며 연결 상태를 맞추는 절차입니다.",
@@ -1282,7 +1287,7 @@ export const interviewGlossaryByQuestion = Object.freeze({
   ],
   "NET-004": [
     "tcp",
-    "handshake"
+    "tcpclose"
   ],
   "q12": [
     "tls",
