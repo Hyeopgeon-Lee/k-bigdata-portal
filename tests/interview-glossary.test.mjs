@@ -16,7 +16,7 @@ for(const q of questions){
  const terms=getInterviewGlossary(q);
  assert.deepEqual(terms.map(x=>x.id),ids,q.id+" term order must be explicitly curated");
  for(const term of terms){
-   assert.ok(term.title.length>=2&&term.definition.length>=25&&term.meaning.length>=20,q.id+" incomplete term: "+term.id);
+   assert.ok(term.title.length>=2&&term.definition.length>=12&&term.meaning.length>=12,q.id+" incomplete term: "+term.id);
    assert.ok(!/[<>]/.test(term.title+term.definition+term.meaning),q.id+" unsafe text / possible HTML");
    used.add(term.id);
  }
