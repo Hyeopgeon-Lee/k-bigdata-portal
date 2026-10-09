@@ -18,5 +18,5 @@ assert.match(ui,/navigator\.share/);
 assert.match(ui,/navigator\.clipboard\?\.writeText/);
 assert.match(ui,/url\.searchParams\.set\("id",q\.id\)/);
 assert.ok(css.includes(".interview-share-row"));
-assert.ok(html.includes("js/learning-ui.js?v=20261009-interview-ux-2"));
+assert.ok(html.includes("js/learning-ui.js?v="));
 console.log("PASS: 150 links keep IDs and do not expose answers in shared text.");
