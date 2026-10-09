@@ -8,6 +8,7 @@ assert.equal(filterInterviewQuestions(questions,{query:"존재하지않는문제
 for(const q of questions){
  const html=renderInterviewQuestion(q,true);
  assert.ok(html.includes("question-answer")&&html.includes("short-answer"),q.id);
+ assert.ok(html.includes("더 알아보기 · 핵심 기술 용어") && html.includes("interview-term-list"),q.id);
  assert.ok(html.includes("30초")||html.includes("10초"),q.id);
  assert.ok(!html.includes("상세 설명")&&!html.includes("적용 예시"),q.id);
  assert.ok(html.includes('rel="noopener noreferrer"')||q.sourceIds.length===0,q.id);
