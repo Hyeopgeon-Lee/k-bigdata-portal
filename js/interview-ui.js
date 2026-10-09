@@ -141,9 +141,14 @@ export function initInterview(){
    $("#reset-interview").hidden=!applied.length;
  }
  function listCard(q){
+   const id=esc(q.id);
+   const practice='<button type="button" class="button button-primary" data-action="select" data-id="'+id+'" aria-label="이 문제 연습하기">'+
+     '<span class="interview-action-full">이 문제 연습하기</span><span class="interview-action-compact" aria-hidden="true">연습하기</span></button>';
+   const report=action("report-problem","오류 신고",false,'data-id="'+id+'" aria-label="해당 기술면접 문항 오류 신고"');
+   const permalink='<a class="button button-secondary question-permalink" href="interview.html?id='+encodeURIComponent(q.id)+'" '+
+     'aria-label="'+esc(q.code)+' 문제 페이지 열기">문제 링크 <span aria-hidden="true">→</span></a>';
    return '<article class="question">'+meta(q)+'<h2 tabindex="-1">'+esc(q.question)+'</h2>'+roles(q)+
-     action("select","이 문제 연습하기",false,'data-id="'+esc(q.id)+'"')+action("report-problem","오류 신고",false,'data-id="'+esc(q.id)+'" aria-label="해당 기술면접 문항 오류 신고"')+
-     '<a class="question-permalink" href="interview.html?id='+encodeURIComponent(q.id)+'"><span class="sr-only">'+esc(q.question)+' </span>문제 링크 →</a></article>';
+     '<div class="interview-list-actions" role="group" aria-label="문항별 작업">'+practice+report+permalink+'</div></article>';
  }
  const pool=()=>filterInterviewQuestions(questions,filters);
  function updateProgress(){
