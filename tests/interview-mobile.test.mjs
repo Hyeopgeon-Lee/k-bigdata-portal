@@ -24,4 +24,8 @@ assert.ok(ui.includes("available.slice(0,limit)"));
 assert.ok(ui.includes("limit+=20"));
 assert.ok(!ui.includes("localStorage")&&!ui.includes("sessionStorage"));
 assert.ok(css.includes("env(safe-area-inset-bottom)"));
+assert.ok(css.includes("--interview-bottom-offset"));
+assert.ok(ui.includes("ResizeObserver"));
+assert.ok(ui.includes("interviewSessionStats(session)"));
+assert.ok(ui.includes("popstate"));
 console.log("PASS: mobile markup / filter states / link accessibility / escaped short answers / no stale content");
