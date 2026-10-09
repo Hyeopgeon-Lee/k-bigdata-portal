@@ -1,4 +1,4 @@
-import { categories, services, serviceAudience, isExternal, studentJourney,quickActions } from "./services.js";
+import { categories, services, serviceAudience, isExternal, studentJourney,quickActions } from "./services.js?v=20261009-course-info-1";
 
 const icons = {
   book: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h7l2 2 2-2h7v16h-7l-2 2-2-2H3ZM12 6v16M6 9h3M15 9h3M6 13h3M15 13h3"/></svg>',
