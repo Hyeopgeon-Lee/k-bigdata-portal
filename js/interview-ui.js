@@ -2,6 +2,7 @@ import {questions, interviewGroups, interviewJobTags, questionSearchText, matche
 import {matches} from "./search-core.js?v=20261005-perf-1";
 import {interviewRoleLinks} from "./interview-links.js?v=20261005-perf-3";
 import {INTERVIEW_HISTORY_KEY,createInterviewSession,interviewSessionStats,serializeInterviewState,restoreInterviewState} from "./interview-session.js?v=20261009-interview-ux-1";
+import {learningReportUrl} from "./learning-report.js?v=20261009-1";
 const esc=value=>String(value??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
 const external=s=>'<a href="'+esc(s.url)+'" target="_blank" rel="noopener noreferrer">'+esc(s.name)+' ↗<span class="sr-only"> 외부 문서, 새 창</span></a>';
 const action=(key,text,primary=false,extra="")=>'<button type="button" class="button button-'+(primary?'primary':'secondary')+'" data-action="'+key+'" '+extra+'>'+esc(text)+'</button>';
@@ -67,7 +68,7 @@ async function copyInterviewQuestionLink(q){
  }
 }
 export function renderInterviewQuestion(q,practice=false,options={}){
- const share=practice?'<div class="interview-share-row" aria-label="문제 공유">'+action("share-problem","문제 공유",false,'aria-label="현재 기술면접 문제 공유"')+action("copy-problem-link","링크 복사",false,'aria-label="현재 기술면접 문제 링크 복사"')+'</div><p id="interview-share-status" class="interview-share-status" role="status" aria-live="polite"></p>':"";
+ const share=practice?'<div class="interview-share-row" aria-label="문제 공유">'+action("share-problem","문제 공유",false,'aria-label="현재 기술면접 문제 공유"')+action("copy-problem-link","링크 복사",false,'aria-label="현재 기술면접 문제 링크 복사"')+action("report-problem","오류 신고",false,'aria-label="현재 기술면접 문항 오류 신고"')+'</div><p id="interview-share-status" class="interview-share-status" role="status" aria-live="polite"></p>':"";
  const sources=(q.sourceIds||[]).map(id=>interviewSources[id]).filter(Boolean);
  const reference=sources.length?'<details class="question-sources"><summary>관련 공식문서</summary><ul>'+sources.map(s=>'<li>'+external(s)+'</li>').join('')+'</ul></details>':"";
  const terms=getInterviewGlossary(q);
@@ -278,6 +279,7 @@ export function initInterview(){
    }
    if(key==="share-problem"){const q=direct||session?.items?.[session.index];if(q)void shareInterviewQuestion(q);}
    if(key==="copy-problem-link"){const q=direct||session?.items?.[session.index];if(q)void copyInterviewQuestionLink(q);}
+    if(key==="report-problem"){const q=direct||session?.items?.[session.index];if(q)location.assign(learningReportUrl("interview",q,q.group));}
    if(key==="toggle-practiced"&&session){
      const q=session.items[session.index];if(!q)return;
      if(session.practiced.has(q.id))session.practiced.delete(q.id);else session.practiced.add(q.id);
