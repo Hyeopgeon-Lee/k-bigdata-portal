@@ -1070,3 +1070,12 @@
   }
 }
 
+
+
+/* Learning-problem report link: equally accessible on touch screens. */
+.practical-page .solve-share-row [data-action="report-problem"]{
+  border-color:#fed7aa;background:#fff7ed;color:#9a3412;
+}
+@media(max-width:480px){
+  .practical-page .solve-share-row{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
