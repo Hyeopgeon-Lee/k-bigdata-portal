@@ -1,4 +1,4 @@
-import {questions} from "../data/interview-questions.js?v=20261009-interview-coaching-1";
+import {questions} from "../data/interview-questions.js?v=20261009-direct-answers-2";
 export {questions};
 export {interviewSources} from "../data/interview-sources.js?v=20261005-accuracy-1";
 
