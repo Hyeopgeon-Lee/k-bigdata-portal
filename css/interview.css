@@ -97,3 +97,55 @@ body[data-page="interview"] .interview-share-status:empty{display:none}
     text-align:left;
   }
 }
+
+/* Spoken coaching answer and separate, example-led teaching section. */
+body[data-page="interview"] .question .answer-content .interview-section-note{
+  font-size:13px;line-height:1.65;color:#52637b;margin:0 0 10px;
+}
+body[data-page="interview"] .question .answer-content>h3{margin:18px 0 6px}
+body[data-page="interview"] .question .short-answer{
+  margin:0 0 16px;padding:18px 20px;border-left:4px solid #2563eb;
+  border-radius:0 12px 12px 0;background:#eff6ff;color:#172b50;
+  font-size:16px;line-height:1.9;word-break:keep-all;overflow-wrap:anywhere;
+}
+body[data-page="interview"] .interview-learning-detail{
+  margin:16px 0 12px;border:1px solid #d5deec;border-radius:12px;
+  padding:0 14px;background:#fff;
+}
+body[data-page="interview"] .interview-learning-detail>summary{
+  min-height:52px;color:#1c447f;font-weight:700;cursor:pointer;
+}
+body[data-page="interview"] .interview-learning-detail[open]>summary{
+  border-bottom:1px solid #dfe5ee;
+}
+body[data-page="interview"] .interview-explanation{padding:14px 2px 16px}
+body[data-page="interview"] .interview-explanation h3,
+body[data-page="interview"] .interview-explanation h4{
+  font-size:16px;line-height:1.5;margin:4px 0 10px;color:#162d53;
+}
+body[data-page="interview"] .interview-explanation p{
+  margin:0 0 12px;line-height:1.85;word-break:keep-all;overflow-wrap:anywhere;
+}
+body[data-page="interview"] .interview-learning-example{
+  margin:16px 0 0;padding:14px 16px;background:#f5f7fb;
+  border-radius:10px;border:1px solid #e1e7f0;
+}
+body[data-page="interview"] .interview-learning-example p:last-child{margin-bottom:0}
+body[data-page="interview"] .interview-code-example{margin:16px 0 0}
+body[data-page="interview"] .interview-code-example pre{
+  max-width:100%;overflow-x:auto;white-space:pre;tab-size:2;
+  padding:14px 16px;border-radius:10px;background:#16243d;
+  color:#f7faff;font-size:13px;line-height:1.65;
+  -webkit-overflow-scrolling:touch;
+}
+body[data-page="interview"] .interview-code-example code{
+  font:inherit;white-space:inherit;
+}
+body[data-page="interview"] .answer-content .interview-learning-detail + h3{
+  margin-top:18px;
+}
+@media(max-width:480px){
+  body[data-page="interview"] .question .short-answer{padding:14px 15px;font-size:15px}
+  body[data-page="interview"] .interview-learning-detail{padding:0 11px}
+  body[data-page="interview"] .interview-learning-example{padding:12px}
+}
