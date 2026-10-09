@@ -1,5 +1,7 @@
 // Official references for reviewing technical concepts.
 export const interviewSources = {
+  scrum: {name: "Scrum Guide · Official", url: "https://scrumguides.org/scrum-guide.html", type: "official"},
+  mcp: {name: "Model Context Protocol · Specification", url: "https://modelcontextprotocol.io/specification/2026-07-28", type: "official"},
   nist: {name: "NIST · Dictionary of Algorithms and Data Structures", url: "https://xlinux.nist.gov/dads/", type: "official"},
   java: {name: "Oracle Java API · Object / Collections", url: "https://docs.oracle.com/en/java/javase/25/docs/api/index.html", type: "official"},
   jvm: {name: "Oracle JVM Specification · Runtime data areas", url: "https://docs.oracle.com/javase/specs/jvms/se25/html/jvms-2.html", type: "official"},
