@@ -142,7 +142,7 @@ export function initInterview(){
  }
  function listCard(q){
    return '<article class="question">'+meta(q)+'<h2 tabindex="-1">'+esc(q.question)+'</h2>'+roles(q)+
-     action("select","이 문제 연습하기",false,'data-id="'+esc(q.id)+'"')+
+     action("select","이 문제 연습하기",false,'data-id="'+esc(q.id)+'"')+action("report-problem","오류 신고",false,'data-id="'+esc(q.id)+'" aria-label="해당 기술면접 문항 오류 신고"')+
      '<a class="question-permalink" href="interview.html?id='+encodeURIComponent(q.id)+'"><span class="sr-only">'+esc(q.question)+' </span>문제 링크 →</a></article>';
  }
  const pool=()=>filterInterviewQuestions(questions,filters);
@@ -279,7 +279,7 @@ export function initInterview(){
    }
    if(key==="share-problem"){const q=direct||session?.items?.[session.index];if(q)void shareInterviewQuestion(q);}
    if(key==="copy-problem-link"){const q=direct||session?.items?.[session.index];if(q)void copyInterviewQuestionLink(q);}
-    if(key==="report-problem"){const q=direct||session?.items?.[session.index];if(q)location.assign(learningReportUrl("interview",q,q.group));}
+    if(key==="report-problem"){const q=questions.find(item=>item.id===b.dataset.id)||direct||session?.items?.[session.index];if(q)location.assign(learningReportUrl("interview",q,q.group));}
    if(key==="toggle-practiced"&&session){
      const q=session.items[session.index];if(!q)return;
      if(session.practiced.has(q.id))session.practiced.delete(q.id);else session.practiced.add(q.id);
