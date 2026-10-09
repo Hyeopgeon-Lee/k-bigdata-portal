@@ -31,6 +31,13 @@ assert.match(ui,/navigator\.share/);
 assert.match(ui,/navigator\.clipboard\?\.writeText/);
 assert.match(ui,/url\.searchParams\.set\("id",q\.id\)/);
 assert.ok(css.includes(".interview-share-row"));
+assert.ok(ui.includes('class="interview-list-actions"'),"browse card has a grouped action row");
+assert.ok(ui.includes('class="button button-primary" data-action="select"'),"practice is the primary button");
+assert.ok(ui.includes('class="button button-secondary question-permalink"'),"problem URL is a styled link, not plain text");
+assert.ok(ui.includes('data-action="report-problem"'),"report button keeps its delegated click action");
+assert.ok(css.includes('grid-template-columns:repeat(3,minmax(0,1fr))'),"three columns prevent uneven mobile action alignment");
+assert.ok(css.includes('.interview-action-compact'),"mobile text fits inside its button");
+
 assert.ok(html.includes("js/learning-ui.js?v="));
 const sample=new URL(learningReportUrl("practical",{id:"R-IND-JAVA-0006",question:"배열 출력"},"산업기사"));
 assert.equal(sample.searchParams.get("source"),"practical");
