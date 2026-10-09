@@ -21,8 +21,11 @@ for(const q of questions){
    used.add(term.id);
  }
  assert.ok(questionSearchText(q).includes(terms[0].title),q.id+" glossary search");
+ assert.ok(questionSearchText(q).includes(terms[0].definition),q.id+" definition search");
+ assert.ok(questionSearchText(q).includes(terms[0].meaning),q.id+" meaning search");
  const html=renderInterviewQuestion(q,true);
  assert.ok(html.includes('<details class="interview-more">'),q.id+" must be expandable");
+ assert.ok(html.indexOf('<details class="interview-more">')>html.indexOf('class="question-answer"'),q.id+" terms must appear outside the oral response section");
  assert.ok(html.includes("더 알아보기 · 핵심 기술 용어"),q.id);
  assert.ok(html.includes("알아둘 점"),q.id);
  assert.ok(html.includes(terms[0].title),q.id);
@@ -49,10 +52,10 @@ const html=readFileSync(new URL("../interview.html",import.meta.url),"utf8");
 const css=readFileSync(new URL("../css/interview.css",import.meta.url),"utf8");
 const lazy=readFileSync(new URL("../js/learning-ui.js",import.meta.url),"utf8");
 const ui=readFileSync(new URL("../js/interview-ui.js",import.meta.url),"utf8");
-assert.ok(html.includes("css/interview.css?v=20261009-glossary-1"));
-assert.ok(html.includes("js/learning-ui.js?v=20261009-glossary-1"));
-assert.ok(lazy.includes("interview-ui.js?v=20261009-glossary-1"));
-assert.ok(ui.includes("interview.js?v=20261009-glossary-1"));
+assert.ok(html.includes("css/interview.css?v=20261009-interview-ux-1"));
+assert.ok(html.includes("js/learning-ui.js?v=20261009-interview-ux-1"));
+assert.ok(lazy.includes("interview-ui.js?v=20261009-interview-ux-1"));
+assert.ok(ui.includes("interview.js?v=20261009-interview-ux-1"));
 assert.ok(css.includes("interview-more>summary")&&css.includes("min-height:52px"));
 assert.ok(css.includes("@media(max-width:480px)"));
 assert.ok(css.includes("word-break:keep-all")&&css.includes("overflow-wrap:anywhere"));
