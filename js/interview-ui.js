@@ -1,4 +1,4 @@
-import {questions, interviewGroups, interviewJobTags, questionSearchText, matchesInterviewCategory, selectRandomQuestions, interviewSources} from "./interview.js?v=20261009-reviewed-150-3";
+import {questions, interviewGroups, interviewJobTags, questionSearchText, matchesInterviewCategory, selectRandomQuestions, interviewSources, getInterviewGlossary} from "./interview.js?v=20261009-glossary-1";
 import {matches} from "./search-core.js?v=20261005-perf-1";
 import {interviewRoleLinks} from "./interview-links.js?v=20261005-perf-3";
 const esc=value=>String(value??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
@@ -69,11 +69,18 @@ export function renderInterviewQuestion(q,practice=false){
  const share=practice?'<div class="interview-share-row" aria-label="문제 공유">'+action("share-problem","문제 공유",false,'aria-label="현재 기술면접 문제 공유"')+action("copy-problem-link","링크 복사",false,'aria-label="현재 기술면접 문제 링크 복사"')+'</div><p id="interview-share-status" class="interview-share-status" role="status" aria-live="polite"></p>':"";
  const sources=(q.sourceIds||[]).map(id=>interviewSources[id]).filter(Boolean);
  const reference=sources.length?'<details class="question-sources"><summary>관련 공식문서</summary><ul>'+sources.map(s=>'<li>'+external(s)+'</li>').join('')+'</ul></details>':"";
+ const terms=getInterviewGlossary(q);
+ const glossary=terms.length?'<details class="interview-more"><summary>더 알아보기 · 핵심 기술 용어 <span class="interview-term-count">'+terms.length+'개</span></summary>'+
+   '<p class="interview-more-guide">모범답안과 별개로 용어의 뜻과 의미를 이해하는 학습 자료입니다.</p>'+
+   '<dl class="interview-term-list">'+terms.map(term=>'<div class="interview-term"><dt>'+esc(term.title)+'</dt>'+
+   '<dd class="interview-term-definition">'+esc(term.definition)+'</dd>'+
+   (term.meaning?'<dd class="interview-term-meaning"><strong>알아둘 점</strong> '+esc(term.meaning)+'</dd>':"")+
+   '</div>').join('')+'</dl></details>':"";
  const seconds=Number.isFinite(q.answerSeconds)?' · 약 '+q.answerSeconds+'초 답변':"";
  return '<article class="question" data-question-id="'+esc(q.id)+'">'+meta(q)+'<h2'+(practice?' tabindex="-1" id="practice-question-heading"':'')+'>'+esc(q.question)+'</h2>'+roles(q)+share+
    '<p class="hint">먼저 직접 답해 보세요. 간단한 질문은 10초만 답해도 충분합니다.</p>'+
    '<details class="question-answer"><summary><span class="answer-toggle">답변 확인</span><span class="sr-only"> · '+esc(q.code)+'</span></summary>'+
-   '<div class="answer-content"><h3>모범답안'+esc(seconds)+'</h3><p class="short-answer">'+esc(q.shortAnswer)+'</p>'+reference+'</div></details></article>';
+   '<div class="answer-content"><h3>모범답안'+esc(seconds)+'</h3><p class="short-answer">'+esc(q.shortAnswer)+'</p>'+glossary+reference+'</div></details></article>';
 }
 export const practiceModeButtonId=(session,direct)=>direct?null:session?(session.mode==="one"?"random-one":"random-ten"):"show-all";
 export const filterInterviewQuestions=(items,{category="전체",job="전체",difficulty="전체",query=""}={})=>items.filter(q=>matchesInterviewCategory(q,category)&&(job==="전체"||q.jobTags.includes(job))&&(difficulty==="전체"||q.difficulty===difficulty)&&matches(questionSearchText(q),query));
