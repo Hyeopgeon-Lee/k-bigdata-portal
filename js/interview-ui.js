@@ -1,4 +1,4 @@
-import {questions, interviewGroups, interviewJobTags, questionSearchText, matchesInterviewCategory, selectRandomQuestions, interviewSources} from "./interview.js?v=20261009-direct-answers-2";
+import {questions, interviewGroups, interviewJobTags, questionSearchText, matchesInterviewCategory, selectRandomQuestions, interviewSources} from "./interview.js?v=20261009-reviewed-150-3";
 import {matches} from "./search-core.js?v=20261005-perf-1";
 import {interviewRoleLinks} from "./interview-links.js?v=20261005-perf-3";
 const esc=value=>String(value??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
@@ -67,7 +67,13 @@ async function copyInterviewQuestionLink(q){
 }
 export function renderInterviewQuestion(q,practice=false){
  const share=practice?'<div class="interview-share-row" aria-label="문제 공유">'+action("share-problem","문제 공유",false,'aria-label="현재 기술면접 문제 공유"')+action("copy-problem-link","링크 복사",false,'aria-label="현재 기술면접 문제 링크 복사"')+'</div><p id="interview-share-status" class="interview-share-status" role="status" aria-live="polite"></p>':"";
- return '<article class="question" data-question-id="'+esc(q.id)+'">'+meta(q)+'<h2'+(practice?' tabindex="-1" id="practice-question-heading"':'')+'>'+esc(q.question)+'</h2>'+roles(q)+share+'<p class="hint">30~60초 동안 실제 면접처럼 소리 내어 답한 뒤 모범답안을 확인하세요.</p><details class="question-answer"><summary><span class="answer-toggle">답변 확인</span><span class="sr-only"> · '+esc(q.code)+'</span></summary><div class="answer-content"><h3>모범답안</h3><p class="interview-section-note">면접관에게 말하는 답변 예시</p><p class="short-answer">'+esc(q.shortAnswer)+'</p><details class="answer-extra interview-learning-detail"><summary>상세 설명 · 원리와 예시 보기</summary><div class="interview-explanation"><h3>상세 설명</h3><p class="interview-section-note">답변의 기술적 근거와 작동 원리</p><p>'+esc(q.detailedAnswer)+'</p>'+(q.learningExample?'<section class="interview-learning-example"><h4>적용 예시</h4><p>'+esc(q.learningExample)+'</p></section>':'')+(q.workedCode?.code?'<section class="interview-code-example"><h4>코드·SQL 예제</h4><pre><code>'+esc(q.workedCode.code)+'</code></pre></section>':'')+'</div></details><h3>핵심 키워드</h3><div class="tags">'+q.keywords.map(t=>'<span>'+esc(t)+'</span>').join('')+'</div><details class="answer-extra"><summary>꼬리질문 '+q.followUps.length+'개 보기<span class="sr-only"> · 면접관이 이어서 물어볼 수 있는 질문</span></summary><ol class="follow-ups">'+q.followUps.map(t=>'<li>'+esc(t)+'</li>').join('')+'</ol></details><details class="question-sources"><summary>공식문서 확인</summary><ul>'+q.sourceIds.map(id=>interviewSources[id]).filter(Boolean).map(s=>'<li>'+external(s)+'</li>').join('')+'</ul></details></div></details></article>';
+ const sources=(q.sourceIds||[]).map(id=>interviewSources[id]).filter(Boolean);
+ const reference=sources.length?'<details class="question-sources"><summary>관련 공식문서</summary><ul>'+sources.map(s=>'<li>'+external(s)+'</li>').join('')+'</ul></details>':"";
+ const seconds=Number.isFinite(q.answerSeconds)?' · 약 '+q.answerSeconds+'초 답변':"";
+ return '<article class="question" data-question-id="'+esc(q.id)+'">'+meta(q)+'<h2'+(practice?' tabindex="-1" id="practice-question-heading"':'')+'>'+esc(q.question)+'</h2>'+roles(q)+share+
+   '<p class="hint">먼저 직접 답해 보세요. 간단한 질문은 10초만 답해도 충분합니다.</p>'+
+   '<details class="question-answer"><summary><span class="answer-toggle">답변 확인</span><span class="sr-only"> · '+esc(q.code)+'</span></summary>'+
+   '<div class="answer-content"><h3>모범답안'+esc(seconds)+'</h3><p class="short-answer">'+esc(q.shortAnswer)+'</p>'+reference+'</div></details></article>';
 }
 export const practiceModeButtonId=(session,direct)=>direct?null:session?(session.mode==="one"?"random-one":"random-ten"):"show-all";
 export const filterInterviewQuestions=(items,{category="전체",job="전체",difficulty="전체",query=""}={})=>items.filter(q=>matchesInterviewCategory(q,category)&&(job==="전체"||q.jobTags.includes(job))&&(difficulty==="전체"||q.difficulty===difficulty)&&matches(questionSearchText(q),query));
