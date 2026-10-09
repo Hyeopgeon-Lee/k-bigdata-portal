@@ -25,7 +25,7 @@ body[data-page="interview"] .question .tags span{font-size:14px}
 body[data-page="interview"] .question-sources a{display:inline-flex;align-items:center;min-height:44px}
 body[data-page="interview"] .interview-bottom{position:fixed;bottom:0;left:0;right:0;z-index:60;display:flex;gap:10px;padding:10px max(12px,calc((100% - 880px)/2)) calc(10px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid var(--color-border)}
 body[data-page="interview"] .interview-bottom .button-primary{flex:1}
-body[data-page="interview"][data-interview-mode^="PRACTICE"] .learning-content{padding-bottom:120px}
+body[data-page="interview"][data-interview-mode^="PRACTICE"] .learning-content{padding-bottom:var(--interview-bottom-offset,160px)}
 body[data-page="interview"][data-interview-mode^="PRACTICE"] .site-footer{display:none}
 body[data-page="interview"] .practice-complete{padding:20px}
 @media(max-width:900px){
@@ -98,56 +98,17 @@ body[data-page="interview"] .interview-share-status:empty{display:none}
   }
 }
 
-/* Spoken coaching answer and separate, example-led teaching section. */
-body[data-page="interview"] .question .answer-content .interview-section-note{
-  font-size:13px;line-height:1.65;color:#52637b;margin:0 0 10px;
+/* Concise oral answer: keep distinct from optional learning terminology. */
+body[data-page="interview"] .question .answer-content>h3{
+  margin:18px 0 8px;font-size:17px;line-height:1.5;
 }
-body[data-page="interview"] .question .answer-content>h3{margin:18px 0 6px}
 body[data-page="interview"] .question .short-answer{
   margin:0 0 16px;padding:18px 20px;border-left:4px solid #2563eb;
   border-radius:0 12px 12px 0;background:#eff6ff;color:#172b50;
   font-size:16px;line-height:1.9;word-break:keep-all;overflow-wrap:anywhere;
 }
-body[data-page="interview"] .interview-learning-detail{
-  margin:16px 0 12px;border:1px solid #d5deec;border-radius:12px;
-  padding:0 14px;background:#fff;
-}
-body[data-page="interview"] .interview-learning-detail>summary{
-  min-height:52px;color:#1c447f;font-weight:700;cursor:pointer;
-}
-body[data-page="interview"] .interview-learning-detail[open]>summary{
-  border-bottom:1px solid #dfe5ee;
-}
-body[data-page="interview"] .interview-explanation{padding:14px 2px 16px}
-body[data-page="interview"] .interview-explanation h3,
-body[data-page="interview"] .interview-explanation h4{
-  font-size:16px;line-height:1.5;margin:4px 0 10px;color:#162d53;
-}
-body[data-page="interview"] .interview-explanation p{
-  margin:0 0 12px;line-height:1.85;word-break:keep-all;overflow-wrap:anywhere;
-}
-body[data-page="interview"] .interview-learning-example{
-  margin:16px 0 0;padding:14px 16px;background:#f5f7fb;
-  border-radius:10px;border:1px solid #e1e7f0;
-}
-body[data-page="interview"] .interview-learning-example p:last-child{margin-bottom:0}
-body[data-page="interview"] .interview-code-example{margin:16px 0 0}
-body[data-page="interview"] .interview-code-example pre{
-  max-width:100%;overflow-x:auto;white-space:pre;tab-size:2;
-  padding:14px 16px;border-radius:10px;background:#16243d;
-  color:#f7faff;font-size:13px;line-height:1.65;
-  -webkit-overflow-scrolling:touch;
-}
-body[data-page="interview"] .interview-code-example code{
-  font:inherit;white-space:inherit;
-}
-body[data-page="interview"] .answer-content .interview-learning-detail + h3{
-  margin-top:18px;
-}
 @media(max-width:480px){
   body[data-page="interview"] .question .short-answer{padding:14px 15px;font-size:15px}
-  body[data-page="interview"] .interview-learning-detail{padding:0 11px}
-  body[data-page="interview"] .interview-learning-example{padding:12px}
 }
 
 /* Optional, question-specific vocabulary learning. Not part of the spoken model answer. */
@@ -182,4 +143,57 @@ body[data-page="interview"] .interview-term-meaning strong{font-weight:700;color
 @media(max-width:480px){
   body[data-page="interview"] .interview-more{padding:0 10px}
   body[data-page="interview"] .interview-term{padding:12px 11px}
+}
+
+/* Review-driven: honest progress, glossary visibility, and zoom-safe navigation. */
+body[data-page="interview"] #items{scroll-margin-top:85px}
+body[data-page="interview"] .practice-status{
+  margin:8px 0 16px;font-size:14px;font-weight:650;color:#334e74;line-height:1.6;
+}
+body[data-page="interview"] .interview-mark-practice{
+  margin:14px 0 4px;padding:12px 14px;border:1px solid #d6e0ee;border-radius:12px;background:#f8fafc;
+}
+body[data-page="interview"] .interview-mark-practice .button{
+  width:100%;min-height:48px;white-space:normal;text-align:center;
+}
+body[data-page="interview"] .interview-mark-practice .button[aria-pressed="true"]{
+  border-color:#2563eb;background:#eaf2ff;color:#173c78;
+}
+body[data-page="interview"] .interview-mark-practice p{
+  margin:8px 0 0;font-size:13px;line-height:1.7;color:#52637b;
+}
+body[data-page="interview"] .interview-bottom{
+  box-sizing:border-box;flex-wrap:wrap;max-height:min(42dvh,228px);
+  overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;
+  box-shadow:0 -6px 20px rgba(11,23,57,.07);
+}
+body[data-page="interview"] .interview-bottom .button{
+  min-width:0;flex:1 1 130px;min-height:48px;white-space:normal;
+}
+body[data-page="interview"] .interview-results{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0 20px;
+}
+body[data-page="interview"] .interview-results p{
+  min-width:0;margin:0;padding:16px 10px;border:1px solid #dce3ef;border-radius:12px;
+  background:#fff;text-align:center;
+}
+body[data-page="interview"] .interview-results strong{
+  display:block;font-size:22px;color:#173c78;line-height:1.35;
+}
+body[data-page="interview"] .interview-results span{
+  display:block;margin-top:6px;font-size:13px;color:#475569;line-height:1.6;
+}
+body[data-page="interview"] .interview-review{
+  border:1px solid #dce3ef;border-radius:10px;padding:0 14px;margin:0 0 20px;background:#fff;
+}
+body[data-page="interview"] .interview-review summary{
+  min-height:48px;padding:12px 2px;color:#173c78;font-weight:700;cursor:pointer;
+}
+body[data-page="interview"] .interview-review li{margin:8px 0;line-height:1.6;overflow-wrap:anywhere}
+body[data-page="interview"] .interview-review a{text-decoration:underline;text-underline-offset:3px}
+@media(max-width:600px){
+  body[data-page="interview"] .interview-results{grid-template-columns:1fr;gap:8px}
+  body[data-page="interview"] .interview-results p{display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;padding:12px 14px}
+  body[data-page="interview"] .interview-results strong{font-size:19px}
+  body[data-page="interview"] .interview-results span{margin:0;text-align:right}
 }
