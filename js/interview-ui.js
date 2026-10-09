@@ -141,7 +141,7 @@ export function initInterview(){
    $("#reset-interview").hidden=!applied.length;
  }
  function listCard(q){
-   return '<article class="question">'+meta(q)+'<h2>'+esc(q.question)+'</h2>'+roles(q)+
+   return '<article class="question">'+meta(q)+'<h2 tabindex="-1">'+esc(q.question)+'</h2>'+roles(q)+
      action("select","이 문제 연습하기",false,'data-id="'+esc(q.id)+'"')+
      '<a class="question-permalink" href="interview.html?id='+encodeURIComponent(q.id)+'"><span class="sr-only">'+esc(q.question)+' </span>문제 링크 →</a></article>';
  }
@@ -176,8 +176,8 @@ export function initInterview(){
        '<details class="interview-review"><summary>모범답안 미확인 '+info.unchecked.length+'문제 보기</summary><ol>'+
        info.unchecked.map(q=>'<li><a href="interview.html?id='+encodeURIComponent(q.id)+'">'+esc(q.question)+'</a></li>').join("")+
        '</ol></details>':'<p>모든 문제의 모범답안을 확인했습니다.</p>';
-     root.innerHTML='<section class="practice-complete"><h2 tabindex="-1">10문제 모의면접 진행 결과</h2>'+
-       '<p>10개 문항을 모두 살펴봤습니다. 아래 수치는 실제 연습 여부를 구분한 기록입니다.</p>'+
+     root.innerHTML='<section class="practice-complete"><h2 tabindex="-1">'+info.total+'문제 모의면접 진행 결과</h2>'+
+       '<p>'+info.total+'개 문항을 모두 살펴봤습니다. 아래 수치는 실제 연습 여부를 구분한 기록입니다.</p>'+
        '<div class="interview-results"><p><strong>'+info.practiced+' / '+info.total+'</strong><span>직접 연습 표시</span></p>'+
        '<p><strong>'+info.checked+' / '+info.total+'</strong><span>모범답안 확인</span></p>'+
        '<p><strong>'+info.unchecked.length+'문제</strong><span>모범답안 미확인</span></p></div>'+
@@ -203,8 +203,16 @@ export function initInterview(){
    }
    adjustBottom();
    if(focus){
-     root.querySelector("h2")?.focus({preventScroll:true});
-     root.scrollIntoView({block:"start",behavior:"auto"});
+     if(mode==="HOME"){
+       $("#random-one").focus({preventScroll:true});
+       $("#interview-home").scrollIntoView({block:"start",behavior:"auto"});
+     }else if(mode==="BROWSE"){
+       (root.querySelector("h2")||input).focus({preventScroll:true});
+       controls.scrollIntoView({block:"start",behavior:"auto"});
+     }else{
+       root.querySelector("h2")?.focus({preventScroll:true});
+       root.scrollIntoView({block:"start",behavior:"auto"});
+     }
    }
  }
  function browse(push=true){
@@ -291,6 +299,7 @@ export function initInterview(){
  });
  root.addEventListener("toggle",event=>{
    const d=event.target;
+   if(!root.contains(d))return;
    if(!d.classList.contains("question-answer")&&!d.classList.contains("interview-more"))return;
    const qid=d.closest("[data-question-id]")?.dataset.questionId;
    if(d.classList.contains("question-answer")){
