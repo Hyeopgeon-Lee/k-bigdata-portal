@@ -4,6 +4,8 @@ on:
     branches: [main]
     paths:
       - "data/interview-questions.js"
+      - "data/interview-glossary.js"
+      - "css/interview.css"
       - "data/interview-sources.js"
       - "js/interview.js"
       - "js/interview-ui.js"
@@ -27,3 +29,4 @@ jobs:
           node tests/interview-accuracy.test.mjs
           node tests/interview-mobile.test.mjs
           node tests/interview-sharing.test.mjs
+          node tests/interview-glossary.test.mjs
