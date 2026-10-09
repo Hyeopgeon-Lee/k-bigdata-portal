@@ -1,3 +1,4 @@
+import {interviewEnrichment} from "./interview-enrichment.js?v=20261009-interview-coaching-1";
 // Edit named fields below. group is the visible learning field; category preserves existing deep links.
 const groups = [];
 const prefixes = ["DS", "JAVA", "DB", "OS", "NET", "SPR", "GIT", "DK", "CN", "AI"];
@@ -642,4 +643,27 @@ addGroup("AI·데이터 기초", "AI / 빅데이터", ["AI개발", "데이터엔
     ["RAG", "Retrieval", "Embedding", "Grounding", "Evaluation"], ["RAG와 fine-tuning은 어떻게 다른가요?", "검색은 맞는데 답이 틀리면 어디를 개선하나요?"], {sourceIds:["rag", "ml"]})
 ]);
 
-export const questions = groups;
+// Code examples are kept separate from the spoken answer so students can study the
+// query after practicing an interview response. These match the educational scenarios.
+const workedCodeById = {
+  "DB-016": {language:"sql", code:"SELECT MAX(salary) AS second_salary\nFROM employees\nWHERE salary < (SELECT MAX(salary) FROM employees);"},
+  "DB-017": {language:"sql", code:"SELECT email, COUNT(*) AS duplicate_count\nFROM users\nWHERE email IS NOT NULL\nGROUP BY email\nHAVING COUNT(*) > 1;"},
+  "DB-018": {language:"sql", code:"SELECT u.id, COUNT(o.id) AS order_count\nFROM users AS u\nLEFT JOIN orders AS o ON o.user_id = u.id\nGROUP BY u.id;"},
+  "q6": {language:"java", code:"@Transactional\npublic void placeOrder() {\n    saveOrder();\n    throw new IllegalStateException(\"결제 실패\");\n}\n// 프록시를 통한 호출이고 예외가 외부로 전파되면 기본적으로 롤백합니다."}
+};
+export const questions = groups.map(row => {
+  const enrichment = interviewEnrichment[row.id];
+  // A missing author-reviewed example must never silently go unnoticed.
+  if(!Array.isArray(enrichment) || enrichment.length !== 2 || enrichment.some(v => typeof v !== "string" || !v.trim())){
+    throw new Error("Missing interview coaching content: " + row.id);
+  }
+  const [spokenContinuation, learningExample] = enrichment;
+  const shortAnswer = row.shortAnswer.trim() + " " + spokenContinuation.trim();
+  return {
+    ...row,
+    shortAnswer, answer:shortAnswer, // Compatibility for existing search consumers.
+    detailedAnswer:row.detailedAnswer, extra:row.detailedAnswer,
+    learningExample, workedCode:workedCodeById[row.id] || null
+  };
+});
+
