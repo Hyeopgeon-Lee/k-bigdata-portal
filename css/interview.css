@@ -206,3 +206,73 @@ body[data-page="interview"] .interview-share-row [data-action="report-problem"]{
 @media(max-width:480px){
   body[data-page="interview"] .interview-share-row{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
+
+
+/* Browsing 150 questions: a consistent three-control action bar. */
+body[data-page="interview"] .interview-list-actions{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  align-items:stretch;
+  gap:8px;
+  margin-top:18px;
+  min-width:0;
+}
+body[data-page="interview"] .interview-list-actions .button{
+  box-sizing:border-box;
+  display:inline-flex;
+  justify-content:center;
+  align-items:center;
+  gap:3px;
+  width:100%;
+  min-width:0;
+  min-height:48px;
+  height:100%;
+  margin:0;
+  padding:10px 7px;
+  border:1px solid var(--color-border);
+  border-radius:10px;
+  font-size:14px;
+  font-weight:700;
+  line-height:1.4;
+  text-align:center;
+  text-decoration:none;
+  white-space:normal;
+  word-break:keep-all;
+  overflow-wrap:anywhere;
+  box-shadow:none;
+}
+body[data-page="interview"] .interview-list-actions .button-primary{
+  background:var(--color-primary-dark);
+  border-color:var(--color-primary-dark);
+  color:#fff;
+}
+body[data-page="interview"] .interview-list-actions .button-secondary{
+  background:#fff;
+  color:var(--color-primary-dark);
+}
+body[data-page="interview"] .interview-list-actions [data-action="report-problem"]{
+  background:#fff7ed;
+  border-color:#f5cba6;
+  color:#9a3412;
+}
+body[data-page="interview"] .interview-list-actions .question-permalink{
+  color:var(--color-primary-dark);
+  font-size:14px;
+  font-weight:700;
+}
+body[data-page="interview"] .interview-list-actions .button:focus-visible{
+  outline:3px solid #2563eb;
+  outline-offset:3px;
+}
+body[data-page="interview"] .interview-action-compact{display:none}
+@media(max-width:520px){
+  body[data-page="interview"] .interview-list-actions{gap:6px;margin-top:14px}
+  body[data-page="interview"] .interview-list-actions .button{
+    min-height:48px;
+    padding:9px 4px;
+    font-size:13px;
+  }
+  body[data-page="interview"] .interview-list-actions .question-permalink{font-size:13px}
+  body[data-page="interview"] .interview-action-full{display:none}
+  body[data-page="interview"] .interview-action-compact{display:inline}
+}
