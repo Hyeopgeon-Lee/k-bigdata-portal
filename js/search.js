@@ -2,7 +2,7 @@ import {services,serviceKind} from "./services.js?v=20261009-course-removed-2";
 import {certifications} from "./certifications.js";
 import {jobs} from "./jobs.js";
 import {docs} from "./docs.js";
-import {questions,questionSearchText} from "./interview.js?v=20261005-accuracy-1";
+import {questions,questionSearchText} from "./interview.js?v=20261009-interview-coaching-1";
 import {normalize,matches,jobSearchText,docSearchText,certificationSearchText} from "./search-core.js?v=20261005-perf-1";
 export {normalize,matches,jobSearchText,docSearchText,certificationSearchText} from "./search-core.js?v=20261005-perf-1";
 export const searchIndex=[
