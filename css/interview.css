@@ -197,3 +197,12 @@ body[data-page="interview"] .interview-review a{text-decoration:underline;text-u
   body[data-page="interview"] .interview-results strong{font-size:19px}
   body[data-page="interview"] .interview-results span{margin:0;text-align:right}
 }
+
+
+/* Technical-interview issue report is available before answer reveal. */
+body[data-page="interview"] .interview-share-row [data-action="report-problem"]{
+  border-color:#fed7aa;background:#fff7ed;color:#9a3412;
+}
+@media(max-width:480px){
+  body[data-page="interview"] .interview-share-row{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
