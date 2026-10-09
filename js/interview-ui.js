@@ -72,7 +72,6 @@ export function renderInterviewQuestion(q,practice=false,options={}){
  const reference=sources.length?'<details class="question-sources"><summary>관련 공식문서</summary><ul>'+sources.map(s=>'<li>'+external(s)+'</li>').join('')+'</ul></details>':"";
  const terms=getInterviewGlossary(q);
  const glossary=terms.length?'<details class="interview-more"><summary>더 알아보기 · 핵심 기술 용어 <span class="interview-term-count">'+terms.length+'개</span></summary>'+
-   '<p class="interview-more-guide">면접 답변을 보기 전에도 용어의 뜻과 활용을 확인할 수 있습니다.</p>'+
    '<dl class="interview-term-list">'+terms.map(term=>'<div class="interview-term"><dt>'+esc(term.title)+'</dt>'+
    '<dd class="interview-term-definition">'+esc(term.definition)+'</dd>'+
    (term.meaning?'<dd class="interview-term-meaning"><strong>알아둘 점</strong> '+esc(term.meaning)+'</dd>':"")+
