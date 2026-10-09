@@ -1,4 +1,4 @@
-import {questions, interviewGroups, interviewJobTags, questionSearchText, matchesInterviewCategory, selectRandomQuestions, interviewSources} from "./interview.js?v=20261009-interview-coaching-1";
+import {questions, interviewGroups, interviewJobTags, questionSearchText, matchesInterviewCategory, selectRandomQuestions, interviewSources} from "./interview.js?v=20261009-direct-answers-2";
 import {matches} from "./search-core.js?v=20261005-perf-1";
 import {interviewRoleLinks} from "./interview-links.js?v=20261005-perf-3";
 const esc=value=>String(value??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
