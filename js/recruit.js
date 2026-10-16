@@ -5,13 +5,85 @@ const todayKst = new Intl.DateTimeFormat('en-CA', { timeZone:'Asia/Seoul', year:
 const isOpen = job => job.active !== false && (job.deadlineType !== "DATE" || !job.deadline || job.deadline >= todayKst);
 const jobs = (window.K_BIGDATA_RECRUITMENTS || []).filter(isOpen);
 const isUnverified = job => job.verification === "DETAILS_UNVERIFIED";
+const linkedJobId = new URLSearchParams(window.location.search).get("job");
+
+// Share a portal deep link, allowing the recipient to view the exact posting.
+function jobShareUrl(job){
+  const url = new URL("recruit.html", window.location.href);
+  url.searchParams.set("job", job.id);
+  return url.toString();
+}
+
+async function shareJob(job, status){
+  const url = jobShareUrl(job);
+  const data = {
+    title: job.company + " 채용공고",
+    text: job.title || job.position || "학과 추천 채용공고",
+    url
+  };
+  if(navigator.share){
+    try {
+      await navigator.share(data);
+      if(status) status.textContent = "공유했습니다.";
+      return;
+    } catch(error) {
+      if(error?.name === "AbortError") return;
+      // Fall back to link copying when the share API is unavailable.
+    }
+  }
+  try {
+    if(navigator.clipboard?.writeText){
+      await navigator.clipboard.writeText(url);
+    } else {
+      const field = document.createElement("textarea");
+      field.value = url;
+      field.setAttribute("readonly", "");
+      field.style.position = "fixed";
+      field.style.opacity = "0";
+      document.body.appendChild(field);
+      try {
+        field.select();
+        if(!document.execCommand("copy")) throw new Error("복사 실패");
+      } finally {
+        field.remove();
+      }
+    }
+    if(status) status.textContent = "공유 링크를 복사했습니다.";
+  } catch(error) {
+    if(typeof window.prompt === "function"){
+      window.prompt("아래 링크를 복사해 공유하세요.", url);
+    }
+    if(status) status.textContent = "자동 복사할 수 없어 공유 링크를 표시했습니다.";
+  }
+}
+
+function focusLinkedJob(){
+  if(!linkedJobId) return;
+  const card = document.getElementById("recruit-" + linkedJobId);
+  if(!card) {
+    const notice = $("#recruit-link-notice");
+    if(notice) notice.textContent = "공유받은 채용공고는 마감되었거나 목록에서 제외되었습니다.";
+    return;
+  }
+  card.classList.add("recruit-card-shared");
+  card.focus({preventScroll:true});
+  card.scrollIntoView({block:"center", behavior:"auto"});
+}
 let currentSite = "전체";
 
 document.addEventListener("DOMContentLoaded", () => {
   renderSummary();
   renderFilters();
   $("#recruit-query")?.addEventListener("input", renderJobs);
+  $("#recruit-list")?.addEventListener("click", async event => {
+    const button = event.target.closest("button[data-share-job]");
+    if(!button) return;
+    const job = jobs.find(item => item.id === button.dataset.shareJob);
+    if(!job) return;
+    await shareJob(job, button.closest(".recruit-card")?.querySelector(".recruit-share-status"));
+  });
   renderJobs();
+  focusLinkedJob();
 });
 
 function renderSummary(){
@@ -54,7 +126,7 @@ function renderJobs(){
   }
   root.innerHTML = filtered.map(job => {
     const applyUrl = "https://apply.k-bigdata.kr/register.html?job=" + encodeURIComponent(job.id);
-    return '<article class="recruit-card">'+
+    return '<article class="recruit-card" id="recruit-'+esc(job.id)+'" tabindex="-1">'+
       '<div class="recruit-card-head"><span class="badge ' + (isUnverified(job) ? 'recruit-pending">정보 확인 필요' : 'recruit-open">채용중') + '</span><span class="recruit-site">'+esc(job.site)+'</span></div>'+
       '<h2>'+esc(job.company)+'</h2>'+
       (job.title ? '<p class="recruit-title">'+esc(job.title)+'</p>' : '')+
@@ -66,6 +138,8 @@ function renderJobs(){
       '<div class="recruit-actions">'+
         '<a class="button button-secondary" href="'+esc(job.url)+'" target="_blank" rel="noopener noreferrer">채용공고 보기 ↗</a>'+
         '<a class="button button-primary" href="'+esc(isUnverified(job) ? "https://apply.k-bigdata.kr/register.html" : applyUrl)+'">'+(isUnverified(job) ? "공고 확인 후 등록 →" : "지원현황 등록 →")+'</a>'+
+        '<button type="button" class="button button-secondary recruit-share-button" data-share-job="'+esc(job.id)+'" aria-label="'+esc(job.company+' '+(job.title || job.position || '채용공고')+' 공유하기')+'">↗ 공고 공유하기</button>'+
+        '<span class="recruit-share-status" role="status" aria-live="polite"></span>'+
       '</div>'+
     '</article>';
   }).join("");
