@@ -57,7 +57,7 @@ assert.ok(formEnd>=0,'hint panel should be after the answer form to avoid moving
 assert.ok(css.includes('.solve-hint[hidden]{display:none !important}'));
 assert.ok(css.includes('@media(max-width:767px)'));
 assert.ok(css.includes('.bank-timer.hint-stage'));
-assert.ok(html.includes('css/practical.css?v=20261005-solution-2'));
+assert.match(html,/css\/practical\.css\?v=[\w-]+/);
 assert.match(html,/js\/practical-ui\.js\?v=[\w-]+/);
 
 console.log('PASS: 0-30 self solve, 30-60 hint, immediate submit grading, 60-second auto reveal, and responsive staged UI contract.');
