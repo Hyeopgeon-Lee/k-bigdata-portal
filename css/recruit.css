@@ -23,3 +23,13 @@ body[data-page="recruit"] .learning-content{max-width:1120px}
 .recruit-card .recruit-title{margin:0 0 10px;color:#253b60;font-size:15px;font-weight:750;line-height:1.65}
 .recruit-card .recruit-meta{margin-top:5px;color:#59647a;font-size:13px;line-height:1.65}
 .recruit-card .recruit-meta strong{margin-right:5px;color:#334d77;font-weight:800}
+
+/* Per-post sharing and deep-linked recruitment cards */
+.recruit-actions .recruit-share-button{grid-column:1/-1;width:100%;font:inherit;font-size:14px;font-weight:750;min-height:42px;cursor:pointer;color:#142d70;background:#f5f8ff;border:1px solid #bfd0ee}
+.recruit-actions .recruit-share-button:hover{background:#eaf1ff}
+.recruit-actions .recruit-share-button:focus-visible{outline:3px solid #4d83d7;outline-offset:3px}
+.recruit-actions .recruit-share-status{grid-column:1/-1;font-size:12px;color:#146c43}
+.recruit-actions .recruit-share-status:empty{display:none}
+.recruit-card.recruit-card-shared{border:2px solid #477bce;box-shadow:0 0 0 3px rgba(71,123,206,.12)}
+.recruit-card:focus{outline:none}
+.recruit-link-notice:not(:empty){margin-bottom:16px;padding:12px 16px;border:1px solid #d4dbe6;border-radius:10px;background:#fff;color:#40516a;font-size:14px}
