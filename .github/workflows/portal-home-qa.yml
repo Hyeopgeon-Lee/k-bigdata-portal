@@ -12,6 +12,7 @@ on:
       - "js/portal-shell.js"
       - "js/portal-shell-entry.js"
       - "tests/portal-dashboard.test.mjs"
+      - "tests/portal-home-browser.mjs"
       - ".github/workflows/portal-home-qa.yml"
   workflow_dispatch:
 permissions:
@@ -33,3 +34,18 @@ jobs:
           node --check js/search-ui.js
           node --check js/portal-shell.js
           node --check js/portal-personal.js
+      - name: Install browser test runtime
+        run: |
+          npm install --no-save --no-package-lock playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Check 5 viewports, favorites, search and tab interactions
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/portal-home-server.log 2>&1 &
+          node tests/portal-home-browser.mjs
+      - name: Upload visual QA screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: portal-home-viewport-screenshots
+          path: ui-screenshots/
+          if-no-files-found: ignore
