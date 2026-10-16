@@ -1,4 +1,4 @@
-import {isExternal} from "./services.js?v=20261009-course-removed-2";
+import {isExternal} from "./services.js?v=20261016-nav-search-1";
 
 const esc=v=>String(v??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
 
@@ -7,7 +7,7 @@ export function initGroupedSearch(){
  if(!input||!root)return;
 
  let groups=[],expanded=new Set(),timer=0,searchModule=null;
- const loadSearch=()=>searchModule||(searchModule=import("./search.js?v=20261005-perf-1"));
+ const loadSearch=()=>searchModule||(searchModule=import("./search.js?v=20261016-expanded-search-1"));
 
  function render(){
   root.innerHTML=groups.map((g,i)=>'<li class="search-group"><h3>'+esc(g.label)+' <small>'+g.items.length+'</small></h3><ul>'+g.items.slice(0,expanded.has(i)?g.items.length:4).map(r=>'<li><a href="'+esc(r.url)+'"'+(isExternal(r.url)?' target="_blank" rel="noopener noreferrer"':'')+'>'+esc(r.title)+(isExternal(r.url)?' ↗<span class="sr-only"> 외부 사이트, 새 창</span>':' →')+'</a></li>').join('')+'</ul>'+(g.items.length>4?'<button type="button" class="button button-secondary" data-search-group="'+i+'" aria-expanded="'+expanded.has(i)+'">'+esc(g.label)+(expanded.has(i)?' 접기':' 더 보기')+'</button>':'')+'</li>').join('');
@@ -24,9 +24,10 @@ export function initGroupedSearch(){
   }
   status.textContent="검색 데이터를 준비하는 중입니다.";
   try{
-   const {groupSearchResults}=await loadSearch();
+   const {groupSearchResultsExpanded}=await loadSearch();
+   const nextGroups=await groupSearchResultsExpanded(query);
    if(query!==input.value.trim())return;
-   groups=groupSearchResults(query);
+   groups=nextGroups;
    status.textContent=groups.reduce((n,g)=>n+g.items.length,0)+"개 결과 · 유형별로 표시합니다.";
    render();
   }catch{
