@@ -47,9 +47,9 @@ try{
  assert.equal(await page.locator('#tab-favorites').getAttribute('aria-selected'),'true','tabs support arrow keys');
  await page.locator('#portal-query').fill('SQL');
  await page.locator('.portal-search-submit').click();
- await page.waitForFunction(()=>document.querySelector('#search-status')?.textContent?.includes('개 결과'),{timeout:20000});
+ await page.waitForFunction(()=>document.querySelector('#search-status')?.textContent?.includes('개 결과'),null,{timeout:20000});
  const searchText=await page.locator('#search-status').textContent();
- assert.match(searchText,/\\d+개 결과/);
+ assert.match(searchText,/\d+개 결과/);
  assert.deepEqual(errors,[],'no browser JS runtime errors');
  await page.close();
  console.log('PASS: 360/390/430/768/1280 layouts, no horizontal overflow, favorites, tabs, search, screenshots');
