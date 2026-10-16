@@ -1,4 +1,4 @@
-import {services,serviceKind} from "./services.js?v=20261009-course-removed-2";
+import {services,serviceKind} from "./services.js?v=20261016-nav-search-1";
 import {certifications} from "./certifications.js";
 import {jobs} from "./jobs.js";
 import {docs} from "./docs.js";
@@ -17,7 +17,7 @@ export const searchIndex=[
 // Keep one index; exact title matches outrank incidental mentions inside answers.
 export function groupSearchResults(query,index=searchIndex){
  if(!query.trim())return [];
- const labels={"개발 공식문서":"공식문서","IT 직무":"관련 직무","IT 자격증":"자격증","기술면접":"기술면접","기술면접 문제":"기술면접","외부 학습 사이트":"외부 학습","포털 가이드":"학습·서비스","학과 서비스":"학습·서비스","프로젝트 가이드":"프로젝트"};
+ const labels={"개발 공식문서":"공식문서","IT 직무":"관련 직무","IT 자격증":"자격증","기술면접":"기술면접","기술면접 문제":"기술면접","외부 학습 사이트":"외부 학습","포털 가이드":"학습·서비스","학과 서비스":"학습·서비스","프로젝트 가이드":"프로젝트","실기 문제":"실기 문제","추천 채용공고":"채용공고"};
  const needle=normalize(query),groups=new Map();
  for(const item of index.filter(item=>matches(item.text,query))){
   const exact=normalize(item.title)===needle?100:normalize(item.title).includes(needle)?50:0;
@@ -27,4 +27,27 @@ export function groupSearchResults(query,index=searchIndex){
   groups.get(label).push({...item,score});
  }
  return [...groups].map(([label,items])=>({label,items:items.sort((a,b)=>b.score-a.score),score:Math.max(...items.map(i=>i.score))})).sort((a,b)=>b.score-a.score);
+}
+
+// Load question-level and recruitment indices only on actual search input.
+// Existing synchronous groupSearchResults remains available to other pages/tests.
+const koreaToday=()=>new Date(Date.now()+9*60*60*1000).toISOString().slice(0,10);
+export async function groupSearchResultsExpanded(query){
+ if(!query.trim())return [];
+ const [practical,recruit]=await Promise.allSettled([
+  import("../data/practical/search-index.js?v=20261016-1"),
+  import("../data/recruitments.js?v=20261016-2")
+ ]);
+ const extra=[];
+ if(practical.status==="fulfilled")extra.push(...practical.value.practicalSearchItems);
+ if(recruit.status==="fulfilled"&&typeof window!=="undefined"){
+  const today=koreaToday();
+  for(const job of window.K_BIGDATA_RECRUITMENTS||[]){
+   if(job.active===false||(job.deadlineType==="DATE"&&job.deadline&&job.deadline<today))continue;
+   const title=[job.company,job.position||job.title].filter(Boolean).join(" · ");
+   const text=[job.company,job.title,job.position,job.location,job.site].filter(Boolean).join(" ");
+   extra.push({title,type:"추천 채용공고",url:"recruit.html?job="+encodeURIComponent(job.id),text});
+  }
+ }
+ return groupSearchResults(query,[...searchIndex,...extra]);
 }
