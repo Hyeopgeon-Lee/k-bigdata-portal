@@ -4,6 +4,7 @@ const esc = value => String(value ?? "").replace(/[&<>'"]/g, char => ({"&":"&amp
 const todayKst = new Intl.DateTimeFormat('en-CA', { timeZone:'Asia/Seoul', year:'numeric', month:'2-digit', day:'2-digit' }).format(new Date());
 const isOpen = job => job.active !== false && (job.deadlineType !== "DATE" || !job.deadline || job.deadline >= todayKst);
 const jobs = (window.K_BIGDATA_RECRUITMENTS || []).filter(isOpen);
+const isUnverified = job => job.verification === "DETAILS_UNVERIFIED";
 let currentSite = "전체";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -15,11 +16,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function renderSummary(){
   const meta = window.K_BIGDATA_RECRUITMENTS_META || {};
-  const count = jobs.length;
+  const pendingCount = jobs.filter(isUnverified).length;
+  const count = jobs.length - pendingCount;
   const countEl = $("#recruit-count");
   const updatedEl = $("#recruit-updated");
   if(countEl) countEl.textContent = count + "건";
-  if(updatedEl) updatedEl.textContent = meta.updatedAt ? "업데이트 " + meta.updatedAt : "";
+  if(updatedEl) updatedEl.textContent = (meta.updatedAt ? "업데이트 " + meta.updatedAt : "") + (pendingCount ? " · 상세 확인 필요 " + pendingCount + "건" : "");
 }
 
 function renderFilters(){
@@ -53,14 +55,14 @@ function renderJobs(){
   root.innerHTML = filtered.map(job => {
     const applyUrl = "https://apply.k-bigdata.kr/register.html?job=" + encodeURIComponent(job.id);
     return '<article class="recruit-card">'+
-      '<div class="recruit-card-head"><span class="badge recruit-open">채용중</span><span class="recruit-site">'+esc(job.site)+'</span></div>'+
+      '<div class="recruit-card-head"><span class="badge ' + (isUnverified(job) ? 'recruit-pending">정보 확인 필요' : 'recruit-open">채용중') + '</span><span class="recruit-site">'+esc(job.site)+'</span></div>'+
       '<h2>'+esc(job.company)+'</h2>'+
       (job.title ? '<p class="recruit-title">'+esc(job.title)+'</p>' : '')+
       '<p class="recruit-deadline">'+esc(deadlineText(job))+'</p>'+
       (job.position ? '<p class="recruit-meta"><strong>직종</strong> '+esc(job.position)+'</p>' : '')+
       (job.location ? '<p class="recruit-meta"><strong>근무지</strong> '+esc(job.location)+'</p>' : '')+
       (job.salary ? '<p class="recruit-meta"><strong>급여</strong> '+esc(job.salary)+'</p>' : '')+
-      (!job.title && !job.position ? '<p>지원직무와 상세 모집요건은 실제 채용공고에서 확인하세요.</p>' : '')+
+      (!job.title && !job.position ? '<p>'+(isUnverified(job) ? '기업명·모집요건·마감일을 채용공고 원문에서 확인하세요.' : '지원직무와 상세 모집요건은 실제 채용공고에서 확인하세요.')+'</p>' : '')+
       '<div class="recruit-actions">'+
         '<a class="button button-secondary" href="'+esc(job.url)+'" target="_blank" rel="noopener noreferrer">채용공고 보기 ↗</a>'+
         '<a class="button button-primary" href="'+esc(applyUrl)+'">지원현황 등록 →</a>'+
