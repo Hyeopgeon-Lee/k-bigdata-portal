@@ -4,25 +4,41 @@ import {getFavorites,getRecent,toggleFavorite} from "./portal-personal.js?v=2026
 const $=selector=>document.querySelector(selector);
 const esc=v=>String(v??"").replace(/[&<>'"]/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[char]));
 const serviceById=id=>services.find(service=>service.id===id);
-const link=service=>'<a href="'+esc(service.url)+'"'+(/^https:\/\//.test(service.url)?' target="_blank" rel="noopener noreferrer"':'')+'>'+esc(service.name)+' <span aria-hidden="true">→</span></a>';
+const link=service=>{const ext=/^https:\/\//.test(service.url);return '<a href="'+esc(service.url)+'"'+(ext?' target="_blank" rel="noopener noreferrer"':'')+'>'+esc(service.name)+' <span aria-hidden="true">'+(ext?'↗':'→')+'</span>'+(ext?'<span class="sr-only">외부 사이트 새 창</span>':'')+'</a>';};
 
+let activeTab = getFavorites().length ? "favorites" : getRecent().length ? "recent" : "favorites";
+const panels = {favorites:"#favorite-services",recent:"#recent-services"};
+const tabIds = {favorites:"#tab-favorites",recent:"#tab-recent"};
+function showPersonalTab(next, focus=false){
+  if(!panels[next])return;
+  activeTab=next;
+  for(const key of Object.keys(panels)){
+    const panel=$(panels[key]), tab=$(tabIds[key]), selected=key===next;
+    if(panel)panel.hidden=!selected;
+    if(tab){tab.setAttribute("aria-selected",String(selected));tab.tabIndex=selected?0:-1;}
+  }
+  if(focus)$(tabIds[next])?.focus();
+}
 function renderPersonal(){
-  const favorites=getFavorites().map(serviceById).filter(Boolean);
+  const favoriteIds=getFavorites();
+  const favorites=favoriteIds.map(serviceById).filter(Boolean);
   const recent=getRecent().map(serviceById).filter(Boolean);
-  const favoritesRoot=$("#favorite-services"), recentRoot=$("#recent-services");
+  const favoritesRoot=$("#favorite-services"),recentRoot=$("#recent-services");
   if(favoritesRoot)favoritesRoot.innerHTML=favorites.length
     ? '<ul class="dashboard-links">'+favorites.slice(0,6).map(s=>'<li>'+link(s)+'</li>').join("")+'</ul>'
-    : '<p class="dashboard-empty">즐겨찾기가 없습니다. 아래 서비스 카드의 ☆을 눌러 등록하세요.</p>';
+    : '<p class="dashboard-empty">자주 쓰는 서비스의 ☆을 눌러 등록하세요.</p><a class="dashboard-empty-link" href="#services">전체 서비스에서 추가하기 →</a>';
   if(recentRoot)recentRoot.innerHTML=recent.length
     ? '<ul class="dashboard-links">'+recent.slice(0,4).map(s=>'<li>'+link(s)+'</li>').join("")+'</ul>'
-    : '<p class="dashboard-empty">서비스를 이용하면 이 기기에 최근 방문 목록이 표시됩니다.</p>';
-  document.querySelectorAll("[data-favorite]").forEach(button=>{
-    const active=getFavorites().includes(button.dataset.favorite);
+    : '<p class="dashboard-empty">방문한 서비스가 이 기기에 표시됩니다.</p><a class="dashboard-empty-link" href="#services">전체 서비스 둘러보기 →</a>';
+  for(const button of document.querySelectorAll("[data-favorite]")){
+    const active=favoriteIds.includes(button.dataset.favorite);
+    const label=button.dataset.serviceName||"서비스";
     button.setAttribute("aria-pressed",String(active));
     button.textContent=active?"★":"☆";
-    button.setAttribute("aria-label",(button.dataset.serviceName||"서비스")+(active?" 즐겨찾기 해제":" 즐겨찾기 추가"));
+    button.setAttribute("aria-label",label+(active?" 즐겨찾기 해제":" 즐겨찾기 추가"));
     button.title=active?"즐겨찾기 해제":"즐겨찾기 추가";
-  });
+  }
+  showPersonalTab(activeTab);
 }
 function installFavoriteButtons(){
   for(const card of document.querySelectorAll(".service-card")){
@@ -70,9 +86,22 @@ installFavoriteButtons();
 renderPersonal();
 renderHighlights();
 document.addEventListener("click",event=>{
-  const button=event.target.closest?.("button[data-favorite]");
-  if(!button)return;
-  toggleFavorite(button.dataset.favorite);
-  renderPersonal();
+  const star=event.target.closest?.("button[data-favorite]");
+  if(star){
+    const active=toggleFavorite(star.dataset.favorite);
+    showPersonalTab("favorites");
+    renderPersonal();
+    if(active)$("#tab-favorites")?.setAttribute("aria-selected","true");
+    return;
+  }
+  const tab=event.target.closest?.("button[role=tab]");
+  if(tab?.id==="tab-favorites")showPersonalTab("favorites");
+  else if(tab?.id==="tab-recent")showPersonalTab("recent");
+});
+document.querySelector(".dashboard-personal-tabs")?.addEventListener("keydown",event=>{
+  if(!["ArrowLeft","ArrowRight","Home","End"].includes(event.key))return;
+  event.preventDefault();
+  const target=(event.key==="Home"||event.key==="ArrowLeft")?"favorites":"recent";
+  showPersonalTab(target,true);
 });
 window.addEventListener("storage",event=>{if(event.key==="kbigdata-portal-ui-v1")renderPersonal();});
