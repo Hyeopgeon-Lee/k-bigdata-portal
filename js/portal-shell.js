@@ -1,4 +1,5 @@
-import {initPortalUX} from "./portal-ux.js?v=20261016-nav-search-filters-1";
+import {initPortalUX} from "./portal-ux.js?v=20261016-dashboard-1";
+import {initRecentTracking} from "./portal-personal.js?v=20261016-dashboard-1";
 import {initGroupedSearch} from "./search-ui.js?v=20261016-nav-search-filters-1";
 import {footerLinks} from "./services.js?v=20261016-nav-search-filters-1";
 
@@ -26,6 +27,7 @@ export async function initPortalShell(){
  });
  document.addEventListener("click",event=>{if(!event.target.closest(".site-header"))closeMenu();});
 
+ initRecentTracking();
  await initPortalUX();
  initGroupedSearch();
 }
