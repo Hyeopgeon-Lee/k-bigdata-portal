@@ -1,6 +1,6 @@
 // Pure learning rules. No browser storage, network, or code execution here.
-export const HINT_SECONDS = 60;
-export const ANSWER_SECONDS = 120;
+export const HINT_SECONDS = 30;
+export const ANSWER_SECONDS = 60;
 export const REVEAL_SECONDS = ANSWER_SECONDS;
 export const WAIT_SECONDS = HINT_SECONDS;
 export const sourceLabels = {reconstructed:"비공식 복원기출",normalized:"공개 복원자료 기반 정규화",transformed:"기출 기반 변형",practice:"추가 연습문제"};
@@ -16,7 +16,11 @@ export const secondsUntilAnswer = remainingAnswerSeconds;
 export const hintAvailable = (attempt,now=Date.now()) => !!attempt && !attempt.submittedAt && !attempt.viewedExplanation && Number.isFinite(attempt.startedAt) && now-attempt.startedAt>=HINT_SECONDS*1000;
 export const answerDeadlineReached = (attempt,now=Date.now()) => !!attempt && !attempt.submittedAt && !attempt.viewedExplanation && Number.isFinite(attempt.startedAt) && now-attempt.startedAt>=ANSWER_SECONDS*1000;
 export const shouldAutoReveal = answerDeadlineReached;
-export const canSubmit = (attempt,answer,now=Date.now()) => !!attempt && !attempt.submittedAt && !attempt.viewedExplanation && Number.isFinite(attempt.startedAt) && now>=attempt.startedAt && now-attempt.startedAt<ANSWER_SECONDS*1000 && !!String(answer??"").trim();
+// Answers remain editable after the 60-second reveal, but late submissions are excluded from grading statistics.
+export const canSubmit = (attempt,answer,now=Date.now()) => !!attempt && Number.isFinite(attempt.startedAt) && now>=attempt.startedAt && !!String(answer??"").trim() && (
+  (attempt.autoRevealed===true && !attempt.lateSubmittedAt) ||
+  (!attempt.submittedAt && !attempt.viewedExplanation && now-attempt.startedAt<ANSWER_SECONDS*1000)
+);
 export const canReveal = (attempt,now=Date.now()) => !!attempt && Number.isFinite(attempt.startedAt) && (!!attempt.submittedAt || now-attempt.startedAt>=ANSWER_SECONDS*1000);
 export function gradeAnswer(question, answer) {
   const normalize = value => String(value).normalize("NFKC").trim().replace(/\r/g,"").replace(/[\t ]+/g," ").replace(/ *\n */g,"\n");
