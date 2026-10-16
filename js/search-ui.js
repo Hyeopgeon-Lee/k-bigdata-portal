@@ -3,10 +3,11 @@ import {isExternal} from "./services.js?v=20261016-nav-search-1";
 const esc=v=>String(v??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
 
 export function initGroupedSearch(){
- const input=document.querySelector("#portal-query"),root=document.querySelector("#search-results"),status=document.querySelector("#search-status");
+ const input=document.querySelector("#portal-query"),root=document.querySelector("#search-results"),status=document.querySelector("#search-status"),form=document.querySelector("#portal-search-form");
  if(!input||!root)return;
 
  let groups=[],expanded=new Set(),timer=0,searchModule=null;
+ if(status&&!input.value.trim())status.textContent="검색어를 입력하면 관련 서비스와 학습 자료를 찾습니다.";
  const loadSearch=()=>searchModule||(searchModule=import("./search.js?v=20261016-expanded-search-1"));
 
  function render(){
@@ -35,6 +36,11 @@ export function initGroupedSearch(){
   }
  }
 
+ form?.addEventListener("submit",event=>{
+  event.preventDefault();
+  clearTimeout(timer);
+  void search();
+ });
  input.addEventListener("input",()=>{
   clearTimeout(timer);
   timer=window.setTimeout(search,90);
