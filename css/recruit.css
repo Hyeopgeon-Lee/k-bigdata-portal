@@ -8,6 +8,7 @@ body[data-page="recruit"] .learning-content{max-width:1120px}
 .recruit-card{display:flex;flex-direction:column;min-width:0;padding:24px;border:1px solid #dce3ef;border-radius:16px;background:#fff;box-shadow:0 6px 24px rgba(11,23,57,.035)}
 .recruit-card-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .recruit-open{color:#146c43;background:#e9f7ef;border:1px solid #b9e2c9}
+.recruit-pending{color:#4b5567;background:#eef1f6;border:1px solid #d4dbe6}
 .recruit-site{color:#59647a;font-size:13px;font-weight:700}
 .recruit-card h2{margin:18px 0 10px;color:#0b1739;font-size:21px;line-height:1.45;letter-spacing:-.025em}
 .recruit-card p{margin:0;color:#59647a;font-size:14px;line-height:1.75}
