@@ -33,3 +33,20 @@ body[data-page="recruit"] .learning-content{max-width:1120px}
 .recruit-card.recruit-card-shared{border:2px solid #477bce;box-shadow:0 0 0 3px rgba(71,123,206,.12)}
 .recruit-card:focus{outline:none}
 .recruit-link-notice:not(:empty){margin-bottom:16px;padding:12px 16px;border:1px solid #d4dbe6;border-radius:10px;background:#fff;color:#40516a;font-size:14px}
+
+/* Recruitment filters: mobile-first readable controls */
+.recruit-controls>label{display:block;margin-bottom:8px;font-weight:750}
+.recruit-controls>input{width:100%;max-width:540px;min-height:44px}
+.recruit-filter-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:18px}
+.recruit-filter-grid>div{display:flex;flex-direction:column;min-width:0;gap:7px}
+.recruit-filter-grid label{font-size:13px;color:#334d77;font-weight:750}
+.recruit-filter-grid select{width:100%;min-width:0;min-height:44px;border:1px solid #b9c8dc;border-radius:9px;padding:9px 10px;background:#fff;color:#172c53;font:inherit}
+.recruit-filter-grid select:focus-visible,.recruit-controls>input:focus-visible{outline:3px solid #4d83d7;outline-offset:2px}
+.recruit-site-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:17px}
+.recruit-site-title{font-size:13px;color:#334d77;font-weight:750}
+#recruit-reset{min-height:38px}
+.recruit-status-badges{display:flex;align-items:center;flex-wrap:wrap;gap:5px}
+.recruit-soon{color:#a33c12;background:#fff0e7;border:1px solid #f2bd9d}
+.recruit-new{color:#204f9f;background:#eaf2ff;border:1px solid #b9cef4}
+@media(max-width:880px){.recruit-filter-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:460px){.recruit-filter-grid{grid-template-columns:1fr}.recruit-card-head{align-items:flex-start}.recruit-site{white-space:nowrap}}
