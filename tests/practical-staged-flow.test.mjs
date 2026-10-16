@@ -8,39 +8,34 @@ import {
 const root=new URL('../',import.meta.url);
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 
-assert.equal(HINT_SECONDS,60);
-assert.equal(ANSWER_SECONDS,120);
-
+assert.equal(HINT_SECONDS,30);
+assert.equal(ANSWER_SECONDS,60);
 const startedAt=1_000_000;
 const attempt={startedAt,submittedAt:null,viewedExplanation:false};
-
-assert.equal(remainingSeconds(startedAt,startedAt),60);
-assert.equal(remainingSeconds(startedAt,startedAt+59_999),1);
-assert.equal(remainingSeconds(startedAt,startedAt+60_000),0);
-
-assert.equal(hintAvailable(attempt,startedAt+59_999),false);
-assert.equal(hintAvailable(attempt,startedAt+60_000),true);
-assert.equal(hintAvailable(attempt,startedAt+119_999),true);
-
-assert.equal(remainingAnswerSeconds(startedAt,startedAt+60_000),60);
-assert.equal(remainingAnswerSeconds(startedAt,startedAt+119_999),1);
-assert.equal(remainingAnswerSeconds(startedAt,startedAt+120_000),0);
-
+assert.equal(remainingSeconds(startedAt,startedAt),30);
+assert.equal(remainingSeconds(startedAt,startedAt+29_999),1);
+assert.equal(remainingSeconds(startedAt,startedAt+30_000),0);
+assert.equal(hintAvailable(attempt,startedAt+29_999),false);
+assert.equal(hintAvailable(attempt,startedAt+30_000),true);
+assert.equal(hintAvailable(attempt,startedAt+59_999),true);
+assert.equal(remainingAnswerSeconds(startedAt,startedAt+30_000),30);
+assert.equal(remainingAnswerSeconds(startedAt,startedAt+59_999),1);
+assert.equal(remainingAnswerSeconds(startedAt,startedAt+60_000),0);
 assert.equal(canSubmit(attempt,'42',startedAt+1),true);
-assert.equal(canSubmit(attempt,'42',startedAt+60_000),true);
-assert.equal(canSubmit(attempt,'42',startedAt+119_999),true);
-assert.equal(canSubmit(attempt,'42',startedAt+120_000),false);
-assert.equal(canSubmit(attempt,'   ',startedAt+80_000),false);
-
-assert.equal(canReveal(attempt,startedAt+119_999),false);
-assert.equal(answerDeadlineReached(attempt,startedAt+119_999),false);
-assert.equal(answerDeadlineReached(attempt,startedAt+120_000),true);
-assert.equal(canReveal(attempt,startedAt+120_000),true);
-
+assert.equal(canSubmit(attempt,'42',startedAt+30_000),true);
+assert.equal(canSubmit(attempt,'42',startedAt+59_999),true);
+assert.equal(canSubmit(attempt,'42',startedAt+60_000),false);
+assert.equal(canSubmit(attempt,'   ',startedAt+40_000),false);
+assert.equal(canReveal(attempt,startedAt+59_999),false);
+assert.equal(answerDeadlineReached(attempt,startedAt+59_999),false);
+assert.equal(answerDeadlineReached(attempt,startedAt+60_000),true);
+assert.equal(canReveal(attempt,startedAt+60_000),true);
 const early={...attempt,submittedAt:startedAt+20_000};
 assert.equal(canReveal(early,startedAt+20_000),true,'submitted answer must reveal immediately');
-assert.equal(hintAvailable(early,startedAt+70_000),false,'submitted answer must not later show hint');
-assert.equal(canSubmit(early,'43',startedAt+70_000),false,'submitted answer is immutable');
+assert.equal(hintAvailable(early,startedAt+40_000),false,'submitted answer must not later show hint');
+assert.equal(canSubmit(early,'43',startedAt+40_000),false,'submitted answer is immutable');
+const late={...attempt,submittedAt:startedAt+60_000,viewedExplanation:true,autoRevealed:true};
+assert.equal(canSubmit(late,'43',startedAt+75_000),true,'late answers can be saved without grading');
 
 const ui=read('js/practical-ui.js');
 const css=read('css/practical.css');
@@ -65,4 +60,4 @@ assert.ok(css.includes('.bank-timer.hint-stage'));
 assert.ok(html.includes('css/practical.css?v=20261005-solution-2'));
 assert.match(html,/js\/practical-ui\.js\?v=[\w-]+/);
 
-console.log('PASS: 0-60 self solve, 60-120 hint, immediate submit grading, 120-second auto reveal, and responsive staged UI contract.');
+console.log('PASS: 0-30 self solve, 30-60 hint, immediate submit grading, 60-second auto reveal, and responsive staged UI contract.');
