@@ -280,6 +280,7 @@ export const studentJourney = [
 export const quickActions = ["practical","interview","ready","apply"];
 export const portalNavLinks = [
   {id:"jobs",label:"직무",group:"career"},
+  {id:"recruit",label:"채용공고",group:"career"},
   {id:"resume",label:"자소서",group:"career"},
   {id:"ready",label:"취업준비",group:"career"},
   {id:"apply",label:"입사지원",group:"career"},
