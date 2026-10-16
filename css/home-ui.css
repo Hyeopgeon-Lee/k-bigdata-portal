@@ -1,0 +1,131 @@
+/* Portal home only: action-first layout and compact services. 2026-10-16 */
+body[data-portal-home]{background:#f5f7fb}
+body[data-portal-home] .brand-short{display:none}
+body[data-portal-home] .brand-copy{display:grid}
+body[data-portal-home] .brand-copy strong{white-space:nowrap}
+body[data-portal-home] #main-content{padding-bottom:24px}
+body[data-portal-home] .dashboard-hero{padding-top:26px;padding-bottom:18px}
+body[data-portal-home] .dashboard-intro{margin-bottom:20px}
+body[data-portal-home] .dashboard-intro h1{font-size:clamp(28px,3.1vw,40px);letter-spacing:-.04em;margin-bottom:5px}
+body[data-portal-home] .dashboard-intro p:last-child{font-size:15px}
+body[data-portal-home] .dashboard-main{grid-template-columns:minmax(0,1.44fr) minmax(280px,1fr);gap:16px}
+body[data-portal-home] .dashboard-primary,body[data-portal-home] .dashboard-side{display:grid;gap:14px;align-content:start;min-width:0}
+body[data-portal-home] .dashboard-start,body[data-portal-home] .dashboard-panel,body[data-portal-home] .portal-search{
+  border:1px solid #d9e3f1;border-radius:16px;background:#fff;padding:20px;box-shadow:0 3px 14px rgba(20,45,112,.035);min-width:0
+}
+body[data-portal-home] .dashboard-panel-heading{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+body[data-portal-home] .dashboard-panel-heading>a{font-size:13px;color:#254e8d;font-weight:700;white-space:nowrap}
+body[data-portal-home] .dashboard-start h2,body[data-portal-home] .dashboard-panel h2,body[data-portal-home] .portal-search h2{font-size:19px;line-height:1.4;margin:0 0 15px;color:#122f63}
+body[data-portal-home] .dashboard-action-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+body[data-portal-home] .dashboard-action-tile{position:relative;min-width:0}
+body[data-portal-home] .dashboard-action{position:relative;display:flex;min-height:160px;padding:18px;gap:6px;background:#f4f7fd;border:1px solid #dbe5f3;border-radius:12px;align-items:flex-start;flex-direction:column;color:#122f63;box-shadow:none;transition:background .18s,border-color .18s}
+body[data-portal-home] .dashboard-action:hover,body[data-portal-home] .dashboard-action:focus-visible{background:#ebf2ff;border-color:#6c90cc;transform:none;box-shadow:none}
+body[data-portal-home] .dashboard-action-symbol{width:42px;height:42px;background:#e0ebfd;color:#1f4b91;display:grid;place-items:center;border-radius:11px}
+body[data-portal-home] .dashboard-action-symbol svg{width:23px;height:23px}
+body[data-portal-home] .dashboard-action strong{font-size:17px;line-height:1.35;margin-top:7px;letter-spacing:-.02em;word-break:keep-all}
+body[data-portal-home] .dashboard-action small{font-size:12px;line-height:1.5;color:#4b607c}
+body[data-portal-home] .dashboard-action-arrow{position:absolute;right:16px;bottom:12px;top:auto;color:#315e9e}
+body[data-portal-home] .dashboard-action-favorite{position:absolute;top:10px;right:10px;z-index:2;min-width:44px;min-height:44px;display:grid;place-items:center;padding:0;border:1px solid transparent;border-radius:50%;background:#fff;color:#284e8b;font:600 25px/1 inherit;cursor:pointer}
+body[data-portal-home] .dashboard-action-favorite:hover,body[data-portal-home] .dashboard-action-favorite[aria-pressed=true]{background:#e5efff;border-color:#9cb5d9;color:#124a9b}
+body[data-portal-home] .portal-search{width:100%;margin:0;padding-top:20px;padding-bottom:20px}
+body[data-portal-home] .portal-search label{font-size:13px;line-height:1.5;color:#425873;font-weight:600;margin-bottom:9px}
+body[data-portal-home] .portal-search-controls{display:flex;gap:8px;min-width:0}
+body[data-portal-home] #portal-query{flex:1;min-width:0;height:48px;margin:0;font-size:15px;padding:9px 12px;border-color:#b9cbe4}
+body[data-portal-home] .portal-search-submit{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-width:84px;min-height:48px;border:0;border-radius:11px;padding:0 14px;background:#142d70;color:#fff;font:700 14px/1.25 inherit;cursor:pointer}
+body[data-portal-home] .portal-search-submit svg{width:18px;height:18px;flex-shrink:0}
+body[data-portal-home] .portal-search-submit:hover{background:#214a98}
+body[data-portal-home] #search-status{margin:10px 0 0;min-height:0;font-size:13px}
+body[data-portal-home] #search-results{margin-top:10px}
+body[data-portal-home] .search-group{min-width:0}
+body[data-portal-home] .dashboard-panel h2{margin-bottom:12px}
+body[data-portal-home] .dashboard-highlights .dashboard-links li+li{border-top:1px solid #ebf0f7}
+body[data-portal-home] .dashboard-links a{min-height:48px;padding:9px 5px}
+body[data-portal-home] .dashboard-caption{font-size:12px;line-height:1.6}
+body[data-portal-home] .dashboard-personal .dashboard-panel-heading{margin-bottom:8px}
+body[data-portal-home] .dashboard-personal-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;border-bottom:1px solid #dce5f1;margin-bottom:8px}
+body[data-portal-home] .dashboard-tab{display:grid;place-items:center;min-height:48px;padding:8px 6px;border:0;border-bottom:3px solid transparent;background:transparent;color:#52627a;font:700 14px/1.4 inherit;cursor:pointer}
+body[data-portal-home] .dashboard-tab[aria-selected=true]{border-bottom-color:#1c4a96;color:#153b79}
+body[data-portal-home] .dashboard-personal-panel[hidden]{display:none!important}
+body[data-portal-home] .dashboard-personal-panel{min-height:52px}
+body[data-portal-home] .dashboard-personal .dashboard-empty{font-size:13px;line-height:1.65;margin:10px 0 2px}
+body[data-portal-home] .dashboard-empty-link{display:inline-flex;align-items:center;min-height:44px;margin-top:6px;font-size:13px;font-weight:700;color:#194b96}
+body[data-portal-home] .dashboard-local-note{margin:10px 0 0;padding-top:9px;border-top:1px solid #edf0f5;font-size:11px;color:#5a6880;line-height:1.6}
+body[data-portal-home] .dashboard-categories{margin-top:15px}
+body[data-portal-home] .dashboard-categories a{font-size:14px;font-weight:700;border-radius:10px;min-height:48px}
+body[data-portal-home] .journey-disclosure{margin-top:8px;margin-bottom:8px}
+body[data-portal-home] .services-section{padding-top:18px;padding-bottom:30px}
+body[data-portal-home] .services-section .section-intro{margin-bottom:20px}
+body[data-portal-home] .services-section .section-intro h2{font-size:clamp(23px,3vw,30px);line-height:1.4}
+body[data-portal-home] .services-section .section-intro p{line-height:1.6}
+body[data-portal-home] .service-group{padding-top:26px;scroll-margin-top:94px}
+body[data-portal-home] .service-group .group-heading{margin-bottom:14px;gap:16px}
+body[data-portal-home] .service-group .group-heading h2{font-size:22px}
+body[data-portal-home] .service-grid.portal-card-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+body[data-portal-home] .service-tile{position:relative;min-width:0}
+body[data-portal-home] .service-tile>.service-card,body[data-portal-home] .service-card{display:flex;flex-direction:row;align-items:center;gap:13px;min-height:90px;height:100%;width:100%;padding:14px 66px 14px 15px;background:#fff;border:1px solid #dce5f1;border-radius:12px;box-shadow:none;opacity:1;transform:none;transition:background .18s,border-color .18s}
+body[data-portal-home] .service-card:hover,body[data-portal-home] .service-card:focus-visible{background:#f6f9ff;border-color:#7e9dcf;transform:none;box-shadow:none}
+body[data-portal-home] .service-card .service-icon{width:42px;height:42px;flex:0 0 42px;display:grid;place-items:center;margin:0;border-radius:10px;background:#edf3fe;color:#204f95}
+body[data-portal-home] .service-card .service-icon svg{width:22px;height:22px}
+body[data-portal-home] .service-summary{display:flex;flex:1;min-width:0;flex-direction:column;gap:4px}
+body[data-portal-home] .service-card .service-summary h3{font-size:17px;letter-spacing:-.02em;line-height:1.4;margin:0;color:#142d70;word-break:keep-all}
+body[data-portal-home] .service-card .service-summary p{font-size:13px;line-height:1.5;margin:0;color:#56647a;word-break:keep-all}
+body[data-portal-home] .service-card .service-chevron{color:#315f9c;font-size:18px;font-weight:700;flex:0 0 auto}
+body[data-portal-home] .service-favorite{right:10px;top:50%;transform:translateY(-50%);border-color:#d3deed;background:#fff;font-size:24px;min-height:44px;min-width:44px}
+body[data-portal-home] .service-favorite[aria-pressed=true]{background:#e8f1ff}
+body[data-portal-home] .dashboard-action-favorite:focus-visible,body[data-portal-home] .dashboard-tab:focus-visible,body[data-portal-home] .portal-search-submit:focus-visible{outline:3px solid #1ba7d4;outline-offset:3px}
+body[data-portal-home] .dashboard-tab[aria-selected=false]:hover{background:#f2f6fc}
+body[data-portal-home] a:focus-visible{outline:3px solid #1ba7d4;outline-offset:3px}
+
+@media(max-width:1190px){
+ body[data-portal-home] .header-inner{position:relative}
+ body[data-portal-home] .brand-copy{display:grid}
+ body[data-portal-home] .menu-toggle{display:inline-flex;align-items:center;gap:8px;margin-left:auto;min-height:44px}
+ body[data-portal-home] .main-nav{display:none;position:absolute;top:100%;left:0;right:0;z-index:60;border:1px solid #c7d5e9;border-radius:0 0 14px 14px;padding:12px;background:#fff;box-shadow:0 15px 25px rgba(11,23,57,.12);white-space:normal}
+ body[data-portal-home] .main-nav.is-open{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+ body[data-portal-home] .main-nav a{padding:12px;font-size:14px;white-space:normal;min-height:44px}
+}
+@media(max-width:900px){
+ body[data-portal-home] .dashboard-main{grid-template-columns:1fr}
+ body[data-portal-home] .dashboard-side{grid-template-columns:repeat(2,minmax(0,1fr))}
+ body[data-portal-home] .dashboard-personal,body[data-portal-home] .dashboard-highlights{min-width:0}
+}
+@media(max-width:767px){
+ body[data-portal-home] .brand-full{display:none}
+ body[data-portal-home] .brand-short{display:inline}
+ body[data-portal-home] .brand-copy strong{font-size:13px}
+ body[data-portal-home] .brand-copy small{font-size:11px}
+ body[data-portal-home] .dashboard-hero{padding-top:18px}
+ body[data-portal-home] .dashboard-intro{margin-bottom:14px}
+ body[data-portal-home] .dashboard-intro h1{font-size:27px}
+ body[data-portal-home] .dashboard-primary,body[data-portal-home] .dashboard-side{gap:11px}
+ body[data-portal-home] .dashboard-side{grid-template-columns:1fr}
+ body[data-portal-home] .dashboard-start,body[data-portal-home] .dashboard-panel,body[data-portal-home] .portal-search{padding:15px}
+ body[data-portal-home] .dashboard-action-grid{gap:8px}
+ body[data-portal-home] .dashboard-action{min-height:148px;padding:13px}
+ body[data-portal-home] .dashboard-action-symbol{width:39px;height:39px}
+ body[data-portal-home] .dashboard-action strong{font-size:16px;line-height:1.4}
+ body[data-portal-home] .dashboard-action small{font-size:12px;line-height:1.4}
+ body[data-portal-home] .dashboard-action-arrow{right:12px;bottom:9px}
+ body[data-portal-home] .portal-search{padding:15px}
+ body[data-portal-home] .portal-search label{font-size:12px}
+ body[data-portal-home] .portal-search-controls{gap:7px}
+ body[data-portal-home] #portal-query{font-size:14px}
+ body[data-portal-home] .dashboard-categories{grid-template-columns:repeat(2,minmax(0,1fr))}
+ body[data-portal-home] .service-grid.portal-card-grid{grid-template-columns:1fr}
+ body[data-portal-home] .service-tile>.service-card,body[data-portal-home] .service-card{min-height:84px;padding:12px 64px 12px 12px}
+ body[data-portal-home] .service-card .service-summary h3{font-size:16px;margin:0}
+ body[data-portal-home] .service-card .service-summary p{font-size:13px}
+ body[data-portal-home] .services-section .section-intro h2{font-size:24px}
+}
+@media(max-width:380px){
+ body[data-portal-home] .brand-mark{width:34px;height:34px;flex-basis:34px}
+ body[data-portal-home] .brand{gap:9px}
+ body[data-portal-home] .brand-copy strong{font-size:12px}
+ body[data-portal-home] .menu-toggle{padding:9px;gap:5px;font-size:13px}
+ body[data-portal-home] .dashboard-action{padding:12px;min-height:156px}
+ body[data-portal-home] .dashboard-action strong{font-size:15px}
+ body[data-portal-home] .portal-search-submit{min-width:70px;padding:0 9px}
+}
+@media(prefers-reduced-motion:reduce){
+ body[data-portal-home] *,body[data-portal-home] *::before,body[data-portal-home] *::after{transition:none!important;scroll-behavior:auto!important}
+}
