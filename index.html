@@ -11,7 +11,7 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css?v=20261005-browser-1">
   <link rel="stylesheet" href="css/learning.css">
-<link rel="stylesheet" href="css/portal-ux.css"></head>
+<link rel="stylesheet" href="css/portal-ux.css?v=20261016-dashboard-1"></head>
 <body data-portal-home>
   <a class="skip-link" href="#services">서비스 목록으로 건너뛰기</a>
 <header class="site-header"><div class="container header-inner">
@@ -22,40 +22,46 @@
 
 
   <main id="top">
-    <section class="hero" aria-labelledby="hero-title">
-      <div class="container hero-grid">
-        <div class="hero-copy">
-          <p class="eyebrow"><span></span>K-BIGDATA STUDENT PORTAL</p>
-          <h1 id="hero-title">학습부터 프로젝트,<br>취업 준비까지<br><em>한 곳에서</em></h1>
-          <p class="hero-description">IT 직무 탐색, 기술 학습, 자격증, 프로젝트, 기술면접, 취업 준비와 학과 서비스를 하나의 포털에서 이용하세요.</p>
-          <div class="hero-actions">
-            <a class="button button-primary" href="#services">전체 서비스 보기 <span aria-hidden="true">↓</span></a>
-            <a class="button button-secondary" href="https://www.kopo.ac.kr/kangseo/content.do?menu=1547">학과 홈페이지 <span aria-hidden="true">↗</span></a>
-          </div><section class="quick-launch" aria-labelledby="quick-title"><h2 id="quick-title">오늘 무엇을 할까요?</h2><div id="quick-actions"></div></section>
-        </div>
-
-
-        <div class="hero-visual portal-map" aria-label="학생 포털의 취업·진로, 학습·역량, 프로젝트·성장, 학과 생활 네 영역">
-          <svg class="network-lines" viewBox="0 0 600 480" aria-hidden="true">
-            <defs><linearGradient id="lineGradient" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#5379f6"/><stop offset="1" stop-color="#39c6e8"/></linearGradient></defs>
-            <path d="M300 238L110 100M300 238L490 100M300 238L110 380M300 238L490 380"/>
-            <circle cx="300" cy="238" r="128"/>
-          </svg>
-          <div class="hub-card">
-            <span class="hub-symbol" aria-hidden="true"><i></i></span>
-            <strong>K-BigData</strong><small>Student Portal</small>
+    <section class="dashboard-hero container" aria-labelledby="hero-title">
+      <div class="dashboard-intro">
+        <p class="eyebrow">K-BIGDATA STUDENT PORTAL</p>
+        <h1 id="hero-title">오늘 무엇을 준비할까요?</h1>
+        <p>학습부터 취업 준비까지, 지금 필요한 서비스를 바로 시작하세요.</p>
+      </div>
+      <div class="dashboard-main">
+        <section class="dashboard-start" aria-labelledby="dashboard-start-title">
+          <div class="dashboard-panel-heading"><h2 id="dashboard-start-title">바로 시작하기</h2><a href="#services">전체 서비스 보기 →</a></div>
+          <div class="dashboard-action-grid">
+            <a class="dashboard-action" href="practical.html"><span class="dashboard-action-symbol" aria-hidden="true">⌨</span><strong>실기 문제풀이</strong><small>C · Java · Python · SQL</small><span class="dashboard-action-arrow" aria-hidden="true">→</span></a>
+            <a class="dashboard-action" href="interview.html"><span class="dashboard-action-symbol" aria-hidden="true">▤</span><strong>기술면접 연습</strong><small>핵심 질문 · 모의면접</small><span class="dashboard-action-arrow" aria-hidden="true">→</span></a>
+            <a class="dashboard-action" href="recruit.html"><span class="dashboard-action-symbol" aria-hidden="true">▣</span><strong>추천 채용공고</strong><small>지원할 기업 찾아보기</small><span class="dashboard-action-arrow" aria-hidden="true">→</span></a>
+            <a class="dashboard-action" href="https://ready.k-bigdata.kr/" target="_blank" rel="noopener noreferrer"><span class="dashboard-action-symbol" aria-hidden="true">✓</span><strong>취업 준비 점검</strong><small>GitHub · 이력서 · 프로젝트</small><span class="dashboard-action-arrow" aria-hidden="true">↗</span></a>
           </div>
-          <a class="orbit-card orbit-career" href="#career"><span data-hero-icon="career" aria-hidden="true"></span><strong>CAREER</strong><small>취업 · 진로</small></a>
-          <a class="orbit-card orbit-learning" href="#learning"><span data-hero-icon="learning" aria-hidden="true"></span><strong>LEARNING</strong><small>학습 · 역량</small></a>
-          <a class="orbit-card orbit-project" href="#project"><span data-hero-icon="project" aria-hidden="true"></span><strong>PROJECT</strong><small>프로젝트 · 성장</small></a>
-          <a class="orbit-card orbit-campus" href="#campus"><span data-hero-icon="campus" aria-hidden="true"></span><strong>CAMPUS</strong><small>학과 생활</small></a>
+        </section>
+        <div class="dashboard-side">
+          <section class="dashboard-panel" aria-labelledby="dashboard-highlights-title">
+            <h2 id="dashboard-highlights-title">최근 학습 · 채용 마감</h2>
+            <div id="dashboard-highlights"><a href="practical.html">실기 문제풀이 →</a><a href="recruit.html">추천 채용공고 →</a></div>
+          </section>
+          <section class="dashboard-panel" aria-labelledby="dashboard-favorites-title">
+            <div class="dashboard-panel-heading"><h2 id="dashboard-favorites-title">즐겨찾기</h2><a href="#services">서비스 선택 →</a></div>
+            <div id="favorite-services"><p class="dashboard-empty">서비스 카드의 ☆을 눌러 등록하세요.</p></div>
+          </section>
+          <section class="dashboard-panel" aria-labelledby="dashboard-recent-title">
+            <h2 id="dashboard-recent-title">최근 이용 서비스</h2>
+            <div id="recent-services"><p class="dashboard-empty">최근 방문한 서비스가 이 기기에 표시됩니다.</p></div>
+          </section>
         </div>
       </div>
+      <nav class="dashboard-categories" aria-label="서비스 영역별 바로가기">
+        <a href="#career">취업 · 진로</a><a href="#learning">학습 · 역량</a><a href="#project">프로젝트 · 성장</a><a href="#campus">학과 생활</a>
+      </nav>
     </section>
+<section class="portal-search container" aria-labelledby="search-heading"><h2 id="search-heading">포털 통합검색</h2><label for="portal-query">서비스·직무·자격증·공식문서·면접·기술블로그 검색</label><input id="portal-query" type="search" placeholder="예: Kubernetes, 쿠버네티스, SQL" autocomplete="off"><p id="search-status" role="status"></p><ul id="search-results" class="search-results"></ul></section>
+
     <details class="journey-disclosure container"><summary>학습·취업 준비 흐름 보기</summary><section class="journey-section container" aria-labelledby="journey-title"><p class="section-kicker">YOUR NEXT STEP</p><h2 id="journey-title">목표 직무부터 첫 입사지원까지</h2><p class="journey-lead">현재 필요한 단계부터 시작하세요. 기술을 배우고, 프로젝트로 증명하고, 취업 준비로 연결합니다.</p><ol id="student-journey" class="student-journey"></ol></section></details>
 
 
-<section class="portal-search container" aria-labelledby="search-heading"><h2 id="search-heading">포털 통합검색</h2><label for="portal-query">서비스·직무·자격증·공식문서·면접·기술블로그 검색</label><input id="portal-query" type="search" placeholder="예: Kubernetes, 쿠버네티스, SQL" autocomplete="off"><p id="search-status" role="status"></p><ul id="search-results" class="search-results"></ul></section>
     <section class="services-section" id="services" aria-labelledby="services-title">
       <div class="container">
         <div class="section-intro">
@@ -76,6 +82,8 @@
     <div class="container footer-bottom"><p>학생용 학습·프로젝트·취업 통합 포털입니다.</p><p>© <span id="current-year"></span> K-BigData Service Portal</p></div>
   </footer>
   <script type="module" src="js/app.js?v=20261016-nav-search-filters-1"></script>
-  <script type="module" src="js/portal-shell-entry.js?v=20261016-nav-search-filters-1"></script>
+  <script type="module" src="js/portal-shell-entry.js?v=20261016-dashboard-1"></script>
+  <script src="data/recruitments.js?v=20261016-2"></script>
+  <script type="module" src="js/home-dashboard.js?v=20261016-dashboard-1"></script>
 </body>
 </html>
