@@ -22,14 +22,18 @@ assert.deepEqual(bankStats(bank),{unique:182,history:186,repeated:4,languages:{C
 const repeated=buildBank(questions,[...history,{...history[0],id:'synthetic-test-only',year:2023,round:3}]);
 assert.equal(bankStats(repeated).unique,182);assert.equal(bankStats(repeated).history,187);assert.equal(bankStats(repeated).repeated,bankStats(bank).repeated+(bank[0].history.length===1?1:0));
 const startedAt=1000,attempt={startedAt,submittedAt:null};
-assert.equal(HINT_SECONDS,60);assert.equal(ANSWER_SECONDS,120);
-assert.equal(remainingSeconds(startedAt,1000),60);assert.equal(remainingSeconds(startedAt,60999),1);assert.equal(remainingSeconds(startedAt,61000),0);
-assert.equal(remainingAnswerSeconds(startedAt,61000),60);assert.equal(remainingAnswerSeconds(startedAt,120999),1);assert.equal(remainingAnswerSeconds(startedAt,121000),0);
-assert.equal(hintAvailable(attempt,startedAt+59999),false);assert.equal(hintAvailable(attempt,startedAt+60000),true);
-assert.equal(answerDeadlineReached(attempt,startedAt+119999),false);assert.equal(answerDeadlineReached(attempt,startedAt+120000),true);
-assert.equal(canSubmit(attempt,'8',startedAt),true);assert.equal(canSubmit(attempt,'8',startedAt+60000),true);assert.equal(canSubmit(attempt,'8',startedAt+119999),true);assert.equal(canSubmit(attempt,'8',startedAt+120000),false);assert.equal(canSubmit(attempt,' ',startedAt+60000),false);
-assert.equal(canReveal(attempt,startedAt+90000),false);assert.equal(canReveal({...attempt,submittedAt:startedAt+20000},startedAt+20000),true);assert.equal(canReveal(attempt,startedAt+120000),true);
-assert.equal(canSubmit({...attempt,submittedAt:startedAt+61000},'8',startedAt+62000),false);
+assert.equal(HINT_SECONDS,30);assert.equal(ANSWER_SECONDS,60);
+assert.equal(remainingSeconds(startedAt,1000),30);assert.equal(remainingSeconds(startedAt,30999),1);assert.equal(remainingSeconds(startedAt,31000),0);
+assert.equal(remainingAnswerSeconds(startedAt,31000),30);assert.equal(remainingAnswerSeconds(startedAt,60999),1);assert.equal(remainingAnswerSeconds(startedAt,61000),0);
+assert.equal(hintAvailable(attempt,startedAt+29999),false);assert.equal(hintAvailable(attempt,startedAt+30000),true);
+assert.equal(answerDeadlineReached(attempt,startedAt+59999),false);assert.equal(answerDeadlineReached(attempt,startedAt+60000),true);
+assert.equal(canSubmit(attempt,'8',startedAt),true);assert.equal(canSubmit(attempt,'8',startedAt+30000),true);assert.equal(canSubmit(attempt,'8',startedAt+59999),true);assert.equal(canSubmit(attempt,'8',startedAt+60000),false);assert.equal(canSubmit(attempt,' ',startedAt+30000),false);
+assert.equal(canReveal(attempt,startedAt+45000),false);assert.equal(canReveal({...attempt,submittedAt:startedAt+20000},startedAt+20000),true);assert.equal(canReveal(attempt,startedAt+60000),true);
+assert.equal(canSubmit({...attempt,submittedAt:startedAt+31000},'8',startedAt+32000),false);
+const timeout={...attempt,submittedAt:startedAt+60000,viewedExplanation:true,autoRevealed:true};
+assert.equal(canSubmit(timeout,'8',startedAt+120000),true);
+assert.equal(canSubmit({...timeout,lateSubmittedAt:startedAt+120000},'8',startedAt+130000),false);
+
 const sql=bank.find(q=>q.grading==='self');assert.equal(gradeAnswer(sql,'different SQL'),null);assert.equal(gradeAnswer(bank[0],'incorrect'),false);
 assert.equal(gradeAnswer(bank.find(q=>q.id==='R-SQL-0001'),'order, SCORE, desc'),true);
 assert.equal(gradeAnswer(bank.find(q=>q.id==='T-PY-0001'),'10\n12'),true);assert.equal(gradeAnswer(bank.find(q=>q.id==='T-PY-0001'),'10 12'),false);
@@ -53,4 +57,4 @@ const record={id:'attempt-1',questionId:'q',submittedAt:61000,elapsedSeconds:60,
 store.saveAttempt(record);store.saveAttempt({...record,viewedExplanation:true});assert.equal(store.getAttempts().length,1);assert.equal(store.getAttempts()[0].viewedExplanation,true);
 globalThis.localStorage={getItem(){throw Error('blocked');},setItem(){throw Error('blocked');}};
 assert.equal(store.getAttempts().length,1);store.saveAttempt({...record,id:'attempt-2'});assert.equal(store.getAttempts().length,2);assert.equal(store.storageAvailable,false);
-console.log('PASS: source/history integrity, 60-second hint / 120-second answer boundaries, immediate submit reveal, grading, storage, daily/random, noindex and certificate CTA.');
+console.log('PASS: source/history integrity, 30-second hint / 60-second answer boundaries, immediate submit reveal, grading, storage, daily/random, noindex and certificate CTA.');
