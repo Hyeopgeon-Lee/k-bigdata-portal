@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="css/style.css?v=20261005-browser-1">
   <link rel="stylesheet" href="css/learning.css">
   <link rel="stylesheet" href="css/portal-ux.css?v=20261005-7">
-  <link rel="stylesheet" href="css/recruit.css?v=20261016-share-1">
+  <link rel="stylesheet" href="css/recruit.css?v=20261016-filters-1">
 </head>
 <body data-page="recruit">
 <a class="skip-link" href="#content">본문으로 건너뛰기</a>
@@ -43,8 +43,15 @@
 <section class="container learning-content" aria-label="추천 채용공고 목록">
 <div class="recruit-overview"><div><span>현재 등록된 채용중 공고</span><br><strong id="recruit-count">0건</strong></div><span id="recruit-updated"></span></div>
 <div class="recruit-controls">
-<label for="recruit-query">기업 검색</label>
-<input id="recruit-query" type="search" placeholder="기업명을 입력하세요" autocomplete="off">
+<label for="recruit-query">기업명 · 모집직무 검색</label>
+<input id="recruit-query" type="search" placeholder="예: 알서포트, 클라우드, 시스템엔지니어" autocomplete="off">
+<div class="recruit-filter-grid" aria-label="채용공고 상세 필터">
+  <div><label for="recruit-role-filter">직무 분야</label><select id="recruit-role-filter"><option value="전체">전체 직무</option></select></div>
+  <div><label for="recruit-region-filter">근무지역</label><select id="recruit-region-filter"><option value="전체">전체 지역</option></select></div>
+  <div><label for="recruit-deadline-filter">마감 · 등록 상태</label><select id="recruit-deadline-filter"><option value="all">전체</option><option value="soon">7일 이내 마감</option><option value="new">최근 7일 등록</option><option value="until">채용시 마감</option><option value="unknown">마감일 미확인</option></select></div>
+  <div><label for="recruit-sort">정렬 기준</label><select id="recruit-sort"><option value="deadline">마감 임박순</option><option value="recent">최근 등록순</option><option value="company">기업명순</option></select></div>
+</div>
+<div class="recruit-site-toolbar"><span class="recruit-site-title">채용사이트</span><button type="button" id="recruit-reset" class="button button-secondary">필터 초기화</button></div>
 <div id="site-filters" class="filters" aria-label="채용사이트 필터"></div>
 <p id="recruit-status" role="status"></p>
 </div>
@@ -58,7 +65,7 @@
 <div class="container footer-bottom"><p>학생용 학습·프로젝트·취업 통합 포털입니다.</p><p>© <span id="current-year"></span> K-BigData Service Portal</p></div>
 </footer>
 <script src="data/recruitments.js?v=20261016-2"></script>
-<script src="js/recruit.js?v=20261016-share-1"></script>
+<script src="js/recruit.js?v=20261016-filters-1"></script>
 <script type="module" src="js/portal-shell-entry.js?v=20261009-course-removed-2"></script>
 </body>
 </html>
