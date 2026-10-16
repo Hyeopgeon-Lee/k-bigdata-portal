@@ -1,7 +1,7 @@
 const $ = selector => document.querySelector(selector);
 const esc = value => String(value ?? "").replace(/[&<>'"]/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[char]));
 
-const todayKst = new Intl.DateTimeFormat('en-CA', { timeZone:'Asia/Seoul', year:'numeric', month:'2-digit', day:'2-digit' }).format(new Date());
+const todayKst = new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().slice(0,10);
 const isOpen = job => job.active !== false && (job.deadlineType !== "DATE" || !job.deadline || job.deadline >= todayKst);
 const jobs = (window.K_BIGDATA_RECRUITMENTS || []).filter(isOpen);
 const isUnverified = job => job.verification === "DETAILS_UNVERIFIED";
@@ -70,11 +70,64 @@ function focusLinkedJob(){
   card.scrollIntoView({block:"center", behavior:"auto"});
 }
 let currentSite = "전체";
+const filterState={role:"전체",region:"전체",deadline:"all",sort:"deadline"};
+const todayUtc=Date.parse(todayKst+"T00:00:00+09:00");
+const daysUntil=job=>job.deadlineType==="DATE"&&job.deadline
+  ?Math.round((Date.parse(job.deadline+"T00:00:00+09:00")-todayUtc)/86400000):null;
+const daysSinceAdded=job=>job.addedAt
+  ?Math.round((todayUtc-Date.parse(job.addedAt+"T00:00:00+09:00"))/86400000):null;
+const isNew=job=>{const n=daysSinceAdded(job);return n!==null&&n>=0&&n<=7;};
+const isSoon=job=>{const n=daysUntil(job);return n!==null&&n>=0&&n<=7;};
+function roleOf(job){
+ const role=(job.position||job.title||"").toLowerCase();
+ if(!role) return "직무 미표기";
+ if(/dba|데이터|빅데이터|분석|인공지능|ai |ai개발|머신러닝|딥러닝|ml |llm/.test(role)) return "데이터 · AI";
+ if(/보안|security|정보보호/.test(role)) return "보안";
+ if(/qa|qc|테스트|품질/.test(role)) return "QA · 테스트";
+ if(/클라우드|시스템|서버|인프라|devops|데브옵스|sre|네트워크|관제|운영|기술지원/.test(role)) return "시스템 · 클라우드";
+ if(/개발|프로그래|소프트웨어|software|엔지니어|프론트|백엔드|frontend|backend|웹 |web |flutter|react|spring|java/.test(role)) return "소프트웨어 개발";
+ return "기타 직무";
+}
+function regionOf(job){
+ const place=(job.location||"").trim();
+ if(!place) return "지역 미표기";
+ if(/서울/.test(place)) return "서울";
+ if(/인천/.test(place)) return "인천";
+ if(/경기|수원|성남|고양|부천|과천|화성|용인|안양|광명|의정부|파주/.test(place)) return "경기";
+ return "기타 지역";
+}
+function deadlineMatches(job){
+ switch(filterState.deadline){
+  case "soon":return isSoon(job);
+  case "new":return isNew(job);
+  case "until":return job.deadlineType==="UNTIL_FILLED";
+  case "unknown":return job.deadlineType!=="UNTIL_FILLED"&&daysUntil(job)===null;
+  default:return true;
+ }
+}
+function compareJobs(a,b){
+ if(filterState.sort==="company")return a.company.localeCompare(b.company,"ko");
+ if(filterState.sort==="recent")return (b.addedAt||"").localeCompare(a.addedAt||"")||a.company.localeCompare(b.company,"ko");
+ const da=daysUntil(a),db=daysUntil(b);
+ return (da===null?Number.MAX_SAFE_INTEGER:da)-(db===null?Number.MAX_SAFE_INTEGER:db)
+  ||a.company.localeCompare(b.company,"ko");
+}
 
 document.addEventListener("DOMContentLoaded", () => {
   renderSummary();
   renderFilters();
-  $("#recruit-query")?.addEventListener("input", renderJobs);
+  $("#recruit-query")?.addEventListener("input",renderJobs);
+  for(const [id,key] of [["#recruit-role-filter","role"],["#recruit-region-filter","region"],["#recruit-deadline-filter","deadline"],["#recruit-sort","sort"]]){
+    $(id)?.addEventListener("change",e=>{filterState[key]=e.target.value;renderJobs();});
+  }
+  $("#recruit-reset")?.addEventListener("click",()=>{
+    currentSite="전체";
+    Object.assign(filterState,{role:"전체",region:"전체",deadline:"all",sort:"deadline"});
+    $("#recruit-query").value="";
+    for(const [id,key] of [["#recruit-role-filter","role"],["#recruit-region-filter","region"],["#recruit-deadline-filter","deadline"],["#recruit-sort","sort"]])$(id).value=filterState[key];
+    $("#site-filters")?.querySelectorAll("[data-site]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.site==="전체")));
+    renderJobs();
+  });
   $("#recruit-list")?.addEventListener("click", async event => {
     const button = event.target.closest("button[data-share-job]");
     if(!button) return;
@@ -97,17 +150,24 @@ function renderSummary(){
 }
 
 function renderFilters(){
-  const root = $("#site-filters");
-  if(!root) return;
-  const sites = ["전체", ...new Set(jobs.map(job => job.site).filter(Boolean))];
-  root.innerHTML = sites.map(site => '<button type="button" data-site="'+esc(site)+'" aria-pressed="'+String(site === currentSite)+'">'+esc(site)+'</button>').join("");
-  root.addEventListener("click", event => {
-    const button = event.target.closest("button[data-site]");
-    if(!button) return;
-    currentSite = button.dataset.site;
-    root.querySelectorAll("button").forEach(item => item.setAttribute("aria-pressed", String(item === button)));
-    renderJobs();
-  });
+ const root=$("#site-filters");
+ if(!root)return;
+ const sites=["전체",...new Set(jobs.map(job=>job.site).filter(Boolean))];
+ root.innerHTML=sites.map(site=>'<button type="button" data-site="'+esc(site)+'" aria-pressed="'+String(site===currentSite)+'">'+esc(site)+'</button>').join("");
+ root.addEventListener("click",event=>{
+  const button=event.target.closest("button[data-site]");
+  if(!button)return;
+  currentSite=button.dataset.site;
+  root.querySelectorAll("button").forEach(item=>item.setAttribute("aria-pressed",String(item===button)));
+  renderJobs();
+ });
+ for(const [selector,items,placeholder] of [
+  ["#recruit-role-filter",[...new Set(jobs.map(roleOf))].sort((a,b)=>a.localeCompare(b,"ko")),"전체 직무"],
+  ["#recruit-region-filter",[...new Set(jobs.map(regionOf))].sort((a,b)=>a.localeCompare(b,"ko")),"전체 지역"]
+ ]){
+  const select=$(selector);
+  if(select)select.innerHTML='<option value="전체">'+placeholder+'</option>'+items.map(item=>'<option value="'+esc(item)+'">'+esc(item)+'</option>').join("");
+ }
 }
 
 function renderJobs(){
@@ -116,10 +176,13 @@ function renderJobs(){
   if(!root) return;
   const query = ($("#recruit-query")?.value || "").trim().toLocaleLowerCase("ko-KR");
   const filtered = jobs
-    .filter(job => currentSite === "전체" || job.site === currentSite)
-    .filter(job => !query || [job.company, job.site, job.title, job.position, job.location].filter(Boolean).join(" ").toLocaleLowerCase("ko-KR").includes(query))
-    .sort((a,b) => a.company.localeCompare(b.company, "ko"));
-  if(status) status.textContent = filtered.length + "건의 채용공고";
+    .filter(job=>currentSite==="전체"||job.site===currentSite)
+    .filter(job=>filterState.role==="전체"||roleOf(job)===filterState.role)
+    .filter(job=>filterState.region==="전체"||regionOf(job)===filterState.region)
+    .filter(deadlineMatches)
+    .filter(job=>!query||[job.company,job.site,job.title,job.position,job.location].filter(Boolean).join(" ").toLocaleLowerCase("ko-KR").includes(query))
+    .sort(compareJobs);
+  if(status) status.textContent = "검색 결과 "+filtered.length+"건 · 전체 채용중 "+jobs.length+"건";
   if(!filtered.length){
     root.innerHTML = '<p class="recruit-empty">조건에 맞는 채용공고가 없습니다.</p>';
     return;
@@ -127,7 +190,7 @@ function renderJobs(){
   root.innerHTML = filtered.map(job => {
     const applyUrl = "https://apply.k-bigdata.kr/register.html?job=" + encodeURIComponent(job.id);
     return '<article class="recruit-card" id="recruit-'+esc(job.id)+'" tabindex="-1">'+
-      '<div class="recruit-card-head"><span class="badge ' + (isUnverified(job) ? 'recruit-pending">정보 확인 필요' : 'recruit-open">채용중') + '</span><span class="recruit-site">'+esc(job.site)+'</span></div>'+
+      '<div class="recruit-card-head"><div class="recruit-status-badges"><span class="badge ' + (isUnverified(job) ? 'recruit-pending">정보 확인 필요' : 'recruit-open">채용중') + '</span>'+(isSoon(job)?'<span class="badge recruit-soon">마감 임박</span>':'')+(isNew(job)?'<span class="badge recruit-new">NEW</span>':'')+'</div><span class="recruit-site">'+esc(job.site)+'</span></div>'+
       '<h2>'+esc(job.company)+'</h2>'+
       (job.title ? '<p class="recruit-title">'+esc(job.title)+'</p>' : '')+
       '<p class="recruit-deadline">'+esc(deadlineText(job))+'</p>'+
