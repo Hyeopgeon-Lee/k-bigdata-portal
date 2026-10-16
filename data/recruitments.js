@@ -395,15 +395,18 @@
   },
   {
     "id": "JOB-20261016-002",
-    "company": "기업명 확인 필요 (공고번호 55257388)",
+    "company": "알서포트(주)",
     "site": "사람인",
     "url": "https://www.saramin.co.kr/zf_user/jobs/relay/view?rec_idx=55257388&view_type=list",
-    "deadline": null,
-    "deadlineType": "UNKNOWN",
+    "title": "클라우드 시스템엔지니어 채용",
+    "position": "클라우드 시스템엔지니어",
+    "location": "서울 강동구",
+    "deadline": "2026-11-09",
+    "deadlineType": "DATE",
     "active": true,
     "addedAt": "2026-10-16",
-    "verifiedAt": null,
-    "verification": "DETAILS_UNVERIFIED"
+    "verifiedAt": "2026-10-16",
+    "verification": "USER_CONFIRMED"
   }
 ]; 
   window.K_BIGDATA_RECRUITMENTS = jobs;
