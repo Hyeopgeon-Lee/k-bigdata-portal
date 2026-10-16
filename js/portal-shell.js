@@ -1,6 +1,6 @@
-import {initPortalUX} from "./portal-ux.js?v=20261009-course-removed-2";
-import {initGroupedSearch} from "./search-ui.js?v=20261005-perf-1";
-import {footerLinks} from "./services.js?v=20261009-course-removed-2";
+import {initPortalUX} from "./portal-ux.js?v=20261016-nav-search-filters-1";
+import {initGroupedSearch} from "./search-ui.js?v=20261016-nav-search-filters-1";
+import {footerLinks} from "./services.js?v=20261016-nav-search-filters-1";
 
 const esc=v=>String(v??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
 
