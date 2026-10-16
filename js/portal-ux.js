@@ -60,19 +60,34 @@ async function enhanceJobDetail(id){
 export async function initPortalUX(){
  const page=document.body.dataset.page,params=new URLSearchParams(location.search),id=params.get("id");
 
- for(const nav of document.querySelectorAll("[data-learning-nav]")){
-  nav.classList.add("portal-service-nav");
-  nav.setAttribute("aria-label","포털 서비스 바로가기");
-  nav.innerHTML=portalNavLinks.map(item=>{
+ const currentService=portalNavLinks.find(item=>{
+   const service=services.find(s=>s.id===item.id);
+   return service && !/^https?:\/\//.test(service.url) && location.pathname.endsWith("/"+service.url);
+ });
+ const defaultGroups={jobs:"career",resume:"career",recruit:"career",certifications:"learning",practical:"learning",interview:"learning",docs:"learning","project-guide":"project"};
+ const group=currentService?.group||defaultGroups[page]||"learning";
+ const groupNames={career:"취업 · 진로",learning:"학습 · 역량",project:"프로젝트 · 성장",campus:"학과 생활"};
+ const renderNavLink=item=>{
    const service=services.find(s=>s.id===item.id);
    if(!service)return "";
-   const current=nav.dataset.currentService?item.id===nav.dataset.currentService:!/^https?:\/\//.test(service.url)&&location.pathname.endsWith(service.url);
-   return '<a href="'+esc(service.url)+'" data-nav-group="'+esc(item.group)+'"'+(current?' aria-current="page"':'')+'>'+esc(item.label)+'</a>';
-  }).join("");
-  const current=nav.querySelector('[aria-current="page"]');
-  if(current&&matchMedia("(max-width:767px)").matches)requestAnimationFrame(()=>current.scrollIntoView({inline:"center",block:"nearest"}));
+   const external=/^https?:\/\//.test(service.url);
+   const current=item.id===currentService?.id;
+   return '<a href="'+esc(service.url)+'" data-nav-group="'+esc(item.group)+'"'+
+     (current?' aria-current="page"':'')+
+     (external?' target="_blank" rel="noopener noreferrer"':'')+'>'+esc(item.label)+'</a>';
+ };
+ for(const nav of document.querySelectorAll("[data-learning-nav]")){
+   nav.classList.add("portal-service-nav","portal-nav-compact");
+   nav.setAttribute("aria-label","현재 영역과 다른 서비스 바로가기");
+   const primary=portalNavLinks.filter(item=>item.group===group);
+   const others=Object.entries(groupNames).filter(([id])=>id!==group).map(([id,label])=>
+     '<section class="portal-nav-other-group"><strong>'+esc(label)+'</strong><div>'+portalNavLinks.filter(item=>item.group===id).map(renderNavLink).join("")+'</div></section>'
+   ).join("");
+   nav.innerHTML='<div class="portal-nav-current"><strong class="portal-nav-title">'+esc(groupNames[group])+'</strong><div class="portal-nav-items">'+
+     primary.map(renderNavLink).join("")+'</div></div>'+
+     '<details class="portal-nav-more"><summary>다른 서비스 보기</summary><div class="portal-nav-other">'+others+
+     '<a href="index.html#services" class="portal-nav-all">전체 서비스 목록 →</a></div></details>';
  }
-
  if(!document.querySelector(".interview-home-link")&&!document.body.classList.contains("practical-page")&&!document.querySelector(".portal-mobile-home")){
   const home=document.createElement("a");
   home.href="index.html";
