@@ -1,0 +1,35 @@
+name: Portal home UI QA
+on:
+  push:
+    branches: [main]
+    paths:
+      - "index.html"
+      - "css/home-ui.css"
+      - "js/app.js"
+      - "js/home-dashboard.js"
+      - "js/portal-personal.js"
+      - "js/search-ui.js"
+      - "js/portal-shell.js"
+      - "js/portal-shell-entry.js"
+      - "tests/portal-dashboard.test.mjs"
+      - ".github/workflows/portal-home-qa.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-home:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate home UX contracts and local preference behavior
+        run: node tests/portal-dashboard.test.mjs
+      - name: Check home JavaScript syntax
+        run: |
+          node --check js/app.js
+          node --check js/home-dashboard.js
+          node --check js/search-ui.js
+          node --check js/portal-shell.js
+          node --check js/portal-personal.js
