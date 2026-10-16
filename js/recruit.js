@@ -65,7 +65,7 @@ function renderJobs(){
       (!job.title && !job.position ? '<p>'+(isUnverified(job) ? '기업명·모집요건·마감일을 채용공고 원문에서 확인하세요.' : '지원직무와 상세 모집요건은 실제 채용공고에서 확인하세요.')+'</p>' : '')+
       '<div class="recruit-actions">'+
         '<a class="button button-secondary" href="'+esc(job.url)+'" target="_blank" rel="noopener noreferrer">채용공고 보기 ↗</a>'+
-        '<a class="button button-primary" href="'+esc(applyUrl)+'">지원현황 등록 →</a>'+
+        '<a class="button button-primary" href="'+esc(isUnverified(job) ? "https://apply.k-bigdata.kr/register.html" : applyUrl)+'">'+(isUnverified(job) ? "공고 확인 후 등록 →" : "지원현황 등록 →")+'</a>'+
       '</div>'+
     '</article>';
   }).join("");
