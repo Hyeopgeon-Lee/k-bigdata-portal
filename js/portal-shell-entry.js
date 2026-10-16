@@ -1,4 +1,4 @@
-import {initPortalShell} from "./portal-shell.js?v=20261016-nav-search-filters-1";
+import {initPortalShell} from "./portal-shell.js?v=20261016-dashboard-1";
 
 initPortalShell().catch(error=>{
  console.error("Portal shell initialization failed",error);
