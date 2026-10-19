@@ -222,3 +222,9 @@ async function loadPublicCalendar() {
   }
 }
 loadPublicCalendar();
+if(/^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(SCHEDULE_API_URL)){
+  // 열린 페이지도 관리자가 공개한 최신 일정으로 갱신합니다.
+  setInterval(()=>{
+    if(document.visibilityState==="visible")loadPublicCalendar();
+  },600000);
+}
