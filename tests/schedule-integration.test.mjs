@@ -39,7 +39,7 @@ const fmt = (date,mask) => {
  return mask==="HH:mm" ? get("hour")+":"+get("minute")
   :get("year")+"-"+get("month")+"-"+get("day");
 };
-const privateRows=[["safe-id","시험 안내","exam","2026-10-20","2026-10-20","10:30",false,true]];
+const privateRows=[["safe-id","시험 안내","exam","2026-10-20","2026-10-20","10:30",false,true,"calendar"]];
 const context=vm.createContext({
  console:{...console,error:()=>{}},
  Date, String, Object,
@@ -81,7 +81,7 @@ function event(title,visibility="DEFAULT",allDay=false,start="2026-10-20T01:30:0
   getVisibility:()=>visibility,getTitle:()=>title,
   getStartTime:()=>new Date(start),getEndTime:()=>new Date(end),
   getId:()=>("private-calendar-id-do-not-publish"),
-  isAllDayEvent:()=>allDay,
+  isAllDayEvent:()=>allDay,getTag:()=>null,
   getDescription:()=>{throw new Error("description read unexpectedly")},
   getGuestList:()=>{throw new Error("guest list read unexpectedly")},
   getLocation:()=>{throw new Error("location read unexpectedly")}
@@ -98,8 +98,9 @@ assert.equal(row[2],"exam");
 assert.equal(row[3],"2026-10-20");
 assert.equal(row[4],"2026-10-20");
 assert.equal(row[5],"10:30");
-assert.equal(row.length,8);
+assert.equal(row.length,9);
 assert.equal(row[7],true);
+assert.equal(row[8],"calendar","calendar-native entries must be nondeletable");
 assert.ok(!row.join(" ").includes("private-calendar-id"));
 const allDay=context.eventPublicRow_(event("(학과) [프로젝트] 발표","DEFAULT",true,
   "2026-10-19T15:00:00Z","2026-10-20T15:00:00Z"));
@@ -116,6 +117,7 @@ assert.equal(raw.ok,true);
 assert.equal(raw.events.length,1);
 assert.equal(raw.events[0].title,"시험 안내");
 assert.equal(raw.events[0].published,true);
+assert.equal(raw.events[0].source,"calendar");
 assert.equal(Object.hasOwn(raw.events[0],"description"),false);
 assert.equal(Object.hasOwn(raw.events[0],"attendees"),false);
 assert.equal(Object.hasOwn(raw.events[0],"calendarId"),false);
@@ -163,6 +165,7 @@ calendarEvents=[event("(학과) [시험] 등록 테스트"),event("개인 회의
 context.syncDepartmentCalendar();
 assert.equal(savedRows.length,1);
 assert.equal(savedRows[0][1],"등록 테스트");
+assert.equal(savedRows[0][8],"calendar");
 calendarEvents=[event("(학과) [시험] 제목 수정")];
 context.syncDepartmentCalendar();
 assert.equal(savedRows[0][1],"제목 수정");
