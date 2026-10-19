@@ -46,7 +46,7 @@ let activeCategory = "all";
 let keyword = "";
 
 const events = (Array.isArray(schedules)?schedules:[])
-  .filter(e=>e&&typeof e==="object"&&e.published!==false&&
+  .filter(e=>e&&typeof e==="object"&&e.published===true&&
     typeof e.title==="string"&&e.title.trim().length>0&&
     Object.hasOwn(CATEGORIES,e.category)&&parseDate(e.startDate)&&
     parseDate(e.endDate||e.startDate)&& (e.endDate||e.startDate)>=e.startDate)
@@ -162,10 +162,10 @@ $("#schedule-query").addEventListener("input",e=>{
   keyword=e.target.value.trim().toLocaleLowerCase("ko");
   render();
 });
-document.querySelectorAll("[data-category]").forEach(button=>{
+document.querySelectorAll(".schedule-filters button[data-category]").forEach(button=>{
   button.addEventListener("click",()=>{
     activeCategory=button.dataset.category;
-    document.querySelectorAll("[data-category]").forEach(b=>
+    document.querySelectorAll(".schedule-filters button[data-category]").forEach(b=>
       b.setAttribute("aria-pressed",String(b===button)));
     render();
   });
