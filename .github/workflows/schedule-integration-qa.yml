@@ -11,6 +11,7 @@ on:
       - "js/services.js"
       - "apps-script/department-calendar/**"
       - "tests/schedule-integration.test.mjs"
+      - "tests/schedule-registration.test.mjs"
       - ".github/workflows/schedule-integration-qa.yml"
   workflow_dispatch:
 permissions:
@@ -30,7 +31,11 @@ jobs:
           node --check tests/schedule-integration.test.mjs
           cp apps-script/department-calendar/Code.gs /tmp/kbigdata-department-calendar.cjs
           node --check /tmp/kbigdata-department-calendar.cjs
+          cp apps-script/department-calendar/PublicRegistration.gs /tmp/kbigdata-public-registration.cjs
+          node --check /tmp/kbigdata-public-registration.cjs
       - name: Test public-only schedule integration
         run: node tests/schedule-integration.test.mjs
+      - name: Test public schedule registration
+        run: node tests/schedule-registration.test.mjs
       - name: Check existing schedule page contracts
         run: node tests/schedule-page.test.mjs

@@ -235,3 +235,81 @@ if(/^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(SCHED
     if(document.visibilityState==="visible")loadPublicCalendar();
   },600000);
 }
+
+const registrationForm=$("#schedule-register-form");
+const registrationStatus=$("#schedule-register-status");
+const registrationSubmit=$("#schedule-register-submit");
+const registrationField=name=>registrationForm.elements.namedItem(name);
+registrationField("startDate").value=selectedDate;
+registrationField("endDate").value=selectedDate;
+registrationField("startDate").min=today;
+registrationField("endDate").min=today;
+registrationField("startDate").addEventListener("change",()=>{
+  if(registrationField("endDate").value<registrationField("startDate").value)
+    registrationField("endDate").value=registrationField("startDate").value;
+});
+registrationField("allDay").addEventListener("change",e=>{
+  for(const name of ["startTime","endTime"]){
+    registrationField(name).disabled=e.target.checked;
+    registrationField(name).required=!e.target.checked;
+  }
+});
+let lastRegistration=null;
+function submitPublicSchedule(values){
+  return new Promise((resolve,reject)=>{
+    if(!/^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(SCHEDULE_API_URL)){
+      reject(new Error("일정 등록 연결을 준비하고 있습니다."));return;
+    }
+    const signature=JSON.stringify(values);
+    if(lastRegistration?.signature!==signature){
+      const bytes=new Uint8Array(16);crypto.getRandomValues(bytes);
+      lastRegistration={signature,requestId:Array.from(bytes,b=>b.toString(16).padStart(2,"0")).join("")};
+    }
+    const requestId=lastRegistration.requestId;
+    const iframe=document.createElement("iframe");
+    iframe.name="schedule-registration-"+requestId;
+    iframe.hidden=true;iframe.title="일정 등록 결과";
+    const post=document.createElement("form");
+    post.method="POST";post.action=SCHEDULE_API_URL;post.target=iframe.name;post.hidden=true;
+    for(const [name,value] of Object.entries({...values,action:"register",requestId})){
+      const input=document.createElement("input");input.type="hidden";input.name=name;input.value=String(value);post.append(input);
+    }
+    const finish=(error,result)=>{
+      window.clearTimeout(timer);window.removeEventListener("message",receive);
+      iframe.remove();post.remove();
+      if(error)reject(error);else resolve(result);
+    };
+    const receive=event=>{
+      let origin;
+      try{origin=new URL(event.origin);}catch{return;}
+      if(origin.protocol!=="https:" || !(origin.hostname==="script.google.com" || origin.hostname.endsWith(".googleusercontent.com")))return;
+      const data=event.data;
+      if(data?.type!=="kbigdata-schedule-registration" || data.requestId!==requestId)return;
+      if(data.ok===true)finish(null,data);
+      else finish(new Error(typeof data.error==="string"?data.error:"일정을 등록하지 못했습니다."));
+    };
+    const timer=window.setTimeout(()=>finish(new Error("등록 응답이 지연되고 있습니다. 목록을 확인하거나 같은 내용으로 다시 시도해 주세요.")),60000);
+    window.addEventListener("message",receive);
+    document.body.append(iframe,post);post.submit();
+  });
+}
+registrationForm.addEventListener("submit",async event=>{
+  event.preventDefault();
+  if(registrationSubmit.disabled)return;
+  const values={};
+  for(const name of ["title","category","startDate","endDate","startTime","endTime","website"])
+    values[name]=registrationField(name).value;
+  values.allDay=String(registrationField("allDay").checked);
+  registrationSubmit.disabled=true;
+  registrationStatus.textContent="일정을 등록하고 있습니다…";
+  try{
+    await submitPublicSchedule(values);
+    lastRegistration=null;
+    registrationStatus.textContent="일정이 등록되었습니다. 학과 달력에서 확인해 주세요.";
+    registrationField("title").value="";
+    selectedDate=values.startDate;visibleMonth=selectedDate.slice(0,7);
+    await loadPublicCalendar();
+  }catch(error){
+    registrationStatus.textContent=error.message;
+  }finally{registrationSubmit.disabled=false;}
+});

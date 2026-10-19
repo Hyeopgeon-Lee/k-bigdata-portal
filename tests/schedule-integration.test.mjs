@@ -13,13 +13,14 @@ const config=read("data/schedule-config.js");
 assert.ok(services.some(s=>s.id==="schedule"&&s.url==="schedule.html"));
 assert.match(config,/SCHEDULE_API_URL\s*=\s*"(?:https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec)?"/);
 assert.match(page,/id="schedule-sync-status"/);
-assert.match(page,/\(학과\)/);
+assert.ok(!page.includes("Google 캘린더에서 제목이"));
+assert.match(page,/schedule-register-form/);
 assert.match(js,/readPublishedSchedules/);
 assert.match(js,/e\.published===true/);
 assert.match(js,/window\[name\]/);
 assert.match(js,/Asia\/Seoul/);
 assert.match(gs,/everyMinutes\(10\)/);
-assert.ok(!gs.includes("function doPost("));
+assert.ok(!gs.includes("function doPost("),"registration is isolated in PublicRegistration.gs");
 
 const store={"SPREADSHEET_ID":"fake-private-sheet","LAST_SYNC_AT":"2026-10-19 18:00:00","SYNC_OK":"true"};
 const props={
