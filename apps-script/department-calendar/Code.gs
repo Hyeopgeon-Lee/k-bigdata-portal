@@ -92,6 +92,8 @@ function eventPublicRow_(event) {
   if (!match) return null;
   const title = match[2].trim().slice(0,120);
   if (!title) return null;
+  // 캘린더 제목이 수식처럼 시작해도 Sheets에서 실행되지 않도록 합니다.
+  const sheetSafeTitle = /^[=+@-]/.test(title) ? "'" + title : title;
   const start = event.getStartTime();
   const end = event.getEndTime();
   const allDay = event.isAllDayEvent();
@@ -103,7 +105,7 @@ function eventPublicRow_(event) {
   const stableId = Utilities.base64EncodeWebSafe(bytes).replace(/=+$/,"").slice(0,28);
   return [
     stableId,
-    title,
+    sheetSafeTitle,
     classify_(match[1],title),
     formattedDate_(start),
     formattedDate_(endInclusive),
@@ -157,7 +159,10 @@ function doGet(e) {
   const props = PropertiesService.getScriptProperties();
   let response;
   try {
-    const sheet = ensureSheet_();
+    const sheetId = props.getProperty("SPREADSHEET_ID");
+    if (!sheetId) throw new Error("Not configured");
+    const sheet = SpreadsheetApp.openById(sheetId).getSheetByName(DEPT.sheetName);
+    if (!sheet) throw new Error("No published data");
     const rows = sheet.getLastRow()>1
       ? sheet.getRange(2,1,sheet.getLastRow()-1,DEPT.headers.length).getValues()
       : [];
