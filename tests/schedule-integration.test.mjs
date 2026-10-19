@@ -23,6 +23,11 @@ assert.match(gs,/everyMinutes\(10\)/);
 assert.ok(!gs.includes("function doPost("),"registration is isolated in PublicRegistration.gs");
 
 const store={"SPREADSHEET_ID":"fake-private-sheet","LAST_SYNC_AT":"2026-10-19 18:00:00","SYNC_OK":"true"};
+const cachedResponses=new Map();
+const cache={get:key=>cachedResponses.get(key)||null,
+  put:(key,value)=>cachedResponses.set(key,value),
+  remove:key=>cachedResponses.delete(key)};
+let sheetReadCount=0;
 const props={
  getProperty:key=>store[key]||null,
  setProperty:(key,value)=>{store[key]=value;},
@@ -44,6 +49,7 @@ const context=vm.createContext({
  console:{...console,error:()=>{}},
  Date, String, Object,
  PropertiesService:{getScriptProperties:()=>props},
+ CacheService:{getScriptCache:()=>cache},
  CalendarApp:{
   Visibility:{DEFAULT:"DEFAULT",PRIVATE:"PRIVATE",CONFIDENTIAL:"CONFIDENTIAL",PUBLIC:"PUBLIC"},
   getDefaultCalendar:()=>defaultCalendar,
@@ -51,6 +57,7 @@ const context=vm.createContext({
  },
  SpreadsheetApp:{
   openById:id=>{
+   sheetReadCount++;
    assert.equal(id,"fake-private-sheet");
    return {getSheetByName:()=>({
     getLastRow:()=>2,
@@ -118,6 +125,15 @@ assert.equal(raw.events.length,1);
 assert.equal(raw.events[0].title,"시험 안내");
 assert.equal(raw.events[0].published,true);
 assert.equal(raw.events[0].source,"calendar");
+const readsAfterFirst=sheetReadCount;
+context.doGet({parameter:{callback:"nextCallback"}});
+assert.equal(sheetReadCount,readsAfterFirst,"repeated public reads should use Apps Script cache");
+store.LAST_SYNC_AT="2026-10-19 18:05:00";
+context.doGet({parameter:{}});
+assert.equal(sheetReadCount,readsAfterFirst+1,"a new sync timestamp invalidates cached version");
+context.invalidatePublicCache_();
+context.doGet({parameter:{}});
+assert.equal(sheetReadCount,readsAfterFirst+2,"explicit cache invalidation must re-read public sheet");
 assert.equal(Object.hasOwn(raw.events[0],"description"),false);
 assert.equal(Object.hasOwn(raw.events[0],"attendees"),false);
 assert.equal(Object.hasOwn(raw.events[0],"calendarId"),false);
