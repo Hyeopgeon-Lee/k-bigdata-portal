@@ -33,6 +33,16 @@ assert.ok(js.includes('timeZone:"Asia/Seoul"'));
 assert.ok(js.includes('parseDate('));
 assert.ok(js.includes('secureLink('));
 assert.ok(css.includes("@media(max-width:767px)"));
+assert.ok(js.includes("SCHEDULE_CACHE_MAX_AGE"),"short-lived published cache is required");
+assert.ok(js.includes("readCachedCalendar()"),"instant cached display is required");
+assert.ok(js.includes("normalizeRemoteEvents"),"cached results must only contain public fields");
+assert.ok(js.includes("storeCachedCalendar(next,response.updatedAt)"),"successful live refresh must update cache");
+assert.ok(js.includes("forgetCachedCalendar()"),"explicit cache invalidation is required");
+assert.ok(js.includes("loadPublicCalendar({force:true})"),"registration/deletion must force refresh");
+assert.ok(js.includes("calendarLoadVersion"),"older asynchronous refreshes must not override new data");
+assert.ok(js.includes("const counts=new Map()"),"calendar cells should not rescan all events");
+assert.ok(html.includes('rel="preconnect" href="https://script.google.com"'));
+
 assert.ok(html.includes('id="schedule-action-status"'),"delete result status is required");
 assert.ok(html.includes('class="schedule-register-pair"'),"date/time fields stay paired");
 assert.ok(js.includes('e.source==="portal"'),"only verified portal entries render delete control");
