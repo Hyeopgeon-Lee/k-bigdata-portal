@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="css/style.css?v=20261005-browser-1">
   <link rel="stylesheet" href="css/learning.css">
   <link rel="stylesheet" href="css/portal-ux.css?v=20261016-dashboard-1">
-  <link rel="stylesheet" href="css/schedule.css?v=20261019-registration-1">
+  <link rel="stylesheet" href="css/schedule.css?v=20261019-paired-fields-2">
 </head>
 <body data-page="schedule">
 <a class="skip-link" href="#content">본문으로 건너뛰기</a>
@@ -40,10 +40,14 @@
       <div class="schedule-register-grid">
         <label class="schedule-register-title">일정명<input name="title" required maxlength="100" placeholder="예: 졸업작품 발표"></label>
         <label>분류<select name="category" required><option value="academic">학사</option><option value="exam">시험</option><option value="project">프로젝트</option><option value="employment">취업</option><option value="certificate">자격증</option><option value="event" selected>행사</option></select></label>
-        <label>시작일<input name="startDate" type="date" required></label>
-        <label>종료일<input name="endDate" type="date" required></label>
-        <label>시작 시간<input name="startTime" type="time" value="09:00" required></label>
-        <label>종료 시간<input name="endTime" type="time" value="10:00" required></label>
+        <div class="schedule-register-pair">
+          <label>시작일<input name="startDate" type="date" required></label>
+          <label>종료일<input name="endDate" type="date" required></label>
+        </div>
+        <div class="schedule-register-pair">
+          <label>시작 시간<input name="startTime" type="time" value="09:00" required></label>
+          <label>종료 시간<input name="endTime" type="time" value="10:00" required></label>
+        </div>
       </div>
       <label class="schedule-all-day"><input name="allDay" type="checkbox"> 종일 일정</label>
       <div class="schedule-register-trap" aria-hidden="true"><label>Website<input name="website" tabindex="-1" autocomplete="off"></label></div>
