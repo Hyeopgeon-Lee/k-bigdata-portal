@@ -1,5 +1,5 @@
 import {schedules} from "../data/schedules.js?v=20261019-1";
-import {SCHEDULE_API_URL} from "../data/schedule-config.js?v=20261019-google-calendar-1";
+import {SCHEDULE_API_URL} from "../data/schedule-config.js?v=20261019-google-calendar-live-1";
 
 const $ = selector => document.querySelector(selector);
 const CATEGORIES = Object.freeze({
