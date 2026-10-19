@@ -82,6 +82,16 @@ function renderEvent(e, showCountdown=false) {
     a.href=href;a.target="_blank";a.rel="noopener noreferrer";
     el.append(a);
   }
+  // 서버가 출처를 확인한 포털 등록 일정만 삭제 버튼을 보여줍니다.
+  if(e.source==="portal" && typeof e.id==="string" && /^[A-Za-z0-9_-]{28}$/.test(e.id)){
+    const actions=item("div","schedule-event-actions");
+    const button=item("button","schedule-delete-button","일정 삭제");
+    button.type="button";
+    button.setAttribute("aria-label",e.title+" 일정 삭제");
+    button.addEventListener("click",()=>deletePortalSchedule(e,button));
+    actions.append(button);
+    el.append(actions);
+  }
   return el;
 }
 function addEvents(root, rows, emptyMessage, showCountdown=false){
@@ -215,7 +225,8 @@ async function loadPublicCalendar() {
     events=normalizeEvents(response.events.map(e=>e && ({
       id:e.id,title:e.title,category:e.category,startDate:e.startDate,
       endDate:e.endDate,startTime:typeof e.startTime==="string"&&/^([01]\d|2[0-3]):[0-5]\d$/.test(e.startTime)?e.startTime:"",
-      important:e.important===true,published:e.published===true
+      important:e.important===true,published:e.published===true,
+      source:e.source==="portal"?"portal":"calendar"
     })));
     render();
     status.textContent=response.updatedAt
@@ -255,26 +266,29 @@ registrationField("allDay").addEventListener("change",e=>{
   }
 });
 let lastRegistration=null;
-function submitPublicSchedule(values){
+function newScheduleRequestId() {
+  const bytes=new Uint8Array(16);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes,b=>b.toString(16).padStart(2,"0")).join("");
+}
+function submitScheduleAction(values,action,requestId){
   return new Promise((resolve,reject)=>{
     if(!/^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(SCHEDULE_API_URL)){
-      reject(new Error("일정 등록 연결을 준비하고 있습니다."));return;
+      reject(new Error("일정 처리 연결을 준비하고 있습니다."));return;
     }
-    const signature=JSON.stringify(values);
-    if(lastRegistration?.signature!==signature){
-      const bytes=new Uint8Array(16);crypto.getRandomValues(bytes);
-      lastRegistration={signature,requestId:Array.from(bytes,b=>b.toString(16).padStart(2,"0")).join("")};
-    }
-    const requestId=lastRegistration.requestId;
     const iframe=document.createElement("iframe");
-    iframe.name="schedule-registration-"+requestId;
-    iframe.hidden=true;iframe.title="일정 등록 결과";
+    iframe.name="schedule-action-"+requestId;
+    iframe.hidden=true;iframe.title="일정 처리 결과";
     const post=document.createElement("form");
     post.method="POST";post.action=SCHEDULE_API_URL;post.target=iframe.name;post.hidden=true;
-    for(const [name,value] of Object.entries({...values,action:"register",requestId})){
-      const input=document.createElement("input");input.type="hidden";input.name=name;input.value=String(value);post.append(input);
+    for(const [name,value] of Object.entries({...values,action,requestId})){
+      const input=document.createElement("input");
+      input.type="hidden";input.name=name;input.value=String(value);post.append(input);
     }
+    let finished=false;
     const finish=(error,result)=>{
+      if(finished)return;
+      finished=true;
       window.clearTimeout(timer);window.removeEventListener("message",receive);
       iframe.remove();post.remove();
       if(error)reject(error);else resolve(result);
@@ -284,14 +298,39 @@ function submitPublicSchedule(values){
       try{origin=new URL(event.origin);}catch{return;}
       if(origin.protocol!=="https:" || !(origin.hostname==="script.google.com" || origin.hostname.endsWith(".googleusercontent.com")))return;
       const data=event.data;
-      if(data?.type!=="kbigdata-schedule-registration" || data.requestId!==requestId)return;
+      const messageType=action==="delete"?"kbigdata-schedule-delete":"kbigdata-schedule-registration";
+      if(data?.type!==messageType || data.requestId!==requestId)return;
       if(data.ok===true)finish(null,data);
-      else finish(new Error(typeof data.error==="string"?data.error:"일정을 등록하지 못했습니다."));
+      else finish(new Error(typeof data.error==="string"?data.error:"일정을 처리하지 못했습니다."));
     };
-    const timer=window.setTimeout(()=>finish(new Error("등록 응답이 지연되고 있습니다. 목록을 확인하거나 같은 내용으로 다시 시도해 주세요.")),60000);
+    const timer=window.setTimeout(()=>finish(new Error("처리 응답이 지연되고 있습니다. 일정을 새로고침하여 확인해 주세요.")),60000);
     window.addEventListener("message",receive);
     document.body.append(iframe,post);post.submit();
   });
+}
+function submitPublicSchedule(values){
+  const signature=JSON.stringify(values);
+  if(lastRegistration?.signature!==signature){
+    lastRegistration={signature,requestId:newScheduleRequestId()};
+  }
+  return submitScheduleAction(values,"register",lastRegistration.requestId);
+}
+async function deletePortalSchedule(e,button){
+  if(button.disabled)return;
+  if(!window.confirm('"' + e.title + '" 일정을 삭제하시겠습니까?\n삭제한 일정은 복구할 수 없습니다.'))return;
+  const status=$("#schedule-action-status");
+  button.disabled=true;
+  button.textContent="삭제 중…";
+  status.textContent="일정을 삭제하고 있습니다…";
+  try{
+    await submitScheduleAction({id:e.id,website:""},"delete",newScheduleRequestId());
+    status.textContent="일정이 삭제되었습니다.";
+    await loadPublicCalendar();
+  }catch(error){
+    status.textContent=error.message;
+    button.disabled=false;
+    button.textContent="일정 삭제";
+  }
 }
 registrationForm.addEventListener("submit",async event=>{
   event.preventDefault();
