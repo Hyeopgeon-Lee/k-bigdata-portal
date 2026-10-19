@@ -1,0 +1,36 @@
+name: Department calendar integration QA
+on:
+  push:
+    branches: [main]
+    paths:
+      - "schedule.html"
+      - "css/schedule.css"
+      - "js/schedule.js"
+      - "data/schedules.js"
+      - "data/schedule-config.js"
+      - "js/services.js"
+      - "apps-script/department-calendar/**"
+      - "tests/schedule-integration.test.mjs"
+      - ".github/workflows/schedule-integration-qa.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  schedule-security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify frontend and Apps Script syntax
+        run: |
+          node --check js/schedule.js
+          node --check data/schedule-config.js
+          node --check tests/schedule-integration.test.mjs
+          cp apps-script/department-calendar/Code.gs /tmp/kbigdata-department-calendar.cjs
+          node --check /tmp/kbigdata-department-calendar.cjs
+      - name: Test public-only schedule integration
+        run: node tests/schedule-integration.test.mjs
+      - name: Check existing schedule page contracts
+        run: node tests/schedule-page.test.mjs
