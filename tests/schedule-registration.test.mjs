@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import vm from "node:vm";
+import {createHash} from "node:crypto";
 
 const root=new URL("../",import.meta.url);
 const source=fs.readFileSync(new URL("apps-script/department-calendar/PublicRegistration.gs",root),"utf8");
@@ -25,15 +26,21 @@ const context=vm.createContext({Date:Clock,console:{error:()=>{}},
  })})},
  LockService:{getScriptLock:()=>({waitLock:()=>{assert.equal(locked,false);locked=true;},releaseLock:()=>{locked=false;}})},
  HtmlService:{XFrameOptionsMode:{ALLOWALL:"ALLOWALL"},createHtmlOutput:html=>({html,setXFrameOptionsMode(){return this;}})},
- Utilities:{formatDate:(date,zone)=>new Intl.DateTimeFormat("sv-SE",{timeZone:zone,year:"numeric",month:"2-digit",day:"2-digit"}).format(date)}
+ Utilities:{
+  formatDate:(date,zone)=>new Intl.DateTimeFormat("sv-SE",{timeZone:zone,year:"numeric",month:"2-digit",day:"2-digit"}).format(date),
+  computeDigest:(_,value)=>Array.from(createHash("sha256").update(value).digest()),
+  DigestAlgorithm:{SHA_256:"SHA_256"},
+  base64EncodeWebSafe:bytes=>Buffer.from(bytes).toString("base64url")
+ }
 });
 function createMockEvent(allDay,args){
  const tags={};
+ const eventId="mock-event-"+(created.length+1);
  const evt={allDay,args,deleted:false,
   setTag:(key,value)=>{tags[key]=value;return evt;},getTag:key=>tags[key]||null,
   getVisibility:()=>"DEFAULT",getTitle:()=>args[0],
   getStartTime:()=>args[1],getEndTime:()=>args[2],
-  isAllDayEvent:()=>allDay,getId:()=>"mock-event-"+(created.length+1),
+  isAllDayEvent:()=>allDay,getId:()=>eventId,
   deleteEvent:()=>{evt.deleted=true;}
  };
  created.push(evt);return evt;
@@ -71,8 +78,8 @@ assert.ok(!reply.html.includes("onerror"));
 assert.equal(syncs,1);
 assert.equal(context.doPost({parameter:{...request,action:"delete"}}).html.includes('"ok":false'),true);
 // 원본 Google 캘린더 일정은 제목이 동일해도 공개 삭제가 불가능해야 합니다.
-const native={...createMockEvent(false,["(학과) [시험] 관리자 일정",
- new Date("2026-10-20T01:00:00Z"),new Date("2026-10-20T02:00:00Z")])};
+const native=createMockEvent(false,["(학과) [시험] 관리자 일정",
+ new Date("2026-10-20T01:00:00Z"),new Date("2026-10-20T02:00:00Z")]);
 const nativeRow=context.eventPublicRow_(native);
 const portalRow=context.eventPublicRow_(created[0]);
 assert.equal(nativeRow[8],"calendar");
