@@ -94,6 +94,7 @@ function storeCachedCalendar(items,updatedAt){
   }catch(_){} // Disabled storage/private browsing/full quota must not prevent display.
 }
 const cachedCalendar=readCachedCalendar();
+let showingCachedSnapshot=Boolean(cachedCalendar);
 let events=cachedCalendar?.events||normalizeEvents(schedules);
 
 const currentEvents = () => events.filter(e =>
@@ -279,7 +280,7 @@ async function loadPublicCalendar({force=false}={}){
       status.textContent="캘린더 자동 연동 준비 중 · 관리자가 연동을 설정하면 학과 일정이 표시됩니다.";
       return;
     }
-    status.textContent=events.length && cachedCalendar
+    status.textContent=showingCachedSnapshot
       ? "저장된 공개 일정을 표시 중입니다 · 최신 일정을 확인하고 있습니다…"
       : "공개된 학과 일정을 불러오는 중입니다…";
     try{
@@ -294,6 +295,7 @@ async function loadPublicCalendar({force=false}={}){
         render();
       }
       storeCachedCalendar(next,response.updatedAt);
+      showingCachedSnapshot=false;
       status.textContent=response.updatedAt
         ? "학과 일정 최근 동기화: "+response.updatedAt+" (한국시간)"
         : "공개된 학과 일정 "+events.length+"건을 불러왔습니다.";
@@ -302,6 +304,7 @@ async function loadPublicCalendar({force=false}={}){
       // The API deliberately fails closed when sync/privacy protection fails.
       // Never keep displaying a cached snapshot when validity is uncertain.
       forgetCachedCalendar();
+      showingCachedSnapshot=false;
       events=[];
       render();
       console.error("Department schedule load failed",error);
@@ -398,6 +401,7 @@ async function deletePortalSchedule(e,button){
   try{
     await submitScheduleAction({id:e.id,website:""},"delete",newScheduleRequestId());
     forgetCachedCalendar();
+    showingCachedSnapshot=false;
     // Immediately remove the deleted entry; the server remains the authority.
     events=events.filter(row=>row.id!==e.id);
     render();
@@ -424,6 +428,7 @@ registrationForm.addEventListener("submit",async event=>{
     registrationStatus.textContent="일정이 등록되었습니다. 학과 달력에서 확인해 주세요.";
     registrationField("title").value="";
     forgetCachedCalendar();
+    showingCachedSnapshot=false;
     selectedDate=values.startDate;visibleMonth=selectedDate.slice(0,7);
     await loadPublicCalendar({force:true});
   }catch(error){
