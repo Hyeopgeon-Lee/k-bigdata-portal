@@ -105,6 +105,21 @@ export const services = [
     "order": 3
   },
   {
+    id:"schedule",
+    name:"학과 주요 일정",
+    englishName:"Department Schedule",
+    category:"campus",
+    description:"학사·시험·프로젝트·취업·자격증·행사를 달력과 목록으로 확인하는 학과 주요 일정 서비스",
+    shortDescription:"학과 주요 일정을 달력에서 확인하세요.",
+    url:"schedule.html",
+    icon:"calendar",
+    accent:"cyan",
+    tags:["학사","시험","프로젝트","취업","자격증","행사","달력"],
+    aliases:"학과 일정 학사 일정 일정표 날짜 달력 공지",
+    featured:false,
+    order:3.5
+  },
+  {
     "id": "room",
     "name": "프로젝트실 예약",
     "englishName": "Project Room",
@@ -292,6 +307,7 @@ export const portalNavLinks = [
   {id:"tech-blog",label:"기술블로그 ↗",group:"learning"},
   {id:"project-guide",label:"프로젝트가이드",group:"project"},
   {id:"portfolio",label:"포트폴리오 ↗",group:"project"},
+  {id:"schedule",label:"학과일정",group:"campus"},
   {id:"room",label:"프로젝트실 ↗",group:"campus"},
   {id:"help",label:"학과요청 ↗",group:"campus"}
 ];
