@@ -82,3 +82,11 @@ body[data-page="schedule"] .schedule-source-note{font-size:13px!important;color:
 #schedule-register-status{margin:12px 0 0;line-height:1.6}
 .schedule-register-trap{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}
 @media(max-width:767px){.schedule-register-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.schedule-register-title,.schedule-register-grid>label:nth-child(2){grid-column:1/-1}.schedule-register-pair{gap:10px}.schedule-register-pair input{padding-inline:7px;font-size:14px}}
+
+/* Delete action is available only for events explicitly marked as portal-created. */
+.schedule-event-actions{display:flex;justify-content:flex-end}
+.schedule-delete-button{min-height:36px;padding:7px 12px;border:1px solid #bdcbe1;border-radius:8px;background:#fff;color:#9a2935;font:inherit;font-size:13px;font-weight:750;cursor:pointer}
+.schedule-delete-button:hover{background:#fff4f4;border-color:#be6e77}
+.schedule-delete-button:disabled{opacity:.55;cursor:wait}
+.schedule-action-status{margin:12px 0 0;color:#304665;font-size:13px;line-height:1.6}
+.schedule-action-status:empty{display:none}
