@@ -11,7 +11,7 @@
 const DEPT = Object.freeze({
   prefix: /^\(학과\)\s*(?:\[(학사|시험|프로젝트|취업|자격증|행사)\]\s*)?(.+)$/,
   sheetName: "PublishedSchedules",
-  headers: ["id","title","category","startDate","endDate","startTime","important","published"],
+  headers: ["id","title","category","startDate","endDate","startTime","important","published","source"],
   periodPastMonths: 6,
   periodFutureMonths: 18,
   maximumEvents: 4000
@@ -20,6 +20,7 @@ const CATEGORIES = Object.freeze({
   "학사":"academic","시험":"exam","프로젝트":"project",
   "취업":"employment","자격증":"certificate","행사":"event"
 });
+const PORTAL_SOURCE_TAG = "kbigdata_portal_registration";
 const PROP = PropertiesService.getScriptProperties();
 
 /** 실행 계정의 기본 캘린더만 읽습니다. 다른 캘린더는 읽지 않습니다. */
@@ -109,7 +110,8 @@ function eventPublicRow_(event) {
     formattedDate_(endInclusive),
     allDay ? "" : formattedTime_(start),
     false,
-    true
+    true,
+    event.getTag(PORTAL_SOURCE_TAG) === "portal-v1" ? "portal" : "calendar"
   ];
 }
 
@@ -182,7 +184,8 @@ function doGet(e) {
       endDate:String(r[4]),
       startTime:String(r[5]),
       important:r[6]===true,
-      published:true
+      published:true,
+      source:r[8]==="portal" ? "portal" : "calendar"
     }));
     response = {
       ok:true,
