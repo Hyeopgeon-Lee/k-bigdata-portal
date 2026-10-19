@@ -275,7 +275,7 @@ async function loadPublicCalendar({force=false}={}){
   const version=++calendarLoadVersion;
   const work=(async()=>{
     const status=$("#schedule-sync-status");
-    if(!/^https:\\/\\/script\\.google\\.com\\/macros\\/s\\/[A-Za-z0-9_-]+\\/exec$/.test(SCHEDULE_API_URL)){
+    if(!/^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(SCHEDULE_API_URL)){
       status.textContent="캘린더 자동 연동 준비 중 · 관리자가 연동을 설정하면 학과 일정이 표시됩니다.";
       return;
     }
