@@ -1,11 +1,11 @@
 import {schedules} from "../data/schedules.js?v=20261019-1";
+import {SCHEDULE_API_URL} from "../data/schedule-config.js?v=20261019-google-calendar-1";
 
 const $ = selector => document.querySelector(selector);
 const CATEGORIES = Object.freeze({
   academic:"학사",exam:"시험",project:"프로젝트",
   employment:"취업",certificate:"자격증",event:"행사"
 });
-const pad = number => String(number).padStart(2,"0");
 const isoUTC = date => date.toISOString().slice(0,10);
 const parseDate = value => {
   if(typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
@@ -45,7 +45,7 @@ let visibleMonth = selectedDate.slice(0,7);
 let activeCategory = "all";
 let keyword = "";
 
-const events = (Array.isArray(schedules)?schedules:[])
+const normalizeEvents = source => (Array.isArray(source)?source:[])
   .filter(e=>e&&typeof e==="object"&&e.published===true&&
     typeof e.title==="string"&&e.title.trim().length>0&&
     Object.hasOwn(CATEGORIES,e.category)&&parseDate(e.startDate)&&
@@ -53,6 +53,7 @@ const events = (Array.isArray(schedules)?schedules:[])
   .map(e=>({...e,endDate:e.endDate||e.startDate,title:e.title.trim()}))
   .sort((a,b)=>a.startDate.localeCompare(b.startDate)||
     (a.startTime||"").localeCompare(b.startTime||"")||a.title.localeCompare(b.title,"ko"));
+let events=normalizeEvents(schedules);
 
 const currentEvents = () => events.filter(e =>
   (activeCategory==="all"||e.category===activeCategory)&&
@@ -171,3 +172,53 @@ document.querySelectorAll(".schedule-filters button[data-category]").forEach(but
   });
 });
 render();
+
+/** Google Apps Script ContentService는 타 도메인에서 CORS가 보장되지 않아 JSONP로 조회합니다.
+ * callback은 안전한 JS 식별자만 전송하며, 응답은 읽기 전용 공개 데이터뿐입니다.
+ */
+function readPublishedSchedules(urlString) {
+  return new Promise((resolve,reject)=>{
+    const url = new URL(urlString);
+    const name="__kBigdataSchedule_"+Date.now().toString(36)+"_"+
+      Math.random().toString(36).slice(2,10);
+    const script=document.createElement("script");
+    let finished=false;
+    const finish=(err,data)=>{
+      if(finished)return;
+      finished=true;
+      window.clearTimeout(timer);
+      script.remove();
+      delete window[name];
+      if(err)reject(err);else resolve(data);
+    };
+    url.searchParams.set("callback",name);
+    window[name]=value=>finish(null,value);
+    script.src=url.href;
+    script.async=true;
+    script.onerror=()=>finish(new Error("일정 조회 요청 실패"));
+    const timer=window.setTimeout(()=>finish(new Error("일정 조회 시간 초과")),15000);
+    document.head.append(script);
+  });
+}
+async function loadPublicCalendar() {
+  const status=$("#schedule-sync-status");
+  // 공개 Google Apps Script URL 외에는 신뢰하지 않습니다.
+  if(!/^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(SCHEDULE_API_URL)){
+    status.textContent="캘린더 자동 연동 준비 중 · 관리자가 연동을 설정하면 학과 일정이 표시됩니다.";
+    return;
+  }
+  status.textContent="공개된 학과 일정을 불러오는 중입니다…";
+  try {
+    const response=await readPublishedSchedules(SCHEDULE_API_URL);
+    if(response?.ok!==true||!Array.isArray(response.events))throw new Error("일정 응답 오류");
+    events=normalizeEvents(response.events);
+    render();
+    status.textContent=response.updatedAt
+      ? "학과 일정 최근 동기화: "+response.updatedAt+" (한국시간)"
+      : "공개된 학과 일정 "+events.length+"건을 불러왔습니다.";
+  }catch(error){
+    console.error("Department schedule load failed",error);
+    status.textContent="일정을 가져오지 못했습니다. 잠시 후 새로고침해 주세요.";
+  }
+}
+loadPublicCalendar();
