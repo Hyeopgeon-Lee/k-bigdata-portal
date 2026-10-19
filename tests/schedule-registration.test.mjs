@@ -92,6 +92,11 @@ const denied=context.doPost({parameter:deleteRequest}).html;
 assert.ok(denied.includes('"ok":false'));
 assert.equal(native.deleted,false);
 assert.equal(syncs,1);
+// Even if a published Sheet row is tampered with, the original event tag is authoritative.
+published=[nativeRow.slice(0,8).concat(["portal"]),portalRow];
+assert.ok(context.doPost({parameter:deleteRequest}).html.includes('"ok":false'));
+assert.equal(native.deleted,false);
+published=[nativeRow,portalRow];
 const deleted=context.doPost({parameter:{...deleteRequest,id:portalRow[0]}}).html;
 assert.ok(deleted.includes('"ok":true'));
 assert.equal(created[0].deleted,true);
