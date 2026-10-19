@@ -1,5 +1,5 @@
 import {schedules} from "../data/schedules.js?v=20261019-1";
-import {SCHEDULE_API_URL} from "../data/schedule-config.js?v=20261019-google-calendar-1";
+import {scheduleFeedEnabled, getScheduleWindow, readScheduleFeed} from "./schedule-feed.js?v=20261019-google-calendar-1";
 
 const $ = selector => document.querySelector(selector);
 const CATEGORIES = Object.freeze({
@@ -138,6 +138,7 @@ function renderCalendar(){
       visibleMonth=key.slice(0,7);
       renderCalendar();
       renderDay();
+      syncSchedule();
     });
     root.append(button);
   }
@@ -153,11 +154,12 @@ function moveMonth(offset){
   visibleMonth=isoUTC(next).slice(0,7);
   selectedDate=visibleMonth+"-01";
   render();
+  syncSchedule();
 }
 $("#schedule-prev").addEventListener("click",()=>moveMonth(-1));
 $("#schedule-next").addEventListener("click",()=>moveMonth(1));
 $("#schedule-today").addEventListener("click",()=>{
-  selectedDate=today;visibleMonth=today.slice(0,7);render();
+  selectedDate=today;visibleMonth=today.slice(0,7);render();syncSchedule();
 });
 $("#schedule-query").addEventListener("input",e=>{
   keyword=e.target.value.trim().toLocaleLowerCase("ko");
@@ -173,52 +175,40 @@ document.querySelectorAll(".schedule-filters button[data-category]").forEach(but
 });
 render();
 
-/** Google Apps Script ContentService는 타 도메인에서 CORS가 보장되지 않아 JSONP로 조회합니다.
- * callback은 안전한 JS 식별자만 전송하며, 응답은 읽기 전용 공개 데이터뿐입니다.
- */
-function readPublishedSchedules(urlString) {
-  return new Promise((resolve,reject)=>{
-    const url = new URL(urlString);
-    const name="__kBigdataSchedule_"+Date.now().toString(36)+"_"+
-      Math.random().toString(36).slice(2,10);
-    const script=document.createElement("script");
-    let finished=false;
-    const finish=(err,data)=>{
-      if(finished)return;
-      finished=true;
-      window.clearTimeout(timer);
-      script.remove();
-      delete window[name];
-      if(err)reject(err);else resolve(data);
-    };
-    url.searchParams.set("callback",name);
-    window[name]=value=>finish(null,value);
-    script.src=url.href;
-    script.async=true;
-    script.onerror=()=>finish(new Error("일정 조회 요청 실패"));
-    const timer=window.setTimeout(()=>finish(new Error("일정 조회 시간 초과")),15000);
-    document.head.append(script);
-  });
-}
-async function loadPublicCalendar() {
+
+let loadedRange = null;
+let requestSeq = 0;
+
+async function syncSchedule(force=false){
   const status=$("#schedule-sync-status");
-  // 공개 Google Apps Script URL 외에는 신뢰하지 않습니다.
-  if(!/^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(SCHEDULE_API_URL)){
-    status.textContent="캘린더 자동 연동 준비 중 · 관리자가 연동을 설정하면 학과 일정이 표시됩니다.";
+  if(!scheduleFeedEnabled()){
+    status.textContent="캘린더 자동 연동 준비 중 · 관리자가 연동 설정을 완료하면 학과 일정이 표시됩니다.";
     return;
   }
+  if(!force && loadedRange &&
+    visibleMonth>=loadedRange.firstMonth && visibleMonth<loadedRange.endMonth)return;
+  const range=getScheduleWindow(visibleMonth);
+  const sequence=++requestSeq;
   status.textContent="공개된 학과 일정을 불러오는 중입니다…";
-  try {
-    const response=await readPublishedSchedules(SCHEDULE_API_URL);
-    if(response?.ok!==true||!Array.isArray(response.events))throw new Error("일정 응답 오류");
-    events=normalizeEvents(response.events);
+  try{
+    const data=await readScheduleFeed(range);
+    if(sequence!==requestSeq)return;
+    events=normalizeEvents(data.events);
+    loadedRange=range;
     render();
-    status.textContent=response.updatedAt
-      ? "학과 일정 최근 동기화: "+response.updatedAt+" (한국시간)"
-      : "공개된 학과 일정 "+events.length+"건을 불러왔습니다.";
+    status.textContent=data.truncated
+      ?"일정이 많아 일부만 표시됩니다. 학과 관리자에게 문의해 주세요."
+      :"Google 캘린더에서 공개된 학과 일정 "+events.length+"건을 불러왔습니다.";
   }catch(error){
+    if(sequence!==requestSeq)return;
     console.error("Department schedule load failed",error);
     status.textContent="일정을 가져오지 못했습니다. 잠시 후 새로고침해 주세요.";
   }
 }
-loadPublicCalendar();
+
+syncSchedule();
+if(scheduleFeedEnabled()){
+  setInterval(()=>{
+    if(document.visibilityState==="visible")syncSchedule(true);
+  },300000);
+}
