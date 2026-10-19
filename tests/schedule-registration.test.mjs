@@ -22,7 +22,8 @@ const context=vm.createContext({Date:Clock,console:{error:()=>{}},
  },
  SpreadsheetApp:{openById:()=>({getSheetByName:()=>({
   getLastRow:()=>published.length+1,
-  getRange:()=>({getValues:()=>published})
+  setFrozenRows:()=>{},
+  getRange:()=>({getValues:()=>published,setValues:()=>{}})
  })})},
  LockService:{getScriptLock:()=>({waitLock:()=>{assert.equal(locked,false);locked=true;},releaseLock:()=>{locked=false;}})},
  HtmlService:{XFrameOptionsMode:{ALLOWALL:"ALLOWALL"},createHtmlOutput:html=>({html,setXFrameOptionsMode(){return this;}})},

@@ -10,6 +10,18 @@ const js=read("js/schedule.js");
 const page=read("schedule.html");
 const config=read("data/schedule-config.js");
 
+// Exercise the actual remote projection: valid KST times must survive both
+// network and browser-cache normalization, while malformed values are removed.
+const remoteContext=vm.createContext({normalizeEvents:rows=>rows});
+vm.runInContext(js.slice(js.indexOf("function normalizeRemoteEvents("),js.indexOf("function forgetCachedCalendar(")),remoteContext);
+for(const startTime of ["00:00","09:05","10:30","23:59"]){
+ const projected=remoteContext.normalizeRemoteEvents([{startTime,published:true}]);
+ assert.equal(projected[0].startTime,startTime,"valid time must remain visible");
+}
+for(const startTime of ["24:00","09:99","9:00",42,null]){
+ assert.equal(remoteContext.normalizeRemoteEvents([{startTime}])[0].startTime,"");
+}
+
 assert.ok(services.some(s=>s.id==="schedule"&&s.url==="schedule.html"));
 assert.match(config,/SCHEDULE_API_URL\s*=\s*"(?:https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec)?"/);
 assert.match(page,/id="schedule-sync-status"/);

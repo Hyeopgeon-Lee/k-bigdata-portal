@@ -63,7 +63,7 @@ function normalizeRemoteEvents(source){
   return normalizeEvents((Array.isArray(source)?source:[]).map(e=>e&&({
     id:e.id,title:e.title,category:e.category,startDate:e.startDate,
     endDate:e.endDate,
-    startTime:typeof e.startTime==="string"&&/^([01]\\d|2[0-3]):[0-5]\\d$/.test(e.startTime)?e.startTime:"",
+    startTime:typeof e.startTime==="string"&&/^([01]\d|2[0-3]):[0-5]\d$/.test(e.startTime)?e.startTime:"",
     important:e.important===true,published:e.published===true,
     source:e.source==="portal"?"portal":"calendar"
   })));
