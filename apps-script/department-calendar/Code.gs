@@ -24,10 +24,7 @@ const PROP = PropertiesService.getScriptProperties();
 
 /** 실행 계정의 기본 캘린더만 읽습니다. 다른 캘린더는 읽지 않습니다. */
 function departmentCalendar_() {
-  const configuredId = PROP.getProperty("CALENDAR_ID");
-  const calendar = configuredId
-    ? CalendarApp.getCalendarById(configuredId)
-    : CalendarApp.getDefaultCalendar();
+  const calendar = CalendarApp.getDefaultCalendar();
   if (!calendar) throw new Error("대상 캘린더에 접근할 수 없습니다.");
   return calendar;
 }
@@ -38,6 +35,7 @@ function setupDepartmentCalendar() {
   let spreadsheet = existingId ? SpreadsheetApp.openById(existingId) : null;
   if (!spreadsheet) {
     spreadsheet = SpreadsheetApp.create("학과 주요 일정 - 포털 공개 목록 (비공개)");
+    spreadsheet.setSpreadsheetTimeZone("Asia/Seoul");
     const first = spreadsheet.getSheets()[0];
     first.setName(DEPT.sheetName);
     PROP.setProperty("SPREADSHEET_ID", spreadsheet.getId());
@@ -134,15 +132,24 @@ function syncDepartmentCalendar() {
     if (sheet.getLastRow()>1) {
       sheet.getRange(2,1,sheet.getLastRow()-1,DEPT.headers.length).clearContent();
     }
-    if (rows.length) sheet.getRange(2,1,rows.length,DEPT.headers.length).setValues(rows);
+    if (rows.length) {
+      // 날짜/시각 문자열의 자동 변환 및 선행 0 손실을 방지합니다.
+      sheet.getRange(2,2,rows.length,5).setNumberFormat("@");
+      sheet.getRange(2,1,rows.length,DEPT.headers.length).setValues(rows);
+    }
     SpreadsheetApp.flush();
     const stamp = Utilities.formatDate(new Date(),"Asia/Seoul","yyyy-MM-dd HH:mm:ss");
     PROP.setProperties({
       LAST_SYNC_AT:stamp,
-      LAST_SYNC_COUNT:String(rows.length)
+      LAST_SYNC_COUNT:String(rows.length),
+      SYNC_OK:"true"
     });
     Logger.log("(학과) 일정 " + rows.length + "건 동기화 완료 (" + stamp + ")");
     return {count:rows.length, updatedAt:stamp};
+  } catch (err) {
+    // 접두어 제거/삭제 후 동기화 실패 시 오래된 목록을 계속 공개하지 않습니다.
+    PROP.setProperty("SYNC_OK","false");
+    throw err;
   } finally {
     lock.releaseLock();
   }
@@ -159,6 +166,7 @@ function doGet(e) {
   const props = PropertiesService.getScriptProperties();
   let response;
   try {
+    if (props.getProperty("SYNC_OK") !== "true") throw new Error("Sync unavailable");
     const sheetId = props.getProperty("SPREADSHEET_ID");
     if (!sheetId) throw new Error("Not configured");
     const sheet = SpreadsheetApp.openById(sheetId).getSheetByName(DEPT.sheetName);

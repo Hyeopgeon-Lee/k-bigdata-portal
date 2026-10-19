@@ -211,12 +211,19 @@ async function loadPublicCalendar() {
   try {
     const response=await readPublishedSchedules(SCHEDULE_API_URL);
     if(response?.ok!==true||!Array.isArray(response.events))throw new Error("일정 응답 오류");
-    events=normalizeEvents(response.events);
+    // 원격 응답은 공개 필드만 취하며 장소/설명/링크는 표시하지 않습니다.
+    events=normalizeEvents(response.events.map(e=>e && ({
+      id:e.id,title:e.title,category:e.category,startDate:e.startDate,
+      endDate:e.endDate,startTime:typeof e.startTime==="string"&&/^([01]\d|2[0-3]):[0-5]\d$/.test(e.startTime)?e.startTime:"",
+      important:e.important===true,published:e.published===true
+    })));
     render();
     status.textContent=response.updatedAt
       ? "학과 일정 최근 동기화: "+response.updatedAt+" (한국시간)"
       : "공개된 학과 일정 "+events.length+"건을 불러왔습니다.";
   }catch(error){
+    events=[];
+    render();
     console.error("Department schedule load failed",error);
     status.textContent="일정을 가져오지 못했습니다. 잠시 후 새로고침해 주세요.";
   }
