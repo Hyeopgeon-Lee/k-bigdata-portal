@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="css/style.css?v=20261005-browser-1">
   <link rel="stylesheet" href="css/learning.css">
   <link rel="stylesheet" href="css/portal-ux.css?v=20261016-dashboard-1">
-  <link rel="stylesheet" href="css/schedule.css?v=20261019-1">
+  <link rel="stylesheet" href="css/schedule.css?v=20261019-google-calendar-1">
 </head>
 <body data-page="schedule">
 <a class="skip-link" href="#content">본문으로 건너뛰기</a>
@@ -30,9 +30,10 @@
   <p class="section-kicker">DEPARTMENT SCHEDULE</p>
   <h1 id="schedule-title">학과 주요 일정</h1>
   <p>학사·시험·프로젝트·취업 등 학과에서 안내하는 일정을 달력과 목록으로 확인하세요.</p>
-  <p class="schedule-source-note">학과에서 등록·공개한 일정만 표시합니다. 개인 Google 캘린더와 연동되지 않습니다.</p>
+  <p class="schedule-source-note">Google 캘린더에서 제목이 <strong>(학과)</strong>로 시작하는 일정만 선별해 표시합니다. 개인 일정과 참석자 정보는 표시되지 않습니다.</p>
 </section>
 <section class="container schedule-page" aria-label="주요 일정 조회">
+  <p class="schedule-sync-status" id="schedule-sync-status" role="status" aria-live="polite">학과 일정 연결 상태를 확인하고 있습니다…</p>
   <div class="schedule-toolbar">
     <div class="schedule-search-wrap">
       <label for="schedule-query">일정 검색</label>
@@ -82,7 +83,7 @@
     </aside>
   </div>
   <p class="schedule-result-note" id="schedule-result-status" role="status"></p>
-  <p class="schedule-admin-note">일정은 학과 관리자가 등록·관리할 예정입니다. 현재는 조회용 화면이며, 등록·수정 기능은 아직 연결되지 않았습니다.</p>
+  <p class="schedule-admin-note">일정 등록·수정·삭제는 Google 캘린더에서 진행합니다. 제목 앞에 <strong>(학과)</strong>를 붙인 일정만 공개 목록으로 동기화합니다. 동기화는 관리자 설정 이후 약 10분 간격으로 실행됩니다.</p>
   <noscript><p class="schedule-empty">달력을 이용하려면 JavaScript를 활성화해 주세요.</p></noscript>
 </section>
 </main>
@@ -90,7 +91,7 @@
 <div class="container footer-grid"><div class="footer-brand"><span class="brand-mark" aria-hidden="true"><span></span></span><div><strong>빅데이터소프트웨어공학과</strong><p>한국폴리텍대학 서울강서캠퍼스</p></div></div><nav class="footer-links" aria-label="학과 대표 사이트"><p>학과 대표 사이트</p></nav></div>
 <div class="container footer-bottom"><p>학생용 학습·프로젝트·취업 통합 포털입니다.</p><p>© <span id="current-year"></span> K-BigData Service Portal</p></div>
 </footer>
-<script type="module" src="js/schedule.js?v=20261019-1"></script>
+<script type="module" src="js/schedule.js?v=20261019-google-calendar-1"></script>
 <script type="module" src="js/portal-shell-entry.js?v=20261016-dashboard-1"></script>
 </body>
 </html>
