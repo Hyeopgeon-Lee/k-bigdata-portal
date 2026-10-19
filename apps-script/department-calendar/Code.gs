@@ -21,6 +21,17 @@ const CATEGORIES = Object.freeze({
   "취업":"employment","자격증":"certificate","행사":"event"
 });
 const PORTAL_SOURCE_TAG = "kbigdata_portal_registration";
+// Store only the published projection, never CalendarApp objects or personal data.
+// Apps Script cache entries are limited to 100 KB, so oversize payloads fall back to Sheets.
+const SCHEDULE_PUBLIC_CACHE_KEY = "dept-public-events-v1";
+const SCHEDULE_PUBLIC_CACHE_SECONDS = 90;
+function publicCache_() {
+  try { return typeof CacheService === "undefined" ? null : CacheService.getScriptCache(); }
+  catch (_) { return null; }
+}
+function invalidatePublicCache_() {
+  try { publicCache_()?.remove(SCHEDULE_PUBLIC_CACHE_KEY); } catch (_) {}
+}
 const PROP = PropertiesService.getScriptProperties();
 
 /** 실행 계정의 기본 캘린더만 읽습니다. 다른 캘린더는 읽지 않습니다. */
@@ -146,11 +157,13 @@ function syncDepartmentCalendar() {
       LAST_SYNC_COUNT:String(rows.length),
       SYNC_OK:"true"
     });
+    invalidatePublicCache_();
     Logger.log("(학과) 일정 " + rows.length + "건 동기화 완료 (" + stamp + ")");
     return {count:rows.length, updatedAt:stamp};
   } catch (err) {
     // 접두어 제거/삭제 후 동기화 실패 시 오래된 목록을 계속 공개하지 않습니다.
     PROP.setProperty("SYNC_OK","false");
+    invalidatePublicCache_();
     throw err;
   } finally {
     lock.releaseLock();
@@ -171,27 +184,40 @@ function doGet(e) {
     if (props.getProperty("SYNC_OK") !== "true") throw new Error("Sync unavailable");
     const sheetId = props.getProperty("SPREADSHEET_ID");
     if (!sheetId) throw new Error("Not configured");
-    const sheet = SpreadsheetApp.openById(sheetId).getSheetByName(DEPT.sheetName);
-    if (!sheet) throw new Error("No published data");
-    const rows = sheet.getLastRow()>1
-      ? sheet.getRange(2,1,sheet.getLastRow()-1,DEPT.headers.length).getValues()
-      : [];
-    const events = rows.filter(r=>r[0]&&r[7]===true).map(r=>({
-      id:String(r[0]),
-      title:String(r[1]),
-      category:String(r[2]),
-      startDate:String(r[3]),
-      endDate:String(r[4]),
-      startTime:String(r[5]),
-      important:r[6]===true,
-      published:true,
-      source:r[8]==="portal" ? "portal" : "calendar"
-    }));
-    response = {
-      ok:true,
-      updatedAt:props.getProperty("LAST_SYNC_AT")||"",
-      events:events
-    };
+    const updatedAt = props.getProperty("LAST_SYNC_AT") || "";
+    const cache = publicCache_();
+    let cached = null;
+    try {
+      const rawCache = cache?.get(SCHEDULE_PUBLIC_CACHE_KEY);
+      if (rawCache) cached = JSON.parse(rawCache);
+    } catch (_) { cached = null; }
+    if (cached?.ok === true && cached.updatedAt === updatedAt && Array.isArray(cached.events)) {
+      response = cached;
+    } else {
+      const sheet = SpreadsheetApp.openById(sheetId).getSheetByName(DEPT.sheetName);
+      if (!sheet) throw new Error("No published data");
+      const rows = sheet.getLastRow()>1
+        ? sheet.getRange(2,1,sheet.getLastRow()-1,DEPT.headers.length).getValues()
+        : [];
+      const events = rows.filter(r=>r[0]&&r[7]===true).map(r=>({
+        id:String(r[0]),
+        title:String(r[1]),
+        category:String(r[2]),
+        startDate:String(r[3]),
+        endDate:String(r[4]),
+        startTime:String(r[5]),
+        important:r[6]===true,
+        published:true,
+        source:r[8]==="portal" ? "portal" : "calendar"
+      }));
+      response = {ok:true,updatedAt:updatedAt,events:events};
+      // 25k UTF-16 units keeps even multilingual JSON comfortably below the
+      // Apps Script per-item 100 KB limit; failures must not break public reads.
+      try {
+        const payload = JSON.stringify(response);
+        if (payload.length <= 25000) cache?.put(SCHEDULE_PUBLIC_CACHE_KEY,payload,SCHEDULE_PUBLIC_CACHE_SECONDS);
+      } catch (_) {}
+    }
   } catch (err) {
     // 개인 설정/Sheet ID/에러 스택이 응답에 노출되지 않도록 고정 메시지로 응답.
     console.error(err);
