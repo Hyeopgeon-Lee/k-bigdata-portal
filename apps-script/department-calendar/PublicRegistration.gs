@@ -112,7 +112,7 @@ function deletePublicSchedule_(p) {
       return {ok:false,error:"이 일정은 포털에서 삭제할 수 없습니다."};
     }
     const startDay = String(row[3]);
-    if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(startDay)) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(startDay)) {
       return {ok:false,error:"일정 정보를 확인할 수 없습니다."};
     }
     const from = new Date(startDay + "T00:00:00+09:00");
