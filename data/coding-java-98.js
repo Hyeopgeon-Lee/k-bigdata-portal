@@ -1,4 +1,4 @@
-// Java 17: 추가 기초·응용·객체지향 98문제 (001,041은 기존 콘텐츠 유지)
+// Java 17 | JAVA-002~100 (JAVA-041 제외), 기존 JAVA-001·041 유지
 export const javaProblems = [
   {
     "id": "JAVA-002",
@@ -10,7 +10,7 @@ export const javaProblems = [
     "input": "입력 없음",
     "output": "Hello\nJava",
     "hint": "println을 두 번 호출하면 두 줄이 차례대로 출력됩니다.",
-    "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        System.out.println(\"Hello\"); // 첫 줄에 Hello 출력\n        System.out.println(\"Java\"); // 다음 줄에 Java 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
+    "code": "public class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        System.out.println(\"Hello\"); // 첫 줄에 Hello 출력\n        System.out.println(\"Java\"); // 다음 줄에 Java 출력\n    } // main 메서드 종료\n} // Main 클래스 종료",
     "explanation": "println 2회 — println을 두 번 호출하면 두 줄이 차례대로 출력됩니다. 예제 입력에 따른 변수 변화는 아래 실행 추적표를 확인하세요.",
     "trace": [
       [
@@ -40,7 +40,7 @@ export const javaProblems = [
     "input": "입력 없음",
     "output": "Score: 100",
     "hint": "문자열 + 숫자 표현식은 문자열을 연결합니다.",
-    "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        int score=100; // score 초기값 100\n        System.out.println(\"Score: \" + score); // 문자열과 숫자를 결합해 Score: 100 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
+    "code": "public class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        int score=100; // score 초기값 100\n        System.out.println(\"Score: \" + score); // 문자열과 숫자를 결합해 Score: 100 출력\n    } // main 메서드 종료\n} // Main 클래스 종료",
     "explanation": "문자열 결합 — 문자열 + 숫자 표현식은 문자열을 연결합니다. 예제 입력에 따른 변수 변화는 아래 실행 추적표를 확인하세요.",
     "trace": [
       [
@@ -70,7 +70,7 @@ export const javaProblems = [
     "input": "입력 없음",
     "output": "She said \"Hi\" \\ Java",
     "hint": "큰따옴표는 \\\"로, 역슬래시는 \\\\로 작성합니다.",
-    "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        System.out.println(\"She said \\\"Hi\\\" \\\\ Java\"); // 따옴표와 역슬래시를 이스케이프해 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
+    "code": "public class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        System.out.println(\"She said \\\"Hi\\\" \\\\ Java\"); // 따옴표와 역슬래시를 이스케이프해 출력\n    } // main 메서드 종료\n} // Main 클래스 종료",
     "explanation": "이스케이프 문자 — 큰따옴표는 \\\"로, 역슬래시는 \\\\로 작성합니다. 예제 입력에 따른 변수 변화는 아래 실행 추적표를 확인하세요.",
     "trace": [
       [
@@ -997,7 +997,8 @@ export const javaProblems = [
     "concept": "조건문"
   },
   {
-    "id": "JAVA-033",    "language": "java",
+    "id": "JAVA-033",
+    "language": "java",
     "level": "입문",
     "topic": "조건문",
     "title": "할인 금액 계산",
@@ -1996,7 +1997,8 @@ export const javaProblems = [
     "output": "-2",
     "hint": "최댓값의 시작값은 0이 아니라 첫 원소입니다.",
     "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        int n=sc.nextInt(); // 배열에 저장할 숫자 개수를 입력받음\n        int[] arr=new int[n]; // n개 크기의 정수 배열을 생성\n        for(int i=0;i<n;i++){ // i를 0부터 n-1까지 증가\n            arr[i]=sc.nextInt(); // i번째 위치에 다음 정수를 저장\n        } // 전체 배열 입력을 완료\n        int answer=arr[0]; // 첫 원소 -7로 최댓값 초기화\n        for(int i=1;i<n;i++){ // 두 번째 원소부터 비교\n            if(arr[i]>answer) answer=arr[i]; // 조건을 만족할 때만 answer 갱신\n        } // 배열 전체 비교 완료\n        System.out.println(answer); // 예제 최댓값 -2 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
-    "explanation": "배열 순회 — 최댓값의 시작값은 0이 아니라 첫 원소입니다. 예제 입력에 따른 변수 변화는 아래 실행 추적표를 확인하세요.",    "trace": [
+    "explanation": "배열 순회 — 최댓값의 시작값은 0이 아니라 첫 원소입니다. 예제 입력에 따른 변수 변화는 아래 실행 추적표를 확인하세요.",
+    "trace": [
       [
         "초기",
         "answer",
@@ -2269,7 +2271,7 @@ export const javaProblems = [
   {
     "id": "JAVA-066",
     "language": "java",
-    "level": "기초 응용",
+    "level": "입문",
     "topic": "문자열 기초",
     "title": "문자열 길이",
     "statement": "공백 없는 문자열 길이를 출력한다\n입력 조건: 문자열 길이 1~100, 영문과 숫자. 출력 규격: 문자 수.",
@@ -2995,7 +2997,8 @@ export const javaProblems = [
       ]
     ],
     "constraints": "1≤N≤100, 각 수 절댓값≤1000",
-    "edgeCases": "음수 합",    "concept": "배열 인자와 return"
+    "edgeCases": "음수 합",
+    "concept": "배열 인자와 return"
   },
   {
     "id": "JAVA-088",
