@@ -47,14 +47,24 @@ const queryDate = new URLSearchParams(location.search).get("date");
 let selectedDate = parseDate(queryDate)?queryDate:today;
 let visibleMonth = selectedDate.slice(0,7);
 let activeCategory = "all";
+let activeTargetGrade = "all";
 let keyword = "";
 
+const unpackGrade = e => {
+  const raw=String(e.title || "").trim();
+  // Old Apps Script returns a tagged title without a targetGrade column.
+  // Normalize either API version while preserving the original published filter.
+  const tag=raw.match(/^\[(1학년|2학년)\]\s*(.*)$/);
+  const grade=e.targetGrade==="1"||e.targetGrade==="2"?e.targetGrade
+    :tag?(tag[1]==="1학년"?"1":"2"):"all";
+  return {...e,title:tag?tag[2].trim():raw,targetGrade:grade};
+};
 const normalizeEvents = source => (Array.isArray(source)?source:[])
   .filter(e=>e&&typeof e==="object"&&e.published===true&&
     typeof e.title==="string"&&e.title.trim().length>0&&
     Object.hasOwn(CATEGORIES,e.category)&&parseDate(e.startDate)&&
     parseDate(e.endDate||e.startDate)&& (e.endDate||e.startDate)>=e.startDate)
-  .map(e=>({...e,endDate:e.endDate||e.startDate,title:e.title.trim()}))
+  .map(e=>unpackGrade({...e,endDate:e.endDate||e.startDate,title:e.title.trim()}))
   .sort((a,b)=>a.startDate.localeCompare(b.startDate)||
     (a.startTime||"").localeCompare(b.startTime||"")||a.title.localeCompare(b.title,"ko"));
 // Cache ONLY already published fields. Never cache the owner's private calendar,
@@ -65,7 +75,7 @@ function normalizeRemoteEvents(source){
     endDate:e.endDate,
     startTime:typeof e.startTime==="string"&&/^([01]\d|2[0-3]):[0-5]\d$/.test(e.startTime)?e.startTime:"",
     important:e.important===true,published:e.published===true,
-    source:e.source==="portal"?"portal":"calendar"
+    targetGrade:e.targetGrade,source:e.source==="portal"?"portal":"calendar"
   })));
 }
 function forgetCachedCalendar(){
@@ -99,6 +109,7 @@ let events=cachedCalendar?.events||normalizeEvents(schedules);
 
 const currentEvents = () => events.filter(e =>
   (activeCategory==="all"||e.category===activeCategory)&&
+  (activeTargetGrade==="all"||e.targetGrade==="all"||e.targetGrade===activeTargetGrade)&&
   (keyword===""||[e.title,e.description,e.place,CATEGORIES[e.category]]
     .some(value=>String(value||"").toLocaleLowerCase("ko").includes(keyword)))
 );
@@ -109,6 +120,8 @@ function renderEvent(e, showCountdown=false) {
   const category=item("span","schedule-event-category",CATEGORIES[e.category]);
   category.dataset.category=e.category;
   top.append(category);
+  top.append(item("span","schedule-grade-badge",
+    e.targetGrade==="1"?"1학년":e.targetGrade==="2"?"2학년":"전체 학년"));
   if(showCountdown){
     const days=diffDays(e.startDate,today);
     const caption=days>0?"D-"+days:days===0?"D-DAY":"진행 중";
@@ -235,6 +248,14 @@ document.querySelectorAll(".schedule-filters button[data-category]").forEach(but
   button.addEventListener("click",()=>{
     activeCategory=button.dataset.category;
     document.querySelectorAll(".schedule-filters button[data-category]").forEach(b=>
+      b.setAttribute("aria-pressed",String(b===button)));
+    render();
+  });
+});
+document.querySelectorAll("#schedule-grade-filters button[data-target-grade]").forEach(button=>{
+  button.addEventListener("click",()=>{
+    activeTargetGrade=button.dataset.targetGrade;
+    document.querySelectorAll("#schedule-grade-filters button[data-target-grade]").forEach(b=>
       b.setAttribute("aria-pressed",String(b===button)));
     render();
   });
@@ -417,8 +438,12 @@ registrationForm.addEventListener("submit",async event=>{
   event.preventDefault();
   if(registrationSubmit.disabled)return;
   const values={};
-  for(const name of ["title","category","startDate","endDate","startTime","endTime","website"])
+  for(const name of ["title","category","targetGrade","startDate","endDate","startTime","endTime","website"])
     values[name]=registrationField(name).value;
+  // Backward compatible: old deployed GAS ignores targetGrade but preserves
+  // the [1학년]/[2학년] title tag. New GAS reads targetGrade as a typed field.
+  if(values.targetGrade==="1"||values.targetGrade==="2")
+    values.title="["+(values.targetGrade==="1"?"1학년":"2학년")+"] "+values.title;
   values.allDay=String(registrationField("allDay").checked);
   registrationSubmit.disabled=true;
   registrationStatus.textContent="일정을 등록하고 있습니다…";
