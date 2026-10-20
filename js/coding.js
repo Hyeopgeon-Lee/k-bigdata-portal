@@ -7,6 +7,7 @@ import {pythonAdvancedProblems} from "../data/coding-python-advanced.js?v=202610
 import {ubuntuFoundationProblems} from "../data/coding-ubuntu-foundations.js?v=20261020-ubuntu50";
 import {ubuntuAdvancedProblems} from "../data/coding-ubuntu-advanced.js?v=20261020-ubuntu50";
 import {ubuntuLegacyGuides} from "../data/coding-ubuntu-legacy-guides.js?v=20261020-ubuntu50";
+import {learningReportUrl} from "./learning-report.js?v=20261020-study-share-1";
 const codingProblems = [...sampleProblems, ...javaProblems, ...cFoundationProblems, ...cAdvancedProblems, ...pythonFoundationProblems, ...pythonAdvancedProblems, ...ubuntuFoundationProblems, ...ubuntuAdvancedProblems].sort((a,b) =>
   a.language.localeCompare(b.language) || Number(a.id.split("-").at(-1))-Number(b.id.split("-").at(-1))
 );
@@ -63,7 +64,7 @@ function updateSummary() {
     const lang = button.dataset.lang;
     const number = codingProblems.filter(q => q.language === lang).length;
     button.setAttribute("aria-pressed", String(language === lang));
-    button.querySelector("span").textContent = "목표 " + targets[lang] + " · 공개 " + number;
+    button.querySelector("span").textContent = number + "문제";
   });
 }
 function listQuestions(syncPage=false) {
@@ -178,6 +179,7 @@ function showQuestion(q) {
   resetReveal("#coding-answer","#coding-answer-button");
   resetReveal("#coding-trace","#coding-trace-button");
   $("#coding-feedback").textContent = "";
+  $("#coding-share-status").textContent = "";
   const done = doneIds.has(q.id);
   $("#coding-done-button").setAttribute("aria-pressed",String(done));
   $("#coding-done-button").textContent = done ? "완료 표시 취소" : "스스로 풀었어요 ✓";
@@ -190,6 +192,74 @@ function reveal(blockId, buttonId) {
   block.hidden = !open;
   btn.setAttribute("aria-expanded",String(open));
 }
+function currentProblemLink(q=current) {
+  if (!q) return "";
+  const url = new URL("coding.html", location.origin + "/");
+  url.searchParams.set("id", q.id);
+  return url.href;
+}
+async function copyText(text) {
+  if (navigator.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return;
+    } catch { /* Try legacy copy for browsers without clipboard permission. */ }
+  }
+  const area = document.createElement("textarea");
+  area.value = text;
+  area.setAttribute("readonly", "");
+  area.style.position = "fixed";
+  area.style.opacity = "0";
+  document.body.append(area);
+  area.select();
+  let ok = false;
+  try { ok = document.execCommand("copy"); } finally { area.remove(); }
+  if (!ok) throw new Error("클립보드 접근 실패");
+}
+function setShareStatus(message) {
+  $("#coding-share-status").textContent = message;
+}
+async function shareCurrentProblem() {
+  if (!current) return;
+  const url = currentProblemLink();
+  const title = labels[current.language] + " · " + current.title;
+  const preview = String(current.statement || "").replace(/\s+/g," ").slice(0,160);
+  const details = { title: title, text: preview, url };
+  if (navigator.share && (!navigator.canShare || navigator.canShare(details))) {
+    try {
+      await navigator.share(details);
+      setShareStatus("문제를 공유했습니다.");
+      return;
+    } catch (error) {
+      if (error?.name === "AbortError") return;
+    }
+  }
+  try {
+    await copyText(title + "\n" + preview + "\n문제 풀기: " + url);
+    setShareStatus("문제 내용과 링크를 복사했습니다.");
+  } catch {
+    setShareStatus("공유하지 못했습니다. 링크 복사를 다시 시도해 주세요.");
+  }
+}
+async function copyCurrentProblemLink() {
+  if (!current) return;
+  try {
+    await copyText(currentProblemLink());
+    setShareStatus("문제 링크를 복사했습니다.");
+  } catch {
+    setShareStatus("복사할 수 없습니다. 브라우저의 클립보드 권한을 확인해 주세요.");
+  }
+}
+function reportCurrentProblem() {
+  if (!current) return;
+  const url = learningReportUrl("coding",current,labels[current.language] + " · " + current.title);
+  if (url) location.assign(url);
+  else setShareStatus("오류 신고 페이지를 열 수 없습니다.");
+}
+
+$("#coding-share-button").addEventListener("click", () => { void shareCurrentProblem(); });
+$("#coding-link-button").addEventListener("click", () => { void copyCurrentProblemLink(); });
+$("#coding-report-button").addEventListener("click", reportCurrentProblem);
 $("#coding-hint-button").addEventListener("click", () => reveal("#coding-hint","#coding-hint-button"));
 $("#coding-answer-button").addEventListener("click", () => reveal("#coding-answer","#coding-answer-button"));
 $("#coding-trace-button").addEventListener("click", () => reveal("#coding-trace","#coding-trace-button"));
