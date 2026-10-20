@@ -35,6 +35,9 @@ try{
   await page.goto('http://127.0.0.1:8765/index.html',{waitUntil:'domcontentloaded'});
   await page.locator('.service-card').first().waitFor({timeout:12000});
   assert.ok(await page.locator('.service-card').count()>=13,'service directory must render at '+width);
+  assert.equal(await page.locator('#home-today-list .home-today-task').count(),3,'three student daily tasks at '+width);
+  assert.ok((await page.locator('#home-today-recommendation').innerText()).includes('실기'),'first grade starts with coding '+width);
+  assert.equal(await page.locator('#home-today-count').innerText(),'0 / 3','daily goals are initially empty '+width);
   assert.equal(await page.locator('.dashboard-action-favorite').count(),4,'grade-specific quick favorite actions');
   assert.equal(await page.locator('.home-practical-favorite').count(),1,'common practical exam favorite');
   assert.equal(await page.locator('.home-practical-link[href="practical.html"]').count(),1,'common practical exam action');
@@ -91,6 +94,7 @@ try{
   await page.locator('button[data-home-grade="2"]').click();
   assert.equal(await page.locator('button[data-home-grade="2"]').getAttribute('aria-pressed'),'true','grade switch selected '+width);
   assert.ok((await page.locator('#hero-title').innerText()).includes('2학년'),'second-grade heading '+width);
+  assert.ok((await page.locator('#home-today-recommendation').innerText()).includes('채용공고'),'second grade starts with recruitment '+width);
   assert.equal(await page.locator('.dashboard-action[href="recruit.html"]').count(),1,'grade-2 recruitment quick action '+width);
   assert.equal(await page.locator('.dashboard-action[href="https://apply.k-bigdata.kr/"]').count(),1,'grade-2 application quick action '+width);
   assert.ok((await page.locator('#dashboard-highlights-title').innerText()).includes('취업'),'grade-2 continuation '+width);
@@ -146,6 +150,18 @@ try{
  assert.equal(await page.locator('button[data-home-grade="1"]').getAttribute('aria-pressed'),'true','grades can be changed repeatedly');
  assert.equal(await page.locator('.dashboard-action[href="docs.html"]').count(),1,'first-grade actions restored');
  assert.equal(await page.locator('.home-practical-link').count(),1,'shared practice survives repeated grade switches');
+ await page.locator('button[data-daily-task="docs"]').click();
+ assert.equal(await page.locator('#home-today-count').innerText(),'1 / 3','manual progress marked');
+ assert.equal(JSON.parse(await page.evaluate(()=>localStorage.getItem('kbigdata:daily-plan:v1'))).byGrade['1'].docs,true,'first-grade mark persisted');
+ await page.reload({waitUntil:'domcontentloaded'});
+ await page.locator('#home-today-list .home-today-task').first().waitFor();
+ assert.equal(await page.locator('#home-today-count').innerText(),'1 / 3','daily mark survives reload');
+ await page.locator('button[data-home-grade="2"]').click();
+ assert.equal(await page.locator('#home-today-count').innerText(),'0 / 3','second-grade daily goals independent');
+ await page.locator('button[data-daily-task="recruit"]').click();
+ assert.equal(await page.locator('#home-today-count').innerText(),'1 / 3','second-grade progress can be marked');
+ await page.locator('button[data-home-grade="1"]').click();
+ assert.equal(await page.locator('#home-today-count').innerText(),'1 / 3','first-grade progress survives grade switches');
  await page.locator('.home-schedule-link').first().click();
  await page.waitForURL('**/schedule.html?date=*');
  assert.ok(new URL(page.url()).searchParams.get('date'),'schedule link opens the selected date');
