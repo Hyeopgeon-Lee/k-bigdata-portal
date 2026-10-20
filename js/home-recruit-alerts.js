@@ -1,6 +1,14 @@
 // Home-only, read-only recruiting deadline preview.
 // Uses the exact dataset already loaded by index.html; no extra network requests.
 const root = document.getElementById("home-recruit-alert-list");
+const projectRoot=document.getElementById("home-project-alert-list");
+const cardTitle=document.getElementById("home-alert-recruit-title");
+function updateGrade(){
+  const firstGrade=document.body.dataset.homeGrade!=="2";
+  if(cardTitle)cardTitle.textContent=firstGrade?"프로젝트 일정":"채용 마감 임박";
+  if(root)root.hidden=firstGrade;
+  if(projectRoot)projectRoot.hidden=!firstGrade;
+}
 const MS_PER_DAY = 86400000;
 function todayKst(){
   return new Date(Date.now() + 9*3600000).toISOString().slice(0,10);
@@ -61,6 +69,8 @@ function renderRecruitAlerts(){
   }
   root.replaceChildren(list);
 }
+updateGrade();
+window.addEventListener("kbigdata:home-gradechange",updateGrade);
 renderRecruitAlerts();
 document.addEventListener("visibilitychange",()=>{
   if(document.visibilityState==="visible")renderRecruitAlerts();
