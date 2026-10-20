@@ -56,6 +56,8 @@
 .coding-reveal{margin-top:15px;border:1px solid #dfe7f2;border-radius:12px;padding:16px;background:#fcfdff}
 .coding-reveal[hidden]{display:none}
 .coding-reveal p{line-height:1.75;color:#354660;margin:0 0 12px}
+.coding-reveal .coding-copy-tip{margin:12px 0 0;padding:12px 14px;border-left:3px solid #85a7e6;border-radius:0 8px 8px 0;background:#eff5ff;font-size:14px;line-height:1.8;word-break:keep-all;overflow-wrap:anywhere}
+.coding-ubuntu-mode .coding-copy-tip{display:none}
 .coding-code{position:relative;min-width:0}
 .coding-code pre{margin:0;max-width:100%;overflow:auto;border-radius:11px;background:#102039;color:#e7eefb;padding:18px;font:13px/1.85 ui-monospace,SFMono-Regular,Consolas,monospace;tab-size:4}
 .coding-code code{white-space:pre}
