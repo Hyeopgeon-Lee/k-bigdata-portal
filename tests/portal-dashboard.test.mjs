@@ -59,7 +59,7 @@ assert.ok(html.includes('id="search-status" role="status"'));
 assert.ok(!html.includes('id="service-groups" aria-live'));
 assert.equal((html.match(/class="dashboard-action-favorite"/g)||[]).length,4);
 assert.ok(html.includes('css/home-ui.css?v=20261020-balanced-grid-2'));
-assert.ok(html.includes('js/home-schedule.js?v=20261020-grade3-final-1'));
+assert.ok(html.includes('js/home-schedule.js?v=20261020-sync-bridge-1'));
 assert.ok(html.includes('js/home-recruit-alerts.js?v=20261020-grade3-final-1'));
 assert.ok(html.includes('css/home-alerts.css?v=20261020-grade3-final-2'));
 assert.ok(html.includes('class="dashboard-panel dashboard-schedule home-alert-card"'));
@@ -76,7 +76,7 @@ assert.ok(homeRecruit.includes('deadlineType==="DATE"'),'only dated recruiting e
 assert.ok(homeRecruit.includes('recruit.html?job='),'recruit deep link');
 assert.ok(homeSchedule.includes('event.published===true'),'only published events used');
 assert.ok(homeSchedule.includes('schedule.html?date='),'calendar deep link');
-assert.ok(homeSchedule.includes('kbigdata:published-schedule:v1:'),'shared public cache');
+assert.ok(homeSchedule.includes('kbigdata:published-schedule:v2:'),'shared public cache');
 assert.ok(dashboard.includes('installFavoriteButtons()'));
 assert.ok(dashboard.includes('renderHighlights()'));
 assert.ok(homeCss.includes('.dashboard-action-grid'));
