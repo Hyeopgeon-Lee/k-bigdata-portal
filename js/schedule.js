@@ -1,8 +1,9 @@
 import {schedules} from "../data/schedules.js?v=20261019-1";
 import {SCHEDULE_API_URL} from "../data/schedule-config.js?v=20261019-google-calendar-live-1";
+import {publishedGrade} from "../data/calendar-grade-bridge.js?v=20261020-synced-1";
 
 const $ = selector => document.querySelector(selector);
-const SCHEDULE_CACHE_KEY = "kbigdata:published-schedule:v1:" + SCHEDULE_API_URL;
+const SCHEDULE_CACHE_KEY = "kbigdata:published-schedule:v2:" + SCHEDULE_API_URL;
 const SCHEDULE_CACHE_MAX_AGE = 30 * 60 * 1000; // Local published snapshot, always revalidated.
 const SCHEDULE_CACHE_MAX_EVENTS = 4000;
 const dateFormatter = new Intl.DateTimeFormat("ko-KR",{
@@ -55,8 +56,7 @@ const unpackGrade = e => {
   // Old Apps Script returns a tagged title without a targetGrade column.
   // Normalize either API version while preserving the original published filter.
   const tag=raw.match(/^\[(1학년|2학년)\]\s*(.*)$/);
-  const grade=e.targetGrade==="1"||e.targetGrade==="2"?e.targetGrade
-    :tag?(tag[1]==="1학년"?"1":"2"):"all";
+  const grade=publishedGrade(e,tag?tag[2].trim():raw);
   return {...e,title:tag?tag[2].trim():raw,targetGrade:grade};
 };
 const normalizeEvents = source => (Array.isArray(source)?source:[])
