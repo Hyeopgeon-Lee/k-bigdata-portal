@@ -27,6 +27,12 @@ assert.ok(html.includes('js/schedule.js'));
 assert.ok(!html.includes('accounts.google.com') && !html.includes('calendar.google.com'));
 assert.ok(!html.includes('type="password"'));
 assert.ok(html.includes('id="schedule-register-form"'));
+assert.ok(html.includes('name="targetGrade"'),'registration requires target grade choice');
+assert.ok(html.includes('id="schedule-grade-filters"'),'calendar grade filters present');
+assert.ok(js.includes('unpackGrade'),'supports pre-upgrade tagged schedule entries');
+assert.ok(js.includes('values.targetGrade'),'audience submitted');
+assert.ok(js.includes('activeTargetGrade'),'calendar grade filter implemented');
+
 assert.ok(!html.includes('Google 캘린더에서 제목이'));
 assert.ok(js.includes('e.published===true'));
 assert.ok(js.includes('timeZone:"Asia/Seoul"'));
