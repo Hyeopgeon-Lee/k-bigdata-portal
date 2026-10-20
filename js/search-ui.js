@@ -1,4 +1,4 @@
-import {isExternal} from "./services.js?v=20261020-coding-1";
+import {isExternal} from "./services.js?v=20261020-study-share-1";
 
 const esc=v=>String(v??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
 
@@ -8,7 +8,7 @@ export function initGroupedSearch(){
 
  let groups=[],expanded=new Set(),timer=0,searchModule=null;
  if(status&&!input.value.trim())status.textContent="검색어를 입력하면 관련 서비스와 학습 자료를 찾습니다.";
- const loadSearch=()=>searchModule||(searchModule=import("./search.js?v=20261016-expanded-search-1"));
+ const loadSearch=()=>searchModule||(searchModule=import("./search.js?v=20261020-study-share-1"));
 
  function render(){
   root.innerHTML=groups.map((g,i)=>'<li class="search-group"><h3>'+esc(g.label)+' <small>'+g.items.length+'</small></h3><ul>'+g.items.slice(0,expanded.has(i)?g.items.length:4).map(r=>'<li><a href="'+esc(r.url)+'"'+(isExternal(r.url)?' target="_blank" rel="noopener noreferrer"':'')+'>'+esc(r.title)+(isExternal(r.url)?' ↗<span class="sr-only"> 외부 사이트, 새 창</span>':' →')+'</a></li>').join('')+'</ul>'+(g.items.length>4?'<button type="button" class="button button-secondary" data-search-group="'+i+'" aria-expanded="'+expanded.has(i)+'">'+esc(g.label)+(expanded.has(i)?' 접기':' 더 보기')+'</button>':'')+'</li>').join('');
