@@ -1,4 +1,4 @@
-import {initPortalShell} from "./portal-shell.js?v=20261016-ui-review-2";
+import {initPortalShell} from "./portal-shell.js?v=20261020-coding-1";
 
 initPortalShell().catch(error=>{
  console.error("Portal shell initialization failed",error);
