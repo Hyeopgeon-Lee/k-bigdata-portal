@@ -87,6 +87,7 @@ function renderGrade(){
  renderQuickActions();
  renderPersonal();
  renderHighlights();
+ window.dispatchEvent(new CustomEvent("kbigdata:home-gradechange",{detail:{grade:selectedGrade}}));
 }
 function chooseGrade(grade){
  if(grade!=="1"&&grade!=="2")return;
