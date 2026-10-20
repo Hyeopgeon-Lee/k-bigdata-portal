@@ -95,13 +95,13 @@ store.CALENDAR_ID="ignored-secondary-calendar";
 assert.equal(context.departmentCalendar_(),defaultCalendar);
 assert.equal(secondaryReads,0);
 
-function event(title,visibility="DEFAULT",allDay=false,start="2026-10-20T01:30:00Z",end="2026-10-20T02:30:00Z"){
+function event(title,visibility="DEFAULT",allDay=false,start="2026-10-20T01:30:00Z",end="2026-10-20T02:30:00Z",description=""){
  return {
   getVisibility:()=>visibility,getTitle:()=>title,
   getStartTime:()=>new Date(start),getEndTime:()=>new Date(end),
   getId:()=>("private-calendar-id-do-not-publish"),
   isAllDayEvent:()=>allDay,getTag:()=>null,
-  getDescription:()=>{throw new Error("description read unexpectedly")},
+  getDescription:()=>description,
   getGuestList:()=>{throw new Error("guest list read unexpectedly")},
   getLocation:()=>{throw new Error("location read unexpectedly")}
  };
@@ -111,6 +111,36 @@ assert.equal(context.eventPublicRow_(event("주간회의 (학과) 참고")),null
 assert.equal(context.eventPublicRow_(event(" (학과) 앞 공백")),null);
 assert.equal(context.eventPublicRow_(event("(학과) 비공개","PRIVATE")),null);
 assert.equal(context.eventPublicRow_(event("(학과) 비밀","CONFIDENTIAL")),null);
+assert.equal(context.targetGradeFromDescription_("대상학년: 1학년"),"1");
+assert.equal(context.targetGradeFromDescription_("대상학년: 2학년"),"2");
+assert.equal(context.targetGradeFromDescription_("대상학년: 전체"),"all");
+assert.equal(context.targetGradeFromDescription_("메모 제목\n  대상 학년： 2학년  \n모임 장소"),"2");
+assert.equal(context.targetGradeFromDescription_("대상학년: 3학년"),null);
+assert.equal(context.targetGradeFromDescription_("대상학년: 1학년 외부 공유"),null);
+assert.equal(context.targetGradeFromDescription_("설명 속에 대상학년: 1학년이 포함"),null);
+assert.equal(context.targetGradeFromDescription_("대상학년: 1학년\r\n별도 안내"),"1");
+// 개인/비공개 일정은 설명을 읽는 것 자체를 금지합니다.
+const forbiddenDescription=event("일반 개인 일정");
+forbiddenDescription.getDescription=()=>{throw new Error("private note was read");};
+assert.equal(context.eventPublicRow_(forbiddenDescription),null);
+const confidentialDescription=event("(학과) 개인 기록","CONFIDENTIAL");
+confidentialDescription.getDescription=()=>{throw new Error("confidential note was read");};
+assert.equal(context.eventPublicRow_(confidentialDescription),null);
+const memoSecret="비공개 개인 메모와 연락처 sample@example.test";
+const withMemo=event("(학과) [프로젝트] [2학년] 팀프로젝트","DEFAULT",false,
+  "2026-10-20T01:30:00Z","2026-10-20T02:30:00Z",
+  memoSecret+"\n대상학년: 1학년\n프로젝트 발표 안내");
+const memoRow=context.eventPublicRow_(withMemo);
+assert.equal(memoRow[1],"팀프로젝트");
+assert.equal(memoRow[9],"1","memo setting overrides legacy title grade");
+assert.equal(memoRow.length,10);
+assert.ok(!memoRow.join(" ").includes(memoSecret),"memo text must not enter published row");
+const wholeGrade=context.eventPublicRow_(event("(학과) [1학년] 학과행사","DEFAULT",false,
+  "2026-10-20T01:30:00Z","2026-10-20T02:30:00Z","대상학년: 전체"));
+assert.equal(wholeGrade[9],"all","explicit overall grade overrides legacy first-grade tag");
+const invalidGrade=context.eventPublicRow_(event("(학과) [2학년] 행사","DEFAULT",false,
+  "2026-10-20T01:30:00Z","2026-10-20T02:30:00Z","대상학년: 미정"));
+assert.equal(invalidGrade[9],"2","invalid memo must retain title fallback");
 const row=context.eventPublicRow_(event("(학과) [시험] 중간고사"));
 assert.equal(row[1],"중간고사");
 assert.equal(row[2],"exam");
@@ -145,6 +175,7 @@ assert.equal(raw.events[0].title,"시험 안내");
 assert.equal(raw.events[0].published,true);
 assert.equal(raw.events[0].source,"calendar");
 assert.equal(raw.events[0].targetGrade,"all");
+assert.equal(Object.hasOwn(raw.events[0],"description"),false,"public API must not expose notes");
 const readsAfterFirst=sheetReadCount;
 context.doGet({parameter:{callback:"nextCallback"}});
 assert.equal(sheetReadCount,readsAfterFirst,"repeated public reads should use Apps Script cache");
@@ -197,11 +228,15 @@ context.setupDepartmentCalendar();
 context.setupDepartmentCalendar();
 assert.equal(createdSheets,1,"setup must reuse its private spreadsheet");
 assert.equal(triggers.length,1,"setup must not duplicate synchronization triggers");
-calendarEvents=[event("(학과) [시험] 등록 테스트"),event("개인 회의")];
+calendarEvents=[event("(학과) [시험] 등록 테스트","DEFAULT",false,
+  "2026-10-20T01:30:00Z","2026-10-20T02:30:00Z",
+  "안내: 기타 내용\\n대상학년: 2학년"),event("개인 회의")];
 context.syncDepartmentCalendar();
 assert.equal(savedRows.length,1);
 assert.equal(savedRows[0][1],"등록 테스트");
 assert.equal(savedRows[0][8],"calendar");
+assert.equal(savedRows[0][9],"2","synchronization stores only the audience from memo");
+assert.equal(savedRows[0].length,10,"published Sheet has no note column");
 calendarEvents=[event("(학과) [시험] 제목 수정")];
 context.syncDepartmentCalendar();
 assert.equal(savedRows[0][1],"제목 수정");
