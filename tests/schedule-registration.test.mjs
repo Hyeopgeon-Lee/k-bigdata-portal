@@ -53,6 +53,12 @@ const request={action:"register",requestId:"a".repeat(32),title:"(학과) 발표
  startDate:"2026-10-20",endDate:"2026-10-20",startTime:"10:00",endTime:"11:00",allDay:"false",website:""};
 assert.equal(context.registerPublicSchedule_(request).ok,true);
 assert.equal(created[0].args[0],"(학과) [프로젝트] 발표회");
+const targeted=context.registrationInput_({...request,targetGrade:"1",title:"[1학년] 발표회"});
+assert.equal(targeted.title,"(학과) [프로젝트] [1학년] 발표회");
+assert.equal(context.registrationInput_({...request,title:"[2학년] 발표회"}).title,"(학과) [프로젝트] [2학년] 발표회","older clients support grade-title fallback");
+assert.equal(context.registrationInput_({...request,targetGrade:"all",title:"[2학년] 발표회"}).title,"(학과) [프로젝트] 발표회","explicit all overrides tag");
+assert.throws(()=>context.registrationInput_({...request,targetGrade:"3"}),"invalid grade denied");
+
 assert.equal(created[0].getTag("kbigdata_portal_registration"),"portal-v1");
 assert.equal(created[0].args[1].toISOString(),"2026-10-20T01:00:00.000Z");
 assert.equal(created[0].args.length,3,"do not accept guests, descriptions or locations");
