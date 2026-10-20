@@ -38,7 +38,7 @@ try{
   const highlights=await page.locator('.dashboard-highlights').boundingBox();
   const actions=await page.locator('.dashboard-start').boundingBox();
   assert.ok(search&&highlights&&actions,'core dashboard regions must be visible');
-  await page.locator('.home-schedule-item').nth(2).waitFor({timeout:7000});
+  await page.locator('.home-schedule-item').nth(2).waitFor({state:'attached',timeout:7000});
   const schedule=await page.locator('.dashboard-schedule').boundingBox();
   assert.ok(schedule,'department schedule card visible at '+width);
   assert.equal(await page.locator('.home-schedule-item').count(),3,'3 published events in DOM');
