@@ -38,30 +38,32 @@ try{
   const highlights=await page.locator('.dashboard-highlights').boundingBox();
   const actions=await page.locator('.dashboard-start').boundingBox();
   assert.ok(search&&highlights&&actions,'core dashboard regions must be visible');
-  await page.locator('.home-schedule-item').nth(2).waitFor({state:'attached',timeout:7000});
+  await page.locator('.home-schedule-item').nth(1).waitFor({state:'attached',timeout:7000});
   const schedule=await page.locator('.dashboard-schedule').boundingBox();
   assert.ok(schedule,'department schedule card visible at '+width);
-  assert.equal(await page.locator('.home-schedule-item').count(),3,'3 published events in DOM');
-  assert.equal(await page.locator('.home-schedule-item:visible').count(),width<=767?2:3,'responsive preview count '+width);
+  assert.equal(await page.locator('.home-schedule-item').count(),2,'top section contains two published events');
+  assert.equal(await page.locator('.home-schedule-item:visible').count(),2,'two visible event alerts '+width);
   assert.ok((await page.locator('.home-schedule-item').first().innerText()).includes('오늘 학과 일정'));
   assert.ok((await page.locator('.home-schedule-link').first().getAttribute('href')).includes('schedule.html?date='));
-  if(width<=900)assert.ok(schedule.y<actions.y,'schedule precedes quick actions on narrow screens '+width);
-  else assert.ok(schedule.x>actions.x && schedule.y<highlights.y,'schedule is upper right on desktop '+width);
+  const recruitAlerts=await page.locator('.home-alert-recruit').boundingBox();
+  assert.ok(recruitAlerts,'recruitment card visible '+width);
+  assert.ok(schedule.y<actions.y && recruitAlerts.y<actions.y,'alerts above quick actions '+width);
+  if(width<=767)assert.ok(recruitAlerts.y>schedule.y,'mobile alerts stack vertically '+width);
+  else assert.ok(recruitAlerts.x>schedule.x && Math.abs(recruitAlerts.y-schedule.y)<2,'desktop/tablet alerts side by side '+width);
+  assert.equal(await page.locator('.home-recruit-item').count(),2,'dated recruitment preview shows 2 entries');
   assert.equal(await page.locator('body').evaluate(()=>{
-   const nodes=['.dashboard-schedule','.dashboard-start','.portal-search','.dashboard-highlights','.dashboard-personal'].map(s=>document.querySelector(s));
+   const nodes=['.dashboard-schedule','.home-alert-recruit','.dashboard-start','.portal-search','.dashboard-highlights','.dashboard-personal'].map(s=>document.querySelector(s));
    return nodes.every((node,i)=>!i||Boolean(nodes[i-1].compareDocumentPosition(node)&Node.DOCUMENT_POSITION_FOLLOWING));
   }),true,'DOM order stays schedule/actions/search/highlights/personal');
   const dimensions=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,viewport:document.documentElement.clientWidth}));
   assert.ok(dimensions.scroll<=dimensions.viewport+2,'horizontal overflow at '+width+': '+JSON.stringify(dimensions));
   if(width<=900){
-   assert.ok(search.y>=actions.y && search.y<highlights.y,'mobile search should precede sidebar at '+width);
+   assert.ok(search.y>=actions.y && search.y<highlights.y,'mobile search precedes sidebar '+width);
   }else{
-   assert.ok(search.x<highlights.x,'desktop search should stay in primary column');
    const personal=await page.locator('.dashboard-personal').boundingBox();
-   assert.ok(Math.abs(search.y-personal.y)<2,'search and shortcuts share the last row');
-   assert.ok(Math.abs(search.y+search.height-personal.y-personal.height)<2,'desktop bottom edges align');
-   assert.ok(Math.abs(actions.y+actions.height-highlights.y-highlights.height)<2,'actions align with upper right stack');
-   assert.ok(Math.abs(search.y-actions.y-actions.height-16)<2,'no empty area below primary actions');
+   assert.ok(personal && highlights.y<personal.y,'right-side panels stack '+width);
+   assert.ok(search.y>=actions.y+actions.height-2,'desktop search follows action row '+width);
+   assert.ok(search.width>actions.width,'desktop search uses full dashboard width '+width);
   }
   if(width<=767){
    assert.equal(await page.locator('.brand-short').isVisible(),true,'short mobile brand '+width);
