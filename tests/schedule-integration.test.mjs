@@ -230,7 +230,7 @@ assert.equal(createdSheets,1,"setup must reuse its private spreadsheet");
 assert.equal(triggers.length,1,"setup must not duplicate synchronization triggers");
 calendarEvents=[event("(학과) [시험] 등록 테스트","DEFAULT",false,
   "2026-10-20T01:30:00Z","2026-10-20T02:30:00Z",
-  "안내: 기타 내용\\n대상학년: 2학년"),event("개인 회의")];
+  "안내: 기타 내용\n대상학년: 2학년"),event("개인 회의")];
 context.syncDepartmentCalendar();
 assert.equal(savedRows.length,1);
 assert.equal(savedRows[0][1],"등록 테스트");
