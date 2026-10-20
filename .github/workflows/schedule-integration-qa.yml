@@ -9,6 +9,7 @@ on:
       - "data/schedules.js"
       - "data/schedule-config.js"
       - "data/calendar-grade-bridge.js"
+      - "tests/calendar-grade-bridge.test.mjs"
       - "js/services.js"
       - "apps-script/department-calendar/**"
       - "tests/schedule-integration.test.mjs"
@@ -37,6 +38,8 @@ jobs:
           node --check /tmp/kbigdata-public-registration.cjs
       - name: Test public-only schedule integration
         run: node tests/schedule-integration.test.mjs
+      - name: Validate calendar memo grade fallback
+        run: node tests/calendar-grade-bridge.test.mjs
       - name: Test public schedule registration
         run: node tests/schedule-registration.test.mjs
       - name: Check existing schedule page contracts
