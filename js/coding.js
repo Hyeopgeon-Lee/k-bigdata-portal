@@ -2,7 +2,9 @@ import {codingProblems as sampleProblems} from "../data/coding-samples.js?v=2026
 import {javaProblems} from "../data/coding-java-98.js?v=20261020-java100-b";
 import {cFoundationProblems} from "../data/coding-c-foundations.js?v=20261020-c100";
 import {cAdvancedProblems} from "../data/coding-c-advanced.js?v=20261020-c100";
-const codingProblems = [...sampleProblems, ...javaProblems, ...cFoundationProblems, ...cAdvancedProblems].sort((a,b) =>
+import {pythonFoundationProblems} from "../data/coding-python-foundations.js?v=20261020-py100";
+import {pythonAdvancedProblems} from "../data/coding-python-advanced.js?v=20261020-py100";
+const codingProblems = [...sampleProblems, ...javaProblems, ...cFoundationProblems, ...cAdvancedProblems, ...pythonFoundationProblems, ...pythonAdvancedProblems].sort((a,b) =>
   a.language.localeCompare(b.language) || Number(a.id.split("-").at(-1))-Number(b.id.split("-").at(-1))
 );
 
