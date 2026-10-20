@@ -7,6 +7,7 @@ const html=read('index.html');
 const css=read('css/portal-ux.css');
 const homeCss=read('css/home-ui.css');
 const alertCss=read('css/home-alerts.css');
+const gradeCss=read('css/home-grade.css');
 const homeRecruit=read('js/home-recruit-alerts.js');
 const app=read('js/app.js');
 const searchUI=read('js/search-ui.js');
@@ -23,6 +24,19 @@ assert.ok(html.indexOf('dashboard-action-grid') < html.indexOf('portal-search-fo
 assert.ok(html.indexOf('portal-search-form') < html.indexOf('dashboard-highlights'),'search precedes personal panels on mobile');
 assert.ok(html.indexOf('dashboard-highlights') < html.indexOf('favorite-services'),'learning precedes shortcuts');
 assert.ok(html.includes('class="brand-short"') && html.includes('class="brand-full"'));
+assert.ok(html.includes('id="home-grade-status"') && html.includes('id="hero-description"'),'grade controls and accessible status');
+assert.ok(html.includes('data-home-grade="1"') && html.includes('data-home-grade="2"'),'both grade buttons');
+assert.ok(html.includes('css/home-grade.css?v=20261020-grade-1'));
+assert.ok(html.includes('js/home-dashboard.js?v=20261020-grade-1'));
+assert.ok(gradeCss.includes('home-grade-button[aria-pressed="true"]'),'selected grade is visually distinguished');
+assert.ok(gradeCss.includes('@media(max-width:767px)'),'compact mobile selector');
+for(const id of ['docs','jobs','project-guide','practical','recruit','apply','interview','ready'])
+  assert.ok(dashboard.includes('"'+id+'"'),'grade actions include '+id);
+assert.ok(dashboard.includes('kbigdata:home-grade:v1'),'local-only grade preference');
+assert.ok(dashboard.includes('chooseGrade('),'grade switching implemented');
+assert.ok(dashboard.includes('renderQuickActions('),'grade-dependent quick actions implemented');
+assert.ok(dashboard.includes('selectedGrade==="1"'),'grade-dependent continue section implemented');
+
 assert.ok(html.includes('role="tablist"') && html.includes('role="tabpanel"'));
 assert.ok(html.includes('role="search"'));
 assert.ok(html.includes('id="search-status" role="status"'));
