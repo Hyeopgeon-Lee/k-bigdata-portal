@@ -1,0 +1,20 @@
+name: C17 coding dataset QA
+on:
+  push:
+    paths:
+      - "data/coding-c-*.js"
+      - "scripts/qa-coding-c.mjs"
+      - ".github/workflows/c-coding-qa.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  c-coding-qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: GCC C17 compilation and input-output tests
+        run: node scripts/qa-coding-c.mjs
