@@ -8,6 +8,7 @@ on:
       - "js/schedule.js"
       - "data/schedules.js"
       - "data/schedule-config.js"
+      - "data/calendar-grade-bridge.js"
       - "js/services.js"
       - "apps-script/department-calendar/**"
       - "tests/schedule-integration.test.mjs"
@@ -28,6 +29,7 @@ jobs:
         run: |
           node --check js/schedule.js
           node --check data/schedule-config.js
+          node --check data/calendar-grade-bridge.js
           node --check tests/schedule-integration.test.mjs
           cp apps-script/department-calendar/Code.gs /tmp/kbigdata-department-calendar.cjs
           node --check /tmp/kbigdata-department-calendar.cjs
