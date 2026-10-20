@@ -563,8 +563,8 @@
   }
 
   .practical-page.is-solving .learning-content{
-    width:min(calc(100% - 40px),1040px);
-    max-width:1040px;
+    width:min(calc(100% - 40px),var(--container));
+    max-width:var(--container);
     padding-bottom:72px;
   }
   .practical-page .bank-solve{
