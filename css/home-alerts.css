@@ -64,3 +64,54 @@ body[data-portal-home] .home-schedule-grade{font-size:11px;font-weight:800;color
 
 /* Career-phase students should see job deadlines before course dates. */
 body[data-portal-home][data-home-grade="2"] .home-alert-recruit{order:-1}
+
+/* Phase 3: one first-year calendar; second-year job deadlines + shared calendar. */
+body[data-portal-home] .home-alert-recruit[hidden]{display:none!important}
+body[data-portal-home]:not([data-home-grade="2"]) .home-alerts-grid{grid-template-columns:minmax(0,1fr)}
+@media(min-width:768px){
+  body[data-portal-home]:not([data-home-grade="2"]) .dashboard-schedule .home-schedule-items{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+}
+
+/* A permanent, equally accessible practical-exam entry for both grades. */
+body[data-portal-home] .home-practical{min-width:0;padding-top:17px;padding-bottom:0}
+body[data-portal-home] .home-practical-heading{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:9px}
+body[data-portal-home] .home-practical-heading h2{margin:0;color:#142f63;font-size:19px;letter-spacing:-.025em}
+body[data-portal-home] .home-practical-heading>span{font-size:12px;font-weight:750;color:#4c6281}
+body[data-portal-home] .home-practical-card{position:relative;display:grid;grid-template-columns:50px minmax(0,1fr) auto;gap:17px;align-items:center;min-width:0;border:1px solid #bfd2eb;border-radius:15px;padding:17px 58px 17px 19px;background:#fafdff;box-shadow:0 3px 14px rgba(20,45,112,.035)}
+body[data-portal-home] .home-practical-icon{display:grid;place-items:center;width:50px;height:50px;border-radius:12px;background:#e5effe;color:#245699;flex:none}
+body[data-portal-home] .home-practical-icon svg{width:27px;height:27px}
+body[data-portal-home] .home-practical-copy{min-width:0}
+body[data-portal-home] .home-practical-copy h3{margin:0 0 5px;color:#162f60;font-size:17px;line-height:1.4;font-weight:800;overflow-wrap:anywhere}
+body[data-portal-home] .home-practical-copy p{margin:0 0 5px;color:#415a7b;font-size:13px;line-height:1.5;word-break:keep-all}
+body[data-portal-home] .home-practical-copy>span{font-size:12px;color:#31588e;font-weight:750}
+body[data-portal-home] .home-practical-actions{display:flex;flex-direction:column;gap:7px;align-items:stretch;min-width:190px}
+body[data-portal-home] .home-practical-link{display:flex;align-items:center;justify-content:center;gap:10px;min-height:46px;padding:9px 16px;background:#163d82;color:#fff;text-decoration:none;border-radius:9px;font-size:14px;font-weight:800;white-space:nowrap}
+body[data-portal-home] .home-practical-link:hover{background:#2358a4}
+body[data-portal-home] .home-practical-cert-link{display:flex;align-items:center;justify-content:center;min-height:34px;color:#25528f;font-size:12px;font-weight:750;text-decoration:underline;text-underline-offset:3px}
+body[data-portal-home] .home-practical-favorite{position:absolute;top:10px;right:10px;z-index:1;display:grid;place-items:center;width:42px;height:42px;border:1px solid #d6e3f4;border-radius:50%;background:#fff;color:#284e8b;font-family:inherit;font-weight:600;font-size:25px;line-height:1;cursor:pointer}
+body[data-portal-home] .home-practical-favorite[aria-pressed="true"],body[data-portal-home] .home-practical-favorite:hover{background:#e5efff;border-color:#9cb5d9}
+body[data-portal-home] .home-practical-favorite:focus-visible,body[data-portal-home] .home-practical-link:focus-visible,body[data-portal-home] .home-practical-cert-link:focus-visible{outline:3px solid #159acc;outline-offset:3px}
+@media(max-width:900px){
+ body[data-portal-home] .home-practical-card{grid-template-columns:50px minmax(0,1fr);gap:12px;padding:16px 57px 16px 16px}
+ body[data-portal-home] .home-practical-actions{grid-column:1/-1;flex-direction:row;align-items:center;gap:13px;min-width:0}
+ body[data-portal-home] .home-practical-link{flex:1}
+ body[data-portal-home] .home-practical-cert-link{padding:8px}
+}
+@media(max-width:767px){
+ body[data-portal-home] .home-practical{padding-top:13px}
+ body[data-portal-home] .home-practical-heading h2{font-size:17px}
+ body[data-portal-home] .home-practical-card{grid-template-columns:42px minmax(0,1fr);padding:13px 48px 13px 13px;gap:11px}
+ body[data-portal-home] .home-practical-icon{width:42px;height:42px}
+ body[data-portal-home] .home-practical-icon svg{width:24px;height:24px}
+ body[data-portal-home] .home-practical-copy h3{font-size:15px}
+ body[data-portal-home] .home-practical-actions{gap:7px;flex-wrap:wrap}
+ body[data-portal-home] .home-practical-link{min-width:0;white-space:normal;font-size:13px}
+ body[data-portal-home] .home-practical-favorite{width:37px;height:37px;top:9px;right:8px}
+}
+@media(max-width:410px){
+ body[data-portal-home] .home-practical-actions{flex-direction:column}
+ body[data-portal-home] .home-practical-link{width:100%}
+ body[data-portal-home] .home-practical-cert-link{min-height:36px}
+}
