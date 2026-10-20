@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="css/learning.css">
 <link rel="stylesheet" href="css/portal-ux.css?v=20261016-ui-review-2">
   <link rel="stylesheet" href="css/home-ui.css?v=20261020-balanced-grid-2">
+  <link rel="stylesheet" href="css/home-alerts.css?v=20261020-alerts-1">
 </head>
 <body data-portal-home>
   <a class="skip-link" href="#main-content">본문으로 바로가기</a>
@@ -25,6 +26,35 @@
 
 
   <main id="main-content" tabindex="-1">
+    <section class="home-alerts container" aria-labelledby="home-alerts-title">
+      <div class="home-alerts-header">
+        <div>
+          <h2 id="home-alerts-title" class="home-alerts-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg>놓치지 마세요</h2>
+          <p class="home-alerts-subtitle">다가오는 학과 일정과 채용 마감일을 확인하세요.</p>
+        </div>
+      </div>
+      <div class="home-alerts-grid">
+        <section class="dashboard-panel dashboard-schedule home-alert-card" aria-labelledby="dashboard-schedule-title">
+                  <div class="dashboard-panel-heading">
+                    <h2 id="dashboard-schedule-title">학과 주요 일정</h2>
+                    <a href="schedule.html">전체 보기 →</a>
+                  </div>
+                  <div id="home-schedule-list" aria-live="polite" aria-atomic="true">
+                    <p class="dashboard-schedule-empty">공개된 학과 일정을 확인하고 있습니다…</p>
+                  </div>
+                </section>
+        <section class="dashboard-panel home-alert-card home-alert-recruit" aria-labelledby="home-alert-recruit-title">
+          <div class="dashboard-panel-heading">
+            <h2 id="home-alert-recruit-title">채용 마감 일정</h2>
+            <a href="recruit.html">전체 보기 →</a>
+          </div>
+          <div id="home-recruit-alert-list" aria-live="polite" aria-atomic="true">
+            <p class="home-alert-empty">채용 마감일을 확인하고 있습니다…</p>
+          </div>
+        </section>
+      </div>
+    </section>
+
     <section class="dashboard-hero container" aria-labelledby="hero-title">
       <div class="dashboard-intro">
         <p class="eyebrow">K-BIGDATA STUDENT PORTAL</p>
@@ -32,15 +62,6 @@
         <p>학습부터 취업 준비까지, 지금 필요한 서비스를 바로 시작하세요.</p>
       </div>
       <div class="dashboard-main">
-        <section class="dashboard-panel dashboard-schedule" aria-labelledby="dashboard-schedule-title">
-          <div class="dashboard-panel-heading">
-            <h2 id="dashboard-schedule-title">학과 주요 일정</h2>
-            <a href="schedule.html">전체 보기 →</a>
-          </div>
-          <div id="home-schedule-list" aria-live="polite" aria-atomic="true">
-            <p class="dashboard-schedule-empty">공개된 학과 일정을 확인하고 있습니다…</p>
-          </div>
-        </section>
         <div class="dashboard-primary">
           <section class="dashboard-start" aria-labelledby="dashboard-start-title">
             <div class="dashboard-panel-heading"><h2 id="dashboard-start-title">바로 시작하기</h2><a href="#services">전체 서비스 보기 →</a></div>
@@ -143,6 +164,7 @@
   <script type="module" src="js/portal-shell-entry.js?v=20261016-ui-review-2"></script>
   <script src="data/recruitments.js?v=20261016-2"></script>
   <script type="module" src="js/home-dashboard.js?v=20261016-ui-review-2"></script>
-  <script type="module" src="js/home-schedule.js?v=20261020-home-schedule-1"></script>
+  <script type="module" src="js/home-schedule.js?v=20261020-alerts-1"></script>
+  <script type="module" src="js/home-recruit-alerts.js?v=20261020-alerts-1"></script>
 </body>
 </html>
