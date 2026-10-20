@@ -66,9 +66,10 @@
 .practical-page #answer-form{margin:22px 0 12px}
 .practical-page #my-answer{border:1px solid #aebed7;border-radius:10px;background:#fff;min-height:50px;padding:12px;font:16px/1.65 ui-monospace,Consolas,monospace;width:100%}
 .practical-page #my-answer:disabled{color:#435577;background:#eef2f8;opacity:1;-webkit-text-fill-color:#435577}
-.practical-page .solve-actions{position:fixed;z-index:95;bottom:var(--keyboard-inset);left:0;right:0;margin:auto;max-width:944px;padding:8px 12px calc(10px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid #c8d6ee;box-shadow:0 -4px 20px rgba(11,23,57,.05)}
+.practical-page .solve-actions{display:grid;gap:12px;position:fixed;z-index:95;bottom:var(--keyboard-inset);left:0;right:0;margin:auto;max-width:944px;padding:12px 12px calc(12px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid #c8d6ee;box-shadow:0 -4px 20px rgba(11,23,57,.05)}
 .practical-page .solve-actions .button{width:100%;min-height:50px}
-.practical-page .bank-timer{font-size:14px;padding:0;margin:0 0 6px;background:none;text-align:center;font-weight:650}
+.practical-page .solve-actions .button:disabled{color:#526079;background:#eef1f6;border-color:#ccd3df;opacity:1}
+.practical-page .bank-timer{font-size:14px;padding:0;margin:0;background:none;text-align:center;font-weight:650}
 .practical-page.is-solving .learning-content{padding-bottom:150px}
 .practical-page.is-solving .study-footer{display:none}
 .practical-page .bank-result{padding:18px;margin-top:20px;background:#fff}
@@ -654,7 +655,7 @@
   }
 }
 
-/* 2026-10-05 staged solving flow: self-solve → hint at 60s → answer at 120s. */
+/* Staged solving flow: self-solve → hint at 30s → answer at 60s. */
 .practical-page .solve-hint{
   margin:22px 0 6px;
   padding:18px 20px;
@@ -705,7 +706,7 @@
 .practical-page .bank-timer.hint-stage{color:#315b91}
 .practical-page .bank-timer.revealed-stage{color:#315b39}
 
-/* Timed reveal status: keep the 120-second learning transition clear on PC and mobile. */
+/* Timed reveal status after the 60-second learning transition on PC and mobile. */
 .practical-page .timeout-note{
   margin:8px 0 18px;
   padding:12px 14px;

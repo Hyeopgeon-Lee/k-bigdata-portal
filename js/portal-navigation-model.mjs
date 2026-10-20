@@ -1,6 +1,6 @@
 import {categories, services, portalNavLinks} from './services.js?v=20261020-unified-shell-1';
 
-export const shellVersion = '20261021-no-study-toolbar-1';
+export const shellVersion = '20261021-practical-actions-1';
 export const portalPages = {
   index: {title:'통합 포털', group:null},
   coding: {title:'기초학습', group:'learning'},
