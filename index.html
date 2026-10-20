@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="css/home-ui.css?v=20261020-balanced-grid-2">
   <link rel="stylesheet" href="css/home-alerts.css?v=20261020-grade3-final-2">
   <link rel="stylesheet" href="css/home-grade.css?v=20261020-grade-2">
+  <link rel="stylesheet" href="css/home-engagement.css?v=20261020-engagement-1">
 </head>
 <body data-portal-home>
   <a class="skip-link" href="#main-content">본문으로 바로가기</a>
@@ -62,6 +63,36 @@
           <div id="home-recruit-alert-list" aria-live="polite" aria-atomic="true">
             <p class="home-alert-empty">채용 마감일을 확인하고 있습니다…</p>
           </div>
+        </section>
+      </div>
+    </section>
+
+    <section class="home-today container" id="home-today" aria-labelledby="home-today-title">
+      <div class="home-today-heading">
+        <div>
+          <p class="home-today-kicker">TODAY'S PLAN</p>
+          <h2 id="home-today-title">오늘의 할 일</h2>
+          <p id="home-today-subtitle">지금 필요한 활동을 하나씩 시작해 보세요.</p>
+        </div>
+        <span class="home-today-caption">하루 3가지 작은 목표</span>
+      </div>
+      <div class="home-today-layout">
+        <section class="home-today-feature" aria-labelledby="home-today-recommendation">
+          <p class="home-today-feature-kicker">먼저 시작할 활동</p>
+          <h3 id="home-today-recommendation">실기 코딩·SQL 문제 2개 풀기</h3>
+          <p id="home-today-recommendation-detail">학년에 맞는 학습 활동을 추천합니다.</p>
+          <a id="home-today-primary" class="home-today-primary" href="practical.html">지금 시작하기 →</a>
+        </section>
+        <section class="home-today-tracker" aria-labelledby="home-today-tracker-title">
+          <div class="home-today-tracker-head">
+            <h3 id="home-today-tracker-title">오늘의 진행 현황</h3>
+            <strong id="home-today-count" class="home-today-count" aria-live="polite">0 / 3</strong>
+          </div>
+          <progress id="home-today-progress" class="home-today-progress" value="0" max="3" aria-label="오늘의 할 일 완료 현황"></progress>
+          <ul id="home-today-list" class="home-today-list">
+            <li class="home-today-task"><a href="practical.html">실기 문제풀이 시작하기 →</a></li>
+          </ul>
+          <p class="home-today-status" id="home-today-status">진행 현황은 이 브라우저에만 저장됩니다.</p>
         </section>
       </div>
     </section>
@@ -199,6 +230,7 @@
   <script type="module" src="js/portal-shell-entry.js?v=20261016-ui-review-2"></script>
   <script src="data/recruitments.js?v=20261016-2"></script>
   <script type="module" src="js/home-dashboard.js?v=20261020-grade3-final-1"></script>
+  <script type="module" src="js/home-engagement.js?v=20261020-engagement-1"></script>
   <script type="module" src="js/home-schedule.js?v=20261020-sync-bridge-1"></script>
   <script type="module" src="js/home-recruit-alerts.js?v=20261020-grade3-final-1"></script>
 </body>
