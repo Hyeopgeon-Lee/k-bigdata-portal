@@ -67,7 +67,9 @@ const makeEvent = (event,today) => {
   date.append(create("span","home-schedule-day",start.slice(5).replace("-",".")));
   const days=Math.round((startDay(event.startDate)-startDay(today))/86400000);
   const countdown=event.startDate<today?"진행 중":days===0?"오늘":"D-"+days;
-  date.append(create("span","home-schedule-countdown",countdown));
+  const countdownEl=create("span","home-schedule-countdown",countdown);
+  countdownEl.dataset.urgency=days<=3?"critical":days<=7?"soon":"normal";
+  date.append(countdownEl);
   const body=create("span","home-schedule-text");
   body.append(create("span","home-schedule-title",event.title));
   const meta=create("span","home-schedule-meta");
@@ -87,7 +89,7 @@ const render = events => {
     const activeA=a.startDate<=today?0:1,activeB=b.startDate<=today?0:1;
     return activeA-activeB || a.startDate.localeCompare(b.startDate) ||
       a.startTime.localeCompare(b.startTime) || a.title.localeCompare(b.title,"ko");
-  }).slice(0,3);
+  }).slice(0,2);
   if(!upcoming.length){empty("현재 공개된 예정 일정이 없습니다.");return;}
   const list=create("ul","home-schedule-items");
   for(const event of upcoming)list.append(makeEvent(event,today));
