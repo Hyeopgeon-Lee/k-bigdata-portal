@@ -8,7 +8,10 @@ body[data-portal-home] .dashboard-hero{padding-top:26px;padding-bottom:18px}
 body[data-portal-home] .dashboard-intro{margin-bottom:20px}
 body[data-portal-home] .dashboard-intro h1{font-size:clamp(28px,3.1vw,40px);letter-spacing:-.04em;margin-bottom:5px}
 body[data-portal-home] .dashboard-intro p:last-child{font-size:15px}
-body[data-portal-home] .dashboard-main{grid-template-columns:minmax(0,1.44fr) minmax(280px,1fr);gap:16px}
+body[data-portal-home] .dashboard-main{display:grid;grid-template-columns:minmax(0,1.44fr) minmax(280px,1fr);grid-template-areas:"primary schedule" "primary side";grid-template-rows:max-content max-content;gap:16px;align-items:start}
+body[data-portal-home] .dashboard-primary{grid-area:primary}
+body[data-portal-home] .dashboard-schedule{grid-area:schedule}
+body[data-portal-home] .dashboard-side{grid-area:side}
 body[data-portal-home] .dashboard-primary,body[data-portal-home] .dashboard-side{display:grid;gap:14px;align-content:start;min-width:0}
 body[data-portal-home] .dashboard-start,body[data-portal-home] .dashboard-panel,body[data-portal-home] .portal-search{
   border:1px solid #d9e3f1;border-radius:16px;background:#fff;padding:20px;box-shadow:0 3px 14px rgba(20,45,112,.035);min-width:0
@@ -38,6 +41,21 @@ body[data-portal-home] #search-status{margin:10px 0 0;min-height:0;font-size:13p
 body[data-portal-home] #search-results{margin-top:10px}
 body[data-portal-home] .search-group{min-width:0}
 body[data-portal-home] .dashboard-panel h2{margin-bottom:12px}
+/* Read-only department schedule preview: PC right rail, mobile above primary actions. */
+body[data-portal-home] .dashboard-schedule .dashboard-panel-heading{align-items:center;margin-bottom:12px}
+body[data-portal-home] .dashboard-schedule .dashboard-panel-heading h2{margin:0}
+body[data-portal-home] .home-schedule-items{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+body[data-portal-home] .home-schedule-link{display:flex;align-items:center;gap:11px;min-height:70px;padding:9px 10px;border:1px solid #e0e8f4;border-radius:10px;background:#fafcff;color:#172f55;text-decoration:none;transition:background .16s,border-color .16s}
+body[data-portal-home] .home-schedule-link:hover,body[data-portal-home] .home-schedule-link:focus-visible{background:#edf4ff;border-color:#7e9dcf}
+body[data-portal-home] .home-schedule-date{flex:0 0 58px;min-height:51px;border-radius:9px;background:#eaf1fc;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:5px 3px;text-align:center}
+body[data-portal-home] .home-schedule-day{font-size:13px;font-weight:800;color:#16447f;line-height:1.2}
+body[data-portal-home] .home-schedule-countdown{font-size:11px;line-height:1.3;color:#2b598b;font-weight:750}
+body[data-portal-home] .home-schedule-text{flex:1;min-width:0;display:grid;gap:4px}
+body[data-portal-home] .home-schedule-title{font-size:14px;font-weight:800;line-height:1.45;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow-wrap:anywhere}
+body[data-portal-home] .home-schedule-meta{display:flex;flex-wrap:wrap;gap:4px 7px;align-items:center;font-size:12px;line-height:1.45;color:#5a6b83}
+body[data-portal-home] .home-schedule-category{color:#215399;font-weight:700}
+body[data-portal-home] .home-schedule-arrow{color:#426596;font-size:16px;flex:0 0 auto}
+body[data-portal-home] .dashboard-schedule-empty{margin:0;padding:17px 10px;border:1px dashed #d0dbea;border-radius:10px;background:#fafcff;color:#5d6b80;font-size:13px;line-height:1.6;text-align:center;word-break:keep-all}
 body[data-portal-home] .dashboard-highlights .dashboard-links li+li{border-top:1px solid #ebf0f7}
 body[data-portal-home] .dashboard-links a{min-height:48px;padding:9px 5px}
 body[data-portal-home] .dashboard-caption{font-size:12px;line-height:1.6}
@@ -85,7 +103,7 @@ body[data-portal-home] a:focus-visible{outline:3px solid #1ba7d4;outline-offset:
  body[data-portal-home] .main-nav a{padding:12px;font-size:14px;white-space:normal;min-height:44px}
 }
 @media(max-width:900px){
- body[data-portal-home] .dashboard-main{grid-template-columns:1fr}
+ body[data-portal-home] .dashboard-main{grid-template-columns:1fr;grid-template-areas:"schedule" "primary" "side";grid-template-rows:auto}
  body[data-portal-home] .dashboard-side{grid-template-columns:repeat(2,minmax(0,1fr))}
  body[data-portal-home] .dashboard-personal,body[data-portal-home] .dashboard-highlights{min-width:0}
 }
@@ -99,6 +117,7 @@ body[data-portal-home] a:focus-visible{outline:3px solid #1ba7d4;outline-offset:
  body[data-portal-home] .dashboard-intro h1{font-size:27px}
  body[data-portal-home] .dashboard-primary,body[data-portal-home] .dashboard-side{gap:11px}
  body[data-portal-home] .dashboard-side{grid-template-columns:1fr}
+ body[data-portal-home] .home-schedule-items > li:nth-child(n+3){display:none}
  body[data-portal-home] .dashboard-start,body[data-portal-home] .dashboard-panel,body[data-portal-home] .portal-search{padding:15px}
  body[data-portal-home] .dashboard-action-grid{gap:8px}
  body[data-portal-home] .dashboard-action{min-height:148px;padding:13px}
