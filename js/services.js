@@ -26,6 +26,13 @@ export const categories = {
 };
 export const services = [
   {
+    id:"coding", name:"기초 코딩 350제", englishName:"CODING FOUNDATIONS",
+    category:"learning", url:"coding.html", icon:"book", accent:"blue", order:8.5,
+    description:"1학년 신입생을 위한 Java·C언어·Python·Ubuntu 기초 코딩 학습. 350문제 제작 목표이며 현재 예제 8문제를 제공합니다.",
+    shortDescription:"직접 코딩하고 줄별 해설·변수 값 변화를 학습하세요.",
+    tags:["Java","C언어","Python","Ubuntu","기초 코딩"], aliases:"신입생 기초코딩 350제 변수 추적 초보 프로그래밍 파이썬 C언어 자바 리눅스 한줄주석", featured:false
+  },
+  {
     id:"practical", name:"실기 코딩·SQL 문제은행", englishName:"PAPER FIRST PRACTICE",
     category:"learning", url:"practical.html", icon:"book", accent:"blue", order:9.5,
     description:"정보처리기사·산업기사 실기 C, Java, Python, SQL 비공식 복원기출을 직접 손으로 풀어보세요.",
@@ -301,6 +308,7 @@ export const portalNavLinks = [
   {id:"apply",label:"입사지원",group:"career"},
   {id:"alumni",label:"졸업생",group:"career"},
   {id:"certifications",label:"자격증",group:"learning"},
+  {id:"coding",label:"기초코딩",group:"learning"},
   {id:"practical",label:"실기",group:"learning"},
   {id:"interview",label:"기술면접",group:"learning"},
   {id:"docs",label:"공식문서",group:"learning"},
