@@ -59,3 +59,5 @@ body[data-portal-home] .dashboard-side{min-width:0}
 
 /* Only one of the second-column alert feeds is exposed at a time. */
 body[data-portal-home] #home-project-alert-list[hidden],body[data-portal-home] #home-recruit-alert-list[hidden]{display:none!important}
+
+body[data-portal-home] .home-schedule-grade{font-size:11px;font-weight:800;color:#36567d;background:#edf3fa;padding:1px 6px;border-radius:5px}
