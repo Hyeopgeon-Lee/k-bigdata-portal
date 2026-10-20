@@ -40,16 +40,12 @@ function annotate(source, traceDetail="", exampleInput="") {
       const changed=statement.match(/^(\*?[A-Za-z_]\w*(?:\[[^\]]+\])?(?:\.[A-Za-z_]\w*)?)\s*(?:\+=|-=|\*=|\/=|=(?!=)|\+\+|--)/);
       const variable=changed?.[1]||"";
       if(variable){
-        const hit=notes.find((note,index)=>!used.has(index)&&new RegExp("(?:^|[, ])"+variable.replace(/[.*+?^${}()|[\]\\]/g,"\\function annotate(source) {
-  return source.split("\n").map(line=>{
-    if(!line.trim())return line;
-    if(line.includes(" // "))return line;
-    return line+" // "+describeLine(line);
-  }).join("\n");
-}")+"\\s*[:=]").test(note));
-        if(hit){
-          used.add(notes.indexOf(hit));
-          comment+=". 예제 값 변화: "+hit.slice(0,88);
+        const hitIndex=notes.findIndex((note,index)=>!used.has(index)&&(
+          note.startsWith(variable+":")||note.startsWith(variable+"=")||note.includes(" "+variable+":")
+        ));
+        if(hitIndex>=0){
+          used.add(hitIndex);
+          comment+=". 예제 값 변화: "+notes[hitIndex].slice(0,88);
         }
       }
     }
