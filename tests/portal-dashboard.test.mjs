@@ -31,7 +31,7 @@ assert.equal((html.match(/class="dashboard-action-favorite"/g)||[]).length,4);
 assert.ok(html.includes('css/home-ui.css?v=20261020-balanced-grid-2'));
 assert.ok(html.includes('js/home-schedule.js?v=20261020-alerts-1'));
 assert.ok(html.includes('js/home-recruit-alerts.js?v=20261020-alerts-1'));
-assert.ok(html.includes('css/home-alerts.css?v=20261020-alerts-1'));
+assert.ok(html.includes('css/home-alerts.css?v=20261020-alerts-2'));
 assert.ok(html.includes('class="dashboard-panel dashboard-schedule home-alert-card"'));
 assert.ok(html.indexOf('home-alerts-title')<html.indexOf('hero-title'),'top alerts precede hero');
 assert.ok(html.indexOf('dashboard-schedule-title')<html.indexOf('dashboard-action-grid'),'schedule card precedes quick actions in DOM');
