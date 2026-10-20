@@ -13,8 +13,8 @@ const futureDay=offset=>{
 };
 const sampleEvents=[
  {title:"오늘 학과 일정",category:"academic",startDate:futureDay(0),endDate:futureDay(0),startTime:"09:00",published:true},
- {title:"내일 프로젝트 일정",category:"project",startDate:futureDay(1),endDate:futureDay(1),startTime:"13:30",published:true},
- {title:"3일 뒤 취업 일정",category:"employment",startDate:futureDay(3),endDate:futureDay(3),startTime:"16:00",published:true},
+ {title:"[1학년] 내일 프로젝트 일정",category:"project",startDate:futureDay(1),endDate:futureDay(1),startTime:"13:30",published:true},
+ {title:"[2학년] 3일 뒤 취업 일정",category:"employment",startDate:futureDay(3),endDate:futureDay(3),startTime:"16:00",published:true},
  {title:"비공개 일정은 표시되지 않음",category:"event",startDate:futureDay(2),endDate:futureDay(2),published:false}
 ];
 const mockPublicSchedule=page=>page.route("https://script.google.com/macros/s/**",route=>{
@@ -58,6 +58,9 @@ try{
   assert.equal(await page.locator('.home-recruit-item').count(),2,'dated recruitment preview shows 2 entries');
   assert.equal(await page.locator('#home-recruit-alert-list').isVisible(),false,'first grade hides recruiting '+width);
   assert.equal(await page.locator('#home-project-alert-list').isVisible(),true,'first grade shows projects '+width);
+  assert.ok((await page.locator('#home-project-alert-list').innerText()).includes('내일 프로젝트 일정'),'1st-grade project event shown '+width);
+  assert.ok(!(await page.locator('#home-project-alert-list').innerText()).includes('[1학년]'),'legacy grade tag is hidden in display '+width);
+  assert.ok(!(await page.locator('#home-schedule-list').innerText()).includes('3일 뒤 취업 일정'),'1st grade excludes 2nd grade employment '+width);
   assert.ok((await page.locator('#dashboard-schedule-title').innerText()).includes('학습'),'first grade academic heading '+width);
   assert.equal(await page.locator('body').evaluate(()=>{
    const nodes=['.dashboard-schedule','.home-alert-recruit','.dashboard-start','.portal-search','.dashboard-highlights','.dashboard-personal'].map(s=>document.querySelector(s));
@@ -87,6 +90,8 @@ try{
   assert.ok((await page.locator('#dashboard-highlights-title').innerText()).includes('취업'),'grade-2 continuation '+width);
   assert.equal(await page.locator('#home-recruit-alert-list').isVisible(),true,'second grade shows recruiting '+width);
   assert.equal(await page.locator('#home-project-alert-list').isVisible(),false,'second grade hides project card '+width);
+  assert.ok((await page.locator('#home-schedule-list').innerText()).includes('3일 뒤 취업 일정'),'2nd grade employment visible '+width);
+  assert.ok(!(await page.locator('#home-schedule-list').innerText()).includes('[2학년]'),'legacy grade tag stripped on display '+width);
   assert.ok((await page.locator('#dashboard-schedule-title').innerText()).includes('취업'),'second grade academic heading '+width);
   const secondDimensions=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,viewport:document.documentElement.clientWidth}));
   assert.ok(secondDimensions.scroll<=secondDimensions.viewport+2,'second-grade horizontal overflow at '+width+': '+JSON.stringify(secondDimensions));
