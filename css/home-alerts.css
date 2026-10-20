@@ -115,3 +115,6 @@ body[data-portal-home] .home-practical-favorite:focus-visible,body[data-portal-h
  body[data-portal-home] .home-practical-link{width:100%}
  body[data-portal-home] .home-practical-cert-link{min-height:36px}
 }
+
+/* Do not hide the third first-year entry on phones: override legacy rail truncation. */
+@media(max-width:767px){body[data-portal-home][data-home-grade="1"] .home-schedule-items > li:nth-child(n+3){display:block}}
