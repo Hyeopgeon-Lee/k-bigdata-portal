@@ -95,6 +95,22 @@ function classify_(label, title) {
   if (/개강|종강|휴강|수강|학사|보강|등록/.test(title)) return "academic";
   return "event";
 }
+/**
+ * 캘린더 설명의 독립된 한 줄에서만 학년을 추출합니다.
+ * 예: 대상학년: 1학년 / 대상학년: 2학년 / 대상학년: 전체
+ * 다른 메모 내용은 시트·공개 API·캐시에 보관하지 않습니다.
+ * 값이 없거나 잘못된 경우 null을 반환하여 기존 제목 태그를 유지합니다.
+ */
+function targetGradeFromDescription_(description) {
+  const lines = String(description || "").split(/\r?\n/);
+  for (const line of lines) {
+    const match = line.match(/^[ \t]*대상[ \t]*학년[ \t]*[:：][ \t]*(1학년|2학년|전체)[ \t]*\r?$/);
+    if (!match) continue;
+    return match[1] === "1학년" ? "1" : match[1] === "2학년" ? "2" : "all";
+  }
+  return null;
+}
+
 function eventPublicRow_(event) {
   if (privateEvent_(event)) return null;
   const original = String(event.getTitle() || "");
@@ -102,6 +118,10 @@ function eventPublicRow_(event) {
   if (!match) return null;
   const title = match[3].trim().slice(0,120);
   if (!title) return null;
+  // 메모는 (학과) 접두어 및 비공개 여부를 검증한 뒤에만 읽습니다.
+  // 메모의 대상학년 한 줄이 제목 태그보다 우선합니다.
+  const targetGrade = targetGradeFromDescription_(event.getDescription()) ||
+    (match[2] === "1학년" ? "1" : match[2] === "2학년" ? "2" : "all");
   // 캘린더 제목이 수식처럼 시작해도 Sheets에서 실행되지 않도록 합니다.
   const sheetSafeTitle = /^[=+@-]/.test(title) ? "'" + title : title;
   const start = event.getStartTime();
@@ -123,7 +143,7 @@ function eventPublicRow_(event) {
     false,
     true,
     event.getTag(PORTAL_SOURCE_TAG) === "portal-v1" ? "portal" : "calendar",
-    match[2] === "1학년" ? "1" : match[2] === "2학년" ? "2" : "all"
+    targetGrade
   ];
 }
 
