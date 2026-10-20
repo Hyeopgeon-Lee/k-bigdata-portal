@@ -1,5 +1,5 @@
 // Main dashboard: favorites, recent shortcuts and published recruitment deadlines.
-import {services} from "./services.js?v=20261016-nav-search-filters-1";
+import {services} from "./services.js?v=20261020-coding-1";
 import {getFavorites,getRecent,toggleFavorite} from "./portal-personal.js?v=20261016-dashboard-1";
 const $=selector=>document.querySelector(selector);
 const esc=v=>String(v??"").replace(/[&<>'"]/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[char]));
@@ -17,7 +17,7 @@ const gradeLayouts=Object.freeze({
  "1":{
   title:"1학년, 오늘 무엇을 배울까요?",
   lead:"개발 기초부터 프로젝트까지, 필요한 학습 서비스를 바로 시작하세요.",
-  actions:["docs","project-guide","jobs","certifications"],
+  actions:["coding","docs","jobs","certifications"],
   quickTitle:"학습 바로 시작하기",
   highlightTitle:"이어서 학습하기"
  },
@@ -30,6 +30,7 @@ const gradeLayouts=Object.freeze({
  }
 });
 const quickCopy=Object.freeze({
+ coding:["기초 코딩 350제","Java · C · Python · Ubuntu"],
  docs:["개발 공식문서","Spring Boot · 클라우드 · AI"],
  jobs:["IT 직무 가이드","목표 직무 탐색"],
  "project-guide":["프로젝트 가이드","기획 · 설계 · 구현"],
@@ -41,6 +42,7 @@ const quickCopy=Object.freeze({
  ready:["취업 준비 점검","GitHub · 이력서 · 포트폴리오"]
 });
 const quickGlyph=Object.freeze({
+ coding:'<path d="m8 8-4 4 4 4M16 8l4 4-4 4M13 5l-2 14"/>',
  docs:'<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5V4.5A2.5 2.5 0 0 1 6.5 2Z"/>',
  jobs:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
  "project-guide":'<path d="m8 8-4 4 4 4M16 8l4 4-4 4M13 5l-2 14"/>',
