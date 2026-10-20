@@ -30,7 +30,7 @@ const gradeLayouts=Object.freeze({
  }
 });
 const quickCopy=Object.freeze({
- coding:["기초 코딩 350제","Java · C · Python · Ubuntu"],
+ coding:["기초 프로그래밍·명령어 350제","Java · C · Python · Ubuntu"],
  docs:["개발 공식문서","Spring Boot · 클라우드 · AI"],
  jobs:["IT 직무 가이드","목표 직무 탐색"],
  "project-guide":["프로젝트 가이드","기획 · 설계 · 구현"],
