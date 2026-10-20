@@ -76,7 +76,7 @@ function renderGrade(){
  if(lead)lead.textContent=layout.lead;
  if(quick)quick.textContent=layout.quickTitle;
  if(highlights)highlights.textContent=layout.highlightTitle;
- for(const button of document.querySelectorAll("[data-home-grade]")){
+ for(const button of document.querySelectorAll("button[data-home-grade]")){
   const pressed=button.dataset.homeGrade===selectedGrade;
   button.setAttribute("aria-pressed",String(pressed));
  }
