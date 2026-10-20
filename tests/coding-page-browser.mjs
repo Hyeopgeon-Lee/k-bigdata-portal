@@ -25,11 +25,13 @@ try{
     assert.ok(bounds.content<=bounds.viewport+2,"no horizontal overflow width "+width+" "+JSON.stringify(bounds));
 
     await page.locator("#coding-link-button").click();
+    await page.waitForFunction(()=>document.querySelector("#coding-share-status")?.textContent?.includes("문제 링크를 복사"),null,{timeout:7000});
     assert.match(await page.locator("#coding-share-status").innerText(),/문제 링크를 복사/);
     const link=await page.evaluate(()=>navigator.clipboard.readText());
     assert.equal(new URL(link).searchParams.get("id"),"LINUX-002");
 
     await page.locator("#coding-share-button").click();
+    await page.waitForFunction(()=>document.querySelector("#coding-share-status")?.textContent?.includes("링크를 복사"),null,{timeout:7000});
     assert.match(await page.locator("#coding-share-status").innerText(),/링크를 복사/);
     const shareText=await page.evaluate(()=>navigator.clipboard.readText());
     assert.ok(shareText.includes("LINUX-002"),"problem share must preserve unique question link");
