@@ -1,0 +1,23 @@
+name: Python coding dataset QA
+on:
+  push:
+    paths:
+      - "data/coding-python-*.js"
+      - "scripts/qa-coding-python.mjs"
+      - ".github/workflows/python-coding-qa.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  python-coding-qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Python 3.12 compilation and input-output tests
+        run: node scripts/qa-coding-python.mjs
