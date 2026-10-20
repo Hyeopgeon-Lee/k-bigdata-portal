@@ -31,6 +31,7 @@ assert.ok(html.includes('name="targetGrade"'),'registration requires target grad
 assert.ok(html.includes('id="schedule-grade-filters"'),'calendar grade filters present');
 assert.ok(js.includes('unpackGrade'),'supports pre-upgrade tagged schedule entries');
 assert.ok(js.includes('values.targetGrade'),'audience submitted');
+assert.ok(js.includes('registrationTitle.maxLength'),'legacy grade-tag input length safety');
 assert.ok(js.includes('activeTargetGrade'),'calendar grade filter implemented');
 
 assert.ok(!html.includes('Google 캘린더에서 제목이'));
