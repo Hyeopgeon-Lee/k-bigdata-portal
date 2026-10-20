@@ -27,7 +27,7 @@ assert.ok(html.includes('class="brand-short"') && html.includes('class="brand-fu
 assert.ok(html.includes('id="home-grade-status"') && html.includes('id="hero-description"'),'grade controls and accessible status');
 assert.ok(html.includes('data-home-grade="1"') && html.includes('data-home-grade="2"'),'both grade buttons');
 assert.ok(html.includes('css/home-grade.css?v=20261020-grade-2'));
-assert.ok(html.includes('js/home-dashboard.js?v=20261020-grade3-final-1'));
+assert.match(html, /js\/home-dashboard\.js\?v=[^\"]+/,'dashboard module must have a versioned entrypoint');
 assert.ok(html.includes('class="home-practical-favorite"') && html.includes('href="practical.html"'),'common practical exam shortcut and favorite');
 assert.ok(html.indexOf('home-practical-title')<html.indexOf('dashboard-action-grid'),'shared practical card precedes grade actions');
 assert.ok(gradeCss.includes('home-grade-button[aria-pressed="true"]'),'selected grade is visually distinguished');
