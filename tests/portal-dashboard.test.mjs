@@ -6,6 +6,8 @@ const read=path=>readFileSync(new URL('../'+path,import.meta.url),'utf8');
 const html=read('index.html');
 const css=read('css/portal-ux.css');
 const homeCss=read('css/home-ui.css');
+const alertCss=read('css/home-alerts.css');
+const homeRecruit=read('js/home-recruit-alerts.js');
 const app=read('js/app.js');
 const searchUI=read('js/search-ui.js');
 const dashboard=read('js/home-dashboard.js');
@@ -13,7 +15,7 @@ const homeSchedule=read('js/home-schedule.js');
 const shell=read('js/portal-shell.js');
 const navigation=read('js/portal-ux.js');
 
-for(const id of ['home-schedule-list','dashboard-highlights','favorite-services','recent-services','services','portal-query'])
+for(const id of ['home-alerts-title','home-schedule-list','home-recruit-alert-list','dashboard-highlights','favorite-services','recent-services','services','portal-query'])
   assert.ok(html.includes('id="'+id+'"'),id+' should exist');
 for(const url of ['practical.html','interview.html','recruit.html','https://ready.k-bigdata.kr/'])
   assert.ok(html.includes('href="'+url+'"'),url+' should have a direct action');
@@ -27,12 +29,21 @@ assert.ok(html.includes('id="search-status" role="status"'));
 assert.ok(!html.includes('id="service-groups" aria-live'));
 assert.equal((html.match(/class="dashboard-action-favorite"/g)||[]).length,4);
 assert.ok(html.includes('css/home-ui.css?v=20261020-balanced-grid-2'));
-assert.ok(html.includes('js/home-schedule.js?v=20261020-home-schedule-1'));
-assert.ok(html.includes('class="dashboard-panel dashboard-schedule"'));
-assert.ok(html.indexOf('dashboard-schedule-title')<html.indexOf('dashboard-action-grid'),'schedule card is first in mobile document flow');
+assert.ok(html.includes('js/home-schedule.js?v=20261020-alerts-1'));
+assert.ok(html.includes('js/home-recruit-alerts.js?v=20261020-alerts-1'));
+assert.ok(html.includes('css/home-alerts.css?v=20261020-alerts-1'));
+assert.ok(html.includes('class="dashboard-panel dashboard-schedule home-alert-card"'));
+assert.ok(html.indexOf('home-alerts-title')<html.indexOf('hero-title'),'top alerts precede hero');
+assert.ok(html.indexOf('dashboard-schedule-title')<html.indexOf('dashboard-action-grid'),'schedule card precedes quick actions in DOM');
+assert.ok(html.indexOf('home-recruit-alert-list')<html.indexOf('dashboard-action-grid'),'recruitment alerts are above quick actions');
 assert.ok(homeCss.includes('grid-template-areas:"start schedule" "start highlights" "search personal"'));
 assert.ok(homeCss.includes('grid-template-areas:"schedule" "primary" "side"'));
-assert.ok(homeCss.includes('.home-schedule-items > li:nth-child(n+3){display:none}'));
+assert.ok(homeSchedule.includes('.slice(0,2);'),'top preview renders two calendar entries');
+assert.ok(alertCss.includes('grid-template-columns:repeat(2,minmax(0,1fr))'),'desktop two-column alerts');
+assert.ok(alertCss.includes('grid-template-columns:minmax(0,1fr)'),'mobile one-column alerts');
+assert.ok(alertCss.includes('grid-template-areas:"start highlights" "start personal" "search search"'),'dashboard no longer reserves a schedule cell');
+assert.ok(homeRecruit.includes('deadlineType==="DATE"'),'only dated recruiting entries get D-Day');
+assert.ok(homeRecruit.includes('recruit.html?job='),'recruit deep link');
 assert.ok(homeSchedule.includes('event.published===true'),'only published events used');
 assert.ok(homeSchedule.includes('schedule.html?date='),'calendar deep link');
 assert.ok(homeSchedule.includes('kbigdata:published-schedule:v1:'),'shared public cache');
