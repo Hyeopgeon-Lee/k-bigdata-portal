@@ -7,6 +7,10 @@ on:
       - "css/home-ui.css"
       - "css/home-alerts.css"
       - "css/home-grade.css"
+      - "css/home-engagement.css"
+      - "js/home-engagement.js"
+      - "js/home-engagement-core.mjs"
+      - "tests/home-engagement.test.mjs"
       - "js/app.js"
       - "js/home-dashboard.js"
       - "js/home-schedule.js"
@@ -37,10 +41,14 @@ jobs:
         run: node tests/portal-dashboard.test.mjs
       - name: Validate calendar memo grade fallback
         run: node tests/calendar-grade-bridge.test.mjs
+      - name: Validate student daily engagement goals
+        run: node tests/home-engagement.test.mjs
       - name: Check home JavaScript syntax
         run: |
           node --check js/app.js
           node --check js/home-dashboard.js
+          node --check js/home-engagement.js
+          node --check js/home-engagement-core.mjs
           node --check js/home-schedule.js
           node --check data/calendar-grade-bridge.js
           node --check js/home-recruit-alerts.js
