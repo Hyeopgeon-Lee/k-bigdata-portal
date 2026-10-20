@@ -61,3 +61,6 @@ body[data-portal-home] .dashboard-side{min-width:0}
 body[data-portal-home] #home-project-alert-list[hidden],body[data-portal-home] #home-recruit-alert-list[hidden]{display:none!important}
 
 body[data-portal-home] .home-schedule-grade{font-size:11px;font-weight:800;color:#36567d;background:#edf3fa;padding:1px 6px;border-radius:5px}
+
+/* Career-phase students should see job deadlines before course dates. */
+body[data-portal-home][data-home-grade="2"] .home-alert-recruit{order:-1}
