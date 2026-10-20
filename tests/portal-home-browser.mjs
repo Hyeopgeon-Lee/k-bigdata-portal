@@ -56,6 +56,9 @@ try{
   if(width<=767)assert.ok(recruitAlerts.y>schedule.y,'mobile alerts stack vertically '+width);
   else assert.ok(recruitAlerts.x>schedule.x && Math.abs(recruitAlerts.y-schedule.y)<2,'desktop/tablet alerts side by side '+width);
   assert.equal(await page.locator('.home-recruit-item').count(),2,'dated recruitment preview shows 2 entries');
+  assert.equal(await page.locator('#home-recruit-alert-list').isVisible(),false,'first grade hides recruiting '+width);
+  assert.equal(await page.locator('#home-project-alert-list').isVisible(),true,'first grade shows projects '+width);
+  assert.ok((await page.locator('#dashboard-schedule-title').innerText()).includes('학습'),'first grade academic heading '+width);
   assert.equal(await page.locator('body').evaluate(()=>{
    const nodes=['.dashboard-schedule','.home-alert-recruit','.dashboard-start','.portal-search','.dashboard-highlights','.dashboard-personal'].map(s=>document.querySelector(s));
    return nodes.every((node,i)=>!i||Boolean(nodes[i-1].compareDocumentPosition(node)&Node.DOCUMENT_POSITION_FOLLOWING));
@@ -82,6 +85,9 @@ try{
   assert.equal(await page.locator('.dashboard-action[href="recruit.html"]').count(),1,'grade-2 recruitment quick action '+width);
   assert.equal(await page.locator('.dashboard-action[href="https://apply.k-bigdata.kr/"]').count(),1,'grade-2 application quick action '+width);
   assert.ok((await page.locator('#dashboard-highlights-title').innerText()).includes('취업'),'grade-2 continuation '+width);
+  assert.equal(await page.locator('#home-recruit-alert-list').isVisible(),true,'second grade shows recruiting '+width);
+  assert.equal(await page.locator('#home-project-alert-list').isVisible(),false,'second grade hides project card '+width);
+  assert.ok((await page.locator('#dashboard-schedule-title').innerText()).includes('취업'),'second grade academic heading '+width);
   const secondDimensions=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,viewport:document.documentElement.clientWidth}));
   assert.ok(secondDimensions.scroll<=secondDimensions.viewport+2,'second-grade horizontal overflow at '+width+': '+JSON.stringify(secondDimensions));
   await page.screenshot({path:'ui-screenshots/home-grade2-'+width+'.png',fullPage:true});
