@@ -10,8 +10,18 @@ function registrationInput_(p) {
     throw new Error("등록 요청을 확인할 수 없습니다. 다시 시도해 주세요.");
   }
   if (String(p.website || "") !== "") throw new Error("등록 요청을 확인할 수 없습니다.");
-  const title = String(p.title || "").trim()
+  const rawTitle = String(p.title || "").trim()
     .replace(/^(?:\((?:학과|하과)\)\s*)+/, "").replace(/\s+/g, " ").trim();
+  // Also understand grade tags embedded by pre-upgrade clients. Old deployed
+  // Apps Script simply stores them in the Calendar title; new code promotes
+  // them to the public targetGrade field without changing the display title.
+  const tagged = rawTitle.match(/^\[(1학년|2학년)\]\s*(.*)$/);
+  const title = (tagged ? tagged[2] : rawTitle).trim();
+  const explicitGrade=String(p.targetGrade || "");
+  if (explicitGrade && !["all","1","2"].includes(explicitGrade)) {
+    throw new Error("대상 학년을 확인해 주세요.");
+  }
+  const targetGrade=explicitGrade || (tagged ? (tagged[1]==="1학년"?"1":"2") : "all");
   if (!title || title.length > 100 || /[\x00-\x1f\x7f]/.test(title)) {
     throw new Error("일정명은 1~100자로 입력해 주세요.");
   }
@@ -47,7 +57,7 @@ function registrationInput_(p) {
     end = new Date(String(p.endDate) + "T" + time(p.endTime) + ":00+09:00");
     if (end <= start) throw new Error("종료 시간은 시작 시간보다 늦어야 합니다.");
   }
-  return {title:"(학과) [" + label + "] " + title, start:start, end:end, allDay:allDay};
+  return {title:"(학과) [" + label + "] " + (targetGrade==="all"?"":"["+(targetGrade==="1"?"1학년":"2학년")+"] ") + title, start:start, end:end, allDay:allDay};
 }
 
 function registerPublicSchedule_(p) {
