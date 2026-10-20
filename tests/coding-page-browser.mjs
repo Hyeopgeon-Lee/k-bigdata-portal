@@ -21,9 +21,52 @@ try{
     assert.equal(await page.locator("#coding-link-button").isVisible(),true);
     assert.equal(await page.locator("#coding-report-button").isVisible(),true);
     assert.ok(await page.locator("#coding-answer").isHidden(),"answer must start hidden");
+    await page.locator(".portal-service-nav.portal-nav-compact").waitFor({timeout:12000});
+    const codingNav=await page.evaluate(()=>{
+      const nav=document.querySelector(".portal-nav-current");
+      const selected=nav.querySelector('a[aria-current="page"]');
+      const css=getComputedStyle(selected);
+      const header=getComputedStyle(document.querySelector(".coding-study-header"));
+      return {
+        heading:nav.querySelector(".portal-nav-title").textContent,
+        tabs:[...nav.querySelectorAll(".portal-nav-items a")].map(a=>a.textContent),
+        active:selected.textContent,
+        buttonStyle:{background:css.backgroundColor,color:css.color,minHeight:css.minHeight,borderRadius:css.borderRadius},
+        headerDisplay:header.display,headerHeight:document.querySelector(".coding-study-header").getBoundingClientRect().height
+      };
+    });
+    assert.equal(codingNav.heading,"학습 · 역량");
+    assert.equal(codingNav.active,"기초학습");
+    const practicePage=await context.newPage();
+    await practicePage.goto("http://127.0.0.1:8765/practical.html",{waitUntil:"domcontentloaded"});
+    await practicePage.locator(".portal-service-nav.portal-nav-compact").waitFor({timeout:12000});
+    const practicalNav=await practicePage.evaluate(()=>{
+      const nav=document.querySelector(".portal-nav-current");
+      const selected=nav.querySelector('a[aria-current="page"]');
+      const css=getComputedStyle(selected);
+      const header=getComputedStyle(document.querySelector(".study-header"));
+      return {
+        heading:nav.querySelector(".portal-nav-title").textContent,
+        tabs:[...nav.querySelectorAll(".portal-nav-items a")].map(a=>a.textContent),
+        active:selected.textContent,
+        buttonStyle:{background:css.backgroundColor,color:css.color,minHeight:css.minHeight,borderRadius:css.borderRadius},
+        headerDisplay:header.display,headerHeight:document.querySelector(".study-header").getBoundingClientRect().height
+      };
+    });
+    assert.equal(practicalNav.heading,codingNav.heading,"matching learning group heading "+width);
+    assert.deepEqual(practicalNav.tabs,codingNav.tabs,"matching learning navigation buttons "+width);
+    assert.equal(practicalNav.active,"실기");
+    assert.deepEqual(practicalNav.buttonStyle,codingNav.buttonStyle,"matching active navigation button styles "+width);
+    assert.equal(practicalNav.headerDisplay,codingNav.headerDisplay,"matching responsive toolbar visibility "+width);
+    if(width<=900)assert.equal(practicalNav.headerHeight,codingNav.headerHeight,"matching mobile study toolbar height "+width);
+    await practicePage.close();
     const bounds=await page.evaluate(()=>({content:document.documentElement.scrollWidth,viewport:document.documentElement.clientWidth}));
     assert.ok(bounds.content<=bounds.viewport+2,"no horizontal overflow width "+width+" "+JSON.stringify(bounds));
 
+    if(width<=900){
+      await page.locator("#coding-progress-jump").click();
+      assert.equal(await page.locator("#coding-summary").evaluate(el=>document.activeElement===el),true,"progress button moves focus to study status");
+    }
     await page.locator("#coding-link-button").click();
     await page.waitForFunction(()=>document.querySelector("#coding-share-status")?.textContent?.includes("문제 링크를 복사"),null,{timeout:7000});
     assert.match(await page.locator("#coding-share-status").innerText(),/문제 링크를 복사/);
@@ -67,5 +110,5 @@ try{
     await context.close();
   }
   assert.deepEqual(failures,[],"no JavaScript runtime errors in learning UI");
-  console.log("PASS: learning page 360/390/430/768/1280, no overflow, share, link copy, error report deep link, language switching and saved drafts");
+  console.log("PASS: learning/practical navigation parity at 360/390/430/768/1280, sharing, reporting, layout and saved drafts");
 }finally{await browser.close();}
