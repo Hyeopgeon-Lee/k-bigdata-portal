@@ -12,9 +12,11 @@ const futureDay=offset=>{
  return date.toISOString().slice(0,10);
 };
 const sampleEvents=[
- {title:"오늘 학과 일정",category:"academic",startDate:futureDay(0),endDate:futureDay(0),startTime:"09:00",published:true},
+ {title:"[1학년] 오늘 학과 일정",category:"academic",startDate:futureDay(0),endDate:futureDay(0),startTime:"09:00",published:true},
  {title:"[1학년] 내일 프로젝트 일정",category:"project",startDate:futureDay(1),endDate:futureDay(1),startTime:"13:30",published:true},
+ {title:"1학년 시험 일정",targetGrade:"1",category:"exam",startDate:futureDay(2),endDate:futureDay(2),published:true},
  {title:"[2학년] 3일 뒤 취업 일정",category:"employment",startDate:futureDay(3),endDate:futureDay(3),startTime:"16:00",published:true},
+ {title:"모든 학년 공통 일정",targetGrade:"all",category:"event",startDate:futureDay(4),endDate:futureDay(4),published:true},
  {title:"비공개 일정은 표시되지 않음",category:"event",startDate:futureDay(2),endDate:futureDay(2),published:false}
 ];
 const mockPublicSchedule=page=>page.route("https://script.google.com/macros/s/**",route=>{
@@ -33,35 +35,39 @@ try{
   await page.goto('http://127.0.0.1:8765/index.html',{waitUntil:'domcontentloaded'});
   await page.locator('.service-card').first().waitFor({timeout:12000});
   assert.ok(await page.locator('.service-card').count()>=13,'service directory must render at '+width);
-  assert.equal(await page.locator('.dashboard-action-favorite').count(),4,'quick favorite actions');
+  assert.equal(await page.locator('.dashboard-action-favorite').count(),4,'grade-specific quick favorite actions');
+  assert.equal(await page.locator('.home-practical-favorite').count(),1,'common practical exam favorite');
+  assert.equal(await page.locator('.home-practical-link[href="practical.html"]').count(),1,'common practical exam action');
   assert.equal(await page.locator('button[data-home-grade="1"]').getAttribute('aria-pressed'),'true','default first-grade dashboard '+width);
   assert.ok((await page.locator('#hero-title').innerText()).includes('1학년'),'first-grade heading '+width);
   assert.equal(await page.locator('.dashboard-action[href="docs.html"]').count(),1,'first-grade documentation action '+width);
   assert.equal(await page.locator('.dashboard-action[href="project-guide.html"]').count(),1,'first-grade project action '+width);
+  assert.equal(await page.locator('.dashboard-action[href="certifications.html"]').count(),1,'first-grade certification guide '+width);
+  assert.equal(await page.locator('.dashboard-action[href="practical.html"]').count(),0,'practice is prominently shared instead of duplicated '+width);
 
   const search=await page.locator('.portal-search').boundingBox();
   const highlights=await page.locator('.dashboard-highlights').boundingBox();
   const actions=await page.locator('.dashboard-start').boundingBox();
   assert.ok(search&&highlights&&actions,'core dashboard regions must be visible');
-  await page.locator('.home-schedule-item').nth(1).waitFor({state:'attached',timeout:7000});
+  await page.locator('.home-schedule-item').nth(2).waitFor({state:'attached',timeout:7000});
   const schedule=await page.locator('.dashboard-schedule').boundingBox();
   assert.ok(schedule,'department schedule card visible at '+width);
-  assert.equal(await page.locator('.home-schedule-item').count(),2,'top section contains two published events');
-  assert.equal(await page.locator('.home-schedule-item:visible').count(),2,'two visible event alerts '+width);
+  assert.equal(await page.locator('.home-schedule-item').count(),3,'first grade contains all three first-year events');
+  assert.equal(await page.locator('.home-schedule-item:visible').count(),3,'three visible first-year event alerts '+width);
   assert.ok((await page.locator('.home-schedule-item').first().innerText()).includes('오늘 학과 일정'));
   assert.ok((await page.locator('.home-schedule-link').first().getAttribute('href')).includes('schedule.html?date='));
-  const recruitAlerts=await page.locator('.home-alert-recruit').boundingBox();
-  assert.ok(recruitAlerts,'recruitment card visible '+width);
-  assert.ok(schedule.y<actions.y && recruitAlerts.y<actions.y,'alerts above quick actions '+width);
-  if(width<=767)assert.ok(recruitAlerts.y>schedule.y,'mobile alerts stack vertically '+width);
-  else assert.ok(recruitAlerts.x>schedule.x && Math.abs(recruitAlerts.y-schedule.y)<2,'desktop/tablet alerts side by side '+width);
-  assert.equal(await page.locator('.home-recruit-item').count(),2,'dated recruitment preview shows 2 entries');
-  assert.equal(await page.locator('#home-recruit-alert-list').isVisible(),false,'first grade hides recruiting '+width);
-  assert.equal(await page.locator('#home-project-alert-list').isVisible(),true,'first grade shows projects '+width);
-  assert.ok((await page.locator('#home-project-alert-list').innerText()).includes('내일 프로젝트 일정'),'1st-grade project event shown '+width);
-  assert.ok(!(await page.locator('#home-project-alert-list').innerText()).includes('[1학년]'),'legacy grade tag is hidden in display '+width);
-  assert.ok(!(await page.locator('#home-schedule-list').innerText()).includes('3일 뒤 취업 일정'),'1st grade excludes 2nd grade employment '+width);
-  assert.ok((await page.locator('#dashboard-schedule-title').innerText()).includes('학습'),'first grade academic heading '+width);
+  const practical=await page.locator('.home-practical-card').boundingBox();
+  assert.ok(practical&&schedule.y<practical.y&&practical.y<actions.y,'practical exam between alerts and grade quick actions '+width);
+  assert.equal(await page.locator('.home-alert-recruit').isVisible(),false,'entire recruitment card hidden from first grade '+width);
+  assert.equal(await page.locator('.home-project-alert-list').count(),0,'no redundant project card '+width);
+  assert.ok((await page.locator('#home-schedule-list').innerText()).includes('내일 프로젝트 일정'),'first grade project is in the same schedule card '+width);
+  assert.ok(!(await page.locator('#home-schedule-list').innerText()).includes('[1학년]'),'legacy grade tag is hidden '+width);
+  assert.ok(!(await page.locator('#home-schedule-list').innerText()).includes('3일 뒤 취업 일정'),'first grade excludes second grade '+width);
+  assert.ok(!(await page.locator('#home-schedule-list').innerText()).includes('모든 학년 공통 일정'),'first grade strictly excludes common events '+width);
+  assert.ok((await page.locator('#dashboard-schedule-title').innerText()).includes('1학년'),'first grade heading '+width);
+  if(width>=768){
+   assert.ok(schedule.width>=.75*(await page.locator('.home-alerts-grid').boundingBox()).width,'first-grade single card uses full content width '+width);
+  }
   assert.equal(await page.locator('body').evaluate(()=>{
    const nodes=['.dashboard-schedule','.home-alert-recruit','.dashboard-start','.portal-search','.dashboard-highlights','.dashboard-personal'].map(s=>document.querySelector(s));
    return nodes.every((node,i)=>!i||Boolean(nodes[i-1].compareDocumentPosition(node)&Node.DOCUMENT_POSITION_FOLLOWING));
@@ -89,10 +95,16 @@ try{
   assert.equal(await page.locator('.dashboard-action[href="https://apply.k-bigdata.kr/"]').count(),1,'grade-2 application quick action '+width);
   assert.ok((await page.locator('#dashboard-highlights-title').innerText()).includes('취업'),'grade-2 continuation '+width);
   assert.equal(await page.locator('#home-recruit-alert-list').isVisible(),true,'second grade shows recruiting '+width);
-  assert.equal(await page.locator('#home-project-alert-list').isVisible(),false,'second grade hides project card '+width);
-  assert.ok((await page.locator('#home-schedule-list').innerText()).includes('3일 뒤 취업 일정'),'2nd grade employment visible '+width);
+  assert.equal(await page.locator('.home-alert-recruit').isVisible(),true,'recruitment card visible only for second grade '+width);
+  assert.equal(await page.locator('.home-recruit-item').count(),2,'two upcoming recruitment listings '+width);
+  assert.equal(await page.locator('.home-schedule-item').count(),2,'second grade sees two schedule items '+width);
+  assert.ok((await page.locator('#home-schedule-list').innerText()).includes('3일 뒤 취업 일정'),'second-grade event visible '+width);
+  assert.ok((await page.locator('#home-schedule-list').innerText()).includes('모든 학년 공통 일정'),'second grade includes common events '+width);
+  assert.ok(!(await page.locator('#home-schedule-list').innerText()).includes('오늘 학과 일정'),'second grade excludes first-grade events '+width);
   assert.ok(!(await page.locator('#home-schedule-list').innerText()).includes('[2학년]'),'legacy grade tag stripped on display '+width);
-  assert.ok((await page.locator('#dashboard-schedule-title').innerText()).includes('취업'),'second grade academic heading '+width);
+  assert.ok((await page.locator('#dashboard-schedule-title').innerText()).includes('공통'),'second-grade and common schedule heading '+width);
+  assert.equal(await page.locator('.home-practical-link').isVisible(),true,'practical exam remains on second-grade homepage '+width);
+  assert.ok((await page.locator('#home-practical-description').innerText()).includes('실전'),'second-grade practical learning copy '+width);
   const secondSchedule=await page.locator('.dashboard-schedule').boundingBox();
   const secondRecruit=await page.locator('.home-alert-recruit').boundingBox();
   assert.ok(width<=767?secondRecruit.y<secondSchedule.y:secondRecruit.x<secondSchedule.x,'recruitment is the first priority for grade 2 '+width);
@@ -106,7 +118,7 @@ try{
  await mockPublicSchedule(page);
  await page.goto('http://127.0.0.1:8765/index.html',{waitUntil:'domcontentloaded'});
  await page.locator('.service-card').first().waitFor();
- const favorite=page.locator('.dashboard-action-favorite[data-favorite="practical"]');
+ const favorite=page.locator('.home-practical-favorite[data-favorite="practical"]');
  await favorite.click();
  assert.equal(await favorite.getAttribute('aria-pressed'),'true','quick favorite toggles on');
  assert.ok((await page.locator('#favorite-services').innerText()).includes('실기 코딩'),'favorite appears in personal shortcuts');
@@ -133,6 +145,7 @@ try{
  await page.locator('button[data-home-grade="1"]').click();
  assert.equal(await page.locator('button[data-home-grade="1"]').getAttribute('aria-pressed'),'true','grades can be changed repeatedly');
  assert.equal(await page.locator('.dashboard-action[href="docs.html"]').count(),1,'first-grade actions restored');
+ assert.equal(await page.locator('.home-practical-link').count(),1,'shared practice survives repeated grade switches');
  await page.locator('.home-schedule-link').first().click();
  await page.waitForURL('**/schedule.html?date=*');
  assert.ok(new URL(page.url()).searchParams.get('date'),'schedule link opens the selected date');
