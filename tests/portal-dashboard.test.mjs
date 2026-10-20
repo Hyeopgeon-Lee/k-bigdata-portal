@@ -16,7 +16,7 @@ const homeSchedule=read('js/home-schedule.js');
 const shell=read('js/portal-shell.js');
 const navigation=read('js/portal-ux.js');
 
-for(const id of ['home-alerts-title','home-schedule-list','home-recruit-alert-list','dashboard-highlights','favorite-services','recent-services','services','portal-query'])
+for(const id of ['home-alerts-title','home-schedule-list','home-recruit-alert-list','home-practical-title','home-practical-description','dashboard-highlights','favorite-services','recent-services','services','portal-query'])
   assert.ok(html.includes('id="'+id+'"'),id+' should exist');
 for(const url of ['practical.html','interview.html','recruit.html','https://ready.k-bigdata.kr/'])
   assert.ok(html.includes('href="'+url+'"'),url+' should have a direct action');
@@ -27,10 +27,12 @@ assert.ok(html.includes('class="brand-short"') && html.includes('class="brand-fu
 assert.ok(html.includes('id="home-grade-status"') && html.includes('id="hero-description"'),'grade controls and accessible status');
 assert.ok(html.includes('data-home-grade="1"') && html.includes('data-home-grade="2"'),'both grade buttons');
 assert.ok(html.includes('css/home-grade.css?v=20261020-grade-2'));
-assert.ok(html.includes('js/home-dashboard.js?v=20261020-grade2-phase2'));
+assert.ok(html.includes('js/home-dashboard.js?v=20261020-grade3-final-1'));
+assert.ok(html.includes('class="home-practical-favorite"') && html.includes('href="practical.html"'),'common practical exam shortcut and favorite');
+assert.ok(html.indexOf('home-practical-title')<html.indexOf('dashboard-action-grid'),'shared practical card precedes grade actions');
 assert.ok(gradeCss.includes('home-grade-button[aria-pressed="true"]'),'selected grade is visually distinguished');
 assert.ok(gradeCss.includes('@media(max-width:767px)'),'compact mobile selector');
-for(const id of ['docs','jobs','project-guide','practical','recruit','apply','interview','ready'])
+for(const id of ['docs','jobs','project-guide','certifications','recruit','apply','interview','ready'])
   assert.ok(dashboard.includes('"'+id+'"'),'grade actions include '+id);
 assert.ok(dashboard.includes('kbigdata:home-grade:v1'),'local-only grade preference');
 assert.ok(dashboard.includes('chooseGrade('),'grade switching implemented');
@@ -38,10 +40,17 @@ assert.ok(dashboard.includes('renderQuickActions('),'grade-dependent quick actio
 assert.ok(dashboard.includes('selectedGrade==="1"'),'grade-dependent continue section implemented');
 assert.ok(dashboard.includes('kbigdata:home-gradechange'),'grade change event dispatched');
 assert.ok(homeSchedule.includes('targetGrade'),'event audience is normalized');
+assert.ok(html.includes('정보처리기사·산업기사 실기 기출문제'),'shared practical card explicit');
+assert.ok(dashboard.includes('grade==="1"')||dashboard.includes('selectedGrade==="1"'));
+assert.ok(dashboard.includes('home-practical-description'),'grade-specific practical exam guidance');
 assert.ok(homeSchedule.includes('visibleToGrade'),'audience filtering is implemented');
-assert.ok(homeSchedule.includes('projectRoot'),'first-grade project card shares schedule request');
+assert.ok(!homeSchedule.includes('projectRoot'),'separate project alerts removed');
+assert.ok(homeSchedule.includes('event.targetGrade==="1"'),'first grade must only see first-grade events');
+assert.ok(homeSchedule.includes('event.targetGrade==="2"||event.targetGrade==="all"'),'second grade includes shared events');
 assert.ok(homeRecruit.includes('updateGrade'),'recruitment feed switches with grade');
-assert.ok(html.includes('id="home-project-alert-list"'),'project card is present');
+assert.ok(!html.includes('id="home-project-alert-list"'),'redundant project card removed');
+assert.ok(homeRecruit.includes('card.hidden=!secondGrade'),'recruitment card hidden for first grade');
+assert.ok(alertCss.includes('home-alerts-grid{grid-template-columns:minmax(0,1fr)}'),'first grade has one full width schedule card');
 
 assert.ok(html.includes('role="tablist"') && html.includes('role="tabpanel"'));
 assert.ok(html.includes('role="search"'));
@@ -49,16 +58,16 @@ assert.ok(html.includes('id="search-status" role="status"'));
 assert.ok(!html.includes('id="service-groups" aria-live'));
 assert.equal((html.match(/class="dashboard-action-favorite"/g)||[]).length,4);
 assert.ok(html.includes('css/home-ui.css?v=20261020-balanced-grid-2'));
-assert.ok(html.includes('js/home-schedule.js?v=20261020-grade2-final'));
-assert.ok(html.includes('js/home-recruit-alerts.js?v=20261020-grade2-phase2'));
-assert.ok(html.includes('css/home-alerts.css?v=20261020-grade2-order'));
+assert.ok(html.includes('js/home-schedule.js?v=20261020-grade3-final-1'));
+assert.ok(html.includes('js/home-recruit-alerts.js?v=20261020-grade3-final-1'));
+assert.ok(html.includes('css/home-alerts.css?v=20261020-grade3-final-1'));
 assert.ok(html.includes('class="dashboard-panel dashboard-schedule home-alert-card"'));
 assert.ok(html.indexOf('home-alerts-title')<html.indexOf('hero-title'),'top alerts precede hero');
 assert.ok(html.indexOf('dashboard-schedule-title')<html.indexOf('dashboard-action-grid'),'schedule card precedes quick actions in DOM');
 assert.ok(html.indexOf('home-recruit-alert-list')<html.indexOf('dashboard-action-grid'),'recruitment alerts are above quick actions');
 assert.ok(homeCss.includes('grid-template-areas:"start schedule" "start highlights" "search personal"'));
 assert.ok(homeCss.includes('grid-template-areas:"schedule" "primary" "side"'));
-assert.ok(homeSchedule.includes('.slice(0,2);'),'top preview renders two entries per card');
+assert.ok(homeSchedule.includes('.slice(0,limit);'),'schedule count configurable per grade');
 assert.ok(alertCss.includes('grid-template-columns:repeat(2,minmax(0,1fr))'),'desktop two-column alerts');
 assert.ok(alertCss.includes('grid-template-columns:minmax(0,1fr)'),'mobile one-column alerts');
 assert.ok(alertCss.includes('grid-template-areas:"start highlights" "start personal" "search search"'),'dashboard no longer reserves a schedule cell');
