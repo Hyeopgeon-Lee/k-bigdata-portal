@@ -1,5 +1,5 @@
 // Main dashboard: favorites, recent shortcuts and published recruitment deadlines.
-import {services} from "./services.js?v=20261020-coding-1";
+import {services} from "./services.js?v=20261020-study-share-1";
 import {getFavorites,getRecent,toggleFavorite} from "./portal-personal.js?v=20261016-dashboard-1";
 const $=selector=>document.querySelector(selector);
 const esc=v=>String(v??"").replace(/[&<>'"]/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[char]));
