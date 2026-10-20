@@ -5,6 +5,7 @@ body[data-portal-home] .home-alerts-title{display:flex;align-items:center;gap:9p
 body[data-portal-home] .home-alerts-title svg{width:23px;height:23px;color:#2859a0;flex:none}
 body[data-portal-home] .home-alerts-subtitle{margin:5px 0 0;font-size:13px;line-height:1.5;color:#576981}
 body[data-portal-home] .home-alerts-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:stretch}
+body[data-portal-home] .home-alerts-grid .dashboard-schedule{grid-area:auto}
 body[data-portal-home] .home-alert-card{min-width:0;min-height:0;padding:17px 18px;border:1px solid #d9e3f1;border-radius:15px;background:#fff;box-shadow:0 3px 14px rgba(20,45,112,.035)}
 body[data-portal-home] .home-alert-card .dashboard-panel-heading{margin-bottom:10px;align-items:center}
 body[data-portal-home] .home-alert-card .dashboard-panel-heading h2{font-size:17px;line-height:1.4;margin:0;color:#152f60}
