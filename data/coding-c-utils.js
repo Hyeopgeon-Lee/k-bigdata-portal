@@ -6,7 +6,7 @@ function describeLine(line) {
   if(l.startsWith("#include <stdio"))return "표준 입출력 기능을 사용합니다";
   if(l.startsWith("#include <string"))return "문자열 표준 함수를 사용합니다";
   if(l.startsWith("#include <ctype"))return "문자 처리 함수를 사용합니다";
-  if(l.startsWith("typedef")||l.startsWith("struct "))return "구조체 형태를 정의합니다";
+  if(l.startsWith("typedef")||/^struct\\s+\\w+\\s*\\{/.test(l))return "구조체 형태를 정의합니다";
   if(l.startsWith("int main("))return "프로그램 실행이 시작됩니다";
   if(l.startsWith("return 0"))return "정상적으로 프로그램을 종료합니다";
   if(l.startsWith("return 1"))return "입력이 올바르지 않아 종료합니다";
