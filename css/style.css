@@ -21,24 +21,12 @@ svg { display: block; }
 .skip-link { position: fixed; z-index: 200; top: 12px; left: 12px; padding: 10px 16px; color: #fff; background: var(--color-primary-dark); border-radius: 6px; transform: translateY(-160%); }
 .skip-link:focus { transform: translateY(0); }
 :focus-visible { outline: 3px solid #1ba7d4; outline-offset: 4px; }
-
-.site-header { position: sticky; z-index: 100; top: 0; height: 76px; border-bottom: 1px solid rgba(210, 220, 238, .8); background: rgba(255, 255, 255, .88); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); }
-.header-inner { height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 28px; }
-.brand, .footer-brand { display: flex; align-items: center; gap: 13px; min-width: 0; }
+.footer-brand { display: flex; align-items: center; gap: 13px; min-width: 0; }
 .brand-mark { position: relative; width: 40px; height: 40px; flex: 0 0 40px; border-radius: 10px; background: var(--color-primary-dark); box-shadow: 0 8px 20px rgba(11, 23, 57, .18); }
 .brand-mark::before, .brand-mark::after { content: ""; position: absolute; background: #fff; border-radius: 2px; }
 .brand-mark::before { width: 4px; height: 21px; left: 11px; top: 9px; box-shadow: 14px 0 #fff; }
 .brand-mark::after { width: 18px; height: 4px; left: 11px; top: 18px; }
 .brand-mark span { position: absolute; z-index: 2; width: 7px; height: 7px; left: 17px; top: 16px; border-radius: 50%; background: #39c6e8; }
-.brand-copy { display: grid; line-height: 1.25; }
-.brand-copy strong { font-size: 14px; letter-spacing: -.02em; }
-.brand-copy small { margin-top: 3px; color: var(--color-text-muted); font-size: 12px; }
-.main-nav { display: flex; align-items: center; gap: 30px; color: #3d4961; font-size: 14px; font-weight: 650; white-space: nowrap; }
-.main-nav a { position: relative; padding-block: 8px; }
-.main-nav a:not(.nav-external)::after { content: ""; position: absolute; right: 0; bottom: 1px; left: 0; height: 2px; background: var(--color-primary); transform: scaleX(0); transition: transform .22s ease; }
-.main-nav a:hover::after { transform: scaleX(1); }
-.nav-external { padding: 9px 14px !important; border: 1px solid var(--color-border); border-radius: 8px; background: #fff; }
-.mobile-home { display: none; font-size: 13px; font-weight: 700; }
 
 .hero { position: relative; overflow: hidden; padding: 86px 0 0; background: radial-gradient(circle at 78% 22%, rgba(80, 121, 246, .11), transparent 31%), linear-gradient(180deg, #fff 0%, #f7f9fd 100%); }
 .hero::before { content: ""; position: absolute; width: 520px; height: 520px; right: -260px; top: -290px; border: 1px solid #dbe5f5; border-radius: 50%; box-shadow: 0 0 0 70px rgba(232, 238, 249, .45), 0 0 0 140px rgba(241, 245, 251, .6); }
@@ -142,8 +130,6 @@ svg { display: block; }
 .noscript { padding: 20px; border: 1px solid #e2a3a3; color: #7b2525; background: #fff5f5; }
 
 @media (max-width: 1023px) {
-  .main-nav { gap: 18px; }
-  .main-nav a:nth-child(2), .main-nav a:nth-child(3) { display: none; }
   .hero { padding-top: 64px; }
   .hero-grid { grid-template-columns: .9fr 1.1fr; gap: 20px; }
   .hero h1 { font-size: 53px; }
@@ -159,12 +145,7 @@ svg { display: block; }
 @media (max-width: 767px) {
   html { scroll-padding-top: 72px; }
   .container { width: min(calc(100% - 36px), var(--container)); }
-  .site-header { height: 66px; }
-  .brand-mark { width: 36px; height: 36px; flex-basis: 36px; transform: scale(.9); }
-  .brand-copy strong { max-width: 155px; overflow: hidden; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
-  .brand-copy small { font-size: 10px; }
-  .main-nav { display: none; }
-  .mobile-home { display: block; }
+  .footer-brand .brand-mark { width: 36px; height: 36px; flex-basis: 36px; transform: scale(.9); }
   .hero { padding-top: 58px; }
   .hero-grid { display: flex; min-height: auto; flex-direction: column; gap: 10px; }
   .hero-copy { width: 100%; padding-bottom: 10px; }
@@ -203,7 +184,6 @@ svg { display: block; }
 
 @media (max-width: 389px) {
   .container { width: min(calc(100% - 32px), var(--container)); }
-  .brand-copy { display: none; }
   .hero-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .button { padding-inline: 10px; font-size: 12px; }
   .hero-visual { height: 360px; transform: scale(.78); }

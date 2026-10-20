@@ -1,5 +1,5 @@
 // Device-only shortcuts: no identity, login or network transmission.
-import {services} from "./services.js?v=20261016-nav-search-filters-1";
+import {services} from "./services.js?v=20261020-unified-shell-1";
 const KEY = "kbigdata-portal-ui-v1";
 const validIds = new Set(services.map(service => service.id));
 const blank = () => ({favorites:[], recent:[]});

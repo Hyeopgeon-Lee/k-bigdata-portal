@@ -44,7 +44,7 @@ function simulate({enabled = true, hostname = "portal.k-bigdata.kr",
   return {
     tags,
     listeners,
-    calls: window.dataLayer.map(args => Array.from(args))
+    get calls() { return window.dataLayer.map(args => Array.from(args)); }
   };
 }
 

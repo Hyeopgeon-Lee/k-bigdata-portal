@@ -1,8 +1,5 @@
 /* Portal home only: action-first layout and compact services. 2026-10-16 */
 body[data-portal-home]{background:#f5f7fb}
-body[data-portal-home] .brand-short{display:none}
-body[data-portal-home] .brand-copy{display:grid}
-body[data-portal-home] .brand-copy strong{white-space:nowrap}
 body[data-portal-home] #main-content{padding-bottom:24px}
 body[data-portal-home] .dashboard-hero{padding-top:26px;padding-bottom:18px}
 body[data-portal-home] .dashboard-intro{margin-bottom:20px}
@@ -105,24 +102,12 @@ body[data-portal-home] a:focus-visible{outline:3px solid #1ba7d4;outline-offset:
  body[data-portal-home] .dashboard-highlights{grid-area:highlights}
  body[data-portal-home] .dashboard-personal{grid-area:personal}
 }
-@media(max-width:1190px){
- body[data-portal-home] .header-inner{position:relative}
- body[data-portal-home] .brand-copy{display:grid}
- body[data-portal-home] .menu-toggle{display:inline-flex;align-items:center;gap:8px;margin-left:auto;min-height:44px}
- body[data-portal-home] .main-nav{display:none;position:absolute;top:100%;left:0;right:0;z-index:60;border:1px solid #c7d5e9;border-radius:0 0 14px 14px;padding:12px;background:#fff;box-shadow:0 15px 25px rgba(11,23,57,.12);white-space:normal}
- body[data-portal-home] .main-nav.is-open{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
- body[data-portal-home] .main-nav a{padding:12px;font-size:14px;white-space:normal;min-height:44px}
-}
 @media(max-width:900px){
  body[data-portal-home] .dashboard-main{grid-template-columns:1fr;grid-template-areas:"schedule" "primary" "side";grid-template-rows:auto}
  body[data-portal-home] .dashboard-side{grid-template-columns:repeat(2,minmax(0,1fr))}
  body[data-portal-home] .dashboard-personal,body[data-portal-home] .dashboard-highlights{min-width:0}
 }
 @media(max-width:767px){
- body[data-portal-home] .brand-full{display:none}
- body[data-portal-home] .brand-short{display:inline}
- body[data-portal-home] .brand-copy strong{font-size:13px}
- body[data-portal-home] .brand-copy small{font-size:11px}
  body[data-portal-home] .dashboard-hero{padding-top:18px}
  body[data-portal-home] .dashboard-intro{margin-bottom:14px}
  body[data-portal-home] .dashboard-intro h1{font-size:27px}
@@ -148,10 +133,6 @@ body[data-portal-home] a:focus-visible{outline:3px solid #1ba7d4;outline-offset:
  body[data-portal-home] .services-section .section-intro h2{font-size:24px}
 }
 @media(max-width:380px){
- body[data-portal-home] .brand-mark{width:34px;height:34px;flex-basis:34px}
- body[data-portal-home] .brand{gap:9px}
- body[data-portal-home] .brand-copy strong{font-size:12px}
- body[data-portal-home] .menu-toggle{padding:9px;gap:5px;font-size:13px}
  body[data-portal-home] .dashboard-action{padding:12px;min-height:156px}
  body[data-portal-home] .dashboard-action strong{font-size:15px}
  body[data-portal-home] .portal-search-submit{min-width:70px;padding:0 9px}

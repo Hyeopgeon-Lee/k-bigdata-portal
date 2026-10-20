@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ko" data-portal-page="index">
 <head>
   <script defer src="js/analytics.js?v=20261008-ga4-3"></script>
   <meta charset="utf-8">
@@ -10,21 +10,38 @@
   <link rel="preconnect" href="https://script.google.com" crossorigin>
   <title>빅데이터소프트웨어공학과 통합 서비스 포털</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="css/style.css?v=20261005-browser-1">
-  <link rel="stylesheet" href="css/learning.css">
-<link rel="stylesheet" href="css/portal-ux.css?v=20261016-ui-review-2">
-  <link rel="stylesheet" href="css/home-ui.css?v=20261020-balanced-grid-2">
-  <link rel="stylesheet" href="css/home-alerts.css?v=20261020-grade3-final-2">
-  <link rel="stylesheet" href="css/home-grade.css?v=20261020-grade-2">
-  <link rel="stylesheet" href="css/home-engagement.css?v=20261020-engagement-1">
+  <link rel="stylesheet" href="css/style.css?v=20261020-unified-shell-1">
+  <link rel="stylesheet" href="css/learning.css?v=20261020-unified-shell-1">
+<link rel="stylesheet" href="css/portal-ux.css?v=20261020-unified-shell-1">
+  <link rel="stylesheet" href="css/home-ui.css?v=20261020-unified-shell-1">
+  <link rel="stylesheet" href="css/home-alerts.css?v=20261020-unified-shell-1">
+  <link rel="stylesheet" href="css/home-grade.css?v=20261020-unified-shell-1">
+  <link rel="stylesheet" href="css/home-engagement.css?v=20261020-unified-shell-1">
+<!-- portal:assets:start (generated; edit scripts/portal-shell-template.mjs) -->
+<link rel="stylesheet" href="css/portal-navigation.css?v=20261020-unified-shell-1">
+<script defer src="js/portal-navigation.js?v=20261020-unified-shell-1"></script>
+<!-- portal:assets:end -->
 </head>
 <body data-portal-home>
   <a class="skip-link" href="#main-content">본문으로 바로가기</a>
-<header class="site-header"><div class="container header-inner">
-<a class="brand" href="index.html" aria-label="통합 서비스 포털 홈"><span class="brand-mark" aria-hidden="true"><span></span></span><span class="brand-copy"><strong><span class="brand-full">빅데이터소프트웨어공학과</span><span class="brand-short">빅데이터SW학과</span></strong><small>학생 통합 포털</small></span></a>
-<button class="menu-toggle" type="button" aria-expanded="false" aria-controls="portal-nav">메뉴 <span aria-hidden="true">☰</span></button>
-<nav class="main-nav" id="portal-nav" aria-label="주요 메뉴"><a href="index.html#services">전체 서비스</a><a href="index.html#career">취업 · 진로</a><a href="index.html#learning">학습 · 역량</a><a href="index.html#project">프로젝트 · 성장</a><a href="index.html#campus">학과 생활</a><a href="https://www.kopo.ac.kr/kangseo/content.do?menu=1547">학과 홈페이지 ↗</a></nav>
-</div></header>
+<!-- portal:header:start (generated; edit scripts/portal-shell-template.mjs) -->
+<header class="site-header" data-portal-shell="20261020-unified-shell-1">
+  <div class="container header-inner">
+    <a tabindex="0" class="brand" href="index.html" aria-label="통합 서비스 포털 홈"><span class="brand-mark" aria-hidden="true"><span></span></span><span class="brand-copy"><strong><span class="brand-full">빅데이터소프트웨어공학과</span><span class="brand-short">빅데이터SW학과</span></strong><small>학생 통합 포털</small></span></a>
+    <details class="portal-menu" open>
+      <summary class="menu-toggle" aria-controls="portal-nav">메뉴 <span aria-hidden="true">☰</span></summary>
+      <nav class="main-nav" id="portal-nav" aria-label="주요 메뉴">
+        <a tabindex="0" href="index.html#services" aria-current="page">전체 서비스</a>
+        <a tabindex="0" href="index.html#career" data-portal-group="career">취업 · 진로</a>
+        <a tabindex="0" href="index.html#learning" data-portal-group="learning">학습 · 역량</a>
+        <a tabindex="0" href="index.html#project" data-portal-group="project">프로젝트 · 성장</a>
+        <a tabindex="0" href="index.html#campus" data-portal-group="campus">학과 생활</a>
+        <a tabindex="0" class="nav-external" href="https://www.kopo.ac.kr/kangseo/content.do?menu=1547">학과 홈페이지 ↗</a>
+      </nav>
+    </details>
+  </div>
+</header>
+<!-- portal:header:end -->
 
 
   <main id="main-content" tabindex="-1">
@@ -226,10 +243,10 @@
     </div>
     <div class="container footer-bottom"><p>학생용 학습·프로젝트·취업 통합 포털입니다.</p><p>© <span id="current-year"></span> K-BigData Service Portal</p></div>
   </footer>
-  <script type="module" src="js/app.js?v=20261020-study-share-1"></script>
-  <script type="module" src="js/portal-shell-entry.js?v=20261020-study-nav-parity-1"></script>
+  <script type="module" src="js/app.js?v=20261020-unified-shell-1"></script>
+  <script type="module" src="js/portal-shell-entry.js?v=20261020-unified-shell-1"></script>
   <script src="data/recruitments.js?v=20261016-2"></script>
-  <script type="module" src="js/home-dashboard.js?v=20261020-study-share-1"></script>
+  <script type="module" src="js/home-dashboard.js?v=20261020-unified-shell-1"></script>
   <script type="module" src="js/home-engagement.js?v=20261020-engagement-1"></script>
   <script type="module" src="js/home-schedule.js?v=20261020-sync-bridge-1"></script>
   <script type="module" src="js/home-recruit-alerts.js?v=20261020-grade3-final-1"></script>

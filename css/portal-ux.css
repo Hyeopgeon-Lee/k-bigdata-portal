@@ -1,9 +1,5 @@
 /* Shared portal UX: reuse navy/blue tokens; no new theme or framework. */
-:root{--portal-header-height:76px;--study-header-height:56px}
-.learning-cross-nav{display:flex;flex-wrap:wrap;gap:8px;overflow:visible;white-space:normal;padding:12px 2px;scroll-padding:2px}
-.learning-cross-nav a{flex:0 1 auto;max-width:100%;display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 14px;border:1px solid var(--color-border);border-radius:9px;background:white;color:var(--color-primary);font-size:14px;font-weight:650}
-.learning-cross-nav a[aria-current=page]{background:var(--color-primary);border-color:var(--color-primary);color:white}
-.portal-mobile-home{display:none}
+
 .quick-launch{margin-top:22px}.quick-launch h2{font-size:20px;margin:0 0 12px}
 #quick-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;max-width:540px}
 #quick-actions .button{font-size:16px;min-height:52px;padding:10px}
@@ -56,12 +52,7 @@ body[data-guide-page] .guide-cta{margin-top:24px;background:#f5f7fb}
 .practical-page .study-footer{display:block;padding:0;color:#fff;background:var(--color-primary-dark)}
 .practical-page .study-footer a{color:inherit}
 .detail-panel>h1{font-size:28px;line-height:1.4;margin:18px 0 12px;overflow-wrap:anywhere}
-@media(max-width:900px){
- :root{--portal-header-height:60px}
- .site-header{height:var(--portal-header-height)}
- .portal-mobile-home{display:inline-flex;align-items:center;min-height:44px;font-size:14px;font-weight:700;margin-left:auto}
- .menu-toggle{margin-left:0;font-size:14px}
-}
+
 @media(max-width:767px){
  body[data-portal-home] .hero{padding:22px 0 0;background:#f5f7fb}
  body[data-portal-home] .hero::before{display:none}
@@ -86,7 +77,6 @@ body[data-guide-page] .guide-cta{margin-top:24px;background:#f5f7fb}
  body[data-portal-home] .service-tags{margin:0 0 16px}
  body[data-portal-home] .service-tags span{font-size:13px}
  body[data-portal-home] .card-link{position:static;font-size:15px;min-height:44px;display:flex;align-items:center;margin-top:8px}
- .learning-cross-nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));padding-block:8px}.learning-cross-nav a{min-width:0;padding-inline:6px}
  .page-hero .back-link,.page-hero .section-kicker{display:none}
  .cert-detail .cert-importance{padding:16px;margin-block:16px}
  .ux-disclosure>.job-section>h3,.ux-disclosure>.cert-preparation>h3{display:none}
@@ -101,7 +91,6 @@ body[data-guide-page] .guide-cta{margin-top:24px;background:#f5f7fb}
  .site-footer .footer-links a{font-size:15px;min-height:44px}
  body[data-guide-page] .guide-hero h1{font-size:28px}
 }
-
 
 /* Shared internal-page header system: one hierarchy for jobs, certifications, practice, interview, docs and project guide. */
 body[data-page] .portal-page-hero{
@@ -197,49 +186,9 @@ body[data-page="practical"] .portal-page-hero p{
     line-height:1.7;
   }
 }
-
-
-/* Desktop header fit and project-page background consistency. */
-@media(min-width:901px) and (max-width:1240px){
-  .site-header .brand-copy{display:none}
-  .site-header .main-nav{gap:12px;font-size:14px}
-}
 body[data-page="project-guide"] .guide-main{
   background:var(--color-background,#f5f7fb);
 }
-
-
-/* Complete portal service navigation: all portal tools, compact on PC and scrollable on mobile. */
-.portal-service-nav{
-  align-items:center;
-  row-gap:8px;
-  padding-top:12px;
-  padding-bottom:12px;
-}
-.portal-service-nav a{
-  white-space:nowrap;
-}
-@media(max-width:767px){
-  .portal-service-nav{
-    display:flex;
-    flex-wrap:nowrap;
-    overflow-x:auto;
-    gap:6px;
-    width:min(calc(100% - 24px),var(--container));
-    padding:8px 0 10px;
-    scroll-snap-type:x proximity;
-    scrollbar-width:none;
-    -webkit-overflow-scrolling:touch;
-  }
-  .portal-service-nav::-webkit-scrollbar{display:none}
-  .portal-service-nav a{
-    flex:0 0 auto;
-    min-height:42px;
-    padding:8px 12px;
-    scroll-snap-align:start;
-  }
-}
-
 
 /* 2026-10-16: student-first home dashboard, device shortcuts and compact navigation. */
 body[data-portal-home] .dashboard-hero{padding-top:32px;padding-bottom:20px}
@@ -282,26 +231,8 @@ body[data-portal-home] .service-tile .service-kind{right:64px}
 body[data-portal-home] .service-favorite{position:absolute;z-index:4;right:14px;top:14px;display:grid;place-items:center;min-width:44px;min-height:44px;padding:0;border:1px solid #b9cce8;border-radius:50%;background:#fff;color:#1b4385;font-size:27px;cursor:pointer}
 body[data-portal-home] .service-favorite[aria-pressed=true]{background:#e9f1ff;border-color:#597fc4;color:#12428b}
 body[data-portal-home] .service-favorite:focus-visible{outline:3px solid #1ba7d4;outline-offset:3px}
-.portal-service-nav.portal-nav-compact{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;width:min(calc(100% - 40px),var(--container));overflow:visible;white-space:normal;align-items:start;margin-inline:auto}
-.portal-nav-current{min-width:0;display:flex;flex-wrap:wrap;align-items:center;gap:10px}
-.portal-nav-title{font-size:13px;white-space:nowrap;color:#394b68}
-.portal-nav-items{display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-width:0}
-.portal-nav-compact .portal-nav-items>a{min-height:42px;padding:8px 11px;white-space:normal}
-.portal-nav-more{position:relative;align-self:start}
-.portal-nav-more>summary{list-style:none;display:flex;align-items:center;min-height:42px;padding:8px 14px;border:1px solid #c1d0e7;border-radius:9px;background:#f0f5ff;color:#17366c;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap}
-.portal-nav-more>summary::-webkit-details-marker{display:none}
-.portal-nav-more[open]>summary{border-color:#345aa1}
-.portal-nav-other{position:absolute;right:0;top:calc(100% + 8px);z-index:40;width:min(510px,calc(100vw - 32px));max-height:65vh;overflow:auto;padding:18px;border:1px solid #c5d2e9;background:white;border-radius:12px;box-shadow:0 16px 30px rgba(11,23,57,.17)}
-.portal-nav-other-group+ .portal-nav-other-group{border-top:1px solid #edf1f6;margin-top:12px;padding-top:12px}
-.portal-nav-other-group>strong{display:block;color:#142d70;font-size:14px;margin-bottom:8px}
-.portal-nav-other-group>div{display:flex;flex-wrap:wrap;gap:6px}
-.portal-nav-compact .portal-nav-other a{font-size:13px;min-height:40px;padding:8px 10px;white-space:normal}
-.portal-nav-compact .portal-nav-all{display:flex;margin-top:12px}
 @media(max-width:900px){
  body[data-portal-home] .dashboard-main{grid-template-columns:1fr}
- .portal-service-nav.portal-nav-compact{grid-template-columns:1fr;gap:8px}
- .portal-nav-more{justify-self:start}
- .portal-nav-other{left:0;right:auto}
 }
 @media(max-width:767px){
  body[data-portal-home] .dashboard-hero{padding-top:18px}
@@ -315,13 +246,6 @@ body[data-portal-home] .service-favorite:focus-visible{outline:3px solid #1ba7d4
  body[data-portal-home] .dashboard-categories{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
  body[data-portal-home] .dashboard-panel{padding:14px}
  body[data-portal-home] .service-tile>.service-card{padding-right:55px}
- .portal-service-nav.portal-nav-compact{width:min(calc(100% - 24px),var(--container));padding:8px 0 10px}
- .portal-nav-current{display:grid;gap:6px}
- .portal-nav-items{display:flex;flex-wrap:wrap;gap:6px}
- .portal-nav-more{width:100%}
- .portal-nav-more>summary{justify-content:center;width:100%}
- .portal-nav-other{width:100%;max-height:55vh}
- .portal-nav-compact .portal-nav-items>a{min-height:44px}
 }
 @media(prefers-reduced-motion:reduce){
  body[data-portal-home] .dashboard-action{transition:none}

@@ -6,25 +6,30 @@ import {certifications} from '../js/certifications.js';
 import {questions} from '../js/interview.js';
 import {docs} from '../js/docs.js';
 import {matches,searchIndex} from '../js/search.js';
+import {navigationItems,portalPages} from '../js/portal-navigation-model.mjs';
+import {renderHeader} from '../scripts/portal-shell-template.mjs';
 const root=new URL('../',import.meta.url);
 const baseline=JSON.parse(readFileSync(new URL('portal-baseline.json',import.meta.url),'utf8'));
 for(const [key,data] of Object.entries({jobs,certifications,questions,docs})){if(key==='jobs')for(const id of baseline.jobs)assert.ok(data.some(x=>x.id===id),id+' permanent ID');else assert.deepEqual(data.map(x=>x.id),baseline[key],key+' permanent IDs');}
 for(const [id,url] of Object.entries(baseline.services))assert.equal(services.find(s=>s.id===id)?.url,url);
-assert.equal(services.length,13);assert.equal(new Set(services.map(s=>s.id)).size,13);
+assert.equal(new Set(services.map(s=>s.id)).size,services.length);
+assert.deepEqual(navigationItems.map(item=>item.id).sort(),services.map(item=>item.id).sort());
 assert.deepEqual(Object.keys(categories),['career','learning','project','campus']);
-const expected={career:['jobs','ready','apply','alumni'],learning:['certifications','practical','interview','docs','tech-blog'],project:['portfolio','project-guide'],campus:['room','help']};
+const expected={career:['jobs','resume','ready','recruit','apply','alumni'],learning:['coding','certifications','practical','interview','docs','tech-blog'],project:['portfolio','project-guide'],campus:['schedule','room','help']};
 for(const [category,ids] of Object.entries(expected))assert.deepEqual(services.filter(s=>s.category===category).sort((a,b)=>a.order-b.order).map(s=>s.id),ids);
 assert.equal(services.find(s=>s.id==='tech-blog').url,'https://prof.k-bigdata.kr/blog/');
 assert.equal(serviceKind(services.find(s=>s.id==='tech-blog')),'EXTERNAL');
-assert.deepEqual(studentJourney.map(s=>s.id),['jobs','docs','certifications','project-guide','interview','ready','apply','alumni']);
+assert.deepEqual(studentJourney.map(s=>s.id),['jobs','docs','certifications','project-guide','resume','interview','ready','apply','alumni']);
 for(const step of studentJourney){assert.ok(services.some(s=>s.id===step.id));if(step.companion)assert.ok(services.some(s=>s.id===step.companion));}
 assert.deepEqual(jobGroups.flatMap(g=>g.ids).sort(),jobs.map(j=>j.id).sort());
 for(const q of questions)for(const tag of q.jobTags){const link=interviewRoleLinks[tag];assert.ok(link);const id=new URL(link,'https://portal.k-bigdata.kr/').searchParams.get('id');if(id)assert.ok(jobs.some(j=>j.id===id));}
 assert.equal(footerLinks.length,5);assert.ok(footerLinks.some(l=>l.url==='https://contest.k-bigdata.kr/'));
-const pages=readdirSync(root,{recursive:true}).filter(p=>p.endsWith('.html')&&!p.startsWith('.git'));
+const pages=readdirSync(root,{recursive:true}).filter(p=>p.endsWith('.html')&&!/^(?:\.git|node_modules|ui-screenshots|test-results)[\\/]/.test(p));
 for(const page of pages){
  const html=readFileSync(new URL(page.replaceAll('\\','/'),root),'utf8');
- assert.match(html,/<meta name="robots" content="noindex, nofollow">/,page);
+ const pageId=page.replace(/\.html$/,'');
+ if(portalPages[pageId])assert.ok(html.includes(renderHeader(portalPages[pageId])),page+' canonical header');
+ assert.match(html,/<meta name="robots" content="noindex,\s*nofollow">/,page);
  assert.ok(!html.includes('content="index, follow"'));
  for(const text of ['skip-link','menu-toggle','aria-controls="portal-nav"',page==='practical.html'?'study-footer':'footer-links'])assert.ok(html.includes(text),page+' '+text);
  for(const [,url] of html.matchAll(/(?:href|src)="([^"]+)"/g))if(!/^(https?:|#|mailto:)/.test(url))assert.ok(existsSync(new URL(url.split(/[?#]/)[0],root)),page+' '+url);
@@ -45,5 +50,7 @@ const shell=readFileSync(new URL('js/portal-shell.js',root),'utf8');
 assert.ok(ui.includes('jobLearningDocs(job,docs)'));
 assert.ok(shell.includes('footerLinks.map'));
 assert.ok(shell.includes('rel="noopener noreferrer"'));
-assert.ok(shell.includes('closeMenu();')&&shell.includes('toggle.focus()'));
-console.log('PASS: all stable IDs/URLs, 4 ordered categories / 13 services, 8-step journey, blog multi-domain search, cross-links, all HTML noindex, local resources, CNAME and common footer/menu.');
+const navigation=readFileSync(new URL('js/portal-navigation.js',root),'utf8');
+assert.ok(navigation.includes("event.key!=='Escape'")&&navigation.includes("querySelector('summary')?.focus()"));
+assert.ok(!shell.includes('closeMenu'),'menu listeners have one owner');
+console.log('PASS: all stable IDs/URLs, ordered categories and complete registry, journey, blog search, cross-links, all HTML noindex, resources, CNAME and common footer/menu.');

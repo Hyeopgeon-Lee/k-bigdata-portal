@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {spawnSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
 import {codingProblems as seeds} from '../data/coding-samples.js';
 import {javaProblems} from '../data/coding-java-98.js';
 import {cFoundationProblems} from '../data/coding-c-foundations.js';
@@ -37,7 +38,7 @@ assert.ok(js.includes('url.searchParams.set("id", q.id)'),'shared deep links pre
 assert.ok(js.includes('history.replaceState'),'deep link remains stable on question selection');
 assert.ok(css.includes('.coding-share-actions')&&css.includes('@media(max-width:530px)'),'responsive share actions');
 for(const moduleFile of ['js/coding.js','js/learning-report.js']){
-  const check=spawnSync('node',['--check',new URL('../'+moduleFile,import.meta.url).pathname],{encoding:'utf8'});
+  const check=spawnSync(process.execPath,['--check',fileURLToPath(new URL('../'+moduleFile,import.meta.url))],{encoding:'utf8'});
   assert.equal(check.status,0,moduleFile+' syntax: '+check.stderr);
 }
 globalThis.location={origin:'https://portal.k-bigdata.kr'};
@@ -52,5 +53,5 @@ assert.equal(reported.searchParams.has('code'),false,'solution must not leak int
 const original=new URL(reported.searchParams.get('url'));
 assert.equal(original.href,'https://portal.k-bigdata.kr/coding.html?id=LINUX-025');
 assert.equal(learningReportUrl('unknown',{id:'test'}),'');
-assert.ok(index.includes('js/app.js?v=20261020-study-share-1'),'home loads updated service registry');
+assert.match(index, /type="module" src="js\/app\.js\?v=[^"]+"/,'home loads versioned service registry entry');
 console.log('PASS: 350 unique questions, refreshed learning title, responsive share controls, canonical links, report URL and unchanged language views');

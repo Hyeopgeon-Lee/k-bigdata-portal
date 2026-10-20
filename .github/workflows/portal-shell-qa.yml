@@ -1,0 +1,50 @@
+name: Shared portal shell QA
+on:
+  push:
+    branches: [main]
+    paths: ['**/*.html', 'css/**', 'js/**', 'scripts/build-portal-shell.mjs', 'scripts/portal-shell-template.mjs', 'tests/portal-shell*', '.github/workflows/portal-shell-qa.yml']
+  pull_request:
+    paths: ['**/*.html', 'css/**', 'js/**', 'scripts/build-portal-shell.mjs', 'scripts/portal-shell-template.mjs', 'tests/portal-shell*', '.github/workflows/portal-shell-qa.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-shell:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        engine: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify generated shell and source contracts
+        run: |
+          node scripts/build-portal-shell.mjs --check
+          node tests/portal-shell.test.mjs
+          node --check js/portal-navigation.js
+      - name: Preserve related portal, learning, calendar and analytics behavior
+        run: |
+          for test in analytics browser-compatibility coding-page content-cleanup course-publication home-engagement performance-architecture portal-dashboard portal-ux interview-session interview-mobile interview-sharing interview-glossary calendar-grade-bridge schedule-integration schedule-registration schedule-page; do
+            node "tests/$test.test.mjs"
+          done
+          node tests/practical-suite.mjs
+      - name: Install pinned browser runtime
+        run: |
+          npm install --no-save --no-package-lock playwright@1.56.1
+          npx playwright install --with-deps ${{ matrix.engine }}
+      - name: Verify all pages at nine widths and menu interactions
+        env:
+          PORTAL_ENGINE: ${{ matrix.engine }}
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/portal-shell-server.log 2>&1 &
+          node tests/portal-shell-browser.mjs
+      - name: Upload computed styles, failures and screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: portal-shell-${{ matrix.engine }}
+          path: ui-screenshots/portal-shell/
+          if-no-files-found: error

@@ -2,7 +2,6 @@
 .today-overview{padding:22px;border:1px solid var(--color-border);border-radius:14px;background:#fff;margin-bottom:22px}.today-overview h2{margin:0;font-size:23px}.today-overview .job-topic-links{margin-bottom:0}
 .practical-page .learning-content{max-width:1100px}.practical-page .page-hero h1{font-size:clamp(32px,4.6vw,52px);line-height:1.3;word-break:keep-all}
 
-
 .bank-nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:5px 4px 16px;max-width:100%}.bank-nav button{min-width:0;white-space:normal}.bank-controls{padding:24px;background:#fff;border:1px solid var(--color-border);border-radius:14px;margin-top:24px}
 .bank-filter-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-bottom:20px}.practical-page label{display:block;font-weight:650;line-height:1.6}.practical-page select,.practical-page textarea{display:block;width:100%;max-width:100%;padding:12px;margin-top:8px;color:var(--color-text);background:#fff;border:1px solid #bbc8dc;border-radius:8px;font:inherit;min-height:48px}.practical-page textarea{resize:vertical;line-height:1.7;font-family:ui-monospace,Consolas,monospace}.practical-page input{width:100%}.practical-page .button{font:inherit;font-weight:650;min-height:48px;padding:12px 18px;cursor:pointer;line-height:1.5}.practical-page .button:disabled{opacity:.55;cursor:not-allowed;transform:none;box-shadow:none}.bank-controls #bank-reset{margin-top:12px}
 .bank-card-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.bank-card{padding:24px;border:1px solid var(--color-border);border-radius:14px;background:#fff;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:12px}.bank-card h2{font-size:21px;line-height:1.5;margin:0;overflow-wrap:anywhere}.bank-card p{margin:0;color:var(--color-text-muted)}.bank-card .button{margin-top:auto}.bank-badges{display:flex;flex-wrap:wrap;gap:8px}.source-reconstructed{background:#e7eefb;color:#142d70;border:1px solid #bccdeb}.source-transformed{background:#f2edf8;color:#573479;border:1px solid #d7c7e9}.source-practice{background:#eff4f5;color:#35585c;border:1px solid #c5dadd}.bank-frequency{font-weight:750;color:#142d70!important}.bank-card small{font-size:13px;color:#59647a}
@@ -14,10 +13,7 @@
 @media(max-width:400px){.bank-filter-grid{grid-template-columns:1fr}.bank-solve{padding:16px}}
 #quick-filters .study-chips{display:grid;grid-template-columns:repeat(5,minmax(0,1fr))}#quick-filters .study-chips button{min-width:0;padding-inline:4px}
 /* Mobile study app. All overrides stay inside this page. */
-.practical-page{font-size:16px;--keyboard-inset:0px;--study-header-height:56px}
-.practical-page .study-header{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;position:sticky;top:var(--portal-header-height);z-index:90;padding:6px 16px;min-height:56px;border-bottom:1px solid var(--color-border);background:#fff}
-.practical-page .study-header strong{text-align:center;font-size:16px}
-.practical-page .study-header a,.practical-page .study-header button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;font:inherit;font-size:14px;color:var(--color-primary);background:none;border:0;padding:6px;cursor:pointer}
+.practical-page{font-size:16px;--keyboard-inset:0px}
 .practical-page .study-intro,.practical-page .learning-content{width:min(calc(100% - 24px),920px);margin-inline:auto}
 .practical-page .study-intro{padding:22px 0 8px}
 .practical-page .study-intro h1{font-size:22px;line-height:1.45;letter-spacing:-.035em;margin:0 0 8px}
@@ -89,11 +85,8 @@
 .practical-page .study-footer{display:flex;justify-content:center;gap:24px;padding:14px 12px calc(14px + env(safe-area-inset-bottom));border-top:1px solid var(--color-border);background:#fff;font-size:14px;color:var(--color-primary)}
 .practical-page .study-footer a{display:inline-flex;align-items:center;min-height:44px}
 @media(max-width:900px){
- .practical-page{--portal-header-height:0px;--study-header-height:calc(56px + env(safe-area-inset-top))}
- .practical-page .site-header{display:none}
- .practical-page .study-header{top:0;padding-top:calc(6px + env(safe-area-inset-top))}
- .practical-page .solve-progress{top:var(--study-header-height)}
- .practical-page .bank-solve h2,.practical-page .bank-result #result-heading{scroll-margin-top:130px}
+
+ .practical-page .bank-solve h2,.practical-page .bank-result #result-heading{scroll-margin-top:calc(var(--portal-header-height) + var(--study-header-height) + 70px)}
 }
 @media(min-width:768px){
  .practical-page .study-intro{padding-top:32px}
@@ -108,7 +101,6 @@
  .practical-page .study-segment button{font-size:12px}
  .practical-page .study-intro h1{font-size:20px}
  .practical-page .study-start{padding:16px}
- .practical-page .study-header{gap:4px;padding-inline:8px}
  .practical-page .study-quick-menu .button{font-size:13px}
 }
 
@@ -122,7 +114,6 @@
 @media(max-width:767px){
  .practical-page .code-scroll-hint{font-size:12px}
 }
-
 
 /* Mobile readability hardening for the expanded practical bank (386 questions). */
 .practical-page{--solve-actions-height:96px}
@@ -203,7 +194,6 @@
   .practical-page .study-segment button{font-size:13px;line-height:1.35;padding-inline:4px}
 }
 
-
 /* 2026-10-05 mobile readability pass: one-hand solving, viewport economy, SQL wrapping. */
 .practical-page .solve-progress{
   display:grid;
@@ -237,18 +227,10 @@
   font-size:16px;
 }
 @media(max-width:900px){
-  .practical-page.is-solving{
-    --study-header-height:0px;
-  }
-  .practical-page.is-solving .study-header{
-    display:none;
-  }
-  .practical-page.is-solving .solve-progress{
-    top:0;
-  }
+
   .practical-page.is-solving .bank-solve h2,
   .practical-page.is-solving .bank-result #result-heading{
-    scroll-margin-top:68px;
+    scroll-margin-top:calc(var(--portal-header-height) + var(--study-header-height) + 70px);
   }
 }
 @media(max-width:480px){
@@ -278,7 +260,6 @@
     min-height:52px;
   }
 }
-
 
 /* 2026-10-05 practical bank readability audit: long-code focus mode and sentence breaks. */
 .practical-page .solve-question br{
@@ -382,15 +363,8 @@
   }
 }
 
-
 /* 2026-10-05 desktop reconstruction: keep mobile behavior, give PC its own layout system. */
 @media(min-width:901px){
-  .practical-page .study-header{display:none}
-
-  .practical-page .learning-cross-nav{
-    width:min(calc(100% - 40px),var(--container));
-    margin-inline:auto;
-  }
 
   .practical-page .study-intro{
     width:min(calc(100% - 40px),var(--container));
@@ -665,7 +639,6 @@
   }
 }
 
-
 /* 2026-10-05 desktop alignment correction: use the same horizontal grid as the shared portal hero. */
 @media(min-width:901px){
   .practical-page .learning-content{
@@ -680,7 +653,6 @@
     max-width:none;
   }
 }
-
 
 /* 2026-10-05 staged solving flow: self-solve → hint at 60s → answer at 120s. */
 .practical-page .solve-hint{
@@ -733,7 +705,6 @@
 .practical-page .bank-timer.hint-stage{color:#315b91}
 .practical-page .bank-timer.revealed-stage{color:#315b39}
 
-
 /* Timed reveal status: keep the 120-second learning transition clear on PC and mobile. */
 .practical-page .timeout-note{
   margin:8px 0 18px;
@@ -752,7 +723,6 @@
     font-size:13px;
   }
 }
-
 
 /* Current-problem sharing: secondary controls that stay compact on PC and touch-friendly on mobile. */
 .practical-page .solve-share-row{
@@ -792,7 +762,6 @@
     text-align:left;
   }
 }
-
 
 /* 2026-10-05 beginner explanation redesign: readable for first-year learners. */
 .practical-page .beginner-flow{
@@ -1069,8 +1038,6 @@
     margin-left:31px;
   }
 }
-
-
 
 /* Learning-problem report link: equally accessible on touch screens. */
 .practical-page .solve-share-row [data-action="report-problem"]{
