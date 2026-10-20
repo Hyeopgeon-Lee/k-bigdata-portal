@@ -139,3 +139,16 @@
   .coding-page .coding-share-actions .button{width:100%;min-width:0;min-height:44px;padding:8px;font-size:13px;white-space:nowrap}
   .coding-share-status{text-align:left}
 }
+
+/* Identical top study-bar geometry to practical.html, without changing the exercise UI. */
+.coding-study-header{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:12px;position:sticky;top:var(--portal-header-height);z-index:90;padding:6px 16px;min-height:56px;border-bottom:1px solid var(--color-border);background:#fff}
+.coding-study-header strong{text-align:center;font-size:16px;line-height:1.35;min-width:0;overflow-wrap:anywhere}
+.coding-study-header a,.coding-study-header button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;font:inherit;font-size:14px;color:var(--color-primary);background:none;border:0;padding:6px;cursor:pointer}
+.coding-study-header button:focus-visible,.coding-study-header a:focus-visible{outline:3px solid #17a2d4;outline-offset:2px;border-radius:6px}
+.coding-page .portal-page-hero{padding-top:28px;padding-bottom:18px}
+.coding-page .coding-summary{scroll-margin-top:calc(var(--portal-header-height) + var(--study-header-height) + 12px)}
+@media(min-width:901px){.coding-study-header{display:none}}
+@media(max-width:767px){
+  .coding-page .portal-page-hero{padding-top:24px;padding-bottom:18px}
+  .coding-page .portal-page-hero h1{font-size:28px;line-height:1.35}
+}
