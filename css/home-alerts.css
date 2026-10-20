@@ -56,3 +56,6 @@ body[data-portal-home] .dashboard-side{min-width:0}
 @media(prefers-reduced-motion:reduce){
  body[data-portal-home] .home-recruit-link{transition:none}
 }
+
+/* Only one of the second-column alert feeds is exposed at a time. */
+body[data-portal-home] #home-project-alert-list[hidden],body[data-portal-home] #home-recruit-alert-list[hidden]{display:none!important}
