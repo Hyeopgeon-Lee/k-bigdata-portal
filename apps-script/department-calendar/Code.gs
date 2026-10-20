@@ -9,9 +9,9 @@
  *   (학과) [취업] 기업 채용설명회
  */
 const DEPT = Object.freeze({
-  prefix: /^\(학과\)\s*(?:\[(학사|시험|프로젝트|취업|자격증|행사)\]\s*)?(.+)$/,
+  prefix: /^\(학과\)\s*(?:\[(학사|시험|프로젝트|취업|자격증|행사)\]\s*)?(?:\[(1학년|2학년)\]\s*)?(.+)$/,
   sheetName: "PublishedSchedules",
-  headers: ["id","title","category","startDate","endDate","startTime","important","published","source"],
+  headers: ["id","title","category","startDate","endDate","startTime","important","published","source","targetGrade"],
   periodPastMonths: 6,
   periodFutureMonths: 18,
   maximumEvents: 4000
@@ -23,7 +23,7 @@ const CATEGORIES = Object.freeze({
 const PORTAL_SOURCE_TAG = "kbigdata_portal_registration";
 // Store only the published projection, never CalendarApp objects or personal data.
 // Apps Script cache entries are limited to 100 KB, so oversize payloads fall back to Sheets.
-const SCHEDULE_PUBLIC_CACHE_KEY = "dept-public-events-v1";
+const SCHEDULE_PUBLIC_CACHE_KEY = "dept-public-events-v2";
 const SCHEDULE_PUBLIC_CACHE_SECONDS = 90;
 function publicCache_() {
   try { return typeof CacheService === "undefined" ? null : CacheService.getScriptCache(); }
@@ -100,7 +100,7 @@ function eventPublicRow_(event) {
   const original = String(event.getTitle() || "");
   const match = original.match(DEPT.prefix);
   if (!match) return null;
-  const title = match[2].trim().slice(0,120);
+  const title = match[3].trim().slice(0,120);
   if (!title) return null;
   // 캘린더 제목이 수식처럼 시작해도 Sheets에서 실행되지 않도록 합니다.
   const sheetSafeTitle = /^[=+@-]/.test(title) ? "'" + title : title;
@@ -122,7 +122,8 @@ function eventPublicRow_(event) {
     allDay ? "" : formattedTime_(start),
     false,
     true,
-    event.getTag(PORTAL_SOURCE_TAG) === "portal-v1" ? "portal" : "calendar"
+    event.getTag(PORTAL_SOURCE_TAG) === "portal-v1" ? "portal" : "calendar",
+    match[2] === "1학년" ? "1" : match[2] === "2학년" ? "2" : "all"
   ];
 }
 
@@ -208,7 +209,8 @@ function doGet(e) {
         startTime:String(r[5]),
         important:r[6]===true,
         published:true,
-        source:r[8]==="portal" ? "portal" : "calendar"
+        source:r[8]==="portal" ? "portal" : "calendar",
+        targetGrade:r[9]==="1"||r[9]==="2"?r[9]:"all"
       }));
       response = {ok:true,updatedAt:updatedAt,events:events};
       // 25k UTF-16 units keeps even multilingual JSON comfortably below the
