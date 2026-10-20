@@ -26,11 +26,34 @@ function describeLine(line) {
   if(l.startsWith("}"))return "현재 코드 블록을 마칩니다";
   return "이 문장을 실행하여 프로그램 흐름을 진행합니다";
 }
-function annotate(source) {
+function annotate(source, traceDetail="", exampleInput="") {
+  const notes=traceDetail.split("|").filter(Boolean);
+  const used=new Set();
+  return source.split("\n").map(line=>{
+    if(!line.trim()||line.includes(" // ")) return line;
+    const statement=line.trim();
+    let comment=describeLine(line);
+    if(/scanf\(|fgets\(/.test(statement)&&exampleInput!=="입력 없음") {
+      comment+=". 예제 입력: "+exampleInput.replace(/\n/g," / ").slice(0,55);
+    }
+    if(!/^(int |char |double |size_t |struct |if\b|for\b|while\b|do\b|return\b)/.test(statement)){
+      const changed=statement.match(/^(\*?[A-Za-z_]\w*(?:\[[^\]]+\])?(?:\.[A-Za-z_]\w*)?)\s*(?:\+=|-=|\*=|\/=|=(?!=)|\+\+|--)/);
+      const variable=changed?.[1]||"";
+      if(variable){
+        const hit=notes.find((note,index)=>!used.has(index)&&new RegExp("(?:^|[, ])"+variable.replace(/[.*+?^${}()|[\]\\]/g,"\\function annotate(source) {
   return source.split("\n").map(line=>{
     if(!line.trim())return line;
     if(line.includes(" // "))return line;
     return line+" // "+describeLine(line);
+  }).join("\n");
+}")+"\\s*[:=]").test(note));
+        if(hit){
+          used.add(notes.indexOf(hit));
+          comment+=". 예제 값 변화: "+hit.slice(0,88);
+        }
+      }
+    }
+    return line+" // "+comment;
   }).join("\n");
 }
 function traceFor(spec,detail) {
@@ -56,7 +79,7 @@ export function makeCProblem(n,body,options={}) {
     title:spec.title,statement:spec.statement,
     input:spec.input,output:spec.output,
     hint:options.hint||"입력 범위와 출력 형식을 확인한 뒤, "+spec.traceFocus+"의 변화 순서대로 코드를 구성하세요.",
-    code:annotate(program),
+    code:annotate(program,options.trace||"",spec.input),
     explanation:options.explanation||"입력 예제와 동일한 값을 넣어 계산 과정을 추적해 보세요. "+spec.traceFocus+"에 주목하고, 경계 조건("+spec.boundary+")도 확인하세요.",
     trace:traceFor(spec,options.trace||""),
     testCases:options.tests||[]
