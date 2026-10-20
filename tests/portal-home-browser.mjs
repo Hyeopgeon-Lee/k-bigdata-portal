@@ -93,6 +93,9 @@ try{
   assert.ok((await page.locator('#home-schedule-list').innerText()).includes('3일 뒤 취업 일정'),'2nd grade employment visible '+width);
   assert.ok(!(await page.locator('#home-schedule-list').innerText()).includes('[2학년]'),'legacy grade tag stripped on display '+width);
   assert.ok((await page.locator('#dashboard-schedule-title').innerText()).includes('취업'),'second grade academic heading '+width);
+  const secondSchedule=await page.locator('.dashboard-schedule').boundingBox();
+  const secondRecruit=await page.locator('.home-alert-recruit').boundingBox();
+  assert.ok(width<=767?secondRecruit.y<secondSchedule.y:secondRecruit.x<secondSchedule.x,'recruitment is the first priority for grade 2 '+width);
   const secondDimensions=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,viewport:document.documentElement.clientWidth}));
   assert.ok(secondDimensions.scroll<=secondDimensions.viewport+2,'second-grade horizontal overflow at '+width+': '+JSON.stringify(secondDimensions));
   await page.screenshot({path:'ui-screenshots/home-grade2-'+width+'.png',fullPage:true});
