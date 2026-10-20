@@ -4,6 +4,9 @@
 import {SCHEDULE_API_URL} from "../data/schedule-config.js?v=20261019-google-calendar-live-1";
 
 const root = document.getElementById("home-schedule-list");
+const projectRoot = document.getElementById("home-project-alert-list");
+const gradeHeading = document.getElementById("dashboard-schedule-title");
+const selectedGrade = () => document.body.dataset.homeGrade === "2" ? "2" : "1";
 const PUBLIC_API_PATTERN = /^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/;
 const CACHE_KEY = "kbigdata:published-schedule:v1:" + SCHEDULE_API_URL;
 const CACHE_TTL_MS = 30 * 60 * 1000;
@@ -38,15 +41,22 @@ const publishedEvents = values => (Array.isArray(values)?values:[])
     isDate(event.endDate||event.startDate) &&
     (event.endDate||event.startDate)>=event.startDate)
   .slice(0,MAX_EVENTS)
-  .map(event=>({
-    title:event.title.trim().slice(0,140),
+  .map(event=>{
+    const rawTitle=event.title.trim().slice(0,140);
+    const tag=rawTitle.match(/^\[(1학년|2학년)\]\s*(.*)$/);
+    const targetGrade=event.targetGrade==="1"||event.targetGrade==="2"?event.targetGrade
+      :tag?(tag[1]==="1학년"?"1":"2"):"all";
+    return {
+    title:tag?tag[2].trim():rawTitle,
+    targetGrade,
     category:event.category,
     startDate:event.startDate,
     endDate:event.endDate||event.startDate,
     startTime:typeof event.startTime==="string" && /^([01]\d|2[0-3]):[0-5]\d$/.test(event.startTime)
       ?event.startTime:"",
     published:true
-  }));
+  };
+  });
 const startDay = date => new Date(date+"T00:00:00Z");
 const dayLabel = (date,today) => {
   const [year,month,day] = date.split("-");
@@ -82,19 +92,37 @@ const makeEvent = (event,today) => {
   entry.append(link);
   return entry;
 };
-const empty = message => root.replaceChildren(create("p","dashboard-schedule-empty",message));
-const render = events => {
-  const today=todayKst();
-  const upcoming=events.filter(event=>event.endDate>=today).sort((a,b)=>{
+const empty = (destination,message) => destination?.replaceChildren(create("p","dashboard-schedule-empty",message));
+let currentPublishedEvents=[];
+const visibleToGrade = (event,grade) => event.targetGrade==="all"||event.targetGrade===grade;
+const sortedUpcoming = (events,today) => events.filter(event=>event.endDate>=today)
+  .sort((a,b)=>{
     const activeA=a.startDate<=today?0:1,activeB=b.startDate<=today?0:1;
     return activeA-activeB || a.startDate.localeCompare(b.startDate) ||
       a.startTime.localeCompare(b.startTime) || a.title.localeCompare(b.title,"ko");
   }).slice(0,2);
-  if(!upcoming.length){empty("현재 공개된 예정 일정이 없습니다.");return;}
+function renderList(destination,events,today,message){
+  if(!destination)return;
+  if(!events.length){empty(destination,message);return;}
   const list=create("ul","home-schedule-items");
-  for(const event of upcoming)list.append(makeEvent(event,today));
-  root.replaceChildren(list);
+  events.forEach(event=>list.append(makeEvent(event,today)));
+  destination.replaceChildren(list);
+}
+const render = events => {
+  currentPublishedEvents=events;
+  const today=todayKst();
+  const grade=selectedGrade();
+  if(gradeHeading)gradeHeading.textContent=grade==="1"?"학습·시험 일정":"취업·자격증 일정";
+  const permitted=events.filter(event=>visibleToGrade(event,grade));
+  const primaryCategories=grade==="1"
+    ?new Set(["academic","exam","certificate","event"])
+    :new Set(["employment","certificate","project","academic","event"]);
+  renderList(root,sortedUpcoming(permitted.filter(event=>primaryCategories.has(event.category)),today),today,
+    grade==="1"?"현재 공개된 학습·시험 일정이 없습니다.":"현재 공개된 취업·자격증 일정이 없습니다.");
+  renderList(projectRoot,sortedUpcoming(permitted.filter(event=>event.category==="project"),today),today,
+    "현재 공개된 프로젝트 일정이 없습니다.");
 };
+window.addEventListener("kbigdata:home-gradechange",()=>render(currentPublishedEvents));
 const readCache = () => {
   try{
     const saved=JSON.parse(localStorage.getItem(CACHE_KEY)||"null");
@@ -141,7 +169,8 @@ async function refresh(){
   if(activeLoad)return activeLoad;
   const work=(async()=>{
     if(!PUBLIC_API_PATTERN.test(SCHEDULE_API_URL)){
-      empty("학과 일정 연결을 확인할 수 없습니다. 전체 일정을 이용해 주세요.");
+      empty(root,"학과 일정 연결을 확인할 수 없습니다. 전체 일정을 이용해 주세요.");
+      empty(projectRoot,"학과 일정을 확인할 수 없습니다.");
       return;
     }
     try{
@@ -154,7 +183,9 @@ async function refresh(){
     }catch(error){
       // Match schedule.html fail-closed behavior: no unverified stale calendar content.
       try{localStorage.removeItem(CACHE_KEY);}catch{}
-      empty("일정을 불러오지 못했습니다. 전체 일정에서 다시 확인해 주세요.");
+      currentPublishedEvents=[];
+      empty(root,"일정을 불러오지 못했습니다. 전체 일정에서 다시 확인해 주세요.");
+      empty(projectRoot,"일정을 불러오지 못했습니다.");
       console.error("Department schedule preview load failed",error);
     }
   })();
