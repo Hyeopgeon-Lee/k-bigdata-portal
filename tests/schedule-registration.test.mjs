@@ -39,7 +39,7 @@ function createMockEvent(allDay,args){
  const eventId="mock-event-"+(created.length+1);
  const evt={allDay,args,deleted:false,
   setTag:(key,value)=>{tags[key]=value;return evt;},getTag:key=>tags[key]||null,
-  getVisibility:()=>"DEFAULT",getTitle:()=>args[0],
+  getVisibility:()=>"DEFAULT",getTitle:()=>args[0],getDescription:()=>"",
   getStartTime:()=>args[1],getEndTime:()=>args[2],
   isAllDayEvent:()=>allDay,getId:()=>eventId,
   deleteEvent:()=>{evt.deleted=true;}
