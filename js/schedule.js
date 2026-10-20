@@ -356,6 +356,15 @@ registrationField("startDate").addEventListener("change",()=>{
   if(registrationField("endDate").value<registrationField("startDate").value)
     registrationField("endDate").value=registrationField("startDate").value;
 });
+const registrationGrade=registrationField("targetGrade");
+const registrationTitle=registrationField("title");
+const applyTitleLimit=()=>{
+  // An older Apps Script release validates the tagged Calendar title as 100
+  // characters. Reserve six characters for the [1학년]/[2학년] prefix.
+  registrationTitle.maxLength=registrationGrade.value==="all"?100:94;
+};
+registrationGrade.addEventListener("change",applyTitleLimit);
+applyTitleLimit();
 registrationField("allDay").addEventListener("change",e=>{
   for(const name of ["startTime","endTime"]){
     registrationField(name).disabled=e.target.checked;
