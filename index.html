@@ -15,6 +15,7 @@
 <link rel="stylesheet" href="css/portal-ux.css?v=20261016-ui-review-2">
   <link rel="stylesheet" href="css/home-ui.css?v=20261020-balanced-grid-2">
   <link rel="stylesheet" href="css/home-alerts.css?v=20261020-alerts-2">
+  <link rel="stylesheet" href="css/home-grade.css?v=20261020-grade-1">
 </head>
 <body data-portal-home>
   <a class="skip-link" href="#main-content">본문으로 바로가기</a>
@@ -31,6 +32,16 @@
         <div>
           <h2 id="home-alerts-title" class="home-alerts-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg>놓치지 마세요</h2>
           <p class="home-alerts-subtitle">다가오는 학과 일정과 채용 마감일을 확인하세요.</p>
+        </div>
+        <div class="home-grade-control" aria-label="학년별 메인화면 설정">
+          <div class="home-grade-control-row">
+            <span class="home-grade-label">내 학년</span>
+            <div class="home-grade-options" role="group" aria-label="학년 선택">
+              <button type="button" class="home-grade-button" data-home-grade="1" aria-pressed="true">1학년</button>
+              <button type="button" class="home-grade-button" data-home-grade="2" aria-pressed="false">2학년</button>
+            </div>
+          </div>
+          <p id="home-grade-status" class="home-grade-status" role="status" aria-live="polite">학년을 선택하면 추천 메뉴가 변경됩니다.</p>
         </div>
       </div>
       <div class="home-alerts-grid">
@@ -59,7 +70,7 @@
       <div class="dashboard-intro">
         <p class="eyebrow">K-BIGDATA STUDENT PORTAL</p>
         <h1 id="hero-title">오늘 무엇을 준비할까요?</h1>
-        <p>학습부터 취업 준비까지, 지금 필요한 서비스를 바로 시작하세요.</p>
+        <p id="hero-description" data-grade-intro>학습부터 취업 준비까지, 지금 필요한 서비스를 바로 시작하세요.</p>
       </div>
       <div class="dashboard-main">
         <div class="dashboard-primary">
@@ -163,7 +174,7 @@
   <script type="module" src="js/app.js?v=20261016-ui-review-2"></script>
   <script type="module" src="js/portal-shell-entry.js?v=20261016-ui-review-2"></script>
   <script src="data/recruitments.js?v=20261016-2"></script>
-  <script type="module" src="js/home-dashboard.js?v=20261016-ui-review-2"></script>
+  <script type="module" src="js/home-dashboard.js?v=20261020-grade-1"></script>
   <script type="module" src="js/home-schedule.js?v=20261020-alerts-1"></script>
   <script type="module" src="js/home-recruit-alerts.js?v=20261020-alerts-1"></script>
 </body>
