@@ -84,6 +84,7 @@ const makeEvent = (event,today) => {
   body.append(create("span","home-schedule-title",event.title));
   const meta=create("span","home-schedule-meta");
   meta.append(create("span","home-schedule-category",CATEGORIES[event.category]));
+  if(event.targetGrade!=="all")meta.append(create("span","home-schedule-grade",event.targetGrade+"학년"));
   meta.append(create("span","",eventDateLabel(event,today)+(event.startTime?" · "+event.startTime:" · 종일")));
   body.append(meta);
   link.append(date,body,create("span","home-schedule-arrow","→"));
