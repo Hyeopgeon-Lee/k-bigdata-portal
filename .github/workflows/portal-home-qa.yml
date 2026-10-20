@@ -11,6 +11,7 @@ on:
       - "js/home-dashboard.js"
       - "js/home-schedule.js"
       - "data/calendar-grade-bridge.js"
+      - "tests/calendar-grade-bridge.test.mjs"
       - "js/home-recruit-alerts.js"
       - "js/schedule.js"
       - "schedule.html"
@@ -34,6 +35,8 @@ jobs:
           node-version: "22"
       - name: Validate home UX contracts and local preference behavior
         run: node tests/portal-dashboard.test.mjs
+      - name: Validate calendar memo grade fallback
+        run: node tests/calendar-grade-bridge.test.mjs
       - name: Check home JavaScript syntax
         run: |
           node --check js/app.js
