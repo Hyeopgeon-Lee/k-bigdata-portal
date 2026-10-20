@@ -6,6 +6,7 @@ on:
       - "index.html"
       - "css/home-ui.css"
       - "css/home-alerts.css"
+      - "css/home-grade.css"
       - "js/app.js"
       - "js/home-dashboard.js"
       - "js/home-schedule.js"
