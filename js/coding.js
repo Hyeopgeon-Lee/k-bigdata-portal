@@ -1,6 +1,8 @@
 import {codingProblems as sampleProblems} from "../data/coding-samples.js?v=20261020-a";
 import {javaProblems} from "../data/coding-java-98.js?v=20261020-java100-b";
-const codingProblems = [...sampleProblems, ...javaProblems].sort((a,b) =>
+import {cFoundationProblems} from "../data/coding-c-foundations.js?v=20261020-c100";
+import {cAdvancedProblems} from "../data/coding-c-advanced.js?v=20261020-c100";
+const codingProblems = [...sampleProblems, ...javaProblems, ...cFoundationProblems, ...cAdvancedProblems].sort((a,b) =>
   a.language.localeCompare(b.language) || Number(a.id.split("-").at(-1))-Number(b.id.split("-").at(-1))
 );
 
