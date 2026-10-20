@@ -2,12 +2,13 @@
 // Reuses the schedule page's public endpoint and 30-minute local snapshot.
 // No private Google Calendar event or credential is read or cached.
 import {SCHEDULE_API_URL} from "../data/schedule-config.js?v=20261019-google-calendar-live-1";
+import {publishedGrade} from "../data/calendar-grade-bridge.js?v=20261020-synced-1";
 
 const root = document.getElementById("home-schedule-list");
 const gradeHeading = document.getElementById("dashboard-schedule-title");
 const selectedGrade = () => document.body.dataset.homeGrade === "2" ? "2" : "1";
 const PUBLIC_API_PATTERN = /^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/;
-const CACHE_KEY = "kbigdata:published-schedule:v1:" + SCHEDULE_API_URL;
+const CACHE_KEY = "kbigdata:published-schedule:v2:" + SCHEDULE_API_URL;
 const CACHE_TTL_MS = 30 * 60 * 1000;
 const MAX_EVENTS = 4000;
 const CATEGORIES = Object.freeze({
@@ -43,8 +44,7 @@ const publishedEvents = values => (Array.isArray(values)?values:[])
   .map(event=>{
     const rawTitle=event.title.trim().slice(0,140);
     const tag=rawTitle.match(/^\[(1학년|2학년)\]\s*(.*)$/);
-    const targetGrade=["1","2","all"].includes(event.targetGrade)?event.targetGrade
-      :tag?(tag[1]==="1학년"?"1":"2"):"all";
+    const targetGrade=publishedGrade(event,tag?tag[2].trim():rawTitle);
     return {
     title:tag?tag[2].trim():rawTitle,
     targetGrade,
