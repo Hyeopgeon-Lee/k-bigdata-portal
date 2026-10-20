@@ -11,6 +11,8 @@ on:
       - "js/home-dashboard.js"
       - "js/home-schedule.js"
       - "js/home-recruit-alerts.js"
+      - "js/schedule.js"
+      - "schedule.html"
       - "js/portal-personal.js"
       - "js/search-ui.js"
       - "js/portal-shell.js"
