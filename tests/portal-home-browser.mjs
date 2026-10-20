@@ -34,7 +34,7 @@ try{
   await page.locator('.service-card').first().waitFor({timeout:12000});
   assert.ok(await page.locator('.service-card').count()>=13,'service directory must render at '+width);
   assert.equal(await page.locator('.dashboard-action-favorite').count(),4,'quick favorite actions');
-  assert.equal(await page.locator('[data-home-grade="1"]').getAttribute('aria-pressed'),'true','default first-grade dashboard '+width);
+  assert.equal(await page.locator('button[data-home-grade="1"]').getAttribute('aria-pressed'),'true','default first-grade dashboard '+width);
   assert.ok((await page.locator('#hero-title').innerText()).includes('1학년'),'first-grade heading '+width);
   assert.equal(await page.locator('.dashboard-action[href="docs.html"]').count(),1,'first-grade documentation action '+width);
   assert.equal(await page.locator('.dashboard-action[href="project-guide.html"]').count(),1,'first-grade project action '+width);
@@ -76,8 +76,8 @@ try{
    assert.equal(await page.locator('.brand-full').isVisible(),true,'full desktop/tablet brand '+width);
   }
   await page.screenshot({path:'ui-screenshots/home-'+width+'.png',fullPage:true});
-  await page.locator('[data-home-grade="2"]').click();
-  assert.equal(await page.locator('[data-home-grade="2"]').getAttribute('aria-pressed'),'true','grade switch selected '+width);
+  await page.locator('button[data-home-grade="2"]').click();
+  assert.equal(await page.locator('button[data-home-grade="2"]').getAttribute('aria-pressed'),'true','grade switch selected '+width);
   assert.ok((await page.locator('#hero-title').innerText()).includes('2학년'),'second-grade heading '+width);
   assert.equal(await page.locator('.dashboard-action[href="recruit.html"]').count(),1,'grade-2 recruitment quick action '+width);
   assert.equal(await page.locator('.dashboard-action[href="https://apply.k-bigdata.kr/"]').count(),1,'grade-2 application quick action '+width);
@@ -110,14 +110,14 @@ try{
  assert.equal(await favorite.getAttribute('aria-pressed'),'true','favorite survives reload');
  await favorite.click();
  assert.equal(await favorite.getAttribute('aria-pressed'),'false','favorite can be removed');
- await page.locator('[data-home-grade="2"]').click();
- assert.equal(await page.locator('[data-home-grade="2"]').getAttribute('aria-pressed'),'true');
+ await page.locator('button[data-home-grade="2"]').click();
+ assert.equal(await page.locator('button[data-home-grade="2"]').getAttribute('aria-pressed'),'true');
  assert.equal(await page.evaluate(()=>localStorage.getItem('kbigdata:home-grade:v1')),'2','grade stored on device');
  await page.reload({waitUntil:'domcontentloaded'});
  await page.locator('.dashboard-action[href="recruit.html"]').waitFor();
- assert.equal(await page.locator('[data-home-grade="2"]').getAttribute('aria-pressed'),'true','grade survives reload');
- await page.locator('[data-home-grade="1"]').click();
- assert.equal(await page.locator('[data-home-grade="1"]').getAttribute('aria-pressed'),'true','grades can be changed repeatedly');
+ assert.equal(await page.locator('button[data-home-grade="2"]').getAttribute('aria-pressed'),'true','grade survives reload');
+ await page.locator('button[data-home-grade="1"]').click();
+ assert.equal(await page.locator('button[data-home-grade="1"]').getAttribute('aria-pressed'),'true','grades can be changed repeatedly');
  assert.equal(await page.locator('.dashboard-action[href="docs.html"]').count(),1,'first-grade actions restored');
  await page.locator('.home-schedule-link').first().click();
  await page.waitForURL('**/schedule.html?date=*');
