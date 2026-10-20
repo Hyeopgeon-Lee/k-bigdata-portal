@@ -51,6 +51,7 @@ assert.ok(homeRecruit.includes('updateGrade'),'recruitment feed switches with gr
 assert.ok(!html.includes('id="home-project-alert-list"'),'redundant project card removed');
 assert.ok(homeRecruit.includes('card.hidden=!secondGrade'),'recruitment card hidden for first grade');
 assert.ok(alertCss.includes('home-alerts-grid{grid-template-columns:minmax(0,1fr)}'),'first grade has one full width schedule card');
+assert.ok(alertCss.includes('li:nth-child(n+3){display:block}'),'third first-year schedule must be visible on mobile');
 
 assert.ok(html.includes('role="tablist"') && html.includes('role="tabpanel"'));
 assert.ok(html.includes('role="search"'));
@@ -60,7 +61,7 @@ assert.equal((html.match(/class="dashboard-action-favorite"/g)||[]).length,4);
 assert.ok(html.includes('css/home-ui.css?v=20261020-balanced-grid-2'));
 assert.ok(html.includes('js/home-schedule.js?v=20261020-grade3-final-1'));
 assert.ok(html.includes('js/home-recruit-alerts.js?v=20261020-grade3-final-1'));
-assert.ok(html.includes('css/home-alerts.css?v=20261020-grade3-final-1'));
+assert.ok(html.includes('css/home-alerts.css?v=20261020-grade3-final-2'));
 assert.ok(html.includes('class="dashboard-panel dashboard-schedule home-alert-card"'));
 assert.ok(html.indexOf('home-alerts-title')<html.indexOf('hero-title'),'top alerts precede hero');
 assert.ok(html.indexOf('dashboard-schedule-title')<html.indexOf('dashboard-action-grid'),'schedule card precedes quick actions in DOM');
