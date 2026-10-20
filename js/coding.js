@@ -4,7 +4,10 @@ import {cFoundationProblems} from "../data/coding-c-foundations.js?v=20261020-c1
 import {cAdvancedProblems} from "../data/coding-c-advanced.js?v=20261020-c100";
 import {pythonFoundationProblems} from "../data/coding-python-foundations.js?v=20261020-py100";
 import {pythonAdvancedProblems} from "../data/coding-python-advanced.js?v=20261020-py100";
-const codingProblems = [...sampleProblems, ...javaProblems, ...cFoundationProblems, ...cAdvancedProblems, ...pythonFoundationProblems, ...pythonAdvancedProblems].sort((a,b) =>
+import {ubuntuFoundationProblems} from "../data/coding-ubuntu-foundations.js?v=20261020-ubuntu50";
+import {ubuntuAdvancedProblems} from "../data/coding-ubuntu-advanced.js?v=20261020-ubuntu50";
+import {ubuntuLegacyGuides} from "../data/coding-ubuntu-legacy-guides.js?v=20261020-ubuntu50";
+const codingProblems = [...sampleProblems, ...javaProblems, ...cFoundationProblems, ...cAdvancedProblems, ...pythonFoundationProblems, ...pythonAdvancedProblems, ...ubuntuFoundationProblems, ...ubuntuAdvancedProblems].sort((a,b) =>
   a.language.localeCompare(b.language) || Number(a.id.split("-").at(-1))-Number(b.id.split("-").at(-1))
 );
 
@@ -105,6 +108,42 @@ function resetReveal(id, buttonId) {
   $(id).hidden = true;
   $(buttonId).setAttribute("aria-expanded","false");
 }
+function updateUbuntuGuide(q) {
+  const isUbuntu = q.language === "linux";
+  const guide = isUbuntu ? {...q, ...(ubuntuLegacyGuides[q.id] || {})} : null;
+  document.body.classList.toggle("coding-ubuntu-mode",isUbuntu);
+  $("#coding-work-heading").textContent = isUbuntu ? "명령어 직접 작성" : "직접 코딩하기";
+  $("#coding-input-label").textContent = isUbuntu ? "초기 실행 환경" : "입력 예제";
+  $("#coding-output-label").textContent = isUbuntu ? "기대 결과" : "출력 예제";
+  $("#coding-answer-button").textContent = isUbuntu ? "정답 명령어 및 해설" : "정답과 줄별 주석";
+  $("#coding-answer-heading").textContent = isUbuntu ? "정답 명령어" : "정답 코드와 한 줄 주석";
+  $("#coding-copy").textContent = isUbuntu ? "명령어 복사" : "주석 없는 코드 복사";
+  $("#coding-editor").placeholder = isUbuntu ? "Ubuntu 터미널에서 사용할 명령어를 직접 작성해 보세요." : "여기에 스스로 정답을 작성해 보세요.";
+  $("#coding-answer-note").hidden = isUbuntu;
+  $("#coding-trace-button").hidden = isUbuntu;
+  $("#coding-overall-explanation").hidden = isUbuntu;
+  $("#coding-ubuntu-guide").hidden = !isUbuntu;
+  if(!isUbuntu) return;
+  $("#coding-code").textContent = guide.code;
+  $("#coding-ubuntu-before").textContent = guide.initialState;
+  $("#coding-ubuntu-after").textContent = guide.afterState;
+  $("#coding-ubuntu-verify").textContent = guide.verification;
+  $("#coding-ubuntu-verify-note").textContent = guide.verificationDetail || guide.output;
+  $("#coding-ubuntu-mistake").textContent = guide.commonMistake;
+  $("#coding-ubuntu-warning").textContent = guide.warning;
+  const tbody = $("#coding-ubuntu-parts");
+  tbody.replaceChildren();
+  for(const part of guide.commandParts){
+    const row=document.createElement("tr");
+    for(const val of [part.token,part.meaning]){
+      const td=document.createElement("td");
+      td.textContent=val;
+      row.append(td);
+    }
+    tbody.append(row);
+  }
+}
+
 function showQuestion(q) {
   if (!q) return;
   current = q;
@@ -123,9 +162,10 @@ function showQuestion(q) {
   $("#coding-hint-text").textContent = q.hint;
   $("#coding-code").textContent = q.code;
   $("#coding-explanation").textContent = q.explanation;
+  updateUbuntuGuide(q);
   const tbody = $("#coding-trace-rows");
   tbody.replaceChildren();
-  q.trace.forEach(row => {
+  (q.trace || []).forEach(row => {
     const tr = document.createElement("tr");
     row.forEach(cellValue => {
       const td = document.createElement("td");
@@ -180,12 +220,11 @@ $("#coding-next-button").addEventListener("click", () => {
   $("#coding-title").scrollIntoView({behavior:"smooth",block:"start"});
 });
 $("#coding-copy").addEventListener("click", async () => {
-  const comment = current.language === "python" || current.language === "linux"
-    ? /\s+#.*$/ : /\s+\/\/.*$/;
-  const plainCode = current.code.split("\n").map(line => line.replace(comment,"")).join("\n");
+  const comment = current.language === "python" ? /\s+#.*$/ : /\s+\/\/.*$/;
+  const plainCode = current.language === "linux" ? (ubuntuLegacyGuides[current.id]?.code || current.code) : current.code.split("\n").map(line => line.replace(comment,"")).join("\n");
   try {
     await navigator.clipboard.writeText(plainCode);
-    $("#coding-feedback").textContent = "주석 없는 정답 코드를 복사했습니다.";
+    $("#coding-feedback").textContent = current.language === "linux" ? "정답 명령어를 복사했습니다. 안전한 실습 폴더에서만 실행하세요." : "주석 없는 정답 코드를 복사했습니다.";
   } catch {
     $("#coding-feedback").textContent = "자동 복사를 지원하지 않는 브라우저입니다. 정답 코드를 직접 선택하여 복사해 주세요.";
   }
