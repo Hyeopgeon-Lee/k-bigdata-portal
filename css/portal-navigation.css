@@ -118,7 +118,6 @@ html { scroll-padding-top: calc(var(--portal-header-height) + var(--study-header
 }
 @media (max-width: 900px) {
   :root { --portal-header-height: 60px; }
-  html[data-portal-page="coding"], html[data-portal-page="practical"] { --study-header-height: 56px; }
   .portal-service-nav.portal-nav-compact { grid-template-columns: 1fr; gap: 8px; }
   .portal-service-nav .portal-nav-more { justify-self: start; }
   .portal-service-nav .portal-nav-other { right: auto; left: 0; }

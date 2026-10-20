@@ -55,5 +55,5 @@ assert.ok(ui.includes('answerDeadlineReached(attempt,now)'));assert.ok(ui.includ
 assert.ok(ui.includes('aliases[id]||id'));assert.ok(ui.includes('params.get("exam")'));
 assert.ok(ui.includes('rel="noopener noreferrer"'));assert.ok(ui.includes('slice(0,pageLimit)'));
 assert.ok(!ui.includes('첨부 데이터 516'));
-assert.ok(html.includes('data-filter="language"')&&html.includes('study-header'));
+assert.ok(html.includes('data-filter="language"')&&!html.includes('class="study-header"'));
 console.log('PASS: immediate submit reveal, 30s hint / 60s auto-answer boundaries, persistence, retry, exam-language pools, grading, aliases, paging, noindex, escaping and links.');

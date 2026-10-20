@@ -31,6 +31,7 @@ for(const file of files){
     assert.equal((generated.match(/aria-current="page"/g)||[]).length,1,'one current service '+file);
   }else assert.ok(!html.includes('data-learning-nav'),'home keeps its own content information architecture');
   if(page.toolbar)assert.ok(html.includes(renderToolbar(page)),'learning toolbar actions preserved '+file);
+  else assert.ok(!/<div class="(?:coding-study-header )?study-header"/.test(html),'no unwanted auxiliary toolbar '+file);
 }
 const generated=spawnSync(process.execPath,['scripts/build-portal-shell.mjs','--check'],{cwd:root,encoding:'utf8'});
 assert.equal(generated.status,0,generated.stderr||generated.stdout);

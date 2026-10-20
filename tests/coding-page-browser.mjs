@@ -26,13 +26,12 @@ try{
       const nav=document.querySelector(".portal-nav-current");
       const selected=nav.querySelector('a[aria-current="page"]');
       const css=getComputedStyle(selected);
-      const header=getComputedStyle(document.querySelector(".coding-study-header"));
       return {
         heading:nav.querySelector(".portal-nav-title").textContent,
         tabs:[...nav.querySelectorAll(".portal-nav-items a")].map(a=>a.textContent),
         active:selected.textContent,
         buttonStyle:{background:css.backgroundColor,color:css.color,minHeight:css.minHeight,borderRadius:css.borderRadius},
-        headerDisplay:header.display,headerHeight:document.querySelector(".coding-study-header").getBoundingClientRect().height
+        toolbarCount:document.querySelectorAll(".study-header").length
       };
     });
     assert.equal(codingNav.heading,"학습 · 역량");
@@ -44,29 +43,25 @@ try{
       const nav=document.querySelector(".portal-nav-current");
       const selected=nav.querySelector('a[aria-current="page"]');
       const css=getComputedStyle(selected);
-      const header=getComputedStyle(document.querySelector(".study-header"));
       return {
         heading:nav.querySelector(".portal-nav-title").textContent,
         tabs:[...nav.querySelectorAll(".portal-nav-items a")].map(a=>a.textContent),
         active:selected.textContent,
         buttonStyle:{background:css.backgroundColor,color:css.color,minHeight:css.minHeight,borderRadius:css.borderRadius},
-        headerDisplay:header.display,headerHeight:document.querySelector(".study-header").getBoundingClientRect().height
+        toolbarCount:document.querySelectorAll(".study-header").length
       };
     });
     assert.equal(practicalNav.heading,codingNav.heading,"matching learning group heading "+width);
     assert.deepEqual(practicalNav.tabs,codingNav.tabs,"matching learning navigation buttons "+width);
     assert.equal(practicalNav.active,"실기");
     assert.deepEqual(practicalNav.buttonStyle,codingNav.buttonStyle,"matching active navigation button styles "+width);
-    assert.equal(practicalNav.headerDisplay,codingNav.headerDisplay,"matching responsive toolbar visibility "+width);
-    if(width<=900)assert.equal(practicalNav.headerHeight,codingNav.headerHeight,"matching mobile study toolbar height "+width);
+    assert.equal(practicalNav.toolbarCount,0,"practical auxiliary toolbar removed "+width);
+    assert.equal(codingNav.toolbarCount,0,"coding auxiliary toolbar removed "+width);
     await practicePage.close();
     const bounds=await page.evaluate(()=>({content:document.documentElement.scrollWidth,viewport:document.documentElement.clientWidth}));
     assert.ok(bounds.content<=bounds.viewport+2,"no horizontal overflow width "+width+" "+JSON.stringify(bounds));
 
-    if(width<=900){
-      await page.locator("#coding-progress-jump").click();
-      assert.equal(await page.locator("#coding-summary").evaluate(el=>document.activeElement===el),true,"progress button moves focus to study status");
-    }
+    assert.equal(await page.locator("#coding-summary").isVisible(),true,"study status remains available in content");
     await page.locator("#coding-link-button").click();
     await page.waitForFunction(()=>document.querySelector("#coding-share-status")?.textContent?.includes("문제 링크를 복사"),null,{timeout:7000});
     assert.match(await page.locator("#coding-share-status").innerText(),/문제 링크를 복사/);

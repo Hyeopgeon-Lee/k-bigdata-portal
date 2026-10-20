@@ -1,10 +1,10 @@
 import {categories, services, portalNavLinks} from './services.js?v=20261020-unified-shell-1';
 
-export const shellVersion = '20261020-unified-shell-1';
+export const shellVersion = '20261021-no-study-toolbar-1';
 export const portalPages = {
   index: {title:'통합 포털', group:null},
-  coding: {title:'기초학습', group:'learning', toolbar:'coding'},
-  practical: {title:'실기 문제풀이', group:'learning', toolbar:'practical'},
+  coding: {title:'기초학습', group:'learning'},
+  practical: {title:'실기 문제풀이', group:'learning'},
   interview: {title:'기술면접', group:'learning'},
   certifications: {title:'자격증', group:'learning'},
   docs: {title:'공식문서', group:'learning'},

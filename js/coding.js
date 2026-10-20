@@ -260,11 +260,6 @@ function reportCurrentProblem() {
 $("#coding-share-button").addEventListener("click", () => { void shareCurrentProblem(); });
 $("#coding-link-button").addEventListener("click", () => { void copyCurrentProblemLink(); });
 $("#coding-report-button").addEventListener("click", reportCurrentProblem);
-$("#coding-progress-jump").addEventListener("click",()=>{
-  const target=$("#coding-summary");
-  target?.scrollIntoView({behavior:"smooth",block:"start"});
-  target?.focus({preventScroll:true});
-});
 $("#coding-hint-button").addEventListener("click", () => reveal("#coding-hint","#coding-hint-button"));
 $("#coding-answer-button").addEventListener("click", () => reveal("#coding-answer","#coding-answer-button"));
 $("#coding-trace-button").addEventListener("click", () => reveal("#coding-trace","#coding-trace-button"));
