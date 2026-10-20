@@ -116,11 +116,14 @@
 .coding-language{margin:16px 0}
 .coding-language button{min-height:76px;padding:12px 15px}
 .coding-language button b{font-size:16px}
-.coding-share-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 12px}
-.coding-share-actions .coding-btn{min-height:38px;padding:7px 12px;font-size:13px}
-.coding-share-actions .coding-btn:last-child{background:#fff;border-color:#d8baba;color:#873d3d}
-.coding-share-actions .coding-btn:last-child:hover{background:#fff5f3}
-.coding-share-status{font-size:13px;font-weight:600;color:#176e58;line-height:1.5;margin:0 0 12px}
+/* Match the live practical.html share buttons: dimensions, base colors and report accent. */
+.coding-page .coding-share-actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px;margin:10px 0 2px}
+.coding-page .coding-share-actions .button{min-height:42px;padding:8px 12px;font-size:13px;font-weight:700;line-height:1.5;border:1px solid var(--color-border);border-radius:9px;background:#fff;color:var(--color-text);box-shadow:none;transform:none}
+.coding-page .coding-share-actions .button:hover{transform:none;background:#f7f9fd}
+.coding-page .coding-share-actions #coding-report-button{border-color:#fed7aa;background:#fff7ed;color:#9a3412}
+.coding-page .coding-share-actions #coding-report-button:hover{background:#ffedd5}
+.coding-page .coding-share-actions .button:focus-visible{outline:3px solid #17a2d4;outline-offset:3px}
+.coding-share-status{min-height:0;margin:4px 0 8px;color:#53627a;font-size:13px;line-height:1.55;text-align:right}
 .coding-share-status:empty{display:none}
 @media(max-width:800px){.coding-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:530px){
@@ -128,6 +131,11 @@
   .coding-summary{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
   .coding-summary-card strong{font-size:22px}
   .coding-language button{min-height:74px}
-  .coding-share-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
-  .coding-share-actions .coding-btn{font-size:12px;padding:8px 4px;min-height:42px;white-space:nowrap}
+}
+
+/* Practical page parity: three equally-sized controls on phone screens. */
+@media(max-width:480px){
+  .coding-page .coding-share-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}
+  .coding-page .coding-share-actions .button{width:100%;min-width:0;min-height:44px;padding:8px;font-size:13px;white-space:nowrap}
+  .coding-share-status{text-align:left}
 }
