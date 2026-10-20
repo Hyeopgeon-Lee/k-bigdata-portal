@@ -44,7 +44,7 @@ try{
   assert.equal(await page.locator('button[data-home-grade="1"]').getAttribute('aria-pressed'),'true','default first-grade dashboard '+width);
   assert.ok((await page.locator('#hero-title').innerText()).includes('1학년'),'first-grade heading '+width);
   assert.equal(await page.locator('.dashboard-action[href="docs.html"]').count(),1,'first-grade documentation action '+width);
-  assert.equal(await page.locator('.dashboard-action[href="project-guide.html"]').count(),1,'first-grade project action '+width);
+  assert.equal(await page.locator('.dashboard-action[href="coding.html"]').count(),1,'first-grade programming and Ubuntu practice action '+width);
   assert.equal(await page.locator('.dashboard-action[href="certifications.html"]').count(),1,'first-grade certification guide '+width);
   assert.equal(await page.locator('.dashboard-action[href="practical.html"]').count(),0,'practice is prominently shared instead of duplicated '+width);
 
