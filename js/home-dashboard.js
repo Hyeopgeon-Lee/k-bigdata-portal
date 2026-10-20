@@ -17,7 +17,7 @@ const gradeLayouts=Object.freeze({
  "1":{
   title:"1학년, 오늘 무엇을 배울까요?",
   lead:"개발 기초부터 프로젝트까지, 필요한 학습 서비스를 바로 시작하세요.",
-  actions:["docs","jobs","project-guide","practical"],
+  actions:["docs","project-guide","jobs","certifications"],
   quickTitle:"학습 바로 시작하기",
   highlightTitle:"이어서 학습하기"
  },
@@ -34,6 +34,7 @@ const quickCopy=Object.freeze({
  jobs:["IT 직무 가이드","목표 직무 탐색"],
  "project-guide":["프로젝트 가이드","기획 · 설계 · 구현"],
  practical:["코딩 · SQL 실습","C · Java · Python · SQL"],
+ certifications:["IT 자격증","기사 · 산업기사 시험 안내"],
  recruit:["추천 채용공고","기업 · 직무 · 마감일"],
  apply:["입사지원 현황","지원 이력 · 주간 목표"],
  interview:["기술면접 연습","핵심 질문 · 모의면접"],
@@ -44,6 +45,7 @@ const quickGlyph=Object.freeze({
  jobs:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
  "project-guide":'<path d="m8 8-4 4 4 4M16 8l4 4-4 4M13 5l-2 14"/>',
  practical:'<path d="m8 8-4 4 4 4M16 8l4 4-4 4M13 5l-2 14"/>',
+ certifications:'<rect x="5" y="2" width="14" height="20" rx="2"/><path d="M9 7h6M9 11h6M9 15h4"/>',
  recruit:'<rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/>',
  apply:'<path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>',
  interview:'<path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5 9.3 9.3 0 0 1-4-.9L3 21l1.9-5.5a9.3 9.3 0 0 1-.9-4A8.5 8.5 0 0 1 12.5 3 8.5 8.5 0 0 1 21 11.5Z"/><path d="M8 10h9M8 14h6"/>',
@@ -80,6 +82,14 @@ function renderGrade(){
   const pressed=button.dataset.homeGrade===selectedGrade;
   button.setAttribute("aria-pressed",String(pressed));
  }
+ const notice=$("#home-alerts-subtitle");
+ if(notice)notice.textContent=selectedGrade==="1"
+  ?"1학년 대상 주요 일정만 모아 보여드립니다."
+  :"마감이 가까운 채용공고와 2학년·공통 일정을 확인하세요.";
+ const practiceDescription=$("#home-practical-description");
+ if(practiceDescription)practiceDescription.textContent=selectedGrade==="1"
+  ?"코드 읽기·값 추적·SQL 기초부터 익혀 보세요."
+  :"정보처리기사·산업기사 실전 기출과 취약 영역을 반복 학습하세요.";
  const status=$("#home-grade-status");
  if(status)status.textContent=readSavedGrade()
    ?"현재 "+selectedGrade+"학년 화면 · 언제든 변경할 수 있습니다."
@@ -171,7 +181,7 @@ function renderHighlights(){
   const root=$("#dashboard-highlights");
   if(!root)return;
   if(selectedGrade==="1"){
-    const allowed=["docs","jobs","project-guide","practical"];
+    const allowed=["docs","jobs","project-guide","certifications","practical"];
     const ids=[...new Set([...getRecent().filter(id=>allowed.includes(id)),"docs","project-guide"])].slice(0,2);
     root.innerHTML='<ul class="dashboard-links">'+ids.map(id=>'<li>'+link(serviceById(id))+'</li>').join("")+'</ul>'+
       '<p class="dashboard-caption">기술 학습과 프로젝트를 이어 가세요.</p>';
