@@ -7,6 +7,7 @@ on:
       - "css/home-ui.css"
       - "js/app.js"
       - "js/home-dashboard.js"
+      - "js/home-schedule.js"
       - "js/portal-personal.js"
       - "js/search-ui.js"
       - "js/portal-shell.js"
@@ -31,6 +32,7 @@ jobs:
         run: |
           node --check js/app.js
           node --check js/home-dashboard.js
+          node --check js/home-schedule.js
           node --check js/search-ui.js
           node --check js/portal-shell.js
           node --check js/portal-personal.js

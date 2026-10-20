@@ -9,10 +9,11 @@ const homeCss=read('css/home-ui.css');
 const app=read('js/app.js');
 const searchUI=read('js/search-ui.js');
 const dashboard=read('js/home-dashboard.js');
+const homeSchedule=read('js/home-schedule.js');
 const shell=read('js/portal-shell.js');
 const navigation=read('js/portal-ux.js');
 
-for(const id of ['dashboard-highlights','favorite-services','recent-services','services','portal-query'])
+for(const id of ['home-schedule-list','dashboard-highlights','favorite-services','recent-services','services','portal-query'])
   assert.ok(html.includes('id="'+id+'"'),id+' should exist');
 for(const url of ['practical.html','interview.html','recruit.html','https://ready.k-bigdata.kr/'])
   assert.ok(html.includes('href="'+url+'"'),url+' should have a direct action');
@@ -25,7 +26,16 @@ assert.ok(html.includes('role="search"'));
 assert.ok(html.includes('id="search-status" role="status"'));
 assert.ok(!html.includes('id="service-groups" aria-live'));
 assert.equal((html.match(/class="dashboard-action-favorite"/g)||[]).length,4);
-assert.ok(html.includes('css/home-ui.css?v=20261016-ui-review-2'));
+assert.ok(html.includes('css/home-ui.css?v=20261020-home-schedule-1'));
+assert.ok(html.includes('js/home-schedule.js?v=20261020-home-schedule-1'));
+assert.ok(html.includes('class="dashboard-panel dashboard-schedule"'));
+assert.ok(html.indexOf('dashboard-schedule-title')<html.indexOf('dashboard-action-grid'),'schedule card is first in mobile document flow');
+assert.ok(homeCss.includes('grid-template-areas:"primary schedule" "primary side"'));
+assert.ok(homeCss.includes('grid-template-areas:"schedule" "primary" "side"'));
+assert.ok(homeCss.includes('.home-schedule-items > li:nth-child(n+3){display:none}'));
+assert.ok(homeSchedule.includes('event.published===true'),'only published events used');
+assert.ok(homeSchedule.includes('schedule.html?date='),'calendar deep link');
+assert.ok(homeSchedule.includes('kbigdata:published-schedule:v1:'),'shared public cache');
 assert.ok(dashboard.includes('installFavoriteButtons()'));
 assert.ok(dashboard.includes('renderHighlights()'));
 assert.ok(homeCss.includes('.dashboard-action-grid'));

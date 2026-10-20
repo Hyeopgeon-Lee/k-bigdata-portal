@@ -6,10 +6,30 @@ mkdirSync('ui-screenshots',{recursive:true});
 const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
 const errors=[];
 const widths=[360,390,430,768,1280];
+const futureDay=offset=>{
+ const date=new Date(Date.now()+9*3600000);
+ date.setUTCDate(date.getUTCDate()+offset);
+ return date.toISOString().slice(0,10);
+};
+const sampleEvents=[
+ {title:"오늘 학과 일정",category:"academic",startDate:futureDay(0),endDate:futureDay(0),startTime:"09:00",published:true},
+ {title:"내일 프로젝트 일정",category:"project",startDate:futureDay(1),endDate:futureDay(1),startTime:"13:30",published:true},
+ {title:"3일 뒤 취업 일정",category:"employment",startDate:futureDay(3),endDate:futureDay(3),startTime:"16:00",published:true},
+ {title:"비공개 일정은 표시되지 않음",category:"event",startDate:futureDay(2),endDate:futureDay(2),published:false}
+];
+const mockPublicSchedule=page=>page.route("https://script.google.com/macros/s/**",route=>{
+ const callback=new URL(route.request().url()).searchParams.get("callback");
+ if(!callback?.startsWith("__kBigdataHomeSchedule_"))return route.continue();
+ return route.fulfill({
+  status:200,contentType:"application/javascript",
+  body:callback+"("+JSON.stringify({ok:true,events:sampleEvents,updatedAt:"테스트"})+")"
+ });
+});
 try{
  for(const width of widths){
   const page=await browser.newPage({viewport:{width,height:900}});
   page.on('pageerror',error=>errors.push(width+': '+String(error)));
+  await mockPublicSchedule(page);
   await page.goto('http://127.0.0.1:8765/index.html',{waitUntil:'domcontentloaded'});
   await page.locator('.service-card').first().waitFor({timeout:12000});
   assert.ok(await page.locator('.service-card').count()>=13,'service directory must render at '+width);
@@ -18,6 +38,15 @@ try{
   const highlights=await page.locator('.dashboard-highlights').boundingBox();
   const actions=await page.locator('.dashboard-start').boundingBox();
   assert.ok(search&&highlights&&actions,'core dashboard regions must be visible');
+  await page.locator('.home-schedule-item').nth(2).waitFor({timeout:7000});
+  const schedule=await page.locator('.dashboard-schedule').boundingBox();
+  assert.ok(schedule,'department schedule card visible at '+width);
+  assert.equal(await page.locator('.home-schedule-item').count(),3,'3 published events in DOM');
+  assert.equal(await page.locator('.home-schedule-item:visible').count(),width<=767?2:3,'responsive preview count '+width);
+  assert.ok((await page.locator('.home-schedule-item').first().innerText()).includes('오늘 학과 일정'));
+  assert.ok((await page.locator('.home-schedule-link').first().getAttribute('href')).includes('schedule.html?date='));
+  if(width<=900)assert.ok(schedule.y<actions.y,'schedule precedes quick actions on narrow screens '+width);
+  else assert.ok(schedule.x>actions.x && schedule.y<highlights.y,'schedule is upper right on desktop '+width);
   const dimensions=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,viewport:document.documentElement.clientWidth}));
   assert.ok(dimensions.scroll<=dimensions.viewport+2,'horizontal overflow at '+width+': '+JSON.stringify(dimensions));
   if(width<=900){
@@ -35,6 +64,7 @@ try{
  }
  const page=await browser.newPage({viewport:{width:390,height:844}});
  page.on('pageerror',error=>errors.push('interaction: '+String(error)));
+ await mockPublicSchedule(page);
  await page.goto('http://127.0.0.1:8765/index.html',{waitUntil:'domcontentloaded'});
  await page.locator('.service-card').first().waitFor();
  const favorite=page.locator('.dashboard-action-favorite[data-favorite="practical"]');
