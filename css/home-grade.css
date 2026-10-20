@@ -4,7 +4,7 @@ body[data-portal-home] .home-grade-control{display:flex;flex-direction:column;al
 body[data-portal-home] .home-grade-control-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
 body[data-portal-home] .home-grade-label{color:#435771;font-size:12px;font-weight:750;white-space:nowrap}
 body[data-portal-home] .home-grade-options{display:flex;gap:3px;padding:4px;border-radius:11px;border:1px solid #cfdced;background:#eef3fa}
-body[data-portal-home] .home-grade-button{border:0;border-radius:8px;background:transparent;padding:9px 17px;color:#405775;min-height:42px;min-width:79px;font:700 14px/1.3 inherit;cursor:pointer;white-space:nowrap}
+body[data-portal-home] .home-grade-button{border:0;border-radius:8px;background:transparent;padding:9px 17px;color:#405775;min-height:42px;min-width:79px;font-family:inherit;font-size:14px;font-weight:700;line-height:1.3;cursor:pointer;white-space:nowrap}
 body[data-portal-home] .home-grade-button[aria-pressed="true"]{background:#153d80;color:white;box-shadow:0 2px 7px #092b6533}
 body[data-portal-home] .home-grade-button:hover:not([aria-pressed="true"]){background:#dde8f7}
 body[data-portal-home] .home-grade-button:focus-visible{outline:3px solid #1ba7d4;outline-offset:3px}
