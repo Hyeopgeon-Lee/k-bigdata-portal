@@ -105,3 +105,29 @@
 .coding-ubuntu-warning strong{font-size:14px}
 .coding-ubuntu-warning p{margin:7px 0 0;color:#704d1b}
 @media(max-width:530px){.coding-ubuntu-states{grid-template-columns:1fr}.coding-ubuntu-guide .coding-trace th:first-child{width:38%}}
+
+/* 350 practical learning questions: compact header, clear share actions */
+.coding-hero{padding-top:25px;padding-bottom:16px}
+.coding-hero h1{font-size:clamp(27px,3.8vw,42px);margin-bottom:7px;overflow-wrap:break-word}
+.coding-lead{font-size:15px;line-height:1.6}
+.coding-summary{grid-template-columns:repeat(2,minmax(0,1fr));max-width:680px;gap:12px;margin-top:16px}
+.coding-summary-card{padding:13px 16px}
+.coding-summary-card strong{font-size:24px}
+.coding-language{margin:16px 0}
+.coding-language button{min-height:76px;padding:12px 15px}
+.coding-language button b{font-size:16px}
+.coding-share-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 12px}
+.coding-share-actions .coding-btn{min-height:38px;padding:7px 12px;font-size:13px}
+.coding-share-actions .coding-btn:last-child{background:#fff;border-color:#d8baba;color:#873d3d}
+.coding-share-actions .coding-btn:last-child:hover{background:#fff5f3}
+.coding-share-status{font-size:13px;font-weight:600;color:#176e58;line-height:1.5;margin:0 0 12px}
+.coding-share-status:empty{display:none}
+@media(max-width:800px){.coding-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:530px){
+  .coding-hero h1{font-size:27px}
+  .coding-summary{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .coding-summary-card strong{font-size:22px}
+  .coding-language button{min-height:74px}
+  .coding-share-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+  .coding-share-actions .coding-btn{font-size:12px;padding:8px 4px;min-height:42px;white-space:nowrap}
+}
