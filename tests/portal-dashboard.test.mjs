@@ -26,8 +26,8 @@ assert.ok(html.indexOf('dashboard-highlights') < html.indexOf('favorite-services
 assert.ok(html.includes('class="brand-short"') && html.includes('class="brand-full"'));
 assert.ok(html.includes('id="home-grade-status"') && html.includes('id="hero-description"'),'grade controls and accessible status');
 assert.ok(html.includes('data-home-grade="1"') && html.includes('data-home-grade="2"'),'both grade buttons');
-assert.ok(html.includes('css/home-grade.css?v=20261020-grade-1'));
-assert.ok(html.includes('js/home-dashboard.js?v=20261020-grade-1'));
+assert.ok(html.includes('css/home-grade.css?v=20261020-grade-2'));
+assert.ok(html.includes('js/home-dashboard.js?v=20261020-grade-2'));
 assert.ok(gradeCss.includes('home-grade-button[aria-pressed="true"]'),'selected grade is visually distinguished');
 assert.ok(gradeCss.includes('@media(max-width:767px)'),'compact mobile selector');
 for(const id of ['docs','jobs','project-guide','practical','recruit','apply','interview','ready'])
