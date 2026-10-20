@@ -84,3 +84,24 @@
 .coding-pagination span{font-size:12px;color:#67758a;text-align:center}
 @media(max-width:800px){.coding-list-panel{position:static}.coding-question-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:530px){.coding-filterbar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.coding-filterbar label{display:grid;align-items:stretch;gap:4px;font-size:12px}.coding-filterbar select{width:100%;font-size:13px}.coding-question-list{grid-template-columns:1fr}}
+
+
+/* Ubuntu learning mode: command explanation instead of line-by-line variable tracing */
+.coding-ubuntu-mode .coding-detail textarea{min-height:130px}
+.coding-ubuntu-mode .coding-detail .coding-code pre{white-space:pre;tab-size:2}
+.coding-ubuntu-mode #coding-trace-button[hidden],
+.coding-ubuntu-mode #coding-answer-note[hidden],
+.coding-ubuntu-mode #coding-overall-explanation[hidden],
+.coding-ubuntu-guide[hidden]{display:none!important}
+.coding-ubuntu-guide{border-top:1px solid #e6ebf3;margin-top:21px;padding-top:20px}
+.coding-ubuntu-guide h3{font-size:16px;margin:17px 0 10px;line-height:1.4}
+.coding-ubuntu-guide h3:first-child{margin-top:0}
+.coding-ubuntu-guide .coding-trace th:first-child{width:30%;white-space:normal}
+.coding-ubuntu-states{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.coding-ubuntu-states>div{min-width:0;border:1px solid #dfebf7;background:#f7faff;border-radius:11px;padding:13px}
+.coding-ubuntu-states strong{display:block;font-size:13px;margin-bottom:7px;color:#27538d}
+.coding-ubuntu-states p,.coding-ubuntu-info{line-height:1.7;color:#344b68;overflow-wrap:anywhere;white-space:pre-wrap;margin:0}
+.coding-ubuntu-warning{border:1px solid #efd7a9;background:#fff9eb;border-radius:11px;margin-top:20px;padding:13px;color:#704d1b}
+.coding-ubuntu-warning strong{font-size:14px}
+.coding-ubuntu-warning p{margin:7px 0 0;color:#704d1b}
+@media(max-width:530px){.coding-ubuntu-states{grid-template-columns:1fr}.coding-ubuntu-guide .coding-trace th:first-child{width:38%}}
