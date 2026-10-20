@@ -3,7 +3,7 @@ import {mkdirSync} from 'node:fs';
 import {chromium} from 'playwright';
 
 mkdirSync('ui-screenshots',{recursive:true});
-const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
+const browser=await chromium.launch({headless:true,...(process.env.PORTAL_BROWSER_CHANNEL?{channel:process.env.PORTAL_BROWSER_CHANNEL}:{}),args:['--no-sandbox']});
 const errors=[];
 const widths=[360,390,430,768,1280];
 const futureDay=offset=>{
@@ -47,12 +47,21 @@ try{
   assert.ok((await page.locator('.home-schedule-link').first().getAttribute('href')).includes('schedule.html?date='));
   if(width<=900)assert.ok(schedule.y<actions.y,'schedule precedes quick actions on narrow screens '+width);
   else assert.ok(schedule.x>actions.x && schedule.y<highlights.y,'schedule is upper right on desktop '+width);
+  assert.equal(await page.locator('body').evaluate(()=>{
+   const nodes=['.dashboard-schedule','.dashboard-start','.portal-search','.dashboard-highlights','.dashboard-personal'].map(s=>document.querySelector(s));
+   return nodes.every((node,i)=>!i||Boolean(nodes[i-1].compareDocumentPosition(node)&Node.DOCUMENT_POSITION_FOLLOWING));
+  }),true,'DOM order stays schedule/actions/search/highlights/personal');
   const dimensions=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,viewport:document.documentElement.clientWidth}));
   assert.ok(dimensions.scroll<=dimensions.viewport+2,'horizontal overflow at '+width+': '+JSON.stringify(dimensions));
   if(width<=900){
    assert.ok(search.y>=actions.y && search.y<highlights.y,'mobile search should precede sidebar at '+width);
   }else{
    assert.ok(search.x<highlights.x,'desktop search should stay in primary column');
+   const personal=await page.locator('.dashboard-personal').boundingBox();
+   assert.ok(Math.abs(search.y-personal.y)<2,'search and shortcuts share the last row');
+   assert.ok(Math.abs(search.y+search.height-personal.y-personal.height)<2,'desktop bottom edges align');
+   assert.ok(Math.abs(actions.y+actions.height-highlights.y-highlights.height)<2,'actions align with upper right stack');
+   assert.ok(Math.abs(search.y-actions.y-actions.height-16)<2,'no empty area below primary actions');
   }
   if(width<=767){
    assert.equal(await page.locator('.brand-short').isVisible(),true,'short mobile brand '+width);
@@ -80,6 +89,14 @@ try{
  await page.waitForFunction(()=>document.querySelector('#search-status')?.textContent?.includes('개 결과'),null,{timeout:20000});
  const searchText=await page.locator('#search-status').textContent();
  assert.match(searchText,/\d+개 결과/);
+ await page.reload({waitUntil:'domcontentloaded'});
+ await page.locator('.service-card').first().waitFor();
+ assert.equal(await favorite.getAttribute('aria-pressed'),'true','favorite survives reload');
+ await favorite.click();
+ assert.equal(await favorite.getAttribute('aria-pressed'),'false','favorite can be removed');
+ await page.locator('.home-schedule-link').first().click();
+ await page.waitForURL('**/schedule.html?date=*');
+ assert.ok(new URL(page.url()).searchParams.get('date'),'schedule link opens the selected date');
  assert.deepEqual(errors,[],'no browser JS runtime errors');
  await page.close();
  console.log('PASS: 360/390/430/768/1280 layouts, no horizontal overflow, favorites, tabs, search, screenshots');

@@ -94,6 +94,17 @@ body[data-portal-home] .dashboard-action-favorite:focus-visible,body[data-portal
 body[data-portal-home] .dashboard-tab[aria-selected=false]:hover{background:#f2f6fc}
 body[data-portal-home] a:focus-visible{outline:3px solid #1ba7d4;outline-offset:3px}
 
+/* Desktop cards share rows; source order remains unchanged on mobile. */
+@media(min-width:901px){
+ body[data-portal-home] .dashboard-main{grid-template-areas:"start schedule" "start highlights" "search personal";grid-template-rows:auto auto auto;align-items:stretch}
+ body[data-portal-home] .dashboard-primary,body[data-portal-home] .dashboard-side{display:contents}
+ body[data-portal-home] .dashboard-start{grid-area:start;display:flex;flex-direction:column}
+ body[data-portal-home] .dashboard-action-grid{flex:1;grid-auto-rows:1fr}
+ body[data-portal-home] .dashboard-action-tile,body[data-portal-home] .dashboard-action{height:100%}
+ body[data-portal-home] .portal-search{grid-area:search}
+ body[data-portal-home] .dashboard-highlights{grid-area:highlights}
+ body[data-portal-home] .dashboard-personal{grid-area:personal}
+}
 @media(max-width:1190px){
  body[data-portal-home] .header-inner{position:relative}
  body[data-portal-home] .brand-copy{display:grid}
