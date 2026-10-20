@@ -1,0 +1,25 @@
+name: 350 lesson UI and sharing QA
+on:
+  push:
+    paths:
+      - "coding.html"
+      - "css/coding.css"
+      - "data/coding-*.js"
+      - "js/coding.js"
+      - "js/learning-report.js"
+      - "js/services.js"
+      - "tests/coding-page.test.mjs"
+      - ".github/workflows/coding-page-qa.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-learning:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate question registry, links, share and report UI
+        run: node tests/coding-page.test.mjs
