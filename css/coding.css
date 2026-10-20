@@ -48,7 +48,7 @@
 .coding-detail textarea{display:block;resize:vertical;width:100%;min-height:165px;background:#fafbfe;border:1px solid #cbd7e9;border-radius:10px;padding:14px;font:13px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace;color:#1d2940}
 .coding-notice{font-size:13px;color:#67758e;line-height:1.65;margin:9px 0}
 .coding-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
-.coding-btn{border:1px solid #b9cbe4;border-radius:10px;min-height:42px;padding:9px 15px;cursor:pointer;font:700 14px/1.2 inherit;background:#fff;color:#173c78}
+.coding-btn{border:1px solid #b9cbe4;border-radius:10px;min-height:42px;padding:9px 15px;cursor:pointer;font-size:14px;font-weight:700;font-family:inherit;line-height:1.2;background:#fff;color:#173c78}
 .coding-btn:hover{background:#eef4fe}
 .coding-btn-primary{background:#142d70;border-color:#142d70;color:#fff}
 .coding-btn-primary:hover{background:#203f8e;color:#fff}
