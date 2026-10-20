@@ -71,3 +71,16 @@
 @media(max-width:800px){.coding-workspace{grid-template-columns:minmax(0,1fr)}.coding-list-panel{position:static}.coding-question-list{grid-template-columns:repeat(2,minmax(0,1fr))}.coding-summary{gap:8px}.coding-summary-card{padding:12px}.coding-summary-card strong{font-size:21px}}
 @media(max-width:530px){.coding-hero{padding-top:23px}.coding-summary{grid-template-columns:repeat(3,minmax(0,1fr))}.coding-summary-card small{font-size:11px}.coding-language{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.coding-language button{min-height:82px;padding:12px}.coding-question-list{grid-template-columns:1fr}.coding-detail{padding:16px}.coding-io{grid-template-columns:1fr}.coding-actions>*{flex:1 1 auto;text-align:center}.coding-code pre{font-size:12px;padding:12px}}
 @media(prefers-reduced-motion:reduce){.coding-page *{scroll-behavior:auto!important}}
+
+/* Java 100제: 단원·난이도 필터와 문제 페이지 이동 */
+.coding-filterbar{display:flex;flex-wrap:wrap;gap:12px;margin:0 0 18px}
+.coding-filterbar label{display:flex;align-items:center;gap:9px;color:#344869;font-weight:700;font-size:14px}
+.coding-filterbar select{min-height:42px;border:1px solid #c7d5e7;border-radius:10px;background:#fff;color:#1b3156;max-width:min(100%,290px);padding:7px 12px;font:inherit}
+.coding-question-list{min-height:150px}
+.coding-pagination{display:flex;justify-content:space-between;align-items:center;gap:8px;border-top:1px solid #e7edf5;margin-top:18px;padding-top:15px}
+.coding-pagination button{border:1px solid #c5d4ea;border-radius:9px;background:#fff;color:#173b74;font:700 13px/1.4 inherit;font-size:13px;font-weight:700;padding:8px 10px;cursor:pointer}
+.coding-pagination button:disabled{opacity:.45;cursor:default}
+.coding-pagination button:hover:not(:disabled){background:#eef4fc}
+.coding-pagination span{font-size:12px;color:#67758a;text-align:center}
+@media(max-width:800px){.coding-list-panel{position:static}.coding-question-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:530px){.coding-filterbar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.coding-filterbar label{display:grid;align-items:stretch;gap:4px;font-size:12px}.coding-filterbar select{width:100%;font-size:13px}.coding-question-list{grid-template-columns:1fr}}
