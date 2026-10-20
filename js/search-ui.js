@@ -1,4 +1,4 @@
-import {isExternal} from "./services.js?v=20261016-nav-search-1";
+import {isExternal} from "./services.js?v=20261020-coding-1";
 
 const esc=v=>String(v??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
 
