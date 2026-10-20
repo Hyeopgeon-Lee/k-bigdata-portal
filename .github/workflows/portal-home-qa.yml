@@ -10,6 +10,7 @@ on:
       - "js/app.js"
       - "js/home-dashboard.js"
       - "js/home-schedule.js"
+      - "data/calendar-grade-bridge.js"
       - "js/home-recruit-alerts.js"
       - "js/schedule.js"
       - "schedule.html"
@@ -38,6 +39,7 @@ jobs:
           node --check js/app.js
           node --check js/home-dashboard.js
           node --check js/home-schedule.js
+          node --check data/calendar-grade-bridge.js
           node --check js/home-recruit-alerts.js
           node --check js/search-ui.js
           node --check js/portal-shell.js
