@@ -6,7 +6,7 @@ import {spawnSync} from "node:child_process";
 
 const repo=resolve(import.meta.dirname,"..");
 const dir=mkdtempSync(join(tmpdir(),"c-coding-qa-"));
-const mods=["coding-c-blueprint.js","coding-c-utils.js","coding-c-foundations.js","coding-c-advanced.js"];
+const mods=["coding-c-blueprint.js","coding-c-guidance.js","coding-c-utils.js","coding-c-foundations.js","coding-c-advanced.js"];
 for(const mod of mods) cpSync(join(repo,"data",mod),join(dir,mod));
 writeFileSync(join(dir,"package.json"),'{"type":"module"}');
 let failures=[];
