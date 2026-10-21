@@ -1,4 +1,5 @@
 import {cBlueprint} from "./coding-c-blueprint.js";
+import {cGuidance} from "./coding-c-guidance.js";
 const byNumber = new Map(cBlueprint.map(p=>[Number(p.id.slice(2)),p]));
 const stdIncludes = ["#include <stdio.h>"];
 function describeLine(line) {
@@ -15,7 +16,9 @@ function describeLine(line) {
   if(l.startsWith("else"))return "앞의 조건이 거짓일 때 실행합니다";
   if(l.startsWith("for(")||l.startsWith("for ("))return "반복 변수와 반복 종료 조건을 확인합니다";
   if(l.startsWith("while(")||l.startsWith("while (")||l.startsWith("do {"))return "반복 조건을 확인하고 다음 단계로 진행합니다";
-  if(l.includes("printf(")||l.includes("puts(")||l.includes("putchar("))return "계산된 결과를 요구된 출력 형식으로 출력합니다";
+  if(l.includes("puts("))return "문자열을 출력하고 줄바꿈합니다";
+  if(l.includes("putchar("))return "문자 하나를 출력합니다";
+  if(l.includes("printf("))return "형식 지정자에 따라 값을 출력합니다";
   if(l.startsWith("int ")||l.startsWith("double ")||l.startsWith("char ")||l.startsWith("size_t ")||l.startsWith("struct "))return "변수를 선언하고 필요한 초기값을 설정합니다";
   if(l.includes("+=")||l.includes("++"))return "기존 변수 값을 기준으로 누적하거나 1 증가시킵니다";
   if(l.includes("-=")||l.includes("--"))return "기존 변수 값을 기준으로 감소시킵니다";
@@ -53,16 +56,23 @@ function annotate(source, traceDetail="", exampleInput="") {
   }).join("\n");
 }
 function traceFor(spec,detail) {
-  const note=(detail||"").split("|").filter(Boolean);
-  return [
-    ["입력","예제 입력",spec.input==="입력 없음"?"사용자 입력 없음":spec.input,spec.input==="입력 없음"?"시작":spec.input],
-    ...note.map((part,i)=>[(i+1)+"단계",spec.traceFocus,part,part.includes("→")?part.split("→").at(-1).trim():part]),
-    ["출력","최종 결과","예제 입력에서 계산한 출력",spec.output]
-  ];
+  const notes=(detail||"").split("|").filter(Boolean);
+  const rows=[];
+  if(spec.input!=="입력 없음")rows.push(["입력","입력값",spec.input,"입력 완료"]);
+  for(const [i,part] of notes.entries()) {
+    const name=part.includes(":")?part.split(":")[0].trim():part.split("→")[0].trim();
+    const target=name.length>38?"실행 단계":name;
+    const result=part.includes("→")?part.split("→").at(-1).trim():"단계 확인";
+    rows.push([(i+1)+"단계",target,part,result]);
+  }
+  rows.push(["출력","화면",spec.input==="입력 없음"?"입력 없이 지정된 문자열 출력":"예제 입력에 대한 결과 출력",spec.output]);
+  return rows;
 }
 export function makeCProblem(n,body,options={}) {
   const spec=byNumber.get(n);
   if(!spec||[1,24].includes(n))throw Error("등록 대상 아님: "+n);
+  const guidance=cGuidance.get(n);
+  if(!guidance||guidance.length!==2)throw Error("문제별 힌트·해설 없음: "+n);
   const headers=[...stdIncludes];
   const all=(body||"")+"\n"+(options.prefix||"");
   if(/\b(strlen|strcmp|strchr|strcspn|snprintf|string.h)\b/.test(all))headers.push("#include <string.h>");
@@ -74,9 +84,9 @@ export function makeCProblem(n,body,options={}) {
     id:spec.id,language:"c",level:spec.level,topic:spec.topic,
     title:spec.title,statement:spec.statement,
     input:spec.input,output:spec.output,
-    hint:options.hint||"입력 범위와 출력 형식을 확인한 뒤, "+spec.traceFocus+"의 변화 순서대로 코드를 구성하세요.",
+    hint:guidance[0],
     code:annotate(program,options.trace||"",spec.input),
-    explanation:options.explanation||"입력 예제와 동일한 값을 넣어 계산 과정을 추적해 보세요. "+spec.traceFocus+"에 주목하고, 경계 조건("+spec.boundary+")도 확인하세요.",
+    explanation:guidance[1],
     trace:traceFor(spec,options.trace||""),
     testCases:options.tests||[]
   };
