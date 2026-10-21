@@ -1,7 +1,7 @@
 import {codingProblems as sampleProblems} from "../data/coding-samples.js?v=20261020-a";
 import {javaProblems} from "../data/coding-java-98.js?v=20261020-java100-b";
-import {cFoundationProblems} from "../data/coding-c-foundations.js?v=20261020-c100";
-import {cAdvancedProblems} from "../data/coding-c-advanced.js?v=20261020-c100";
+import {cFoundationProblems} from "../data/coding-c-foundations.js?v=20261022-help-c-1";
+import {cAdvancedProblems} from "../data/coding-c-advanced.js?v=20261022-help-c-1";
 import {pythonFoundationProblems} from "../data/coding-python-foundations.js?v=20261020-py100";
 import {pythonAdvancedProblems} from "../data/coding-python-advanced.js?v=20261020-py100";
 import {ubuntuFoundationProblems} from "../data/coding-ubuntu-foundations.js?v=20261020-ubuntu50";
