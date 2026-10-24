@@ -88,9 +88,14 @@ try{
     if(width===390){
       await page.goto("http://127.0.0.1:8765/coding.html?id=PY-041");
       await page.locator("#coding-title").filter({hasText:"1부터 N까지의 합"}).waitFor({timeout:15000});
-      await page.locator("#coding-editor").fill("print('연습')");
+      // CodeMirror progressively hides the original textarea when CDN modules load.
+      const richEditor=page.locator("#coding-editor-host .cm-content");
+      if(await richEditor.isVisible()) await richEditor.fill("print('연습')");
+      else await page.locator("#coding-editor").fill("print('연습')");
+      await page.waitForFunction(()=>document.querySelector("#coding-editor")?.value==="print('연습')");
       await page.reload({waitUntil:"domcontentloaded"});
       await page.locator("#coding-title").filter({hasText:"1부터 N까지의 합"}).waitFor({timeout:15000});
+      await page.waitForFunction(()=>document.querySelector("#coding-editor")?.value==="print('연습')");
       assert.equal(await page.locator("#coding-editor").inputValue(),"print('연습')","draft survives reload");
       await page.route("https://help.k-bigdata.kr/request.html**",route=>route.fulfill({status:200,contentType:"text/html",body:"<html><body>신고 양식으로 이동</body></html>"}));
       await Promise.all([
