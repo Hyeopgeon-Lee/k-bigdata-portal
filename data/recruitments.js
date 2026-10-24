@@ -407,8 +407,59 @@
     "addedAt": "2026-10-16",
     "verifiedAt": "2026-10-16",
     "verification": "USER_CONFIRMED"
+  },
+  {
+    "id": "JOB-20261024-001",
+    "authNo": "K120612610160033",
+    "company": "컴즈 주식회사",
+    "site": "고용24",
+    "title": "SW QA & Test Engineer (신입/경력) 모집",
+    "position": "SW QA · 소프트웨어 테스트 엔지니어",
+    "location": "서울특별시 구로구 디지털로34길 (구로동)",
+    "salary": "연봉 2,800만~3,000만원",
+    "deadline": "2026-12-15",
+    "deadlineType": "DATE",
+    "active": true,
+    "addedAt": "2026-10-24",
+    "verifiedAt": "2026-10-19",
+    "verification": "SOURCE_SPREADSHEET",
+    "url": "https://www.work24.go.kr/wk/a/b/1500/empDetailAuthView.do?wantedAuthNo=K120612610160033&infoTypeCd=VALIDATION&infoTypeGroup=tb_workinfoworknet"
+  },
+  {
+    "id": "JOB-20261024-002",
+    "authNo": "KJK5002610150020",
+    "company": "주식회사 리더스시스템즈",
+    "site": "고용24",
+    "title": "시스템 엔지니어 채용 (신입/경력)",
+    "position": "서버 · GPU 시스템 엔지니어",
+    "location": "경기도 하남시 미사강변한강로 (망월동)",
+    "salary": "연봉 3,000만~5,000만원",
+    "deadline": "2026-12-14",
+    "deadlineType": "DATE",
+    "active": true,
+    "addedAt": "2026-10-24",
+    "verifiedAt": "2026-10-19",
+    "verification": "SOURCE_SPREADSHEET",
+    "url": "https://www.work24.go.kr/wk/a/b/1500/empDetailAuthView.do?wantedAuthNo=KJK5002610150020&infoTypeCd=VALIDATION&infoTypeGroup=tb_workinfoworknet"
+  },
+  {
+    "id": "JOB-20261024-003",
+    "authNo": "KJKH002610070026",
+    "company": "주식회사 유호스트",
+    "site": "고용24",
+    "title": "보안 솔루션 및 시스템/서버 인재 모집 (신입 가능)",
+    "position": "보안관제 · 시스템/서버 관제",
+    "location": "서울특별시 금천구 가산디지털1로 (가산동)",
+    "salary": "연봉 3,000만~3,500만원",
+    "deadline": "2026-12-06",
+    "deadlineType": "DATE",
+    "active": true,
+    "addedAt": "2026-10-24",
+    "verifiedAt": "2026-10-19",
+    "verification": "SOURCE_SPREADSHEET",
+    "url": "https://www.work24.go.kr/wk/a/b/1500/empDetailAuthView.do?wantedAuthNo=KJKH002610070026&infoTypeCd=VALIDATION&infoTypeGroup=tb_workinfoworknet"
   }
 ]; 
   window.K_BIGDATA_RECRUITMENTS = jobs;
-  window.K_BIGDATA_RECRUITMENTS_META = { updatedAt: "2026-10-16", count: jobs.length, source: "학과 추천 채용공고" };
+  window.K_BIGDATA_RECRUITMENTS_META = { updatedAt: "2026-10-24", count: jobs.length, source: "학과 추천 채용공고" };
 })();
