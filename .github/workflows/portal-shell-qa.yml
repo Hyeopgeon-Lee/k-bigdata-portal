@@ -27,7 +27,7 @@ jobs:
           node --check js/portal-navigation.js
       - name: Preserve related portal, learning, calendar and analytics behavior
         run: |
-          for test in analytics browser-compatibility coding-page content-cleanup course-publication home-engagement performance-architecture portal-dashboard portal-ux interview-session interview-mobile interview-sharing interview-glossary calendar-grade-bridge schedule-integration schedule-registration schedule-page; do
+          for test in analytics browser-compatibility coding-page content-cleanup course-publication home-engagement performance-architecture portal-dashboard portal-ux interview-session interview-mobile interview-sharing interview-glossary calendar-grade-bridge schedule-integration schedule-registration schedule-page schedule-sharing; do
             node "tests/$test.test.mjs"
           done
           node tests/practical-suite.mjs
