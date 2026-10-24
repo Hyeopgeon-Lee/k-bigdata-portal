@@ -259,3 +259,16 @@
     min-width:0;
   }
 }
+
+/* Autocomplete is a per-browser opt-in, independent of editor syntax highlighting. */
+.coding-editor-heading{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px 12px;margin-bottom:10px}
+.coding-editor-heading h3{margin:0}
+.coding-autocomplete-switch{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid #cbd7e9;border-radius:9px;background:#f6f9fe;color:#193968;font-weight:700;font-size:13px;line-height:1.4;cursor:pointer;white-space:nowrap}
+.coding-autocomplete-switch:has(input:disabled){cursor:wait;opacity:.67}
+.coding-autocomplete-switch:has(input:checked){background:#eaf6fe;border-color:#60b6de}
+.coding-autocomplete-switch input{width:16px;height:16px;margin:0;accent-color:#116ba4;cursor:inherit;flex:0 0 auto}
+.coding-autocomplete-switch input:focus-visible{outline:3px solid #17a2d4;outline-offset:3px}
+.coding-autocomplete-status{min-width:32px;text-align:center;color:#576e8c;font-weight:700}
+.coding-autocomplete-switch:has(input:checked) .coding-autocomplete-status{color:#116ba4}
+.coding-editor-host .cm-tooltip-autocomplete{max-width:min(360px,calc(100vw - 36px));font-size:13px}
+@media(max-width:530px){.coding-editor-heading{align-items:center}.coding-autocomplete-switch{padding:7px 9px;font-size:12px}}
