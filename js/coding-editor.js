@@ -79,12 +79,12 @@ export function createCodingEditor({textarea, host, language, onChange, autocomp
   const completionCompartment = new Compartment();
 
   function completionSource(context) {
-    const word = context.matchBefore(/[A-Za-z_][\\w.]*/);
+    const word = context.matchBefore(/[A-Za-z_][\w.]*/);
     const typed = word?.text || "";
     if (!context.explicit && typed.length < 2) return null;
     const options = codingCompletionOptions(selectedLanguage, typed, context.state.doc.toString(), context.explicit);
     if (!options.length) return null;
-    return {from:word?.from ?? context.pos, options, validFor:/^[A-Za-z_][\\w.]*$/};
+    return {from:word?.from ?? context.pos, options, validFor:/^[A-Za-z_][\w.]*$/};
   }
   const completionExtension = () => completionEnabled
     ? autocompletion({override:[completionSource], activateOnTyping:true, maxRenderedOptions:10})
