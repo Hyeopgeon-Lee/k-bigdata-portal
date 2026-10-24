@@ -11,6 +11,7 @@ import {pythonAdvancedProblems} from '../data/coding-python-advanced.js';
 import {ubuntuFoundationProblems} from '../data/coding-ubuntu-foundations.js';
 import {ubuntuAdvancedProblems} from '../data/coding-ubuntu-advanced.js';
 import {learningReportUrl} from '../js/learning-report.js';
+import {completionCatalog, codingCompletionOptions} from '../js/coding-completion-data.js';
 
 const html=readFileSync(new URL('../coding.html',import.meta.url),'utf8');
 const js=readFileSync(new URL('../js/coding.js',import.meta.url),'utf8');
@@ -21,6 +22,21 @@ const list=[...seeds,...javaProblems,...cFoundationProblems,...cAdvancedProblems
 assert.equal(list.length,350,'all 350 exercises must be present');
 const unique=new Set(list.map(p=>p.id));
 assert.equal(unique.size,350,'exercise IDs must be unique');
+const firstVisitAutocomplete=html.includes('id="coding-autocomplete-toggle" type="checkbox" role="switch"')
+  && !/<input[^>]+id="coding-autocomplete-toggle"[^>]+checked/.test(html);
+assert.ok(firstVisitAutocomplete,'autocomplete switch exists and is initially unchecked');
+assert.match(js,/kbigdata:coding:autocomplete:v1/,'saved opt-in key');
+assert.match(js,/autocompleteEnabled = getSafe\(AUTOCOMPLETE_KEY, "off"\) === "on"/);
+for(const lang of ['java','c','python','linux']) {
+  assert.ok(completionCatalog[lang].length>=20,lang+' keywords available');
+  assert.deepEqual(codingCompletionOptions(lang,'p','',false),[],lang+' one-character suggestions do not activate');
+}
+assert.ok(codingCompletionOptions('c','pri','',false).some(item=>item.label==='printf'));
+assert.ok(codingCompletionOptions('python','pri','',false).some(item=>item.label==='print'));
+assert.ok(codingCompletionOptions('java','Sys','',false).some(item=>item.label==='System.out.println'));
+assert.ok(codingCompletionOptions('linux','mk','',false).some(item=>item.label==='mkdir'));
+assert.ok(codingCompletionOptions('c','va','int variableName = 10;',false).some(item=>item.label==='variableName'));
+
 for(const [lang,target] of Object.entries({java:100,c:100,python:100,linux:50}))
   assert.equal(list.filter(p=>p.language===lang).length,target,lang+' count');
 assert.ok(html.includes('기초 프로그래밍·명령어 350제'));
