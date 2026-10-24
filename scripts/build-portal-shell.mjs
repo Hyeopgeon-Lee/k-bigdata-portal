@@ -25,8 +25,12 @@ for(const file of htmlPages){
   else html=removeRegion(html,'services');
   const assets=`<link rel="stylesheet" href="css/portal-navigation.css?v=${shellVersion}">\n<script defer src="js/portal-navigation.js?v=${shellVersion}"></script>`;
   if(html.includes('portal:assets:start'))html=replaceRegion(html,'assets',assets);else html=html.replace('</head>',region('assets',assets)+'\n</head>');
-  html=html.replace(/(href="css\/[^"?]+\.css)(?:\?v=[^"]+)?"/g,`$1?v=${shellVersion}"`);
-  html=html.replace(/(src="js\/(?:app|home-dashboard|learning-ui|portal-shell-entry|coding)\.js)(?:\?v=[^"]+)?"/g,`$1?v=${shellVersion}"`);
+  // Coding lesson assets have their own content version and can be updated
+  // without unnecessarily invalidating the shared portal shell.
+  html=html.replace(/(href="css\/[^"?]+\.css)(?:\?v=[^"]+)?"/g,(match,asset)=>
+    asset==='href="css/coding.css' ? match : `${asset}?v=${shellVersion}"`);
+  html=html.replace(/(src="js\/(?:app|home-dashboard|learning-ui|portal-shell-entry|coding)\.js)(?:\?v=[^"]+)?"/g,(match,asset)=>
+    asset==='src="js/coding.js' ? match : `${asset}?v=${shellVersion}"`);
   html=html.replace(/<main\b([^>]*)(?<!tabindex="-1")>/,match=>match.includes('tabindex=')?match:match.slice(0,-1)+' tabindex="-1">');
   if(html!==original){outdated.push(file);if(!process.argv.includes('--check'))writeFileSync(path.join(root,file),html);}
 }
