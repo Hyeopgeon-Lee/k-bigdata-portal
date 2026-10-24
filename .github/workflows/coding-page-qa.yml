@@ -10,6 +10,7 @@ on:
       - "js/services.js"
       - "tests/coding-page.test.mjs"
       - "tests/coding-c-help-regression.test.mjs"
+      - "tests/coding-20261022-help.test.mjs"
       - "scripts/qa-coding-c.mjs"
       - "tests/coding-page-browser.mjs"
       - ".github/workflows/coding-page-qa.yml"
@@ -28,6 +29,8 @@ jobs:
         run: node tests/coding-page.test.mjs
       - name: Verify C issue regression and per-question guidance
         run: node tests/coding-c-help-regression.test.mjs
+      - name: Verify Oct 22 Help report regression coverage
+        run: node tests/coding-20261022-help.test.mjs
       - name: Compile and execute all C learning solutions and boundary cases
         run: node scripts/qa-coding-c.mjs
       - name: Install Chromium test runtime
