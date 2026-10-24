@@ -113,3 +113,5 @@ body[data-page="schedule"] .schedule-source-note{font-size:13px!important;color:
   .schedule-event-actions{gap:6px}
   .schedule-share-button{min-height:38px;padding:8px 10px;font-size:12px}
 }
+
+.schedule-share-note{margin:13px 0 0;color:#576b81;font-size:12px;line-height:1.65}
