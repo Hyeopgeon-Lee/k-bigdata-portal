@@ -3,17 +3,61 @@
  * One source of truth: the original textarea + unchanged localStorage draft keys.
  * All third-party imports are resolved by the coding.html import map.
  */
-import {EditorView, basicSetup} from "codemirror";
-import {EditorState, Prec, EditorSelection} from "@codemirror/state";
-import {keymap, placeholder} from "@codemirror/view";
-import {indentWithTab, indentMore, indentLess} from "@codemirror/commands";
+import {EditorView} from "codemirror";
+import {EditorState, Prec, EditorSelection, Compartment} from "@codemirror/state";
+import {
+  keymap, placeholder, lineNumbers, highlightActiveLineGutter,
+  highlightSpecialChars, drawSelection, dropCursor,
+  rectangularSelection, crosshairCursor, highlightActiveLine
+} from "@codemirror/view";
+import {
+  indentWithTab, indentMore, indentLess, history, defaultKeymap, historyKeymap
+} from "@codemirror/commands";
 import {java} from "@codemirror/lang-java";
 import {cpp} from "@codemirror/lang-cpp";
 import {python} from "@codemirror/lang-python";
-import {StreamLanguage} from "@codemirror/language";
+import {
+  StreamLanguage, foldGutter, indentOnInput, syntaxHighlighting,
+  defaultHighlightStyle, bracketMatching, foldKeymap
+} from "@codemirror/language";
 import {shell} from "@codemirror/legacy-modes/mode/shell";
+import {autocompletion, closeCompletion, closeBrackets, closeBracketsKeymap} from "@codemirror/autocomplete";
+import {highlightSelectionMatches, searchKeymap} from "@codemirror/search";
+import {lintKeymap} from "@codemirror/lint";
+import {codingCompletionOptions} from "./coding-completion-data.js?v=20261024-autocomplete-1";
 
 const modes = {java:java(), c:cpp(), python:python(), linux:StreamLanguage.define(shell)};
+/**
+ * The stock basicSetup includes autocomplete, even if the visible toggle is off.
+ * Retain all its editing features except autocomplete, which is isolated in a
+ * Compartment below. OFF therefore truly contains no completion plugin.
+ */
+const editorBaseSetup = [
+  lineNumbers(),
+  highlightActiveLineGutter(),
+  highlightSpecialChars(),
+  history(),
+  foldGutter(),
+  drawSelection(),
+  dropCursor(),
+  EditorState.allowMultipleSelections.of(true),
+  indentOnInput(),
+  syntaxHighlighting(defaultHighlightStyle, {fallback:true}),
+  bracketMatching(),
+  closeBrackets(),
+  rectangularSelection(),
+  crosshairCursor(),
+  highlightActiveLine(),
+  highlightSelectionMatches(),
+  keymap.of([
+    ...closeBracketsKeymap,
+    ...defaultKeymap,
+    ...searchKeymap,
+    ...historyKeymap,
+    ...foldKeymap,
+    ...lintKeymap
+  ])
+];
 const mobileKeys = [
   ["indent", "Tab", "한 단계 들여쓰기"],
   ["outdent", "⇤", "한 단계 내어쓰기"],
@@ -27,14 +71,32 @@ const mobileKeys = [
   ["text", "/", "슬래시 입력", "/"]
 ];
 
-export function createCodingEditor({textarea, host, language, onChange}) {
+export function createCodingEditor({textarea, host, language, onChange, autocompleteEnabled = false}) {
   if (!textarea || !host) throw new Error("코드 입력창이 없습니다.");
   let applying = false;
+  let selectedLanguage = language;
+  let completionEnabled = Boolean(autocompleteEnabled);
+  const completionCompartment = new Compartment();
+
+  function completionSource(context) {
+    const word = context.matchBefore(/[A-Za-z_][\\w.]*/);
+    const typed = word?.text || "";
+    if (!context.explicit && typed.length < 2) return null;
+    const options = codingCompletionOptions(selectedLanguage, typed, context.state.doc.toString(), context.explicit);
+    if (!options.length) return null;
+    return {from:word?.from ?? context.pos, options, validFor:/^[A-Za-z_][\\w.]*$/};
+  }
+  const completionExtension = () => completionEnabled
+    ? autocompletion({override:[completionSource], activateOnTyping:true, maxRenderedOptions:10})
+    : [];
+
   function createState(doc, chosenLanguage, hint) {
+    selectedLanguage = chosenLanguage;
     return EditorState.create({
       doc,
       extensions: [
-        basicSetup,
+        editorBaseSetup,
+        completionCompartment.of(completionExtension()),
         Prec.high(keymap.of([
           indentWithTab,
           // Explicit keyboard escape from Tab indentation to the next control.
@@ -114,6 +176,12 @@ export function createCodingEditor({textarea, host, language, onChange}) {
   textarea.classList.add("coding-textarea--hidden");
   if (toolbar) toolbar.hidden = false;
   return {
+    setAutocompleteEnabled(enabled) {
+      completionEnabled = Boolean(enabled);
+      if (!completionEnabled) closeCompletion(editor);
+      // Reconfigure only autocomplete: preserve selection, undo, and draft.
+      editor.dispatch({effects:completionCompartment.reconfigure(completionExtension())});
+    },
     setContent(value, nextLanguage, nextPlaceholder) {
       // New document state resets undo/redo history across different questions.
       applying = true;
