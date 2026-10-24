@@ -1,11 +1,11 @@
-import {codingProblems as sampleProblems} from "../data/coding-samples.js?v=20261020-a";
-import {javaProblems} from "../data/coding-java-98.js?v=20261020-java100-b";
-import {cFoundationProblems} from "../data/coding-c-foundations.js?v=20261022-help-c-1";
-import {cAdvancedProblems} from "../data/coding-c-advanced.js?v=20261022-help-c-1";
-import {pythonFoundationProblems} from "../data/coding-python-foundations.js?v=20261020-py100";
-import {pythonAdvancedProblems} from "../data/coding-python-advanced.js?v=20261020-py100";
-import {ubuntuFoundationProblems} from "../data/coding-ubuntu-foundations.js?v=20261020-ubuntu50";
-import {ubuntuAdvancedProblems} from "../data/coding-ubuntu-advanced.js?v=20261020-ubuntu50";
+import {codingProblems as sampleProblems} from "../data/coding-samples.js?v=20261024-help-122";
+import {javaProblems} from "../data/coding-java-98.js?v=20261024-help-122";
+import {cFoundationProblems} from "../data/coding-c-foundations.js?v=20261024-help-122";
+import {cAdvancedProblems} from "../data/coding-c-advanced.js?v=20261024-help-122";
+import {pythonFoundationProblems} from "../data/coding-python-foundations.js?v=20261024-help-122";
+import {pythonAdvancedProblems} from "../data/coding-python-advanced.js?v=20261024-help-122";
+import {ubuntuFoundationProblems} from "../data/coding-ubuntu-foundations.js?v=20261024-help-122";
+import {ubuntuAdvancedProblems} from "../data/coding-ubuntu-advanced.js?v=20261024-help-122";
 import {ubuntuLegacyGuides} from "../data/coding-ubuntu-legacy-guides.js?v=20261020-ubuntu50";
 import {learningReportUrl} from "./learning-report.js?v=20261020-study-share-1";
 const codingProblems = [...sampleProblems, ...javaProblems, ...cFoundationProblems, ...cAdvancedProblems, ...pythonFoundationProblems, ...pythonAdvancedProblems, ...ubuntuFoundationProblems, ...ubuntuAdvancedProblems].sort((a,b) =>
