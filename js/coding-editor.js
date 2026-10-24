@@ -4,7 +4,7 @@
  * All third-party imports are resolved by the coding.html import map.
  */
 import {EditorView, basicSetup} from "codemirror";
-import {EditorState, Compartment, Prec, EditorSelection} from "@codemirror/state";
+import {EditorState, Prec, EditorSelection} from "@codemirror/state";
 import {keymap, placeholder} from "@codemirror/view";
 import {indentWithTab, indentMore, indentLess} from "@codemirror/commands";
 import {java} from "@codemirror/lang-java";
@@ -29,27 +29,31 @@ const mobileKeys = [
 
 export function createCodingEditor({textarea, host, language, onChange}) {
   if (!textarea || !host) throw new Error("코드 입력창이 없습니다.");
-  const languageSlot = new Compartment();
-  const placeholderSlot = new Compartment();
   let applying = false;
-  const editor = new EditorView({
-    parent: host,
-    state: EditorState.create({
-      doc: textarea.value,
+  function createState(doc, chosenLanguage, hint) {
+    return EditorState.create({
+      doc,
       extensions: [
         basicSetup,
-        Prec.high(keymap.of([indentWithTab])),
+        Prec.high(keymap.of([
+          indentWithTab,
+          // Explicit keyboard escape from Tab indentation to the next control.
+          {key:"Ctrl-Enter", run() {
+            document.getElementById("coding-hint-button")?.focus();
+            return true;
+          }}
+        ])),
         EditorState.tabSize.of(4),
         EditorView.lineWrapping,
         EditorView.contentAttributes.of({
-          "aria-label": "내 답안 작성 코드 편집기",
+          "aria-label": "내 답안 작성 코드 편집기. 다음 버튼으로 이동하려면 컨트롤 엔터를 누르세요.",
           "aria-multiline": "true",
           "spellcheck": "false",
           "autocapitalize": "off",
           "autocomplete": "off"
         }),
-        languageSlot.of(modes[language] || modes.java),
-        placeholderSlot.of(placeholder(textarea.placeholder || "여기에 코드를 입력하세요.")),
+        modes[chosenLanguage] || modes.java,
+        placeholder(hint || "여기에 코드를 입력하세요."),
         EditorView.updateListener.of(update => {
           if (!update.docChanged || applying) return;
           const value = update.state.doc.toString();
@@ -57,7 +61,11 @@ export function createCodingEditor({textarea, host, language, onChange}) {
           onChange(value);
         })
       ]
-    })
+    });
+  }
+  const editor = new EditorView({
+    parent: host,
+    state: createState(textarea.value, language, textarea.placeholder)
   });
 
   const toolbar = document.getElementById("coding-editor-tools");
@@ -107,17 +115,10 @@ export function createCodingEditor({textarea, host, language, onChange}) {
   if (toolbar) toolbar.hidden = false;
   return {
     setContent(value, nextLanguage, nextPlaceholder) {
+      // New document state resets undo/redo history across different questions.
       applying = true;
       try {
-        const extensions = [
-          languageSlot.reconfigure(modes[nextLanguage] || modes.java),
-          placeholderSlot.reconfigure(placeholder(nextPlaceholder || "여기에 코드를 입력하세요."))
-        ];
-        editor.dispatch({
-          changes:{from:0,to:editor.state.doc.length,insert:value},
-          effects:extensions,
-          selection:EditorSelection.cursor(0)
-        });
+        editor.setState(createState(value, nextLanguage, nextPlaceholder));
       } finally {
         applying = false;
       }
