@@ -6,6 +6,8 @@ on:
       - "css/coding.css"
       - "data/coding-*.js"
       - "js/coding.js"
+      - "js/coding-editor.js"
+      - "js/coding-completion-data.js"
       - "js/learning-report.js"
       - "js/services.js"
       - "tests/coding-page.test.mjs"
