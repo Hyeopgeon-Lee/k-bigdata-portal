@@ -1,4 +1,5 @@
 import {schedules} from "../data/schedules.js?v=20261019-1";
+import {scheduleShareUrl,copyScheduleLink,downloadScheduleIcs,openBandShare} from "./schedule-sharing.js?v=20261024-1";
 import {SCHEDULE_API_URL} from "../data/schedule-config.js?v=20261019-google-calendar-live-1";
 import {publishedGrade} from "../data/calendar-grade-bridge.js?v=20261020-synced-1";
 
@@ -44,7 +45,11 @@ const item = (tag,className,text) => {
 };
 
 const today = kstToday();
-const queryDate = new URLSearchParams(location.search).get("date");
+const pageParams=new URLSearchParams(location.search);
+const queryDate=pageParams.get("date");
+const queryEventId=pageParams.get("event");
+const sharedEventId=typeof queryEventId==="string" && /^[A-Za-z0-9_-]{1,100}$/.test(queryEventId)
+  ? queryEventId : "";
 let selectedDate = parseDate(queryDate)?queryDate:today;
 let visibleMonth = selectedDate.slice(0,7);
 let activeCategory = "all";
@@ -106,6 +111,17 @@ function storeCachedCalendar(items,updatedAt){
 const cachedCalendar=readCachedCalendar();
 let showingCachedSnapshot=Boolean(cachedCalendar);
 let events=cachedCalendar?.events||normalizeEvents(schedules);
+let linkedEventSelected=false;
+function selectLinkedEvent() {
+  if (!sharedEventId || linkedEventSelected) return;
+  const match=events.find(e=>e.id===sharedEventId);
+  if(match){
+    selectedDate=match.startDate;
+    visibleMonth=selectedDate.slice(0,7);
+    linkedEventSelected=true;
+  }
+}
+selectLinkedEvent();
 
 const currentEvents = () => events.filter(e =>
   (activeCategory==="all"||e.category===activeCategory)&&
@@ -116,6 +132,7 @@ const currentEvents = () => events.filter(e =>
 
 function renderEvent(e, showCountdown=false) {
   const el=item("li","schedule-event");
+  if(sharedEventId && e.id===sharedEventId)el.classList.add("is-shared");
   const top=item("div","schedule-event-top");
   const category=item("span","schedule-event-category",CATEGORIES[e.category]);
   category.dataset.category=e.category;
@@ -137,16 +154,51 @@ function renderEvent(e, showCountdown=false) {
     a.href=href;a.target="_blank";a.rel="noopener noreferrer";
     el.append(a);
   }
-  // 서버가 출처를 확인한 포털 등록 일정만 삭제 버튼을 보여줍니다.
+  // Sharing is available for every public event; deletion remains origin-protected.
+  const actions=item("div","schedule-event-actions");
+  const band=item("button","schedule-share-button schedule-share-band","밴드 공유");
+  band.type="button";
+  band.setAttribute("aria-label",e.title+" 밴드 게시글로 공유");
+  band.addEventListener("click",()=>{
+    $("#schedule-action-status").textContent="밴드에서 게시할 모임을 선택해 주세요. 밴드 일정 탭에는 자동 등록되지 않습니다.";
+    openBandShare(e);
+  });
+  const copy=item("button","schedule-share-button","링크 복사");
+  copy.type="button";
+  copy.setAttribute("aria-label",e.title+" 일정 링크 복사");
+  copy.addEventListener("click",async()=>{
+    try {
+      if(await copyScheduleLink(e)){
+        $("#schedule-action-status").textContent="일정 링크를 복사했습니다.";
+        copy.textContent="복사 완료";
+      } else {
+        window.prompt("일정 링크를 직접 복사해 주세요.",scheduleShareUrl(e));
+        $("#schedule-action-status").textContent="링크를 직접 복사해 주세요.";
+      }
+    }catch(_){
+      $("#schedule-action-status").textContent="링크 복사에 실패했습니다.";
+    }
+  });
+  const calendar=item("button","schedule-share-button","캘린더 저장");
+  calendar.type="button";
+  calendar.setAttribute("aria-label",e.title+" 일정 파일 저장");
+  calendar.addEventListener("click",()=>{
+    try{
+      downloadScheduleIcs(e);
+      $("#schedule-action-status").textContent="일정 파일(.ics)이 저장되었습니다. 캘린더 앱에서 열어 등록해 주세요.";
+    }catch(_){
+      $("#schedule-action-status").textContent="일정 파일을 생성할 수 없습니다.";
+    }
+  });
+  actions.append(band,copy,calendar);
   if(e.source==="portal" && typeof e.id==="string" && /^[A-Za-z0-9_-]{28}$/.test(e.id)){
-    const actions=item("div","schedule-event-actions");
     const button=item("button","schedule-delete-button","일정 삭제");
     button.type="button";
     button.setAttribute("aria-label",e.title+" 일정 삭제");
     button.addEventListener("click",()=>deletePortalSchedule(e,button));
     actions.append(button);
-    el.append(actions);
   }
+  el.append(actions);
   return el;
 }
 function addEvents(root, rows, emptyMessage, showCountdown=false){
@@ -313,6 +365,7 @@ async function loadPublicCalendar({force=false}={}){
       // A periodic refresh should not redraw 42 cells when nothing changed.
       if(JSON.stringify(next)!==JSON.stringify(events)){
         events=next;
+        selectLinkedEvent();
         render();
       }
       storeCachedCalendar(next,response.updatedAt);
