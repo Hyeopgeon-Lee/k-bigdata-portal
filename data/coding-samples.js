@@ -25,7 +25,7 @@ export const codingProblems = [
   {
     "id": "JAVA-041",
     "language": "java",
-    "level": "기초 응용",
+    "level": "입문",
     "topic": "반복문",
     "title": "1부터 N까지의 합",
     "statement": "1 이상 100 이하 정수 N을 입력받아 1부터 N까지의 합을 출력하시오.",
@@ -187,7 +187,7 @@ export const codingProblems = [
   {
     "id": "PY-041",
     "language": "python",
-    "level": "기초 응용",
+    "level": "입문",
     "topic": "반복문",
     "title": "1부터 N까지의 합",
     "statement": "1 이상 100 이하 정수 N을 입력받아 1부터 N까지의 합을 출력하시오.",
