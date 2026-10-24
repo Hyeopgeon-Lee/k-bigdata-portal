@@ -1,4 +1,4 @@
-import {pythonBlueprint} from "./coding-python-blueprint.js";
+import {pythonBlueprint} from "./coding-python-blueprint.js?v=20261024-help-122";
 const byNumber=new Map(pythonBlueprint.map(p=>[Number(p.id.slice(3)),p]));
 function description(line) {
   const s=line.trim();
