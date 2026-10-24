@@ -86,11 +86,55 @@ try{
     await page.screenshot({path:"ui-screenshots/learning-"+width+".png",fullPage:true});
 
     if(width===390){
+      await page.goto("http://127.0.0.1:8765/coding.html?id=C-001",{waitUntil:"domcontentloaded"});
+      await page.locator("#coding-title").filter({hasText:"두 정수의 합"}).waitFor({timeout:15000});
+      const autoToggle=page.locator("#coding-autocomplete-toggle");
+      assert.equal(await autoToggle.isChecked(),false,"autocomplete starts OFF in new browser");
+      assert.equal(await page.locator("#coding-autocomplete-status").innerText(),"꺼짐");
+      await page.waitForFunction(()=>!document.querySelector("#coding-autocomplete-toggle").disabled,{timeout:20000});
+      const richEditor=page.locator("#coding-editor-host .cm-content");
+      await richEditor.waitFor({state:"visible",timeout:20000});
+      await richEditor.click();
+      await page.keyboard.type("pri",{delay:55});
+      await page.waitForTimeout(500);
+      assert.equal(await page.locator(".cm-tooltip-autocomplete").isVisible(),false,"OFF suppresses suggestion popup");
+      await autoToggle.check();
+      assert.equal(await page.locator("#coding-autocomplete-status").innerText(),"켜짐");
+      await richEditor.fill("");
+      await richEditor.click();
+      await page.keyboard.type("pri",{delay:55});
+      const completionPopup=page.locator(".cm-tooltip-autocomplete");
+      await completionPopup.waitFor({state:"visible",timeout:10000});
+      assert.match(await completionPopup.innerText(),/printf/,"ON offers C function completion");
+      await autoToggle.uncheck();
+      await completionPopup.waitFor({state:"hidden",timeout:4000});
+      await richEditor.fill("");
+      await richEditor.click();
+      await page.keyboard.type("pri",{delay:55});
+      await page.keyboard.press("Control+Space");
+      await page.waitForTimeout(400);
+      assert.equal(await completionPopup.isVisible(),false,"OFF also disables manual completion shortcut");
+
+      await autoToggle.check();
+      await page.reload({waitUntil:"domcontentloaded"});
+      await page.waitForFunction(()=>!document.querySelector("#coding-autocomplete-toggle").disabled,{timeout:20000});
+      assert.equal(await autoToggle.isChecked(),true,"ON setting saved after reload");
+      await page.locator("#coding-language button[data-lang=java]").click();
+      assert.equal(await autoToggle.isChecked(),true,"setting follows language switch");
+      await richEditor.fill("");
+      await richEditor.click();
+      await page.keyboard.type("Sys",{delay:55});
+      await completionPopup.waitFor({state:"visible",timeout:10000});
+      assert.match(await completionPopup.innerText(),/System.out.println/,"Java-specific completions offered");
+      await autoToggle.uncheck();
+      await page.reload({waitUntil:"domcontentloaded"});
+      await page.waitForFunction(()=>!document.querySelector("#coding-autocomplete-toggle").disabled,{timeout:20000});
+      assert.equal(await autoToggle.isChecked(),false,"OFF setting persisted");
       await page.goto("http://127.0.0.1:8765/coding.html?id=PY-041");
       await page.locator("#coding-title").filter({hasText:"1부터 N까지의 합"}).waitFor({timeout:15000});
       // CodeMirror progressively hides the original textarea when CDN modules load.
-      const richEditor=page.locator("#coding-editor-host .cm-content");
-      if(await richEditor.isVisible()) await richEditor.fill("print('연습')");
+      const draftEditor=page.locator("#coding-editor-host .cm-content");
+      if(await draftEditor.isVisible()) await draftEditor.fill("print('연습')");
       else await page.locator("#coding-editor").fill("print('연습')");
       await page.waitForFunction(()=>document.querySelector("#coding-editor")?.value==="print('연습')");
       await page.reload({waitUntil:"domcontentloaded"});
