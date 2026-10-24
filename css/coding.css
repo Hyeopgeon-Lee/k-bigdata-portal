@@ -147,3 +147,32 @@
   .coding-page .portal-page-hero{padding-top:24px;padding-bottom:18px}
   .coding-page .portal-page-hero h1{font-size:28px;line-height:1.35}
 }
+
+
+/* CodeMirror 6 enhancement, scoped to the coding exercise view. */
+.coding-detail textarea.coding-textarea--hidden{display:none}
+.coding-editor-host[hidden],.coding-editor-tools[hidden]{display:none!important}
+.coding-editor-host{min-width:0;border:1px solid #cbd7e9;border-radius:11px;background:#fafbfe;overflow:hidden}
+.coding-editor-host:focus-within{border-color:#189cc9;box-shadow:0 0 0 3px rgba(23,162,212,.25)}
+.coding-editor-host .cm-editor{min-height:225px;max-height:560px;background:transparent;color:#172943;font:14px/1.65 ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace}
+.coding-editor-host .cm-editor.cm-focused{outline:none}
+.coding-editor-host .cm-scroller{overflow:auto;font:inherit;min-height:225px;max-height:560px;overscroll-behavior:contain}
+.coding-editor-host .cm-content{padding:12px 0;min-height:205px;caret-color:#15367c}
+.coding-editor-host .cm-line{padding:0 10px 0 6px;overflow-wrap:anywhere}
+.coding-editor-host .cm-gutters{background:#f1f5fa;border-right:1px solid #e1e8f1;color:#70809b;min-height:225px}
+.coding-editor-host .cm-activeLine,.coding-editor-host .cm-activeLineGutter{background:rgba(44,95,186,.075)}
+.coding-editor-host .cm-selectionBackground{background:#cbdffb!important}
+.coding-editor-host .cm-cursor{border-left-color:#152e72}
+.coding-editor-tools{display:flex;flex-wrap:nowrap;gap:6px;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin;padding:7px 1px 9px;max-width:100%;-webkit-overflow-scrolling:touch}
+.coding-editor-tool{flex:0 0 auto;min-width:43px;min-height:39px;padding:7px 10px;border:1px solid #c7d6eb;border-radius:8px;background:#f6f9fe;color:#193968;font:700 13px/1.1 ui-monospace,SFMono-Regular,Consolas,monospace;touch-action:manipulation;cursor:pointer}
+.coding-editor-tool:focus-visible{outline:3px solid #17a2d4;outline-offset:1px}
+.coding-editor-tool:active{background:#e3eeff}
+.coding-ubuntu-mode .coding-editor-host .cm-editor,.coding-ubuntu-mode .coding-editor-host .cm-scroller{min-height:165px}
+.coding-ubuntu-mode .coding-editor-host .cm-content{min-height:145px}
+@media(min-width:801px){.coding-editor-tools{max-width:100%;justify-content:flex-start;gap:6px}}
+@media(max-width:530px){
+  .coding-editor-host .cm-editor{font-size:16px;line-height:1.65;max-height:55vh}
+  .coding-editor-host .cm-scroller{font-size:16px;max-height:55vh}
+  .coding-editor-tool{min-height:44px;min-width:44px;font-size:14px}
+  .coding-detail textarea{font-size:16px}
+}
