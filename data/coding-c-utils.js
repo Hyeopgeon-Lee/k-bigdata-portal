@@ -55,19 +55,41 @@ function annotate(source, traceDetail="", exampleInput="") {
     return line+" // "+comment;
   }).join("\n");
 }
-function traceFor(spec,detail) {
-  const notes=(detail||"").split("|").filter(Boolean);
-  const rows=[];
-  if(spec.input!=="입력 없음")rows.push(["입력","입력값",spec.input,"입력 완료"]);
-  for(const [i,part] of notes.entries()) {
-    const name=part.includes(":")?part.split(":")[0].trim():part.split("→")[0].trim();
-    const target=name.length>38?"실행 단계":name;
-    const result=part.includes("→")?part.split("→").at(-1).trim():"단계 확인";
-    rows.push([(i+1)+"단계",target,part,result]);
+function traceFor(spec, detail) {
+  const notes = (detail || "").split("|").filter(Boolean);
+  const rows = [];
+  if (spec.input !== "입력 없음") {
+    rows.push(["입력", "예제 입력", "표준 입력에서 값을 읽어 변수에 저장", spec.input]);
   }
-  rows.push(["출력","화면",spec.input==="입력 없음"?"입력 없이 지정된 문자열 출력":"예제 입력에 대한 결과 출력",spec.output]);
+  for (const [i, part] of notes.entries()) {
+    const assignments = [...part.matchAll(/(?:^|[,\s])([a-zA-Z_]\w*(?:\[[^\]]+\])?)\s*=\s*(-?\d+(?:\.\d+)?|'[^']*'|"[^"]*")/g)];
+    const named = part.match(/(?:^|[^a-zA-Z_])([a-zA-Z_]\w*(?:\[[^\]]+\])?)\s*[:=]/)?.[1] || "";
+    let target = assignments.length > 1
+      ? [...new Set(assignments.map(match => match[1]))].join(", ")
+      : named || (/출력/.test(part) ? "출력" : /비교|조건|참|거짓/.test(part) ? "조건" : "실행 단계");
+    if (target.length > 38) target = "실행 단계";
+
+    // Only show values supported by the authored example trace; never invent a state.
+    let result = "—";
+    if (part.includes("→")) {
+      const tail = part.split("→").at(-1).trim();
+      const numeric = tail.match(/^(-?\d+(?:\.\d+)?)(?:\s|$|\()/);
+      result = named && numeric ? named + "=" + numeric[1] : tail;
+    } else if (assignments.length > 1) {
+      result = assignments.map(match => match[1] + "=" + match[2]).join(", ");
+    } else {
+      const finalAssignment = part.match(/=\s*(-?\d+(?:\.\d+)?|'[^']*'|"[^"]*")(?:\s*\([^)]*\))?\s*$/);
+      if (finalAssignment) result = (named ? named + "=" : "") + finalAssignment[1];
+      else if (/출력/.test(part)) result = spec.output;
+      else if (named && part.includes(":")) result = part.slice(part.indexOf(":") + 1).trim() || "—";
+    }
+    rows.push([(i + 1) + "단계", target, part, result]);
+  }
+  rows.push(["출력", "화면", spec.input === "입력 없음"
+    ? "입력 없이 지정된 문자열 출력" : "예제 입력에 대한 결과 출력", spec.output]);
   return rows;
 }
+
 export function makeCProblem(n,body,options={}) {
   const spec=byNumber.get(n);
   if(!spec||[1,24].includes(n))throw Error("등록 대상 아님: "+n);
