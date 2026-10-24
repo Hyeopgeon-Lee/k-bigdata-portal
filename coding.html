@@ -10,7 +10,7 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css?v=20261021-coding-comment-tip-1">
   <link rel="stylesheet" href="css/portal-ux.css?v=20261021-coding-comment-tip-1">
-  <link rel="stylesheet" href="css/coding.css?v=20261021-coding-comment-tip-1">
+  <link rel="stylesheet" href="css/coding.css?v=20261024-codemirror-1">
   <script defer src="js/analytics.js?v=20261008-ga4-3"></script>
 <!-- portal:assets:start (generated; edit scripts/portal-shell-template.mjs) -->
 <link rel="stylesheet" href="css/portal-navigation.css?v=20261021-coding-comment-tip-1">
@@ -107,6 +107,8 @@
           <section class="coding-section" aria-labelledby="coding-work-heading">
             <h3 id="coding-work-heading">직접 코딩하기</h3>
             <label for="coding-editor" class="sr-only">내 답안 작성</label>
+            <div id="coding-editor-tools" class="coding-editor-tools" role="toolbar" aria-label="코드 입력 도구" hidden></div>
+            <div id="coding-editor-host" class="coding-editor-host" hidden></div>
             <textarea id="coding-editor" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="여기에 스스로 정답을 작성해 보세요."></textarea>
             <p class="coding-notice">답안은 이 브라우저에 저장됩니다. 실행·자동 채점 기능은 없습니다.</p>
             <div class="coding-actions">
@@ -150,7 +152,21 @@
     </section>
   </main>
   <footer class="site-footer"><div class="container footer-grid"><div class="footer-brand"><span class="brand-mark" aria-hidden="true"><span></span></span><div><strong>빅데이터소프트웨어공학과</strong><p>한국폴리텍대학 서울강서캠퍼스</p></div></div><nav class="footer-links" aria-label="학과 대표 사이트"><p>학과 대표 사이트</p></nav></div><div class="container footer-bottom"><p>학생용 학습·프로젝트·취업 통합 포털입니다.</p><p>© <span id="current-year"></span> K-BigData Service Portal</p></div></footer>
-  <script type="module" src="js/coding.js?v=20261022-help-c-1"></script>
+  <!-- CodeMirror 6 modules share one dependency graph via esm.sh import-map externals. -->
+  <script type="importmap">
+  {
+    "imports": {
+      "style-mod": "https://esm.sh/style-mod",
+      "w3c-keyname": "https://esm.sh/w3c-keyname",
+      "crelt": "https://esm.sh/crelt",
+      "@marijn/find-cluster-break": "https://esm.sh/@marijn/find-cluster-break",
+      "@lezer/": "https://esm.sh/*@lezer/",
+      "@codemirror/": "https://esm.sh/*@codemirror/",
+      "codemirror": "https://esm.sh/*codemirror@6.0.2"
+    }
+  }
+  </script>
+  <script type="module" src="js/coding.js?v=20261024-codemirror-1"></script>
   <script type="module" src="js/portal-shell-entry.js?v=20261021-coding-comment-tip-1"></script>
 </body>
 </html>
