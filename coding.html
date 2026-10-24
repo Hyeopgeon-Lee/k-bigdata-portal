@@ -10,7 +10,7 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css?v=20261021-coding-comment-tip-1">
   <link rel="stylesheet" href="css/portal-ux.css?v=20261021-coding-comment-tip-1">
-  <link rel="stylesheet" href="css/coding.css?v=20261024-codemirror-1">
+  <link rel="stylesheet" href="css/coding.css?v=20261024-pc-code-layout-1">
   <script defer src="js/analytics.js?v=20261008-ga4-3"></script>
 <!-- portal:assets:start (generated; edit scripts/portal-shell-template.mjs) -->
 <link rel="stylesheet" href="css/portal-navigation.css?v=20261021-coding-comment-tip-1">
@@ -111,7 +111,7 @@
             <div id="coding-editor-host" class="coding-editor-host" hidden></div>
             <textarea id="coding-editor" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="여기에 스스로 정답을 작성해 보세요."></textarea>
             <p class="coding-notice">답안은 이 브라우저에 저장됩니다. 실행·자동 채점 기능은 없습니다.</p>
-            <div class="coding-actions">
+            <div class="coding-actions coding-actions--help">
               <button id="coding-hint-button" class="coding-btn" type="button" aria-expanded="false" aria-controls="coding-hint">힌트 보기</button>
               <button id="coding-answer-button" class="coding-btn coding-btn-primary" type="button" aria-expanded="false" aria-controls="coding-answer">정답과 줄별 주석</button>
               <button id="coding-trace-button" class="coding-btn" type="button" aria-expanded="false" aria-controls="coding-trace">값 변화 추적</button>
@@ -141,7 +141,7 @@
               <h3>실행 단계와 값 변화</h3>
               <div class="coding-scroll"><table class="coding-trace"><thead><tr><th scope="col">단계</th><th scope="col">대상</th><th scope="col">연산·상태 변화</th><th scope="col">결과</th></tr></thead><tbody id="coding-trace-rows"></tbody></table></div>
             </div>
-            <div class="coding-actions">
+            <div class="coding-actions coding-actions--progress">
               <button id="coding-done-button" class="coding-btn" type="button" aria-pressed="false">스스로 풀었어요 ✓</button>
               <button id="coding-next-button" class="coding-btn" type="button">다음 문제 →</button>
             </div>
