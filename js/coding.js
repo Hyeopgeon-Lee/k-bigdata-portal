@@ -38,7 +38,7 @@ let query = "";
 let topicFilter = "all";
 let levelFilter = "all";
 let listPage = 0;
-const PAGE_SIZE = 12;
+const PAGE_SIZE = 10;
 function refreshFilters() {
   const topics = [...new Set(codingProblems.filter(q=>q.language===language).map(q=>q.topic))];
   const topicControl=$("#coding-topic-filter");
