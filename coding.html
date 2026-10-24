@@ -10,7 +10,7 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css?v=20261021-coding-comment-tip-1">
   <link rel="stylesheet" href="css/portal-ux.css?v=20261021-coding-comment-tip-1">
-  <link rel="stylesheet" href="css/coding.css?v=20261024-coding-balanced-10">
+  <link rel="stylesheet" href="css/coding.css?v=20261024-autocomplete-1">
   <script defer src="js/analytics.js?v=20261008-ga4-3"></script>
 <!-- portal:assets:start (generated; edit scripts/portal-shell-template.mjs) -->
 <link rel="stylesheet" href="css/portal-navigation.css?v=20261021-coding-comment-tip-1">
@@ -105,7 +105,15 @@
             <div><b id="coding-output-label">출력 예제</b><pre id="coding-output">—</pre></div>
           </div>
           <section class="coding-section" aria-labelledby="coding-work-heading">
-            <h3 id="coding-work-heading">직접 코딩하기</h3>
+            <div class="coding-editor-heading">
+              <h3 id="coding-work-heading">직접 코딩하기</h3>
+              <label class="coding-autocomplete-switch" for="coding-autocomplete-toggle" title="켜면 언어별 코드 키워드와 직접 입력한 식별자를 추천합니다.">
+                <input id="coding-autocomplete-toggle" type="checkbox" role="switch" aria-describedby="coding-autocomplete-help" disabled>
+                <span class="coding-autocomplete-name">코드 자동완성</span>
+                <span id="coding-autocomplete-status" class="coding-autocomplete-status" aria-live="polite">꺼짐</span>
+              </label>
+              <span class="sr-only" id="coding-autocomplete-help">기본 꺼짐. 켜면 입력 중 추천 목록을 표시하고, 끄면 표시하지 않습니다. 이 브라우저에 설정이 저장됩니다.</span>
+            </div>
             <label for="coding-editor" class="sr-only">내 답안 작성</label>
             <div id="coding-editor-tools" class="coding-editor-tools" role="toolbar" aria-label="코드 입력 도구" hidden></div>
             <div id="coding-editor-host" class="coding-editor-host" hidden></div>
@@ -166,7 +174,7 @@
     }
   }
   </script>
-  <script type="module" src="js/coding.js?v=20261024-help-122"></script>
+  <script type="module" src="js/coding.js?v=20261024-autocomplete-1"></script>
   <script type="module" src="js/portal-shell-entry.js?v=20261021-coding-comment-tip-1"></script>
 </body>
 </html>
