@@ -99,3 +99,17 @@ body[data-page="schedule"] .schedule-source-note{font-size:13px!important;color:
 .schedule-grade-badge{padding:3px 8px;border-radius:6px;background:#eef3fb;color:#425a7a;font-weight:800;font-size:11px}
 .schedule-page select:focus-visible{outline:3px solid #1ba7d4;outline-offset:2px}
 @media(max-width:767px){.schedule-grade-filter{align-items:flex-start;gap:9px}.schedule-grade-filter .schedule-filter-label{width:100%}}
+
+
+/* Per-event sharing controls: compact on desktop and wrap on narrow screens. */
+.schedule-event-actions{display:flex;justify-content:flex-start;align-items:center;gap:7px;flex-wrap:wrap}
+.schedule-share-button{min-height:36px;padding:7px 10px;border:1px solid #bdcbe1;border-radius:8px;background:#f8faff;color:#264b7f;font:inherit;font-size:12px;font-weight:750;cursor:pointer;white-space:nowrap}
+.schedule-share-button:hover{background:#eef4ff;border-color:#8eaacc}
+.schedule-share-band{background:#e9f6ec;border-color:#acdfbf;color:#166d3c}
+.schedule-share-band:hover{background:#d9efdf;border-color:#78c492}
+.schedule-event-actions .schedule-delete-button{margin-left:auto}
+.schedule-event.is-shared{border:2px solid #245cbb;background:#f6f9ff}
+@media(max-width:767px){
+  .schedule-event-actions{gap:6px}
+  .schedule-share-button{min-height:38px;padding:8px 10px;font-size:12px}
+}
