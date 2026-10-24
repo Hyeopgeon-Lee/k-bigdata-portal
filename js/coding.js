@@ -32,6 +32,7 @@ try {
 
 const requestedId = new URLSearchParams(location.search).get("id");
 let current = codingProblems.find(q => q.id === requestedId) || codingProblems[0];
+let codeEditor = null;
 let language = current.language;
 let query = "";
 let topicFilter = "all";
@@ -164,6 +165,7 @@ function showQuestion(q) {
   $("#coding-code").textContent = q.code;
   $("#coding-explanation").textContent = q.explanation;
   updateUbuntuGuide(q);
+  codeEditor?.setContent($("#coding-editor").value, q.language, $("#coding-editor").placeholder);
   const tbody = $("#coding-trace-rows");
   tbody.replaceChildren();
   (q.trace || []).forEach(row => {
@@ -338,5 +340,54 @@ $("#coding-page-prev").addEventListener("click",()=>{
 $("#coding-page-next").addEventListener("click",()=>{
   listPage++;listQuestions();
 });
+// Native textarea fallback remains usable if the CDN is unreachable or blocked.
+const nativeEditor = $("#coding-editor");
+function notifyNativeEdit() {
+  nativeEditor.dispatchEvent(new Event("input", {bubbles:true}));
+}
+nativeEditor.addEventListener("keydown", event => {
+  if (codeEditor || (event.key !== "Tab" && event.key !== "Enter")) return;
+  const start = nativeEditor.selectionStart, end = nativeEditor.selectionEnd;
+  const value = nativeEditor.value;
+  if (event.key === "Enter") {
+    const lineStart = value.lastIndexOf("\n", start - 1) + 1;
+    const spaces = value.slice(lineStart, start).match(/^[ \t]*/)?.[0] || "";
+    event.preventDefault();
+    nativeEditor.setRangeText("\n" + spaces, start, end, "end");
+    notifyNativeEdit();
+    return;
+  }
+  event.preventDefault();
+  const lineStart = value.lastIndexOf("\n", start - 1) + 1;
+  const lastLineEnd = end > start && value[end - 1] === "\n" ? end - 1 : end;
+  const firstLineEnd = value.indexOf("\n", lineStart);
+  const multi = lastLineEnd > (firstLineEnd < 0 ? value.length : firstLineEnd);
+  if (!multi && !event.shiftKey) {
+    nativeEditor.setRangeText("    ", start, end, "end");
+  } else {
+    const begin = lineStart;
+    const segment = value.slice(begin, lastLineEnd);
+    const adjusted = segment.split("\n").map(line =>
+      event.shiftKey ? line.replace(/^( {1,4}|\t)/, "") : "    " + line
+    ).join("\n");
+    nativeEditor.setRangeText(adjusted, begin, lastLineEnd, "select");
+  }
+  notifyNativeEdit();
+});
+
 refreshFilters();
 showQuestion(current);
+void import("./coding-editor.js?v=20261024-codemirror-1")
+  .then(({createCodingEditor}) => {
+    codeEditor = createCodingEditor({
+      textarea:nativeEditor,
+      host:$("#coding-editor-host"),
+      language:current.language,
+      onChange(value) { setSafe(DRAFT_PREFIX + current.id, value); }
+    });
+  })
+  .catch(error => {
+    console.warn("CodeMirror 초기화 실패, 기본 입력창을 유지합니다.", error);
+    const notice = $(".coding-notice");
+    if (notice) notice.textContent += " 코드 편집기를 불러오지 못해 기본 입력창으로 표시합니다. Tab 들여쓰기는 이용할 수 있습니다.";
+  });
