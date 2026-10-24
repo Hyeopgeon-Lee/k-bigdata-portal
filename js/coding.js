@@ -17,6 +17,7 @@ const labels = {java:"Java", c:"C언어", python:"Python", linux:"Ubuntu"};
 const targets = {java:100, c:100, python:100, linux:50};
 const DONE_KEY = "kbigdata:coding:done:v1";
 const DRAFT_PREFIX = "kbigdata:coding:draft:v1:";
+const AUTOCOMPLETE_KEY = "kbigdata:coding:autocomplete:v1";
 const getSafe = (key, fallback = "") => {
   try { return localStorage.getItem(key) ?? fallback; } catch { return fallback; }
 };
@@ -29,6 +30,26 @@ try {
   const saved = JSON.parse(getSafe(DONE_KEY, "[]"));
   if (Array.isArray(saved)) doneIds = new Set(saved.filter(id => knownIds.has(id)));
 } catch { doneIds = new Set(); }
+
+// The first visit is OFF. Subsequent visits restore this browser's opt-in.
+let autocompleteEnabled = getSafe(AUTOCOMPLETE_KEY, "off") === "on";
+const autocompleteToggle = $("#coding-autocomplete-toggle");
+const autocompleteStatus = $("#coding-autocomplete-status");
+autocompleteToggle.checked = autocompleteEnabled;
+function refreshAutocompleteStatus() {
+  autocompleteStatus.textContent = autocompleteEnabled ? "켜짐" : "꺼짐";
+}
+refreshAutocompleteStatus();
+autocompleteToggle.addEventListener("change", () => {
+  if (!codeEditor) {
+    autocompleteToggle.checked = autocompleteEnabled;
+    return;
+  }
+  autocompleteEnabled = autocompleteToggle.checked;
+  codeEditor.setAutocompleteEnabled(autocompleteEnabled);
+  setSafe(AUTOCOMPLETE_KEY, autocompleteEnabled ? "on" : "off");
+  refreshAutocompleteStatus();
+});
 
 const requestedId = new URLSearchParams(location.search).get("id");
 let current = codingProblems.find(q => q.id === requestedId) || codingProblems[0];
@@ -377,14 +398,17 @@ nativeEditor.addEventListener("keydown", event => {
 
 refreshFilters();
 showQuestion(current);
-void import("./coding-editor.js?v=20261024-codemirror-1")
+void import("./coding-editor.js?v=20261024-autocomplete-1")
   .then(({createCodingEditor}) => {
     codeEditor = createCodingEditor({
       textarea:nativeEditor,
       host:$("#coding-editor-host"),
       language:current.language,
+      autocompleteEnabled,
       onChange(value) { setSafe(DRAFT_PREFIX + current.id, value); }
     });
+    autocompleteToggle.disabled = false;
+    refreshAutocompleteStatus();
   })
   .catch(error => {
     console.warn("CodeMirror 초기화 실패, 기본 입력창을 유지합니다.", error);
