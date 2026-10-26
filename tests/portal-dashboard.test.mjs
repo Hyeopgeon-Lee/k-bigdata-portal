@@ -53,7 +53,7 @@ assert.ok(directoryJS.includes('service.url'));
 assert.ok(shell.includes('initRecentTracking()'));
 assert.ok(searchUI.includes('event.preventDefault()'));
 assert.equal(services.length,18,'the complete service registry is retained');
-assert.equal(services.find(s=>s.id==='practical').name,'정보처리 자격증 기출문제');
+assert.equal(services.find(s=>s.id==='practical').name,'정보처리 기출문제');
 assert.equal(services.find(s=>s.id==='ncp').name,'NCP 기출문제');
 const store=new Map();
 globalThis.localStorage={
