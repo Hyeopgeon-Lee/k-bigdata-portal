@@ -99,7 +99,7 @@ export const ncpQuestions = [
       "기존 디스크의 물리적 일련번호"
     ],
     "answer": "C",
-    "explanation": "원본 복원문제 15번은 ACG 정보를 답으로 제시한다. 제품 버전별 동작 확인 필요.",
+    "explanation": "서버 복제나 유사 구성 서버 생성 시 접근제어그룹(ACG) 설정도 함께 확인해야 한다. 실제 적용 범위는 서비스 정책에 따른다.",
     "type": "2025년 공개 복원문제 기반 재서술",
     "sourceUrl": "https://notion2979.tistory.com/5",
     "originalNumber": 15,
@@ -120,7 +120,7 @@ export const ncpQuestions = [
       "가장 최근 종료 시각"
     ],
     "answer": "D",
-    "explanation": "게시자의 18번 복원문제 정답은 최근 종료 일시다. 콘솔 화면 변경 여부 확인 필요.",
+    "explanation": "서버의 생성 시각, 운영체제 등 기본 정보와 달리 최근 종료 시각은 별도 운영 기록을 통해 확인해야 할 수 있다.",
     "type": "2025년 공개 복원문제 기반 재서술",
     "sourceUrl": "https://notion2979.tistory.com/5",
     "originalNumber": 18,
@@ -162,7 +162,7 @@ export const ncpQuestions = [
       "NAT Gateway"
     ],
     "answer": "C",
-    "explanation": "복원문제 24번에 제시된 답은 로드밸런서다. 현재 서비스 범위는 가이드로 재확인해야 한다.",
+    "explanation": "로드밸런서는 유형에 따라 특정 가용 영역과 자원 배치 방식이 다를 수 있다. 해당 서비스의 구성 단위를 구분하는 문제다.",
     "type": "2025년 공개 복원문제 기반 재서술",
     "sourceUrl": "https://notion2979.tistory.com/5",
     "originalNumber": 24,
@@ -225,7 +225,7 @@ export const ncpQuestions = [
       "DNS 서버 전체 삭제"
     ],
     "answer": "A",
-    "explanation": "복원자료 29번의 답은 콘솔에서 서버 이름 변경이다. OS의 hostname과 화면 표시명은 다를 수 있다.",
+    "explanation": "관리 콘솔에 표시되는 서버 이름은 콘솔에서 변경할 수 있다. OS 내부의 hostname과 표시 이름은 구분해야 한다.",
     "type": "2025년 공개 복원문제 기반 재서술",
     "sourceUrl": "https://notion2979.tistory.com/5",
     "originalNumber": 29,
@@ -267,7 +267,7 @@ export const ncpQuestions = [
       "루트 디스크 타입만으로 HDD/SSD 선택이 고정되지는 않는다"
     ],
     "answer": "D",
-    "explanation": "복원자료 35번은 루트 디스크 종류와 상관없이 추가 스토리지 타입을 선택할 수 있다고 설명한다.",
+    "explanation": "추가 블록 스토리지의 유형은 루트 볼륨의 종류와 구분하여 선택할 수 있다. 지원 조합은 최신 상품 정책을 확인한다.",
     "type": "2025년 공개 복원문제 기반 재서술",
     "sourceUrl": "https://notion2979.tistory.com/6",
     "originalNumber": 35,
@@ -393,7 +393,7 @@ export const ncpQuestions = [
       "CSV"
     ],
     "answer": "B",
-    "explanation": "복원자료 50번에서는 JSON을 답으로 제시한다. Packer의 최신 HCL 지원 여부는 별도로 확인해야 한다.",
+    "explanation": "이 문항은 Packer 설정 형식 중 JSON을 묻는다. 현재 Packer에서는 HCL 등 다른 구성 형식도 사용하므로 구분해야 한다.",
     "type": "2025년 공개 복원문제 기반 재서술",
     "sourceUrl": "https://notion2979.tistory.com/6",
     "originalNumber": 50,
@@ -435,7 +435,7 @@ export const ncpQuestions = [
       "변환 옵션"
     ],
     "answer": "C",
-    "explanation": "해당 복원문제의 답은 토큰 키다. 실제 서명 URL 정책은 서비스 설정에 따라 다를 수 있다.",
+    "explanation": "이미지 변환 URL은 원본 경로와 변환 옵션 등을 포함한다. 토큰 사용 여부는 별도의 접근 정책과 서비스 설정에 따라 달라질 수 있다.",
     "type": "2025년 공개 복원문제 기반 재서술",
     "sourceUrl": "https://notion2979.tistory.com/7",
     "originalNumber": 2,
@@ -792,7 +792,7 @@ export const ncpQuestions = [
       "Classic LB"
     ],
     "answer": "C",
-    "explanation": "게시된 84번은 Network Load Balancer를 정답으로 제시한다.",
+    "explanation": "Network Load Balancer는 클라이언트 IP 전달과 관련된 특성을 갖는다. 서비스별 동작은 최신 기술문서로 확인한다.",
     "type": "2025년 공개 복원문제 기반 재서술",
     "sourceUrl": "https://notion2979.tistory.com/8",
     "originalNumber": 84,
