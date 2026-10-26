@@ -26,6 +26,14 @@ export const categories = {
 };
 export const services = [
   {
+    id:"ncp", name:"NCP Professional 문제은행", englishName:"NAVER CLOUD PRACTICE",
+    category:"learning", url:"ncp.html", icon:"book", accent:"blue", order:9.2,
+    description:"NCP-200·202·207 공식문서 기반 자체 제작 객관식 90문제를 풀고 정답·해설·출처를 확인하세요.",
+    shortDescription:"NCP Professional 200·202·207 연습문제 90제를 풀어보세요.",
+    tags:["NCP","NAVER CLOUD","NCP-200","NCP-202","NCP-207","클라우드","DevOps"],
+    aliases:"네이버클라우드 NCP 자격증 Professional 문제풀이 연습문제 시험 준비", featured:false
+  },
+  {
     id:"coding", name:"기초 프로그래밍·명령어 350제", englishName:"PROGRAMMING & COMMAND PRACTICE",
     category:"learning", url:"coding.html", icon:"book", accent:"blue", order:8.5,
     description:"Java·C·Python 프로그래밍 300문제와 Ubuntu 명령어 50문제를 직접 연습하세요.",
