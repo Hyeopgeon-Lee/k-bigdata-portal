@@ -5,7 +5,7 @@ export const portalPages = {
   index: {title:'통합 포털', group:null},
   services: {title:'전체 서비스', group:null, directory:true},
   coding: {title:'기초학습', group:'learning'},
-  practical: {title:'정보처리 자격증 기출문제', group:'learning'},
+  practical: {title:'정보처리 기출문제', group:'learning'},
   interview: {title:'기술면접', group:'learning'},
   certifications: {title:'자격증', group:'learning'},
   ncp: {title:'NCP 기출문제', group:'learning'},
