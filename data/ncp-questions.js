@@ -91,7 +91,7 @@ export const ncpQuestions = [
     "area": "Compute / Storage",
     "topic": "서버 복제",
     "difficulty": "중",
-    "question": "NCP에서 기존 서버와 유사한 서버를 만들 때 함께 반영되는 네트워크 보안 관련 정보로 게시된 답은?",
+    "question": "NCP에서 기존 서버를 복제해 유사한 서버를 만들 때 함께 적용되는 네트워크 접근제어 설정은?",
     "options": [
       "최근 종료 시각",
       "사용자의 메일 주소",
@@ -112,7 +112,7 @@ export const ncpQuestions = [
     "area": "Compute / Storage",
     "topic": "서버 관리 콘솔",
     "difficulty": "중",
-    "question": "서버 상세 화면에서 일반적으로 제공하는 정보와 달리, 복원문제에서 확인 불가 항목으로 지목한 것은?",
+    "question": "NCP 서버 상세 정보 화면에서 일반적으로 제공되지 않는 항목은?",
     "options": [
       "서버 생성 시각",
       "운영체제 유형",
@@ -154,7 +154,7 @@ export const ncpQuestions = [
     "area": "Compute / Storage",
     "topic": "VPC 및 가용영역",
     "difficulty": "중",
-    "question": "게시된 NCP-200 복원문제에서 VPC의 특정 Zone에 직접 종속되지 않는 대상으로 분류한 서비스는?",
+    "question": "NCP VPC 환경에서 특정 가용 영역(Zone)에 직접 종속되지 않는 서비스로 분류된 것은?",
     "options": [
       "서버",
       "서브넷",
@@ -217,7 +217,7 @@ export const ncpQuestions = [
     "area": "Compute / Storage",
     "topic": "서버 이름 관리",
     "difficulty": "중",
-    "question": "NCP 관리 콘솔에 표시되는 서버의 이름을 바꾸려 할 때 복원자료가 제시한 방법은?",
+    "question": "NCP 관리 콘솔에 표시되는 서버 이름을 변경하려면 어떤 방법을 사용할 수 있는가?",
     "options": [
       "콘솔의 서버 이름 변경 기능",
       "fstab 직접 수정",
@@ -238,7 +238,7 @@ export const ncpQuestions = [
     "area": "Compute / Storage",
     "topic": "원격 접속",
     "difficulty": "중",
-    "question": "NCP 서버 접속 수단을 묻는 복원문제에서 '서버 생성 시 자동 발급된 공개 도메인으로 접속' 설명의 판정은?",
+    "question": "NCP 서버의 원격 접속 방법에 대한 다음 설명은 올바른가? '서버를 생성하면 공개 도메인이 자동 발급되어 그 주소로 바로 접속할 수 있다.'",
     "options": [
       "정확한 접속 절차다",
       "별도 설정 없이 항상 가능하다",
@@ -280,7 +280,7 @@ export const ncpQuestions = [
     "area": "Compute / Storage",
     "topic": "스토리지 스냅샷",
     "difficulty": "중",
-    "question": "블록 스토리지 스냅샷에서 곧바로 생성할 수 있다고 복원자료가 지목한 자원은?",
+    "question": "블록 스토리지의 스냅샷을 이용해 생성할 수 있는 자원은?",
     "options": [
       "새 볼륨",
       "DNS Zone",
@@ -301,7 +301,7 @@ export const ncpQuestions = [
     "area": "Compute / Storage",
     "topic": "초기화 스크립트",
     "difficulty": "중",
-    "question": "복원자료가 제시한 NCP Init Script의 일반적인 실행 시점은?",
+    "question": "NCP Init Script는 일반적으로 어느 시점에 실행되는가?",
     "options": [
       "정기적으로 매주",
       "신규 VM을 만들 때 최초 실행",
@@ -343,7 +343,7 @@ export const ncpQuestions = [
     "area": "Compute / Storage",
     "topic": "서버 이미지 빌더",
     "difficulty": "중",
-    "question": "복원자료에서 Server Image Builder의 내부 도구로 소개한 오픈소스는?",
+    "question": "NCP Server Image Builder에서 이미지 생성 자동화 도구로 사용하는 오픈소스는?",
     "options": [
       "Packer",
       "Hadoop",
@@ -385,7 +385,7 @@ export const ncpQuestions = [
     "area": "Compute / Storage",
     "topic": "이미지 빌드 설정",
     "difficulty": "중",
-    "question": "Packer 기반 Server Image Builder의 설정 데이터 형식으로 복원자료가 정답 처리한 것은?",
+    "question": "Packer 기반의 서버 이미지 빌드 설정에서 사용 가능한 데이터 형식은?",
     "options": [
       "HTML",
       "JSON",
@@ -427,7 +427,7 @@ export const ncpQuestions = [
     "area": "Network / Database",
     "topic": "Image Optimizer",
     "difficulty": "중",
-    "question": "복원자료에서 이미지 썸네일 URL의 핵심 구성요소가 아니라고 분류한 것은?",
+    "question": "NCP Image Optimizer의 이미지 썸네일 URL 구성요소로 보기 어려운 것은?",
     "options": [
       "객체 파일명",
       "CDN 주소",
@@ -532,7 +532,7 @@ export const ncpQuestions = [
     "area": "Network / Database",
     "topic": "Global DNS",
     "difficulty": "중",
-    "question": "일반 사용자가 직접 추가하는 DNS 레코드와 달리 Zone 생성 시 자동 관리되는 것으로 문제에 나온 것은?",
+    "question": "DNS Zone 생성 시 기본적으로 제공되는 영역 관리 레코드는?",
     "options": [
       "SOA",
       "A",
@@ -679,7 +679,7 @@ export const ncpQuestions = [
     "area": "Network / Database",
     "topic": "Cloud Insight",
     "difficulty": "중",
-    "question": "서브 계정이 Cloud Insight를 이용할 수 없다는 설명은 어떻게 판단해야 하나?",
+    "question": "서브 계정(Sub Account)은 Cloud Insight 서비스를 사용할 수 없다는 설명으로 옳은 것은?",
     "options": [
       "역할 권한과 관계없이 참이다",
       "반드시 관리자 계정 전용이다",
@@ -700,7 +700,7 @@ export const ncpQuestions = [
     "area": "Network / Database",
     "topic": "관리형 데이터베이스",
     "difficulty": "중",
-    "question": "복원자료에서 NCP의 사전 설치 DB 이미지가 아닌 것으로 제시된 DB는?",
+    "question": "다음 중 NCP의 사전 설치 데이터베이스 이미지로 제공되는 제품이 아닌 것은?",
     "options": [
       "Aurora",
       "MariaDB",
@@ -742,7 +742,7 @@ export const ncpQuestions = [
     "area": "Network / Database",
     "topic": "ACG 규칙",
     "difficulty": "중",
-    "question": "ACG는 Inbound에만 적용할 수 있고 Outbound 규칙은 없다. 복원문제에서 이 설명의 판정은?",
+    "question": "ACG에는 Inbound 규칙만 있고 Outbound 규칙은 없다는 설명은 옳은가?",
     "options": [
       "틀린 설명",
       "맞는 설명",
@@ -784,7 +784,7 @@ export const ncpQuestions = [
     "area": "Network / Database",
     "topic": "로드밸런서",
     "difficulty": "중",
-    "question": "클라이언트 원본 IP를 대상 서버까지 전달하는 데 유리한 VPC 로드밸런서 유형으로 복원자료가 선택한 것은?",
+    "question": "클라이언트 원본 IP 주소를 대상 서버에 전달하는 데 적합한 NCP VPC 로드밸런서 유형은?",
     "options": [
       "Application LB",
       "Network Proxy LB",
@@ -889,7 +889,7 @@ export const ncpQuestions = [
     "area": "Troubleshooting",
     "topic": "Linux 디스크 I/O",
     "difficulty": "중",
-    "question": "sar에서 블록 디바이스 입출력 관련 통계를 보는 옵션으로 복원자료에 나온 것은?",
+    "question": "Linux에서 sar 명령으로 블록 디바이스 입출력 통계를 확인할 때 사용하는 옵션은?",
     "options": [
       "-c",
       "-b",
@@ -1246,7 +1246,7 @@ export const ncpQuestions = [
     "area": "Troubleshooting",
     "topic": "Init Script 로그",
     "difficulty": "중",
-    "question": "NCP Linux 서버의 초기화 스크립트 실행 로그 경로로 복원자료가 소개한 것은?",
+    "question": "NCP Linux 서버에서 Init Script 실행 로그를 확인할 수 있는 파일 경로는?",
     "options": [
       "/var/log/secure",
       "/var/log/ncloud-init.log",
