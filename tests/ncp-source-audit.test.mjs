@@ -37,10 +37,10 @@ for(const q of ncpQuestions){
  assert.ok(ncpResources.some(r=>r.url===q.sourceUrl),"Source appears in the directory: "+q.id);
 }
 const html=read("ncp.html"),quiz=read("js/ncp-quiz.js"),services=read("js/services.js");
-for(const url of sourceLinks)assert.ok(html.includes(url),"Source post linked directly from portal.");
-assert.ok(html.includes("75문항")&&html.includes("공개 복원문제 원문 바로가기"),"Public labeling is truthful.");
-assert.ok(html.includes("39개 보기"),"Source count label is current.");
-assert.ok(quiz.includes("item.originalNumber")&&quiz.includes("item.sourceUrl"),"Each answer must cite its original problem.");
+for(const url of sourceLinks)assert.ok(ncpResources.some(item=>item.url===url),"Source post is indexed in the data.");
+assert.ok(html.includes("75문항")&&html.includes("id=\"ncp-question\""),"Question-first page is present.");
+assert.ok(!html.includes("ncp-sources")&&!html.includes("ncp-originals"),"Avoid long source catalogs in quiz.");
+assert.ok(quiz.includes("q.originalNumber")&&quiz.includes("q.sourceUrl"),"Each answer must cite its original problem.");
 assert.ok(!html.includes("학습용 자체 제작 문제 90개"),"Unattributed old questions must not be published.");
 assert.ok(services.includes("복원기출 75문항"),"Home service card uses reconstruction terminology.");
-console.log("PASS: 75 source-numbered NCP reconstructed items, 39 resource links and accurate portal labeling.");
+console.log("PASS: 75 source-linked NCP questions and question-first layout.");
