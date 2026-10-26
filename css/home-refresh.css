@@ -24,7 +24,8 @@ body[data-portal-home] .dashboard-start{grid-row:3;padding:0!important;border:0!
 body[data-portal-home] .dashboard-start .dashboard-panel-heading{margin:0 0 10px;display:flex;align-items:baseline;justify-content:space-between}
 body[data-portal-home] .dashboard-start h2{margin:0!important;font-size:20px!important;color:#17376d}
 body[data-portal-home] .dashboard-start .dashboard-action-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px}
-body[data-portal-home] .dashboard-action{min-height:124px;padding:14px 13px;gap:4px;background:#fff;border:1px solid #d9e3f1;box-shadow:none}
+body[data-portal-home] .dashboard-action-tile{display:flex;min-width:0}
+body[data-portal-home] .dashboard-action{flex:1;min-width:0;min-height:124px;height:100%;box-sizing:border-box;padding:14px 13px;gap:4px;background:#fff;border:1px solid #d9e3f1;box-shadow:none}
 body[data-portal-home] .dashboard-action-symbol{width:34px;height:34px;border-radius:9px}
 body[data-portal-home] .dashboard-action-symbol svg{width:20px;height:20px}
 body[data-portal-home] .dashboard-action strong{font-size:15px;margin-top:5px}
