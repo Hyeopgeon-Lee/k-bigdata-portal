@@ -26,10 +26,10 @@ export const categories = {
 };
 export const services = [
   {
-    id:"ncp", name:"NCP Professional 문제은행", englishName:"NAVER CLOUD PRACTICE",
+    id:"ncp", name:"NCP Professional 복원기출", englishName:"NAVER CLOUD PRACTICE",
     category:"learning", url:"ncp.html", icon:"book", accent:"blue", order:9.2,
-    description:"NCP-200·202·207 공식문서 기반 자체 제작 객관식 90문제를 풀고 정답·해설·출처를 확인하세요.",
-    shortDescription:"NCP Professional 200·202·207 연습문제 90제를 풀어보세요.",
+    description:"2025년 공개 복원기출의 원본 번호와 출처를 확인하며 재서술 문항 75개를 풀고, 원문 복원자료 6건도 볼 수 있습니다.",
+    shortDescription:"NCP-200·202·207 공개 복원기출 75문항을 풀어보세요.",
     tags:["NCP","NAVER CLOUD","NCP-200","NCP-202","NCP-207","클라우드","DevOps"],
     aliases:"네이버클라우드 NCP 자격증 Professional 문제풀이 연습문제 시험 준비", featured:false
   },
