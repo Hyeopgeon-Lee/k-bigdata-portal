@@ -7,6 +7,7 @@ export const portalPages = {
   practical: {title:'실기 문제풀이', group:'learning'},
   interview: {title:'기술면접', group:'learning'},
   certifications: {title:'자격증', group:'learning'},
+  ncp: {title:'NCP 문제풀이', group:'learning'},
   docs: {title:'공식문서', group:'learning'},
   jobs: {title:'IT 직무', group:'career'},
   resume: {title:'자기소개서', group:'career'},
