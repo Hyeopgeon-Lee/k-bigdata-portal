@@ -24,8 +24,8 @@ function serviceLink(item,current){
 export function renderServiceNavigation(page,id){
   if(!page.group)return '';
   return focusable(`<nav class="container learning-cross-nav portal-service-nav portal-nav-compact" aria-label="현재 영역과 다른 서비스 바로가기" data-learning-nav>
-  <div class="portal-nav-current"><strong class="portal-nav-title">${esc(groups.find(group=>group.id===page.group).label)}</strong><div class="portal-nav-items">${navigationItems.filter(item=>item.group===page.group).map(item=>serviceLink(item,id)).join('')}</div></div>
-  <details class="portal-nav-more"><summary>다른 서비스 보기</summary><div class="portal-nav-other">${groups.filter(group=>group.id!==page.group).map(group=>`<section class="portal-nav-other-group"><strong>${esc(group.label)}</strong><div>${navigationItems.filter(item=>item.group===group.id).map(item=>serviceLink(item,id)).join('')}</div></section>`).join('')}<a href="services.html" class="portal-nav-all">전체 서비스 목록 →</a></div></details>
+  <div class="portal-nav-current"><strong class="portal-nav-title">${esc(groups.find(group=>group.id===page.group).label)}</strong></div>
+  <details class="portal-nav-more"><summary>서비스 메뉴</summary><div class="portal-nav-other"><section class="portal-nav-other-group"><strong>${esc(groups.find(group=>group.id===page.group).label)}</strong><div>${navigationItems.filter(item=>item.group===page.group).map(item=>serviceLink(item,id)).join('')}</div></section>${groups.filter(group=>group.id!==page.group).map(group=>`<section class="portal-nav-other-group"><strong>${esc(group.label)}</strong><div>${navigationItems.filter(item=>item.group===group.id).map(item=>serviceLink(item,id)).join('')}</div></section>`).join('')}<a href="services.html" class="portal-nav-all">전체 서비스 목록 →</a></div></details>
 </nav>`);
 }
 export function renderToolbar(page){
