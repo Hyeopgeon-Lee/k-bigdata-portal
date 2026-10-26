@@ -1,4 +1,4 @@
-import {ncpQuestions} from "../data/ncp-questions.js?v=20261026-quizfocus-1";
+import {ncpQuestions} from "../data/ncp-questions.js?v=20261026-quizfocus-2";
 import {initPortalShell} from "./portal-shell.js?v=20261020-unified-shell-1";
 
 const byId=id=>document.getElementById(id);
