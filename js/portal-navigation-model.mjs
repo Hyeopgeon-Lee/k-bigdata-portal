@@ -3,11 +3,12 @@ import {categories, services, portalNavLinks} from './services.js?v=20261020-uni
 export const shellVersion = '20261021-coding-comment-tip-1';
 export const portalPages = {
   index: {title:'통합 포털', group:null},
+  services: {title:'전체 서비스', group:null, directory:true},
   coding: {title:'기초학습', group:'learning'},
-  practical: {title:'실기 문제풀이', group:'learning'},
+  practical: {title:'정보처리 자격증 기출문제', group:'learning'},
   interview: {title:'기술면접', group:'learning'},
   certifications: {title:'자격증', group:'learning'},
-  ncp: {title:'NCP 문제풀이', group:'learning'},
+  ncp: {title:'NCP 기출문제', group:'learning'},
   docs: {title:'공식문서', group:'learning'},
   jobs: {title:'IT 직무', group:'career'},
   resume: {title:'자기소개서', group:'career'},
