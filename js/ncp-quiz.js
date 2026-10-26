@@ -1,114 +1,141 @@
-import {ncpQuestions} from "../data/ncp-questions.js?v=20261026-recon-1";
-import {ncpResources} from "../data/ncp-resources.js?v=20261026-recon-1";
+import {ncpQuestions} from "../data/ncp-questions.js?v=20261026-quizfocus-1";
 import {initPortalShell} from "./portal-shell.js?v=20261020-unified-shell-1";
 
 const byId=id=>document.getElementById(id);
 const esc=value=>String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const KEY="k-bigdata-ncp-progress-v1";
-const KEYS=["A","B","C","D"];
+const letters=["A","B","C","D"];
+const numerals=["①","②","③","④"];
 const params=new URLSearchParams(location.search);
-const state={exam:/^NCP-(200|202|207)$/.test(params.get("exam")||"")?params.get("exam"):"all",difficulty:"all",query:"",mode:"all",list:[],index:0,answers:{}};
-try{const stored=JSON.parse(localStorage.getItem(KEY)||"{}");if(stored&&typeof stored==="object"&&!Array.isArray(stored))state.answers=stored;}catch{}
-const elements={exam:byId("ncp-exam"),difficulty:byId("ncp-difficulty"),search:byId("ncp-search"),question:byId("ncp-question"),list:byId("ncp-list"),status:byId("ncp-status"),metrics:byId("ncp-metrics"),summary:byId("ncp-summary"),prev:byId("ncp-prev"),next:byId("ncp-next")};
-const valid=record=>record&&typeof record.choice==="string"&&KEYS.includes(record.choice);
-const getRecord=id=>valid(state.answers[id])?state.answers[id]:null;
+const requestedExam=params.get("exam");
+const state={
+ exam:/^NCP-(200|202|207)$/.test(requestedExam||"")?requestedExam:"NCP-200",
+ mode:"all",query:"",list:[],index:0,answers:{}
+};
+try{
+ const saved=JSON.parse(localStorage.getItem(KEY)||"{}");
+ if(saved&&typeof saved==="object"&&!Array.isArray(saved))state.answers=saved;
+}catch{}
+const el={exam:byId("ncp-exam"),search:byId("ncp-search"),question:byId("ncp-question"),
+ list:byId("ncp-list"),status:byId("ncp-status"),summary:byId("ncp-summary"),
+ progress:byId("ncp-progress"),prev:byId("ncp-prev"),next:byId("ncp-next")};
+const recordFor=id=>{
+ const record=state.answers[id];
+ return record&&letters.includes(record.choice)?record:null;
+};
 function save(){try{localStorage.setItem(KEY,JSON.stringify(state.answers));}catch{}}
-function matches(item){return (state.exam==="all"||item.exam===state.exam)&&(state.difficulty==="all"||item.difficulty===state.difficulty)&&(!state.query||(item.question+" "+item.topic+" "+item.area+" "+item.id).toLowerCase().includes(state.query));}
-function shuffle(items){for(let i=items.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[items[i],items[j]]=[items[j],items[i]];}return items;}
-function setItems(preferredId){
-  let items=ncpQuestions.filter(matches);
-  if(state.mode==="random")items=shuffle([...items]).slice(0,10);
-  state.list=items;
-  state.index=Math.max(0,preferredId?items.findIndex(q=>q.id===preferredId):0);
-  if(preferredId&&state.index<0)state.index=0;
-  render();
+function shuffle(array){
+ for(let i=array.length-1;i>0;i--){
+  const j=Math.floor(Math.random()*(i+1));
+  [array[i],array[j]]=[array[j],array[i]];
+ }
+ return array;
 }
-function renderStats(){
- const all=ncpQuestions.filter(q=>state.exam==="all"||q.exam===state.exam);
- const attempted=all.filter(q=>getRecord(q.id));
- const correct=attempted.filter(q=>getRecord(q.id).choice===q.answer).length;
- const rate=attempted.length?Math.round(correct/attempted.length*100):0;
- elements.metrics.innerHTML='<div><strong>'+all.length+'</strong><span>복원기출 기반 문항</span></div><div><strong>'+attempted.length+'</strong><span>풀이 완료</span></div><div><strong>'+correct+'</strong><span>게시자 답안 일치</span></div><div><strong>'+rate+'%</strong><span>답안 일치율</span></div>';
- const progress=byId("ncp-progress");
- progress.max=Math.max(1,all.length);progress.value=attempted.length;
- elements.summary.textContent='이 기기 기록 · '+attempted.length+'/'+all.length+'문항 풀이 · 게시자 답안 일치율 '+rate+'%';
+function filteredQuestions(){
+ return ncpQuestions.filter(item=>
+  (state.exam==="all"||item.exam===state.exam)&&
+  (!state.query||(item.question+" "+item.topic+" "+item.id+" "+item.originalNumber).toLowerCase().includes(state.query))
+ );
 }
-function renderList(){
- elements.list.innerHTML=state.list.map((q,i)=>{
- const record=getRecord(q.id);
- const badge=record?(record.choice===q.answer?"맞힘":"오답"):"미풀이";
- return '<button type="button" data-index="'+i+'" class="'+(i===state.index?"current ":"")+(record?(record.choice===q.answer?"correct":"wrong"):"")+'" aria-current="'+(i===state.index?"true":"false")+'" aria-label="'+(i+1)+'번 '+badge+'">'+(i+1)+'<span class="sr-only"> '+badge+'</span></button>';
+function changeSet(id){
+ let questions=filteredQuestions();
+ if(state.mode==="random")questions=shuffle([...questions]).slice(0,10);
+ state.list=questions;
+ state.index=Math.max(0,id?questions.findIndex(q=>q.id===id):0);
+ render();
+}
+function updateProgress(){
+ const completed=state.list.filter(q=>recordFor(q.id));
+ const matches=completed.filter(q=>recordFor(q.id).choice===q.answer).length;
+ el.summary.textContent=state.list.length?'풀이 '+completed.length+'/'+state.list.length+' · 답안 일치 '+matches:"검색 결과 없음";
+ el.progress.max=Math.max(1,state.list.length);
+ el.progress.value=completed.length;
+}
+function renderNumbers(){
+ el.list.innerHTML=state.list.map((q,i)=>{
+  const record=recordFor(q.id);
+  const status=record?(record.choice===q.answer?"matched":"unmatched"):"";
+  const desc=record?(record.choice===q.answer?"복원 답안 일치":"복원 답안 불일치"):"미풀이";
+  return '<button type="button" data-index="'+i+'" class="'+(i===state.index?"current ":"")+status+
+   '" aria-label="'+(i+1)+'번 '+desc+'"'+(i===state.index?' aria-current="true"':'')+'>'+String(i+1)+'</button>';
  }).join("");
 }
 function render(){
- renderStats();
- renderList();
- const item=state.list[state.index];
- elements.prev.disabled=!item||state.index===0;
- elements.next.disabled=!item||state.index===state.list.length-1;
- if(!item){elements.question.innerHTML='<div class="ncp-empty"><h2>일치하는 문제가 없습니다.</h2><p>시험·난이도·검색어를 변경해 주세요.</p></div>';elements.status.textContent="검색 결과 없음";return;}
- const record=getRecord(item.id);
- const finished=!!record;
- elements.status.textContent=(state.index+1)+' / '+state.list.length+'문제 · '+item.exam+' · '+item.difficulty+' 난이도';
- const choices=item.options.map((option,i)=>{
- const letter=KEYS[i],selected=record&&record.choice===letter,correct=finished&&item.answer===letter;
- return '<button type="button" class="ncp-choice'+(selected?" selected":"")+(correct?" is-correct":"")+(finished&&selected&&!correct?" is-wrong":"")+'" data-choice="'+letter+'" aria-pressed="'+!!selected+'" '+(finished?"disabled":"")+'><span class="choice-letter">'+letter+'</span><span>'+esc(option)+'</span></button>';
+ updateProgress();
+ renderNumbers();
+ const q=state.list[state.index];
+ el.prev.disabled=!q||state.index<=0;
+ el.next.disabled=!q||state.index>=state.list.length-1;
+ if(!q){
+  el.status.textContent="검색 결과 없음";
+  el.question.innerHTML='<div class="ncp-empty"><h2>검색된 문제가 없습니다.</h2><p>시험을 바꾸거나 검색어를 수정하세요.</p></div>';
+  return;
+ }
+ el.status.textContent=(state.index+1)+' / '+state.list.length+'번';
+ const answered=recordFor(q.id);
+ const options=q.options.map((option,i)=>{
+  const letter=letters[i],selected=answered?.choice===letter,matched=!!answered&&letter===q.answer;
+  const cls=(selected?" is-selected":"")+(matched?" is-answer":"")+(answered&&selected&&!matched?" is-mismatch":"");
+  return '<button type="button" class="ncp-choice'+cls+'" data-choice="'+letter+'" aria-pressed="'+Boolean(selected)+
+   '"'+(answered?' disabled':'')+'><span class="ncp-choice-index" aria-hidden="true">'+numerals[i]+'</span><span>'+esc(option)+'</span></button>';
  }).join("");
- const result=finished?'<section class="ncp-answer '+(record.choice===item.answer?"success":"retry")+'" aria-label="채점 결과"><strong>'+(record.choice===item.answer?"복원자료 답안과 일치합니다.":"게시자 답안과 다릅니다. 게시자 답안: "+item.answer)+'</strong><p>'+esc(item.explanation)+'</p><p class="ncp-answer-warning">비공식 복원자료의 게시자 답안입니다. 공식 정답으로 검증되지 않았습니다.</p><a href="'+esc(item.sourceUrl)+'" target="_blank" rel="noopener noreferrer">'+esc(item.exam)+' 원문 '+esc(item.originalNumber)+'번 보기 ↗</a></section>':
- '<p class="ncp-help">선택하면 복원자료에 게시된 정답과 출처 원문 번호를 확인할 수 있습니다. 게시자 정답은 공식 검증되지 않았습니다.</p>';
- elements.question.innerHTML='<div class="ncp-question-meta"><span>'+esc(item.id)+'</span><span>'+esc(item.exam)+'</span><span>복원 원문 '+esc(item.originalNumber)+'번</span><span>'+esc(item.topic)+'</span></div>'+
- '<h2 tabindex="-1">'+esc(item.question)+'</h2><div class="ncp-options" role="group" aria-label="정답 선택">'+choices+'</div>'+result+
- '<div class="ncp-question-actions"><a class="ncp-light-button" href="'+esc(item.sourceUrl)+'" target="_blank" rel="noopener noreferrer">복원 원문 '+esc(item.originalNumber)+'번 보기 ↗</a><button type="button" class="ncp-light-button" id="ncp-share">문제 링크 복사</button><a class="ncp-light-button" href="https://help.k-bigdata.kr/" target="_blank" rel="noopener noreferrer">문제 오류 신고 ↗</a></div>';
+ const sourceURL=/^https:\/\/notion2979\.tistory\.com\/(?:5|6|7|8|9|10)$/.test(q.sourceUrl)?q.sourceUrl:"#";
+ const result=answered?
+  '<section class="ncp-answer" tabindex="-1" aria-label="복원자료 답안 확인"><div class="ncp-answer-head"><strong>복원 답안 '+numerals[letters.indexOf(q.answer)]+'</strong><span class="'+(answered.choice===q.answer?"ncp-answer-match":"ncp-answer-diff")+'">'+(answered.choice===q.answer?"일치":"불일치")+'</span></div><p>'+esc(q.explanation)+'</p><button type="button" class="ncp-retry" data-retry>이 문제 다시 풀기</button></section>':"";
+ el.question.innerHTML='<div class="ncp-question-meta"><span>'+esc(q.exam)+'</span><span>'+esc(q.topic)+'</span></div>'+
+  '<h2 tabindex="-1">'+esc(q.question)+'</h2>'+
+  '<div class="ncp-options" role="group" aria-label="선택지">'+options+'</div>'+result+
+  '<div class="ncp-source-link"><a href="'+esc(sourceURL)+'" target="_blank" rel="noopener noreferrer">2025 복원 원문 '+esc(q.originalNumber)+'번 보기 ↗</a></div>';
 }
-function showChoice(letter){
- const item=state.list[state.index];if(!item||getRecord(item.id)||!KEYS.includes(letter))return;
- state.answers[item.id]={choice:letter,at:new Date().toISOString()};save();render();
- const result=elements.question.querySelector(".ncp-answer");
- if(result)result.setAttribute("tabindex","-1"),result.focus({preventScroll:true});
-}
+function focusQuestion(){el.question.querySelector("h2")?.focus({preventScroll:true});}
 function updateFilters(){
  state.mode="all";
- document.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.mode==="all")));
- setItems();
+ document.querySelectorAll("[data-mode]").forEach(button=>button.setAttribute("aria-pressed",String(button.dataset.mode==="all")));
+ changeSet();
 }
-elements.exam.value=state.exam;
-elements.exam.addEventListener("change",()=>{state.exam=elements.exam.value;updateFilters();});
-elements.difficulty.addEventListener("change",()=>{state.difficulty=elements.difficulty.value;updateFilters();});
-elements.search.addEventListener("input",()=>{state.query=elements.search.value.trim().toLowerCase();updateFilters();});
-document.querySelectorAll("[data-mode]").forEach(btn=>btn.addEventListener("click",()=>{
- state.mode=btn.dataset.mode;
- document.querySelectorAll("[data-mode]").forEach(b=>b.setAttribute("aria-pressed",String(b===btn)));
- setItems();
+el.exam.value=state.exam;
+el.exam.addEventListener("change",()=>{state.exam=el.exam.value;updateFilters();});
+el.search.addEventListener("input",()=>{state.query=el.search.value.trim().toLowerCase();updateFilters();});
+document.querySelectorAll("[data-mode]").forEach(button=>button.addEventListener("click",()=>{
+ state.mode=button.dataset.mode;
+ document.querySelectorAll("[data-mode]").forEach(item=>item.setAttribute("aria-pressed",String(item===button)));
+ changeSet();
 }));
-elements.list.addEventListener("click",e=>{
- const target=e.target.closest("button[data-index]");
- if(!target)return;state.index=Number(target.dataset.index);render();elements.question.querySelector("h2")?.focus({preventScroll:true});
+el.list.addEventListener("click",event=>{
+ const button=event.target.closest("button[data-index]");
+ if(!button)return;
+ state.index=Number(button.dataset.index);
+ render();focusQuestion();
 });
-elements.question.addEventListener("click",async e=>{
- const choice=e.target.closest("[data-choice]");
- if(choice){showChoice(choice.dataset.choice);return;}
- if(e.target.closest("#ncp-share")){
- const item=state.list[state.index];if(!item)return;
- const url=new URL(location.href);url.search="";url.searchParams.set("id",item.id);
- try{await navigator.clipboard.writeText(url.href);elements.status.textContent="문제 링크를 복사했습니다.";}catch{elements.status.textContent="복사할 수 없습니다. 주소창의 링크를 이용해 주세요.";}
+el.question.addEventListener("click",event=>{
+ const answer=event.target.closest("[data-choice]");
+ const q=state.list[state.index];
+ if(!q)return;
+ if(answer&&!recordFor(q.id)&&letters.includes(answer.dataset.choice)){
+  state.answers[q.id]={choice:answer.dataset.choice,at:new Date().toISOString()};
+  save();render();
+  el.question.querySelector(".ncp-answer")?.focus({preventScroll:true});
+  return;
+ }
+ if(event.target.closest("[data-retry]")){
+  delete state.answers[q.id];save();render();focusQuestion();
  }
 });
-elements.prev.addEventListener("click",()=>{if(state.index>0){state.index--;render();elements.question.querySelector("h2")?.focus({preventScroll:true});}});
-elements.next.addEventListener("click",()=>{if(state.index<state.list.length-1){state.index++;render();elements.question.querySelector("h2")?.focus({preventScroll:true});}});
+el.prev.addEventListener("click",()=>{
+ if(state.index>0){state.index--;render();focusQuestion();}
+});
+el.next.addEventListener("click",()=>{
+ if(state.index<state.list.length-1){state.index++;render();focusQuestion();}
+});
 byId("ncp-reset").addEventListener("click",()=>{
- if(!confirm("저장된 NCP 문제풀이 기록을 모두 삭제할까요?"))return;
+ if(!confirm("저장된 NCP 문제풀이 기록을 모두 지울까요?"))return;
  state.answers={};save();render();
 });
-const initial=params.get("id");
-if(initial&&ncpQuestions.some(q=>q.id===initial)){const selected=ncpQuestions.find(q=>q.id===initial);state.exam=selected.exam;elements.exam.value=state.exam;setItems(initial);}
-else setItems();
-function renderResources(){
- const host=byId("ncp-resources");if(!host)return;
- const sources=[...ncpResources].sort((a,b)=>Number(b.type.startsWith("공식"))-Number(a.type.startsWith("공식"))||a.id-b.id);
- host.innerHTML='<ol class="ncp-source-list">'+sources.map(item=>{
-  const official=item.type.startsWith("공식");
-  return '<li><div class="ncp-source-top"><strong>'+esc(item.title)+'</strong><span class="'+(official?"official":"unofficial")+'">'+(official?"공식 제공":"비공식 자료")+'</span></div><p>'+esc(item.exam)+' · '+esc(item.type)+' · '+esc(item.date)+'</p><p>'+esc(item.description)+'</p><small>검증 상태: '+esc(item.verification)+'</small><a href="'+esc(item.url)+'" target="_blank" rel="noopener noreferrer">원문 사이트 열기 ↗</a></li>';
- }).join("")+'</ol>';
-}
-renderResources();
-initPortalShell().catch(error=>console.error("NCP portal shell",error));
+const initialID=params.get("id");
+const initial=ncpQuestions.find(q=>q.id===initialID);
+if(initial){
+ state.exam=initial.exam;
+ el.exam.value=initial.exam;
+ changeSet(initial.id);
+}else changeSet();
+initPortalShell().catch(error=>console.error("NCP portal initialization failed",error));
