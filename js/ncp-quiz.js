@@ -28,10 +28,10 @@ function renderStats(){
  const attempted=all.filter(q=>getRecord(q.id));
  const correct=attempted.filter(q=>getRecord(q.id).choice===q.answer).length;
  const rate=attempted.length?Math.round(correct/attempted.length*100):0;
- elements.metrics.innerHTML='<div><strong>'+all.length+'</strong><span>복원기출 기반 문항</span></div><div><strong>'+attempted.length+'</strong><span>풀이 완료</span></div><div><strong>'+correct+'</strong><span>정답 수</span></div><div><strong>'+rate+'%</strong><span>정답률</span></div>';
+ elements.metrics.innerHTML='<div><strong>'+all.length+'</strong><span>복원기출 기반 문항</span></div><div><strong>'+attempted.length+'</strong><span>풀이 완료</span></div><div><strong>'+correct+'</strong><span>게시자 답안 일치</span></div><div><strong>'+rate+'%</strong><span>답안 일치율</span></div>';
  const progress=byId("ncp-progress");
  progress.max=Math.max(1,all.length);progress.value=attempted.length;
- elements.summary.textContent='이 기기 기록 · '+attempted.length+'/'+all.length+'문항 풀이 · 정답률 '+rate+'%';
+ elements.summary.textContent='이 기기 기록 · '+attempted.length+'/'+all.length+'문항 풀이 · 게시자 답안 일치율 '+rate+'%';
 }
 function renderList(){
  elements.list.innerHTML=state.list.map((q,i)=>{
@@ -54,7 +54,7 @@ function render(){
  const letter=KEYS[i],selected=record&&record.choice===letter,correct=finished&&item.answer===letter;
  return '<button type="button" class="ncp-choice'+(selected?" selected":"")+(correct?" is-correct":"")+(finished&&selected&&!correct?" is-wrong":"")+'" data-choice="'+letter+'" aria-pressed="'+!!selected+'" '+(finished?"disabled":"")+'><span class="choice-letter">'+letter+'</span><span>'+esc(option)+'</span></button>';
  }).join("");
- const result=finished?'<section class="ncp-answer '+(record.choice===item.answer?"success":"retry")+'" aria-label="채점 결과"><strong>'+(record.choice===item.answer?"정답입니다.":"오답입니다. 정답: "+item.answer)+'</strong><p>'+esc(item.explanation)+'</p><p class="ncp-answer-warning">비공식 복원자료의 게시자 답안입니다. 공식 정답으로 검증되지 않았습니다.</p><a href="'+esc(item.sourceUrl)+'" target="_blank" rel="noopener noreferrer">'+esc(item.exam)+' 원문 '+esc(item.originalNumber)+'번 보기 ↗</a></section>':
+ const result=finished?'<section class="ncp-answer '+(record.choice===item.answer?"success":"retry")+'" aria-label="채점 결과"><strong>'+(record.choice===item.answer?"복원자료 답안과 일치합니다.":"게시자 답안과 다릅니다. 게시자 답안: "+item.answer)+'</strong><p>'+esc(item.explanation)+'</p><p class="ncp-answer-warning">비공식 복원자료의 게시자 답안입니다. 공식 정답으로 검증되지 않았습니다.</p><a href="'+esc(item.sourceUrl)+'" target="_blank" rel="noopener noreferrer">'+esc(item.exam)+' 원문 '+esc(item.originalNumber)+'번 보기 ↗</a></section>':
  '<p class="ncp-help">선택하면 복원자료에 게시된 정답과 출처 원문 번호를 확인할 수 있습니다. 게시자 정답은 공식 검증되지 않았습니다.</p>';
  elements.question.innerHTML='<div class="ncp-question-meta"><span>'+esc(item.id)+'</span><span>'+esc(item.exam)+'</span><span>복원 원문 '+esc(item.originalNumber)+'번</span><span>'+esc(item.topic)+'</span></div>'+
  '<h2 tabindex="-1">'+esc(item.question)+'</h2><div class="ncp-options" role="group" aria-label="정답 선택">'+choices+'</div>'+result+
