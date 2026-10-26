@@ -44,8 +44,8 @@ assert.equal(makeDailyPlan("1",[],freshDailyState(day),day).next.id,"practical",
 const html=read("index.html"),css=read("css/home-engagement.css"),ui=read("js/home-engagement.js");
 for(const id of ["home-today","home-today-subtitle","home-today-primary","home-today-progress","home-today-list","home-today-status"])
   assert.ok(html.includes('id="'+id+'"'),id+" is mounted");
-assert.ok(html.indexOf('id="home-alerts-title"')<html.indexOf('id="home-today"'));
-assert.ok(html.indexOf('id="home-today"')<html.indexOf('id="home-practical-title"'));
+assert.ok(html.indexOf('id="home-today"')<html.indexOf('id="home-alerts-title"'));
+assert.ok(html.indexOf('class="dashboard-action-grid"')<html.indexOf('id="home-today"'));
 assert.ok(html.includes('js/home-engagement.js?v=20261020-engagement-1'));
 assert.match(html,/css\/home-engagement\.css\?v=[^"']+/);
 assert.ok(ui.includes('kbigdata:home-gradechange'),"grade changes refresh the checklist");
