@@ -17,9 +17,11 @@ for(const id of requiredHomeIds)assert.ok(home.includes('id="'+id+'"'),'home '+i
 assert.ok(home.indexOf('id="portal-query"')<home.indexOf('class="dashboard-action-grid"'),'search first');
 assert.ok(home.indexOf('class="dashboard-action-grid"')<home.indexOf('id="home-today"'),'quick actions before daily plan');
 assert.ok(home.indexOf('id="home-today"')<home.indexOf('id="home-alerts-title"'),'daily plan before schedule');
-assert.ok(home.indexOf('id="home-alerts-title"')<home.indexOf('id="services"'),'schedule before directory shortcuts');
+assert.ok(home.indexOf('id="services"')<home.indexOf('id="home-alerts-title"'),'school schedule follows the service directory shortcuts');
 assert.ok(!home.includes('id="service-groups"'),'full catalogue no longer rendered on home');
 assert.ok(!home.includes('dashboard-highlights'),'redundant continuation panel is removed');
+assert.ok(home.includes('학과 주요 일정'),'clear academic section title');
+assert.ok(!home.includes('놓치지 마세요'),'ambiguous mid-page notice title removed');
 assert.ok(!home.includes('home-practical-card'),'duplicate practical card is removed');
 assert.ok(home.includes('data-home-grade="1"')&&home.includes('data-home-grade="2"'));
 assert.ok(home.includes('class="dashboard-personal-tabs" role="tablist"'));
