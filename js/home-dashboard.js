@@ -34,7 +34,7 @@ const quickCopy=Object.freeze({
  docs:["개발 공식문서","Spring Boot · 클라우드 · AI"],
  jobs:["IT 직무 가이드","목표 직무 탐색"],
  "project-guide":["프로젝트 가이드","기획 · 설계 · 구현"],
- practical:["정보처리 자격증 기출문제","C · Java · Python · SQL"],
+ practical:["정보처리 기출문제","C · Java · Python · SQL"],
  certifications:["IT 자격증","기사 · 산업기사 시험 안내"],
  recruit:["추천 채용공고","기업 · 직무 · 마감일"],
  apply:["입사지원 현황","지원 이력 · 주간 목표"],
