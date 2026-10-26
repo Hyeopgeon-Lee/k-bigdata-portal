@@ -86,8 +86,8 @@ function renderGrade(){
  }
  const notice=$("#home-alerts-subtitle");
  if(notice)notice.textContent=selectedGrade==="1"
-  ?"1학년 대상 주요 일정만 모아 보여드립니다."
-  :"마감이 가까운 채용공고와 2학년·공통 일정을 확인하세요.";
+  ?"1학년 학과 일정을 확인하세요."
+  :"2학년 일정과 채용 마감일을 확인하세요.";
  const practiceDescription=$("#home-practical-description");
  if(practiceDescription)practiceDescription.textContent=selectedGrade==="1"
   ?"코드 읽기·값 추적·SQL 기초부터 익혀 보세요."
