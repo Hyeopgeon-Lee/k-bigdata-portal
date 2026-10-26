@@ -1,7 +1,7 @@
 // Service-directory controls reuse the canonical service registry and existing browser-only favorites.
-import "./app.js?v=20261020-unified-shell-1";
-import {services} from "./services.js?v=20261020-unified-shell-1";
-import {getFavorites,toggleFavorite} from "./portal-personal.js?v=20261020-unified-shell-1";
+import "./app.js?v=20261026-portal-launcher-1";
+import {services} from "./services.js?v=20261026-portal-launcher-1";
+import {getFavorites,toggleFavorite} from "./portal-personal.js?v=20261026-portal-launcher-1";
 const input=document.getElementById("directory-query");
 const clear=document.getElementById("directory-clear");
 const category=document.getElementById("directory-category");
