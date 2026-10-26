@@ -114,7 +114,7 @@ const render = events => {
   const grade=selectedGrade();
   if(gradeHeading)gradeHeading.textContent=grade==="1"?"1학년 주요 일정":"2학년 · 공통 일정";
   const permitted=events.filter(event=>visibleToGrade(event,grade));
-  renderList(root,sortedUpcoming(permitted,today,grade==="1"?3:2),today,
+  renderList(root,sortedUpcoming(permitted,today,2),today,
     grade==="1"?"현재 공개된 1학년 대상 예정 일정이 없습니다."
       :"현재 공개된 2학년·공통 예정 일정이 없습니다.");
 };
