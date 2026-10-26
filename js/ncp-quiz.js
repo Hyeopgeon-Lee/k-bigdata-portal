@@ -58,7 +58,7 @@ function render(){
  '<p class="ncp-help">선택하면 복원자료에 게시된 정답과 출처 원문 번호를 확인할 수 있습니다. 게시자 정답은 공식 검증되지 않았습니다.</p>';
  elements.question.innerHTML='<div class="ncp-question-meta"><span>'+esc(item.id)+'</span><span>'+esc(item.exam)+'</span><span>복원 원문 '+esc(item.originalNumber)+'번</span><span>'+esc(item.topic)+'</span></div>'+
  '<h2 tabindex="-1">'+esc(item.question)+'</h2><div class="ncp-options" role="group" aria-label="정답 선택">'+choices+'</div>'+result+
- '<div class="ncp-question-actions"><button type="button" class="ncp-light-button" id="ncp-share">문제 링크 복사</button><a class="ncp-light-button" href="https://help.k-bigdata.kr/" target="_blank" rel="noopener noreferrer">문제 오류 신고 ↗</a></div>';
+ '<div class="ncp-question-actions"><a class="ncp-light-button" href="'+esc(item.sourceUrl)+'" target="_blank" rel="noopener noreferrer">복원 원문 '+esc(item.originalNumber)+'번 보기 ↗</a><button type="button" class="ncp-light-button" id="ncp-share">문제 링크 복사</button><a class="ncp-light-button" href="https://help.k-bigdata.kr/" target="_blank" rel="noopener noreferrer">문제 오류 신고 ↗</a></div>';
 }
 function showChoice(letter){
  const item=state.list[state.index];if(!item||getRecord(item.id)||!KEYS.includes(letter))return;
