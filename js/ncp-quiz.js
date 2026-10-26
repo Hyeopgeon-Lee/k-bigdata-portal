@@ -1,5 +1,5 @@
 import {ncpQuestions} from "../data/ncp-questions.js?v=20261026-quizfocus-2";
-import {initPortalShell} from "./portal-shell.js?v=20261020-unified-shell-1";
+import {initPortalShell} from "./portal-shell.js?v=20261026-portal-launcher-1";
 
 const byId=id=>document.getElementById(id);
 const esc=value=>String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
