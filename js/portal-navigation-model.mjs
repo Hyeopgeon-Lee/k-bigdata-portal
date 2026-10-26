@@ -1,4 +1,4 @@
-import {categories, services, portalNavLinks} from './services.js?v=20261020-unified-shell-1';
+import {categories, services, portalNavLinks} from './services.js?v=20261026-portal-launcher-1';
 
 export const shellVersion = '20261021-coding-comment-tip-1';
 export const portalPages = {
