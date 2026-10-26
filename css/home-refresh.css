@@ -10,7 +10,7 @@ body[data-portal-home] .home-grade-control{display:grid;justify-items:end;gap:4p
 body[data-portal-home] .home-grade-control-row{display:flex;gap:10px;align-items:center}
 body[data-portal-home] .home-grade-label{font-size:12px;font-weight:700;color:#536581}
 body[data-portal-home] .home-grade-options{display:flex;gap:3px;padding:3px;border:1px solid #c9d9ec;border-radius:10px;background:#eaf1fa}
-body[data-portal-home] .home-grade-button{font:700 13px/1.2 inherit;font-family:inherit;border:0;border-radius:8px;background:transparent;color:#365579;min-height:42px;padding:10px 17px;cursor:pointer}
+body[data-portal-home] .home-grade-button{font-family:inherit;font-weight:700;font-size:13px;line-height:1.2;border:0;border-radius:8px;background:transparent;color:#365579;min-height:42px;padding:10px 17px;cursor:pointer}
 body[data-portal-home] .home-grade-button[aria-pressed=true]{background:#153d80;color:white}
 body[data-portal-home] .home-grade-status{font-size:11px;line-height:1.35;text-align:right;color:#5d6d82;margin:0;max-width:260px}
 body[data-portal-home] .portal-search{grid-row:2;width:100%;margin:0;padding:17px 21px;border:1px solid #d9e3f1;border-radius:14px;background:#fff;box-shadow:none}
