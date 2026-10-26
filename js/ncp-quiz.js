@@ -1,4 +1,5 @@
 import {ncpQuestions} from "../data/ncp-questions.js";
+import {ncpResources} from "../data/ncp-resources.js";
 import {initPortalShell} from "./portal-shell.js?v=20261020-unified-shell-1";
 
 const byId=id=>document.getElementById(id);
@@ -101,4 +102,13 @@ byId("ncp-reset").addEventListener("click",()=>{
 const initial=params.get("id");
 if(initial&&ncpQuestions.some(q=>q.id===initial)){const selected=ncpQuestions.find(q=>q.id===initial);state.exam=selected.exam;elements.exam.value=state.exam;setItems(initial);}
 else setItems();
+function renderResources(){
+ const host=byId("ncp-resources");if(!host)return;
+ const sources=[...ncpResources].sort((a,b)=>Number(b.type.startsWith("공식"))-Number(a.type.startsWith("공식"))||a.id-b.id);
+ host.innerHTML='<ol class="ncp-source-list">'+sources.map(item=>{
+  const official=item.type.startsWith("공식");
+  return '<li><div class="ncp-source-top"><strong>'+esc(item.title)+'</strong><span class="'+(official?"official":"unofficial")+'">'+(official?"공식 제공":"비공식 자료")+'</span></div><p>'+esc(item.exam)+' · '+esc(item.type)+' · '+esc(item.date)+'</p><p>'+esc(item.description)+'</p><small>검증 상태: '+esc(item.verification)+'</small><a href="'+esc(item.url)+'" target="_blank" rel="noopener noreferrer">원문 사이트 열기 ↗</a></li>';
+ }).join("")+'</ol>';
+}
+renderResources();
 initPortalShell().catch(error=>console.error("NCP portal shell",error));
