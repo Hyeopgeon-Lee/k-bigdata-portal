@@ -26,6 +26,12 @@ assert.ok(!home.includes('home-practical-card'),'duplicate practical card is rem
 assert.ok(home.includes('data-home-grade="1"')&&home.includes('data-home-grade="2"'));
 assert.ok(home.includes('class="dashboard-personal-tabs" role="tablist"'));
 assert.ok(home.includes('css/home-refresh.css'));
+assert.ok(!home.includes('놓치지 마세요'),'outdated notice heading must not return');
+assert.ok(home.includes('id="home-alerts-title" class="home-alerts-title">학과 주요 일정'),'schedule section has explicit title');
+assert.ok(home.includes('class="home-see-all" href="schedule.html"'),'schedule link is in section heading');
+assert.ok(css.includes('.home-alerts .home-alerts-header{display:flex;flex-direction:row;align-items:flex-start'),'schedule header stays in one row');
+assert.ok(css.includes('.home-alerts .home-alerts-title{display:block;margin:0;font-size:20px;line-height:1.4;text-align:left'),'schedule heading stays left aligned');
+assert.ok(css.includes('.home-alerts .dashboard-schedule-empty{padding:12px 14px'),'empty state is compact');
 assert.ok(home.includes('js/home-dashboard.js?v='));
 assert.ok(home.includes('js/home-engagement.js?v='));
 assert.ok(home.includes('js/home-schedule.js?v='));
