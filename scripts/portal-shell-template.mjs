@@ -9,8 +9,8 @@ export function renderHeader(page){
     <details class="portal-menu" open>
       <summary class="menu-toggle" aria-controls="portal-nav">메뉴 <span aria-hidden="true">☰</span></summary>
       <nav class="main-nav" id="portal-nav" aria-label="주요 메뉴">
-        <a href="index.html#services"${page.group?'':' aria-current="page"'}>전체 서비스</a>
-        ${groups.map(group=>`<a href="index.html#${group.id}" data-portal-group="${group.id}"${page.group===group.id?' aria-current="location"':''}>${esc(group.label)}</a>`).join('\n        ')}
+        <a href="services.html"${page.directory?' aria-current="page"':''}>전체 서비스</a>
+        ${groups.map(group=>`<a href="services.html#${group.id}" data-portal-group="${group.id}"${page.group===group.id?' aria-current="location"':''}>${esc(group.label)}</a>`).join('\n        ')}
         <a class="nav-external" href="${officialWebsite}">학과 홈페이지 ↗</a>
       </nav>
     </details>
@@ -25,7 +25,7 @@ export function renderServiceNavigation(page,id){
   if(!page.group)return '';
   return focusable(`<nav class="container learning-cross-nav portal-service-nav portal-nav-compact" aria-label="현재 영역과 다른 서비스 바로가기" data-learning-nav>
   <div class="portal-nav-current"><strong class="portal-nav-title">${esc(groups.find(group=>group.id===page.group).label)}</strong><div class="portal-nav-items">${navigationItems.filter(item=>item.group===page.group).map(item=>serviceLink(item,id)).join('')}</div></div>
-  <details class="portal-nav-more"><summary>다른 서비스 보기</summary><div class="portal-nav-other">${groups.filter(group=>group.id!==page.group).map(group=>`<section class="portal-nav-other-group"><strong>${esc(group.label)}</strong><div>${navigationItems.filter(item=>item.group===group.id).map(item=>serviceLink(item,id)).join('')}</div></section>`).join('')}<a href="index.html#services" class="portal-nav-all">전체 서비스 목록 →</a></div></details>
+  <details class="portal-nav-more"><summary>다른 서비스 보기</summary><div class="portal-nav-other">${groups.filter(group=>group.id!==page.group).map(group=>`<section class="portal-nav-other-group"><strong>${esc(group.label)}</strong><div>${navigationItems.filter(item=>item.group===group.id).map(item=>serviceLink(item,id)).join('')}</div></section>`).join('')}<a href="services.html" class="portal-nav-all">전체 서비스 목록 →</a></div></details>
 </nav>`);
 }
 export function renderToolbar(page){
