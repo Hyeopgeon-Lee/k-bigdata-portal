@@ -316,6 +316,7 @@ export const portalNavLinks = [
   {id:"apply",label:"입사지원",group:"career"},
   {id:"alumni",label:"졸업생",group:"career"},
   {id:"certifications",label:"자격증",group:"learning"},
+  {id:"ncp",label:"NCP",group:"learning"},
   {id:"coding",label:"기초학습",group:"learning"},
   {id:"practical",label:"실기",group:"learning"},
   {id:"interview",label:"기술면접",group:"learning"},
