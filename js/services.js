@@ -41,7 +41,7 @@ export const services = [
     tags:["Java","C언어","Python","Ubuntu","기초 프로그래밍","명령어"], aliases:"기초코딩 코딩 350제 신입생 기초 프로그래밍 명령어 변수 추적 파이썬 C언어 자바 우분투 리눅스 한줄주석", featured:false
   },
   {
-    id:"practical", name:"정보처리 자격증 기출문제", englishName:"PAPER FIRST PRACTICE",
+    id:"practical", name:"정보처리 기출문제", englishName:"PAPER FIRST PRACTICE",
     category:"learning", url:"practical.html", icon:"book", accent:"blue", order:9.5,
     description:"정보처리기사·산업기사 실기 C, Java, Python, SQL 비공식 복원기출을 직접 손으로 풀어보세요.",
     shortDescription:"정보처리기사·산업기사 기출·기출 기반 문제를 학습하세요.",
@@ -318,7 +318,7 @@ export const portalNavLinks = [
   {id:"certifications",label:"자격증",group:"learning"},
   {id:"ncp",label:"NCP 기출문제",group:"learning"},
   {id:"coding",label:"기초학습",group:"learning"},
-  {id:"practical",label:"정보처리 자격증 기출문제",group:"learning"},
+  {id:"practical",label:"정보처리 기출문제",group:"learning"},
   {id:"interview",label:"기술면접",group:"learning"},
   {id:"docs",label:"공식문서",group:"learning"},
   {id:"tech-blog",label:"기술블로그 ↗",group:"learning"},
