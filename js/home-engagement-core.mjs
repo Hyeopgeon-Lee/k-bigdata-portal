@@ -1,14 +1,14 @@
 // Pure daily engagement model. No identity or network access.
 export const TODAY_TASKS = Object.freeze({
   "1": Object.freeze([
-    {id:"practical", title:"실기 코딩·SQL 문제 2개 풀기", detail:"정답 여부와 관계없이 직접 제출한 문제를 집계합니다.", url:"practical.html", automatic:true},
+    {id:"practical", title:"정보처리 자격증 기출문제 2개 풀기", detail:"정답 여부와 관계없이 직접 제출한 문제를 집계합니다.", url:"practical.html", automatic:true},
     {id:"docs", title:"개발 공식문서 주제 1개 공부하기", detail:"오늘 배운 기술을 하나 골라 읽어 보세요.", url:"docs.html", automatic:false},
     {id:"project", title:"프로젝트 제작 단계 확인하기", detail:"기획·구현·테스트 중 현재 단계를 확인해 보세요.", url:"project-guide.html", automatic:false}
   ]),
   "2": Object.freeze([
     {id:"recruit", title:"추천 채용공고 1건 검토하기", detail:"직무·지원요건·마감일을 원문에서 확인하세요.", url:"recruit.html", automatic:false},
     {id:"interview", title:"기술면접 답변 1개 직접 연습하기", detail:"답을 읽기 전에 자신의 말로 설명해 보세요.", url:"interview.html", automatic:false},
-    {id:"practical", title:"실기 코딩·SQL 문제 2개 풀기", detail:"정답 여부와 관계없이 직접 제출한 문제를 집계합니다.", url:"practical.html", automatic:true}
+    {id:"practical", title:"정보처리 자격증 기출문제 2개 풀기", detail:"정답 여부와 관계없이 직접 제출한 문제를 집계합니다.", url:"practical.html", automatic:true}
   ])
 });
 export const DAILY_STATE_KEY = "kbigdata:daily-plan:v1";
