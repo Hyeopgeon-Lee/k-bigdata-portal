@@ -17,15 +17,15 @@ const gradeLayouts=Object.freeze({
  "1":{
   title:"1학년, 오늘 무엇을 배울까요?",
   lead:"개발 기초부터 프로젝트까지, 필요한 학습 서비스를 바로 시작하세요.",
-  actions:["coding","docs","jobs","certifications"],
-  quickTitle:"학습 바로 시작하기",
+  actions:["coding","practical","certifications","docs"],
+  quickTitle:"빠른 실행",
   highlightTitle:"이어서 학습하기"
  },
  "2":{
   title:"2학년, 오늘 무엇을 준비할까요?",
   lead:"취업 준비부터 입사지원까지, 필요한 활동을 바로 시작하세요.",
   actions:["recruit","apply","interview","ready"],
-  quickTitle:"취업 바로 시작하기",
+  quickTitle:"빠른 실행",
   highlightTitle:"이어서 취업 준비하기"
  }
 });
@@ -34,7 +34,7 @@ const quickCopy=Object.freeze({
  docs:["개발 공식문서","Spring Boot · 클라우드 · AI"],
  jobs:["IT 직무 가이드","목표 직무 탐색"],
  "project-guide":["프로젝트 가이드","기획 · 설계 · 구현"],
- practical:["코딩 · SQL 실습","C · Java · Python · SQL"],
+ practical:["정보처리 자격증 기출문제","C · Java · Python · SQL"],
  certifications:["IT 자격증","기사 · 산업기사 시험 안내"],
  recruit:["추천 채용공고","기업 · 직무 · 마감일"],
  apply:["입사지원 현황","지원 이력 · 주간 목표"],
@@ -128,10 +128,10 @@ function renderPersonal(){
   const favoritesRoot=$("#favorite-services"),recentRoot=$("#recent-services");
   if(favoritesRoot)favoritesRoot.innerHTML=favorites.length
     ? '<ul class="dashboard-links">'+favorites.slice(0,6).map(s=>'<li>'+link(s)+'</li>').join("")+'</ul>'
-    : '<p class="dashboard-empty">자주 쓰는 서비스의 ☆을 눌러 등록하세요.</p><a class="dashboard-empty-link" href="#services">전체 서비스에서 추가하기 →</a>';
+    : '<p class="dashboard-empty">자주 쓰는 서비스의 ☆을 눌러 등록하세요.</p><a class="dashboard-empty-link" href="services.html">전체 서비스에서 추가하기 →</a>';
   if(recentRoot)recentRoot.innerHTML=recent.length
     ? '<ul class="dashboard-links">'+recent.slice(0,4).map(s=>'<li>'+link(s)+'</li>').join("")+'</ul>'
-    : '<p class="dashboard-empty">방문한 서비스가 이 기기에 표시됩니다.</p><a class="dashboard-empty-link" href="#services">전체 서비스 둘러보기 →</a>';
+    : '<p class="dashboard-empty">방문한 서비스가 이 기기에 표시됩니다.</p><a class="dashboard-empty-link" href="services.html">전체 서비스 둘러보기 →</a>';
   for(const button of document.querySelectorAll("[data-favorite]")){
     const active=favoriteIds.includes(button.dataset.favorite);
     const label=button.dataset.serviceName||"서비스";
