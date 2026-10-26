@@ -26,10 +26,10 @@ export const categories = {
 };
 export const services = [
   {
-    id:"ncp", name:"NCP Professional 복원기출", englishName:"NAVER CLOUD PRACTICE",
+    id:"ncp", name:"NCP 기출문제", englishName:"NAVER CLOUD PRACTICE",
     category:"learning", url:"ncp.html", icon:"book", accent:"blue", order:9.2,
     description:"2025년 공개 복원기출의 원본 번호와 출처를 확인하며 재서술 문항 75개를 풀고, 원문 복원자료 6건도 볼 수 있습니다.",
-    shortDescription:"NCP-200·202·207 공개 복원기출 75문항을 풀어보세요.",
+    shortDescription:"NCP 기출문제: 공개 복원자료 기반 75문항을 학습하세요.",
     tags:["NCP","NAVER CLOUD","NCP-200","NCP-202","NCP-207","클라우드","DevOps"],
     aliases:"네이버클라우드 NCP 자격증 Professional 문제풀이 연습문제 시험 준비", featured:false
   },
@@ -41,10 +41,10 @@ export const services = [
     tags:["Java","C언어","Python","Ubuntu","기초 프로그래밍","명령어"], aliases:"기초코딩 코딩 350제 신입생 기초 프로그래밍 명령어 변수 추적 파이썬 C언어 자바 우분투 리눅스 한줄주석", featured:false
   },
   {
-    id:"practical", name:"실기 코딩·SQL 문제은행", englishName:"PAPER FIRST PRACTICE",
+    id:"practical", name:"정보처리 자격증 기출문제", englishName:"PAPER FIRST PRACTICE",
     category:"learning", url:"practical.html", icon:"book", accent:"blue", order:9.5,
     description:"정보처리기사·산업기사 실기 C, Java, Python, SQL 비공식 복원기출을 직접 손으로 풀어보세요.",
-    shortDescription:"실기 코딩·SQL 복원기출을 종이와 펜으로 직접 추적하세요.",
+    shortDescription:"정보처리기사·산업기사 기출·기출 기반 문제를 학습하세요.",
     tags:["C","Java","Python","SQL"], aliases:"실기 코딩 SQL 문제은행 종이 풀이 복원기출 정보처리기사 정보처리산업기사 오답노트", featured:false
   },
   {
@@ -316,9 +316,9 @@ export const portalNavLinks = [
   {id:"apply",label:"입사지원",group:"career"},
   {id:"alumni",label:"졸업생",group:"career"},
   {id:"certifications",label:"자격증",group:"learning"},
-  {id:"ncp",label:"NCP",group:"learning"},
+  {id:"ncp",label:"NCP 기출문제",group:"learning"},
   {id:"coding",label:"기초학습",group:"learning"},
-  {id:"practical",label:"실기",group:"learning"},
+  {id:"practical",label:"정보처리 기출문제",group:"learning"},
   {id:"interview",label:"기술면접",group:"learning"},
   {id:"docs",label:"공식문서",group:"learning"},
   {id:"tech-blog",label:"기술블로그 ↗",group:"learning"},
