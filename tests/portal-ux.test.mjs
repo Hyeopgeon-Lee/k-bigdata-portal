@@ -20,7 +20,7 @@ for(const page of pages){
  if(!['index','services'].includes(page)){assert.ok(html.includes('data-learning-nav'));assert.ok(!html.includes('id="portal-query"'));}
  for(const [,url] of html.matchAll(/(?:href|src)="([^"]+)"/g))if(!/^(https?:|#|mailto:)/.test(url))assert.ok(existsSync(new URL(url.split(/[?#]/)[0],root)),page+' '+url);
 }
-assert.deepEqual(quickActions,['practical','interview','ready','apply']);
+assert.deepEqual(quickActions,['coding','practical','certifications','docs']);
 assert.equal(portalNavLinks.length,services.length,'all services appear in navigation');
 assert.deepEqual(learningLinks,portalNavLinks,'legacy API remains an alias of the canonical menu');
 assert.equal(new Set(portalNavLinks.map(item=>item.id)).size,portalNavLinks.length);
