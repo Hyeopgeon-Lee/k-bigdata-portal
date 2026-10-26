@@ -1,4 +1,4 @@
-import {services,serviceKind} from "./services.js?v=20261026-portal-launcher-1";
+import {services,serviceKind} from "./services.js?v=20261026-card-label-1";
 import {certifications} from "./certifications.js";
 import {jobs} from "./jobs.js";
 import {docs} from "./docs.js";
