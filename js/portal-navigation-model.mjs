@@ -1,6 +1,6 @@
 import {categories, services, portalNavLinks} from './services.js?v=20261026-portal-launcher-1';
 
-export const shellVersion = '20261021-coding-comment-tip-1';
+export const shellVersion = '20261026-portal-launcher-1';
 export const portalPages = {
   index: {title:'통합 포털', group:null},
   services: {title:'전체 서비스', group:null, directory:true},
