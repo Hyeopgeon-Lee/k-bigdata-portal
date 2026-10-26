@@ -1,4 +1,4 @@
-// 조사일 2026-10-26. 외부 링크는 자체 검증 및 공식 기출 인증 자료가 아닐 수 있습니다.
+// 2026-10-26 공개 자료. 공식 자료와 비공식 복원 게시글 분리.
 export const ncpResources = [
   {
     "id": 1,
@@ -369,5 +369,25 @@ export const ncpResources = [
     "verification": "시험 등급 혼합 / Professional 문항만 구분",
     "url": "https://cloudinfosec.tistory.com/209",
     "date": "2022-12-28"
+  },
+  {
+    "id": 38,
+    "type": "비공식 복원",
+    "exam": "NCP-202",
+    "title": "2025-09-03 NCP-202 복원문제 51~100번",
+    "description": "응시자가 게시한 NCP 202 원본 51~100번과 게시자 답안",
+    "verification": "원문 확인 / 정답 공식 검증 미완료",
+    "url": "https://notion2979.tistory.com/8",
+    "date": "2025-09-03"
+  },
+  {
+    "id": 39,
+    "type": "비공식 복원",
+    "exam": "NCP-207",
+    "title": "2025-09-09 NCP-207 복원문제 46~90번",
+    "description": "응시자가 게시한 NCP 207 원본 46~90번과 게시자 답안",
+    "verification": "원문 확인 / 정답 공식 검증 미완료",
+    "url": "https://notion2979.tistory.com/10",
+    "date": "2025-09-09"
   }
 ];
