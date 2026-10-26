@@ -29,7 +29,7 @@ try{
   await page.locator('.directory-catalog .service-card').first().waitFor({timeout:15000});
   assert.equal(await page.locator('.directory-catalog .service-card').count(),18,'all services remain visible '+width);
   assert.equal(await page.locator('.directory-favorite-button').count(),18,'favorite buttons '+width);
-  assert.ok((await page.locator('#directory-favorites-list').innerText()).includes('정보처리 자격증 기출문제'));
+  assert.ok((await page.locator('#directory-favorites-list').innerText()).includes('정보처리 기출문제'));
   await page.locator('#directory-query').fill('NCP');
   assert.ok(await page.locator('.directory-service-tile:visible').count()>=1,'NCP search '+width);
   assert.ok((await page.locator('#directory-status').innerText()).includes('개 서비스'));
