@@ -15,7 +15,7 @@ for(const [id,url] of Object.entries(baseline.services))assert.equal(services.fi
 assert.equal(new Set(services.map(s=>s.id)).size,services.length);
 assert.deepEqual(navigationItems.map(item=>item.id).sort(),services.map(item=>item.id).sort());
 assert.deepEqual(Object.keys(categories),['career','learning','project','campus']);
-const expected={career:['jobs','resume','ready','recruit','apply','alumni'],learning:['coding','certifications','practical','interview','docs','tech-blog'],project:['portfolio','project-guide'],campus:['schedule','room','help']};
+const expected={career:['jobs','resume','ready','recruit','apply','alumni'],learning:['coding','certifications','ncp','practical','interview','docs','tech-blog'],project:['portfolio','project-guide'],campus:['schedule','room','help']};
 for(const [category,ids] of Object.entries(expected))assert.deepEqual(services.filter(s=>s.category===category).sort((a,b)=>a.order-b.order).map(s=>s.id),ids);
 assert.equal(services.find(s=>s.id==='tech-blog').url,'https://prof.k-bigdata.kr/blog/');
 assert.equal(serviceKind(services.find(s=>s.id==='tech-blog')),'EXTERNAL');
