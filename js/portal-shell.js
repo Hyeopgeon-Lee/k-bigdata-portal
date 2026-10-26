@@ -1,7 +1,7 @@
-import {initPortalUX} from "./portal-ux.js?v=20261020-unified-shell-1";
-import {initRecentTracking} from "./portal-personal.js?v=20261020-unified-shell-1";
-import {initGroupedSearch} from "./search-ui.js?v=20261020-unified-shell-1";
-import {footerLinks} from "./services.js?v=20261020-unified-shell-1";
+import {initPortalUX} from "./portal-ux.js?v=20261026-portal-launcher-1";
+import {initRecentTracking} from "./portal-personal.js?v=20261026-portal-launcher-1";
+import {initGroupedSearch} from "./search-ui.js?v=20261026-portal-launcher-1";
+import {footerLinks} from "./services.js?v=20261026-portal-launcher-1";
 
 const esc=v=>String(v??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
 
