@@ -1,5 +1,5 @@
-import {ncpQuestions} from "../data/ncp-questions.js";
-import {ncpResources} from "../data/ncp-resources.js";
+import {ncpQuestions} from "../data/ncp-questions.js?v=20261026-recon-1";
+import {ncpResources} from "../data/ncp-resources.js?v=20261026-recon-1";
 import {initPortalShell} from "./portal-shell.js?v=20261020-unified-shell-1";
 
 const byId=id=>document.getElementById(id);
