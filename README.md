@@ -7,6 +7,16 @@ Vanilla HTML/CSS/JavaScript 기반 GitHub Pages 정적 사이트이며 로그인
 
 GA4 접속 통계: 9개 페이지에 학생 포털 전용 측정 ID `G-8PMMKFNRY7`을 설정했습니다. [설치·개인정보 보호·보고서 안내](docs/analytics-setup.md)를 참고하세요.
 
+## 2026-10-26 메인 페이지 간소화
+
+- 메인은 검색 → 학년별 빠른 실행 4개 → 오늘의 할 일 → 주요 일정/마감 알림 → 내 바로가기 → 4개 분야 입구 순으로 정리했습니다.
+- 18개 서비스를 나열하던 목록과 학습·취업 흐름 안내는 `services.html`로 옮겼습니다. 분야 선택, 검색, 즐겨찾기만 필터 및 브라우저별 즐겨찾기를 지원합니다.
+- 카드 중복 영역인 공통 실기 강조 카드와 '이어서 준비하기'는 메인에서 제거했습니다. 기존 학습 문제·기록·즐겨찾기 스토리지·외부 링크는 유지합니다.
+- 학생에게 보이는 시험 서비스명은 '정보처리 자격증 기출문제', 'NCP 기출문제'로 통일했습니다. 문항 출처·복원 여부 및 기출 기반 변형 여부는 개별 문제 안내에서 구분합니다.
+- 공유 헤더의 전체 서비스 및 분야별 링크는 `services.html`로 연결합니다. 새 페이지도 공통 템플릿 생성과 페이지 등록 목록에 포함됩니다.
+- `js/portal-personal.js`는 실제 서비스 클릭 시 GA4에 승인된 서비스 ID와 페이지 구분만 전송합니다. 검색어, 학번, 성명, 답변 내용은 전송하지 않습니다.
+- 검증 명령: `node scripts/build-portal-shell.mjs --check`, `node --test tests/*.test.mjs`; 브라우저는 로컬 HTTP 서버에서 `node tests/portal-home-browser.mjs`로 확인합니다.
+
 ## 메뉴 구조
 
 - 취업 · 진로: IT 직무 가이드, 취업 준비 점검, 입사지원 현황, 졸업생 네트워크
@@ -23,7 +33,7 @@ GA4 접속 통계: 9개 페이지에 학생 포털 전용 측정 ID `G-8PMMKFNRY
 ## 파일 구조
 
 ```text
-index.html                  메인 서비스 허브
+index.html                  학년별 간편 런처 (검색·빠른 실행·오늘의 할 일·일정·바로가기)\nservices.html               전체 18개 서비스 검색·분야 필터·즐겨찾기
 certifications.html         IT 자격증 목록 / ?id=cka 상세
 jobs.html                   IT 직무 목록 / ?id=data 상세
 interview.html              기술면접 학습 / ?category=Kubernetes
