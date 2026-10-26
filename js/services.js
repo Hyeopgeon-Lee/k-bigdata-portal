@@ -307,7 +307,7 @@ export const studentJourney = [
   {id:"apply", title:"입사지원", description:"실제 지원 기업과 진행 상황 관리하기"},
   {id:"alumni", title:"졸업생 네트워크", description:"선배의 경험과 채용 정보 나누기"}
 ];
-export const quickActions = ["practical","interview","ready","apply"];
+export const quickActions = ["coding","practical","certifications","docs"];
 export const portalNavLinks = [
   {id:"jobs",label:"직무",group:"career"},
   {id:"recruit",label:"채용공고",group:"career"},
