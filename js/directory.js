@@ -4,6 +4,8 @@ import {services} from "./services.js?v=20261020-unified-shell-1";
 import {getFavorites,toggleFavorite} from "./portal-personal.js?v=20261020-unified-shell-1";
 const input=document.getElementById("directory-query");
 const clear=document.getElementById("directory-clear");
+const category=document.getElementById("directory-category");
+const favoriteFilter=document.getElementById("directory-only-favorites");
 const status=document.getElementById("directory-status");
 const favoritesList=document.getElementById("directory-favorites-list");
 const favoritesCount=document.getElementById("directory-favorite-count");
@@ -29,7 +31,7 @@ function render(){
  for(const card of document.querySelectorAll(".directory-catalog .service-card")){
   const service=serviceByUrl(card.getAttribute("href"));
   if(!service)continue;
-  const matches=(!query||text(service).includes(query))&&(!onlyFavorites||favorites.has(service.id));
+  const matches=(!query||text(service).includes(query))&&(!category.value||service.category===category.value)&&(!onlyFavorites||favorites.has(service.id));
   card.parentElement.hidden=!matches;
   if(matches)visible++;
   const button=card.parentElement.querySelector(".directory-favorite-button");
@@ -44,7 +46,9 @@ function render(){
  for(const group of document.querySelectorAll(".directory-catalog .service-group")){
   group.hidden=!group.querySelector(".directory-service-tile:not([hidden])");
  }
- status.textContent=(query||onlyFavorites?"검색 결과 ":"전체 ")+visible+"개 서비스"+(onlyFavorites?" · 즐겨찾기 필터":"");
+ status.textContent=(query||onlyFavorites||category.value?"검색 결과 ":"전체 ")+visible+"개 서비스"+(onlyFavorites?" · 즐겨찾기 필터":"");
+ favoriteFilter.setAttribute("aria-pressed",String(onlyFavorites));
+ favoriteFilter.textContent=onlyFavorites?"★ 즐겨찾기만 표시 중":"☆ 즐겨찾기만";
  renderFavorites();
 }
 for(const card of document.querySelectorAll(".directory-catalog .service-card")){
@@ -61,7 +65,9 @@ for(const card of document.querySelectorAll(".directory-catalog .service-card"))
  wrapper.append(favorite);
 }
 input?.addEventListener("input",render);
-clear?.addEventListener("click",()=>{input.value="";onlyFavorites=false;render();input.focus();});
+category?.addEventListener("change",render);
+favoriteFilter?.addEventListener("click",()=>{onlyFavorites=!onlyFavorites;render();});
+clear?.addEventListener("click",()=>{input.value="";category.value="";onlyFavorites=false;render();input.focus();});
 document.getElementById("service-groups")?.addEventListener("click",event=>{
  const favorite=event.target.closest(".directory-favorite-button");
  if(!favorite)return;
