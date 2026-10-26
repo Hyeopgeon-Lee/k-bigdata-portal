@@ -56,6 +56,15 @@ export function initRecentTracking(){
     const anchor=target.closest("a[href]");
     if(!anchor)return;
     const service=matchService(anchor.href);
-    if(service)recordService(service.id);
+    if(service){
+      recordService(service.id);
+      // Only approved service IDs are measured; no search terms, personal identifiers or task contents.
+      if(location.hostname==="portal.k-bigdata.kr"&&typeof window.gtag==="function"){
+        window.gtag("event","portal_service_open",{
+          service_key:service.id,
+          page_context:document.documentElement.dataset.portalPage||"unknown"
+        });
+      }
+    }
   });
 }
