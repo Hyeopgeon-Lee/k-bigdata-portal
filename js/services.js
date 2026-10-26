@@ -318,7 +318,7 @@ export const portalNavLinks = [
   {id:"certifications",label:"자격증",group:"learning"},
   {id:"ncp",label:"NCP 기출문제",group:"learning"},
   {id:"coding",label:"기초학습",group:"learning"},
-  {id:"practical",label:"정보처리 기출문제",group:"learning"},
+  {id:"practical",label:"정보처리 자격증 기출문제",group:"learning"},
   {id:"interview",label:"기술면접",group:"learning"},
   {id:"docs",label:"공식문서",group:"learning"},
   {id:"tech-blog",label:"기술블로그 ↗",group:"learning"},
