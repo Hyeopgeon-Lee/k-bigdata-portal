@@ -20,7 +20,7 @@ function serviceCard(service, index) {
   </a>`;
 }
 
-const groups = Object.values(categories).map((category) => {
+const groups = Object.values(categories).sort((a,b)=>["learning","career","project","campus"].indexOf(a.id)-["learning","career","project","campus"].indexOf(b.id)).map((category) => {
   const categoryServices = services.filter((service) => service.category === category.id).sort((a, b) => a.order - b.order);
   return `<section class="service-group" id="${escapeHTML(category.id)}" aria-labelledby="${escapeHTML(category.id)}-title">
     <div class="group-heading"><div><p>${escapeHTML(category.english)}</p><h2 id="${escapeHTML(category.id)}-title">${escapeHTML(category.label)}</h2></div><p>${escapeHTML(category.description)}</p></div>
