@@ -37,5 +37,5 @@ assert.ok(!/\.answer|\.explanation|\.options|state\.answers/.test(shareText),"Do
 assert.match(css,/\.ncp-share-row/);
 assert.match(css,/grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
 assert.match(html,/ncp-quiz\.js\?v=20261027-ncp-share-1/);
-assert.match(html,/ncp-quiz\.css\?v=20261026-schedule-align-1/);
+assert.match(html,/ncp-quiz\.css\?rev=20261027-ncp-share-1/);
 console.log("PASS: NCP problem sharing and reporting link all 75 IDs without leaking answers.");
