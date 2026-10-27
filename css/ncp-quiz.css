@@ -24,6 +24,12 @@
 .ncp-question-meta span+span{background:#f2f4f7;color:#63738b;font-weight:600}
 #ncp-question h2{margin:13px 0 23px;font-size:clamp(19px,2.2vw,25px);line-height:1.65;color:#172944;letter-spacing:-.025em;word-break:keep-all}
 #ncp-question h2:focus{outline:none}
+.ncp-share-row{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:8px;margin:-8px 0 13px}
+.ncp-share-row button{min-height:42px;padding:8px 12px;border:1px solid #c8d5e5;border-radius:8px;background:#f7faff;color:#285383;font-size:13px;font-weight:700;cursor:pointer}
+.ncp-share-row button:hover{background:#eaf2ff;border-color:#7da4d5}
+.ncp-share-row button:focus-visible{outline:3px solid #a8c8ef;outline-offset:2px}
+.ncp-share-status{margin:0 0 10px;color:#53627a;font-size:13px;line-height:1.5;text-align:right}
+.ncp-share-status:empty{display:none}
 .ncp-options{display:grid;gap:10px}
 .ncp-choice{display:flex;align-items:center;gap:13px;min-height:62px;width:100%;padding:13px 15px;text-align:left;line-height:1.55;font-size:15px;color:#253550;border:1px solid #cbd7e5;background:#fff;border-radius:10px;cursor:pointer;white-space:normal}
 .ncp-choice-index{display:grid;place-items:center;flex:0 0 30px;height:30px;border-radius:8px;background:#edf2fa;color:#294f83;font-size:20px;line-height:1;font-weight:700}
@@ -89,4 +95,8 @@
  .ncp-list{grid-template-columns:repeat(7,minmax(0,1fr))}
  .ncp-traverse button{min-width:0;flex:1}
  .ncp-page-heading h1{font-size:25px}
+ .ncp-share-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));margin-top:-4px}
+ .ncp-share-row button{width:100%;min-height:44px;padding-inline:8px}
+ .ncp-share-row button:last-child{grid-column:1/-1}
+ .ncp-share-status{text-align:left}
 }

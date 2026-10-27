@@ -42,5 +42,5 @@ assert.ok(html.includes("75문항")&&html.includes("id=\"ncp-question\""),"Quest
 assert.ok(!html.includes("ncp-sources")&&!html.includes("ncp-originals"),"Avoid long source catalogs in quiz.");
 assert.ok(quiz.includes("q.originalNumber")&&quiz.includes("q.sourceUrl"),"Each answer must cite its original problem.");
 assert.ok(!html.includes("학습용 자체 제작 문제 90개"),"Unattributed old questions must not be published.");
-assert.ok(services.includes("복원기출 75문항"),"Home service card uses reconstruction terminology.");
+assert.ok(services.includes("NCP 기출문제: 공개 복원자료 기반 75문항"),"Home service card describes the source as reconstruction material.");
 console.log("PASS: 75 source-linked NCP questions and question-first layout.");

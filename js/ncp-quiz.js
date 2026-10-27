@@ -1,5 +1,6 @@
 import {ncpQuestions} from "../data/ncp-questions.js?v=20261026-quizfocus-2";
 import {initPortalShell} from "./portal-shell.js?v=20261026-card-label-1";
+import {learningReportUrl} from "./learning-report.js?v=20261027-ncp-report-1";
 
 const byId=id=>document.getElementById(id);
 const esc=value=>String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -51,6 +52,52 @@ function updateProgress(){
  el.progress.max=Math.max(1,state.list.length);
  el.progress.value=completed.length;
 }
+function problemShareUrl(q){
+ const url=new URL("ncp.html",location.origin);
+ url.searchParams.set("id",q.id);
+ return url.href;
+}
+function problemShareText(q){
+ return ["NCP 기출문제 · "+q.exam,String(q.question).replace(/\s+/g," ").trim()].join("\n");
+}
+async function copyText(value){
+ if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(value);return;}
+ const area=document.createElement("textarea");
+ area.value=value;
+ area.readOnly=true;
+ area.style.position="fixed";
+ area.style.opacity="0";
+ document.body.append(area);
+ try{
+  area.select();
+  if(!document.execCommand("copy"))throw new Error("복사할 수 없습니다.");
+ }finally{area.remove();}
+}
+function setShareStatus(message){
+ const status=el.question.querySelector("#ncp-share-status");
+ if(status)status.textContent=message;
+}
+async function shareCurrentProblem(q){
+ const url=problemShareUrl(q),text=problemShareText(q);
+ const shareData={title:"NCP 기출문제 · "+q.exam,text,url};
+ if(navigator.share&&(!navigator.canShare||navigator.canShare(shareData))){
+  try{
+   await navigator.share(shareData);
+   setShareStatus("문제를 공유했습니다.");
+   return;
+  }catch(error){if(error?.name==="AbortError")return;}
+ }
+ try{
+  await copyText(text+"\n문제 풀기: "+url);
+  setShareStatus("문제 내용과 링크를 복사했습니다.");
+ }catch{setShareStatus("공유할 수 없습니다. 다시 시도해 주세요.");}
+}
+async function copyCurrentProblemLink(q){
+ try{
+  await copyText(problemShareUrl(q));
+  setShareStatus("문제 링크를 복사했습니다.");
+ }catch{setShareStatus("링크를 복사할 수 없습니다. 다시 시도해 주세요.");}
+}
 function renderNumbers(){
  el.list.innerHTML=state.list.map((q,i)=>{
   const record=recordFor(q.id);
@@ -84,6 +131,11 @@ function render(){
   '<section class="ncp-answer" tabindex="-1" aria-label="복원자료 답안 확인"><div class="ncp-answer-head"><strong>복원 답안 '+numerals[letters.indexOf(q.answer)]+'</strong><span class="'+(answered.choice===q.answer?"ncp-answer-match":"ncp-answer-diff")+'">'+(answered.choice===q.answer?"일치":"불일치")+'</span></div><p>'+esc(q.explanation)+'</p><button type="button" class="ncp-retry" data-retry>이 문제 다시 풀기</button></section>':"";
  el.question.innerHTML='<div class="ncp-question-meta"><span>'+esc(q.exam)+'</span><span>'+esc(q.topic)+'</span></div>'+
   '<h2 tabindex="-1">'+esc(q.question)+'</h2>'+
+  '<div class="ncp-share-row" role="group" aria-label="현재 문제 공유 및 오류 신고">'+
+  '<button type="button" data-action="share-problem" aria-label="현재 NCP 문제 공유">문제 공유</button>'+
+  '<button type="button" data-action="copy-problem-link" aria-label="현재 NCP 문제 링크 복사">링크 복사</button>'+
+  '<button type="button" data-action="report-problem" aria-label="현재 NCP 문제 오류 신고">오류 신고</button></div>'+
+  '<p id="ncp-share-status" class="ncp-share-status" role="status" aria-live="polite"></p>'+
   '<div class="ncp-options" role="group" aria-label="선택지">'+options+'</div>'+result+
   '<div class="ncp-source-link"><a href="'+esc(sourceURL)+'" target="_blank" rel="noopener noreferrer">2025 복원 원문 '+esc(q.originalNumber)+'번 보기 ↗</a></div>';
 }
@@ -111,6 +163,15 @@ el.question.addEventListener("click",event=>{
  const answer=event.target.closest("[data-choice]");
  const q=state.list[state.index];
  if(!q)return;
+ const action=event.target.closest("button[data-action]")?.dataset.action;
+ if(action==="share-problem"){void shareCurrentProblem(q);return;}
+ if(action==="copy-problem-link"){void copyCurrentProblemLink(q);return;}
+ if(action==="report-problem"){
+  const url=learningReportUrl("ncp",q,q.exam+" · 원문 "+q.originalNumber+"번");
+  if(url)location.assign(url);
+  else setShareStatus("오류 신고 페이지를 열 수 없습니다.");
+  return;
+ }
  if(answer&&!recordFor(q.id)&&letters.includes(answer.dataset.choice)){
   state.answers[q.id]={choice:answer.dataset.choice,at:new Date().toISOString()};
   save();render();
