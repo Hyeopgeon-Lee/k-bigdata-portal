@@ -783,7 +783,7 @@ export const ubuntuPptProblems = [
     "statement": "Vim에서 memo.txt의 두 번째 줄을 삭제하시오. 파일을 저장한 후 남은 내용을 확인하시오.",
     "input": "student@ubuntu:~/lab$ cat memo.txt\none\ntwo\nthree\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\none\nthree",
-    "code": "vim memo.txt\ncat memo.txt",
+    "code": "vim memo.txt",
     "vimSteps": [
       "터미널에서 vim memo.txt를 실행하여 Vim을 여시오.",
       "Vim 안에서 :2를 입력하고 Enter를 눌러 두 번째 줄로 이동하시오.",
@@ -829,7 +829,7 @@ export const ubuntuPptProblems = [
     "statement": "Vim에서 memo.txt에 들어 있는 linux를 모두 Linux로 변경하시오. 저장한 후 바뀐 파일 내용을 확인하시오.",
     "input": "student@ubuntu:~/lab$ cat memo.txt\nlinux intro\nlearn linux\nlinux lab\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\nLinux intro\nlearn Linux\nLinux lab",
-    "code": "vim memo.txt\ncat memo.txt",
+    "code": "vim memo.txt",
     "vimSteps": [
       "터미널에서 vim memo.txt를 실행하여 Vim을 여시오.",
       "Vim 안에서 :%s/linux/Linux/g를 입력하고 Enter를 눌러 파일 전체의 linux를 Linux로 바꾸시오.",
