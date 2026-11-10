@@ -25,7 +25,7 @@ for(const q of questions){
 }
 assert.match(ui,/function shareInterviewQuestion\(q\)/);
 assert.match(ui,/function copyInterviewQuestionLink\(q\)/);
-assert.ok(ui.includes('action("report-problem","오류 신고"'));
+assert.ok(ui.includes('learningReportUrl("interview",q,q.group)'));
 assert.ok(ui.includes('learningReportUrl("interview"'));
 assert.match(ui,/navigator\.share/);
 assert.match(ui,/navigator\.clipboard\?\.writeText/);
@@ -34,7 +34,7 @@ assert.ok(css.includes(".interview-share-row"));
 assert.ok(ui.includes('class="interview-list-actions"'),"browse card has a grouped action row");
 assert.ok(ui.includes('class="button button-primary" data-action="select"'),"practice is the primary button");
 assert.ok(ui.includes('class="button button-secondary question-permalink"'),"problem URL is a styled link, not plain text");
-assert.ok(ui.includes('action("report-problem","오류 신고"'),"report button keeps its delegated click action");
+assert.ok(ui.includes("const report='<a"),"report navigation uses href");
 assert.ok(css.includes('grid-template-columns:repeat(3,minmax(0,1fr))'),"three columns prevent uneven mobile action alignment");
 assert.ok(css.includes('.interview-action-compact'),"mobile text fits inside its button");
 
