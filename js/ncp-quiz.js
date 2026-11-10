@@ -1,3 +1,5 @@
+import {recordCloudAttempt,getCloudRecords} from "./learning-sync.js";
+import {getAccount} from "./learning-auth.js";
 import {ncpQuestions} from "../data/ncp-questions.js?v=20261026-quizfocus-2";
 import {initPortalShell} from "./portal-shell.js?v=20261026-card-label-1";
 import {learningReportUrl} from "./learning-report.js?v=20261027-ncp-report-1";
@@ -5,6 +7,8 @@ import {learningReportUrl} from "./learning-report.js?v=20261027-ncp-report-1";
 const byId=id=>document.getElementById(id);
 const esc=value=>String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const KEY="k-bigdata-ncp-progress-v1";
+let ownerId="";
+const storageKey=()=>ownerId?KEY+":"+ownerId:KEY;
 const letters=["A","B","C","D"];
 const numerals=["①","②","③","④"];
 const params=new URLSearchParams(location.search);
@@ -24,7 +28,7 @@ const recordFor=id=>{
  const record=state.answers[id];
  return record&&letters.includes(record.choice)?record:null;
 };
-function save(){try{localStorage.setItem(KEY,JSON.stringify(state.answers));}catch{}}
+function save(){try{localStorage.setItem(storageKey(),JSON.stringify(state.answers));}catch{}}
 function shuffle(array){
  for(let i=array.length-1;i>0;i--){
   const j=Math.floor(Math.random()*(i+1));
@@ -171,12 +175,13 @@ el.question.addEventListener("click",event=>{
  if(action==="copy-problem-link"){void copyCurrentProblemLink(q);return;}
  if(answer&&!recordFor(q.id)&&letters.includes(answer.dataset.choice)){
   state.answers[q.id]={choice:answer.dataset.choice,at:new Date().toISOString()};
+  void recordCloudAttempt({bank:"ncp",questionId:q.id,result:answer.dataset.choice===q.answer?"correct":"incorrect",gradingMethod:"automatic",answerText:answer.dataset.choice});
   save();render();
   el.question.querySelector(".ncp-answer")?.focus({preventScroll:true});
   return;
  }
  if(event.target.closest("[data-retry]")){
-  delete state.answers[q.id];save();render();focusQuestion();
+  state.answers[q.id]={choice:null,at:new Date().toISOString()};save();render();focusQuestion();
  }
 });
 el.prev.addEventListener("click",()=>{
@@ -187,13 +192,25 @@ el.next.addEventListener("click",()=>{
 });
 byId("ncp-reset").addEventListener("click",()=>{
  if(!confirm("저장된 NCP 문제풀이 기록을 모두 지울까요?"))return;
- state.answers={};save();render();
+ for(const q of ncpQuestions)state.answers[q.id]={choice:null,at:new Date().toISOString()};
+ save();render();
 });
-const initialID=params.get("id");
-const initial=ncpQuestions.find(q=>q.id===initialID);
-if(initial){
- state.exam=initial.exam;
- el.exam.value=initial.exam;
- changeSet(initial.id);
-}else changeSet();
+async function hydrateCloudNcp(){
+ const account=await getAccount().catch(()=>null);
+ if(!account?.active&&!account?.readOnly)return;
+ ownerId=account.user.id;
+ try{state.answers=JSON.parse(localStorage.getItem(storageKey())||"{}")||{};}catch{state.answers={};}
+ const rows=await getCloudRecords("ncp");
+ for(const row of rows){
+  const prev=state.answers[row.question_id];
+  if(prev?.at&&Date.parse(prev.at)>=Date.parse(row.submitted_at))continue;
+  state.answers[row.question_id]={choice:row.answer_text,at:row.submitted_at};
+ }
+ save();
+}
+void hydrateCloudNcp().finally(()=>{
+ const initialID=params.get("id");const initial=ncpQuestions.find(q=>q.id===initialID);
+ if(initial){state.exam=initial.exam;el.exam.value=initial.exam;changeSet(initial.id);}
+ else changeSet();
+});
 initPortalShell().catch(error=>console.error("NCP portal initialization failed",error));
