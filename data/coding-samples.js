@@ -235,7 +235,7 @@ export const codingProblems = [
     "level": "입문",
     "topic": "파일·디렉터리",
     "title": "프로젝트 디렉터리와 파일 만들기",
-    "statement": "현재 디렉터리 아래에 project/src 디렉터리를 만들고, 그 안에 빈 main.py 파일을 생성한 뒤 파일 존재를 확인하시오. 학습용 디렉터리에서 실행하세요.",
+    "statement": "현재 디렉터리 아래에 project/src 디렉터리를 만들고, 그 안에 빈 main.py 파일을 생성하시오. 파일이 만들어졌는지 확인하시오. 개인 실습 디렉터리에서 실행하시오.",
     "input": "현재 디렉터리에 project가 없다고 가정",
     "output": "project/src/main.py",
     "hint": "mkdir -p는 중간 디렉터리까지 함께 만들고, touch는 빈 파일을 생성합니다.",
