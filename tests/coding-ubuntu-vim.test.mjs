@@ -43,7 +43,7 @@ for(const [id,parts] of Object.entries({
 })){
  const p=byId.get(id);
  for(const part of parts)assert.ok(p.vimSteps.join(" ").includes(part),id+" missing step "+part);
- assert.match(p.code,/cat memo\.txt/,id+" needs verification in solution");
+ assert.match(p.verification,/cat memo\.txt/,id+" needs verification after Vim");
 }
 const html=readFileSync(new URL("../coding.html",import.meta.url),"utf8");
 assert.match(html,/id="coding-vim-steps"/,"answer panel includes Vim step section");
