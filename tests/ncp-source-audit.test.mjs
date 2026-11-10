@@ -41,6 +41,9 @@ for(const url of sourceLinks)assert.ok(ncpResources.some(item=>item.url===url),"
 assert.ok(html.includes("75문항")&&html.includes("id=\"ncp-question\""),"Question-first page is present.");
 assert.ok(!html.includes("ncp-sources")&&!html.includes("ncp-originals"),"Avoid long source catalogs in quiz.");
 assert.ok(quiz.includes("q.originalNumber")&&quiz.includes("q.sourceUrl"),"Each answer must cite its original problem.");
+assert.ok(quiz.includes("originalReference")&&quiz.includes("문제·선택지 원문 확인"),"Every problem must visibly offer the untouched public reconstruction source before answering.");
+assert.ok(quiz.indexOf("originalReference+")<quiz.indexOf('<h2 tabindex="'),"Public reconstruction source must appear before the reworded quiz.");
+assert.ok(html.includes("원문과 동일하지 않습니다"),"Visible disclaimer must distinguish reworded practice from the original source.");
 assert.ok(!html.includes("학습용 자체 제작 문제 90개"),"Unattributed old questions must not be published.");
 assert.ok(services.includes("NCP 기출문제: 공개 복원자료 기반 75문항"),"Home service card describes the source as reconstruction material.");
 console.log("PASS: 75 source-linked NCP questions and question-first layout.");
