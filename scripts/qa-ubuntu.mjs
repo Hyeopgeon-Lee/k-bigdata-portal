@@ -66,7 +66,11 @@ for(let n=1;n<=50;n++){
 // Link practice covers both link types and their observable differences.
 assert(problems[20].code.includes("ln -s data.txt data-link"),"LINUX-021 symbolic link");
 assert(problems[21].code.includes("ln data.txt data-hard")&&problems[21].code.includes("ln -s data.txt data-link"),"LINUX-022 both link types");
-assert(problems[21].code.includes("ls -li data.txt data-hard data-link"),"LINUX-022 inode/type/count comparison");
+assert(
+ (problems[21].code.includes("ls -li data.txt data-hard data-link")) ||
+ (problems[21].code.includes("ls -i data.txt data-hard data-link")&&problems[21].code.includes("ls -l data.txt data-hard data-link")),
+ "LINUX-022 inode/type/count comparison"
+);
 assert(problems[21].output.includes("data-hard")&&problems[21].output.includes("data-link -> data.txt"),"LINUX-022 terminal results");
 assert(observed["입문"]===15,"expected 15 introductory tasks");
 assert(observed["기초 응용"]===25,"expected 25 intermediate tasks");
