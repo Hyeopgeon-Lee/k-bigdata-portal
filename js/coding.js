@@ -7,7 +7,7 @@ import {pythonAdvancedProblems} from "../data/coding-python-advanced.js?v=202611
 
 
 
-import {ubuntuPptProblems} from "../data/coding-ubuntu-ppt.js?v=20261111-linux003-ui-mask-2";
+import {ubuntuPptProblems} from "../data/coding-ubuntu-ppt.js?v=20261111-linux-console-final-3";
 import {learningReportUrl} from "./learning-report.js?v=20261020-study-share-1";
 const codingProblems = [...sampleProblems.filter(p=>p.language!=="linux"), ...javaProblems, ...cFoundationProblems, ...cAdvancedProblems, ...pythonFoundationProblems, ...pythonAdvancedProblems, ...ubuntuPptProblems].sort((a,b) =>
   a.language.localeCompare(b.language) || Number(a.id.split("-").at(-1))-Number(b.id.split("-").at(-1))
@@ -209,10 +209,6 @@ function renderExtraExamples(q) {
 }
 
 // Mask the solution in the initially visible terminal example.
-function visibleExampleText(q, text) {
-  if (q.id !== "LINUX-003") return text;
-  return String(text).replace(/(\$\s*)pwd\b/g, "$1[명령어 입력]");
-}
 
 function showQuestion(q) {
   if (!q) return;
@@ -227,8 +223,8 @@ function showQuestion(q) {
   $("#coding-topic").textContent = q.topic;
   $("#coding-title").textContent = q.title;
   $("#coding-statement").textContent = q.statement;
-  $("#coding-input").textContent = visibleExampleText(q, q.input);
-  $("#coding-output").textContent = visibleExampleText(q, q.output);
+  $("#coding-input").textContent = q.input;
+  $("#coding-output").textContent = q.output;
   const ubuntuOutputNote = $("#coding-ubuntu-output-note");
   ubuntuOutputNote.textContent = q.language === "linux" ? (q.outputNote || "") : "";
   ubuntuOutputNote.hidden = !ubuntuOutputNote.textContent;
