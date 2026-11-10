@@ -35,6 +35,13 @@ assert.equal(unique.size,350,'exercise IDs must be unique');
 assert.equal(ubuntuPptProblems.length,50,'PPT-based Linux exercises count');
 const linux003=ubuntuPptProblems.find(p=>p.id==='LINUX-003');
 assert.ok(linux003,'LINUX-003 must exist');
+assert.ok(ubuntuPptProblems.every(p=>p.statement.trim().endsWith('시오.')),'50 Linux tasks use imperative sentences');
+assert.ok(ubuntuPptProblems.every(p=>/^student@ubuntu:[^\n]+\$ /.test(p.input)&&/^student@ubuntu:[^\n]+\$ /.test(p.output)),'50 Linux tasks show Ubuntu terminal screens');
+assert.ok(ubuntuPptProblems.every(p=>p.input===p.initialState&&p.output===p.afterState),'Ubuntu console and state panels are consistent');
+assert.ok(ubuntuPptProblems.every(p=>!p.output.includes('[명령어 입력]')),'Expected console is literal, not a placeholder');
+assert.ok(js.includes('coding-ubuntu-terminal-demo",isUbuntu'),'Both Ubuntu console panels receive terminal styling');
+assert.ok(html.includes('coding-ubuntu-output-note'),'Output note is available when system-dependent values vary');
+
 assert.match(linux003.statement,/하시오\.$/,'question uses imperative phrasing');
 assert.equal(linux003.code,'pwd','answer remains available in the answer panel');
 assert.ok(js.includes('function visibleExampleText(q, text)'), 'UI has example redaction guard');
