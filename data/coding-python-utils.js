@@ -1,4 +1,4 @@
-import {pythonBlueprint} from "./coding-python-blueprint.js?v=20261110-function-contracts-1";
+import {pythonBlueprint} from "./coding-python-blueprint.js?v=20261110-beginner-wording-1";
 const byNumber=new Map(pythonBlueprint.map(p=>[Number(p.id.slice(3)),p]));
 function description(line) {
   const s=line.trim();
