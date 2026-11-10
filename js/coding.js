@@ -140,6 +140,8 @@ autocompleteToggle.addEventListener("change", () => {
 
 const requestedId = new URLSearchParams(location.search).get("id");
 let current = codingProblems.find(q => q.id === requestedId) || codingProblems[0];
+// A shared question link opens with the selected problem before the long list on phones.
+document.body.classList.toggle("coding-direct-link", Boolean(requestedId && current.id === requestedId));
 let codeEditor = null;
 let language = current.language;
 let query = "";
@@ -213,6 +215,11 @@ function listQuestions(syncPage=false) {
       if(event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
       event.preventDefault();
       showQuestion(q);
+      // On phones the long list can otherwise hide the newly selected exercise.
+      if (window.matchMedia("(max-width:800px)").matches) {
+        const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        $("#coding-title").scrollIntoView({behavior:reduceMotion ? "auto" : "smooth",block:"start"});
+      }
     });
     li.append(link);
     list.append(li);
