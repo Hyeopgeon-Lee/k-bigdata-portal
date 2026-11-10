@@ -1,5 +1,5 @@
-import {cBlueprint} from "./coding-c-blueprint.js?v=20261110-classroom-1";
-import {cGuidance} from "./coding-c-guidance.js?v=20261110-simple-while-1";
+import {cBlueprint} from "./coding-c-blueprint.js?v=20261110-c069-example-1";
+import {cGuidance} from "./coding-c-guidance.js?v=20261110-c069-example-1";
 const byNumber = new Map(cBlueprint.map(p=>[Number(p.id.slice(2)),p]));
 const stdIncludes = ["#include <stdio.h>"];
 function describeLine(line) {
