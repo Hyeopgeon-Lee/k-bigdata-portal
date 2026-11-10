@@ -59,6 +59,11 @@ assert.ok(!js.includes('function renderVimSteps(q)')&&!js.includes('const vimLis
 assert.ok(html.includes('id="coding-vim-explanation-list"'),'Vim uses one numbered list in the existing explanation section');
 assert.ok(js.includes('vimList.append(item)')&&js.includes('$("#coding-explanation").hidden = vimSteps.length > 0'),'Vim list replaces duplicate inline explanation');
 assert.ok(css.includes('.coding-vim-instruction-list li'),'Vim steps retain readable spacing');
+assert.ok(html.includes('id="coding-ubuntu-vim-reference"')&&html.includes('id="coding-ubuntu-vim-rows"'),'Vim command table exists in hidden answer panel');
+assert.ok(js.includes('const vimReferenceRows =')&&js.includes('vimRows.append(tr)'),'Vim table renders for editing tasks');
+assert.ok(js.includes('const parts = isVimTask ? guide.commandParts.filter'),'Vim row duplication is prevented');
+assert.ok(css.includes('.coding-vim-reference .coding-trace'),'Vim table preserves readable layout');
+assert.equal(ubuntuPptProblems.filter(p=>Array.isArray(p.vimSteps)).length,6);
 
 assert.match(linux003.statement,/하시오\.$/,'question uses imperative phrasing');
 assert.equal(linux003.code,'pwd','answer remains available in the answer panel');
