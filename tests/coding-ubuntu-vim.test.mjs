@@ -33,6 +33,13 @@ for(const [id,name] of Object.entries(vimTasks)){
 for(const p of ubuntu) assert.doesNotMatch(p.code,/\b(?:nano|gedit|emacs|touch)\b/,p.id+" only uses PPT-approved methods");
 assert.match(byId.get("LINUX-002").code,/chmod 640 report\.txt/);
 assert.match(byId.get("LINUX-002").output,/-rw-r-----/);
+for(const keyword of ["소유자","그룹","기타 사용자","r=4","w=2","x=1","640","777","student"]){
+ assert.ok(byId.get("LINUX-002").explanation.includes(keyword),"missing permission explanation "+keyword);
+}
+for(const id of ["LINUX-007","LINUX-016","LINUX-026","LINUX-027","LINUX-028"]){
+ assert.match(byId.get(id).explanation,/소유자/,"related explanation missing "+id);
+}
+assert.match(readFileSync(new URL("../js/coding.js",import.meta.url),"utf8"),/coding-overall-explanation"\)\.hidden = !q\.explanation/);
 assert.match(byId.get("LINUX-023").output,/linux study/);
 assert.doesNotMatch(byId.get("LINUX-024").output,/\ntwo\n/);
 assert.match(byId.get("LINUX-025").output,/Linux intro/);
