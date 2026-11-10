@@ -29,7 +29,7 @@ assert.match(q("C-012").code, /int sum = a \+ b;/);
 assert.match(q("C-012").code, /int diff = a - b;/);
 assert.match(q("C-012").code, /int product = a \* b;/);
 assert.doesNotMatch(q("C-019").code, /long long/);
-assert.match(q("C-019").statement, /-100 ≤ N ≤ 100/);
+assert.match(q("C-019").statement, /정수 N.*N\+1과 N-1/);
 assert.match(q("C-047").code, /\n        for \(int c/);
 assert.match(q("C-047").code, /\n            printf\("\*"\);/);
 assert.match(q("C-066").code, /\(int\)ch/);
