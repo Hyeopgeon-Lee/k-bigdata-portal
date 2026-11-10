@@ -7,6 +7,9 @@ let flushing=false;
 const validBank=bank=>["coding","ncp","practical"].includes(bank);
 export async function recordCloudAttempt({bank,questionId,clientAttemptId,result="ungraded",gradingMethod="none",answerText="",elapsedSeconds=null,usedHint=false,submittedAt=new Date().toISOString(),metadata={}}){
  if(!validBank(bank)||!questionId)return;
+ // Do not load a network-only SDK or send data when running locally, in tests,
+ // or before the learner explicitly signs in on this device.
+ if(typeof window==="undefined"||typeof localStorage==="undefined"||!localStorage.getItem("kbigdata-learning-auth"))return;
  const client=await getClient();if(!client)return; // local-only mode remains functional
  const {data:{session}}=await client.auth.getSession();
  if(!session?.user?.id)return; // never silently assign anonymous drafts to a later account
