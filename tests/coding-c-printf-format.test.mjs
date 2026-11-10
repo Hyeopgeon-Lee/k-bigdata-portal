@@ -85,6 +85,14 @@ assert.match(q("C-021").code, /printf\("POSITIVE\\n"\)/);
 assert.match(q("C-013").code, /scanf\("%d %d",\s*&a,\s*&b\);/);
 assert.match(q("C-013").code, /if \(b == 0\)/);
 assert.match(q("C-094").code, /if \(b == 0\)/);
+// For C-049 through C-051, avoid unnecessary do-while in beginner exercises.
+for (const id of ["C-049", "C-050", "C-051"]) {
+  assert.doesNotMatch(q(id).code, /\bdo\s*\{/, id + " should not use do-while");
+  assert.match(q(id).code, /\bwhile\s*\(/, id + " should use a plain while");
+}
+assert.match(q("C-049").code, /int digits=1;/);
+assert.match(q("C-049").code, /while \(n >= 10\)/);
+
 assert.match(q("C-047").code, /\n            printf\("\*"\)/);
 assert.match(q("C-052").code, /\n        if \(n%d==0\) \{/);
 assert.match(q("C-064").code, /\n            if \(a\[j\]>a\[j\+1\]\) \{/);
