@@ -63,6 +63,8 @@ assert.match(js,/coding-overall-explanation"\)\.hidden = !q\.explanation/,"Ubunt
 assert.match(js,/const includesVim/,"copy feedback handles Vim interactively");
 assert.match(js,/터미널 명령은 한 줄씩 실행/);
 assert.match(html,/id="coding-vim-explanation-list"/,"Vim uses one numbered list");
+assert.match(html,/id="coding-ubuntu-vim-reference"/,"Vim command reference exists");
+assert.match(js,/vimRows.append\(tr\)/,"Vim command rows are rendered");
 assert.match(js,/vimList\.append\(item\)/,"Vim steps keep line spacing");
 assert.match(js,/\$\("#coding-explanation"\)\.hidden = vimSteps\.length > 0/,"inline duplicate Vim explanation is hidden");
 console.log("PASS: six active PPT-based Vim editing exercises and 50 editor-policy checks.");
