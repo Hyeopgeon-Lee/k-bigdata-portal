@@ -27,7 +27,7 @@ assert.match(q("C-012").code, /int a = 0, b = 0;/);
 assert.doesNotMatch(q("C-019").code, /long long/);
 assert.match(q("C-019").statement, /-100 ≤ N ≤ 100/);
 assert.match(q("C-047").code, /\n        for \(int c/);
-assert.match(q("C-047").code, /\n            putchar/);
+assert.match(q("C-047").code, /\n            printf\("\*"\);/);
 assert.match(q("C-066").code, /\(int\)ch/);
 assert.doesNotMatch(q("C-066").code, /\(unsigned int\)/);
 assert.match(q("C-072").code, /for \(int i/);
