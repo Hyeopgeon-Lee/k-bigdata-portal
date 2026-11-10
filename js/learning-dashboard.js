@@ -1,3 +1,4 @@
+import {importLegacyLearning} from "./learning-import.js";
 import {getClient,getAccount,koreanStatus} from "./learning-auth.js";
 import {flushCloudAttempts} from "./learning-sync.js";
 const $=s=>document.querySelector(s);
@@ -47,3 +48,14 @@ async function load(){
 }
 $("#refresh-button").addEventListener("click",()=>location.reload());
 load().catch(e=>{$("#account-note").textContent="학습현황을 표시할 수 없습니다: "+e.message;});
+
+document.querySelector("#legacy-import-button").addEventListener("click",async event=>{
+ const button=event.currentTarget;button.disabled=true;
+ try{
+  const result=await importLegacyLearning();
+  if(result.cancelled)return;
+  alert("학습 기록 "+result.attempts+"건과 답안 초안 "+result.drafts+"건을 가져오기 대상으로 처리했습니다. 동기화가 완료되면 화면을 새로고침하세요.");
+  location.reload();
+ }catch(e){alert("기록 가져오기 실패: "+e.message);}
+ finally{button.disabled=false;}
+});
