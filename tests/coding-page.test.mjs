@@ -38,16 +38,28 @@ assert.ok(linux003,'LINUX-003 must exist');
 assert.ok(ubuntuPptProblems.every(p=>p.statement.trim().endsWith('시오.')),'50 Linux tasks use imperative sentences');
 assert.ok(ubuntuPptProblems.every(p=>/^student@ubuntu:[^\n]+\$ /.test(p.input)&&/^student@ubuntu:[^\n]+\$ /.test(p.output)),'50 Linux tasks show Ubuntu terminal screens');
 assert.ok(ubuntuPptProblems.every(p=>p.input===p.initialState&&p.output===p.afterState),'Ubuntu console and state panels are consistent');
-assert.ok(ubuntuPptProblems.every(p=>!p.output.includes('[명령어 입력]')),'Expected console is literal, not a placeholder');
+assert.ok(ubuntuPptProblems.every(p=>p.input.includes('[명령어 입력]')&&p.output.includes('[명령어 입력]')),'All 50 terminal examples have a student input marker');
+const terminalPrompt=/^student@ubuntu:[^\n$]*\$\s*(.*)$/;
+for(const p of ubuntuPptProblems){
+  const answers=new Set(p.code.split('\n').map(line=>line.trim()).filter(Boolean));
+  for(const line of p.input.split('\n')){
+    const m=line.match(terminalPrompt);
+    if(m)assert.ok(!answers.has(m[1].trim()),p.id+' setup must not reveal solution commands');
+  }
+  for(const line of p.output.split('\n')){
+    const m=line.match(terminalPrompt);
+    if(m)assert.ok(!m[1].trim()||m[1].trim()==='[명령어 입력]',p.id+' expected output may not reveal a command');
+  }
+}
 assert.ok(js.includes('coding-ubuntu-terminal-demo",isUbuntu'),'Both Ubuntu console panels receive terminal styling');
 assert.ok(html.includes('coding-ubuntu-output-note'),'Output note is available when system-dependent values vary');
 
 assert.match(linux003.statement,/하시오\.$/,'question uses imperative phrasing');
 assert.equal(linux003.code,'pwd','answer remains available in the answer panel');
-assert.ok(js.includes('function visibleExampleText(q, text)'), 'UI has example redaction guard');
-assert.ok(!js.includes('visibleExampleText('),'Expected Ubuntu output is not masked');
-assert.ok(js.includes('visibleExampleText(q, q.input)')&&js.includes('visibleExampleText(q, q.output)'),
-  'both input and output examples are sanitized before display');
+assert.ok(js.includes('function visibleUbuntuConsole(q, transcript, expected=false)'), 'UI has reusable Ubuntu command sanitizer');
+assert.ok(js.includes('function renderConsoleText(pre, transcript, isUbuntu)'), 'UI displays emphasized input marker safely');
+assert.ok(js.includes('visibleUbuntuConsole(q,q.input)')&&js.includes('visibleUbuntuConsole(q,q.output,true)'),
+  'both Ubuntu terminal examples are sanitized before display');
 assert.deepEqual(ubuntuPptProblems.reduce((acc,p)=>(acc[p.level]=(acc[p.level]??0)+1,acc),{}),{'입문':15,'기초 응용':25,'종합 활용':10},'PPT-based difficulty distribution');
 assert.ok(ubuntuPptProblems.every((p,n)=>p.id==='LINUX-'+String(n+1).padStart(3,'0')&&p.pptSource),'Linux IDs and PPT sources');
 assert.ok(ubuntuPptProblems.every(p=>p.input.startsWith('student@ubuntu:')&&p.output.startsWith('student@ubuntu:')),'50 Ubuntu terminal examples');
@@ -58,7 +70,7 @@ assert.ok(!html.includes('coding-ubuntu-states'),'duplicate before/after details
 assert.ok(js.includes('coding-ubuntu-terminal-demo",isUbuntu'),'all Ubuntu questions use terminal presentation');
 
 assert.ok(js.includes('...ubuntuPptProblems')&&!js.includes('ubuntuLegacyGuides'),'browser uses only the PPT Linux data');
-assert.ok(html.includes('js/coding.js?v=20261111-linux-console-final-3'),'up-to-date script reference');
+assert.ok(html.includes('js/coding.js?v=20261111-linux-answer-mask-50-v4'),'up-to-date script reference');
 const firstVisitAutocomplete=html.includes('id="coding-autocomplete-toggle" type="checkbox" role="switch"')
   && !/<input[^>]+id="coding-autocomplete-toggle"[^>]+checked/.test(html);
 assert.ok(firstVisitAutocomplete,'autocomplete switch exists and is initially unchecked');
