@@ -18,7 +18,7 @@ const ids=ubuntu.map(p=>p.id);
 if(new Set(ids).size!==50)errors.push("duplicate exercise id");
 for(let n=1;n<=50;n++)if(!ids.includes("LINUX-"+String(n).padStart(3,"0")))errors.push("missing LINUX-"+n);
 for(const p of ubuntu){
- for(const field of ["id","title","topic","level","statement","input","output","code","initialState","afterState","verification","verificationDetail","commonMistake","warning"]){
+ for(const field of ["id","title","topic","level","statement","input","output","code","initialState","afterState","verification","verificationDetail","commonMistake"]){
  if(typeof p[field]!=="string"||!p[field].trim())errors.push(p.id+" missing "+field);
  }
  if(!Array.isArray(p.commandParts)||!p.commandParts.length||p.commandParts.some(x=>!x.token||!x.meaning))errors.push(p.id+" missing option explanation");
@@ -32,10 +32,15 @@ const js=readFileSync(join(base,"js","coding.js"),"utf8");
 if(!html.includes("350문제")||!js.includes("ubuntuAdvancedProblems"))errors.push("UI not linked to Ubuntu");
 const idsInHtml=[...html.matchAll(/\bid="([^"]+)"/g)].map(x=>x[1]);
 const seen=new Set();for(const id of idsInHtml){if(seen.has(id))errors.push("duplicate DOM id "+id);seen.add(id);}
-for(const id of ["coding-ubuntu-guide","coding-ubuntu-parts","coding-ubuntu-before","coding-ubuntu-after","coding-ubuntu-verify","coding-ubuntu-mistake","coding-ubuntu-warning","coding-trace-button"])if(!seen.has(id))errors.push("missing UI id "+id);
+for(const id of ["coding-ubuntu-guide","coding-ubuntu-parts","coding-ubuntu-before","coding-ubuntu-after","coding-ubuntu-verify","coding-ubuntu-mistake","coding-trace-button"])if(!seen.has(id))errors.push("missing UI id "+id);
 const syntax=spawnSync("node",["--check",join(base,"js","coding.js")],{encoding:"utf8"});
 if(syntax.status!==0)errors.push("coding.js syntax: "+syntax.stderr);
 const dataByID=Object.fromEntries(ubuntu.map(x=>[x.id,x]));
+if(ubuntu.some(p=>Object.hasOwn(p,"warning")))errors.push("Ubuntu exercises should not contain per-exercise safety notices");
+if(html.includes("실습 안전 안내")||html.includes("coding-ubuntu-warning")||js.includes("coding-ubuntu-warning"))errors.push("safety notice UI is still present");
+if(dataByID["LINUX-004"].input!=="student@ubuntu:~/lab$ touch a.txt\\nstudent@ubuntu:~/lab$ mkdir docs")errors.push("LINUX-004 setup transcript incorrect");
+if(dataByID["LINUX-004"].output!=="student@ubuntu:~/lab$ ls\\na.txt  docs")errors.push("LINUX-004 expected terminal output incorrect");
+
 const smoke=[
 {n:11,setup:"",check:"test -f note.txt"},
 {n:12,setup:"",check:"test -d reports"},
