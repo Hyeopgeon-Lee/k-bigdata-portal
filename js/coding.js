@@ -7,7 +7,7 @@ import {pythonAdvancedProblems} from "../data/coding-python-advanced.js?v=202611
 
 
 
-import {ubuntuPptProblems} from "../data/coding-ubuntu-ppt.js?v=20261111-linux-links-compare-1";
+import {ubuntuPptProblems} from "../data/coding-ubuntu-ppt.js?v=20261111-vim-explanation-deduplicate-1";
 import {learningReportUrl} from "./learning-report.js?v=20261020-study-share-1";
 const codingProblems = [...sampleProblems.filter(p=>p.language!=="linux"), ...javaProblems, ...cFoundationProblems, ...cAdvancedProblems, ...pythonFoundationProblems, ...pythonAdvancedProblems, ...ubuntuPptProblems].sort((a,b) =>
   a.language.localeCompare(b.language) || Number(a.id.split("-").at(-1))-Number(b.id.split("-").at(-1))
@@ -146,22 +146,26 @@ function updateUbuntuGuide(q) {
   $("#coding-output-label").textContent = isUbuntu ? "기대 결과" : "출력 예제";
   $("#coding-answer-button").textContent = isUbuntu ? "정답 명령어 및 해설" : "정답과 줄별 주석";
   $("#coding-answer-heading").textContent = isUbuntu ? "정답 명령어" : "정답 코드와 한 줄 주석";
+  $("#coding-overall-explanation h3").textContent = isUbuntu && Array.isArray(q.vimSteps) ? "Vim 조작 방법" : "전체 해설";
   $("#coding-copy").textContent = isUbuntu ? "명령어 복사" : "주석 없는 코드 복사";
   $("#coding-copy-tip").textContent = ({
     c:"복사한 C 코드를 vim에 붙여 넣어 직접 주석을 작성하고, 터미널에서 gcc 또는 make로 컴파일해 확인하세요.",
     java:"Java 코드를 IntelliJ에서 실행하며 각 줄이 어떤 역할을 하는지 주석으로 설명해 보세요.",
     python:"Python 코드를 VS Code, PyCharm 또는 터미널에서 실행하며 각 줄에 직접 주석을 달아 보세요.",
-    linux:"터미널 명령어는 한 줄씩 실행하세요. Vim을 연 뒤에는 위의 'Vim 입력·편집·저장 순서'에 따라 키를 누르고 저장·종료하세요."
+    linux:"터미널 명령어를 한 줄씩 실행하세요. Vim 문제는 아래 'Vim 조작 방법'에서 편집과 저장에 필요한 키 조작을 확인하세요."
   })[q.language];
   $("#coding-editor").placeholder = isUbuntu ? "Ubuntu 터미널에서 사용할 명령어를 직접 작성해 보세요." : "여기에 스스로 정답을 작성해 보세요.";
   $("#coding-answer-note").hidden = isUbuntu;
   $("#coding-trace-button").hidden = isUbuntu;
-  $("#coding-overall-explanation").hidden = isUbuntu;
+  // Vim questions already contain a complete keystroke explanation: show it once in the existing answer explanation.
+  $("#coding-overall-explanation").hidden = isUbuntu && !Array.isArray(q.vimSteps);
   $("#coding-ubuntu-guide").hidden = !isUbuntu;
   if(!isUbuntu) return;
   $("#coding-code").textContent = guide.code;
   $("#coding-ubuntu-verify").textContent = guide.verification;
-  $("#coding-ubuntu-verify-note").textContent = guide.verificationDetail || guide.output;
+  // Avoid repeating the same Vim procedure below the verification command.
+  $("#coding-ubuntu-verify-note").textContent = Array.isArray(q.vimSteps) ? "" : (guide.verificationDetail || guide.output);
+  $("#coding-ubuntu-verify-note").hidden = !$("#coding-ubuntu-verify-note").textContent;
   $("#coding-ubuntu-mistake").textContent = guide.commonMistake;
   const tbody = $("#coding-ubuntu-parts");
   tbody.replaceChildren();
@@ -237,20 +241,6 @@ function renderConsoleText(pre, transcript, isUbuntu) {
   });
 }
 
-// Reveal step-by-step Vim keystrokes only with the answer (never as shell commands).
-function renderVimSteps(q) {
-  const section = $("#coding-vim-steps");
-  const list = $("#coding-vim-steps-list");
-  const steps = q.language === "linux" && Array.isArray(q.vimSteps) ? q.vimSteps : [];
-  list.replaceChildren();
-  section.hidden = steps.length === 0;
-  for (const step of steps) {
-    const item = document.createElement("li");
-    item.textContent = step;
-    list.append(item);
-  }
-}
-
 function showQuestion(q) {
   if (!q) return;
   current = q;
@@ -273,7 +263,6 @@ function showQuestion(q) {
   $("#coding-editor").value = getSafe(DRAFT_PREFIX + q.id);
   $("#coding-hint-text").textContent = q.hint;
   $("#coding-code").textContent = q.code;
-  renderVimSteps(q);
   $("#coding-explanation").textContent = q.explanation;
   updateUbuntuGuide(q);
   codeEditor?.setContent($("#coding-editor").value, q.language, $("#coding-editor").placeholder);
