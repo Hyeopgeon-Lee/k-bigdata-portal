@@ -20,6 +20,7 @@ for(const [id,name] of Object.entries(vimTasks)){
  assert.ok(p.code.includes("vim "+name),id+" uses Vim");
  assert.match(p.statement,/Vim/i,id+" question mentions Vim");
  assert.match(p.explanation,/:wq/,id+" provides save and exit explanation");
+ assert.ok(p.vimSteps?.length>=3,id+" shows Vim keystrokes in the answer");
  assert.match(p.input,/^student@ubuntu:/,id+" initial console");
  assert.match(p.output,/^student@ubuntu:/,id+" expected console");
  assert.doesNotMatch(p.code,/\b(?:nano|gedit|emacs|touch)\b/,id+" must not use other editor or file initializer");
@@ -29,7 +30,7 @@ assert.match(byId.get("LINUX-002").code,/chmod 640 report\.txt/);
 assert.match(byId.get("LINUX-002").output,/-rw-r-----/);
 assert.match(byId.get("LINUX-023").output,/linux study/);
 assert.doesNotMatch(byId.get("LINUX-024").output,/\ntwo\n/);
-assert.match(byId.get("LINUX-025").output,/Linux first/);
+assert.match(byId.get("LINUX-025").output,/Linux intro/);
 const js=readFileSync(new URL("../js/coding.js",import.meta.url),"utf8");
 assert.match(js,/const includesVim/,"copy feedback handles Vim interactively");
 assert.match(js,/터미널 명령은 한 줄씩 실행/);
