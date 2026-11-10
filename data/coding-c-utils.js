@@ -10,8 +10,8 @@ function describeLine(line) {
   if(l.startsWith("typedef")||/^struct\s+\w+\s*\{/.test(l))return "구조체 형태를 정의합니다";
   if(l.startsWith("int main("))return "프로그램 실행이 시작됩니다";
   if(l.startsWith("return 0"))return "정상적으로 프로그램을 종료합니다";
-  if(l.startsWith("return 1"))return "입력이 올바르지 않아 종료합니다";
-  if(l.startsWith("if (scanf(")||l.startsWith("if(scanf("))return "입력값을 읽고 입력 성공 여부를 확인합니다";
+  if(l.startsWith("return 1"))return "문제에서 지정한 예외 조건으로 프로그램을 종료합니다";
+  if(l.startsWith("scanf(")||l.startsWith("scanf ("))return "입력값을 읽어 변수에 저장합니다";
   if(l.startsWith("if(")||l.startsWith("if ("))return "조건이 참인지 확인해 실행할 경로를 정합니다";
   if(l.startsWith("else"))return "앞의 조건이 거짓일 때 실행합니다";
   if(l.startsWith("for(")||l.startsWith("for ("))return "반복 변수와 반복 종료 조건을 확인합니다";
