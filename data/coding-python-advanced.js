@@ -1,4 +1,4 @@
-import {makePythonProblem} from "./coding-python-utils.js?v=20261110-function-contracts-1";
+import {makePythonProblem} from "./coding-python-utils.js?v=20261110-beginner-wording-1";
 const definitions=[
  [
   51,
