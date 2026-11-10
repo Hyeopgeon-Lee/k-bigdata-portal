@@ -53,7 +53,7 @@ for(const p of ubuntuPptProblems){
 }
 assert.ok(js.includes('coding-ubuntu-terminal-demo",isUbuntu'),'Both Ubuntu console panels receive terminal styling');
 assert.ok(html.includes('coding-ubuntu-output-note'),'Output note is available when system-dependent values vary');
-assert.ok(html.includes('id="coding-vim-steps"')&&html.includes('id="coding-vim-steps-list"'),'A single Vim instruction section appears inside the hidden answer panel');
+assert.ok(!html.includes('id="coding-vim-steps"')&&!html.includes('id="coding-vim-steps-list"'),'Vim duplicate section removed');
 assert.ok(!html.includes('id="coding-ubuntu-vim-steps"')&&!html.includes('id="coding-ubuntu-vim-list"'),'Duplicated Vim instructions removed');
 assert.ok(js.includes('function renderVimSteps(q)')&&!js.includes('const vimList ='),'Only one Vim instruction renderer is used');
 
