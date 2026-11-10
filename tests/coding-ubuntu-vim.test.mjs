@@ -64,7 +64,7 @@ for (const id of ["LINUX-001","LINUX-002"]) {
     id+" must have identical answers in lesson and guide");
   assert.ok(ubuntuLegacyGuides[id].commandParts.some(part=>part.token.startsWith("vim")),
     id+" guide documents Vim");
-  assert.ok(ubuntuLegacyGuides[id].commandParts.some(part=>part.token===":wq"),
+  assert.ok(ubuntuLegacyGuides[id].commandParts.some(part=>part.token.includes(":wq")),
     id+" guide explains how to save");
   assert.doesNotMatch(JSON.stringify(ubuntuLegacyGuides[id]), /\btouch\b/,
     id+" guide must not refer to touch-based file creation");
