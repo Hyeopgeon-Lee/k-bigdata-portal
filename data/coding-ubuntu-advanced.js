@@ -374,13 +374,13 @@ export const ubuntuAdvancedProblems = [
     "id": "LINUX-038",
     "language": "linux",
     "topic": "시스템·프로세스",
-    "title": "현재 디렉터리 저장 공간",
+    "title": "현재 위치가 속한 파일 시스템의 남은 공간",
     "level": "종합 활용",
-    "statement": "현재 작업 디렉터리가 위치한 파일 시스템의 사용량과 남은 공간을 읽기 쉬운 단위로 확인하시오.",
+    "statement": "현재 작업 디렉터리가 속한 파일 시스템의 전체·사용·남은 공간을 사람이 읽기 쉬운 단위로 확인하시오. 특정 디렉터리만의 크기를 구하는 문제가 아닙니다.",
     "input": "Ubuntu 실습 디렉터리에서 실행",
     "output": "파일 시스템의 전체·사용·여유 공간 표시",
     "code": "df -h .",
-    "hint": "df 명령어의 목적과 옵션을 생각하고, 출력 또는 파일 상태를 확인하는 방법도 떠올려 보세요.",
+    "hint": "df -h . 은 현재 위치가 속한 파일 시스템의 용량을 표시합니다. 특정 폴더 용량은 du -sh . 으로 확인합니다.",
     "explanation": "df — 파일 시스템 단위 사용량 출력 / -h — 용량을 사람이 읽기 쉬운 단위로 표시 / . — 현재 작업 디렉터리가 속한 파일 시스템 선택",
     "initialState": "Ubuntu 실습 디렉터리에서 실행",
     "afterState": "디스크 공간은 변경되지 않고 현재 가용 공간이 표시",
@@ -630,33 +630,33 @@ export const ubuntuAdvancedProblems = [
     "id": "LINUX-046",
     "language": "linux",
     "topic": "네트워크·패키지",
-    "title": "설치된 패키지 상태 확인",
+    "title": "python3 패키지 설치 여부 확인",
     "level": "종합 활용",
-    "statement": "현재 시스템에 python3 패키지가 설치되었는지 dpkg로 확인하시오.",
+    "statement": "Ubuntu에서 python3 패키지의 설치 여부와 버전을 dpkg -s 명령으로 확인하시오.",
     "input": "Ubuntu의 dpkg 기반 환경",
-    "output": "python3 패키지의 설치 상태와 버전 표시",
-    "code": "dpkg-query -W -f='${Status} ${Version}\\n' python3",
-    "hint": "dpkg-query 명령어의 목적과 옵션을 생각하고, 출력 또는 파일 상태를 확인하는 방법도 떠올려 보세요.",
-    "explanation": "dpkg-query — 설치 패키지 데이터베이스 조회 / -W — 지정한 패키지 정보 표시 / -f — 출력할 설치 상태·버전 형식 지정",
+    "output": "Status: install ok installed 항목과 Version 항목 등 패키지 정보 표시",
+    "code": "dpkg -s python3",
+    "hint": "dpkg -s 패키지명은 해당 패키지가 설치되어 있는지 상태 정보를 확인합니다.",
+    "explanation": "dpkg — Debian 계열 패키지 관리 도구 / -s — 지정 패키지의 설치 상태 정보 확인 / python3 — 확인할 패키지 이름",
     "initialState": "Ubuntu의 dpkg 기반 환경",
-    "afterState": "설치 상태는 바뀌지 않고 install ok installed 등의 상태를 출력",
+    "afterState": "설치 상태는 바뀌지 않고 Status 및 Version 정보가 표시",
     "commandParts": [
       {
-        "token": "dpkg-query",
-        "meaning": "설치 패키지 데이터베이스 조회"
+        "token": "dpkg",
+        "meaning": "패키지 관리 도구"
       },
       {
-        "token": "-W",
-        "meaning": "지정한 패키지 정보 표시"
+        "token": "-s",
+        "meaning": "설치 상태 조회 옵션"
       },
       {
-        "token": "-f",
-        "meaning": "출력할 설치 상태·버전 형식 지정"
+        "token": "python3",
+        "meaning": "확인할 패키지"
       }
     ],
-    "verification": "dpkg-query -W -f='${Status} ${Version}\\n' python3",
-    "verificationDetail": "dpkg-query -W -f='${Status} ${Version}\\n' python3",
-    "commonMistake": "패키지가 설치되지 않았다면 0이 아닌 종료 상태와 오류 메시지가 나올 수 있습니다.",
+    "verification": "dpkg -s python3",
+    "verificationDetail": "Status: install ok installed 행이 있으면 설치된 상태입니다. Version 행에는 버전이 표시됩니다.",
+    "commonMistake": "설치하지 않은 패키지는 상태 조회에 실패할 수 있습니다. 이 명령은 설치·제거하지 않습니다.",
     "warning": "운영체제 상태가 달라질 수 있는 명령어는 개인 실습 환경에서만 확인하세요.",
     "trace": []
   },
