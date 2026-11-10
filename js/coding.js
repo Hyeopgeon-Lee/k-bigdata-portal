@@ -4,9 +4,9 @@ import {cFoundationProblems} from "../data/coding-c-foundations.js?v=20261111-es
 import {cAdvancedProblems} from "../data/coding-c-advanced.js?v=20261111-essential-ranges-1";
 import {pythonFoundationProblems} from "../data/coding-python-foundations.js?v=20261111-essential-ranges-1";
 import {pythonAdvancedProblems} from "../data/coding-python-advanced.js?v=20261111-essential-ranges-1";
-import {ubuntuFoundationProblems} from "../data/coding-ubuntu-foundations.js?v=20261110-classroom-1";
-import {ubuntuAdvancedProblems} from "../data/coding-ubuntu-advanced.js?v=20261110-classroom-1";
-import {ubuntuLegacyGuides} from "../data/coding-ubuntu-legacy-guides.js?v=20261020-ubuntu50";
+import {ubuntuFoundationProblems} from "../data/coding-ubuntu-foundations.js?v=20261111-terminal-warning-cleanup-1";
+import {ubuntuAdvancedProblems} from "../data/coding-ubuntu-advanced.js?v=20261111-terminal-warning-cleanup-1";
+import {ubuntuLegacyGuides} from "../data/coding-ubuntu-legacy-guides.js?v=20261111-terminal-warning-cleanup-1";
 import {learningReportUrl} from "./learning-report.js?v=20261020-study-share-1";
 const codingProblems = [...sampleProblems, ...javaProblems, ...cFoundationProblems, ...cAdvancedProblems, ...pythonFoundationProblems, ...pythonAdvancedProblems, ...ubuntuFoundationProblems, ...ubuntuAdvancedProblems].sort((a,b) =>
   a.language.localeCompare(b.language) || Number(a.id.split("-").at(-1))-Number(b.id.split("-").at(-1))
@@ -139,6 +139,7 @@ function updateUbuntuGuide(q) {
   const isUbuntu = q.language === "linux";
   const guide = isUbuntu ? {...q, ...(ubuntuLegacyGuides[q.id] || {})} : null;
   document.body.classList.toggle("coding-ubuntu-mode",isUbuntu);
+  document.body.classList.toggle("coding-ubuntu-terminal-demo",q.id === "LINUX-004");
   $("#coding-work-heading").textContent = isUbuntu ? "명령어 직접 작성" : "직접 코딩하기";
   $("#coding-input-label").textContent = isUbuntu ? "초기 실행 환경" : "입력 예제";
   $("#coding-output-label").textContent = isUbuntu ? "기대 결과" : "출력 예제";
@@ -149,7 +150,7 @@ function updateUbuntuGuide(q) {
     c:"복사한 C 코드를 vim에 붙여 넣어 직접 주석을 작성하고, 터미널에서 gcc 또는 make로 컴파일해 확인하세요.",
     java:"Java 코드를 IntelliJ에서 실행하며 각 줄이 어떤 역할을 하는지 주석으로 설명해 보세요.",
     python:"Python 코드를 VS Code, PyCharm 또는 터미널에서 실행하며 각 줄에 직접 주석을 달아 보세요.",
-    linux:"Ubuntu 터미널의 안전한 실습 디렉터리에서 명령어를 직접 확인하세요."
+    linux:"Ubuntu 터미널에서 명령어를 직접 실행하고 결과를 확인하세요."
   })[q.language];
   $("#coding-editor").placeholder = isUbuntu ? "Ubuntu 터미널에서 사용할 명령어를 직접 작성해 보세요." : "여기에 스스로 정답을 작성해 보세요.";
   $("#coding-answer-note").hidden = isUbuntu;
@@ -163,7 +164,6 @@ function updateUbuntuGuide(q) {
   $("#coding-ubuntu-verify").textContent = guide.verification;
   $("#coding-ubuntu-verify-note").textContent = guide.verificationDetail || guide.output;
   $("#coding-ubuntu-mistake").textContent = guide.commonMistake;
-  $("#coding-ubuntu-warning").textContent = guide.warning;
   const tbody = $("#coding-ubuntu-parts");
   tbody.replaceChildren();
   for(const part of guide.commandParts){
