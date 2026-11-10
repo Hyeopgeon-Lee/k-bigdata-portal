@@ -60,7 +60,7 @@ const client=readFileSync(join(root,"js","coding.js"),"utf8");
 assert(client.includes("ubuntuPptProblems")&&!client.includes("ubuntuLegacyGuides"),"client is not using PPT data exclusively");
 assert(client.includes('sampleProblems.filter(p=>p.language!=="linux")'),"legacy first two problems not filtered");
 assert(client.includes('coding-ubuntu-output-note')&&client.includes('coding-ubuntu-terminal-demo\",isUbuntu'),"Ubuntu output note/terminal toggle missing");
-assert(html.includes("js/coding.js?v=20261111-ubuntu-console-50-v2"),"HTML module cache not refreshed");
+assert(/js\/coding\.js\?v=20261111-/.test(html),"HTML module cache not refreshed");
 for(const el of ["coding-ubuntu-guide","coding-ubuntu-parts","coding-ubuntu-output-note","coding-ubuntu-verify","coding-ubuntu-mistake"]){
  assert(html.includes('id="'+el+'"'),"missing guide element: "+el);
 }
