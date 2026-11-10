@@ -12,6 +12,9 @@ for(const id of editing){
  assert.match(q.code,/(?:^|\n)vim\s+[^\n]+/,id+" edits with Vim");
  assert.match(q.statement,/Vim/i,id+" explains Vim in question");
  assert.match(q.explanation,/:wq/,id+" explains saving before exit");
+ assert.ok(Array.isArray(q.vimSteps)&&q.vimSteps.length>=3,id+" supplies explicit Vim keystrokes");
+ assert.match(q.vimSteps.join(" "),/:wq/,id+" explains Vim save/exit keystrokes");
+ assert.match(q.vimSteps.join(" "),/Enter 키/,id+" explains how to execute Vim commands");
 }
 for(const q of lessons){
  assert.match(q.statement,/시오\.$/,q.id+" must use an imperative first-year prompt");
@@ -22,5 +25,8 @@ for(const q of lessons){
  assert.equal(q.output,q.afterState,q.id+" duplicate result data must agree");
 }
 assert.ok(byId.get("LINUX-018").code.startsWith("grep -n"),"LOG search remains PPT-based");
+assert.match(byId.get("LINUX-023").vimSteps.join(" "),/i 키.*linux study.*Esc 키.*:wq/s,"insert-mode, text, normal-mode, save sequence");
+assert.match(byId.get("LINUX-024").vimSteps.join(" "),/:2.*dd.*:wq/s,"line deletion sequence");
+assert.match(byId.get("LINUX-025").vimSteps.join(" "),/:%s\/linux\/Linux\/g.*:wq/s,"global substitution sequence");
 assert.ok(byId.get("LINUX-047").code.startsWith("gzip"),"compression is not an editor lesson");
 console.log("PASS: 50 active Ubuntu lessons preserve Vim-only editing, terminal transcripts and imperative prompts.");
