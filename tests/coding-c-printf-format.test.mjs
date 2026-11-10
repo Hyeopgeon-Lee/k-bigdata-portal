@@ -19,6 +19,26 @@ assert.equal(problems.length, 100, "C coding exercises remain at 100");
 assert.equal(byId.size, 100, "C coding IDs must be unique");
 assert.equal(cGuidance.size, 98, "authored guidance must cover 98 generated exercises");
 
+function topLevelComma(s) {
+  let literal = "", escaped = false, round = 0, square = 0, curly = 0;
+  for (const char of s) {
+    if (literal) {
+      if (escaped) escaped = false;
+      else if (char === "\\") escaped = true;
+      else if (char === literal) literal = "";
+      continue;
+    }
+    if (char === '"' || char === "'") { literal = char; continue; }
+    if (char === "(") round++;
+    if (char === ")") round--;
+    if (char === "[") square++;
+    if (char === "]") square--;
+    if (char === "{") curly++;
+    if (char === "}") curly--;
+    if (char === "," && round === 0 && square === 0 && curly === 0) return true;
+  }
+  return false;
+}
 function sourceWithoutLearningComments(code) {
   return code.split("\n").map(line => line.replace(/\s+\/\/.*$/, "")).join("\n");
 }
@@ -35,6 +55,9 @@ for (const entry of problems) {
   for (const line of code.split("\n")) {
     const text = line.trim();
     if (!text || text.startsWith("#")) continue;
+    const declaration = text.match(/^(?:int|char|double|float|long|size_t|unsigned int)\s+(.+);$/);
+    if (declaration) assert.equal(topLevelComma(declaration[1]), false, entry.id + " declares multiple variables in one line");
+
     if (text.startsWith("}")) {
       depth--;
       if (activeCaseDepth > depth) activeCaseDepth = -1;
