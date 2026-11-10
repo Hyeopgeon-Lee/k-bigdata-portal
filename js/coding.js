@@ -353,7 +353,10 @@ $("#coding-copy").addEventListener("click", async () => {
   const plainCode = current.language === "linux" ? (ubuntuLegacyGuides[current.id]?.code || current.code) : current.code.split("\n").map(line => line.replace(comment,"")).join("\n");
   try {
     await navigator.clipboard.writeText(plainCode);
-    $("#coding-feedback").textContent = current.language === "linux" ? "정답 명령어를 복사했습니다. 안전한 실습 폴더에서만 실행하세요." : "주석 없는 정답 코드를 복사했습니다.";
+    const includesVim = current.language === "linux" && /(^|\n)\s*vim\s+\S+/.test(plainCode);
+    $("#coding-feedback").textContent = includesVim
+      ? "Vim 실습 명령어를 복사했습니다. 터미널 명령은 한 줄씩 실행하고 Vim 안에서 안내된 키를 누른 뒤 :wq로 저장·종료하세요."
+      : current.language === "linux" ? "정답 명령어를 복사했습니다. 안전한 실습 폴더에서만 실행하세요." : "주석 없는 정답 코드를 복사했습니다.";
   } catch {
     $("#coding-feedback").textContent = "자동 복사를 지원하지 않는 브라우저입니다. 정답 코드를 직접 선택하여 복사해 주세요.";
   }
