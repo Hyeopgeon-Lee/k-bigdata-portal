@@ -12,6 +12,8 @@ import {learningReportUrl} from "./learning-report.js?v=20261020-study-share-1";
 const codingProblems = [...sampleProblems.filter(p=>p.language!=="linux"), ...javaProblems, ...cFoundationProblems, ...cAdvancedProblems, ...pythonFoundationProblems, ...pythonAdvancedProblems, ...ubuntuPptProblems].sort((a,b) =>
   a.language.localeCompare(b.language) || Number(a.id.split("-").at(-1))-Number(b.id.split("-").at(-1))
 );
+// Reuse the comprehensive ls option definitions from LINUX-004 for every Ubuntu problem that uses ls.
+const lsOptionRows = ubuntuPptProblems.find(p=>p.id==="LINUX-004")?.commandParts || [];
 
 const $ = selector => document.querySelector(selector);
 const labels = {java:"Java", c:"C언어", python:"Python", linux:"Ubuntu"};
@@ -167,6 +169,24 @@ function updateUbuntuGuide(q) {
   $("#coding-ubuntu-verify-note").textContent = Array.isArray(q.vimSteps) ? "" : (guide.verificationDetail || guide.output);
   $("#coding-ubuntu-verify-note").hidden = !$("#coding-ubuntu-verify-note").textContent;
   $("#coding-ubuntu-mistake").textContent = guide.commonMistake;
+  // Include the same ls reference table whenever ls appears in an answer or a verification command.
+  // LINUX-004 already presents this complete table as its main command explanation.
+  const usesLs = /\bls\b/.test([guide.code || "",guide.verification || ""].join("\n"));
+  const showLsOptions = usesLs && guide.id !== "LINUX-004" && lsOptionRows.length > 0;
+  $("#coding-ubuntu-ls-options").hidden = !showLsOptions;
+  const lsTbody = $("#coding-ubuntu-ls-option-rows");
+  lsTbody.replaceChildren();
+  if (showLsOptions) {
+    for (const part of lsOptionRows) {
+      const row = document.createElement("tr");
+      for (const value of [part.token,part.meaning,part.example || "—"]) {
+        const td = document.createElement("td");
+        td.textContent = value;
+        row.append(td);
+      }
+      lsTbody.append(row);
+    }
+  }
   $("#coding-ubuntu-guide > h3").textContent = guide.optionGuideHeading || "명령어·옵션 설명";
   const tbody = $("#coding-ubuntu-parts");
   const showExamples = guide.commandParts.some(part => Boolean(part.example));
