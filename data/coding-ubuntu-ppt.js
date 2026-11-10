@@ -691,7 +691,7 @@ export const ubuntuPptProblems = [
   {
     "id": "LINUX-022",
     "language": "linux",
-    "level": "종합 활용",
+    "level": "기초 응용",
     "topic": "파일 링크",
     "title": "하드 링크와 심볼릭 링크 비교하기",
     "statement": "현재 디렉터리에 data.txt가 있습니다. data-hard라는 하드 링크와 data-link라는 심볼릭 링크를 각각 생성하시오. 원본과 두 링크의 inode 번호를 비교하고, 상세 목록에서 링크 종류와 하드 링크 개수를 확인하시오.",
