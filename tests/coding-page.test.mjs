@@ -11,6 +11,7 @@ import {pythonAdvancedProblems} from '../data/coding-python-advanced.js';
 
 
 import {ubuntuPptProblems} from '../data/coding-ubuntu-ppt.js';
+import {getUbuntuRelatedOptions} from '../data/coding-ubuntu-command-reference.js';
 import {learningReportUrl} from '../js/learning-report.js';
 import {completionCatalog, codingCompletionOptions} from '../js/coding-completion-data.js';
 
@@ -33,6 +34,18 @@ assert.match(java016.explanation,/2분 5초/,'JAVA-016 explanation matches outpu
 const unique=new Set(list.map(p=>p.id));
 assert.equal(unique.size,350,'exercise IDs must be unique');
 assert.equal(ubuntuPptProblems.length,50,'PPT-based Linux exercises count');
+// A related-option table must be available for every answer:
+// the new shared reference, the existing ls table, or the existing Vim table.
+assert.ok(html.includes('id="coding-ubuntu-related-options"') && html.includes('id="coding-ubuntu-related-rows"'),'Ubuntu related-options table is mounted');
+assert.ok(js.includes('getUbuntuRelatedOptions(guide)'),'Ubuntu related options are rendered per question');
+for(const p of ubuntuPptProblems){
+  const rows=getUbuntuRelatedOptions(p);
+  const existingLs=/\\bls\\b/.test(p.code);
+  const existingVim=Array.isArray(p.vimSteps)&&p.vimSteps.length>0;
+  assert.ok(rows.length || existingLs || existingVim,p.id+' requires a relevant option reference table');
+  assert.ok(rows.every(row=>row.usage&&row.meaning&&row.example),p.id+' related-option rows must include explanations and examples');
+}
+
 const linux003=ubuntuPptProblems.find(p=>p.id==='LINUX-003');
 assert.ok(linux003,'LINUX-003 must exist');
 assert.ok(ubuntuPptProblems.every(p=>p.statement.trim().endsWith('시오.')),'50 Linux tasks use imperative sentences');
@@ -113,7 +126,7 @@ assert.ok(js.includes('learningReportUrl("coding",q'),'coding issue report uses 
 assert.ok(js.includes('url.searchParams.set("id", q.id)'),'shared deep links preserve question id');
 assert.ok(js.includes('history.replaceState'),'deep link remains stable on question selection');
 assert.ok(css.includes('.coding-share-actions')&&css.includes('@media(max-width:530px)'),'responsive share actions');
-for(const moduleFile of ['js/coding.js','js/learning-report.js']){
+for(const moduleFile of ['js/coding.js','js/learning-report.js','data/coding-ubuntu-command-reference.js']){
   const check=spawnSync(process.execPath,['--check',fileURLToPath(new URL('../'+moduleFile,import.meta.url))],{encoding:'utf8'});
   assert.equal(check.status,0,moduleFile+' syntax: '+check.stderr);
 }
