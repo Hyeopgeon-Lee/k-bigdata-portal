@@ -4,11 +4,12 @@ import {cFoundationProblems} from "../data/coding-c-foundations.js?v=20261111-es
 import {cAdvancedProblems} from "../data/coding-c-advanced.js?v=20261111-essential-ranges-1";
 import {pythonFoundationProblems} from "../data/coding-python-foundations.js?v=20261111-essential-ranges-1";
 import {pythonAdvancedProblems} from "../data/coding-python-advanced.js?v=20261111-essential-ranges-1";
-import {ubuntuFoundationProblems} from "../data/coding-ubuntu-foundations.js?v=20261111-ubuntu-vim-only-2";
-import {ubuntuAdvancedProblems} from "../data/coding-ubuntu-advanced.js?v=20261111-ubuntu-vim-only-2";
-import {ubuntuLegacyGuides} from "../data/coding-ubuntu-legacy-guides.js?v=20261111-ubuntu-vim-only-2";
+
+
+
+import {ubuntuPptProblems} from "../data/coding-ubuntu-ppt.js?v=20261111-ppt-50-v1";
 import {learningReportUrl} from "./learning-report.js?v=20261020-study-share-1";
-const codingProblems = [...sampleProblems, ...javaProblems, ...cFoundationProblems, ...cAdvancedProblems, ...pythonFoundationProblems, ...pythonAdvancedProblems, ...ubuntuFoundationProblems, ...ubuntuAdvancedProblems].sort((a,b) =>
+const codingProblems = [...sampleProblems.filter(p=>p.language!=="linux"), ...javaProblems, ...cFoundationProblems, ...cAdvancedProblems, ...pythonFoundationProblems, ...pythonAdvancedProblems, ...ubuntuPptProblems].sort((a,b) =>
   a.language.localeCompare(b.language) || Number(a.id.split("-").at(-1))-Number(b.id.split("-").at(-1))
 );
 
@@ -137,7 +138,7 @@ function resetReveal(id, buttonId) {
 }
 function updateUbuntuGuide(q) {
   const isUbuntu = q.language === "linux";
-  const guide = isUbuntu ? {...q, ...(ubuntuLegacyGuides[q.id] || {})} : null;
+  const guide = isUbuntu ? q : null;
   document.body.classList.toggle("coding-ubuntu-mode",isUbuntu);
   document.body.classList.toggle("coding-ubuntu-terminal-demo",q.id === "LINUX-004");
   $("#coding-work-heading").textContent = isUbuntu ? "명령어 직접 작성" : "직접 코딩하기";
