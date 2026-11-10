@@ -680,7 +680,6 @@ export const ubuntuAdvancedProblems = [
     "verificationDetail": "hello가 한 줄 출력되는지 확인합니다.",
     "commonMistake": "i를 눌러야 문자를 입력할 수 있습니다. :q!는 저장하지 않고 종료하므로 :wq로 저장하세요.",
     "trace": [],
-    "warning": "기존 파일이 없는 개인 실습 디렉터리에서만 실행하세요."
   },
   {
     "id": "LINUX-048",
@@ -726,7 +725,6 @@ export const ubuntuAdvancedProblems = [
     "verificationDetail": "첫째 줄 hello, 둘째 줄 world가 출력됩니다.",
     "commonMistake": "기존 hello를 지우지 않도록 G 다음 o를 사용하세요. :q!로 끝내면 수정 내용이 저장되지 않습니다.",
     "trace": [],
-    "warning": "기존 파일을 수정하므로 개인 실습 파일에서만 실행하세요."
   },
   {
     "id": "LINUX-049",
