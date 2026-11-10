@@ -382,3 +382,46 @@
 @media(max-width:600px){
  .coding-ubuntu-guide #coding-ubuntu-related-options .coding-trace td:nth-child(3){background:#f1f5fb;padding:7px 10px;border-radius:7px;font-size:13px;color:#173d7a}
 }
+
+
+/* ls option comparison: readable wrapping on narrow screens. */
+.coding-ubuntu-guide #coding-ubuntu-ls-options .coding-scroll{max-width:100%}
+.coding-ubuntu-guide #coding-ubuntu-ls-options .coding-trace{table-layout:fixed}
+.coding-ubuntu-guide #coding-ubuntu-ls-options .coding-trace th:first-child{width:24%}
+.coding-ubuntu-guide #coding-ubuntu-ls-options .coding-trace th:nth-child(2){width:46%}
+.coding-ubuntu-guide #coding-ubuntu-ls-options .coding-trace th:nth-child(3){width:30%}
+.coding-ubuntu-guide #coding-ubuntu-ls-options .coding-trace th,
+.coding-ubuntu-guide #coding-ubuntu-ls-options .coding-trace td{
+  white-space:normal;
+  word-break:keep-all;
+  overflow-wrap:anywhere;
+  line-height:1.7;
+}
+@media(max-width:600px){
+  .coding-ubuntu-guide #coding-ubuntu-ls-options .coding-trace tbody tr{gap:0}
+  .coding-ubuntu-guide #coding-ubuntu-ls-options .coding-trace tbody td{
+    padding:6px 0;
+    white-space:normal;
+    overflow-wrap:anywhere;
+    word-break:keep-all;
+  }
+  .coding-ubuntu-guide #coding-ubuntu-ls-options .coding-trace tbody td:first-child{
+    padding:0 0 9px;
+    margin-bottom:4px;
+    border-bottom:1px solid #e3eaf3;
+  }
+  .coding-ubuntu-guide #coding-ubuntu-ls-options .coding-trace tbody td:nth-child(2)::before,
+  .coding-ubuntu-guide #coding-ubuntu-ls-options .coding-trace tbody td:nth-child(3)::before{
+    display:block;
+    margin-bottom:3px;
+    font:750 12px/1.5 inherit;
+    color:#60728b;
+  }
+  .coding-ubuntu-guide #coding-ubuntu-ls-options .coding-trace tbody td:nth-child(2)::before{content:"기능 설명"}
+  .coding-ubuntu-guide #coding-ubuntu-ls-options .coding-trace tbody td:nth-child(3)::before{content:"사용 예시"}
+  .coding-ubuntu-guide #coding-ubuntu-ls-options .coding-trace tbody td:nth-child(3){
+    margin-top:5px;
+    padding:9px 10px;
+    white-space:pre-wrap;
+  }
+}
