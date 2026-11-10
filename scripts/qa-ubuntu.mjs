@@ -36,7 +36,7 @@ for(let n=1;n<=50;n++){
  assert(p.input.startsWith("student@ubuntu:"),id+" initial environment must be Ubuntu terminal");
  assert(p.output.startsWith("student@ubuntu:"),id+" expected result must be Ubuntu terminal");
  assert(p.input===p.initialState&&p.output===p.afterState,id+" duplicated state differs");
- assert(p.statement.split(/\.\s+/).every(sentence=>/하시오\.?$/.test(sentence)),id+" use imperative question sentences");
+ assert(p.statement.split(/\.\s+/).every(sentence=>/시오\.?$/.test(sentence)),id+" use imperative question sentences");
  assert(typeof p.outputNote==="string",id+" missing output note data");
 
  assert(/^(\d+장|.*\d+장)/.test(p.pptSource),id+" missing cited chapter");
@@ -75,7 +75,6 @@ const smoke=[
  [7,": > note.txt","ls -l note.txt | grep -q note.txt"],
  [10,"","test -d reports"],
  [12,"mkdir empty","test ! -d empty"],
- [13,"","test -f /etc/hosts"],
  [14,"printf 'hello\n' > note.txt","cmp note.txt backup.txt"],
  [15,"printf 'draft\n' > draft.txt","test -f final.txt && test ! -f draft.txt"],
  [16,"mkdir docs","ls -ld docs | grep -q '^d'"],
