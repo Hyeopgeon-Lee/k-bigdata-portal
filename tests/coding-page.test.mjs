@@ -53,6 +53,8 @@ for(const p of ubuntuPptProblems){
 }
 assert.ok(js.includes('coding-ubuntu-terminal-demo",isUbuntu'),'Both Ubuntu console panels receive terminal styling');
 assert.ok(html.includes('coding-ubuntu-output-note'),'Output note is available when system-dependent values vary');
+assert.ok(html.includes('id="coding-ubuntu-vim-steps"')&&html.includes('id="coding-ubuntu-vim-list"'),'Vim instructions appear inside the hidden answer panel');
+assert.ok(js.includes('Array.isArray(q.vimSteps)')&&js.includes('vimList.append(item)'),'Vim step list renders per question');
 
 assert.match(linux003.statement,/하시오\.$/,'question uses imperative phrasing');
 assert.equal(linux003.code,'pwd','answer remains available in the answer panel');
