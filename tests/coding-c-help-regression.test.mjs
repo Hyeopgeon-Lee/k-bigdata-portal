@@ -31,7 +31,7 @@ assert.match(q("C-010").statement,/공백 한 칸/);
 assert.match(q("C-015").statement,/소수 셋째 자리/);
 assert.match(q("C-016").statement,/소수 둘째 자리/);
 assert.match(q("C-025").statement,/90점 이상/);
-assert.match(q("C-036").statement,/1 ≤ N ≤ 20/);
+assert.match(q("C-036").statement,/양의 정수 N/);
 assert.match(q("C-045").statement,/72줄/);
 assert.match(q("C-057").statement,/반올림/);
 assert.match(q("C-061").statement,/첫째 줄/);
