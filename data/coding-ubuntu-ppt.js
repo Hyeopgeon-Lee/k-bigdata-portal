@@ -98,12 +98,12 @@ export const ubuntuPptProblems = [
     "title": "현재 위치 확인하기",
     "statement": "현재 작업 중인 디렉터리의 절대경로를 출력하시오.",
     "input": "student@ubuntu:~/lab$ ",
-    "output": "student@ubuntu:~/lab$ pwd\n/home/student/lab",
+    "output": "student@ubuntu:~/lab$ [명령어 입력]\n/home/student/lab",
     "code": "pwd",
     "hint": "절대경로는 루트 디렉터리에서 시작한다.",
     "explanation": "pwd는 현재 작업 디렉터리의 절대경로를 출력한다.",
     "initialState": "student@ubuntu:~/lab$ ",
-    "afterState": "student@ubuntu:~/lab$ pwd\n/home/student/lab",
+    "afterState": "현재 경로 /home/student/lab이 표시되며 작업 디렉터리는 변경되지 않음",
     "commandParts": [
       {
         "token": "pwd",
