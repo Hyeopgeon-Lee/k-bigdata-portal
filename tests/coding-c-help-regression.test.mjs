@@ -49,7 +49,7 @@ assert.equal(q("C-049").level,"기초 응용");
 assert.equal(q("C-050").level,"기초 응용");
 assert.doesNotMatch(q("C-004").explanation,/경계 조건\(0, 음수, 100\)/);
 assert.doesNotMatch(q("C-002").explanation,/입력 예제와 동일한 값을/);
-assert.match(q("C-002").hint,/puts/);
+assert.match(q("C-002").hint,/printf/);
 assert.match(q("C-006").hint,/\\n/);
 const changes=id=>q(id).trace.map(row=>row[2]).join("|");
 assert.match(changes("C-008"),/sum = 1\+2\+3 = 6/);
