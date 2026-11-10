@@ -23,7 +23,6 @@ export const ubuntuFoundationProblems = [
     "verification": "pwd",
     "verificationDetail": "cd 명령을 실행하지 않았으므로 위치는 변경되지 않습니다.",
     "commonMistake": "pwd 출력은 사용자마다 달라집니다. 경로 자체를 외워 정답으로 사용하지 마세요.",
-    "warning": "자신의 개인 실습 디렉터리에서만 변경 명령어를 실행하세요.",
     "trace": []
   },
   {
@@ -33,8 +32,8 @@ export const ubuntuFoundationProblems = [
     "title": "현재 디렉터리 내용 목록",
     "level": "입문",
     "statement": "현재 디렉터리의 파일과 폴더 이름을 확인하시오.",
-    "input": "실습 디렉터리에 a.txt와 docs 폴더가 존재",
-    "output": "a.txt 및 docs 이름 확인",
+    "input": "student@ubuntu:~/lab$ touch a.txt\nstudent@ubuntu:~/lab$ mkdir docs",
+    "output": "student@ubuntu:~/lab$ ls\na.txt  docs",
     "code": "ls",
     "hint": "ls를 옵션 없이 실행하면 현재 디렉터리의 파일·폴더 이름을 보여 줍니다. 숨김 항목은 기본적으로 보이지 않습니다.",
     "explanation": "ls — 숨김 파일을 제외한 일반 목록 출력",
@@ -49,7 +48,6 @@ export const ubuntuFoundationProblems = [
     "verification": "ls",
     "verificationDetail": "ls",
     "commonMistake": "숨김 파일 이름이 나타나지 않는 것은 오류가 아닙니다.",
-    "warning": "자신의 개인 실습 디렉터리에서만 변경 명령어를 실행하세요.",
     "trace": []
   },
   {
@@ -79,7 +77,6 @@ export const ubuntuFoundationProblems = [
     "verification": "ls -a",
     "verificationDetail": "ls -a",
     "commonMistake": "숨김 파일은 이름이 점으로 시작합니다. -a 출력에는 . 및 ..도 포함됩니다.",
-    "warning": "자신의 개인 실습 디렉터리에서만 변경 명령어를 실행하세요.",
     "trace": []
   },
   {
@@ -113,7 +110,6 @@ export const ubuntuFoundationProblems = [
     "verification": "ls -lh",
     "verificationDetail": "ls -lh",
     "commonMistake": "-h는 -l 등 크기 출력이 있는 형식과 함께 사용해야 학습 효과가 있습니다.",
-    "warning": "자신의 개인 실습 디렉터리에서만 변경 명령어를 실행하세요.",
     "trace": []
   },
   {
@@ -147,7 +143,6 @@ export const ubuntuFoundationProblems = [
     "verification": "pwd",
     "verificationDetail": "pwd",
     "commonMistake": "cd는 명령을 실행한 현재 셸의 위치를 바꿉니다.",
-    "warning": "자신의 개인 실습 디렉터리에서만 변경 명령어를 실행하세요.",
     "trace": []
   },
   {
@@ -181,7 +176,6 @@ export const ubuntuFoundationProblems = [
     "verification": "pwd",
     "verificationDetail": "pwd",
     "commonMistake": "..은 상위 폴더, .은 현재 폴더를 뜻합니다.",
-    "warning": "자신의 개인 실습 디렉터리에서만 변경 명령어를 실행하세요.",
     "trace": []
   },
   {
@@ -215,7 +209,6 @@ export const ubuntuFoundationProblems = [
     "verification": "pwd",
     "verificationDetail": "pwd",
     "commonMistake": "~의 실제 경로는 사용자 환경에 따라 달라집니다.",
-    "warning": "자신의 개인 실습 디렉터리에서만 변경 명령어를 실행하세요.",
     "trace": []
   },
   {
@@ -253,7 +246,6 @@ export const ubuntuFoundationProblems = [
     "verification": "find . -maxdepth 1 -type d",
     "verificationDetail": "find . -maxdepth 1 -type d",
     "commonMistake": "find는 시작 경로인 . 자신도 검색 결과에 포함할 수 있습니다.",
-    "warning": "자신의 개인 실습 디렉터리에서만 변경 명령어를 실행하세요.",
     "trace": []
   },
   {
@@ -287,7 +279,6 @@ export const ubuntuFoundationProblems = [
     "verification": "ls -l note.txt",
     "verificationDetail": "ls -l note.txt",
     "commonMistake": "Vim을 열기만 하고 저장하지 않으면 빈 파일이 생성되지 않을 수 있습니다. :wq와 Enter로 저장·종료하시오.",
-    "warning": "자신의 개인 실습 디렉터리에서만 변경 명령어를 실행하세요.",
     "trace": []
   },
   {
@@ -317,7 +308,6 @@ export const ubuntuFoundationProblems = [
     "verification": "ls -ld reports",
     "verificationDetail": "ls -ld reports",
     "commonMistake": "같은 이름의 디렉터리가 이미 있으면 일반적인 mkdir은 실패합니다.",
-    "warning": "자신의 개인 실습 디렉터리에서만 변경 명령어를 실행하세요.",
     "trace": []
   },
   {
@@ -351,7 +341,6 @@ export const ubuntuFoundationProblems = [
     "verification": "ls -ld project/docs",
     "verificationDetail": "ls -ld project/docs",
     "commonMistake": "-p가 없으면 상위 project가 없을 때 생성이 실패합니다.",
-    "warning": "자신의 개인 실습 디렉터리에서만 변경 명령어를 실행하세요.",
     "trace": []
   },
   {
@@ -389,7 +378,6 @@ export const ubuntuFoundationProblems = [
     "verification": "cmp note.txt note-copy.txt",
     "verificationDetail": "cmp note.txt note-copy.txt",
     "commonMistake": "cmp가 차이 없이 종료하고 아무것도 출력하지 않으면 내용이 같습니다.",
-    "warning": "자신의 개인 실습 디렉터리에서만 변경 명령어를 실행하세요.",
     "trace": []
   },
   {
@@ -423,7 +411,6 @@ export const ubuntuFoundationProblems = [
     "verification": "ls -l final.txt",
     "verificationDetail": "ls -l final.txt",
     "commonMistake": "mv는 대상 파일이 이미 존재하면 덮어쓸 수 있습니다. 여기서는 final.txt가 없는 연습 폴더를 전제로 합니다.",
-    "warning": "자신의 개인 실습 디렉터리에서만 변경 명령어를 실행하세요.",
     "trace": []
   },
   {
@@ -457,7 +444,6 @@ export const ubuntuFoundationProblems = [
     "verification": "ls -l archive/notes.txt",
     "verificationDetail": "ls -l archive/notes.txt",
     "commonMistake": "복사(cp)와 달리 이동(mv) 후 원본 위치에는 파일이 남지 않습니다.",
-    "warning": "자신의 개인 실습 디렉터리에서만 변경 명령어를 실행하세요.",
     "trace": []
   },
   {
@@ -495,7 +481,6 @@ export const ubuntuFoundationProblems = [
     "verification": "find reports-backup -type f",
     "verificationDetail": "find reports-backup -type f",
     "commonMistake": "이미 reports-backup 디렉터리가 존재하면 복사 결과 경로가 달라질 수 있으므로 초기 조건을 확인합니다.",
-    "warning": "자신의 개인 실습 디렉터리에서만 변경 명령어를 실행하세요.",
     "trace": []
   },
   {
@@ -521,7 +506,6 @@ export const ubuntuFoundationProblems = [
     "verification": "stat -c '%y' memo.txt",
     "verificationDetail": "stat -c '%y' memo.txt",
     "commonMistake": "파일을 새로 작성하거나 내용을 바꾸는 작업과 파일의 시간 정보만 갱신하는 작업을 혼동하지 마시오.",
-    "warning": "자신의 개인 실습 디렉터리에서만 변경 명령어를 실행하세요.",
     "trace": []
   },
   {
@@ -551,7 +535,6 @@ export const ubuntuFoundationProblems = [
     "verification": "test ! -d empty && echo OK",
     "verificationDetail": "test ! -d empty && echo OK",
     "commonMistake": "rmdir은 비어 있지 않은 디렉터리를 지우지 않습니다. 재귀 삭제보다 안전합니다.",
-    "warning": "개인 실습 폴더의 비어 있는 디렉터리에만 실행하세요.",
     "trace": []
   },
   {
@@ -585,7 +568,6 @@ export const ubuntuFoundationProblems = [
     "verification": "test ! -e scratch.tmp && echo OK",
     "verificationDetail": "test ! -e scratch.tmp && echo OK",
     "commonMistake": "rm은 휴지통을 거치지 않습니다. 잘못된 파일을 삭제하면 복구가 어려울 수 있습니다.",
-    "warning": "개인 실습 폴더에서 임시 파일 이름을 반드시 확인하고 실행하세요.",
     "trace": []
   },
   {
@@ -623,7 +605,6 @@ export const ubuntuFoundationProblems = [
     "verification": "readlink readme-link",
     "verificationDetail": "readlink readme-link",
     "commonMistake": "심볼릭 링크를 다른 위치로 옮기면 상대경로가 깨질 수 있습니다.",
-    "warning": "자신의 개인 실습 디렉터리에서만 변경 명령어를 실행하세요.",
     "trace": []
   },
   {
@@ -653,7 +634,6 @@ export const ubuntuFoundationProblems = [
     "verification": "cat note.txt",
     "verificationDetail": "cat note.txt",
     "commonMistake": "바이너리 파일이나 매우 긴 파일에는 cat보다 다른 보기 명령이 적합할 수 있습니다.",
-    "warning": "자신의 개인 실습 디렉터리에서만 변경 명령어를 실행하세요.",
     "trace": []
   },
   {
@@ -683,7 +663,6 @@ export const ubuntuFoundationProblems = [
     "verification": "head -n 3 log.txt",
     "verificationDetail": "head -n 3 log.txt",
     "commonMistake": "-n 옵션 뒤 숫자를 바꾸면 출력할 줄 수가 달라집니다.",
-    "warning": "자신의 개인 실습 디렉터리에서만 변경 명령어를 실행하세요.",
     "trace": []
   },
   {
@@ -713,7 +692,6 @@ export const ubuntuFoundationProblems = [
     "verification": "tail -n 5 log.txt",
     "verificationDetail": "tail -n 5 log.txt",
     "commonMistake": "tail -n 5는 실시간 감시가 아니며, 실시간 감시는 -f 옵션을 사용합니다.",
-    "warning": "자신의 개인 실습 디렉터리에서만 변경 명령어를 실행하세요.",
     "trace": []
   },
   {
@@ -743,7 +721,6 @@ export const ubuntuFoundationProblems = [
     "verification": "wc -l notes.txt",
     "verificationDetail": "wc -l notes.txt",
     "commonMistake": "마지막 줄에 줄바꿈 문자가 없으면 화면에서 보이는 줄 수와 wc -l 값이 다를 수 있습니다.",
-    "warning": "자신의 개인 실습 디렉터리에서만 변경 명령어를 실행하세요.",
     "trace": []
   },
   {
@@ -773,7 +750,6 @@ export const ubuntuFoundationProblems = [
     "verification": "wc -w notes.txt",
     "verificationDetail": "wc -w notes.txt",
     "commonMistake": "공백이 여러 개 있어도 단어 사이 구분자로 처리합니다.",
-    "warning": "자신의 개인 실습 디렉터리에서만 변경 명령어를 실행하세요.",
     "trace": []
   }
 ];
