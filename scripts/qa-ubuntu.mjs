@@ -27,6 +27,12 @@ for(let n=1;n<=50;n++){
   assert(typeof p[k]==="string"&&p[k].trim().length>0,id+" empty "+k);
  }
  assert(Array.isArray(p.commandParts)&&p.commandParts.length>0,id+" missing command explanation");
+ assert(p.statement.trim().endsWith("시오."),id+" statement must end with imperative -시오.");
+ assert(/^student@ubuntu:[^\n]+\$ /.test(p.input),id+" initial environment must be Ubuntu terminal");
+ assert(/^student@ubuntu:[^\n]+\$ /.test(p.output),id+" expected result must be Ubuntu terminal");
+ assert(p.input===p.initialState && p.output===p.afterState,id+" duplicated state mismatch");
+ assert(!p.input.includes("[명령어 입력]")&&!p.output.includes("[명령어 입력]"),id+" placeholder in console");
+
  assert(p.input.startsWith("student@ubuntu:"),id+" initial environment must be Ubuntu terminal");
  assert(p.output.startsWith("student@ubuntu:"),id+" expected result must be Ubuntu terminal");
  assert(p.input===p.initialState&&p.output===p.afterState,id+" duplicated state differs");
@@ -60,6 +66,8 @@ for(const el of ["coding-ubuntu-guide","coding-ubuntu-parts","coding-ubuntu-outp
 }
 // Each smoke fixture uses a disposable workspace and is safe to run locally.
 const smoke=[
+ [13,"printf 'Hello Linux\\nUbuntu\\n' > readme.txt","test \"$(cat readme.txt | wc -l)\" -eq 2"],
+ [17,"printf 'line1\\nline2\\nline3\\nline4\\nline5\\nline6\\nline7\\nline8\\nline9\\nline10\\n' > log.txt","test \"$(tail -7 log.txt | wc -l)\" -eq 7 && test \"$(tail -7 log.txt | head -n 1)\" = line4"],
  [3,"",null],
  [4,"mkdir docs; : > a.txt","test \"$(ls | tr '\n' ' ')\" = 'a.txt docs '"],
  [5,": > .profile; : > note.txt","ls -a | grep -q .profile"],
