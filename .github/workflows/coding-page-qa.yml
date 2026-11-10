@@ -26,7 +26,7 @@ permissions:
   contents: read
 jobs:
   verify-learning:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -48,6 +48,7 @@ jobs:
         run: node tests/coding-ubuntu-vim-only.test.mjs
       - name: Compile and execute all C learning solutions and boundary cases
         run: node scripts/qa-coding-c.mjs
+      # Playwright 1.56.1 Chromium cannot install on GitHub-hosted Ubuntu 26.04.
       - name: Install Chromium test runtime
         run: |
           npm install --no-save --no-package-lock playwright@1.56.1
