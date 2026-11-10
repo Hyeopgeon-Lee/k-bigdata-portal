@@ -40,7 +40,7 @@ assert.ok(html.includes('id="coding-ubuntu-related-options"') && html.includes('
 assert.ok(js.includes('getUbuntuRelatedOptions(guide)'),'Ubuntu related options are rendered per question');
 for(const p of ubuntuPptProblems){
   const rows=getUbuntuRelatedOptions(p);
-  const existingLs=/\\bls\\b/.test(p.code);
+  const existingLs=/\bls\b/.test(p.code);
   const existingVim=Array.isArray(p.vimSteps)&&p.vimSteps.length>0;
   assert.ok(rows.length || existingLs || existingVim,p.id+' requires a relevant option reference table');
   assert.ok(rows.every(row=>row.usage&&row.meaning&&row.example),p.id+' related-option rows must include explanations and examples');
