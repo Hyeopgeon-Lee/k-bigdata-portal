@@ -72,7 +72,7 @@ const definitions=[
  ],
  [
   12,
-  "a, b = map(int, input().split())\ntotal = a + b\ndifference = a - b\nproduct = a * b\nprint(total)\nprint(difference)\nprint(product)",
+  "parts = input().split()\na = int(parts[0])\nb = int(parts[1])\ntotal = a + b\ndifference = a - b\nproduct = a * b\nprint(total)\nprint(difference)\nprint(product)",
   {
    "trace": "a=8,b=3|total=8+3→11|difference=8-3→5|product=8*3→24"
   }
