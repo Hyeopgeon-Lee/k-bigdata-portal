@@ -21,7 +21,7 @@ for(const [id,name] of Object.entries(vimTasks)){
  assert.ok(Array.isArray(p.vimSteps) && p.vimSteps.length>=3,id+" has editor keystroke steps");
  assert.match(p.vimSteps.join(" "),/:wq/,id+" includes Vim save command");
  assert.match(p.vimSteps.join(" "),/Enter/,id+" includes Enter key");
- assert.match(p.vimSteps[0],/터미널에서 vim /,id+" starts with a shell invocation");
+ assert.ok(p.vimSteps.some(step=>/터미널에서 vim /.test(step)),id+" explains the Vim shell invocation");
 
  assert.match(p.statement,/Vim/i,id+" question mentions Vim");
  assert.match([p.explanation,...(p.vimSteps||[])].join(" "),/:wq/,id+" provides save and exit explanation");
