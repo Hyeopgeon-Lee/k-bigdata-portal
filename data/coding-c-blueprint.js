@@ -1006,7 +1006,7 @@ export const cBlueprint = [
     "topic": "함수",
     "title": "함수 분리 계산기",
     "level": "종합 활용",
-    "statement": "정수 A, B와 연산 번호(1~3)를 공백으로 구분해 순서대로 입력받으시오. 다음 세 개의 int 반환 함수를 직접 정의하시오. add(int a, int b)는 두 정수의 합(a+b)을 반환하고, sub(int a, int b)는 첫 번째 정수에서 두 번째 정수를 뺀 차(a-b)를 반환하며, mul(int a, int b)는 두 정수의 곱(a*b)을 반환합니다. 연산 번호가 1이면 add(A, B), 2이면 sub(A, B), 3이면 mul(A, B)를 호출하고, 그 반환값을 한 줄에 출력하시오.",
+    "statement": "정수 A, B와 연산 번호(1~3)를 공백으로 구분해 순서대로 입력받으시오.\n다음 세 개의 int 반환 함수를 직접 정의하시오.\n- add(int a, int b): 두 정수의 합(a+b)을 반환하는 덧셈 함수\n- sub(int a, int b): 첫 번째 정수에서 두 번째 정수를 뺀 차(a-b)를 반환하는 뺄셈 함수\n- mul(int a, int b): 두 정수의 곱(a*b)을 반환하는 곱셈 함수\n연산 번호가 1이면 add(A, B), 2이면 sub(A, B), 3이면 mul(A, B)를 호출하고, 해당 함수의 반환값을 한 줄에 출력하시오.",
     "input": "4 2 3",
     "output": "8",
     "boundary": "음수·0",
