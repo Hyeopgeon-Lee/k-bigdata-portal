@@ -25,7 +25,6 @@ export const ubuntuLegacyGuides = {
     "verification": "find project -type f",
     "verificationDetail": "project/src/main.py 경로가 출력됩니다. 다른 파일이 없는 초기 환경을 전제로 합니다.",
     "commonMistake": "부모 디렉터리가 없는 상태에서 mkdir project/src만 실행하면 실패할 수 있습니다.",
-    "warning": "개인 실습 폴더에서 실행하세요. 이미 존재하는 프로젝트에 같은 명령어를 적용하면 의도치 않은 파일을 변경할 수 있습니다."
   },
   "LINUX-002": {
     "code": "touch report.txt\nchmod 640 report.txt\nls -l report.txt",
@@ -52,6 +51,5 @@ export const ubuntuLegacyGuides = {
     "verification": "stat -c '%a %n' report.txt",
     "verificationDetail": "640 report.txt가 표시되는지 확인합니다. ls -l의 권한 부분은 -rw-r-----와 대응합니다.",
     "commonMistake": "640을 세 자리 숫자의 단순 크기로 생각하면 안 됩니다. 각 자리는 소유자/그룹/기타의 비트 권한입니다.",
-    "warning": "자신이 소유한 실습용 파일에만 권한을 변경하세요. 시스템 파일에 chmod를 적용하지 마세요."
   }
 };
