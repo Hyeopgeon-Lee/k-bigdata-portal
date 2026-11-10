@@ -67,12 +67,14 @@ Deno.serve(async(req:Request)=>{
    const result=await deliver(p.user_id,p.email,"student",week.date,"[학과 포털] 주간 학습 리포트",body);
    counts[result as "sent"|"failed"|"duplicate"]++;
   }
+  const activeStudentIds=new Set(students.map(p=>p.user_id));
+  const cohortAttempts=attempts.filter(x=>activeStudentIds.has(x.user_id));
   const subjects:Record<string,number>={coding:0,ncp:0,practical:0},wrong:Record<string,number>={};
-  for(const r of attempts){subjects[r.bank]=(subjects[r.bank]||0)+1;
+  for(const r of cohortAttempts){subjects[r.bank]=(subjects[r.bank]||0)+1;
    if(r.result==="incorrect")wrong[r.bank+":"+r.question_id]=(wrong[r.bank+":"+r.question_id]||0)+1;
   }
   const frequent=Object.entries(wrong).sort((a,b)=>b[1]-a[1]).slice(0,10).map(([q,n])=>"<li>"+escape(q)+" · "+n+"회</li>").join("");
-  const adminBody=html("학급 주간 학습 통계",week.date,"<p>학습 참여 "+new Set(attempts.map(x=>x.user_id)).size+"명 / 제출 "+attempts.length+"회</p><p>기초 "+subjects.coding+"회 · NCP "+subjects.ncp+"회 · 정보처리 "+subjects.practical+"회</p><h3>자주 틀린 문제</h3><ol>"+(frequent||"<li>없음</li>")+"</ol>");
+  const adminBody=html("학급 주간 학습 통계",week.date,"<p>학습 참여 "+new Set(cohortAttempts.map(x=>x.user_id)).size+"명 / 제출 "+cohortAttempts.length+"회</p><p>기초 "+subjects.coding+"회 · NCP "+subjects.ncp+"회 · 정보처리 "+subjects.practical+"회</p><h3>자주 틀린 문제</h3><ol>"+(frequent||"<li>없음</li>")+"</ol>");
   const adminResult=await deliver(null,adminMail,"super_admin",week.date,"[학과 포털] 학급 주간 학습 통계",adminBody);
   return resp({ok:true,counts,adminResult,weekStart:week.date});
  }catch(e){console.error("Weekly reports",e);return resp({error:"REPORT_FAILED"},500);}
