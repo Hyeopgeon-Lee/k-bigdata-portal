@@ -55,7 +55,8 @@ assert.ok(js.includes('coding-ubuntu-terminal-demo",isUbuntu'),'Both Ubuntu cons
 assert.ok(html.includes('coding-ubuntu-output-note'),'Output note is available when system-dependent values vary');
 assert.ok(!html.includes('id="coding-vim-steps"')&&!html.includes('id="coding-vim-steps-list"'),'Vim duplicate section removed');
 assert.ok(!html.includes('id="coding-ubuntu-vim-steps"')&&!html.includes('id="coding-ubuntu-vim-list"'),'Duplicated Vim instructions removed');
-assert.ok(js.includes('function renderVimSteps(q)')&&!js.includes('const vimList ='),'Only one Vim instruction renderer is used');
+assert.ok(!js.includes('function renderVimSteps(q)')&&!js.includes('const vimList ='),'No duplicated Vim instruction renderer remains');
+assert.ok(js.includes('isUbuntu && !Array.isArray(q.vimSteps)'),'Vim uses the existing single explanation section');
 
 assert.match(linux003.statement,/하시오\.$/,'question uses imperative phrasing');
 assert.equal(linux003.code,'pwd','answer remains available in the answer panel');
