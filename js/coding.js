@@ -7,13 +7,97 @@ import {pythonAdvancedProblems} from "../data/coding-python-advanced.js?v=202611
 
 
 
-import {ubuntuPptProblems} from "../data/coding-ubuntu-ppt.js?v=20261111-ls-option-table-1";
+import {ubuntuPptProblems} from "../data/coding-ubuntu-ppt.js?v=20261111-vim-reference-1";
 import {learningReportUrl} from "./learning-report.js?v=20261020-study-share-1";
 const codingProblems = [...sampleProblems.filter(p=>p.language!=="linux"), ...javaProblems, ...cFoundationProblems, ...cAdvancedProblems, ...pythonFoundationProblems, ...pythonAdvancedProblems, ...ubuntuPptProblems].sort((a,b) =>
   a.language.localeCompare(b.language) || Number(a.id.split("-").at(-1))-Number(b.id.split("-").at(-1))
 );
 // Reuse the comprehensive ls option definitions from LINUX-004 for every Ubuntu problem that uses ls.
 const lsOptionRows = ubuntuPptProblems.find(p=>p.id==="LINUX-004")?.commandParts || [];
+
+// PPT 3장에 실제 수록된 Vim 명령·키 조작만 안내합니다.
+const vimReferenceRows = [
+  [
+    "실행",
+    "vim 파일명",
+    "터미널에서 파일을 열거나 새 파일 편집을 시작합니다. 예: vim memo.txt"
+  ],
+  [
+    "입력 모드",
+    "i / a",
+    "i: 커서 위치부터 입력, a: 커서 다음 위치부터 입력"
+  ],
+  [
+    "입력 모드",
+    "o / O",
+    "o: 현재 줄 아래에 새 줄, O: 현재 줄 위에 새 줄 생성 후 입력"
+  ],
+  [
+    "모드 전환",
+    "Esc",
+    "입력 모드를 끝내고 일반 모드로 돌아갑니다."
+  ],
+  [
+    "저장",
+    ":w",
+    "파일을 저장하고 Vim 편집 상태를 유지합니다. Enter로 실행"
+  ],
+  [
+    "종료",
+    ":q",
+    "수정된 내용이 없을 때 Vim을 종료합니다. Enter로 실행"
+  ],
+  [
+    "종료",
+    ":q!",
+    "변경 내용을 저장하지 않고 종료합니다. Enter로 실행"
+  ],
+  [
+    "저장·종료",
+    ":wq",
+    "변경 내용을 저장한 뒤 Vim을 종료합니다. Enter로 실행"
+  ],
+  [
+    "행 이동",
+    "0 / $",
+    "현재 줄의 맨 앞 / 맨 끝으로 이동합니다."
+  ],
+  [
+    "행 이동",
+    ":행번호",
+    "지정한 줄로 이동합니다. 예: :2 입력 후 Enter"
+  ],
+  [
+    "삭제",
+    "x / dd",
+    "x: 현재 글자 삭제, dd: 커서가 있는 줄 전체 삭제"
+  ],
+  [
+    "실행 취소",
+    "u",
+    "직전에 수행한 편집 명령을 취소합니다."
+  ],
+  [
+    "복사·붙여넣기",
+    "yy / p / P",
+    "yy: 현재 줄 복사, p: 아래에 붙여넣기, P: 위에 붙여넣기"
+  ],
+  [
+    "검색",
+    "/문자열 / n",
+    "/문자열: 아래 방향 검색 후 Enter, n: 같은 방향 다음 검색"
+  ],
+  [
+    "치환",
+    ":%s/기존/새값/g",
+    "문서 전체에서 일치하는 모든 문자열을 바꿉니다. 예: :%s/linux/Linux/g"
+  ],
+  [
+    "행 번호",
+    ":set nu / :set nonu",
+    "줄 번호를 표시하거나 숨깁니다. Enter로 실행"
+  ]
+];
 
 const $ = selector => document.querySelector(selector);
 const labels = {java:"Java", c:"C언어", python:"Python", linux:"Ubuntu"};
@@ -187,12 +271,18 @@ function updateUbuntuGuide(q) {
       lsTbody.append(row);
     }
   }
-  $("#coding-ubuntu-guide > h3").textContent = guide.optionGuideHeading || "명령어·옵션 설명";
+  const isVimTask = Array.isArray(guide.vimSteps) && guide.vimSteps.length > 0;
+  // Vim operations belong to one common reference table, not the general option table.
+  const vimKey = /^(?:vim(?:\s|$)|i$|a$|o$|Esc$|dd$|:(?:wq|w|q|[0-9]+|%s))/i;
+  const parts = isVimTask ? guide.commandParts.filter(part => !vimKey.test(part.token)) : guide.commandParts;
+  $("#coding-ubuntu-parts-heading").textContent = guide.optionGuideHeading || "명령어·옵션 설명";
+  $("#coding-ubuntu-parts-heading").hidden = parts.length === 0;
+  $("#coding-ubuntu-parts-wrap").hidden = parts.length === 0;
   const tbody = $("#coding-ubuntu-parts");
-  const showExamples = guide.commandParts.some(part => Boolean(part.example));
+  const showExamples = parts.some(part => Boolean(part.example));
   $("#coding-ubuntu-example-head").hidden = !showExamples;
   tbody.replaceChildren();
-  for(const part of guide.commandParts){
+  for(const part of parts){
     const row=document.createElement("tr");
     const columns = showExamples ? [part.token,part.meaning,part.example || "—"] : [part.token,part.meaning];
     for(const val of columns){
@@ -201,6 +291,20 @@ function updateUbuntuGuide(q) {
       row.append(td);
     }
     tbody.append(row);
+  }
+  $("#coding-ubuntu-vim-reference").hidden = !isVimTask;
+  const vimRows = $("#coding-ubuntu-vim-rows");
+  vimRows.replaceChildren();
+  if(isVimTask){
+    for(const [group,key,meaning] of vimReferenceRows){
+      const tr=document.createElement("tr");
+      for(const value of [group,key,meaning]){
+        const td=document.createElement("td");
+        td.textContent=value;
+        tr.append(td);
+      }
+      vimRows.append(tr);
+    }
   }
 }
 
