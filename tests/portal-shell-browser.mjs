@@ -40,7 +40,7 @@ async function snapshot(page){
     const rect=node=>{const b=node.getBoundingClientRect();return Object.fromEntries(['x','y','width','height'].map(key=>[key,Math.round(b[key]*100)/100]));};
     const component=selector=>{const node=document.querySelector(selector);return node?{style:style(node),rect:rect(node)}:null;};
     const nav=document.querySelector('.portal-service-nav');
-    const active=nav?.querySelector('.portal-nav-current [aria-current="page"]');
+    const active=nav?.querySelector('[data-nav-id][aria-current="page"]');
     const commonHeader=Object.fromEntries(['.site-header','.header-inner','.brand','.brand-mark','.brand-copy','.brand-copy strong','.brand-copy small','.brand-full','.brand-short','.menu-toggle'].map(selector=>[selector,component(selector)]));
     const relativeRect=node=>{const value=rect(node),origin=rect(nav);value.x=Math.round((value.x-origin.x)*100)/100;value.y=Math.round((value.y-origin.y)*100)/100;return value;};
     const buttons=[...(nav?.querySelectorAll('.portal-nav-current .portal-nav-items a')||[])].map(node=>{const value=style(node);delete value.backgroundColor;delete value.color;delete value.borderTopColor;return {id:node.dataset.navId,style:value,rect:relativeRect(node)};});
@@ -65,7 +65,7 @@ async function interactions(page,width,id){
     await summary.click();await page.locator('main').click({position:{x:2,y:2}});
     assert.equal(await menu.getAttribute('open'),null,'outside click closes menu');
   }else assert.equal(await page.locator('#portal-nav').isVisible(),true,'desktop links visible');
-  if(id!=='index'){
+  if(portalPages[id].group){
     const other=page.locator('.portal-nav-more'),toggle=other.locator(':scope > summary');
     await toggle.click();assert.equal(await other.getAttribute('open'),'','other services expand');
     assert.equal(await other.locator('.portal-nav-other').isVisible(),true);
@@ -115,14 +115,14 @@ try{
   try{
     await ready(page,'coding.html?id=LINUX-002');
     await page.locator('#coding-title').filter({hasText:'파일 접근 권한 설정'}).waitFor();
-    assert.equal(await page.locator('.portal-nav-current [aria-current="page"]').getAttribute('data-nav-id'),'coding');
+    assert.equal(await page.locator('.portal-service-nav [aria-current="page"]').getAttribute('data-nav-id'),'coding');
     await page.locator('#coding-done-button').click();
     const saved=await page.evaluate(()=>localStorage.getItem('kbigdata:coding:done:v1'));
     assert.ok(JSON.parse(saved).includes('LINUX-002'),'existing learning completion persists');
     await page.reload({waitUntil:'domcontentloaded'});
     assert.equal(await page.locator('#coding-done-button').getAttribute('aria-pressed'),'true');
-    await page.locator('.portal-nav-current a[data-nav-id="docs"]').click();await page.waitForURL('**/docs.html');
-    assert.equal(await page.locator('.portal-nav-current [aria-current="page"]').getAttribute('data-nav-id'),'docs');
+    await page.locator('.portal-nav-more > summary').click();await page.locator('.portal-nav-other a[data-nav-id="docs"]').click();await page.waitForURL('**/docs.html');
+    assert.equal(await page.locator('.portal-service-nav [aria-current="page"]').getAttribute('data-nav-id'),'docs');
     await page.goBack({waitUntil:'domcontentloaded'});assert.ok(page.url().includes('id=LINUX-002'));
     assert.equal(await page.evaluate(()=>localStorage.getItem('kbigdata:coding:done:v1')),saved,'navigation preserves existing state');
     await page.addScriptTag({url:url('js/portal-navigation.js?v='+shellVersion)});
@@ -141,7 +141,7 @@ try{
   const noScript=await browser.newContext({javaScriptEnabled:false,viewport:{width:390,height:844}});await prepare(noScript);
   for(const id of Object.keys(portalPages)){
     const page=await noScript.newPage();
-    try{await page.goto(url(id+'.html'));assert.equal(await page.locator('#portal-nav a').count(),6);assert.equal(await page.locator('#portal-nav').isVisible(),true,'native details fallback keeps header links usable');const state=await snapshot(page),reference=evidence.find(row=>row.page===id&&row.width===390);assert.deepEqual(state.header,reference.header,'source header has identical geometry and styles before enhancement');assert.deepEqual(state.buttons,reference.buttons,'service menu does not shift when content JavaScript starts');await page.locator('.portal-menu > summary').click();assert.equal(await page.locator('#portal-nav').isVisible(),false,'native summary closes panel without JavaScript');if(id!=='index'){await page.locator('.portal-nav-more > summary').click();assert.equal(await page.locator('.portal-nav-other').isVisible(),true);}}
+    try{await page.goto(url(id+'.html'));assert.equal(await page.locator('#portal-nav a').count(),6);assert.equal(await page.locator('#portal-nav').isVisible(),true,'native details fallback keeps header links usable');const state=await snapshot(page),reference=evidence.find(row=>row.page===id&&row.width===390);assert.deepEqual(state.header,reference.header,'source header has identical geometry and styles before enhancement');assert.deepEqual(state.buttons,reference.buttons,'service menu does not shift when content JavaScript starts');await page.locator('.portal-menu > summary').click();assert.equal(await page.locator('#portal-nav').isVisible(),false,'native summary closes panel without JavaScript');if(portalPages[id].group){await page.locator('.portal-nav-more > summary').click();assert.equal(await page.locator('.portal-nav-other').isVisible(),true);}}
     catch(error){record(engine+' no-JavaScript '+id,error);}finally{await page.close();}
   }
   await noScript.close();
