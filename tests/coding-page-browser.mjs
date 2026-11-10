@@ -17,6 +17,12 @@ try{
     assert.equal(await page.locator("#coding-available").innerText(),"350문제");
     assert.equal((await page.locator("#coding-language button[data-lang=linux] span").innerText()),"50문제");
     assert.equal(await page.locator("#coding-trace-button").isVisible(),false);
+    assert.match(await page.locator("#coding-statement").innerText(),/하시오\.$/,"freshman imperative ending");
+    assert.match(await page.locator("#coding-input").innerText(),/^student@ubuntu:/,"Ubuntu initial-state console");
+    assert.match(await page.locator("#coding-output").innerText(),/^student@ubuntu:/,"Ubuntu expected-result console");
+    assert.equal(await page.locator(".coding-ubuntu-terminal-demo").count(),1,"terminal mode enabled");
+    assert.equal(await page.locator("#coding-ubuntu-output-note").isVisible(),true,"environment-dependent output note visible");
+
     assert.equal(await page.locator("#coding-share-button").isVisible(),true);
     assert.equal(await page.locator("#coding-link-button").isVisible(),true);
     assert.equal(await page.locator("#coding-report-button").isVisible(),true);
@@ -77,7 +83,7 @@ try{
     await page.locator("#coding-answer-button").click();
     assert.equal(await page.locator("#coding-ubuntu-guide").isVisible(),true);
     assert.ok((await page.locator("#coding-ubuntu-parts").innerText()).includes("chmod"));
-    assert.ok((await page.locator("#coding-ubuntu-verify").innerText()).includes("stat"));
+    assert.ok((await page.locator("#coding-ubuntu-verify").innerText()).includes("ls -l report.txt"));
 
     await page.locator("#coding-language button[data-lang=java]").click();
     assert.equal(await page.locator("#coding-trace-button").isVisible(),true);
