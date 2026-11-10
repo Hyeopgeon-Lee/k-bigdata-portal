@@ -2,6 +2,21 @@ import {cBlueprint} from "./coding-c-blueprint.js?v=20261110-function-contracts-
 import {cGuidance} from "./coding-c-guidance.js?v=20261110-c069-example-1";
 const byNumber = new Map(cBlueprint.map(p=>[Number(p.id.slice(2)),p]));
 const stdIncludes = ["#include <stdio.h>"];
+const beginnerFunctionDescriptions = {
+  add:"두 정수의 합을 반환하는 add 함수를 정의합니다",
+  sub:"첫 번째 정수에서 두 번째 정수를 뺀 값을 반환하는 sub 함수를 정의합니다",
+  mul:"두 정수의 곱을 반환하는 mul 함수를 정의합니다",
+  square:"정수를 제곱한 값을 반환하는 square 함수를 정의합니다",
+  max2:"두 정수 중 큰 값을 반환하는 max2 함수를 정의합니다",
+  isEven:"정수가 짝수면 1, 홀수면 0을 반환하는 isEven 함수를 정의합니다",
+  sumTo:"1부터 n까지의 합을 반환하는 sumTo 함수를 정의합니다",
+  factorial:"1부터 n까지의 곱을 반환하는 factorial 함수를 정의합니다",
+  gcd:"두 정수의 최대공약수를 반환하는 gcd 함수를 정의합니다",
+  sumArray:"배열의 모든 정수를 더한 값을 반환하는 sumArray 함수를 정의합니다",
+  maxArray:"배열에서 가장 큰 값을 반환하는 maxArray 함수를 정의합니다",
+  swap:"두 변수의 값을 포인터를 통해 교환하는 swap 함수를 정의합니다",
+  divide:"몫과 나머지를 포인터를 통해 저장하는 divide 함수를 정의합니다"
+};
 function describeLine(line) {
   const l=line.trim();
   if(l.startsWith("#include <stdio"))return "표준 입출력 기능을 사용합니다";
@@ -11,6 +26,9 @@ function describeLine(line) {
   if(l.startsWith("int main("))return "프로그램 실행이 시작됩니다";
   if(l.startsWith("return 0"))return "정상적으로 프로그램을 종료합니다";
   if(l.startsWith("return 1"))return "문제에서 지정한 예외 조건으로 프로그램을 종료합니다";
+  const definedFunction=l.match(/^(?:int|void|double|float|long)\s+([A-Za-z_]\w*)\s*\([^;]*\)\s*\{$/);
+  if(definedFunction)return beginnerFunctionDescriptions[definedFunction[1]]||"함수를 정의하고 매개변수를 지정합니다";
+  if(/^return\s+/.test(l))return "계산한 결과를 호출한 위치에 반환합니다";
   if(l.startsWith("scanf(")||l.startsWith("scanf ("))return "입력값을 읽어 변수에 저장합니다";
   if(l.startsWith("if(")||l.startsWith("if ("))return "조건이 참인지 확인해 실행할 경로를 정합니다";
   if(l.startsWith("else"))return "앞의 조건이 거짓일 때 실행합니다";
