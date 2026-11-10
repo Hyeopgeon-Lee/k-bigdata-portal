@@ -283,3 +283,6 @@
 /* Ubuntu PPT: both initial environment and expected result use a terminal-like surface. */
 .coding-ubuntu-output-note[hidden]{display:none!important}
 .coding-ubuntu-output-note{color:#bdd0ea;font-size:12px;line-height:1.6;margin:10px 0 0;max-width:100%;overflow-wrap:break-word}
+
+/* Clearly mark where students type a command without revealing the solution. */
+.coding-ubuntu-terminal-demo .coding-io .ubuntu-command-placeholder{color:#ffd58e;font-weight:750}
