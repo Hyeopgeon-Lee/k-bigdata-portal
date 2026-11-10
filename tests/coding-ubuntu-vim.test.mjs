@@ -42,7 +42,7 @@ assert.match(byId.get("LINUX-002").explanation,/x\)?=1/,"execution numeric weigh
 for(const id of ["LINUX-007","LINUX-016","LINUX-026","LINUX-027","LINUX-028"]){
  assert.match(byId.get(id).explanation,/소유자/,"related explanation missing "+id);
 }
-assert.match(readFileSync(new URL("../js/coding.js",import.meta.url),"utf8"),/coding-overall-explanation"\)\.hidden = !q\.explanation/);
+assert.match(readFileSync(new URL("../js/coding.js",import.meta.url),"utf8"),/coding-overall-explanation"\)\.hidden = isUbuntu/,"Vim instructions are isolated from non-Vim concepts");
 assert.match(byId.get("LINUX-023").output,/linux study/);
 assert.doesNotMatch(byId.get("LINUX-024").output,/\ntwo\n/);
 assert.match(byId.get("LINUX-025").output,/Linux intro/);
@@ -59,12 +59,12 @@ const html=readFileSync(new URL("../coding.html",import.meta.url),"utf8");
 assert.doesNotMatch(html,/id="coding-vim-steps"/,"duplicated Vim step section is removed");
 const js=readFileSync(new URL("../js/coding.js",import.meta.url),"utf8");
 assert.doesNotMatch(js,/function renderVimSteps/,"no duplicated Vim step renderer");
-assert.match(js,/coding-overall-explanation"\)\.hidden = !q\.explanation/,"Ubuntu concepts are visible in the existing answer section");
+assert.match(js,/coding-ubuntu-concept-text/,"Ubuntu concepts appear in the dedicated concept section");
 assert.match(js,/const includesVim/,"copy feedback handles Vim interactively");
 assert.match(js,/터미널 명령은 한 줄씩 실행/);
 assert.match(html,/id="coding-vim-explanation-list"/,"Vim uses one numbered list");
 assert.match(html,/id="coding-ubuntu-vim-reference"/,"Vim command reference exists");
 assert.match(js,/vimRows.append\(tr\)/,"Vim command rows are rendered");
 assert.match(js,/vimList\.append\(item\)/,"Vim steps keep line spacing");
-assert.match(js,/\$\("#coding-explanation"\)\.hidden = vimSteps\.length > 0/,"inline duplicate Vim explanation is hidden");
+assert.match(js,/\$\("#coding-explanation"\)\.hidden = q\.language === "linux"/,"Ubuntu concepts are not duplicated in the generic explanation block");
 console.log("PASS: six active PPT-based Vim editing exercises and 50 editor-policy checks.");
