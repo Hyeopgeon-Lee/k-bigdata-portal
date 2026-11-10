@@ -70,7 +70,7 @@ assert.ok(!html.includes('coding-ubuntu-states'),'duplicate before/after details
 assert.ok(js.includes('coding-ubuntu-terminal-demo",isUbuntu'),'all Ubuntu questions use terminal presentation');
 
 assert.ok(js.includes('...ubuntuPptProblems')&&!js.includes('ubuntuLegacyGuides'),'browser uses only the PPT Linux data');
-assert.ok(html.includes('js/coding.js?v=20261111-linux-answer-mask-50-v4'),'up-to-date script reference');
+assert.ok(html.includes('js/coding.js?v=20261111-linux-owner-example-2'),'up-to-date script reference');
 const firstVisitAutocomplete=html.includes('id="coding-autocomplete-toggle" type="checkbox" role="switch"')
   && !/<input[^>]+id="coding-autocomplete-toggle"[^>]+checked/.test(html);
 assert.ok(firstVisitAutocomplete,'autocomplete switch exists and is initially unchecked');
