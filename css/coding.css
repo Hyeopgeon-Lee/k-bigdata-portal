@@ -110,9 +110,9 @@
 .coding-ubuntu-states>div{min-width:0;border:1px solid #dfebf7;background:#f7faff;border-radius:11px;padding:13px}
 .coding-ubuntu-states strong{display:block;font-size:13px;margin-bottom:7px;color:#27538d}
 .coding-ubuntu-states p,.coding-ubuntu-info{line-height:1.7;color:#344b68;overflow-wrap:anywhere;white-space:pre-wrap;margin:0}
-.coding-ubuntu-terminal-demo .coding-io>div:last-child{background:#102039;border-color:#243d5f}
-.coding-ubuntu-terminal-demo .coding-io>div:last-child b{color:#9fc8ff}
-.coding-ubuntu-terminal-demo .coding-io>div:last-child pre{color:#e7eefb;white-space:pre;overflow-x:auto;overflow-wrap:normal;font:13px/1.8 ui-monospace,SFMono-Regular,Consolas,monospace}
+.coding-ubuntu-terminal-demo .coding-io>div{background:#102039;border-color:#243d5f}
+.coding-ubuntu-terminal-demo .coding-io>div b{color:#9fc8ff}
+.coding-ubuntu-terminal-demo .coding-io>div pre{color:#e7eefb;white-space:pre;overflow-x:auto;overflow-wrap:normal;font:13px/1.8 ui-monospace,SFMono-Regular,Consolas,monospace}
 @media(max-width:530px){.coding-ubuntu-states{grid-template-columns:1fr}.coding-ubuntu-guide .coding-trace th:first-child{width:38%}}
 
 /* 350 practical learning questions: compact header, clear share actions */
@@ -279,3 +279,7 @@
 .coding-autocomplete-switch:has(input:checked) .coding-autocomplete-status{color:#116ba4}
 .coding-editor-host .cm-tooltip-autocomplete{max-width:min(360px,calc(100vw - 36px));font-size:13px}
 @media(max-width:530px){.coding-editor-heading{align-items:center}.coding-autocomplete-switch{padding:7px 9px;font-size:12px}}
+
+/* Ubuntu PPT: both initial environment and expected result use a terminal-like surface. */
+.coding-ubuntu-output-note[hidden]{display:none!important}
+.coding-ubuntu-output-note{color:#bdd0ea;font-size:12px;line-height:1.6;margin:10px 0 0;max-width:100%;overflow-wrap:break-word}
