@@ -1,5 +1,5 @@
 import {cBlueprint} from "./coding-c-blueprint.js?v=20261110-classroom-1";
-import {cGuidance} from "./coding-c-guidance.js?v=20261110-classroom-1";
+import {cGuidance} from "./coding-c-guidance.js?v=20261110-c-format-1";
 const byNumber = new Map(cBlueprint.map(p=>[Number(p.id.slice(2)),p]));
 const stdIncludes = ["#include <stdio.h>"];
 function describeLine(line) {
@@ -16,8 +16,6 @@ function describeLine(line) {
   if(l.startsWith("else"))return "앞의 조건이 거짓일 때 실행합니다";
   if(l.startsWith("for(")||l.startsWith("for ("))return "반복 변수와 반복 종료 조건을 확인합니다";
   if(l.startsWith("while(")||l.startsWith("while (")||l.startsWith("do {"))return "반복 조건을 확인하고 다음 단계로 진행합니다";
-  if(l.includes("puts("))return "문자열을 출력하고 줄바꿈합니다";
-  if(l.includes("putchar("))return "문자 하나를 출력합니다";
   if(l.includes("printf("))return "형식 지정자에 따라 값을 출력합니다";
   if(l.startsWith("int ")||l.startsWith("double ")||l.startsWith("char ")||l.startsWith("size_t ")||l.startsWith("struct "))return "변수를 선언하고 필요한 초기값을 설정합니다";
   if(l.includes("+=")||l.includes("++"))return "기존 변수 값을 기준으로 누적하거나 1 증가시킵니다";
