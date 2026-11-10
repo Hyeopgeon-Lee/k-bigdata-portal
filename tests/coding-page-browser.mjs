@@ -83,12 +83,14 @@ try{
     await page.locator("#coding-answer-button").click();
     assert.equal(await page.locator("#coding-ubuntu-guide").isVisible(),true);
     assert.ok((await page.locator("#coding-ubuntu-parts").innerText()).includes("chmod"));
-    assert.ok((await page.locator("#coding-ubuntu-verify").innerText()).includes("ls -l report.txt"));
+    assert.match(await page.locator("#coding-code").innerText(),/ls -l report.txt/,"the answer already includes result checking");
+    assert.equal(await page.locator("#coding-ubuntu-verification").isHidden(),true,"verification command is not duplicated");
+    assert.match(await page.locator("#coding-ubuntu-concept-text").innerText(),/소유자/,"the key concept remains visible");
     assert.equal(await page.locator("#coding-output-label").innerText(),"예상 실행 결과","Ubuntu examples use a clear expected output label");
-    assert.ok((await page.locator("#coding-ubuntu-guide h3").allInnerTexts()).includes("실행 결과 확인 명령어"),"verification section distinguishes the checking command");
-    assert.equal(await page.locator("#coding-ubuntu-related-options").isVisible(),true,"related option reference opens with the answer");
-    assert.match(await page.locator("#coding-ubuntu-related-rows").innerText(),/chmod 640/,"current permission mode is explained");
+    assert.equal(await page.locator("#coding-ubuntu-related-options").isVisible(),true,"alternative options appear with the answer");
     assert.match(await page.locator("#coding-ubuntu-related-rows").innerText(),/chmod u-w/,"related symbolic permission options are compared");
+    assert.doesNotMatch(await page.locator("#coding-ubuntu-related-rows").innerText(),/chmod 640/,"the active permission command is not repeated in alternative options");
+    assert.equal(await page.locator("#coding-ubuntu-ls-options").getAttribute("open"),null,"long ls references start collapsed");
 
     await page.locator("#coding-language button[data-lang=java]").click();
     assert.equal(await page.locator("#coding-trace-button").isVisible(),true);
