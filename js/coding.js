@@ -240,7 +240,7 @@ function updateUbuntuGuide(q) {
   $("#coding-output-label").textContent = isUbuntu ? "예상 실행 결과" : "출력 예제";
   $("#coding-answer-button").textContent = isUbuntu ? "정답 명령어 및 해설" : "정답과 줄별 주석";
   $("#coding-answer-heading").textContent = isUbuntu ? "정답 명령어" : "정답 코드와 한 줄 주석";
-  $("#coding-overall-explanation h3").textContent = isUbuntu && Array.isArray(q.vimSteps) ? "Vim 조작 방법" : isUbuntu ? "학습 개념과 풀이" : "전체 해설";
+  $("#coding-overall-explanation h3").textContent = isUbuntu ? "Vim 조작 순서" : "전체 해설";
   $("#coding-copy").textContent = isUbuntu ? "명령어 복사" : "주석 없는 코드 복사";
   $("#coding-copy-tip").textContent = ({
     c:"복사한 C 코드를 vim에 붙여 넣어 직접 주석을 작성하고, 터미널에서 gcc 또는 make로 컴파일해 확인하세요.",
@@ -251,12 +251,19 @@ function updateUbuntuGuide(q) {
   $("#coding-editor").placeholder = isUbuntu ? "Ubuntu 터미널에서 사용할 명령어를 직접 작성해 보세요." : "여기에 스스로 정답을 작성해 보세요.";
   $("#coding-answer-note").hidden = isUbuntu;
   $("#coding-trace-button").hidden = isUbuntu;
-  // Vim questions already contain a complete keystroke explanation: show it once in the existing answer explanation.
-  $("#coding-overall-explanation").hidden = !q.explanation;
+  // Ubuntu concepts have their own section; Vim keystrokes are shown only once.
+  $("#coding-overall-explanation").hidden = isUbuntu ? !Array.isArray(q.vimSteps) || !q.vimSteps.length : !q.explanation;
   $("#coding-ubuntu-guide").hidden = !isUbuntu;
   if(!isUbuntu) return;
   $("#coding-code").textContent = guide.code;
-  $("#coding-ubuntu-verify").textContent = guide.verification;
+  $("#coding-ubuntu-concept-text").textContent = guide.explanation || "";
+  $("#coding-ubuntu-concept").hidden = !guide.explanation;
+  $("#coding-ubuntu-verify").textContent = guide.verification || "";
+  // If the answer already contains the checking command, do not print it twice.
+  const enteredLines = new Set(String(guide.code || "").split(/[\n;]/).map(line=>line.trim()).filter(Boolean));
+  const checkLines = String(guide.verification || "").split(/[\n;]/).map(line=>line.trim()).filter(Boolean);
+  const checkAlreadyIncluded = checkLines.length > 0 && checkLines.every(line=>enteredLines.has(line));
+  $("#coding-ubuntu-verification").hidden = !checkLines.length || checkAlreadyIncluded;
   // Avoid repeating the same Vim procedure below the verification command.
   $("#coding-ubuntu-verify-note").textContent = Array.isArray(q.vimSteps) ? "" : (guide.verificationDetail || guide.output);
   $("#coding-ubuntu-verify-note").hidden = !$("#coding-ubuntu-verify-note").textContent;
@@ -265,6 +272,7 @@ function updateUbuntuGuide(q) {
   // LINUX-004 already presents this complete table as its main command explanation.
   const usesLs = /\bls\b/.test([guide.code || "",guide.verification || ""].join("\n"));
   const showLsOptions = usesLs && guide.id !== "LINUX-004" && lsOptionRows.length > 0;
+  $("#coding-ubuntu-ls-options").open = false;
   $("#coding-ubuntu-ls-options").hidden = !showLsOptions;
   const lsTbody = $("#coding-ubuntu-ls-option-rows");
   lsTbody.replaceChildren();
@@ -283,7 +291,7 @@ function updateUbuntuGuide(q) {
   // Vim operations belong to one common reference table, not the general option table.
   const vimKey = /^(?:vim(?:\s|$)|i$|a$|o$|Esc$|dd$|:(?:wq|w|q|[0-9]+|%s))/i;
   const parts = isVimTask ? guide.commandParts.filter(part => !vimKey.test(part.token)) : guide.commandParts;
-  $("#coding-ubuntu-parts-heading").textContent = guide.optionGuideHeading || "명령어·옵션 설명";
+  $("#coding-ubuntu-parts-heading").textContent = guide.optionGuideHeading || "정답 명령어 구성";
   $("#coding-ubuntu-parts-heading").hidden = parts.length === 0;
   $("#coding-ubuntu-parts-wrap").hidden = parts.length === 0;
   const tbody = $("#coding-ubuntu-parts");
@@ -300,9 +308,26 @@ function updateUbuntuGuide(q) {
     }
     tbody.append(row);
   }
-  // Each question shows only the related options for commands used in its revealed answer.
-  // The other usage forms are drawn exclusively from the 50 PPT-grounded Ubuntu exercises.
-  const relatedRows = getUbuntuRelatedOptions(guide);
+  // Compare only relevant alternative usage forms; never repeat the answer's own option.
+  // The source catalogue contains commands/options already present in the PPT lessons.
+  const currentOptions = new Set((guide.commandParts || []).map(part=>String(part.token).trim()));
+  const exactAnswers = new Set(String(guide.code || "").split(/[\n;]/).map(line=>line.trim()).filter(Boolean));
+  const relatedRows = getUbuntuRelatedOptions(guide).filter(part=>{
+    if(exactAnswers.has(part.example) || exactAnswers.has(part.usage)) return false;
+    if(part.command === "chmod"){
+      const numeric = part.usage.match(/^chmod\s+(\d{3})\b/);
+      if(numeric && currentOptions.has(numeric[1])) return false;
+      if(/LINUX-02[67]$/.test(guide.id) && !/^(?:chmod 640|chmod u-w|chmod g\+wx)/.test(part.usage)) return false;
+    }
+    if(part.command === "echo"){
+      if(/LINUX-03[23]$/.test(guide.id)) return /\s(?:>|>>)\s/.test(part.usage);
+      if(guide.id === "LINUX-031") return part.usage === "echo 문자열";
+      if(guide.id === "LINUX-029") return part.usage === "echo 문자열";
+    }
+    // A one-form reference repeats the primary command explanation without adding a comparison.
+    const variants = getUbuntuRelatedOptions(guide).filter(other=>other.command===part.command);
+    return variants.length > 1;
+  });
   $("#coding-ubuntu-related-options").hidden = relatedRows.length === 0;
   const relatedBody = $("#coding-ubuntu-related-rows");
   relatedBody.replaceChildren();
@@ -316,6 +341,7 @@ function updateUbuntuGuide(q) {
     relatedBody.append(row);
   }
   $("#coding-ubuntu-vim-reference").hidden = !isVimTask;
+  $("#coding-ubuntu-vim-reference").open = false;
   const vimRows = $("#coding-ubuntu-vim-rows");
   vimRows.replaceChildren();
   if(isVimTask){
@@ -424,7 +450,7 @@ function showQuestion(q) {
   }
   vimList.hidden = vimSteps.length === 0;
   $("#coding-explanation").textContent = q.explanation || "";
-  $("#coding-explanation").hidden = vimSteps.length > 0;
+  $("#coding-explanation").hidden = q.language === "linux" || vimSteps.length > 0;
   $("#coding-explanation").style.whiteSpace = q.language === "linux" ? "pre-line" : "";
   updateUbuntuGuide(q);
   codeEditor?.setContent($("#coding-editor").value, q.language, $("#coding-editor").placeholder);
