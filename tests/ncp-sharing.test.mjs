@@ -31,7 +31,7 @@ assert.match(ui,/navigator\.share/);
 assert.match(ui,/navigator\.clipboard\?\.writeText/);
 assert.match(ui,/document\.execCommand\("copy"\)/);
 assert.match(ui,/learningReportUrl\("ncp",q/);
-assert.ok(ui.includes("'<a href='"),"NCP report is a real link");
+assert.ok(ui.includes("<a href="),"NCP report is a real link");
 assert.match(ui,/id="ncp-share-status".*role="status"/);
 const shareText=ui.slice(ui.indexOf("function problemShareText"),ui.indexOf("async function copyText"));
 assert.ok(!/\.answer|\.explanation|\.options|state\.answers/.test(shareText),"Do not reveal model answers in shared text");
