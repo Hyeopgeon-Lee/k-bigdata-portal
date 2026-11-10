@@ -22,6 +22,35 @@
 8. **미완료:** Resend 등 메일 서비스에서 도메인 검증 후 `RESEND_API_KEY`, `REPORT_FROM_EMAIL`을 Supabase Edge Function Secrets에 등록하세요.
 9. **미완료:** 주간 보고서는 월요일 08:00 KST = 전날 23:00 UTC에 Cron으로 트리거해야 합니다. cron 비밀번호는 Supabase Vault 등에 안전하게 보관하세요. 리포트는 슈퍼 관리자 `hglee67@kopo.ac.kr` 한 사람에게만 집계본이 발송되도록 코드가 제한합니다.
 
+
+## 기존 Resend 계정 연결 (추가 계정 생성 불필요)
+
+이메일 인증번호 및 학생 주간 보고서 모두 **기존 Resend 계정**을 사용합니다. 아래 작업은 별도 사용자 로그인/Resend API 자격증명이 필요하므로 GitHub PR 코드만으로 자동 적용되지 않습니다.
+
+### A. Supabase Auth: 인증번호(OTP) 발송
+
+1. [Resend × Supabase 공식 연동](https://supabase.com/partners/catalog/resend)에서 기존 Resend 계정으로 Connect / Add Integration을 선택하고 프로젝트 `zjsindkakjfzmjgrkaou`를 지정하면 Resend가 전용 API 키를 생성하고 Supabase SMTP를 자동 설정할 수 있습니다. 선택 가능한 기존 **Verified** 발신 도메인을 확인하세요.
+2. 자동 연결을 사용하지 않을 때는 [Supabase 프로젝트 SMTP 설정](https://supabase.com/dashboard/project/zjsindkakjfzmjgrkaou/auth/smtp)에서 **Custom SMTP**를 활성화합니다.
+   - Host: `smtp.resend.com`
+   - Port: `465` (SSL, 문제가 있으면 `587` TLS)
+   - Username: `resend`
+   - Password: **Resend API Key** (소스 코드·GitHub·채팅에 공유 금지)
+   - Sender address: 기존 Resend에 **Verified**로 표시된 도메인의 발신 주소. 실제 확인 전 `noreply@k-bigdata.kr` 등 임의 주소를 사용하지 마세요.
+   - Sender name: `빅데이터소프트웨어공학과`
+3. [Auth 이메일 템플릿](https://supabase.com/dashboard/project/zjsindkakjfzmjgrkaou/auth/templates) > **Magic Link**에 `supabase/templates/magic_link_otp.txt`의 HTML을 붙여 넣습니다. **`{{ .Token }}` 반드시 유지** (링크가 아닌 6자리 인증번호).
+4. [Auth URL 설정](https://supabase.com/dashboard/project/zjsindkakjfzmjgrkaou/auth/url-configuration)에서 Site URL은 `https://portal.k-bigdata.kr`로 설정하고 허용 Redirect URL도 필요한 포털 경로에 제한합니다.
+5. 실제 계정으로 OTP를 한 번 요청해 발신 주소, 발송 로그, 6자리 입력, 인증 성공 및 관리자/학생 승인 흐름을 검사합니다.
+
+### B. 주간 보고서: Resend API 발송
+
+- 이미 배포된 `weekly-learning-report` Edge Function은 **Resend API**(`https://api.resend.com/emails`)를 사용하도록 구현돼 있습니다.
+- Supabase 프로젝트 > Edge Functions > Secrets에 `RESEND_API_KEY` (기존 Resend 계정의 **portal용 별도 발송 키 권장**), `REPORT_FROM_EMAIL` (Verified 발신 주소), `LEARNING_REPORT_CRON_SECRET` (별도의 긴 임의값)을 설정합니다.
+- 키를 등록하지 않으면 이메일 발송이 작동하지 않습니다. Resend SMTP 자동 연동과 Edge Function 환경변수 등록은 **별도 단계**입니다.
+- Cron은 매주 월요일 08:00 KST = 일요일 23:00 UTC이며, 실행 전에 주간 리포트 중복 발송/수신자 제한 테스트가 필요합니다.
+- 교수 통계 수신자는 `hglee67@kopo.ac.kr` 단 한 명입니다. 학생은 수신 동의한 재학생에게만 개인 리포트를 보냅니다.
+
+**주의:** Resend 발신 도메인 확인 없이 DNS의 기존 MX/SPF 설정을 덮어쓰지 않습니다. 필요한 레코드는 Resend 대시보드에서 제공하는 실제 값으로 검증합니다.
+
 ## 회원 정책
 - 이메일 인증번호로 로그인하며 이름과 학번을 제출한 학생은 관리자 승인 후 이용 가능합니다.
 - hglee67@kopo.ac.kr 소유자가 OTP 인증 후 이름을 등록하면 DB의 서버 측 로직이 슈퍼 관리자 역할을 부여합니다. 학번은 필요 없습니다.
