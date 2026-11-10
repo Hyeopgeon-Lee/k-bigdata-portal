@@ -29,12 +29,12 @@ try{
     assert.ok(await page.locator("#coding-answer").isHidden(),"answer must start hidden");
     await page.locator(".portal-service-nav.portal-nav-compact").waitFor({timeout:12000});
     const codingNav=await page.evaluate(()=>{
-      const nav=document.querySelector(".portal-nav-current");
-      const selected=nav.querySelector('a[aria-current="page"]');
+      const nav=document.querySelector(".portal-service-nav");
+      const selected=nav.querySelector('.portal-nav-other a[aria-current="page"]');
       const css=getComputedStyle(selected);
       return {
         heading:nav.querySelector(".portal-nav-title").textContent,
-        tabs:[...nav.querySelectorAll(".portal-nav-items a")].map(a=>a.textContent),
+        tabs:[...nav.querySelectorAll(".portal-nav-other-group:first-child a")].map(a=>a.textContent),
         active:selected.textContent,
         buttonStyle:{background:css.backgroundColor,color:css.color,minHeight:css.minHeight,borderRadius:css.borderRadius},
         toolbarCount:document.querySelectorAll(".study-header").length
@@ -46,12 +46,12 @@ try{
     await practicePage.goto("http://127.0.0.1:8765/practical.html",{waitUntil:"domcontentloaded"});
     await practicePage.locator(".portal-service-nav.portal-nav-compact").waitFor({timeout:12000});
     const practicalNav=await practicePage.evaluate(()=>{
-      const nav=document.querySelector(".portal-nav-current");
-      const selected=nav.querySelector('a[aria-current="page"]');
+      const nav=document.querySelector(".portal-service-nav");
+      const selected=nav.querySelector('.portal-nav-other a[aria-current="page"]');
       const css=getComputedStyle(selected);
       return {
         heading:nav.querySelector(".portal-nav-title").textContent,
-        tabs:[...nav.querySelectorAll(".portal-nav-items a")].map(a=>a.textContent),
+        tabs:[...nav.querySelectorAll(".portal-nav-other-group:first-child a")].map(a=>a.textContent),
         active:selected.textContent,
         buttonStyle:{background:css.backgroundColor,color:css.color,minHeight:css.minHeight,borderRadius:css.borderRadius},
         toolbarCount:document.querySelectorAll(".study-header").length
@@ -59,7 +59,7 @@ try{
     });
     assert.equal(practicalNav.heading,codingNav.heading,"matching learning group heading "+width);
     assert.deepEqual(practicalNav.tabs,codingNav.tabs,"matching learning navigation buttons "+width);
-    assert.equal(practicalNav.active,"실기");
+    assert.equal(practicalNav.active,"정보처리 기출문제");
     assert.deepEqual(practicalNav.buttonStyle,codingNav.buttonStyle,"matching active navigation button styles "+width);
     assert.equal(practicalNav.toolbarCount,0,"practical auxiliary toolbar removed "+width);
     assert.equal(codingNav.toolbarCount,0,"coding auxiliary toolbar removed "+width);
