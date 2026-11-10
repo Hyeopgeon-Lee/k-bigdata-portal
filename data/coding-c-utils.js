@@ -1,4 +1,4 @@
-import {cBlueprint} from "./coding-c-blueprint.js?v=20261110-c075-examples-1";
+import {cBlueprint} from "./coding-c-blueprint.js?v=20261110-function-contracts-1";
 import {cGuidance} from "./coding-c-guidance.js?v=20261110-c069-example-1";
 const byNumber = new Map(cBlueprint.map(p=>[Number(p.id.slice(2)),p]));
 const stdIncludes = ["#include <stdio.h>"];
