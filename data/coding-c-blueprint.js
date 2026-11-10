@@ -228,6 +228,18 @@ export const cBlueprint = [
     "statement": "정수 N을 한 개 입력받아 양수이면 POSITIVE, 음수이면 NEGATIVE, 0이면 ZERO를 한 줄에 출력하시오.",
     "input": "-3",
     "output": "NEGATIVE",
+    "examples": [
+      {
+        "input": "0",
+        "output": "ZERO",
+        "reason": "0은 양수도 음수도 아닙니다."
+      },
+      {
+        "input": "5",
+        "output": "POSITIVE",
+        "reason": "양수일 때 POSITIVE를 출력합니다."
+      }
+    ],
     "boundary": "0 및 양·음수",
     "traceFocus": "n과 분기 진입 여부"
   },
@@ -272,6 +284,18 @@ export const cBlueprint = [
     "statement": "정수 점수 s(0 ≤ s ≤ 100)를 입력받아 90점 이상이면 A, 80점 이상 90점 미만이면 B, 70점 이상 80점 미만이면 C, 60점 이상 70점 미만이면 D, 60점 미만이면 F를 한 글자로 출력하시오.",
     "input": "85",
     "output": "B",
+    "examples": [
+      {
+        "input": "90",
+        "output": "A",
+        "reason": "90점은 A등급에 포함됩니다."
+      },
+      {
+        "input": "59",
+        "output": "F",
+        "reason": "60점 미만은 F등급입니다."
+      }
+    ],
     "boundary": "59/60,69/70,79/80,89/90",
     "traceFocus": "score와 grade 조건"
   },
@@ -280,9 +304,21 @@ export const cBlueprint = [
     "topic": "조건문",
     "title": "윤년 판별",
     "level": "입문",
-    "statement": "연도 1~9999를 입력받아 그레고리력 윤년이면 LEAP, 아니면 COMMON 출력.",
+    "statement": "연도(1~9999)를 입력받으시오. 그레고리력 윤년 규칙에 따라 윤년이면 LEAP, 그렇지 않으면 COMMON을 출력하시오.",
     "input": "2000",
     "output": "LEAP",
+    "examples": [
+      {
+        "input": "1900",
+        "output": "COMMON",
+        "reason": "100으로 나누어떨어지지만 400의 배수는 아니므로 평년입니다."
+      },
+      {
+        "input": "2024",
+        "output": "LEAP",
+        "reason": "4의 배수이면서 100의 배수가 아니므로 윤년입니다."
+      }
+    ],
     "boundary": "1900,2000,2024,2100",
     "traceFocus": "4·100·400 나머지"
   },
@@ -291,9 +327,16 @@ export const cBlueprint = [
     "topic": "조건문",
     "title": "성인 여부 판별",
     "level": "입문",
-    "statement": "나이 0~120을 입력받아 19세 이상 ADULT, 미만 MINOR 출력.",
+    "statement": "나이(0~120)를 입력받으시오. 19세 이상이면 ADULT, 19세 미만이면 MINOR를 출력하시오.",
     "input": "18",
     "output": "MINOR",
+    "examples": [
+      {
+        "input": "19",
+        "output": "ADULT",
+        "reason": "19세 이상은 ADULT입니다."
+      }
+    ],
     "boundary": "18,19",
     "traceFocus": "age와 비교 결과"
   },
@@ -316,6 +359,13 @@ export const cBlueprint = [
     "statement": "정수 A, B를 공백으로 구분해 입력받아 A가 B보다 크면 >, 작으면 <, 같으면 =를 한 줄에 출력하시오.",
     "input": "5 7",
     "output": "<",
+    "examples": [
+      {
+        "input": "5 5",
+        "output": "=",
+        "reason": "두 정수가 같으면 =를 출력합니다."
+      }
+    ],
     "boundary": "동일,음수",
     "traceFocus": "a,b 비교 분기"
   },
@@ -324,9 +374,26 @@ export const cBlueprint = [
     "topic": "조건문",
     "title": "switch 사칙연산 메뉴",
     "level": "입문",
-    "statement": "연산번호 1~4와 정수 A,B를 입력받아 1=합,2=차,3=곱,4=몫을 정수로 출력. 4일 때 B는 0이 아니다.",
+    "statement": "연산 번호(1~4)와 정수 A, B를 순서대로 입력받으시오. 번호가 1이면 합(A+B), 2이면 차(A-B), 3이면 곱(A×B), 4이면 정수 몫(A/B)을 출력하시오. 번호가 4일 때는 B가 0이 아닙니다.",
     "input": "1 7 2",
     "output": "9",
+    "examples": [
+      {
+        "input": "2 7 2",
+        "output": "5",
+        "reason": "연산 번호 2는 첫 번째 값에서 두 번째 값을 빼는 연산입니다."
+      },
+      {
+        "input": "3 7 2",
+        "output": "14",
+        "reason": "연산 번호 3은 곱셈입니다."
+      },
+      {
+        "input": "4 7 2",
+        "output": "3",
+        "reason": "연산 번호 4는 정수 몫을 구합니다."
+      }
+    ],
     "boundary": "4, 음수, 0제수 제외",
     "traceFocus": "menu switch 선택"
   },
@@ -371,6 +438,13 @@ export const cBlueprint = [
     "statement": "연도 Y(1~9999)와 월 M(1~12)을 공백으로 구분해 입력받아 해당 월의 일수를 출력하시오. 2월의 일수는 윤년 규칙을 적용해 계산하시오.",
     "input": "2024 2",
     "output": "29",
+    "examples": [
+      {
+        "input": "2023 2",
+        "output": "28",
+        "reason": "평년의 2월은 28일입니다."
+      }
+    ],
     "boundary": "2월, 4월,12월,1900년",
     "traceFocus": "year,month,days"
   },
@@ -382,6 +456,18 @@ export const cBlueprint = [
     "statement": "구매금액 N(0 이상 100000 이하의 정수, 단위 원)을 입력받아 할인 후 결제금액을 출력하시오. N ≥ 50000이면 10%, 10000 ≤ N < 50000이면 5%, N < 10000이면 0%를 할인하며, 할인액은 정수 나눗셈으로 계산하시오.",
     "input": "20000",
     "output": "19000",
+    "examples": [
+      {
+        "input": "50000",
+        "output": "45000",
+        "reason": "50000원부터 10% 할인을 적용합니다."
+      },
+      {
+        "input": "9999",
+        "output": "9999",
+        "reason": "10000원 미만은 할인하지 않습니다."
+      }
+    ],
     "boundary": "9999,10000,49999,50000",
     "traceFocus": "price,rate,discount,total"
   },
@@ -536,6 +622,18 @@ export const cBlueprint = [
     "statement": "정수 N(0 ≤ N ≤ 1,000,000,000)을 입력받아 십진수 자릿수를 출력하시오. N=0이면 1자리로 계산합니다.",
     "input": "1200",
     "output": "4",
+    "examples": [
+      {
+        "input": "0",
+        "output": "1",
+        "reason": "0도 한 자리로 계산합니다."
+      },
+      {
+        "input": "10",
+        "output": "2",
+        "reason": "10은 두 자리 정수입니다."
+      }
+    ],
     "boundary": "N=0,10,1000",
     "traceFocus": "n 임시 변수 /10"
   },
@@ -547,6 +645,18 @@ export const cBlueprint = [
     "statement": "정수 N(0 ≤ N ≤ 1,000,000)을 입력받아 십진수 각 자리의 순서를 뒤집은 정수를 출력하시오. 예: 120 → 21 (뒤집은 수 앞의 0은 출력하지 않음).",
     "input": "120",
     "output": "21",
+    "examples": [
+      {
+        "input": "0",
+        "output": "0",
+        "reason": "0을 뒤집어도 0입니다."
+      },
+      {
+        "input": "100",
+        "output": "1",
+        "reason": "뒤집었을 때 앞에 오는 0은 출력하지 않습니다."
+      }
+    ],
     "boundary": "0,10,100",
     "traceFocus": "digit,reverse 변화"
   },
@@ -569,6 +679,13 @@ export const cBlueprint = [
     "statement": "정수 N(2 ≤ N ≤ 100000)을 입력받아 소수이면 PRIME, 합성수이면 COMPOSITE를 출력하시오.",
     "input": "13",
     "output": "PRIME",
+    "examples": [
+      {
+        "input": "4",
+        "output": "COMPOSITE",
+        "reason": "4는 1과 자기 자신 외에도 2로 나누어떨어집니다."
+      }
+    ],
     "boundary": "2,4,9,99991",
     "traceFocus": "divisor 후보와 분기"
   },
@@ -610,7 +727,7 @@ export const cBlueprint = [
     "topic": "배열",
     "title": "배열 다섯 수 합계",
     "level": "기초 응용",
-    "statement": "정수 5개(-100~100)를 입력받아 합계 출력.",
+    "statement": "정수 5개(-100~100)를 입력받으시오. 다섯 정수의 합을 출력하시오.",
     "input": "1 2 3 4 5",
     "output": "15",
     "boundary": "모두 음수,모두 0",
@@ -632,7 +749,7 @@ export const cBlueprint = [
     "topic": "배열",
     "title": "배열 최댓값·최솟값",
     "level": "기초 응용",
-    "statement": "정수 5개를 입력받아 최대와 최소를 공백으로 출력.",
+    "statement": "정수 5개를 입력받으시오. 최댓값과 최솟값을 이 순서대로 공백으로 구분해 출력하시오.",
     "input": "5 -3 7 1 0",
     "output": "7 -3",
     "boundary": "전부 음수,중복",
@@ -654,7 +771,7 @@ export const cBlueprint = [
     "topic": "배열",
     "title": "배열 역순 출력",
     "level": "기초 응용",
-    "statement": "정수 5개를 받아 마지막부터 첫째까지 공백으로 출력.",
+    "statement": "정수 5개를 입력받으시오. 마지막 값부터 첫 번째 값까지 역순으로 공백으로 구분해 출력하시오.",
     "input": "1 2 3 4 5",
     "output": "5 4 3 2 1",
     "boundary": "동일값·음수",
@@ -668,6 +785,13 @@ export const cBlueprint = [
     "statement": "첫째 줄에 정수 5개를 공백으로 구분해, 둘째 줄에 찾을 정수 T를 입력받으시오. 배열에서 T가 처음 나오는 위치(0부터 시작하는 인덱스)를 출력하고, 없으면 -1을 출력하시오.",
     "input": "1 4 4 5 6\n4",
     "output": "1",
+    "examples": [
+      {
+        "input": "1 2 3 4 5\n9",
+        "output": "-1",
+        "reason": "찾을 값이 없으면 -1을 출력합니다."
+      }
+    ],
     "boundary": "첫째·마지막·없음",
     "traceFocus": "i,found"
   },
@@ -731,7 +855,7 @@ export const cBlueprint = [
     "topic": "문자·문자열 기초",
     "title": "소문자를 대문자로",
     "level": "기초 응용",
-    "statement": "소문자 ASCII 문자(a~z) 한 개를 입력받아 대문자로 바꾸어 한 줄에 출력하시오. toupper(ch)는 영문 소문자를 대응하는 대문자로 변환해 반환하는 함수입니다. 이 함수를 사용하거나 ASCII 코드 차이를 계산하여 구현할 수 있습니다.",
+    "statement": "영문 소문자(a~z) 하나를 입력받으시오. 대문자로 바꾸어 출력하시오. toupper(ch)를 사용하거나 ASCII 코드 차이를 계산할 수 있습니다.",
     "input": "b",
     "output": "B",
     "boundary": "a,z",
@@ -753,7 +877,7 @@ export const cBlueprint = [
     "topic": "문자·문자열 기초",
     "title": "영문 단어 그대로 출력",
     "level": "기초 응용",
-    "statement": "공백 없는 영문 단어(1글자 이상 20글자 이하)를 입력받아 그대로 출력하시오. 입력 버퍼 크기를 넘지 않도록 최대 20글자만 읽고, 문자열 종료 문자 '\\0'을 위한 공간도 확보하세요.",
+    "statement": "공백 없는 영문 단어(1~20글자)를 입력받아 그대로 출력하시오. 문자 배열은 최대 20글자와 문자열 종료 문자 '\\0'을 저장할 수 있도록 선언하시오.",
     "input": "abcdefghijklmnopqrst",
     "output": "abcdefghijklmnopqrst",
     "boundary": "20글자 버퍼·널 종료",
@@ -764,7 +888,7 @@ export const cBlueprint = [
     "topic": "문자·문자열 기초",
     "title": "문자열 길이 직접 세기",
     "level": "기초 응용",
-    "statement": "공백 없는 ASCII 영문 단어(1~20글자)를 입력받아 문자열의 글자 수를 출력하시오. 문자열 끝의 종료 문자 '\\0'은 글자 수에 포함하지 않습니다. strlen은 이 글자 수를 계산해 반환하는 표준 함수이지만, 이번 문제에서는 strlen을 사용하지 말고 반복문으로 직접 세세요.",
+    "statement": "공백 없는 영문 단어(1~20글자)를 입력받으시오. strlen()을 사용하지 말고 반복문으로 글자 수를 직접 세어 출력하시오. 종료 문자 '\\0'은 글자 수에 포함하지 않습니다.",
     "input": "hello",
     "output": "5",
     "boundary": "길이1,20",
@@ -775,7 +899,7 @@ export const cBlueprint = [
     "topic": "C 문자열 API",
     "title": "strlen으로 길이 계산",
     "level": "기초 응용",
-    "statement": "공백 없는 ASCII 단어(1~30글자)를 입력받으시오. strlen(word)은 문자열의 종료 문자 '\\0'을 제외한 실제 글자 수를 반환하는 표준 함수입니다. strlen으로 길이를 구하여 한 줄에 출력하시오.",
+    "statement": "공백 없는 단어(1~30글자)를 입력받으시오. 문자열의 글자 수를 반환하는 strlen() 함수를 사용하여 길이를 출력하시오. 종료 문자 '\\0'은 길이에 포함하지 않습니다.",
     "input": "abcde",
     "output": "5",
     "boundary": "길이1,30",
@@ -786,7 +910,7 @@ export const cBlueprint = [
     "topic": "C 문자열 API",
     "title": "모음 개수 세기",
     "level": "기초 응용",
-    "statement": "공백 없는 ASCII 영문 단어(1~30글자)를 입력받아 모음(a, e, i, o, u) 개수를 대소문자 구분 없이 출력하시오. tolower(ch)는 대문자 영문자를 소문자로 변환해 반환하고 소문자는 그대로 반환합니다. 각 문자를 소문자로 바꿔 검사하세요.",
+    "statement": "공백 없는 영문 단어(1~30글자)를 입력받으시오. 영문 대문자를 소문자로 바꿔주는 tolower() 함수를 사용하여 모음(a, e, i, o, u)의 개수를 대소문자 구분 없이 출력하시오.",
     "input": "Apple",
     "output": "2",
     "boundary": "모음 없음·대문자·모두 모음",
@@ -808,9 +932,16 @@ export const cBlueprint = [
     "topic": "C 문자열 API",
     "title": "strcmp 동등 비교",
     "level": "기초 응용",
-    "statement": "공백 없는 ASCII 단어 두 개(각각 1~20글자)를 공백으로 구분해 입력받으시오. strcmp(first, second)는 두 문자열을 대소문자까지 구분하여 비교하며, 같으면 0, 다르면 0이 아닌 값을 반환합니다. 반환값이 0이면 SAME, 그렇지 않으면 DIFF를 한 줄에 출력하시오.",
+    "statement": "공백 없는 단어 2개(각각 1~20글자)를 입력받으시오. strcmp()는 대소문자를 구분해 두 문자열을 비교하고 같으면 0을 반환합니다. 같으면 SAME, 다르면 DIFF를 출력하시오.",
     "input": "cat cat",
     "output": "SAME",
+    "examples": [
+      {
+        "input": "Cat cat",
+        "output": "DIFF",
+        "reason": "대소문자를 구분하므로 서로 다른 문자열입니다."
+      }
+    ],
     "boundary": "대소문자 구분,길이 다름",
     "traceFocus": "strcmp 결과"
   },
@@ -819,7 +950,7 @@ export const cBlueprint = [
     "topic": "C 문자열 API",
     "title": "문자열 사전순 비교",
     "level": "기초 응용",
-    "statement": "영어 소문자(a~z)로만 이루어진 단어 두 개(각각 1~20글자)를 공백으로 구분해 한 줄에 입력받으시오. 두 단어를 왼쪽 글자부터 사전순으로 비교합니다. 처음 서로 다른 글자가 나오면 알파벳 순서가 빠른 단어가 앞서고, 앞부분이 모두 같으면 더 짧은 단어가 앞섭니다. strcmp(first, second)는 첫 단어가 앞서면 음수, 뒤서면 양수, 완전히 같으면 0을 반환하는 문자열 비교 함수입니다. 첫 번째 단어가 앞서면 FIRST, 두 번째가 앞서면 SECOND, 같으면 EQUAL을 한 줄에 출력하시오.",
+    "statement": "영문 소문자 단어 2개(각각 1~20글자)를 입력받으시오. strcmp(first, second)는 첫 번째 단어가 사전순으로 앞서면 음수, 뒤서면 양수, 같으면 0을 반환합니다. 앞부분이 같다면 더 짧은 단어가 먼저입니다. 첫 번째가 앞서면 FIRST, 두 번째가 앞서면 SECOND, 같으면 EQUAL을 출력하시오.",
     "input": "apple banana",
     "output": "FIRST",
     "examples": [
@@ -852,9 +983,16 @@ export const cBlueprint = [
     "topic": "C 문자열 API",
     "title": "문자 strchr 찾기",
     "level": "기초 응용",
-    "statement": "공백 없는 ASCII 단어(1~30글자)와 검색 문자 1개를 공백으로 구분해 입력받으시오. strchr(word, target)는 문자열에서 target이 처음 나타나는 문자의 주소(포인터)를 반환하며, 없으면 NULL을 반환합니다. 찾은 주소에서 word의 시작 주소를 빼서 0부터 시작하는 위치를 계산해 출력하시오. 문자가 없으면 -1을 출력하시오.",
+    "statement": "공백 없는 단어(1~30글자)와 찾을 문자 하나를 입력받으시오. strchr(word, target)는 문자가 처음 등장한 위치의 주소를 반환하며, 없으면 NULL을 반환합니다. 처음 등장한 위치를 0부터 세어 출력하고, 없으면 -1을 출력하시오.",
     "input": "banana n",
     "output": "2",
+    "examples": [
+      {
+        "input": "banana z",
+        "output": "-1",
+        "reason": "찾는 문자가 없으면 -1을 출력합니다."
+      }
+    ],
     "boundary": "첫 글자·없음",
     "traceFocus": "ptr 기반 오프셋"
   },
@@ -863,7 +1001,7 @@ export const cBlueprint = [
     "topic": "C 문자열 API",
     "title": "공백 포함 줄 입력",
     "level": "기초 응용",
-    "statement": "공백이 포함될 수 있는 ASCII 한 줄(줄바꿈 제외 최대 60글자)을 입력받으시오. fgets(line, sizeof(line), stdin)은 공백도 포함해 한 줄을 배열에 읽어 저장하는 함수이며, 공간이 남으면 줄바꿈 문자도 함께 저장할 수 있습니다. 줄바꿈은 세지 말고 실제 공백 문자(' ')의 개수만 출력하시오. 빈 줄도 입력될 수 있습니다.",
+    "statement": "공백이 포함될 수 있는 한 줄(최대 60글자)을 입력받으시오. fgets()로 공백을 포함해 읽고, 일반 공백(' ')의 개수만 출력하시오. 빈 줄도 입력될 수 있습니다.",
     "input": "I love C",
     "output": "2",
     "boundary": "빈 줄,문장 끝 공백",
@@ -874,7 +1012,7 @@ export const cBlueprint = [
     "topic": "C 문자열 API",
     "title": "문자열 뒤집기",
     "level": "기초 응용",
-    "statement": "공백 없는 ASCII 단어(1~30글자)를 입력받아 마지막 문자부터 첫 문자까지 거꾸로 출력하시오. strlen(word)은 문자열 끝의 '\\0'을 제외한 글자 수를 반환합니다. 이 길이로 마지막 문자 위치를 계산해 역순으로 출력하시오.",
+    "statement": "공백 없는 단어(1~30글자)를 입력받으시오. strlen()으로 글자 수를 구한 다음, 마지막 문자부터 첫 문자까지 역순으로 출력하시오.",
     "input": "abcd",
     "output": "dcba",
     "boundary": "길이1,짝·홀수",
@@ -885,9 +1023,16 @@ export const cBlueprint = [
     "topic": "C 문자열 API",
     "title": "회문 검사",
     "level": "기초 응용",
-    "statement": "공백 없는 ASCII 소문자 단어(1~30글자)를 입력받으시오. strlen(word)은 종료 문자 '\\0'을 제외한 글자 수를 반환합니다. 이 길이를 이용해 앞쪽 문자와 뒤쪽 문자를 하나씩 비교하여, 순서를 뒤집어도 같은 회문이면 YES, 아니면 NO를 출력하시오.",
+    "statement": "영문 소문자 단어(1~30글자)를 입력받으시오. strlen()으로 길이를 구하고 양쪽 끝의 문자부터 차례대로 비교하시오. 회문이면 YES, 아니면 NO를 출력하시오.",
     "input": "level",
     "output": "YES",
+    "examples": [
+      {
+        "input": "apple",
+        "output": "NO",
+        "reason": "앞뒤를 뒤집으면 다른 단어입니다."
+      }
+    ],
     "boundary": "길이1,짝·홀수",
     "traceFocus": "left,right 이동"
   },
@@ -896,7 +1041,7 @@ export const cBlueprint = [
     "topic": "C 문자열 API",
     "title": "두 단어 안전하게 합치기",
     "level": "기초 응용",
-    "statement": "공백 없는 ASCII 영문 단어 두 개(각각 1~20글자)를 공백으로 구분해 입력받으시오. 두 단어를 붙여 한 줄에 출력하시오. snprintf(dest, sizeof(dest), ...)는 만들어진 문자열을 화면이 아닌 dest 문자 배열에 저장하면서 배열 크기를 초과하지 않도록 쓰는 길이를 제한합니다. dest는 64바이트 이상 확보하고, 저장한 문자열을 printf로 화면에 출력하시오.",
+    "statement": "공백 없는 영문 단어 2개(각각 1~20글자)를 입력받으시오. snprintf()로 두 단어를 붙인 문자열을 배열 dest에 저장하시오. 배열은 64바이트 이상 확보하고 크기를 초과하지 않도록 제한하시오. 저장한 문자열을 printf()로 출력하시오.",
     "input": "data base",
     "output": "database",
     "boundary": "총길이40,빈 값 미허용",
@@ -932,6 +1077,13 @@ export const cBlueprint = [
     "statement": "정수 n 하나를 입력받아 int isEven(int n) 함수를 호출하시오. 함수는 짝수이면 1, 홀수이면 0을 반환하며, 반환값을 한 줄에 출력하시오.",
     "input": "8",
     "output": "1",
+    "examples": [
+      {
+        "input": "7",
+        "output": "0",
+        "reason": "홀수이면 isEven이 0을 반환합니다."
+      }
+    ],
     "boundary": "0,음수",
     "traceFocus": "나머지·반환값"
   },
@@ -1009,6 +1161,18 @@ export const cBlueprint = [
     "statement": "정수 A, B와 연산 번호(1~3)를 공백으로 구분해 순서대로 입력받으시오.\n다음 세 개의 int 반환 함수를 직접 정의하시오.\n- add(int a, int b): 두 정수의 합(a+b)을 반환하는 덧셈 함수\n- sub(int a, int b): 첫 번째 정수에서 두 번째 정수를 뺀 차(a-b)를 반환하는 뺄셈 함수\n- mul(int a, int b): 두 정수의 곱(a*b)을 반환하는 곱셈 함수\n연산 번호가 1이면 add(A, B), 2이면 sub(A, B), 3이면 mul(A, B)를 호출하고, 해당 함수의 반환값을 한 줄에 출력하시오.",
     "input": "4 2 3",
     "output": "8",
+    "examples": [
+      {
+        "input": "4 2 1",
+        "output": "6",
+        "reason": "1번은 덧셈 함수 add를 호출합니다."
+      },
+      {
+        "input": "4 2 2",
+        "output": "2",
+        "reason": "2번은 뺄셈 함수 sub를 호출합니다."
+      }
+    ],
     "boundary": "음수·0",
     "traceFocus": "호출 함수의 인수·반환값"
   },
@@ -1061,7 +1225,7 @@ export const cBlueprint = [
     "topic": "포인터·구조체",
     "title": "포인터로 문자열 길이",
     "level": "종합 활용",
-    "statement": "공백 없는 ASCII 단어(1글자 이상 20글자 이하)를 입력받아 char *p 포인터를 문자열 끝의 널 문자까지 이동시키며 길이를 계산한 뒤 출력하시오.",
+    "statement": "공백 없는 단어(1~20글자)를 입력받으시오. char *p 포인터를 문자열 끝의 널 문자('\\0')까지 이동시키면서 글자 수를 세어 출력하시오.",
     "input": "abc",
     "output": "3",
     "boundary": "길이1·20",
