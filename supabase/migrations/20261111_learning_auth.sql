@@ -239,7 +239,7 @@ create policy user_preferences_self_update on public.user_preferences for update
 using (user_id=(select auth.uid()) and (select private.portal_write_allowed()))
 with check(user_id=(select auth.uid()) and (select private.portal_write_allowed()));
 
-revoke all on all tables in schema public from anon;
+revoke all on all tables in schema public from anon, authenticated;
 grant select on public.profiles,public.account_roles,public.learning_attempts,
  public.learning_progress,public.learning_drafts,public.learning_preferences,
  public.user_preferences to authenticated;
