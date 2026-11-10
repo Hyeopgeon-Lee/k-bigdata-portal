@@ -64,6 +64,11 @@ let tested=0;
 for(const spec of smoke){
  const p=dataByID["LINUX-"+String(spec.n).padStart(3,"0")];
  if(!p){errors.push("missing smoke task "+spec.n);continue;}
+ // Vim tasks need interactive keystrokes, so validate their command without non-TTY execution.
+ if([11,47,48].includes(spec.n)){
+  if(!p.code.startsWith("vim "))errors.push(p.id+" missing Vim command");
+  continue;
+ }
  const dir=mkdtempSync(join(tmpdir(),"ubuntu-qa-"));
  try {
  const result=spawnSync("bash",["-euo","pipefail","-c",[spec.setup,p.code,spec.check].filter(Boolean).join("\n")],{cwd:dir,encoding:"utf8",timeout:7000});
