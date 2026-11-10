@@ -26,6 +26,7 @@ let inspectedLines = 0;
 for (const entry of problems) {
   const code = sourceWithoutLearningComments(entry.code);
   assert.doesNotMatch(code, /\b(?:puts|putchar)\s*\(/, entry.id + " must teach printf output");
+  assert.doesNotMatch(code, /\bif\s*\(\s*scanf\s*\(/, entry.id + " must not test scanf return status");
   assert.match(code, /#include <stdio\.h>/, entry.id + " C include");
   assert.ok(entry.output && entry.statement, entry.id + " retains the question and expected output");
 
@@ -58,6 +59,9 @@ for (const [id, guide] of cGuidance) {
 assert.match(q("C-002").code, /printf\("Hello World\\n"\)/);
 assert.match(q("C-003").code, /printf\("C Language\\n"\)/);
 assert.match(q("C-021").code, /printf\("POSITIVE\\n"\)/);
+assert.match(q("C-013").code, /scanf\("%d %d",\s*&a,\s*&b\);/);
+assert.match(q("C-013").code, /if \(b == 0\)/);
+assert.match(q("C-094").code, /if \(b == 0\)/);
 assert.match(q("C-047").code, /\n            printf\("\*"\)/);
 assert.match(q("C-052").code, /\n        if \(n%d==0\) \{/);
 assert.match(q("C-064").code, /\n            if \(a\[j\]>a\[j\+1\]\) \{/);
