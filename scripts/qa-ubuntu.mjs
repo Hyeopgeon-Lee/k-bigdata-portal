@@ -27,6 +27,12 @@ for(let n=1;n<=50;n++){
   assert(typeof p[k]==="string"&&p[k].trim().length>0,id+" empty "+k);
  }
  assert(Array.isArray(p.commandParts)&&p.commandParts.length>0,id+" missing command explanation");
+ assert(p.input.startsWith("student@ubuntu:"),id+" initial environment must be Ubuntu terminal");
+ assert(p.output.startsWith("student@ubuntu:"),id+" expected result must be Ubuntu terminal");
+ assert(p.input===p.initialState&&p.output===p.afterState,id+" duplicated state differs");
+ assert(p.statement.split(/\.\s+/).every(sentence=>/하시오\.?$/.test(sentence)),id+" use imperative question sentences");
+ assert(typeof p.outputNote==="string",id+" missing output note data");
+
  assert(/^(\d+장|.*\d+장)/.test(p.pptSource),id+" missing cited chapter");
  assert(!/개인 실습 디렉터리|실습 안전 안내|touch로\s*편집|nano\s|gedit\s/.test([p.statement,p.input,p.output,p.code,p.explanation].join("\n")),id+" contains disallowed directions/editor");
  assert(!/(?:^|\n)\s*(?:rm\s+-rf|mkfs|dd\s+if=|sudo\s+shutdown)/.test(p.code),id+" risky code");
@@ -47,8 +53,9 @@ const html=readFileSync(join(root,"coding.html"),"utf8");
 const client=readFileSync(join(root,"js","coding.js"),"utf8");
 assert(client.includes("ubuntuPptProblems")&&!client.includes("ubuntuLegacyGuides"),"client is not using PPT data exclusively");
 assert(client.includes('sampleProblems.filter(p=>p.language!=="linux")'),"legacy first two problems not filtered");
-assert(html.includes("js/coding.js?v=20261111-linux003-ui-mask-2"),"HTML module cache not refreshed");
-for(const el of ["coding-ubuntu-guide","coding-ubuntu-parts","coding-ubuntu-before","coding-ubuntu-after","coding-ubuntu-verify","coding-ubuntu-mistake"]){
+assert(client.includes('coding-ubuntu-output-note')&&client.includes('coding-ubuntu-terminal-demo\",isUbuntu'),"Ubuntu output note/terminal toggle missing");
+assert(html.includes("js/coding.js?v=20261111-ubuntu-console-50-v2"),"HTML module cache not refreshed");
+for(const el of ["coding-ubuntu-guide","coding-ubuntu-parts","coding-ubuntu-output-note","coding-ubuntu-verify","coding-ubuntu-mistake"]){
  assert(html.includes('id="'+el+'"'),"missing guide element: "+el);
 }
 // Each smoke fixture uses a disposable workspace and is safe to run locally.
