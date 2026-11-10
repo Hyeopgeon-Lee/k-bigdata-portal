@@ -47,7 +47,7 @@ const html=readFileSync(join(root,"coding.html"),"utf8");
 const client=readFileSync(join(root,"js","coding.js"),"utf8");
 assert(client.includes("ubuntuPptProblems")&&!client.includes("ubuntuLegacyGuides"),"client is not using PPT data exclusively");
 assert(client.includes('sampleProblems.filter(p=>p.language!=="linux")'),"legacy first two problems not filtered");
-assert(html.includes("js/coding.js?v=20261111-linux003-no-answer-1"),"HTML module cache not refreshed");
+assert(html.includes("js/coding.js?v=20261111-linux003-ui-mask-2"),"HTML module cache not refreshed");
 for(const el of ["coding-ubuntu-guide","coding-ubuntu-parts","coding-ubuntu-before","coding-ubuntu-after","coding-ubuntu-verify","coding-ubuntu-mistake"]){
  assert(html.includes('id="'+el+'"'),"missing guide element: "+el);
 }
