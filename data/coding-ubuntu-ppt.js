@@ -654,15 +654,15 @@ export const ubuntuPptProblems = [
     "language": "linux",
     "level": "기초 응용",
     "topic": "파일 링크",
-    "title": "심벌릭 링크 만들고 종류 확인하기",
-    "statement": "data.txt 파일을 가리키는 data-link 심벌릭 링크를 생성하시오. 링크가 가리키는 파일 이름을 확인하시오.",
-    "input": "student@ubuntu:~/lab$ ls\ndata.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
-    "output": "student@ubuntu:~/lab$ [명령어 입력]\nlrwxrwxrwx 1 student student 8 Nov 11 09:00 data-link -> data.txt",
-    "code": "ln -s data.txt data-link\nls -l data-link",
-    "hint": "하드 링크와 심벌릭 링크의 차이를 생각해 보세요.",
-    "explanation": "ln -s로 심벌릭 링크를 생성한다. ls -l은 원본 경로와 링크 기호 l을 표시한다.",
-    "initialState": "student@ubuntu:~/lab$ ls\ndata.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
-    "afterState": "student@ubuntu:~/lab$ [명령어 입력]\nlrwxrwxrwx 1 student student 8 Nov 11 09:00 data-link -> data.txt",
+    "title": "심볼릭 링크 만들고 inode 확인하기",
+    "statement": "data.txt를 가리키는 data-link 심볼릭 링크를 생성하시오. 원본과 심볼릭 링크의 inode 번호 및 파일 종류 표시를 확인하시오.",
+    "input": "student@ubuntu:~/lab$ ls -li data.txt\n123456 -rw-r--r-- 1 student student 12 Nov 11 09:00 data.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
+    "output": "student@ubuntu:~/lab$ [명령어 입력]\nstudent@ubuntu:~/lab$ [명령어 입력]\n234567 lrwxrwxrwx 1 student student  8 Nov 11 09:00 data-link -> data.txt\n123456 -rw-r--r-- 1 student student 12 Nov 11 09:00 data.txt",
+    "code": "ln -s data.txt data-link\nls -li data.txt data-link",
+    "hint": "심볼릭 링크는 원본 파일의 경로를 가리킵니다. 파일 종류 기호와 -> 표시를 확인해 보세요.",
+    "explanation": "ln -s는 원본의 경로를 가리키는 심볼릭 링크를 만든다. ls -li는 inode 번호, 파일 종류, 링크 개수를 표시한다. 심볼릭 링크는 원본과 다른 inode 번호를 갖고 첫 글자가 l이며 -> 뒤에 원본 경로가 나타난다. 원본의 하드 링크 개수는 증가하지 않는다.",
+    "initialState": "student@ubuntu:~/lab$ ls -li data.txt\n123456 -rw-r--r-- 1 student student 12 Nov 11 09:00 data.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
+    "afterState": "student@ubuntu:~/lab$ [명령어 입력]\nstudent@ubuntu:~/lab$ [명령어 입력]\n234567 lrwxrwxrwx 1 student student  8 Nov 11 09:00 data-link -> data.txt\n123456 -rw-r--r-- 1 student student 12 Nov 11 09:00 data.txt",
     "commandParts": [
       {
         "token": "ln",
@@ -670,54 +670,74 @@ export const ubuntuPptProblems = [
       },
       {
         "token": "-s",
-        "meaning": "심벌릭 링크 생성"
+        "meaning": "심볼릭 링크 생성"
       },
       {
         "token": "ls -l",
-        "meaning": "링크의 상세 정보 확인"
+        "meaning": "종류·링크 수·대상 경로 표시"
+      },
+      {
+        "token": "ls -i",
+        "meaning": "inode 번호 확인"
+      },
+      {
+        "token": "-li",
+        "meaning": "-l과 -i를 함께 적용"
       }
     ],
-    "verification": "ls -l data-link",
-    "verificationDetail": "ln -s로 심벌릭 링크를 생성한다. ls -l은 원본 경로와 링크 기호 l을 표시한다.",
-    "commonMistake": "원본 파일이 사라지면 심벌릭 링크가 가리키는 내용에 접근하지 못할 수 있다.",
+    "verification": "ls -li data.txt data-link",
+    "verificationDetail": "data.txt와 data-link의 inode가 다르고, data-link의 종류가 l, 대상이 -> data.txt이며 원본의 링크 개수는 1인지 확인한다.",
+    "commonMistake": "심볼릭 링크의 inode가 원본과 같다고 혼동하지 마시오. 대상 경로가 사라지면 링크는 끊어질 수 있다.",
     "trace": [],
     "pptSource": "2장 49~50쪽",
-    "outputNote": "파일의 수정 시각·소유자 등은 달라질 수 있습니다."
+    "outputNote": "inode 번호·소유자·날짜는 환경에 따라 달라집니다. 서로 다른 inode, l, -> data.txt 표시를 확인하시오."
   },
   {
     "id": "LINUX-022",
     "language": "linux",
     "level": "기초 응용",
     "topic": "파일 링크",
-    "title": "하드 링크의 inode 비교",
-    "statement": "data.txt 파일의 하드 링크를 data-hard라는 이름으로 생성하시오. 두 파일의 inode 번호가 같은지 확인하시오.",
-    "input": "student@ubuntu:~/lab$ ls\ndata.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
-    "output": "student@ubuntu:~/lab$ [명령어 입력]\n123456 data.txt\n123456 data-hard",
-    "code": "ln data.txt data-hard\nls -i data.txt data-hard",
-    "hint": "파일 이름이 다르더라도 같은 inode를 공유할 수 있는지 생각해 보세요.",
-    "explanation": "ln은 기존 파일에 다른 이름을 추가한 하드 링크를 만든다. ls -i로 inode 번호를 본다.",
-    "initialState": "student@ubuntu:~/lab$ ls\ndata.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
-    "afterState": "student@ubuntu:~/lab$ [명령어 입력]\n123456 data.txt\n123456 data-hard",
+    "title": "하드 링크와 심볼릭 링크 비교하기",
+    "statement": "data.txt의 하드 링크 data-hard와 심볼릭 링크 data-link를 각각 생성하시오. 세 파일의 inode 번호, 파일 종류 기호, 링크 개수를 비교하시오.",
+    "input": "student@ubuntu:~/lab$ ls -li data.txt\n123456 -rw-r--r-- 1 student student 12 Nov 11 09:00 data.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
+    "output": "student@ubuntu:~/lab$ [명령어 입력]\nstudent@ubuntu:~/lab$ [명령어 입력]\nstudent@ubuntu:~/lab$ [명령어 입력]\n123456 -rw-r--r-- 2 student student 12 Nov 11 09:00 data-hard\n234567 lrwxrwxrwx 1 student student  8 Nov 11 09:00 data-link -> data.txt\n123456 -rw-r--r-- 2 student student 12 Nov 11 09:00 data.txt",
+    "code": "ln data.txt data-hard\nln -s data.txt data-link\nls -li data.txt data-hard data-link",
+    "hint": "하드 링크는 inode를 공유하고 심볼릭 링크는 원본 경로를 가리킵니다. inode, 파일 종류, 링크 개수를 함께 비교해 보세요.",
+    "explanation": "ln data.txt data-hard는 원본과 동일한 inode를 공유하는 하드 링크를 만든다. data.txt와 data-hard는 inode 번호가 같고 파일 종류 기호가 -이며 하드 링크 개수는 2가 된다. ln -s data.txt data-link는 원본 경로를 가리키는 심볼릭 링크를 만든다. data-link는 별도의 inode를 갖고 종류 기호가 l이며 -> data.txt가 표시된다. 심볼릭 링크 생성은 원본의 하드 링크 개수를 늘리지 않는다. 원본 이름이 삭제되어도 하드 링크가 남아 있으면 데이터에 접근할 수 있지만, 대상 경로가 사라지면 심볼릭 링크는 끊어질 수 있다.",
+    "initialState": "student@ubuntu:~/lab$ ls -li data.txt\n123456 -rw-r--r-- 1 student student 12 Nov 11 09:00 data.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
+    "afterState": "student@ubuntu:~/lab$ [명령어 입력]\nstudent@ubuntu:~/lab$ [명령어 입력]\nstudent@ubuntu:~/lab$ [명령어 입력]\n123456 -rw-r--r-- 2 student student 12 Nov 11 09:00 data-hard\n234567 lrwxrwxrwx 1 student student  8 Nov 11 09:00 data-link -> data.txt\n123456 -rw-r--r-- 2 student student 12 Nov 11 09:00 data.txt",
     "commandParts": [
       {
         "token": "ln",
-        "meaning": "하드 링크 생성"
+        "meaning": "옵션 없이 하드 링크 생성"
+      },
+      {
+        "token": "-s",
+        "meaning": "심볼릭 링크 생성"
       },
       {
         "token": "ls",
-        "meaning": "파일 목록 확인"
+        "meaning": "파일 목록 출력"
       },
       {
         "token": "-i",
         "meaning": "inode 번호 출력"
+      },
+      {
+        "token": "-l",
+        "meaning": "종류·링크 수·연결 대상 표시"
+      },
+      {
+        "token": "-li",
+        "meaning": "-l과 -i를 함께 적용"
       }
     ],
-    "verification": "ls -i data.txt data-hard",
-    "verificationDetail": "ln은 기존 파일에 다른 이름을 추가한 하드 링크를 만든다. ls -i로 inode 번호를 본다.",
-    "commonMistake": "심벌릭 링크는 하드 링크와 달리 별도의 inode를 갖는다.",
+    "verification": "ls -li data.txt data-hard data-link",
+    "verificationDetail": "data.txt와 data-hard의 inode 번호가 같고 링크 수는 2여야 한다. data-link는 inode 번호가 다르고 l과 -> data.txt가 표시되는지 확인한다.",
+    "commonMistake": "심볼릭 링크도 원본과 같은 inode를 쓰거나 원본의 하드 링크 개수를 늘린다고 혼동하지 마시오.",
     "trace": [],
     "pptSource": "2장 44~46쪽",
-    "outputNote": "inode 번호는 예시이며, 두 파일에서 같은 번호인지 확인하십시오."
+    "outputNote": "inode 번호는 예시입니다. 실제 번호·소유자·날짜는 달라도 하드 링크는 동일 inode 및 링크 수 2, 심볼릭 링크는 다른 inode 및 l과 -> 표시로 구분됩니다."
   },
   {
     "id": "LINUX-023",
