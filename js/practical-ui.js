@@ -1,6 +1,8 @@
+import {getAccount} from "./learning-auth.js";
+import {getCloudRecords} from "./learning-sync.js";
 import {loadPracticalBank} from "./practical-data.js?v=20261006-audit-2";
 import {HINT_SECONDS,ANSWER_SECONDS,examLabels,typeLabels,languages,escapeHTML as esc,remainingSeconds,remainingAnswerSeconds,hintAvailable,answerDeadlineReached,canSubmit,canReveal,gradeAnswer,questionText,shuffle,recommendFive,matchesExam,localDay,summarizeAttempts,highlightCode,formatCodeForDisplay} from "./practical-core.js?v=20261016-timing-1";
-import {getAttempts,saveAttempt,getSession,saveSession,clearLocalLearning,storageAvailable,getPreferences,savePreferences,exportLearning,importLearning} from "./practical-store.js";
+import {getAttempts,saveAttempt,getSession,saveSession,clearLocalLearning,storageAvailable,getPreferences,savePreferences,exportLearning,importLearning,setLearningOwner} from "./practical-store.js";
 import {matches} from "./search-core.js?v=20261005-perf-1";
 import {beginnerExplanation,examMemory,solutionTrace} from "./practical-explanation.js?v=20261006-audit-2";
 import {learningReportUrl} from "./learning-report.js?v=20261009-1";
@@ -386,7 +388,7 @@ root.addEventListener("click",event=>{
  if(action==="retry")openQuestion(current.id,true);
  if(action==="similar"){queue=[];openQuestion(b.dataset.id,true);}
  if((action==="self-correct"||action==="self-wrong")&&current?.grading==="self"&&!attempt.autoRevealed&&canReveal(attempt)){
-   attempt.correct=action==="self-correct";saveSession(current.id,attempt);saveAttempt(attempt);revealAnswer();
+   attempt.correct=action==="self-correct";attempt.grading="self";saveSession(current.id,attempt);saveAttempt(attempt);revealAnswer();
  }
  if(action==="next"&&canReveal(attempt)){
    if(current.grading==="self"&&attempt.correct===null&&!attempt.autoRevealed){$("#gate-status").textContent="SQL 예시와 비교해 정답/오답을 먼저 기록하세요.";return;}
@@ -418,7 +420,21 @@ document.querySelectorAll("[data-filter]").forEach(b=>b.addEventListener("click"
 let bankSearchTimer=0;$("#bank-query").addEventListener("input",event=>{const value=event.target.value;clearTimeout(bankSearchTimer);bankSearchTimer=window.setTimeout(()=>{filters.query=value;pageLimit=24;render();},80);});
 function resetFilters(){Object.assign(filters,{exam:"all",language:"all",source:"reconstructed",difficulty:"all",type:"all",sort:"latest",query:"",completion:"unseen",year:"all",round:"all"});for(const key of ["exam","language","source","difficulty","type","sort","completion","year","round"])$("#"+key+"-filter").value=filters[key];$("#bank-query").value="";const url=new URL(location.href);url.searchParams.delete("exam");history.replaceState(null,"",url);selectView("bank");}
 $("#bank-reset").addEventListener("click",resetFilters);
-loadPracticalBank().then(result=>{
+loadPracticalBank().then(async result=>{
+  const account=await getAccount().catch(()=>null);
+  if(account?.active||account?.readOnly){
+   setLearningOwner(account.user.id);
+   const rows=await getCloudRecords("practical");
+   if(rows.length){
+    const imported=rows.map(row=>({
+     id:row.client_attempt_id,questionId:row.question_id,
+     submittedAt:Date.parse(row.submitted_at),elapsedSeconds:row.elapsed_seconds??0,
+     answer:row.answer_text||"",correct:row.result==="correct"?true:row.result==="incorrect"?false:null,
+     viewedExplanation:true,autoRevealed:row.result==="timeout",usedHint:row.used_hint
+    })).filter(x=>Number.isFinite(x.submittedAt)&&typeof x.id==="string");
+    try{importLearning({format:"kbigdata-practical",version:1,attempts:imported});}catch(err){console.warn("기존 정보처리 학습기록 가져오기 실패",err);}
+   }
+  }
  bank=result.bank;aliases=result.aliases||{};
  $("#year-filter").insertAdjacentHTML("beforeend",[...new Set(bank.flatMap(q=>q.history.map(h=>h.year)))].sort((a,b)=>b-a).map(year=>'<option value="'+year+'">'+year+'년</option>').join(""));
  const saved=getPreferences().filters;
