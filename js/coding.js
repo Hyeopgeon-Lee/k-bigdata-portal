@@ -1,4 +1,4 @@
-import {recordCloudAttempt,saveCloudDraft,getCloudProgress} from "./learning-sync.js";
+import {recordCloudAttempt,saveCloudDraft,getCloudProgress,getCloudDraft} from "./learning-sync.js";
 import {getAccount} from "./learning-auth.js";
 import {codingProblems as sampleProblems} from "../data/coding-samples.js?v=20261111-ubuntu-vim-only-2";
 import {javaProblems} from "../data/coding-java-98.js?v=20261111-java016-korean-units-1";
@@ -105,14 +105,16 @@ const vimReferenceRows = [
 const $ = selector => document.querySelector(selector);
 const labels = {java:"Java", c:"C언어", python:"Python", linux:"Ubuntu"};
 const targets = {java:100, c:100, python:100, linux:50};
+let cloudOwner="";
+const scopedKey=key=>cloudOwner?key+":"+cloudOwner:localStorage.getItem("kbigdata-learning-auth")?"kbigdata:pending-auth:"+key:key;
 const DONE_KEY = "kbigdata:coding:done:v1";
 const DRAFT_PREFIX = "kbigdata:coding:draft:v1:";
 const AUTOCOMPLETE_KEY = "kbigdata:coding:autocomplete:v1";
 const getSafe = (key, fallback = "") => {
-  try { return localStorage.getItem(key) ?? fallback; } catch { return fallback; }
+  try { return localStorage.getItem(scopedKey(key)) ?? fallback; } catch { return fallback; }
 };
 const setSafe = (key, value) => {
-  try { localStorage.setItem(key, value); } catch { /* Private browsing or storage full */ }
+  try { localStorage.setItem(scopedKey(key), value); } catch { /* Private browsing or storage full */ }
 };
 const knownIds = new Set(codingProblems.map(p => p.id));
 let doneIds = new Set();
@@ -440,6 +442,11 @@ function showQuestion(q) {
   ubuntuOutputNote.hidden = !ubuntuOutputNote.textContent;
   renderExtraExamples(q);
   $("#coding-editor").value = getSafe(DRAFT_PREFIX + q.id);
+  if(cloudOwner)void getCloudDraft("coding",q.id).then(remote=>{
+   if(current?.id===q.id&&remote!==null&&!$("#coding-editor").value){
+    $("#coding-editor").value=remote;codeEditor?.setContent(remote,q.language,$("#coding-editor").placeholder);
+   }
+  }).catch(()=>{});
   $("#coding-hint-text").textContent = q.hint;
   $("#coding-code").textContent = q.code;
   const vimSteps = q.language === "linux" && Array.isArray(q.vimSteps) ? q.vimSteps : [];
@@ -588,12 +595,13 @@ for(const [buttonId,result] of [["#coding-correct-button","correct"],["#coding-w
 }
 void getAccount().then(async account=>{
  if(!account.active&&!account.readOnly)return;
+ cloudOwner=account.user.id;
  const rows=await getCloudProgress("coding");
  // Never merge another user's legacy local completion flags automatically.
  doneIds=new Set(rows.filter(x=>["correct","completed"].includes(x.last_result)).map(x=>x.question_id));
  setSafe(DONE_KEY,JSON.stringify([...doneIds]));
  updateSummary();listQuestions(true);
- if(current){$("#coding-done-button").setAttribute("aria-pressed",String(doneIds.has(current.id)));}
+ if(current)showQuestion(current);
 }).catch(()=>{});
 
 $("#coding-next-button").addEventListener("click", () => {
