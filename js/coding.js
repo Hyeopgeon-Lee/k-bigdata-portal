@@ -146,7 +146,7 @@ function updateUbuntuGuide(q) {
   $("#coding-output-label").textContent = isUbuntu ? "예상 실행 결과" : "출력 예제";
   $("#coding-answer-button").textContent = isUbuntu ? "정답 명령어 및 해설" : "정답과 줄별 주석";
   $("#coding-answer-heading").textContent = isUbuntu ? "정답 명령어" : "정답 코드와 한 줄 주석";
-  $("#coding-overall-explanation h3").textContent = isUbuntu ? "학습 개념과 풀이" : "전체 해설";
+  $("#coding-overall-explanation h3").textContent = isUbuntu && Array.isArray(q.vimSteps) ? "Vim 조작 방법" : isUbuntu ? "학습 개념과 풀이" : "전체 해설";
   $("#coding-copy").textContent = isUbuntu ? "명령어 복사" : "주석 없는 코드 복사";
   $("#coding-copy-tip").textContent = ({
     c:"복사한 C 코드를 vim에 붙여 넣어 직접 주석을 작성하고, 터미널에서 gcc 또는 make로 컴파일해 확인하세요.",
@@ -267,8 +267,18 @@ function showQuestion(q) {
   $("#coding-editor").value = getSafe(DRAFT_PREFIX + q.id);
   $("#coding-hint-text").textContent = q.hint;
   $("#coding-code").textContent = q.code;
-  $("#coding-explanation").textContent = q.explanation;
-  $("#coding-explanation").style.whiteSpace = isUbuntu ? "pre-line" : "";
+  const vimSteps = q.language === "linux" && Array.isArray(q.vimSteps) ? q.vimSteps : [];
+  const vimList = $("#coding-vim-explanation-list");
+  vimList.replaceChildren();
+  for(const step of vimSteps){
+    const item = document.createElement("li");
+    item.textContent = step;
+    vimList.append(item);
+  }
+  vimList.hidden = vimSteps.length === 0;
+  $("#coding-explanation").textContent = q.explanation || "";
+  $("#coding-explanation").hidden = vimSteps.length > 0;
+  $("#coding-explanation").style.whiteSpace = q.language === "linux" ? "pre-line" : "";
   updateUbuntuGuide(q);
   codeEditor?.setContent($("#coding-editor").value, q.language, $("#coding-editor").placeholder);
   const tbody = $("#coding-trace-rows");
