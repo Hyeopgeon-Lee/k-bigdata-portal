@@ -11,7 +11,7 @@ for(const id of editing){
  assert.ok(q,id+" exists");
  assert.match(q.code,/(?:^|\n)vim\s+[^\n]+/,id+" edits with Vim");
  assert.match(q.statement,/Vim/i,id+" explains Vim in question");
- assert.match(q.explanation,/:wq/,id+" explains saving before exit");
+ assert.match([q.explanation,...(q.vimSteps||[])].join(" "),/:wq/,id+" explains saving before exit without duplicating Vim steps");
  assert.ok(Array.isArray(q.vimSteps)&&q.vimSteps.length>=3,id+" supplies explicit Vim keystrokes");
  assert.match(q.vimSteps.join(" "),/:wq/,id+" explains Vim save/exit keystrokes");
  assert.match(q.vimSteps.join(" "),/Enter(?: 키)?(?:를|로| )/,id+" explains how to execute Vim commands");
