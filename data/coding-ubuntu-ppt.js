@@ -6,14 +6,14 @@ export const ubuntuPptProblems = [
     "level": "입문",
     "topic": "파일·디렉터리",
     "title": "프로젝트 폴더와 빈 파일 만들기",
-    "statement": "현재 디렉터리에 project/src를 생성하고 Vim으로 빈 main.py 파일을 저장한 뒤 하위 디렉터리 목록을 확인한다.",
-    "input": "project 디렉터리가 없는 상태",
-    "output": "project 아래에 src, 그 안에 main.py가 존재함",
+    "statement": "현재 디렉터리에 project 폴더를 만들고 그 안에 src 폴더를 생성하시오. Vim으로 src 폴더에 빈 main.py 파일을 저장하시오. 마지막으로 생성한 폴더와 파일을 확인하시오.",
+    "input": "student@ubuntu:~/lab$ ls",
+    "output": "student@ubuntu:~/lab$ ls -R project\nproject:\nsrc\n\nproject/src:\nmain.py",
     "code": "mkdir -p project/src\nvim project/src/main.py\nls -R project",
     "hint": "중간 경로 생성, 편집기 저장, 하위 목록 확인을 순서대로 생각한다.",
     "explanation": "mkdir -p로 중간 디렉터리를 만들고 Vim에서 :wq와 Enter로 저장·종료한다. ls -R은 하위 내용도 표시한다.",
-    "initialState": "project 디렉터리가 없는 상태",
-    "afterState": "project 아래에 src, 그 안에 main.py가 존재함",
+    "initialState": "student@ubuntu:~/lab$ ls",
+    "afterState": "student@ubuntu:~/lab$ ls -R project\nproject:\nsrc\n\nproject/src:\nmain.py",
     "commandParts": [
       {
         "token": "mkdir",
@@ -44,7 +44,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "mkdir -p로 중간 디렉터리를 만들고 Vim에서 :wq와 Enter로 저장·종료한다. ls -R은 하위 내용도 표시한다.",
     "commonMistake": "Vim을 열기만 하고 :wq로 저장하지 않으면 파일이 생성되지 않을 수 있다.",
     "trace": [],
-    "pptSource": "2장 22쪽, 3장 4~5쪽"
+    "pptSource": "2장 22쪽, 3장 4~5쪽",
+    "outputNote": ""
   },
   {
     "id": "LINUX-002",
@@ -52,14 +53,14 @@ export const ubuntuPptProblems = [
     "level": "입문",
     "topic": "파일 권한",
     "title": "파일을 만들고 접근 권한 설정하기",
-    "statement": "Vim으로 report.txt를 생성한 뒤 소유자는 읽기·쓰기, 그룹은 읽기, 기타 사용자는 권한이 없도록 설정하고 확인한다.",
-    "input": "report.txt가 없는 상태",
-    "output": "ls -l 출력의 권한 부분: -rw-r-----",
+    "statement": "Vim으로 빈 report.txt 파일을 저장하시오. 파일 소유자에게 읽기·쓰기, 그룹에게 읽기 권한을 주고 기타 사용자의 권한은 모두 제거하시오. 변경된 권한을 확인하시오.",
+    "input": "student@ubuntu:~/lab$ ls",
+    "output": "student@ubuntu:~/lab$ ls -l report.txt\n-rw-r----- 1 student student 0 Nov 11 10:00 report.txt",
     "code": "vim report.txt\nchmod 640 report.txt\nls -l report.txt",
     "hint": "권한 세 범주를 소유자·그룹·기타 사용자 순서로 계산한다.",
     "explanation": "Vim에서 :wq로 빈 파일을 저장한다. chmod 640은 rw- / r-- / ---이다. ls -l로 확인한다.",
-    "initialState": "report.txt가 없는 상태",
-    "afterState": "ls -l 출력의 권한 부분: -rw-r-----",
+    "initialState": "student@ubuntu:~/lab$ ls",
+    "afterState": "student@ubuntu:~/lab$ ls -l report.txt\n-rw-r----- 1 student student 0 Nov 11 10:00 report.txt",
     "commandParts": [
       {
         "token": "vim",
@@ -86,7 +87,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "Vim에서 :wq로 빈 파일을 저장한다. chmod 640은 rw- / r-- / ---이다. ls -l로 확인한다.",
     "commonMistake": "640과 604를 혼동하면 소유자·그룹·기타 권한이 달라진다.",
     "trace": [],
-    "pptSource": "3장 4~5쪽, 5장 13~15쪽"
+    "pptSource": "3장 4~5쪽, 5장 13~15쪽",
+    "outputNote": "파일의 수정 시각은 실습 시점에 따라 달라질 수 있습니다."
   },
   {
     "id": "LINUX-003",
@@ -94,14 +96,14 @@ export const ubuntuPptProblems = [
     "level": "입문",
     "topic": "디렉터리 탐색",
     "title": "현재 위치 확인하기",
-    "statement": "Ubuntu 터미널에서 현재 작업 디렉터리의 절대경로를 표시하는 명령어를 작성하시오.",
-    "input": "ubuntu@ubuntu:~/lab$",
-    "output": "/home/ubuntu/lab",
+    "statement": "현재 작업 중인 디렉터리의 절대경로를 출력하시오.",
+    "input": "student@ubuntu:~/lab$ ",
+    "output": "student@ubuntu:~/lab$ pwd\n/home/student/lab",
     "code": "pwd",
     "hint": "절대경로는 루트 디렉터리에서 시작한다.",
     "explanation": "pwd는 현재 작업 디렉터리의 절대경로를 출력한다.",
-    "initialState": "ubuntu@ubuntu:~/lab$ (명령어 입력 전)",
-    "afterState": "/home/ubuntu/lab이 출력되며 작업 디렉터리는 그대로 유지됨",
+    "initialState": "student@ubuntu:~/lab$ ",
+    "afterState": "student@ubuntu:~/lab$ pwd\n/home/student/lab",
     "commandParts": [
       {
         "token": "pwd",
@@ -112,7 +114,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "pwd는 현재 작업 디렉터리의 절대경로를 출력한다.",
     "commonMistake": "사용자에 따라 실제 출력되는 경로는 달라질 수 있다.",
     "trace": [],
-    "pptSource": "2장 10쪽"
+    "pptSource": "2장 10쪽",
+    "outputNote": ""
   },
   {
     "id": "LINUX-004",
@@ -120,13 +123,13 @@ export const ubuntuPptProblems = [
     "level": "입문",
     "topic": "디렉터리 탐색",
     "title": "현재 디렉터리의 파일·폴더 확인",
-    "statement": "현재 디렉터리에 존재하는 a.txt 파일과 docs 디렉터리의 이름을 출력한다.",
-    "input": "현재 디렉터리에 빈 a.txt 파일과 docs 디렉터리가 이미 있는 상태",
+    "statement": "현재 디렉터리에 있는 a.txt 파일과 docs 폴더의 이름을 출력하시오.",
+    "input": "student@ubuntu:~/lab$ ",
     "output": "student@ubuntu:~/lab$ ls\na.txt  docs",
     "code": "ls",
     "hint": "경로를 지정하지 않을 때의 명령 대상이 무엇인지 생각한다.",
     "explanation": "ls는 현재 디렉터리의 파일과 하위 디렉터리 이름을 표시한다.",
-    "initialState": "현재 디렉터리에 빈 a.txt 파일과 docs 디렉터리가 이미 있는 상태",
+    "initialState": "student@ubuntu:~/lab$ ",
     "afterState": "student@ubuntu:~/lab$ ls\na.txt  docs",
     "commandParts": [
       {
@@ -138,7 +141,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "ls는 현재 디렉터리의 파일과 하위 디렉터리 이름을 표시한다.",
     "commonMistake": "파일이 이미 존재하므로 새로 생성하지 않는다.",
     "trace": [],
-    "pptSource": "2장 13쪽"
+    "pptSource": "2장 13쪽",
+    "outputNote": ""
   },
   {
     "id": "LINUX-005",
@@ -146,14 +150,14 @@ export const ubuntuPptProblems = [
     "level": "입문",
     "topic": "디렉터리 탐색",
     "title": "숨김 파일 포함하여 목록 확인",
-    "statement": "현재 디렉터리에서 점으로 시작하는 숨김 파일을 포함해 목록을 출력한다.",
-    "input": "현재 위치에 .profile과 note.txt가 있음",
-    "output": "목록에 .profile과 note.txt가 함께 표시됨",
+    "statement": "현재 디렉터리에 있는 일반 파일 note.txt와 숨김 파일 .profile을 모두 표시하시오.",
+    "input": "student@ubuntu:~/lab$ ls\nnote.txt",
+    "output": "student@ubuntu:~/lab$ ls -a\n.  ..  .profile  note.txt",
     "code": "ls -a",
     "hint": "일반 목록과 숨김 항목을 포함한 목록의 차이를 구별한다.",
     "explanation": "ls -a는 숨김 항목과 . 및 ..도 표시한다.",
-    "initialState": "현재 위치에 .profile과 note.txt가 있음",
-    "afterState": "목록에 .profile과 note.txt가 함께 표시됨",
+    "initialState": "student@ubuntu:~/lab$ ls\nnote.txt",
+    "afterState": "student@ubuntu:~/lab$ ls -a\n.  ..  .profile  note.txt",
     "commandParts": [
       {
         "token": "ls",
@@ -168,7 +172,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "ls -a는 숨김 항목과 . 및 ..도 표시한다.",
     "commonMistake": "일반 ls에서는 .으로 시작하는 파일이 보이지 않는다.",
     "trace": [],
-    "pptSource": "2장 14쪽"
+    "pptSource": "2장 14쪽",
+    "outputNote": ""
   },
   {
     "id": "LINUX-006",
@@ -176,14 +181,14 @@ export const ubuntuPptProblems = [
     "level": "입문",
     "topic": "디렉터리 탐색",
     "title": "파일 종류 기호 확인하기",
-    "statement": "현재 디렉터리에서 파일과 폴더의 종류를 구분하는 기호를 표시한다.",
-    "input": "docs 디렉터리와 note.txt 파일이 있음",
-    "output": "docs/ 와 note.txt처럼 종류에 따른 표시가 나타남",
+    "statement": "현재 디렉터리에 있는 docs 폴더와 note.txt 파일의 이름 뒤에 파일 종류를 나타내는 기호를 표시하시오.",
+    "input": "student@ubuntu:~/lab$ ls\ndocs  note.txt",
+    "output": "student@ubuntu:~/lab$ ls -F\ndocs/  note.txt",
     "code": "ls -F",
     "hint": "파일 종류를 표시하는 기호의 의미를 떠올린다.",
     "explanation": "ls -F는 디렉터리에 /, 심벌릭 링크에 @, 실행 파일에 *를 붙인다.",
-    "initialState": "docs 디렉터리와 note.txt 파일이 있음",
-    "afterState": "docs/ 와 note.txt처럼 종류에 따른 표시가 나타남",
+    "initialState": "student@ubuntu:~/lab$ ls\ndocs  note.txt",
+    "afterState": "student@ubuntu:~/lab$ ls -F\ndocs/  note.txt",
     "commandParts": [
       {
         "token": "ls",
@@ -198,7 +203,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "ls -F는 디렉터리에 /, 심벌릭 링크에 @, 실행 파일에 *를 붙인다.",
     "commonMistake": "-F의 / 표시는 디렉터리 이름 일부가 아니다.",
     "trace": [],
-    "pptSource": "2장 15쪽"
+    "pptSource": "2장 15쪽",
+    "outputNote": ""
   },
   {
     "id": "LINUX-007",
@@ -206,14 +212,14 @@ export const ubuntuPptProblems = [
     "level": "입문",
     "topic": "파일 속성",
     "title": "상세 파일 정보 읽기",
-    "statement": "note.txt 파일의 권한, 소유자, 크기, 수정 시간을 확인한다.",
-    "input": "현재 디렉터리에 note.txt 파일이 있음",
-    "output": "권한, 링크 수, 소유자, 그룹, 크기, 수정 시간, 파일명이 표시됨",
+    "statement": "현재 디렉터리의 note.txt 파일에 대한 접근 권한, 소유자, 크기, 수정 시각을 출력하시오.",
+    "input": "student@ubuntu:~/lab$ ls\nnote.txt",
+    "output": "student@ubuntu:~/lab$ ls -l note.txt\n-rw-r--r-- 1 student student 6 Nov 11 10:00 note.txt",
     "code": "ls -l note.txt",
     "hint": "간단한 이름 목록과 파일 속성 목록을 비교한다.",
     "explanation": "ls -l은 파일 접근 권한과 소유자·크기·수정 시각 등의 상세 속성을 보여준다.",
-    "initialState": "현재 디렉터리에 note.txt 파일이 있음",
-    "afterState": "권한, 링크 수, 소유자, 그룹, 크기, 수정 시간, 파일명이 표시됨",
+    "initialState": "student@ubuntu:~/lab$ ls\nnote.txt",
+    "afterState": "student@ubuntu:~/lab$ ls -l note.txt\n-rw-r--r-- 1 student student 6 Nov 11 10:00 note.txt",
     "commandParts": [
       {
         "token": "ls",
@@ -228,7 +234,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "ls -l은 파일 접근 권한과 소유자·크기·수정 시각 등의 상세 속성을 보여준다.",
     "commonMistake": "파일 권한은 출력 첫 번째 열에서 확인한다.",
     "trace": [],
-    "pptSource": "2장 16~17쪽"
+    "pptSource": "2장 16~17쪽",
+    "outputNote": "권한·소유자·크기·수정 시각은 예시이며 실제 파일의 속성에 따라 달라집니다."
   },
   {
     "id": "LINUX-008",
@@ -236,14 +243,14 @@ export const ubuntuPptProblems = [
     "level": "입문",
     "topic": "디렉터리 탐색",
     "title": "한 단계 상위로 이동하기",
-    "statement": "project 디렉터리에서 부모 디렉터리로 이동한 뒤 위치를 확인한다.",
-    "input": "현재 위치가 /home/ubuntu/lab/project임",
-    "output": "/home/ubuntu/lab",
+    "statement": "현재 위치인 project 폴더에서 한 단계 위인 lab 폴더로 이동하시오. 이동한 뒤 현재 경로를 출력하시오.",
+    "input": "student@ubuntu:~/lab/project$ ",
+    "output": "student@ubuntu:~/lab/project$ cd ..\nstudent@ubuntu:~/lab$ pwd\n/home/student/lab",
     "code": "cd ..\npwd",
     "hint": "현재 디렉터리와 부모 디렉터리의 기호를 구별한다.",
     "explanation": "cd ..으로 한 단계 위로 이동하고 pwd로 확인한다.",
-    "initialState": "현재 위치가 /home/ubuntu/lab/project임",
-    "afterState": "/home/ubuntu/lab",
+    "initialState": "student@ubuntu:~/lab/project$ ",
+    "afterState": "student@ubuntu:~/lab/project$ cd ..\nstudent@ubuntu:~/lab$ pwd\n/home/student/lab",
     "commandParts": [
       {
         "token": "cd",
@@ -262,7 +269,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "cd ..으로 한 단계 위로 이동하고 pwd로 확인한다.",
     "commonMistake": "..과 .은 서로 다른 위치를 나타낸다.",
     "trace": [],
-    "pptSource": "2장 5~8쪽, 11쪽"
+    "pptSource": "2장 5~8쪽, 11쪽",
+    "outputNote": ""
   },
   {
     "id": "LINUX-009",
@@ -270,14 +278,14 @@ export const ubuntuPptProblems = [
     "level": "입문",
     "topic": "디렉터리 탐색",
     "title": "홈 디렉터리로 이동하기",
-    "statement": "현재 위치와 관계없이 자신의 홈 디렉터리로 이동하고 확인한다.",
-    "input": "현재 위치가 /tmp임",
-    "output": "홈 디렉터리 /home/ubuntu가 출력됨",
+    "statement": "현재 위치가 /tmp일 때 자신의 홈 디렉터리로 이동하시오. 이동한 경로를 확인하시오.",
+    "input": "student@ubuntu:/tmp$ ",
+    "output": "student@ubuntu:/tmp$ cd ~\nstudent@ubuntu:~$ pwd\n/home/student",
     "code": "cd ~\npwd",
     "hint": "홈 디렉터리를 나타내는 단축 기호를 생각한다.",
     "explanation": "~는 현재 사용자의 홈 디렉터리이고 cd ~는 해당 경로로 이동한다.",
-    "initialState": "현재 위치가 /tmp임",
-    "afterState": "홈 디렉터리 /home/ubuntu가 출력됨",
+    "initialState": "student@ubuntu:/tmp$ ",
+    "afterState": "student@ubuntu:/tmp$ cd ~\nstudent@ubuntu:~$ pwd\n/home/student",
     "commandParts": [
       {
         "token": "cd",
@@ -296,7 +304,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "~는 현재 사용자의 홈 디렉터리이고 cd ~는 해당 경로로 이동한다.",
     "commonMistake": "실행 사용자의 홈 디렉터리 경로가 ubuntu와 다를 수 있다.",
     "trace": [],
-    "pptSource": "2장 6쪽, 12쪽"
+    "pptSource": "2장 6쪽, 12쪽",
+    "outputNote": ""
   },
   {
     "id": "LINUX-010",
@@ -304,14 +313,14 @@ export const ubuntuPptProblems = [
     "level": "입문",
     "topic": "디렉터리 생성",
     "title": "새 폴더 만들기",
-    "statement": "현재 디렉터리에 reports라는 디렉터리를 생성한다.",
-    "input": "reports 디렉터리가 없음",
-    "output": "reports 디렉터리가 생성됨",
+    "statement": "현재 디렉터리에 reports라는 새 폴더를 생성하시오.",
+    "input": "student@ubuntu:~/lab$ ls\nnote.txt",
+    "output": "student@ubuntu:~/lab$ ls\nnote.txt  reports",
     "code": "mkdir reports",
     "hint": "파일과 디렉터리의 생성 방법을 구별한다.",
     "explanation": "mkdir는 지정한 이름의 디렉터리를 만든다.",
-    "initialState": "reports 디렉터리가 없음",
-    "afterState": "reports 디렉터리가 생성됨",
+    "initialState": "student@ubuntu:~/lab$ ls\nnote.txt",
+    "afterState": "student@ubuntu:~/lab$ ls\nnote.txt  reports",
     "commandParts": [
       {
         "token": "mkdir",
@@ -322,7 +331,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "mkdir는 지정한 이름의 디렉터리를 만든다.",
     "commonMistake": "동일한 디렉터리가 이미 있다면 일반 mkdir는 생성에 실패한다.",
     "trace": [],
-    "pptSource": "2장 20쪽"
+    "pptSource": "2장 20쪽",
+    "outputNote": ""
   },
   {
     "id": "LINUX-011",
@@ -330,14 +340,14 @@ export const ubuntuPptProblems = [
     "level": "입문",
     "topic": "문서 편집",
     "title": "Vim으로 빈 텍스트 파일 저장하기",
-    "statement": "Vim으로 note.txt를 열어 내용 없이 저장하고 종료한다.",
-    "input": "note.txt가 없는 상태",
-    "output": "빈 note.txt 파일이 생성됨",
+    "statement": "Vim으로 note.txt를 열고 아무 내용도 입력하지 않은 상태에서 저장한 뒤 종료하시오.",
+    "input": "student@ubuntu:~/lab$ ls",
+    "output": "student@ubuntu:~/lab$ ls -l note.txt\n-rw-r--r-- 1 student student 0 Nov 11 10:00 note.txt",
     "code": "vim note.txt",
     "hint": "Vim 실행 후 저장·종료를 위한 마지막 행 명령을 사용한다.",
     "explanation": "Vim 실행 후 :wq와 Enter로 저장·종료한다. 내용이 없어도 새 파일을 저장할 수 있다.",
-    "initialState": "note.txt가 없는 상태",
-    "afterState": "빈 note.txt 파일이 생성됨",
+    "initialState": "student@ubuntu:~/lab$ ls",
+    "afterState": "student@ubuntu:~/lab$ ls -l note.txt\n-rw-r--r-- 1 student student 0 Nov 11 10:00 note.txt",
     "commandParts": [
       {
         "token": "vim",
@@ -352,7 +362,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "Vim 실행 후 :wq와 Enter로 저장·종료한다. 내용이 없어도 새 파일을 저장할 수 있다.",
     "commonMistake": "저장하지 않고 종료하면 새 파일이 남지 않을 수 있다.",
     "trace": [],
-    "pptSource": "3장 2~5쪽"
+    "pptSource": "3장 2~5쪽",
+    "outputNote": "파일 소유자 및 저장 시각은 환경에 따라 달라질 수 있습니다."
   },
   {
     "id": "LINUX-012",
@@ -360,14 +371,14 @@ export const ubuntuPptProblems = [
     "level": "입문",
     "topic": "디렉터리 삭제",
     "title": "빈 폴더 삭제하기",
-    "statement": "내용이 없는 empty 디렉터리를 삭제한다.",
-    "input": "empty 디렉터리가 존재하며 내부에 파일과 하위 디렉터리가 없음",
-    "output": "empty 디렉터리가 삭제됨",
+    "statement": "현재 디렉터리에 있는 빈 empty 폴더를 삭제하시오.",
+    "input": "student@ubuntu:~/lab$ ls -F\nempty/",
+    "output": "student@ubuntu:~/lab$ ls",
     "code": "rmdir empty",
     "hint": "디렉터리 내부가 비어 있다는 조건에 주의한다.",
     "explanation": "rmdir은 빈 디렉터리를 삭제한다.",
-    "initialState": "empty 디렉터리가 존재하며 내부에 파일과 하위 디렉터리가 없음",
-    "afterState": "empty 디렉터리가 삭제됨",
+    "initialState": "student@ubuntu:~/lab$ ls -F\nempty/",
+    "afterState": "student@ubuntu:~/lab$ ls",
     "commandParts": [
       {
         "token": "rmdir",
@@ -378,7 +389,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "rmdir은 빈 디렉터리를 삭제한다.",
     "commonMistake": "내용이 들어 있는 디렉터리는 rmdir만으로 지울 수 없다.",
     "trace": [],
-    "pptSource": "2장 23쪽"
+    "pptSource": "2장 23쪽",
+    "outputNote": ""
   },
   {
     "id": "LINUX-013",
@@ -386,14 +398,14 @@ export const ubuntuPptProblems = [
     "level": "입문",
     "topic": "파일 내용",
     "title": "텍스트 파일 내용 확인하기",
-    "statement": "/etc/hosts 파일의 내용을 터미널에 출력한다.",
-    "input": "Ubuntu에 /etc/hosts가 존재함",
-    "output": "/etc/hosts의 내용이 화면에 표시됨",
+    "statement": "Ubuntu의 /etc/hosts 파일 내용을 터미널 화면에 출력하시오.",
+    "input": "student@ubuntu:~/lab$ ",
+    "output": "student@ubuntu:~/lab$ cat /etc/hosts\n127.0.0.1 localhost\n127.0.1.1 ubuntu",
     "code": "cat /etc/hosts",
     "hint": "파일을 수정하지 않고 내용만 출력하는 기능을 생각한다.",
     "explanation": "cat은 지정한 파일의 내용을 화면에 출력한다.",
-    "initialState": "Ubuntu에 /etc/hosts가 존재함",
-    "afterState": "/etc/hosts의 내용이 화면에 표시됨",
+    "initialState": "student@ubuntu:~/lab$ ",
+    "afterState": "student@ubuntu:~/lab$ cat /etc/hosts\n127.0.0.1 localhost\n127.0.1.1 ubuntu",
     "commandParts": [
       {
         "token": "cat",
@@ -404,7 +416,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "cat은 지정한 파일의 내용을 화면에 출력한다.",
     "commonMistake": "출력은 PC의 hosts 설정에 따라 달라질 수 있다.",
     "trace": [],
-    "pptSource": "2장 24쪽"
+    "pptSource": "2장 24쪽",
+    "outputNote": "화면에는 출력 일부만 예시로 표시했습니다. 실제 파일의 내용은 컴퓨터마다 다를 수 있습니다."
   },
   {
     "id": "LINUX-014",
@@ -412,14 +425,14 @@ export const ubuntuPptProblems = [
     "level": "입문",
     "topic": "파일 복사",
     "title": "텍스트 파일 복사하기",
-    "statement": "note.txt 파일을 backup.txt라는 이름으로 복사한다.",
-    "input": "note.txt는 존재하고 backup.txt는 없음",
-    "output": "note.txt를 유지한 채 backup.txt가 추가됨",
+    "statement": "현재 디렉터리의 note.txt 파일을 backup.txt라는 이름으로 복사하시오. 원본 파일은 유지하시오.",
+    "input": "student@ubuntu:~/lab$ ls\nnote.txt",
+    "output": "student@ubuntu:~/lab$ ls\nbackup.txt  note.txt",
     "code": "cp note.txt backup.txt",
     "hint": "원본을 보존하는 동작과 이름을 바꾸는 동작을 구별한다.",
     "explanation": "cp는 원본 파일을 남기고 지정한 이름의 복사본을 만든다.",
-    "initialState": "note.txt는 존재하고 backup.txt는 없음",
-    "afterState": "note.txt를 유지한 채 backup.txt가 추가됨",
+    "initialState": "student@ubuntu:~/lab$ ls\nnote.txt",
+    "afterState": "student@ubuntu:~/lab$ ls\nbackup.txt  note.txt",
     "commandParts": [
       {
         "token": "cp",
@@ -430,7 +443,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "cp는 원본 파일을 남기고 지정한 이름의 복사본을 만든다.",
     "commonMistake": "복사는 원본 파일을 삭제하지 않는다.",
     "trace": [],
-    "pptSource": "2장 30쪽"
+    "pptSource": "2장 30쪽",
+    "outputNote": ""
   },
   {
     "id": "LINUX-015",
@@ -438,14 +452,14 @@ export const ubuntuPptProblems = [
     "level": "입문",
     "topic": "파일 이동",
     "title": "파일 이름 바꾸기",
-    "statement": "draft.txt의 이름을 final.txt로 변경한다.",
-    "input": "draft.txt가 존재하고 final.txt는 없음",
-    "output": "final.txt가 존재하고 draft.txt는 사라짐",
+    "statement": "현재 디렉터리의 draft.txt 파일 이름을 final.txt로 바꾸시오.",
+    "input": "student@ubuntu:~/lab$ ls\ndraft.txt",
+    "output": "student@ubuntu:~/lab$ ls\nfinal.txt",
     "code": "mv draft.txt final.txt",
     "hint": "이름 변경 전후에 존재해야 하는 파일을 생각한다.",
     "explanation": "mv는 파일의 위치를 이동하거나 파일 이름을 변경한다.",
-    "initialState": "draft.txt가 존재하고 final.txt는 없음",
-    "afterState": "final.txt가 존재하고 draft.txt는 사라짐",
+    "initialState": "student@ubuntu:~/lab$ ls\ndraft.txt",
+    "afterState": "student@ubuntu:~/lab$ ls\nfinal.txt",
     "commandParts": [
       {
         "token": "mv",
@@ -456,7 +470,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "mv는 파일의 위치를 이동하거나 파일 이름을 변경한다.",
     "commonMistake": "이름 변경과 복사는 원본 파일 존재 여부가 다르다.",
     "trace": [],
-    "pptSource": "2장 34~35쪽"
+    "pptSource": "2장 34~35쪽",
+    "outputNote": ""
   },
   {
     "id": "LINUX-016",
@@ -464,14 +479,14 @@ export const ubuntuPptProblems = [
     "level": "기초 응용",
     "topic": "디렉터리 정보",
     "title": "폴더 자체의 상세 정보 확인",
-    "statement": "docs 아래 파일이 아닌 docs 디렉터리 자체의 권한과 소유자를 확인한다.",
-    "input": "docs 디렉터리가 존재함",
-    "output": "docs 디렉터리 한 항목의 상세 정보가 표시됨",
+    "statement": "docs 폴더 안의 파일 목록이 아니라 docs 폴더 자체의 접근 권한과 소유자를 확인하시오.",
+    "input": "student@ubuntu:~/lab$ ls\ndocs",
+    "output": "student@ubuntu:~/lab$ ls -ld docs\ndrwxr-xr-x 2 student student 4096 Nov 11 10:00 docs",
     "code": "ls -ld docs",
     "hint": "디렉터리 속성과 디렉터리 내부 목록을 구분한다.",
     "explanation": "ls -l의 상세 표시와 -d의 디렉터리 자체 표시를 함께 사용한다.",
-    "initialState": "docs 디렉터리가 존재함",
-    "afterState": "docs 디렉터리 한 항목의 상세 정보가 표시됨",
+    "initialState": "student@ubuntu:~/lab$ ls\ndocs",
+    "afterState": "student@ubuntu:~/lab$ ls -ld docs\ndrwxr-xr-x 2 student student 4096 Nov 11 10:00 docs",
     "commandParts": [
       {
         "token": "ls",
@@ -490,7 +505,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "ls -l의 상세 표시와 -d의 디렉터리 자체 표시를 함께 사용한다.",
     "commonMistake": "-d가 없으면 폴더 내부 목록이 출력될 수 있다.",
     "trace": [],
-    "pptSource": "2장 16쪽, 18쪽"
+    "pptSource": "2장 16쪽, 18쪽",
+    "outputNote": "폴더의 권한·크기·수정 시각은 환경에 따라 달라질 수 있습니다."
   },
   {
     "id": "LINUX-017",
@@ -498,14 +514,14 @@ export const ubuntuPptProblems = [
     "level": "기초 응용",
     "topic": "파일 내용",
     "title": "파일의 마지막 일곱 줄 확인",
-    "statement": "/etc/services 파일의 마지막 일곱 줄을 표시한다.",
-    "input": "Ubuntu에 /etc/services가 존재함",
-    "output": "파일 마지막 7개 행이 표시됨",
-    "code": "tail -7 /etc/services",
+    "statement": "log.txt 파일의 마지막 일곱 줄만 출력하시오.",
+    "input": "student@ubuntu:~/lab$ cat log.txt\nline 1\nline 2\nline 3\nline 4\nline 5\nline 6\nline 7\nline 8\nline 9",
+    "output": "student@ubuntu:~/lab$ tail -7 log.txt\nline 3\nline 4\nline 5\nline 6\nline 7\nline 8\nline 9",
+    "code": "tail -7 log.txt",
     "hint": "파일의 시작 부분이 아니라 끝부분을 대상으로 한다.",
-    "explanation": "tail의 -숫자 형식으로 파일의 끝에서 출력할 줄 수를 지정한다.",
-    "initialState": "Ubuntu에 /etc/services가 존재함",
-    "afterState": "파일 마지막 7개 행이 표시됨",
+    "explanation": "tail은 파일의 끝에서부터 지정한 줄 수만큼 출력합니다. -7은 마지막 일곱 줄을 뜻합니다.",
+    "initialState": "student@ubuntu:~/lab$ cat log.txt\nline 1\nline 2\nline 3\nline 4\nline 5\nline 6\nline 7\nline 8\nline 9",
+    "afterState": "student@ubuntu:~/lab$ tail -7 log.txt\nline 3\nline 4\nline 5\nline 6\nline 7\nline 8\nline 9",
     "commandParts": [
       {
         "token": "tail",
@@ -513,14 +529,15 @@ export const ubuntuPptProblems = [
       },
       {
         "token": "-7",
-        "meaning": "마지막 일곱 줄 출력"
+        "meaning": "마지막 일곱 줄 표시"
       }
     ],
-    "verification": "tail -7 /etc/services",
-    "verificationDetail": "tail의 -숫자 형식으로 파일의 끝에서 출력할 줄 수를 지정한다.",
-    "commonMistake": "환경에 따라 각 줄의 실제 내용은 달라질 수 있다.",
+    "verification": "tail -7 log.txt",
+    "verificationDetail": "tail은 파일의 끝에서부터 지정한 줄 수만큼 출력합니다. -7은 마지막 일곱 줄을 뜻합니다.",
+    "commonMistake": "처음 일곱 줄이 아니라 마지막 일곱 줄을 출력해야 합니다.",
     "trace": [],
-    "pptSource": "2장 28~29쪽"
+    "pptSource": "2장 28~29쪽",
+    "outputNote": ""
   },
   {
     "id": "LINUX-018",
@@ -528,14 +545,14 @@ export const ubuntuPptProblems = [
     "level": "기초 응용",
     "topic": "파일 검색",
     "title": "검색 결과의 행 번호 함께 보기",
-    "statement": "app.log에서 ERROR를 포함하는 행을 줄 번호와 함께 출력한다.",
-    "input": "app.log의 2행은 ERROR first, 5행은 ERROR second이며 다른 행에는 ERROR가 없음",
-    "output": "2:ERROR first\n5:ERROR second",
+    "statement": "app.log 파일에서 ERROR가 포함된 줄을 찾아 해당 줄 번호와 함께 출력하시오.",
+    "input": "student@ubuntu:~/lab$ cat app.log\nINFO start\nERROR first\nINFO ok\nINFO done\nERROR second",
+    "output": "student@ubuntu:~/lab$ grep -n 'ERROR' app.log\n2:ERROR first\n5:ERROR second",
     "code": "grep -n 'ERROR' app.log",
     "hint": "검색 문자열과 출력 형태를 함께 고려한다.",
     "explanation": "grep -n은 일치하는 행 앞에 해당 행 번호를 함께 표시한다.",
-    "initialState": "app.log의 2행은 ERROR first, 5행은 ERROR second이며 다른 행에는 ERROR가 없음",
-    "afterState": "2:ERROR first\n5:ERROR second",
+    "initialState": "student@ubuntu:~/lab$ cat app.log\nINFO start\nERROR first\nINFO ok\nINFO done\nERROR second",
+    "afterState": "student@ubuntu:~/lab$ grep -n 'ERROR' app.log\n2:ERROR first\n5:ERROR second",
     "commandParts": [
       {
         "token": "grep",
@@ -550,22 +567,23 @@ export const ubuntuPptProblems = [
     "verificationDetail": "grep -n은 일치하는 행 앞에 해당 행 번호를 함께 표시한다.",
     "commonMistake": "ERROR와 error는 대소문자가 달라 서로 구분될 수 있다.",
     "trace": [],
-    "pptSource": "2장 53쪽"
+    "pptSource": "2장 53쪽",
+    "outputNote": ""
   },
   {
     "id": "LINUX-019",
     "language": "linux",
     "level": "기초 응용",
     "topic": "파일 검색",
-    "title": "특정 소유자의 파일 검색하기",
-    "statement": "현재 디렉터리부터 아래로 검색하여 ubuntu 사용자가 소유한 파일과 디렉터리 경로를 확인한다.",
-    "input": "현재 사용자 계정 이름이 ubuntu이며 접근 가능한 실습 파일이 존재함",
-    "output": "ubuntu 소유 파일과 디렉터리 경로가 표시됨",
-    "code": "find . -user ubuntu",
+    "title": "내 계정이 소유한 파일 찾기",
+    "statement": "현재 디렉터리와 그 아래에서 student 사용자가 소유한 파일 및 폴더의 경로를 출력하시오.",
+    "input": "student@ubuntu:~/lab$ ls -l\ntotal 4\n-rw-r--r-- 1 student student 5 Nov 11 10:00 note.txt",
+    "output": "student@ubuntu:~/lab$ find . -user student\n.\n./note.txt",
+    "code": "find . -user student",
     "hint": "검색 시작 위치와 파일 소유자 조건을 구분한다.",
-    "explanation": "find는 지정 위치에서 조건에 맞는 항목을 찾고 -user는 소유자를 기준으로 검색한다.",
-    "initialState": "현재 사용자 계정 이름이 ubuntu이며 접근 가능한 실습 파일이 존재함",
-    "afterState": "ubuntu 소유 파일과 디렉터리 경로가 표시됨",
+    "explanation": "find . -user student는 현재 위치에서 하위 경로까지 student 사용자가 소유한 항목을 찾아 출력합니다.",
+    "initialState": "student@ubuntu:~/lab$ ls -l\ntotal 4\n-rw-r--r-- 1 student student 5 Nov 11 10:00 note.txt",
+    "afterState": "student@ubuntu:~/lab$ find . -user student\n.\n./note.txt",
     "commandParts": [
       {
         "token": "find",
@@ -580,11 +598,12 @@ export const ubuntuPptProblems = [
         "meaning": "특정 소유자의 파일 검색"
       }
     ],
-    "verification": "find . -user ubuntu",
-    "verificationDetail": "find는 지정 위치에서 조건에 맞는 항목을 찾고 -user는 소유자를 기준으로 검색한다.",
+    "verification": "find . -user student",
+    "verificationDetail": "find . -user student는 현재 위치에서 하위 경로까지 student 사용자가 소유한 항목을 찾아 출력합니다.",
     "commonMistake": "다른 사용자가 소유한 파일은 결과에 포함되지 않는다.",
     "trace": [],
-    "pptSource": "2장 54쪽"
+    "pptSource": "2장 54쪽",
+    "outputNote": "소유자·크기·수정 시각과 검색 결과의 순서는 실제 환경에 따라 달라질 수 있습니다."
   },
   {
     "id": "LINUX-020",
@@ -592,14 +611,14 @@ export const ubuntuPptProblems = [
     "level": "기초 응용",
     "topic": "파일 위치",
     "title": "명령어가 저장된 위치 확인",
-    "statement": "mv 명령어의 실행 파일이 위치한 경로를 확인한다.",
-    "input": "mv 명령어를 사용할 수 있는 Ubuntu 환경",
-    "output": "mv 명령어 실행 파일의 경로가 표시됨",
+    "statement": "mv 명령어의 실행 파일이 저장된 경로를 확인하시오.",
+    "input": "student@ubuntu:~/lab$ ",
+    "output": "student@ubuntu:~/lab$ which mv\n/usr/bin/mv",
     "code": "which mv",
     "hint": "명령어 기능과 명령어 실행 파일 위치를 구별한다.",
     "explanation": "which는 명령어가 저장된 실행 파일 경로를 보여준다.",
-    "initialState": "mv 명령어를 사용할 수 있는 Ubuntu 환경",
-    "afterState": "mv 명령어 실행 파일의 경로가 표시됨",
+    "initialState": "student@ubuntu:~/lab$ ",
+    "afterState": "student@ubuntu:~/lab$ which mv\n/usr/bin/mv",
     "commandParts": [
       {
         "token": "which",
@@ -610,7 +629,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "which는 명령어가 저장된 실행 파일 경로를 보여준다.",
     "commonMistake": "반환 경로는 시스템 환경에 따라 달라질 수 있다.",
     "trace": [],
-    "pptSource": "2장 55쪽"
+    "pptSource": "2장 55쪽",
+    "outputNote": "실행 파일의 실제 경로는 Ubuntu 설치 환경에 따라 달라질 수 있습니다."
   },
   {
     "id": "LINUX-021",
@@ -618,14 +638,14 @@ export const ubuntuPptProblems = [
     "level": "기초 응용",
     "topic": "파일 링크",
     "title": "심벌릭 링크 만들고 종류 확인하기",
-    "statement": "data.txt를 가리키는 data-link 심벌릭 링크를 생성하고 링크 대상을 확인한다.",
-    "input": "data.txt가 존재하며 data-link는 없음",
-    "output": "data-link -> data.txt 형태가 상세 목록에 표시됨",
+    "statement": "data.txt 파일을 가리키는 data-link라는 심벌릭 링크를 생성하시오. 생성한 링크가 가리키는 대상을 확인하시오.",
+    "input": "student@ubuntu:~/lab$ ls\ndata.txt",
+    "output": "student@ubuntu:~/lab$ ls -l data-link\nlrwxrwxrwx 1 student student 8 Nov 11 10:00 data-link -> data.txt",
     "code": "ln -s data.txt data-link\nls -l data-link",
     "hint": "원본과 심벌릭 링크 파일의 역할을 구분한다.",
     "explanation": "ln -s로 심벌릭 링크를 생성한다. ls -l은 원본 경로와 링크 기호 l을 표시한다.",
-    "initialState": "data.txt가 존재하며 data-link는 없음",
-    "afterState": "data-link -> data.txt 형태가 상세 목록에 표시됨",
+    "initialState": "student@ubuntu:~/lab$ ls\ndata.txt",
+    "afterState": "student@ubuntu:~/lab$ ls -l data-link\nlrwxrwxrwx 1 student student 8 Nov 11 10:00 data-link -> data.txt",
     "commandParts": [
       {
         "token": "ln",
@@ -644,7 +664,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "ln -s로 심벌릭 링크를 생성한다. ls -l은 원본 경로와 링크 기호 l을 표시한다.",
     "commonMistake": "원본 파일이 사라지면 심벌릭 링크가 가리키는 내용에 접근하지 못할 수 있다.",
     "trace": [],
-    "pptSource": "2장 49~50쪽"
+    "pptSource": "2장 49~50쪽",
+    "outputNote": "링크의 소유자와 생성 시각은 실습 환경에 따라 달라질 수 있습니다."
   },
   {
     "id": "LINUX-022",
@@ -652,14 +673,14 @@ export const ubuntuPptProblems = [
     "level": "기초 응용",
     "topic": "파일 링크",
     "title": "하드 링크의 inode 비교",
-    "statement": "data.txt에 대한 하드 링크 data-hard를 생성한 뒤 두 파일의 inode 번호를 비교한다.",
-    "input": "data.txt는 있고 data-hard는 없음",
-    "output": "두 파일명 앞에 같은 inode 번호가 표시됨",
+    "statement": "data.txt 파일을 가리키는 data-hard 하드 링크를 생성하시오. 두 파일 이름의 inode 번호가 같은지 비교하시오.",
+    "input": "student@ubuntu:~/lab$ ls\ndata.txt",
+    "output": "student@ubuntu:~/lab$ ls -i data.txt data-hard\n123456 data-hard\n123456 data.txt",
     "code": "ln data.txt data-hard\nls -i data.txt data-hard",
     "hint": "파일 이름과 실제 파일 정보 구조를 연결한다.",
     "explanation": "ln은 기존 파일에 다른 이름을 추가한 하드 링크를 만든다. ls -i로 inode 번호를 본다.",
-    "initialState": "data.txt는 있고 data-hard는 없음",
-    "afterState": "두 파일명 앞에 같은 inode 번호가 표시됨",
+    "initialState": "student@ubuntu:~/lab$ ls\ndata.txt",
+    "afterState": "student@ubuntu:~/lab$ ls -i data.txt data-hard\n123456 data-hard\n123456 data.txt",
     "commandParts": [
       {
         "token": "ln",
@@ -678,7 +699,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "ln은 기존 파일에 다른 이름을 추가한 하드 링크를 만든다. ls -i로 inode 번호를 본다.",
     "commonMistake": "심벌릭 링크는 하드 링크와 달리 별도의 inode를 갖는다.",
     "trace": [],
-    "pptSource": "2장 44~46쪽"
+    "pptSource": "2장 44~46쪽",
+    "outputNote": "123456은 비교를 위한 예시 inode 번호이며 실제 번호는 달라집니다."
   },
   {
     "id": "LINUX-023",
@@ -686,14 +708,14 @@ export const ubuntuPptProblems = [
     "level": "기초 응용",
     "topic": "Vim 문서 편집",
     "title": "문장 입력 후 저장하기",
-    "statement": "Vim으로 memo.txt를 열어 첫 줄에 'linux study'를 입력하고 저장하여 종료한다.",
-    "input": "memo.txt가 없는 상태",
-    "output": "memo.txt 파일에 linux study 한 줄이 저장됨",
+    "statement": "Vim으로 memo.txt 파일을 열어 첫 줄에 linux study를 입력하시오. 입력한 내용을 저장하고 편집기를 종료하시오.",
+    "input": "student@ubuntu:~/lab$ ls",
+    "output": "student@ubuntu:~/lab$ cat memo.txt\nlinux study",
     "code": "vim memo.txt",
     "hint": "편집 모드에서 입력 모드로 전환하는 키를 활용한다.",
     "explanation": "Vim에서 i를 눌러 문장을 입력하고 Esc 후 :wq와 Enter로 저장·종료한다.",
-    "initialState": "memo.txt가 없는 상태",
-    "afterState": "memo.txt 파일에 linux study 한 줄이 저장됨",
+    "initialState": "student@ubuntu:~/lab$ ls",
+    "afterState": "student@ubuntu:~/lab$ cat memo.txt\nlinux study",
     "commandParts": [
       {
         "token": "vim",
@@ -716,7 +738,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "Vim에서 i를 눌러 문장을 입력하고 Esc 후 :wq와 Enter로 저장·종료한다.",
     "commonMistake": "입력 후 Esc로 명령 입력 상태로 돌아와야 :wq가 동작한다.",
     "trace": [],
-    "pptSource": "3장 5~7쪽"
+    "pptSource": "3장 5~7쪽",
+    "outputNote": ""
   },
   {
     "id": "LINUX-024",
@@ -724,14 +747,14 @@ export const ubuntuPptProblems = [
     "level": "기초 응용",
     "topic": "Vim 문서 편집",
     "title": "특정 행 삭제하기",
-    "statement": "Vim에서 memo.txt의 두 번째 행을 삭제한 뒤 저장한다.",
-    "input": "memo.txt는 1행 one, 2행 two, 3행 three으로 구성됨",
-    "output": "저장 후 1행 one, 2행 three만 남음",
+    "statement": "Vim에서 memo.txt 파일의 두 번째 줄인 two를 삭제하시오. 수정한 파일을 저장하시오.",
+    "input": "student@ubuntu:~/lab$ cat memo.txt\none\ntwo\nthree",
+    "output": "student@ubuntu:~/lab$ cat memo.txt\none\nthree",
     "code": "vim memo.txt",
     "hint": "명령어가 작동하는 행은 커서가 놓인 행이다.",
     "explanation": "Vim에서 :2로 두 번째 행에 이동하고 dd로 행을 지운 다음 :wq로 저장한다.",
-    "initialState": "memo.txt는 1행 one, 2행 two, 3행 three으로 구성됨",
-    "afterState": "저장 후 1행 one, 2행 three만 남음",
+    "initialState": "student@ubuntu:~/lab$ cat memo.txt\none\ntwo\nthree",
+    "afterState": "student@ubuntu:~/lab$ cat memo.txt\none\nthree",
     "commandParts": [
       {
         "token": "vim",
@@ -754,7 +777,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "Vim에서 :2로 두 번째 행에 이동하고 dd로 행을 지운 다음 :wq로 저장한다.",
     "commonMistake": "dd는 한 글자가 아니라 커서의 현재 행을 삭제한다.",
     "trace": [],
-    "pptSource": "3장 14쪽, 18~20쪽"
+    "pptSource": "3장 14쪽, 18~20쪽",
+    "outputNote": ""
   },
   {
     "id": "LINUX-025",
@@ -762,14 +786,14 @@ export const ubuntuPptProblems = [
     "level": "기초 응용",
     "topic": "Vim 문서 편집",
     "title": "파일 전체 문자열 바꾸기",
-    "statement": "Vim에서 memo.txt 안의 모든 linux를 Linux로 바꾸고 저장한다.",
-    "input": "memo.txt에 linux가 세 번 등장함",
-    "output": "linux 세 곳이 모두 Linux로 변경됨",
+    "statement": "Vim에서 memo.txt에 포함된 linux 문자열 세 곳을 모두 Linux로 변경하시오. 변경한 내용을 저장하시오.",
+    "input": "student@ubuntu:~/lab$ cat memo.txt\nlinux first\nlinux second\nend linux",
+    "output": "student@ubuntu:~/lab$ cat memo.txt\nLinux first\nLinux second\nend Linux",
     "code": "vim memo.txt",
     "hint": "현재 행만 바꾸는 명령과 파일 전체를 바꾸는 명령을 구별한다.",
     "explanation": "Vim에서 :%s/linux/Linux/g를 실행하고 :wq로 저장한다.",
-    "initialState": "memo.txt에 linux가 세 번 등장함",
-    "afterState": "linux 세 곳이 모두 Linux로 변경됨",
+    "initialState": "student@ubuntu:~/lab$ cat memo.txt\nlinux first\nlinux second\nend linux",
+    "afterState": "student@ubuntu:~/lab$ cat memo.txt\nLinux first\nLinux second\nend Linux",
     "commandParts": [
       {
         "token": "vim",
@@ -788,7 +812,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "Vim에서 :%s/linux/Linux/g를 실행하고 :wq로 저장한다.",
     "commonMistake": "마지막 g가 빠지면 한 행의 모든 일치 항목을 바꾸지 못할 수 있다.",
     "trace": [],
-    "pptSource": "3장 27~29쪽"
+    "pptSource": "3장 27~29쪽",
+    "outputNote": ""
   },
   {
     "id": "LINUX-026",
