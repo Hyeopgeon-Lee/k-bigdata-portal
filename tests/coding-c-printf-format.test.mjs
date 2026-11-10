@@ -101,6 +101,13 @@ assert.match(q("C-073").code, /for \(int i = 0; word\[i\]/);
 for (const id of ["C-071", "C-073", "C-077", "C-078", "C-079"]) {
   assert.doesNotMatch(q(id).code, /\bsize_t\b/, id + " should use a beginner-friendly index type");
 }
+assert.equal(q("C-069").input, "abcdefghijklmnopqrst");
+assert.equal(q("C-069").output, "abcdefghijklmnopqrst");
+assert.equal(q("C-069").input.length, 20);
+assert.match(q("C-069").code, /scanf\("%20s",word\)/);
+assert.match(q("C-069").code, /예제 입력: abcdefghijklmnopqrst/);
+assert.match(q("C-069").hint, /%20s/);
+
 assert.match(q("C-071").code, /printf\("%d\\n",length\)/);
 assert.match(q("C-076").code, /int index = -1;/);
 assert.match(q("C-076").code, /if \(found != NULL\)/);
