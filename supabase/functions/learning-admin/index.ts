@@ -66,7 +66,10 @@ Deno.serve(async(req:Request)=>{
    return json({ok:true});
   }
   if(action==="summary"){
-   const records=await allAttempts(mondayStartUTC()),participants=new Set(records.map(x=>x.user_id));
+   const {data:activeStudents,error:studentError}=await admin.from("profiles").select("user_id").eq("approval_status","approved").eq("enrollment_status","enrolled").neq("email","hglee67@kopo.ac.kr");
+   if(studentError)throw studentError;
+   const allowed=new Set((activeStudents||[]).map(x=>x.user_id));
+   const records=(await allAttempts(mondayStartUTC())).filter(x=>allowed.has(x.user_id)),participants=new Set(records.map(x=>x.user_id));
    const subjects:Record<string,number>={coding:0,ncp:0,practical:0};
    const wrong:Record<string,number>={};
    for(const r of records){subjects[r.bank]=(subjects[r.bank]||0)+1;
