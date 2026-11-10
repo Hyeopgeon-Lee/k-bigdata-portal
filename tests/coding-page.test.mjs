@@ -35,15 +35,16 @@ assert.equal(unique.size,350,'exercise IDs must be unique');
 assert.equal(ubuntuPptProblems.length,50,'PPT-based Linux exercises count');
 const linux003=ubuntuPptProblems.find(p=>p.id==='LINUX-003');
 assert.ok(linux003,'LINUX-003 must exist');
-assert.match(linux003.statement,/하시오\.$/,'beginner task uses imperative question phrasing');
-assert.match(linux003.input,/student@ubuntu:~\/lab\$\s*$/,'initial environment displays Ubuntu prompt');
-assert.equal(linux003.output,'student@ubuntu:~/lab$ [명령어 입력]\n/home/student/lab','expected result shows terminal output without the answer');
-assert.ok(!/\$\s*pwd\b/.test(linux003.input+'\n'+linux003.output),'do not leak pwd in visible examples');
-assert.equal(linux003.code,'pwd','answer stays available under answer reveal');
+assert.match(linux003.statement,/하시오\.$/,'question uses imperative phrasing');
+assert.equal(linux003.code,'pwd','answer remains available in the answer panel');
+assert.ok(js.includes('function visibleExampleText(q, text)'), 'UI has example redaction guard');
+assert.ok(js.includes('$1[명령어 입력]'), 'visible terminal example masks pwd');
+assert.ok(js.includes('visibleExampleText(q, q.input)')&&js.includes('visibleExampleText(q, q.output)'),
+  'both input and output examples are sanitized before display');
 assert.deepEqual(ubuntuPptProblems.reduce((acc,p)=>(acc[p.level]=(acc[p.level]??0)+1,acc),{}),{'입문':15,'기초 응용':25,'종합 활용':10},'PPT-based difficulty distribution');
 assert.ok(ubuntuPptProblems.every((p,n)=>p.id==='LINUX-'+String(n+1).padStart(3,'0')&&p.pptSource),'Linux IDs and PPT sources');
 assert.ok(js.includes('...ubuntuPptProblems')&&!js.includes('ubuntuLegacyGuides'),'browser uses only the PPT Linux data');
-assert.ok(html.includes('js/coding.js?v=20261111-linux003-no-answer-1'),'up-to-date script reference');
+assert.ok(html.includes('js/coding.js?v=20261111-linux003-ui-mask-2'),'up-to-date script reference');
 const firstVisitAutocomplete=html.includes('id="coding-autocomplete-toggle" type="checkbox" role="switch"')
   && !/<input[^>]+id="coding-autocomplete-toggle"[^>]+checked/.test(html);
 assert.ok(firstVisitAutocomplete,'autocomplete switch exists and is initially unchecked');
