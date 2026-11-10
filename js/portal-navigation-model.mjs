@@ -3,6 +3,9 @@ import {categories, services, portalNavLinks} from './services.js?v=20261026-sch
 export const shellVersion = '20261026-schedule-align-1';
 export const portalPages = {
   index: {title:'통합 포털', group:null},
+  login: {title:'학습 계정 로그인',group:null},
+  'my-learning': {title:'나의 학습현황',group:null},
+  'students-admin': {title:'학생 회원 관리',group:null},
   services: {title:'전체 서비스', group:null, directory:true},
   coding: {title:'기초학습', group:'learning'},
   practical: {title:'정보처리 기출문제', group:'learning'},
