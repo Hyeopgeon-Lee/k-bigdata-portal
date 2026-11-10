@@ -7,7 +7,7 @@ import {pythonAdvancedProblems} from "../data/coding-python-advanced.js?v=202611
 
 
 
-import {ubuntuPptProblems} from "../data/coding-ubuntu-ppt.js?v=20261111-permission-guide-1";
+import {ubuntuPptProblems} from "../data/coding-ubuntu-ppt.js?v=20261111-ls-option-table-1";
 import {learningReportUrl} from "./learning-report.js?v=20261020-study-share-1";
 const codingProblems = [...sampleProblems.filter(p=>p.language!=="linux"), ...javaProblems, ...cFoundationProblems, ...cAdvancedProblems, ...pythonFoundationProblems, ...pythonAdvancedProblems, ...ubuntuPptProblems].sort((a,b) =>
   a.language.localeCompare(b.language) || Number(a.id.split("-").at(-1))-Number(b.id.split("-").at(-1))
@@ -167,11 +167,15 @@ function updateUbuntuGuide(q) {
   $("#coding-ubuntu-verify-note").textContent = Array.isArray(q.vimSteps) ? "" : (guide.verificationDetail || guide.output);
   $("#coding-ubuntu-verify-note").hidden = !$("#coding-ubuntu-verify-note").textContent;
   $("#coding-ubuntu-mistake").textContent = guide.commonMistake;
+  $("#coding-ubuntu-guide > h3").textContent = guide.optionGuideHeading || "명령어·옵션 설명";
   const tbody = $("#coding-ubuntu-parts");
+  const showExamples = guide.commandParts.some(part => Boolean(part.example));
+  $("#coding-ubuntu-example-head").hidden = !showExamples;
   tbody.replaceChildren();
   for(const part of guide.commandParts){
     const row=document.createElement("tr");
-    for(const val of [part.token,part.meaning]){
+    const columns = showExamples ? [part.token,part.meaning,part.example || "—"] : [part.token,part.meaning];
+    for(const val of columns){
       const td=document.createElement("td");
       td.textContent=val;
       row.append(td);
