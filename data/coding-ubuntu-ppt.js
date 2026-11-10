@@ -124,12 +124,12 @@ export const ubuntuPptProblems = [
     "topic": "디렉터리 탐색",
     "title": "현재 디렉터리의 파일·폴더 확인",
     "statement": "현재 폴더에 있는 파일과 디렉터리의 이름을 출력하시오.",
-    "input": "student@ubuntu:~/lab$ [초기 상태 확인]\na.txt  docs\nstudent@ubuntu:~/lab$ [명령어 입력]",
+    "input": "student@ubuntu:~/lab$ [명령어 입력]\na.txt  docs",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\na.txt  docs",
     "code": "ls",
     "hint": "현재 폴더에 어떤 항목이 있는지 표시하는 기본 명령을 생각해 보세요.",
     "explanation": "ls는 현재 디렉터리의 파일과 하위 디렉터리 이름을 표시한다.",
-    "initialState": "student@ubuntu:~/lab$ [초기 상태 확인]\na.txt  docs\nstudent@ubuntu:~/lab$ [명령어 입력]",
+    "initialState": "student@ubuntu:~/lab$ [명령어 입력]\na.txt  docs",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\na.txt  docs",
     "commandParts": [
       {
@@ -244,12 +244,12 @@ export const ubuntuPptProblems = [
     "topic": "디렉터리 탐색",
     "title": "한 단계 상위로 이동하기",
     "statement": "project 폴더에서 한 단계 위인 lab 폴더로 이동하시오. 이동한 뒤 현재 디렉터리 경로를 확인하시오.",
-    "input": "student@ubuntu:~/lab/project$ [초기 상태 확인]\n/home/student/lab/project\nstudent@ubuntu:~/lab/project$ [명령어 입력]",
+    "input": "student@ubuntu:~/lab/project$ [명령어 입력]\n/home/student/lab/project",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\n/home/student/lab",
     "code": "cd ..\npwd",
     "hint": "현재 디렉터리와 상위 디렉터리를 나타내는 기호가 서로 다릅니다.",
     "explanation": "cd ..으로 한 단계 위로 이동하고 pwd로 확인한다.",
-    "initialState": "student@ubuntu:~/lab/project$ [초기 상태 확인]\n/home/student/lab/project\nstudent@ubuntu:~/lab/project$ [명령어 입력]",
+    "initialState": "student@ubuntu:~/lab/project$ [명령어 입력]\n/home/student/lab/project",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\n/home/student/lab",
     "commandParts": [
       {
@@ -279,12 +279,12 @@ export const ubuntuPptProblems = [
     "topic": "디렉터리 탐색",
     "title": "홈 디렉터리로 이동하기",
     "statement": "현재 위치에서 자신의 홈 디렉터리로 이동하시오. 이동한 위치의 전체 경로를 출력하시오.",
-    "input": "student@ubuntu:/tmp$ [초기 상태 확인]\n/tmp\nstudent@ubuntu:/tmp$ [명령어 입력]",
+    "input": "student@ubuntu:/tmp$ [명령어 입력]\n/tmp",
     "output": "student@ubuntu:~$ [명령어 입력]\n/home/student",
     "code": "cd ~\npwd",
     "hint": "현재 폴더가 어디든 홈 디렉터리로 이동할 수 있습니다.",
     "explanation": "~는 현재 사용자의 홈 디렉터리이고 cd ~는 해당 경로로 이동한다.",
-    "initialState": "student@ubuntu:/tmp$ [초기 상태 확인]\n/tmp\nstudent@ubuntu:/tmp$ [명령어 입력]",
+    "initialState": "student@ubuntu:/tmp$ [명령어 입력]\n/tmp",
     "afterState": "student@ubuntu:~$ [명령어 입력]\n/home/student",
     "commandParts": [
       {
@@ -822,12 +822,12 @@ export const ubuntuPptProblems = [
     "topic": "파일 권한",
     "title": "기호 모드로 쓰기 권한 제거",
     "statement": "note.txt 파일의 소유자에게 부여된 쓰기 권한만 제거하시오. 다른 사용자의 권한은 그대로 두고 변경 결과를 확인하시오.",
-    "input": "student@ubuntu:~/lab$ [초기 상태 확인]\n-rw-rw-r-- 1 student student 6 Nov 11 10:00 note.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
+    "input": "student@ubuntu:~/lab$ [명령어 입력]\n-rw-rw-r-- 1 student student 6 Nov 11 10:00 note.txt",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\n-r--rw-r-- 1 student student 6 Nov 11 10:00 note.txt",
     "code": "chmod u-w note.txt\nls -l note.txt",
     "hint": "권한 기호의 사용자·연산자·권한 문자를 구분한다.",
     "explanation": "chmod u-w는 소유자(u)의 쓰기(w) 권한을 제거한다.",
-    "initialState": "student@ubuntu:~/lab$ [초기 상태 확인]\n-rw-rw-r-- 1 student student 6 Nov 11 10:00 note.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
+    "initialState": "student@ubuntu:~/lab$ [명령어 입력]\n-rw-rw-r-- 1 student student 6 Nov 11 10:00 note.txt",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\n-r--rw-r-- 1 student student 6 Nov 11 10:00 note.txt",
     "commandParts": [
       {
@@ -857,12 +857,12 @@ export const ubuntuPptProblems = [
     "topic": "파일 권한",
     "title": "그룹에 두 가지 권한 추가",
     "statement": "note.txt 파일의 그룹에 쓰기와 실행 권한을 추가하시오. 기존 읽기 권한은 유지하고 변경된 결과를 확인하시오.",
-    "input": "student@ubuntu:~/lab$ [초기 상태 확인]\n-rw-r----- 1 student student 6 Nov 11 10:00 note.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
+    "input": "student@ubuntu:~/lab$ [명령어 입력]\n-rw-r----- 1 student student 6 Nov 11 10:00 note.txt",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\n-rw-rwx--- 1 student student 6 Nov 11 10:00 note.txt",
     "code": "chmod g+wx note.txt\nls -l note.txt",
     "hint": "권한의 추가와 특정 값으로 덮어쓰기를 구별한다.",
     "explanation": "chmod g+wx는 그룹에 쓰기와 실행 권한을 더한다. 이미 있던 읽기 권한은 유지한다.",
-    "initialState": "student@ubuntu:~/lab$ [초기 상태 확인]\n-rw-r----- 1 student student 6 Nov 11 10:00 note.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
+    "initialState": "student@ubuntu:~/lab$ [명령어 입력]\n-rw-r----- 1 student student 6 Nov 11 10:00 note.txt",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\n-rw-rwx--- 1 student student 6 Nov 11 10:00 note.txt",
     "commandParts": [
       {
@@ -1055,12 +1055,12 @@ export const ubuntuPptProblems = [
     "topic": "셸 리다이렉션",
     "title": "기존 파일 끝에 내용 추가",
     "statement": "result.txt 파일의 기존 hello 아래에 world를 새 줄로 추가하시오. 기존 내용을 유지한 상태에서 파일 전체를 확인하시오.",
-    "input": "student@ubuntu:~/lab$ [초기 상태 확인]\nhello\nstudent@ubuntu:~/lab$ [명령어 입력]",
+    "input": "student@ubuntu:~/lab$ [명령어 입력]\nhello",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\nhello\nworld",
     "code": "echo world >> result.txt\ncat result.txt",
     "hint": "내용을 덮어쓰는 경우와 끝에 추가하는 경우를 구별한다.",
     "explanation": "출력 리다이렉션 >>는 기존 내용 뒤에 출력 결과를 이어 붙인다.",
-    "initialState": "student@ubuntu:~/lab$ [초기 상태 확인]\nhello\nstudent@ubuntu:~/lab$ [명령어 입력]",
+    "initialState": "student@ubuntu:~/lab$ [명령어 입력]\nhello",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\nhello\nworld",
     "commandParts": [
       {
@@ -1519,12 +1519,12 @@ export const ubuntuPptProblems = [
     "title": "기존 아카이브 파일 추출하기",
     "statement": "현재 폴더에 있는 backup.tar 아카이브에서 docs 폴더와 note.txt 파일을 추출하시오. 추출한 파일을 확인하시오.",
     "input": "student@ubuntu:~/lab$ ls\nbackup.tar\nstudent@ubuntu:~/lab$ [명령어 입력]",
-    "output": "student@ubuntu:~/lab$ [명령어 입력]\ndocs/\ndocs/note.txt\nstudent@ubuntu:~/lab$ [명령어 입력]\ndocs:\nnote.txt",
+    "output": "student@ubuntu:~/lab$ [명령어 입력]\ndocs/\ndocs/note.txt",
     "code": "tar xvf backup.tar",
     "hint": "아카이브 생성, 내용 확인, 추출의 기능 문자를 비교한다.",
     "explanation": "tar xvf는 아카이브의 원래 파일을 추출한다.",
     "initialState": "student@ubuntu:~/lab$ ls\nbackup.tar\nstudent@ubuntu:~/lab$ [명령어 입력]",
-    "afterState": "student@ubuntu:~/lab$ [명령어 입력]\ndocs/\ndocs/note.txt\nstudent@ubuntu:~/lab$ [명령어 입력]\ndocs:\nnote.txt",
+    "afterState": "student@ubuntu:~/lab$ [명령어 입력]\ndocs/\ndocs/note.txt",
     "commandParts": [
       {
         "token": "tar",
@@ -1558,12 +1558,12 @@ export const ubuntuPptProblems = [
     "title": "압축 후 압축 파일의 내용 확인",
     "statement": "report.txt 파일을 gzip 형식으로 압축하시오. 압축을 해제하지 않고 압축된 파일의 내용을 화면에 출력하시오.",
     "input": "student@ubuntu:~/lab$ cat report.txt\nhello\nstudent@ubuntu:~/lab$ [명령어 입력]",
-    "output": "student@ubuntu:~/lab$ [명령어 입력]\nstudent@ubuntu:~/lab$ [명령어 입력]\nreport.txt.gz\nstudent@ubuntu:~/lab$ [명령어 입력]\nhello",
+    "output": "student@ubuntu:~/lab$ [명령어 입력]\nstudent@ubuntu:~/lab$ [명령어 입력]\nhello",
     "code": "gzip report.txt\nzcat report.txt.gz",
     "hint": "압축 파일 자체를 읽는 방식과 압축을 푸는 방식을 구별한다.",
     "explanation": "gzip은 .gz 압축 파일을 생성한다. zcat은 gzip 압축 파일의 내용을 화면에 출력한다.",
     "initialState": "student@ubuntu:~/lab$ cat report.txt\nhello\nstudent@ubuntu:~/lab$ [명령어 입력]",
-    "afterState": "student@ubuntu:~/lab$ [명령어 입력]\nstudent@ubuntu:~/lab$ [명령어 입력]\nreport.txt.gz\nstudent@ubuntu:~/lab$ [명령어 입력]\nhello",
+    "afterState": "student@ubuntu:~/lab$ [명령어 입력]\nstudent@ubuntu:~/lab$ [명령어 입력]\nhello",
     "commandParts": [
       {
         "token": "gzip",
