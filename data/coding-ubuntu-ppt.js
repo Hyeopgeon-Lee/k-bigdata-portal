@@ -861,7 +861,7 @@ export const ubuntuPptProblems = [
     "topic": "Vim 문서 편집",
     "title": "특정 행 삭제하기",
     "statement": "Vim에서 memo.txt의 두 번째 줄을 삭제하시오. 파일을 저장한 후 남은 내용을 확인하시오.",
-    "input": "student@ubuntu:~/lab$ cat memo.txt\none\ntwo\nthree\nstudent@ubuntu:~/lab$ [명령어 입력]",
+    "input": "student@ubuntu:~/lab$ [명령어 입력]\none\ntwo\nthree\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\none\nthree",
     "code": "vim memo.txt\ncat memo.txt",
     "vimSteps": [
@@ -874,7 +874,7 @@ export const ubuntuPptProblems = [
     ],
     "hint": "Vim에서는 현재 커서가 놓인 행을 기준으로 편집 명령을 실행합니다.",
     "explanation": "터미널에서 vim memo.txt 실행 → Vim 안에서 :2 입력 후 Enter로 두 번째 행 이동 → 일반 모드에서 dd로 행 삭제 → :wq 입력 후 Enter → 터미널에서 cat memo.txt로 확인한다.",
-    "initialState": "student@ubuntu:~/lab$ cat memo.txt\none\ntwo\nthree\nstudent@ubuntu:~/lab$ [명령어 입력]",
+    "initialState": "student@ubuntu:~/lab$ [명령어 입력]\none\ntwo\nthree\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\none\nthree",
     "commandParts": [
       {
@@ -908,7 +908,7 @@ export const ubuntuPptProblems = [
     "topic": "Vim 문서 편집",
     "title": "파일 전체 문자열 바꾸기",
     "statement": "Vim에서 memo.txt에 들어 있는 linux를 모두 Linux로 변경하시오. 저장한 후 바뀐 파일 내용을 확인하시오.",
-    "input": "student@ubuntu:~/lab$ cat memo.txt\nlinux intro\nlearn linux\nlinux lab\nstudent@ubuntu:~/lab$ [명령어 입력]",
+    "input": "student@ubuntu:~/lab$ [명령어 입력]\nlinux intro\nlearn linux\nlinux lab\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\nLinux intro\nlearn Linux\nLinux lab",
     "code": "vim memo.txt\ncat memo.txt",
     "vimSteps": [
@@ -920,7 +920,7 @@ export const ubuntuPptProblems = [
     ],
     "hint": "일부만이 아니라 파일 전체를 대상으로 문자열을 바꾸어야 합니다.",
     "explanation": "터미널에서 vim memo.txt 실행 → Vim 안에서 :%s/linux/Linux/g 입력 후 Enter로 파일 전체 변경 → :wq 입력 후 Enter로 저장·종료 → 터미널에서 cat memo.txt로 확인한다.",
-    "initialState": "student@ubuntu:~/lab$ cat memo.txt\nlinux intro\nlearn linux\nlinux lab\nstudent@ubuntu:~/lab$ [명령어 입력]",
+    "initialState": "student@ubuntu:~/lab$ [명령어 입력]\nlinux intro\nlearn linux\nlinux lab\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\nLinux intro\nlearn Linux\nLinux lab",
     "commandParts": [
       {
