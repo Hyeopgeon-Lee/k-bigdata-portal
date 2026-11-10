@@ -49,7 +49,7 @@ for(const id of ['coding-share-button','coding-link-button','coding-report-butto
 const ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
 assert.equal(new Set(ids).size,ids.length,'HTML ids must be unique');
 assert.ok(js.includes('navigator.share')&&js.includes('navigator.clipboard')&&js.includes('document.execCommand'),'share and fallbacks wired');
-assert.ok(js.includes('learningReportUrl("coding",current'),'coding issue report uses URL helper');
+assert.ok(js.includes('learningReportUrl("coding",q'),'coding issue report uses URL helper');
 assert.ok(js.includes('url.searchParams.set("id", q.id)'),'shared deep links preserve question id');
 assert.ok(js.includes('history.replaceState'),'deep link remains stable on question selection');
 assert.ok(css.includes('.coding-share-actions')&&css.includes('@media(max-width:530px)'),'responsive share actions');
