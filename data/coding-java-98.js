@@ -921,7 +921,7 @@ export const javaProblems = [
     "level": "입문",
     "topic": "조건문",
     "title": "윤년 판별",
-    "statement": "연도(1583~9999)를 입력받으시오. 그레고리력 윤년 규칙에 따라 윤년이면 LEAP, 아니면 COMMON을 출력하시오.",
+    "statement": "연도(1583~9999)를 입력받으시오. 400의 배수이거나, 4의 배수이면서 100의 배수가 아닌 연도는 윤년입니다. 윤년이면 LEAP, 그렇지 않으면 COMMON을 출력하시오.",
     "input": "2000",
     "output": "LEAP",
     "examples": [
@@ -3606,7 +3606,7 @@ export const javaProblems = [
     "level": "종합 활용",
     "topic": "클래스·객체·컬렉션",
     "title": "도서 대출 가능 여부",
-    "statement": "정수 N(1~20)을 입력받고 도서 N개의 제목 한 단어와 대출 여부(0 또는 1)를 차례대로 입력받으시오. Book 클래스의 title, borrowed 필드를 사용해 대출할 수 있는 도서의 제목만 입력 순서대로 한 줄에 하나씩 출력하시오. 해당 도서가 없으면 NONE을 출력하시오.",
+    "statement": "정수 N(1~20)을 입력받고 도서 N개의 제목 한 단어와 대출 여부를 차례대로 입력받으시오. 대출 여부는 0이 대출 가능, 1이 대출 중을 뜻합니다. Book 클래스의 title, borrowed 필드를 사용해 대출 가능한 도서 제목만 입력 순서대로 한 줄에 하나씩 출력하시오. 해당 도서가 없으면 NONE을 출력하시오.",
     "input": "3 Java 0 Cloud 1 Python 0",
     "output": "Java\nPython",
     "examples": [
