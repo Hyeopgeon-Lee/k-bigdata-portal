@@ -37,6 +37,10 @@ assert.equal(ubuntuPptProblems.length,50,'PPT-based Linux exercises count');
 // A related-option table must be available for every answer:
 // the new shared reference, the existing ls table, or the existing Vim table.
 assert.ok(html.includes('id="coding-ubuntu-related-options"') && html.includes('id="coding-ubuntu-related-rows"'),'Ubuntu related-options table is mounted');
+assert.ok(html.includes('id="coding-ubuntu-concept"') && html.includes('id="coding-ubuntu-verification"'),'Ubuntu unique concepts and conditional verification have separate blocks');
+assert.ok(js.includes('checkAlreadyIncluded'),'checking command is not repeated when already in the answer');
+assert.ok(ubuntuPptProblems.every(p=>p.explanation.trim().length>0 && !p.verificationDetail),'All Ubuntu lessons have specific explanations without duplicated checking prose');
+
 assert.ok(js.includes('getUbuntuRelatedOptions(guide)'),'Ubuntu related options are rendered per question');
 for(const p of ubuntuPptProblems){
   const rows=getUbuntuRelatedOptions(p);
@@ -70,7 +74,7 @@ assert.ok(!html.includes('id="coding-vim-steps"')&&!html.includes('id="coding-vi
 assert.ok(!html.includes('id="coding-ubuntu-vim-steps"')&&!html.includes('id="coding-ubuntu-vim-list"'),'Duplicated Vim instructions removed');
 assert.ok(!js.includes('function renderVimSteps(q)')&&js.includes('const vimList = $("#coding-vim-explanation-list")'),'One readable Vim explanation list remains without a duplicate renderer');
 assert.ok(html.includes('id="coding-vim-explanation-list"'),'Vim uses one numbered list in the existing explanation section');
-assert.ok(js.includes('vimList.append(item)')&&js.includes('$("#coding-explanation").hidden = vimSteps.length > 0'),'Vim list replaces duplicate inline explanation');
+assert.ok(js.includes('vimList.append(item)')&&js.includes('$("#coding-explanation").hidden = q.language === "linux" || vimSteps.length > 0'),'Vim list replaces duplicate inline explanation');
 assert.ok(css.includes('.coding-vim-instruction-list li'),'Vim steps retain readable spacing');
 assert.ok(html.includes('id="coding-ubuntu-vim-reference"')&&html.includes('id="coding-ubuntu-vim-rows"'),'Vim command table exists in hidden answer panel');
 assert.ok(js.includes('const vimReferenceRows =')&&js.includes('vimRows.append(tr)'),'Vim table renders for editing tasks');
