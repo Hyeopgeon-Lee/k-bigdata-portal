@@ -110,9 +110,9 @@
 .coding-ubuntu-states>div{min-width:0;border:1px solid #dfebf7;background:#f7faff;border-radius:11px;padding:13px}
 .coding-ubuntu-states strong{display:block;font-size:13px;margin-bottom:7px;color:#27538d}
 .coding-ubuntu-states p,.coding-ubuntu-info{line-height:1.7;color:#344b68;overflow-wrap:anywhere;white-space:pre-wrap;margin:0}
-.coding-ubuntu-terminal-demo .coding-io>div{background:#102039;border-color:#243d5f}
-.coding-ubuntu-terminal-demo .coding-io b{color:#9fc8ff}
-.coding-ubuntu-terminal-demo .coding-io pre{color:#e7eefb;white-space:pre;overflow-x:auto;overflow-wrap:normal;font:13px/1.8 ui-monospace,SFMono-Regular,Consolas,monospace}
+.coding-ubuntu-terminal-demo .coding-io>div:last-child{background:#102039;border-color:#243d5f}
+.coding-ubuntu-terminal-demo .coding-io>div:last-child b{color:#9fc8ff}
+.coding-ubuntu-terminal-demo .coding-io>div:last-child pre{color:#e7eefb;white-space:pre;overflow-x:auto;overflow-wrap:normal;font:13px/1.8 ui-monospace,SFMono-Regular,Consolas,monospace}
 @media(max-width:530px){.coding-ubuntu-states{grid-template-columns:1fr}.coding-ubuntu-guide .coding-trace th:first-child{width:38%}}
 
 /* 350 practical learning questions: compact header, clear share actions */
