@@ -427,3 +427,136 @@
     white-space:pre-wrap;
   }
 }
+
+
+/* Ubuntu: one visual language for all 50 answer explanations. */
+.coding-ubuntu-mode #coding-answer{
+  background:#fff;border:1px solid #dae5f2;border-radius:16px;
+  box-shadow:0 8px 28px rgba(22,48,86,.055);
+}
+.coding-ubuntu-mode #coding-answer-heading{
+  color:#102d55;font-weight:850;letter-spacing:-.025em;
+}
+.coding-ubuntu-mode #coding-answer>.coding-code pre{
+  background:#12243b;color:#edf4ff;border:1px solid #263f60;
+  border-radius:12px;line-height:1.85;
+}
+.coding-ubuntu-mode #coding-overall-explanation{
+  margin:20px 0 0;padding:18px 19px;
+  border:1px solid #d9e6f5;border-radius:12px;background:#f5f9ff;
+}
+.coding-ubuntu-mode #coding-overall-explanation h3{
+  margin:0 0 12px;font-size:16px;color:#153a71;
+}
+.coding-ubuntu-mode .coding-vim-instruction-list{
+  border:0;background:transparent;border-radius:0;padding:0 0 0 24px;
+  color:#263c57;gap:13px;
+}
+.coding-ubuntu-mode .coding-vim-instruction-list li{padding-left:3px;word-break:keep-all}
+.coding-ubuntu-mode .coding-vim-instruction-list li::marker{color:#1c5a9e;font-weight:800}
+.coding-ubuntu-mode .coding-ubuntu-guide{
+  border:0;margin-top:22px;padding:0;display:grid;gap:16px;min-width:0;
+}
+.coding-ubuntu-mode .coding-ubuntu-guide>h3{
+  margin:2px 0 -7px;color:#193b66;letter-spacing:-.02em;font-size:16px;
+}
+.coding-ubuntu-mode #coding-ubuntu-concept{
+  background:#f5f9ff;border:1px solid #d9e6f3;padding:17px 19px;border-radius:12px;
+}
+.coding-ubuntu-mode #coding-ubuntu-concept h3,
+.coding-ubuntu-mode #coding-ubuntu-verification h3{
+  margin:0 0 10px;font-size:16px;color:#163c70;
+}
+.coding-ubuntu-mode #coding-ubuntu-concept-text{
+  margin:0;color:#30455f;font-size:15px;line-height:1.85;
+  white-space:pre-line;word-break:keep-all;overflow-wrap:anywhere;
+}
+.coding-ubuntu-mode #coding-ubuntu-parts-wrap{border:1px solid #e0e9f4;border-radius:11px;overflow-x:auto}
+.coding-ubuntu-mode #coding-ubuntu-parts-wrap .coding-trace{margin:0}
+.coding-ubuntu-mode .coding-ubuntu-guide .coding-trace{
+  font-size:14px;line-height:1.75;border-collapse:collapse;
+}
+.coding-ubuntu-mode .coding-ubuntu-guide .coding-trace th{
+  background:#eaf1fb;color:#27466c;font-weight:800;
+}
+.coding-ubuntu-mode .coding-ubuntu-guide .coding-trace th,
+.coding-ubuntu-mode .coding-ubuntu-guide .coding-trace td{
+  padding:11px 12px;vertical-align:top;word-break:keep-all;
+}
+.coding-ubuntu-mode .coding-ubuntu-guide .coding-trace td:last-child{
+  font-weight:500;color:#36506b;
+}
+.coding-ubuntu-mode .coding-ubuntu-guide .coding-trace td:first-child{
+  font-weight:800;color:#174783;
+}
+.coding-ubuntu-mode .coding-ubuntu-guide #coding-ubuntu-related-options{
+  margin-top:0;padding:16px 18px;border:1px solid #e0e9f4;border-radius:12px;
+}
+.coding-ubuntu-mode #coding-ubuntu-related-options>h3{
+  margin:0 0 7px;color:#193b66;
+}
+.coding-ubuntu-mode #coding-ubuntu-related-options .coding-ubuntu-info{
+  margin:0 0 11px;font-size:13px;
+}
+.coding-ubuntu-mode .coding-ubuntu-reference{
+  margin:0;padding:0;border:1px solid #d7e3f2;border-radius:12px;
+  background:#fbfdff;overflow:hidden;
+}
+.coding-ubuntu-mode .coding-ubuntu-reference[hidden],
+.coding-ubuntu-mode #coding-ubuntu-verification[hidden],
+.coding-ubuntu-mode #coding-ubuntu-concept[hidden],
+.coding-ubuntu-mode #coding-ubuntu-related-options[hidden]{display:none!important}
+.coding-ubuntu-mode .coding-ubuntu-reference summary{
+  display:flex;justify-content:space-between;align-items:center;gap:12px;
+  min-height:52px;padding:14px 17px;cursor:pointer;
+  color:#1c477c;font-size:15px;font-weight:800;line-height:1.45;
+  list-style:none;word-break:keep-all;
+}
+.coding-ubuntu-mode .coding-ubuntu-reference summary::-webkit-details-marker{display:none}
+.coding-ubuntu-mode .coding-ubuntu-reference summary::after{
+  content:"+";font:800 21px/1 ui-monospace,SFMono-Regular,Consolas,monospace;color:#3d6593;
+}
+.coding-ubuntu-mode .coding-ubuntu-reference[open] summary::after{content:"−"}
+.coding-ubuntu-mode .coding-ubuntu-reference summary:focus-visible{
+  outline:3px solid #1b8fd9;outline-offset:-4px;border-radius:11px;
+}
+.coding-ubuntu-mode .coding-ubuntu-reference[open] summary{border-bottom:1px solid #d7e3f2;background:#f2f7fd}
+.coding-ubuntu-mode .coding-ubuntu-reference>.coding-ubuntu-info{
+  padding:13px 17px 10px;margin:0;font-size:13px;
+}
+.coding-ubuntu-mode .coding-ubuntu-reference>.coding-scroll{margin:0 13px 14px}
+.coding-ubuntu-mode #coding-ubuntu-verification{
+  padding:16px 18px;border:1px solid #dce8f6;border-radius:12px;
+}
+.coding-ubuntu-mode #coding-ubuntu-verification .coding-code pre{
+  border-radius:9px;margin:0;
+}
+.coding-ubuntu-mode .coding-ubuntu-guide>h3:has(+ #coding-ubuntu-mistake){
+  margin-top:3px;margin-bottom:-8px;
+}
+.coding-ubuntu-mode #coding-ubuntu-mistake{
+  margin:0;padding:13px 16px;background:#fffaf1;
+  border:1px solid #eddfc1;border-left:4px solid #c69748;border-radius:9px;
+  font-size:14px;line-height:1.8;color:#5b4c37;word-break:keep-all;
+}
+@media(max-width:600px){
+  .coding-ubuntu-mode #coding-answer{padding:14px}
+  .coding-ubuntu-mode #coding-overall-explanation,
+  .coding-ubuntu-mode #coding-ubuntu-concept,
+  .coding-ubuntu-mode #coding-ubuntu-related-options,
+  .coding-ubuntu-mode #coding-ubuntu-verification{padding:14px}
+  .coding-ubuntu-mode .coding-ubuntu-guide{gap:13px}
+  .coding-ubuntu-mode .coding-ubuntu-guide .coding-trace th,
+  .coding-ubuntu-mode .coding-ubuntu-guide .coding-trace td{padding:7px 0}
+  .coding-ubuntu-mode .coding-ubuntu-guide .coding-trace tbody tr{
+    padding:12px;border:1px solid #dfe7f3;background:#fff;border-radius:11px;
+  }
+  .coding-ubuntu-mode #coding-ubuntu-concept-text{font-size:15px;line-height:1.9}
+  .coding-ubuntu-mode .coding-ubuntu-guide .coding-trace td:first-child{font-size:15px}
+  .coding-ubuntu-mode #coding-ubuntu-related-options .coding-trace td:nth-child(3){
+    padding:8px 10px;margin-top:4px;font-size:13px;
+  }
+  .coding-ubuntu-mode .coding-ubuntu-reference summary{min-height:50px;padding:13px 14px}
+  .coding-ubuntu-mode .coding-ubuntu-reference>.coding-ubuntu-info{padding:12px 14px}
+  .coding-ubuntu-mode .coding-ubuntu-reference>.coding-scroll{margin:0 10px 12px}
+}
