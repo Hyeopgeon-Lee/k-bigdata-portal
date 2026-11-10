@@ -89,6 +89,15 @@ assert.match(q("C-047").code, /\n            printf\("\*"\)/);
 assert.match(q("C-052").code, /\n        if \(n%d==0\) \{/);
 assert.match(q("C-064").code, /\n            if \(a\[j\]>a\[j\+1\]\) \{/);
 assert.match(q("C-100").code, /\n                struct Student temp/);
+assert.match(q("C-073").code, /for \(int i = 0; word\[i\]/);
+for (const id of ["C-071", "C-073", "C-077", "C-078", "C-079"]) {
+  assert.doesNotMatch(q(id).code, /\bsize_t\b/, id + " should use a beginner-friendly index type");
+}
+assert.match(q("C-071").code, /printf\("%d\\n",length\)/);
+assert.match(q("C-076").code, /int index = -1;/);
+assert.match(q("C-076").code, /if \(found != NULL\)/);
+assert.match(q("C-080").code, /snprintf로 결과 문자열을 지정된 크기의 배열에 저장합니다/);
+
 
 // Optional real execution validation: C_CODING_RUNTIME_TEST=1 node tests/coding-c-printf-format.test.mjs
 // Compile and execute every authored sample input with gcc, comparing exact expected output.
