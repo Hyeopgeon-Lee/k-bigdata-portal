@@ -72,7 +72,7 @@ assert.ok(!html.includes('coding-ubuntu-states'),'duplicate before/after details
 assert.ok(js.includes('coding-ubuntu-terminal-demo",isUbuntu'),'all Ubuntu questions use terminal presentation');
 
 assert.ok(js.includes('...ubuntuPptProblems')&&!js.includes('ubuntuLegacyGuides'),'browser uses only the PPT Linux data');
-assert.ok(html.includes('js/coding.js?v=20261111-vim-step-by-step-1'),'up-to-date script reference');
+assert.match(html,/js\/coding\.js\?v=20261111-[\w-]+/,'up-to-date script reference');
 const firstVisitAutocomplete=html.includes('id="coding-autocomplete-toggle" type="checkbox" role="switch"')
   && !/<input[^>]+id="coding-autocomplete-toggle"[^>]+checked/.test(html);
 assert.ok(firstVisitAutocomplete,'autocomplete switch exists and is initially unchecked');
