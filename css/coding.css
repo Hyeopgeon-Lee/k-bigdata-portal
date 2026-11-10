@@ -414,7 +414,9 @@
   .coding-ubuntu-guide #coding-ubuntu-ls-options .coding-trace tbody td:nth-child(3)::before{
     display:block;
     margin-bottom:3px;
-    font:750 12px/1.5 inherit;
+    font-size:12px;
+    font-weight:750;
+    line-height:1.5;
     color:#60728b;
   }
   .coding-ubuntu-guide #coding-ubuntu-ls-options .coding-trace tbody td:nth-child(2)::before{content:"기능 설명"}
