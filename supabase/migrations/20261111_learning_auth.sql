@@ -255,6 +255,19 @@ grant execute on function private.portal_read_allowed(),private.portal_write_all
 -- Private schema stays unexposed to the Data API. Service-side admin code should
 -- use public tables + a service key or carefully scoped SECURITY DEFINER RPC.
 
+
+-- Audited student state changes (service-role write only).
+create table if not exists public.admin_audit_log (
+ id bigint generated always as identity primary key,
+ actor_user_id uuid references auth.users(id) on delete set null,
+ target_user_id uuid references auth.users(id) on delete set null,
+ old_status text not null,
+ new_status text not null,
+ created_at timestamptz not null default now()
+);
+alter table public.admin_audit_log enable row level security;
+revoke all on public.admin_audit_log from anon,authenticated;
+
 -- A JWT-bound, server-enforced session/admin check, for Edge Function authorization.
 create or replace function public.portal_super_admin_allowed()
 returns boolean language sql stable security definer
