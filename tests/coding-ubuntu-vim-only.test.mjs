@@ -1,45 +1,26 @@
 import assert from "node:assert/strict";
-import {codingProblems as samples} from "../data/coding-samples.js";
-import {ubuntuFoundationProblems} from "../data/coding-ubuntu-foundations.js";
-import {ubuntuAdvancedProblems} from "../data/coding-ubuntu-advanced.js";
-import {ubuntuLegacyGuides} from "../data/coding-ubuntu-legacy-guides.js";
+import {ubuntuPptProblems as lessons} from "../data/coding-ubuntu-ppt.js";
 
-const lessons = [...samples.filter(q => q.language === "linux"), ...ubuntuFoundationProblems, ...ubuntuAdvancedProblems];
-const byId = new Map(lessons.map(q => [q.id, q]));
-assert.equal(lessons.length, 50, "Ubuntu still has 50 exercises");
-assert.equal(byId.size, 50, "All Ubuntu exercise IDs are unique");
+assert.equal(lessons.length,50,"All 50 active Ubuntu exercises are present");
+const byId=new Map(lessons.map(x=>[x.id,x]));
+assert.equal(byId.size,50,"IDs are unique");
 
-const vimFileLessons = ["LINUX-001", "LINUX-002", "LINUX-011", "LINUX-047", "LINUX-048"];
-for (const id of vimFileLessons) {
-  const q = byId.get(id);
-  assert.ok(q, id + " exists");
-  assert.match(q.statement, /vim/i, id + " requires Vim in the question");
-  assert.match(q.code, /\bvim\s+[^\n]+/, id + " opens file via Vim");
-  assert.match(q.hint, /vim/i, id + " hint explains Vim");
-  assert.match(q.explanation, /vim/i, id + " explanation matches the Vim workflow");
-  assert.match(q.code, /:wq/, id + " gives the save and exit command");
-  assert.doesNotMatch(q.code, /\btouch\b|\bnano\b|\bgedit\b|\bemacs\b|printf[^\n]*>{1,2}/i, id + " must not substitute another editor or file writer");
+const editing=["LINUX-001","LINUX-002","LINUX-011","LINUX-023","LINUX-024","LINUX-025"];
+for(const id of editing){
+ const q=byId.get(id);
+ assert.ok(q,id+" exists");
+ assert.match(q.code,/(?:^|\n)vim\s+[^\n]+/,id+" edits with Vim");
+ assert.match(q.statement,/Vim/i,id+" explains Vim in question");
+ assert.match(q.explanation,/:wq/,id+" explains saving before exit");
 }
-for (const q of lessons) {
-  assert.doesNotMatch(q.code, /\bnano\b|\bgedit\b|\bemacs\b|\bvi\s/i, q.id + " uses no alternate text editor");
-  if (q.id !== "LINUX-018") assert.doesNotMatch(q.code, /\btouch\b/, q.id + " uses Vim for file creation, not touch");
+for(const q of lessons){
+ assert.match(q.statement,/하시오\.$/,q.id+" must use an imperative first-year prompt");
+ assert.match(q.input,/^student@ubuntu:/,q.id+" setup is a terminal screenshot-style transcript");
+ assert.match(q.output,/^student@ubuntu:/,q.id+" expected result is a terminal screenshot-style transcript");
+ assert.doesNotMatch(q.code,/\b(?:touch|nano|gedit|emacs)\b/i,q.id+" no non-PPT editor or touch file-creation method");
+ assert.equal(q.input,q.initialState,q.id+" duplicate setup data must agree");
+ assert.equal(q.output,q.afterState,q.id+" duplicate result data must agree");
 }
-assert.equal(byId.get("LINUX-018").code, "touch memo.txt", "touch remains valid only for updating file timestamps");
-assert.match(byId.get("LINUX-018").statement, /시간 정보|수정 시간/, "timestamp lesson is not an editing lesson");
-
-for (const id of ["LINUX-001", "LINUX-002"]) {
-  const q = byId.get(id);
-  const guide = ubuntuLegacyGuides[id];
-  assert.ok(guide, id + " has a detailed guide");
-  assert.equal(guide.code, q.code, id + " visible commands match copied commands");
-  assert.ok(guide.commandParts.some(part => /vim/i.test(part.token)), id + " guide documents Vim");
-  assert.doesNotMatch(JSON.stringify(guide.commandParts), /touch|nano|gedit|emacs/i, id + " guide is Vim-only");
-}
-assert.match(byId.get("LINUX-002").code, /chmod 640 report\.txt/, "file permissions remain unchanged");
-assert.match(byId.get("LINUX-002").code, /ls -l report\.txt/, "permission verification remains unchanged");
-assert.match(byId.get("LINUX-047").code, /\bi\s*→\s*hello/, "Vim new-file lesson explains insert mode");
-assert.match(byId.get("LINUX-048").code, /G\s*→\s*o\s*→\s*world/, "Vim append lesson explains navigation and opening a line");
-assert.equal(byId.get("LINUX-047").topic, "Vim 편집");
-assert.equal(byId.get("LINUX-048").topic, "Vim 편집");
-
-console.log("PASS: 50 Ubuntu exercises; 5 Vim editing tasks, consistent guide and command copy, touch reserved for timestamps");
+assert.ok(byId.get("LINUX-018").code.startsWith("grep -n"),"LOG search remains PPT-based");
+assert.ok(byId.get("LINUX-047").code.startsWith("gzip"),"compression is not an editor lesson");
+console.log("PASS: 50 active Ubuntu lessons preserve Vim-only editing, terminal transcripts and imperative prompts.");
