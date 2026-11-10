@@ -38,7 +38,7 @@
 .coding-chip{display:inline-flex;align-items:center;border:1px solid #d9e5f8;background:#f3f7fe;color:#35578e;border-radius:20px;padding:4px 10px;font-size:12px;font-weight:700}
 .coding-chip--muted{background:#f3f5f8;color:#5b677b;border-color:#e4e8ee}
 .coding-detail h2{font-size:clamp(24px,3vw,30px);margin:13px 0 12px;line-height:1.35;letter-spacing:-.04em}
-.coding-desc{margin:0 0 22px;color:#35455e;line-height:1.85}
+.coding-desc{margin:0 0 22px;color:#35455e;line-height:1.85;white-space:pre-line;overflow-wrap:anywhere}
 .coding-section{border-top:1px solid #e6ebf3;margin-top:22px;padding-top:20px}
 .coding-section h3{font-size:17px;letter-spacing:-.025em;margin:0 0 12px}
 .coding-io{display:grid;grid-template-columns:1fr 1fr;gap:12px}
