@@ -663,65 +663,81 @@ export const ubuntuAdvancedProblems = [
   {
     "id": "LINUX-047",
     "language": "linux",
-    "topic": "파이프·리다이렉션",
-    "title": "명령 결과를 파일에 저장",
+    "topic": "Vim 파일 편집",
+    "title": "Vim으로 새 텍스트 파일 저장",
     "level": "종합 활용",
-    "statement": "hello 한 줄을 greeting.txt라는 새 파일에 저장하시오.",
+    "statement": "Vim 편집기를 사용하여 greeting.txt 파일을 만들고 hello를 한 줄 입력한 뒤 저장하시오.",
     "input": "greeting.txt가 없는 개인 연습 폴더",
     "output": "greeting.txt 내용이 hello 한 줄",
-    "code": "printf 'hello\\n' > greeting.txt",
-    "hint": "printf 명령어의 목적과 옵션을 생각하고, 출력 또는 파일 상태를 확인하는 방법도 떠올려 보세요.",
-    "explanation": "printf — 문자열을 정해진 형식으로 출력 / \\n — 줄바꿈 문자 / > — 표준 출력을 파일로 저장하며 기존 파일이면 덮어씀",
+    "code": "vim greeting.txt  # Vim에서 i → hello 입력 → Esc → :wq → Enter",
+    "hint": "vim greeting.txt로 파일을 열고 i를 눌러 입력 모드에서 hello를 작성하시오. Esc를 누른 뒤 :wq와 Enter로 저장·종료하시오.",
+    "explanation": "vim greeting.txt — Vim 편집기로 파일 열기 / i — 입력 모드 시작 / hello — 파일에 작성할 내용 / Esc — 일반 모드로 돌아가기 / :wq — 저장 후 종료(Enter로 실행)",
     "initialState": "greeting.txt가 없는 개인 연습 폴더",
     "afterState": "greeting.txt 없음 → 내용 hello가 포함된 파일 생성",
     "commandParts": [
       {
-        "token": "printf",
-        "meaning": "문자열을 정해진 형식으로 출력"
+        "token": "vim greeting.txt",
+        "meaning": "Vim에서 새 파일을 엽니다"
       },
       {
-        "token": "\\n",
-        "meaning": "줄바꿈 문자"
+        "token": "i",
+        "meaning": "입력 모드로 전환합니다"
       },
       {
-        "token": ">",
-        "meaning": "표준 출력을 파일로 저장하며 기존 파일이면 덮어씀"
+        "token": "Esc",
+        "meaning": "일반 모드로 돌아갑니다"
+      },
+      {
+        "token": ":wq",
+        "meaning": "파일을 저장하고 종료합니다(Enter로 실행)"
       }
     ],
     "verification": "cat greeting.txt",
-    "verificationDetail": "cat greeting.txt",
-    "commonMistake": ">를 기존 파일에 사용하면 내용을 덮어씁니다. 실습 문제에서는 파일이 없는 상태를 전제로 합니다.",
-    "warning": "중요한 파일 이름에 >를 사용하지 마세요. 기존 내용이 지워집니다.",
+    "verificationDetail": "cat greeting.txt를 실행했을 때 hello 한 줄이 출력되는지 확인하시오.",
+    "commonMistake": "입력 모드에서 :wq를 입력하면 파일 내용으로 기록됩니다. Esc를 눌러 일반 모드로 돌아온 뒤 :wq와 Enter를 입력하시오.",
+    "warning": "개인 실습 폴더의 greeting.txt를 사용하고, 편집한 내용을 확인한 뒤 저장하시오.",
     "trace": []
   },
   {
     "id": "LINUX-048",
     "language": "linux",
-    "topic": "파이프·리다이렉션",
-    "title": "파일 끝에 새로운 줄 추가",
+    "topic": "Vim 파일 편집",
+    "title": "Vim으로 파일 끝에 한 줄 추가",
     "level": "종합 활용",
-    "statement": "기존 greeting.txt의 hello를 보존하면서 다음 줄에 world를 추가하시오.",
+    "statement": "Vim 편집기로 기존 greeting.txt를 열어 첫 줄의 hello를 유지하면서 다음 줄에 world를 추가하고 저장하시오.",
     "input": "greeting.txt에 hello 한 줄과 마지막 개행이 저장되어 있음",
     "output": "hello 다음 줄에 world가 추가",
-    "code": "printf 'world\\n' >> greeting.txt",
-    "hint": "printf 명령어의 목적과 옵션을 생각하고, 출력 또는 파일 상태를 확인하는 방법도 떠올려 보세요.",
-    "explanation": "printf — 추가할 문자열 출력 / >> — 파일 끝에 표준 출력을 추가(append)",
+    "code": "vim greeting.txt  # Vim에서 G → o → world 입력 → Esc → :wq → Enter",
+    "hint": "Vim에서 G로 마지막 줄로 이동하고 o로 다음 줄을 연 뒤 world를 입력하시오. Esc → :wq → Enter로 저장·종료하시오.",
+    "explanation": "vim greeting.txt — 기존 파일을 Vim으로 열기 / G — 마지막 줄로 이동 / o — 현재 줄 아래에 새 줄을 만들고 입력 모드 시작 / world — 새 줄에 추가할 내용 / Esc — 일반 모드 / :wq — 변경 사항 저장 후 종료(Enter로 실행)",
     "initialState": "greeting.txt에 hello 한 줄과 마지막 개행이 저장되어 있음",
     "afterState": "greeting.txt: hello 한 줄 → hello와 world 두 줄",
     "commandParts": [
       {
-        "token": "printf",
-        "meaning": "추가할 문자열 출력"
+        "token": "vim greeting.txt",
+        "meaning": "기존 파일을 Vim으로 엽니다"
       },
       {
-        "token": ">>",
-        "meaning": "파일 끝에 표준 출력을 추가(append)"
+        "token": "G",
+        "meaning": "파일의 마지막 줄로 이동합니다"
+      },
+      {
+        "token": "o",
+        "meaning": "아래에 새 줄을 만들고 입력 모드로 전환합니다"
+      },
+      {
+        "token": "Esc",
+        "meaning": "일반 모드로 돌아갑니다"
+      },
+      {
+        "token": ":wq",
+        "meaning": "변경한 파일을 저장하고 Vim을 종료합니다"
       }
     ],
     "verification": "cat greeting.txt",
-    "verificationDetail": "cat greeting.txt",
-    "commonMistake": ">는 덮어쓰기, >>는 이어 쓰기입니다. 기존 문장이 줄바꿈으로 끝나는지 확인하세요.",
-    "warning": "운영체제 상태가 달라질 수 있는 명령어는 개인 실습 환경에서만 확인하세요.",
+    "verificationDetail": "cat greeting.txt에서 첫 줄 hello, 둘째 줄 world가 순서대로 출력되는지 확인하시오.",
+    "commonMistake": "i로 기존 줄의 hello를 덮어쓰지 않도록 주의하시오. G로 마지막 줄에 이동한 다음 o로 새 줄을 열어 입력하시오.",
+    "warning": "기존 greeting.txt의 내용을 변경하는 실습이므로 개인 실습 폴더의 파일에서만 실행하시오.",
     "trace": []
   },
   {
