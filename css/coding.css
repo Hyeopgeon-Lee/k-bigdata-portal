@@ -16,7 +16,7 @@
 .coding-language button[aria-pressed="true"]{border:2px solid #1f55b8;background:#eff5ff;box-shadow:0 5px 20px #1b4fa41f}
 .coding-language button b{display:block;font-size:18px}
 .coding-language button span{display:block;color:#60708b;font-size:12px;margin-top:5px}
-.coding-language button:focus-visible,.coding-question-list button:focus-visible,.coding-btn:focus-visible{outline:3px solid #17a2d4;outline-offset:3px}
+.coding-language button:focus-visible,.coding-question-list a:focus-visible,.coding-btn:focus-visible{outline:3px solid #17a2d4;outline-offset:3px}
 .coding-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:6px 0 22px}
 .coding-toolbar label{font-weight:700;font-size:14px}
 .coding-toolbar input{min-height:44px;border:1px solid #c9d4e5;border-radius:10px;background:#fff;padding:9px 13px;font:inherit;flex:1;min-width:180px}
@@ -28,11 +28,11 @@
 .coding-count{color:#6a7992;font-size:12px}
 .coding-question-list{list-style:none;padding:0;margin:13px 0 0;display:grid;gap:8px}
 .coding-question-list li{min-width:0}
-.coding-question-list button{width:100%;border:1px solid #e3e9f2;border-radius:10px;background:#fff;text-align:left;cursor:pointer;padding:12px 13px;color:#192944}
-.coding-question-list button[aria-current="true"]{background:#eff5ff;border-color:#85a7e6}
-.coding-question-list button strong{display:block;font-size:14px;line-height:1.45}
-.coding-question-list button small{display:block;color:#697992;margin-top:3px;font-size:12px}
-.coding-question-list button .coding-done{color:#16795e}
+.coding-question-list a{display:block;text-decoration:none;width:100%;border:1px solid #e3e9f2;border-radius:10px;background:#fff;text-align:left;cursor:pointer;padding:12px 13px;color:#192944}
+.coding-question-list a[aria-current="page"]{background:#eff5ff;border-color:#85a7e6}
+.coding-question-list a strong{display:block;font-size:14px;line-height:1.45}
+.coding-question-list a small{display:block;color:#697992;margin-top:3px;font-size:12px}
+.coding-question-list a .coding-done{color:#16795e}
 .coding-detail{padding:clamp(20px,3vw,30px);min-width:0}
 .coding-tagrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .coding-chip{display:inline-flex;align-items:center;border:1px solid #d9e5f8;background:#f3f7fe;color:#35578e;border-radius:20px;padding:4px 10px;font-size:12px;font-weight:700}
