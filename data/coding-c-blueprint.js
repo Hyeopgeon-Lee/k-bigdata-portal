@@ -754,8 +754,8 @@ export const cBlueprint = [
     "title": "영문 단어 그대로 출력",
     "level": "기초 응용",
     "statement": "공백 없는 영문 단어(1글자 이상 20글자 이하)를 입력받아 그대로 출력하시오. 입력 버퍼 크기를 넘지 않도록 최대 20글자만 읽고, 문자열 종료 문자 '\\0'을 위한 공간도 확보하세요.",
-    "input": "code",
-    "output": "code",
+    "input": "abcdefghijklmnopqrst",
+    "output": "abcdefghijklmnopqrst",
     "boundary": "20글자 버퍼·널 종료",
     "traceFocus": "word[0]과 끝 '\\0'"
   },
