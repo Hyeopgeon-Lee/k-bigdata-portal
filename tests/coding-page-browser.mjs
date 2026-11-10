@@ -85,7 +85,10 @@ try{
     assert.ok((await page.locator("#coding-ubuntu-parts").innerText()).includes("chmod"));
     assert.ok((await page.locator("#coding-ubuntu-verify").innerText()).includes("ls -l report.txt"));
     assert.equal(await page.locator("#coding-output-label").innerText(),"예상 실행 결과","Ubuntu examples use a clear expected output label");
-    assert.equal(await page.locator("#coding-ubuntu-guide h3").nth(1).innerText(),"실행 결과 확인 명령어","verification section distinguishes the checking command");
+    assert.ok((await page.locator("#coding-ubuntu-guide h3").allInnerTexts()).includes("실행 결과 확인 명령어"),"verification section distinguishes the checking command");
+    assert.equal(await page.locator("#coding-ubuntu-related-options").isVisible(),true,"related option reference opens with the answer");
+    assert.match(await page.locator("#coding-ubuntu-related-rows").innerText(),/chmod 640/,"current permission mode is explained");
+    assert.match(await page.locator("#coding-ubuntu-related-rows").innerText(),/chmod u-w/,"related symbolic permission options are compared");
 
     await page.locator("#coding-language button[data-lang=java]").click();
     assert.equal(await page.locator("#coding-trace-button").isVisible(),true);
