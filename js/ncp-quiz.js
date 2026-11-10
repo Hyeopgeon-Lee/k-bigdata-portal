@@ -58,7 +58,7 @@ function problemShareUrl(q){
  return url.href;
 }
 function problemShareText(q){
- return ["NCP 기출문제 · "+q.exam,String(q.question).replace(/\s+/g," ").trim()].join("\n");
+ return ["NCP 학습용 재서술 문제 · "+q.exam,"공개 복원 원문 "+q.originalNumber+"번: "+q.sourceUrl,String(q.question).replace(/\s+/g," ").trim()].join("\n");
 }
 async function copyText(value){
  if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(value);return;}
@@ -102,7 +102,7 @@ function renderNumbers(){
  el.list.innerHTML=state.list.map((q,i)=>{
   const record=recordFor(q.id);
   const status=record?(record.choice===q.answer?"matched":"unmatched"):"";
-  const desc=record?(record.choice===q.answer?"복원 답안 일치":"복원 답안 불일치"):"미풀이";
+  const desc=record?(record.choice===q.answer?"학습용 정답 일치":"학습용 정답 불일치"):"미풀이";
   return '<button type="button" data-index="'+i+'" class="'+(i===state.index?"current ":"")+status+
    '" aria-label="'+(i+1)+'번 · 공개 복원 원문 '+q.originalNumber+'번 · '+desc+'"'+(i===state.index?' aria-current="true"':'')+'>'+String(i+1)+'</button>';
  }).join("");
@@ -131,7 +131,7 @@ function render(){
   '<div><strong>공개 복원자료 원문 '+esc(q.originalNumber)+'번</strong><p>아래 문제와 선택지는 학습용으로 재서술되어 원문과 다를 수 있습니다.</p></div>'+
   '<a href="'+esc(sourceURL)+'" target="_blank" rel="noopener noreferrer" aria-label="'+esc(q.exam)+' 공개 복원자료 원문 '+esc(q.originalNumber)+'번 새 창에서 확인">문제·선택지 원문 확인 ↗</a></section>';
  const result=answered?
-  '<section class="ncp-answer" tabindex="-1" aria-label="복원자료 답안 확인"><div class="ncp-answer-head"><strong>복원 답안 '+numerals[letters.indexOf(q.answer)]+'</strong><span class="'+(answered.choice===q.answer?"ncp-answer-match":"ncp-answer-diff")+'">'+(answered.choice===q.answer?"일치":"불일치")+'</span></div><p>'+esc(q.explanation)+'</p><button type="button" class="ncp-retry" data-retry>이 문제 다시 풀기</button></section>':"";
+  '<section class="ncp-answer" tabindex="-1" aria-label="학습용 정답 확인"><div class="ncp-answer-head"><strong>학습용 정답 '+numerals[letters.indexOf(q.answer)]+'</strong><span class="'+(answered.choice===q.answer?"ncp-answer-match":"ncp-answer-diff")+'">'+(answered.choice===q.answer?"일치":"불일치")+'</span></div><p>'+esc(q.explanation)+'</p><button type="button" class="ncp-retry" data-retry>이 문제 다시 풀기</button></section>':"";
  el.question.innerHTML='<div class="ncp-question-meta"><span>'+esc(q.exam)+'</span><span>'+esc(q.topic)+'</span></div>'+
   originalReference+
   '<h2 tabindex="-1">'+esc(q.question)+'</h2>'+
