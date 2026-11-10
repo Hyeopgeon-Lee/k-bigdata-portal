@@ -576,7 +576,7 @@ export const ubuntuPptProblems = [
     "level": "기초 응용",
     "topic": "파일 검색",
     "title": "내 계정이 소유한 파일 찾기",
-    "statement": "현재 디렉터리(~/lab)는 student 사용자가 소유하고 있습니다. 아래 파일 목록에서 세 번째 열은 소유자입니다. 현재 폴더와 하위 폴더에서 student 사용자가 소유한 파일 및 디렉터리의 경로만 검색하시오.",
+    "statement": "현재 디렉터리(~/lab)의 소유자는 student이며, 아래 목록의 세 번째 열에 표시된 소유자를 참고하여 현재 폴더와 하위 폴더에서 student 사용자가 소유한 파일 및 디렉터리의 경로만 검색하시오.",
     "input": "student@ubuntu:~/lab$ ls -l\ntotal 8\ndrwxr-xr-x 2 student student 4096 Nov 11 09:00 docs\n-rw-r--r-- 1 teacher teacher   20 Nov 11 09:00 note.txt\nstudent@ubuntu:~/lab$ ls -l docs\ntotal 8\n-rw-r--r-- 1 teacher teacher 18 Nov 11 09:00 guide.txt\n-rw-r--r-- 1 student student 15 Nov 11 09:00 memo.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\n.\n./docs\n./docs/memo.txt",
     "code": "find . -user student",
