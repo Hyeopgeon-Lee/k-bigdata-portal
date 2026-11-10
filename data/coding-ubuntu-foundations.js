@@ -393,9 +393,9 @@ export const ubuntuFoundationProblems = [
     "statement": "draft.txt를 final.txt로 이름을 바꾸시오.",
     "input": "draft.txt는 존재하고 final.txt는 없음",
     "output": "final.txt 존재, draft.txt는 없음",
-    "code": "mv -n draft.txt final.txt",
-    "hint": "mv는 이름 변경에도 사용합니다. -n을 추가하면 기존 대상 파일을 덮어쓰지 않습니다.",
-    "explanation": "mv — 파일 이동 또는 이름 변경 / -n — 기존 대상 파일이 있으면 덮어쓰지 않음 / draft.txt — 기존 파일 이름 / final.txt — 새 파일 이름",
+    "code": "mv draft.txt final.txt",
+    "hint": "mv 기존이름 새이름 형태로 파일 이름을 바꿉니다. 문제 조건에 final.txt는 존재하지 않습니다.",
+    "explanation": "mv — 파일 이동·이름 변경 / draft.txt — 변경 전 이름 / final.txt — 변경 후 이름. 이 문제에서는 대상 파일이 없으므로 -n 옵션이 필요하지 않습니다.",
     "initialState": "draft.txt는 존재하고 final.txt는 없음",
     "afterState": "draft.txt → final.txt로 이름 변경",
     "commandParts": [
@@ -404,21 +404,17 @@ export const ubuntuFoundationProblems = [
         "meaning": "파일 이동 또는 이름 변경"
       },
       {
-        "token": "-n",
-        "meaning": "기존 대상 파일이 있으면 덮어쓰지 않음"
-      },
-      {
         "token": "draft.txt",
-        "meaning": "기존 파일 이름"
+        "meaning": "원래 파일 이름"
       },
       {
         "token": "final.txt",
-        "meaning": "새 파일 이름"
+        "meaning": "바뀔 파일 이름"
       }
     ],
     "verification": "ls -l final.txt",
     "verificationDetail": "ls -l final.txt",
-    "commonMistake": "-n은 덮어쓰기를 막습니다. 이미 대상이 있다면 변경이 일어나지 않을 수 있습니다.",
+    "commonMistake": "mv는 대상 파일이 이미 존재하면 덮어쓸 수 있습니다. 여기서는 final.txt가 없는 연습 폴더를 전제로 합니다.",
     "warning": "자신의 개인 실습 디렉터리에서만 변경 명령어를 실행하세요.",
     "trace": []
   },
