@@ -54,15 +54,15 @@ Deno.serve(async(req:Request)=>{
    const {data:target,error:findError}=await admin.from("profiles").select("user_id,email,approval_status,enrollment_status").eq("user_id",data.userId).single();
    if(findError||!target)return json({error:"STUDENT_NOT_FOUND"},404);
    if(target.email?.toLowerCase()==="hglee67@kopo.ac.kr")return json({error:"CANNOT_EDIT_SUPER_ADMIN"},403);
-   const {error}=await admin.from("profiles").update({
-    approval_status:data.approvalStatus,enrollment_status:data.enrollmentStatus,updated_at:new Date().toISOString()
-   }).eq("user_id",target.user_id);
-   if(error)throw error;
    const jwt=req.headers.get("authorization")!.replace(/^Bearer /i,"");
-   const actor=createClient(url,publishable,{global:{headers:{Authorization:"Bearer "+jwt}},auth:{persistSession:false}});
-   const who=await actor.auth.getUser(jwt);
-   await admin.from("admin_audit_log").insert({actor_user_id:who.data.user?.id,target_user_id:target.user_id,
-    old_status:target.approval_status+"/"+target.enrollment_status,new_status:data.approvalStatus+"/"+data.enrollmentStatus});
+   const actorClient=createClient(url,publishable,{global:{headers:{Authorization:"Bearer "+jwt}},auth:{persistSession:false}});
+   const who=await actorClient.auth.getUser(jwt);
+   if(!who.data.user?.id)return json({error:"ADMIN_NOT_AUTHORIZED"},403);
+   const {error:changeError}=await admin.rpc("admin_change_student",{
+    p_actor_user_id:who.data.user.id,p_target_user_id:target.user_id,
+    p_approval_status:data.approvalStatus,p_enrollment_status:data.enrollmentStatus
+   });
+   if(changeError)throw changeError;
    return json({ok:true});
   }
   if(action==="summary"){
