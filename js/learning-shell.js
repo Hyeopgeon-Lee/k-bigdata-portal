@@ -1,4 +1,7 @@
 import {getAccount} from "./learning-auth.js";
+if(!document.querySelector('link[href="css/learning-account.css"]')){
+ const css=document.createElement("link");css.rel="stylesheet";css.href="css/learning-account.css";document.head.append(css);
+}
 const main=document.querySelector("main");
 if(main){
  const bar=document.createElement("nav");
