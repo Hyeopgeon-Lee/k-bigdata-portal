@@ -16,6 +16,7 @@ function describeLine(line) {
   if(l.startsWith("else"))return "앞의 조건이 거짓일 때 실행합니다";
   if(l.startsWith("for(")||l.startsWith("for ("))return "반복 변수와 반복 종료 조건을 확인합니다";
   if(l.startsWith("while(")||l.startsWith("while (")||l.startsWith("do {"))return "반복 조건을 확인하고 다음 단계로 진행합니다";
+  if(/\bsnprintf\s*\(/.test(l))return "snprintf로 결과 문자열을 지정된 크기의 배열에 저장합니다";
   if(l.includes("printf("))return "printf로 지정한 문자열이나 계산 결과를 출력합니다";
   if(l.startsWith("int ")||l.startsWith("double ")||l.startsWith("char ")||l.startsWith("size_t ")||l.startsWith("struct "))return "변수를 선언하고 필요한 초기값을 설정합니다";
   if(l.includes("+=")||l.includes("++"))return "기존 변수 값을 기준으로 누적하거나 1 증가시킵니다";
