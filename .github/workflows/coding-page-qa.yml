@@ -12,6 +12,8 @@ on:
       - "js/services.js"
       - "tests/coding-page.test.mjs"
       - "tests/coding-c-help-regression.test.mjs"
+      - "tests/coding-c-printf-format.test.mjs"
+      - "tests/coding-20261110-help.test.mjs"
       - "tests/coding-20261022-help.test.mjs"
       - "scripts/qa-coding-c.mjs"
       - "tests/coding-page-browser.mjs"
@@ -31,6 +33,8 @@ jobs:
         run: node tests/coding-page.test.mjs
       - name: Verify C issue regression and per-question guidance
         run: node tests/coding-c-help-regression.test.mjs
+      - name: Verify 100 C exercises use printf and consistently indent nested blocks
+        run: node tests/coding-c-printf-format.test.mjs
       - name: Verify Oct 22 Help report regression coverage
         run: node tests/coding-20261022-help.test.mjs
       - name: Compile and execute all C learning solutions and boundary cases
