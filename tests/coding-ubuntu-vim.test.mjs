@@ -36,9 +36,9 @@ assert.match(byId.get("LINUX-002").output,/-rw-r-----/);
 for(const keyword of ["소유자","그룹","기타 사용자","640","777","student"]){
  assert.ok(byId.get("LINUX-002").explanation.includes(keyword),"missing permission explanation "+keyword);
 }
-assert.match(byId.get("LINUX-002").explanation,/r\\)?=4/,"reading numeric weight explained");
-assert.match(byId.get("LINUX-002").explanation,/w\\)?=2/,"writing numeric weight explained");
-assert.match(byId.get("LINUX-002").explanation,/x\\)?=1/,"execution numeric weight explained");
+assert.match(byId.get("LINUX-002").explanation,/r\)?=4/,"reading numeric weight explained");
+assert.match(byId.get("LINUX-002").explanation,/w\)?=2/,"writing numeric weight explained");
+assert.match(byId.get("LINUX-002").explanation,/x\)?=1/,"execution numeric weight explained");
 for(const id of ["LINUX-007","LINUX-016","LINUX-026","LINUX-027","LINUX-028"]){
  assert.match(byId.get(id).explanation,/소유자/,"related explanation missing "+id);
 }
