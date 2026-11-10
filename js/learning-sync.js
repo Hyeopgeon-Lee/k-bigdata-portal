@@ -70,4 +70,4 @@ export async function getCloudProgress(bank){
  return data||[];
 }
 export function pendingCount(){return readQueue().length;}
-window.addEventListener("online",()=>{void flushCloudAttempts();});
+if(typeof window!=="undefined")window.addEventListener("online",()=>{void flushCloudAttempts();});
