@@ -172,13 +172,45 @@ export const ubuntuPptProblems = [
     "output": "student@ubuntu:~/lab$ [명령어 입력]\na.txt  docs",
     "code": "ls",
     "hint": "현재 폴더에 어떤 항목이 있는지 표시하는 기본 명령을 생각해 보세요.",
-    "explanation": "ls는 현재 디렉터리의 파일과 하위 디렉터리 이름을 표시한다.",
+    "explanation": "ls는 현재 디렉터리의 파일과 폴더 이름을 표시하는 명령어입니다. 옵션을 붙이지 않으면 점(.)으로 시작하는 숨김 항목은 표시하지 않습니다. 아래 표에서 주요 ls 옵션의 기능과 사용 예시를 비교해 보세요. ls 명령어와 아래 옵션들은 파일을 생성·수정·삭제하지 않고 목록의 표시 방식만 바꿉니다.",
+    "optionGuideHeading": "ls 주요 옵션 비교표",
     "initialState": "student@ubuntu:~/lab$ [명령어 입력]\na.txt  docs",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\na.txt  docs",
     "commandParts": [
       {
-        "token": "ls",
-        "meaning": "현재 디렉터리의 목록을 출력"
+        "token": "ls (옵션 없음)",
+        "meaning": "현재 디렉터리의 일반 파일·폴더 이름 출력. 점(.)으로 시작하는 숨김 항목은 제외",
+        "example": "ls"
+      },
+      {
+        "token": "-a",
+        "meaning": "숨김 항목까지 모두 출력. .(현재 디렉터리)과 ..(상위 디렉터리)도 함께 표시",
+        "example": "ls -a"
+      },
+      {
+        "token": "-l",
+        "meaning": "권한·하드 링크 수·소유자·그룹·파일 크기·수정 시각 등 상세 정보 표시",
+        "example": "ls -l"
+      },
+      {
+        "token": "-F",
+        "meaning": "이름 뒤에 종류 구분 기호를 붙임. 디렉터리 /, 심벌릭 링크 @, 실행 파일 *",
+        "example": "ls -F"
+      },
+      {
+        "token": "-d",
+        "meaning": "디렉터리 내부 목록 대신 디렉터리 자체를 표시. -l과 함께 사용하면 디렉터리의 권한 등을 확인",
+        "example": "ls -ld docs"
+      },
+      {
+        "token": "-i",
+        "meaning": "파일·디렉터리 이름 앞에 inode 번호 표시. 하드 링크를 비교할 때 활용",
+        "example": "ls -i a.txt"
+      },
+      {
+        "token": "-R",
+        "meaning": "현재 디렉터리와 그 아래 하위 디렉터리의 목록을 재귀적으로 표시",
+        "example": "ls -R"
       }
     ],
     "verification": "ls",
