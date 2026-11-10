@@ -3,7 +3,7 @@ import {getClient,getAccount,koreanStatus} from "./learning-auth.js";
 import {flushCloudAttempts} from "./learning-sync.js";
 const $=s=>document.querySelector(s);
 const labels={coding:"기초 프로그래밍·Ubuntu",ncp:"NCP",practical:"정보처리"};
-const totals={coding:350,ncp:75,practical:220};
+const totals={coding:350,ncp:75,practical:386};
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const link=row=>({coding:"coding.html",ncp:"ncp.html",practical:"practical.html"}[row.bank]||"index.html")+"?id="+encodeURIComponent(row.question_id);
 async function load(){
