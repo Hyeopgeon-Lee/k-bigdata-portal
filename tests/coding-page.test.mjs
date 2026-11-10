@@ -55,7 +55,7 @@ assert.ok(js.includes('coding-ubuntu-terminal-demo",isUbuntu'),'Both Ubuntu cons
 assert.ok(html.includes('coding-ubuntu-output-note'),'Output note is available when system-dependent values vary');
 assert.ok(!html.includes('id="coding-vim-steps"')&&!html.includes('id="coding-vim-steps-list"'),'Vim duplicate section removed');
 assert.ok(!html.includes('id="coding-ubuntu-vim-steps"')&&!html.includes('id="coding-ubuntu-vim-list"'),'Duplicated Vim instructions removed');
-assert.ok(!js.includes('function renderVimSteps(q)')&&!js.includes('const vimList ='),'No duplicated Vim instruction renderer remains');
+assert.ok(!js.includes('function renderVimSteps(q)')&&js.includes('const vimList = $("#coding-vim-explanation-list")'),'One readable Vim explanation list remains without a duplicate renderer');
 assert.ok(html.includes('id="coding-vim-explanation-list"'),'Vim uses one numbered list in the existing explanation section');
 assert.ok(js.includes('vimList.append(item)')&&js.includes('$("#coding-explanation").hidden = vimSteps.length > 0'),'Vim list replaces duplicate inline explanation');
 assert.ok(css.includes('.coding-vim-instruction-list li'),'Vim steps retain readable spacing');
