@@ -1055,32 +1055,28 @@ export const ubuntuPptProblems = [
     "language": "linux",
     "level": "기초 응용",
     "topic": "셸 에일리어스",
-    "title": "상세 목록 명령에 별명 지정",
-    "statement": "ls -l 명령에 ll이라는 별명을 지정하고 이를 실행한다.",
-    "input": "현재 셸에 ll 별명이 없는 상태",
-    "output": "ll 실행 결과로 현재 디렉터리의 상세 정보가 표시됨",
-    "code": "alias ll='ls -l'\nll",
-    "hint": "자주 반복하는 명령에 짧은 별명을 지정하는 방식을 생각한다.",
-    "explanation": "alias 이름='명령'으로 별명을 등록한다. ll은 기존 ls -l을 실행한다.",
+    "title": "명령어 별명 설정과 확인",
+    "statement": "현재 셸에서 ls 명령을 실행할 때 파일 종류 기호가 표시되도록 별명을 설정하고, 설정된 별명 목록을 확인한다.",
+    "input": "Ubuntu 터미널에서 ls를 기본 동작으로 사용하고 있는 상태",
+    "output": "alias 출력에서 ls='ls -F' 설정을 확인할 수 있음",
+    "code": "alias ls='ls -F'\nalias",
+    "hint": "자주 쓰는 명령어에 기본 옵션을 지정한 뒤 등록된 별명 목록을 확인한다.",
+    "explanation": "alias ls='ls -F'는 ls를 입력할 때 파일 종류를 표시하는 -F 옵션을 기본 적용하도록 별명을 지정한다. 인자 없이 alias를 실행하면 현재 별명 설정을 확인할 수 있다.",
     "initialState": "현재 셸에 ll 별명이 없는 상태",
     "afterState": "ll 실행 결과로 현재 디렉터리의 상세 정보가 표시됨",
     "commandParts": [
       {
         "token": "alias",
-        "meaning": "명령어의 별명 등록"
+        "meaning": "명령어의 별명을 등록하거나 목록 조회"
       },
       {
-        "token": "ls -l",
-        "meaning": "상세 디렉터리 목록"
-      },
-      {
-        "token": "ll",
-        "meaning": "사용자가 등록한 별명"
+        "token": "ls -F",
+        "meaning": "목록에 파일 종류 구분 기호를 표시"
       }
     ],
     "verification": "alias",
-    "verificationDetail": "alias 이름='명령'으로 별명을 등록한다. ll은 기존 ls -l을 실행한다.",
-    "commonMistake": "새 셸을 열면 일시적으로 설정한 별명이 유지되지 않을 수 있다.",
+    "verificationDetail": "alias 목록에 ls='ls -F'가 표시되면 설정이 완료된 것이다.",
+    "commonMistake": "ls 명령 자체를 변경하는 것이 아니라 현재 셸에 적용되는 별명을 만드는 것이다.",
     "trace": [],
     "pptSource": "4장 22~25쪽"
   },
