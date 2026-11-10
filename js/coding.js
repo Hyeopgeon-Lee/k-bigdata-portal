@@ -143,7 +143,7 @@ function updateUbuntuGuide(q) {
   document.body.classList.toggle("coding-ubuntu-terminal-demo",isUbuntu);
   $("#coding-work-heading").textContent = isUbuntu ? "명령어 직접 작성" : "직접 코딩하기";
   $("#coding-input-label").textContent = isUbuntu ? "초기 실행 환경" : "입력 예제";
-  $("#coding-output-label").textContent = isUbuntu ? "기대 결과" : "출력 예제";
+  $("#coding-output-label").textContent = isUbuntu ? "예상 실행 결과" : "출력 예제";
   $("#coding-answer-button").textContent = isUbuntu ? "정답 명령어 및 해설" : "정답과 줄별 주석";
   $("#coding-answer-heading").textContent = isUbuntu ? "정답 명령어" : "정답 코드와 한 줄 주석";
   $("#coding-overall-explanation h3").textContent = isUbuntu ? "학습 개념과 풀이" : "전체 해설";
