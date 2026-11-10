@@ -576,14 +576,14 @@ export const ubuntuPptProblems = [
     "level": "기초 응용",
     "topic": "파일 검색",
     "title": "내 계정이 소유한 파일 찾기",
-    "statement": "현재 폴더와 하위 폴더에서 student 사용자가 소유한 파일 및 디렉터리의 경로를 검색하시오.",
-    "input": "student@ubuntu:~/lab$ ls -F\ndocs/  note.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
-    "output": "student@ubuntu:~/lab$ [명령어 입력]\n.\n./docs\n./note.txt",
+    "statement": "현재 디렉터리(~/lab)는 student 사용자가 소유하고 있습니다. 아래 파일 목록에서 세 번째 열은 소유자입니다. 현재 폴더와 하위 폴더에서 student 사용자가 소유한 파일 및 디렉터리의 경로만 검색하시오.",
+    "input": "student@ubuntu:~/lab$ ls -l\ntotal 8\ndrwxr-xr-x 2 student student 4096 Nov 11 09:00 docs\n-rw-r--r-- 1 teacher teacher   20 Nov 11 09:00 note.txt\nstudent@ubuntu:~/lab$ ls -l docs\ntotal 8\n-rw-r--r-- 1 teacher teacher 18 Nov 11 09:00 guide.txt\n-rw-r--r-- 1 student student 15 Nov 11 09:00 memo.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
+    "output": "student@ubuntu:~/lab$ [명령어 입력]\n.\n./docs\n./docs/memo.txt",
     "code": "find . -user student",
-    "hint": "파일 이름이 아니라 소유자 조건으로 검색한다는 점에 주의하세요.",
-    "explanation": "find는 지정한 위치에서 조건에 맞는 파일과 디렉터리를 검색합니다. -user student는 student 사용자 소유 항목을 찾는 조건입니다.",
-    "initialState": "student@ubuntu:~/lab$ ls -F\ndocs/  note.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
-    "afterState": "student@ubuntu:~/lab$ [명령어 입력]\n.\n./docs\n./note.txt",
+    "hint": "소유자는 파일 목록의 세 번째 열에서 확인할 수 있습니다. 파일 이름 대신 소유자 조건으로 검색하시오.",
+    "explanation": "파일 목록의 세 번째 열은 소유자입니다. student가 소유한 현재 디렉터리(.), docs 디렉터리, docs/memo.txt만 검색 결과에 포함됩니다. teacher 소유인 note.txt와 docs/guide.txt는 제외됩니다.",
+    "initialState": "student@ubuntu:~/lab$ ls -l\ntotal 8\ndrwxr-xr-x 2 student student 4096 Nov 11 09:00 docs\n-rw-r--r-- 1 teacher teacher   20 Nov 11 09:00 note.txt\nstudent@ubuntu:~/lab$ ls -l docs\ntotal 8\n-rw-r--r-- 1 teacher teacher 18 Nov 11 09:00 guide.txt\n-rw-r--r-- 1 student student 15 Nov 11 09:00 memo.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
+    "afterState": "student@ubuntu:~/lab$ [명령어 입력]\n.\n./docs\n./docs/memo.txt",
     "commandParts": [
       {
         "token": "find",
@@ -599,11 +599,11 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "find . -user student",
-    "verificationDetail": "find는 지정한 위치에서 조건에 맞는 파일과 디렉터리를 검색합니다. -user student는 student 사용자 소유 항목을 찾는 조건입니다.",
-    "commonMistake": "다른 사용자가 소유한 파일은 결과에 포함되지 않는다.",
+    "verificationDetail": "find는 현재 디렉터리와 하위 폴더에서 조건에 맞는 항목을 검색합니다. -user student는 소유자가 student인 항목을 찾는 조건입니다.",
+    "commonMistake": "파일에 대한 접근 권한이 있다고 해서 소유자인 것은 아닙니다. 목록의 세 번째 열에 적힌 사용자 이름을 확인하시오.",
     "trace": [],
     "pptSource": "2장 54쪽",
-    "outputNote": "검색 결과의 순서와 개수는 디렉터리 구성과 파일 소유자에 따라 달라집니다."
+    "outputNote": "검색 결과는 student 소유 항목만 표시합니다. 출력 순서는 환경에 따라 달라질 수 있습니다."
   },
   {
     "id": "LINUX-020",
