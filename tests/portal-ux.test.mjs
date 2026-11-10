@@ -7,6 +7,7 @@ import {renderHeader,renderServiceNavigation,renderToolbar} from '../scripts/por
 const root=new URL('../',import.meta.url);
 const read=path=>readFileSync(new URL(path,root),'utf8');
 const pages=Object.keys(portalPages);
+const accountPages=new Set(['login','my-learning','students-admin']);
 for(const page of pages){
  const html=read(page+'.html');
  assert.match(html,/<meta name="robots" content="noindex,\s*nofollow">/);
@@ -17,7 +18,7 @@ for(const page of pages){
  assert.ok(html.includes('css/portal-navigation.css?v='),page+' common component styles');
  assert.ok(html.includes('js/portal-navigation.js?v='),page+' independent navigation initialization');
  if(portalPages[page].toolbar)assert.ok(html.includes(renderToolbar(portalPages[page])),page+' shared toolbar');
- if(!['index','services'].includes(page)){assert.ok(html.includes('data-learning-nav'));assert.ok(!html.includes('id="portal-query"'));}
+ if(!['index','services'].includes(page)&&!accountPages.has(page)){assert.ok(html.includes('data-learning-nav'));assert.ok(!html.includes('id="portal-query"'));}
  for(const [,url] of html.matchAll(/(?:href|src)="([^"]+)"/g))if(!/^(https?:|#|mailto:)/.test(url))assert.ok(existsSync(new URL(url.split(/[?#]/)[0],root)),page+' '+url);
 }
 assert.deepEqual(quickActions,['coding','practical','certifications','docs']);
@@ -25,7 +26,7 @@ assert.equal(portalNavLinks.length,services.length,'all services appear in navig
 assert.deepEqual(learningLinks,portalNavLinks,'legacy API remains an alias of the canonical menu');
 assert.equal(new Set(portalNavLinks.map(item=>item.id)).size,portalNavLinks.length);
 for(const item of portalNavLinks)assert.ok(services.some(s=>s.id===item.id));
-for(const page of pages.filter(page=>!['index','services'].includes(page))){
+for(const page of pages.filter(page=>!['index','services'].includes(page)&&!accountPages.has(page))){
  const html=read(page+'.html');
  const nav=renderServiceNavigation(portalPages[page],page);
  assert.ok(html.includes(nav),page+' service navigation matches the single template');

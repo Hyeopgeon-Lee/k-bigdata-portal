@@ -1,15 +1,32 @@
+import {recordCloudAttempt} from "./learning-sync.js";
 // Replace this adapter to integrate an approved backend later. Nothing is transmitted.
 const key="kbigdata-practical-v1", sessionKey="kbigdata-practical-attempt-v1", preferencesKey="kbigdata-practical-preferences-v1";
-let memory=[],sessions={},preferences={};
+let memory=[],sessions={},preferences={},ownerId="";
+const scoped=k=>ownerId?k+":"+ownerId:k;
+export function setLearningOwner(id){ownerId=id||"";memory=[];sessions={};preferences={};}
 export let storageAvailable=true;
 function read(kind,key,fallback){try{return JSON.parse(globalThis[kind].getItem(key))||fallback;}catch{storageAvailable=false;return fallback;}}
-export function getAttempts(){const data=read("localStorage",key,memory);return Array.isArray(data)?data.filter(a=>a&&typeof a.questionId==="string"&&Number.isFinite(a.submittedAt)&&Number.isFinite(a.elapsedSeconds)):[];}
-function writeAttempts(items){memory=items;try{localStorage.setItem(key,JSON.stringify(items));}catch{storageAvailable=false;}}
-export function saveAttempt(item){const items=getAttempts(),index=items.findIndex(a=>a.id===item.id);if(index<0)items.push(item);else items[index]=item;writeAttempts(items);}
-export function getSession(id){const data=read("localStorage",sessionKey,null)||read("sessionStorage",sessionKey,sessions);sessions=data&&typeof data==="object"&&!Array.isArray(data)?data:{};return sessions[id];}
-export function saveSession(id,item){getSession(id);sessions[id]=item;try{localStorage.setItem(sessionKey,JSON.stringify(sessions));sessionStorage.setItem(sessionKey,JSON.stringify(sessions));}catch{storageAvailable=false;}}
-export function getPreferences(){const data=read("localStorage",preferencesKey,preferences);return data&&typeof data==="object"&&!Array.isArray(data)?data:{};}
-export function savePreferences(value){preferences={...getPreferences(),...value};try{localStorage.setItem(preferencesKey,JSON.stringify(preferences));}catch{storageAvailable=false;}}
+export function getAttempts(){const data=read("localStorage",scoped(key),memory);return Array.isArray(data)?data.filter(a=>a&&typeof a.questionId==="string"&&Number.isFinite(a.submittedAt)&&Number.isFinite(a.elapsedSeconds)):[];}
+function writeAttempts(items){memory=items;try{localStorage.setItem(scoped(key),JSON.stringify(items));}catch{storageAvailable=false;}}
+export function saveAttempt(item){
+ const items=getAttempts(),index=items.findIndex(a=>a.id===item.id);
+ if(index<0)items.push(item);else items[index]=item;
+ writeAttempts(items);
+ // Record only final graded attempts; early submissions and SQL awaiting self-review
+ // must not occupy the immutable server attempt ID prematurely.
+ if(!item.viewedExplanation||(!item.autoRevealed&&typeof item.correct!=="boolean"))return;
+ const result=item.autoRevealed?"timeout":item.correct?"correct":"incorrect";
+ void recordCloudAttempt({
+  bank:"practical",questionId:item.questionId,clientAttemptId:item.id,
+  result,gradingMethod:item.autoRevealed?"none":item.correct!==null&&item.grading==="self"?"self":item.grading==="self"?"self":"automatic",
+  answerText:item.answer||"",elapsedSeconds:item.elapsedSeconds,usedHint:item.usedHint,
+  submittedAt:new Date(item.submittedAt).toISOString(),metadata:{autoRevealed:!!item.autoRevealed,viewedExplanation:!!item.viewedExplanation}
+ });
+}
+export function getSession(id){const data=read("localStorage",scoped(sessionKey),null)||read("sessionStorage",scoped(sessionKey),sessions);sessions=data&&typeof data==="object"&&!Array.isArray(data)?data:{};return sessions[id];}
+export function saveSession(id,item){getSession(id);sessions[id]=item;try{localStorage.setItem(scoped(sessionKey),JSON.stringify(sessions));sessionStorage.setItem(scoped(sessionKey),JSON.stringify(sessions));}catch{storageAvailable=false;}}
+export function getPreferences(){const data=read("localStorage",scoped(preferencesKey),preferences);return data&&typeof data==="object"&&!Array.isArray(data)?data:{};}
+export function savePreferences(value){preferences={...getPreferences(),...value};try{localStorage.setItem(scoped(preferencesKey),JSON.stringify(preferences));}catch{storageAvailable=false;}}
 export function exportLearning(){return {format:"kbigdata-practical",version:1,exportedAt:new Date().toISOString(),attempts:getAttempts(),preferences:getPreferences()};}
 export function importLearning(data){
  if(data?.format!=="kbigdata-practical"||data.version!==1||!Array.isArray(data.attempts)||data.attempts.length>10000)throw Error("지원하는 학습 기록 파일이 아닙니다.");
@@ -20,4 +37,4 @@ export function importLearning(data){
  // Never import running sessions or timer/unlock state.
  return items.length;
 }
-export function clearLocalLearning(){writeAttempts([]);sessions={};preferences={};try{sessionStorage.removeItem(sessionKey);localStorage.removeItem(sessionKey);localStorage.removeItem(preferencesKey);}catch{storageAvailable=false;}}
+export function clearLocalLearning(){writeAttempts([]);sessions={};preferences={};try{sessionStorage.removeItem(scoped(sessionKey));localStorage.removeItem(scoped(sessionKey));localStorage.removeItem(scoped(preferencesKey));}catch{storageAvailable=false;}}

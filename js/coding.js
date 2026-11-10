@@ -1,3 +1,5 @@
+import {recordCloudAttempt,saveCloudDraft,getCloudProgress,getCloudDraft} from "./learning-sync.js";
+import {getAccount} from "./learning-auth.js";
 import {codingProblems as sampleProblems} from "../data/coding-samples.js?v=20261111-ubuntu-vim-only-2";
 import {javaProblems} from "../data/coding-java-98.js?v=20261111-java016-korean-units-1";
 import {cFoundationProblems} from "../data/coding-c-foundations.js?v=20261111-essential-ranges-1";
@@ -103,14 +105,16 @@ const vimReferenceRows = [
 const $ = selector => document.querySelector(selector);
 const labels = {java:"Java", c:"C언어", python:"Python", linux:"Ubuntu"};
 const targets = {java:100, c:100, python:100, linux:50};
+let cloudOwner="";
+const scopedKey=key=>cloudOwner?key+":"+cloudOwner:localStorage.getItem("kbigdata-learning-auth")?"kbigdata:pending-auth:"+key:key;
 const DONE_KEY = "kbigdata:coding:done:v1";
 const DRAFT_PREFIX = "kbigdata:coding:draft:v1:";
 const AUTOCOMPLETE_KEY = "kbigdata:coding:autocomplete:v1";
 const getSafe = (key, fallback = "") => {
-  try { return localStorage.getItem(key) ?? fallback; } catch { return fallback; }
+  try { return localStorage.getItem(scopedKey(key)) ?? fallback; } catch { return fallback; }
 };
 const setSafe = (key, value) => {
-  try { localStorage.setItem(key, value); } catch { /* Private browsing or storage full */ }
+  try { localStorage.setItem(scopedKey(key), value); } catch { /* Private browsing or storage full */ }
 };
 const knownIds = new Set(codingProblems.map(p => p.id));
 let doneIds = new Set();
@@ -438,6 +442,11 @@ function showQuestion(q) {
   ubuntuOutputNote.hidden = !ubuntuOutputNote.textContent;
   renderExtraExamples(q);
   $("#coding-editor").value = getSafe(DRAFT_PREFIX + q.id);
+  if(cloudOwner)void getCloudDraft("coding",q.id).then(remote=>{
+   if(current?.id===q.id&&remote!==null&&!$("#coding-editor").value){
+    $("#coding-editor").value=remote;codeEditor?.setContent(remote,q.language,$("#coding-editor").placeholder);
+   }
+  }).catch(()=>{});
   $("#coding-hint-text").textContent = q.hint;
   $("#coding-code").textContent = q.code;
   const vimSteps = q.language === "linux" && Array.isArray(q.vimSteps) ? q.vimSteps : [];
@@ -467,6 +476,7 @@ function showQuestion(q) {
   });
   resetReveal("#coding-hint","#coding-hint-button");
   resetReveal("#coding-answer","#coding-answer-button");
+  $("#coding-self-grade").hidden=true;
   resetReveal("#coding-trace","#coding-trace-button");
   $("#coding-feedback").textContent = "";
   $("#coding-share-status").textContent = "";
@@ -481,6 +491,7 @@ function reveal(blockId, buttonId) {
   const open = block.hidden;
   block.hidden = !open;
   btn.setAttribute("aria-expanded",String(open));
+  if(blockId==="#coding-answer")$("#coding-self-grade").hidden=!open;
 }
 function currentProblemLink(q=current) {
   if (!q) return "";
@@ -545,16 +556,23 @@ $("#coding-link-button").addEventListener("click", () => { void copyCurrentProbl
 $("#coding-hint-button").addEventListener("click", () => reveal("#coding-hint","#coding-hint-button"));
 $("#coding-answer-button").addEventListener("click", () => reveal("#coding-answer","#coding-answer-button"));
 $("#coding-trace-button").addEventListener("click", () => reveal("#coding-trace","#coding-trace-button"));
+let cloudDraftTimer=0;
+function scheduleCloudDraft(){
+ clearTimeout(cloudDraftTimer);
+ cloudDraftTimer=setTimeout(()=>{if(current)void saveCloudDraft("coding",current.id,$("#coding-editor").value);},900);
+}
 $("#coding-editor").addEventListener("input", event => {
-  setSafe(DRAFT_PREFIX + current.id, event.target.value);
+  setSafe(DRAFT_PREFIX + current.id, event.target.value);scheduleCloudDraft();
 });
 $("#coding-done-button").addEventListener("click", () => {
   if (doneIds.has(current.id)) {
     doneIds.delete(current.id);
     $("#coding-feedback").textContent = "완료 표시를 취소했습니다.";
+    void recordCloudAttempt({bank:"coding",questionId:current.id,result:"ungraded",gradingMethod:"completion"});
   } else {
     doneIds.add(current.id);
     $("#coding-feedback").textContent = "스스로 해결한 문제로 표시했습니다. 자동 채점 결과는 아닙니다.";
+    void recordCloudAttempt({bank:"coding",questionId:current.id,result:"completed",gradingMethod:"completion",answerText:$("#coding-editor").value});
   }
   setSafe(DONE_KEY, JSON.stringify([...doneIds]));
   const done = doneIds.has(current.id);
@@ -563,6 +581,29 @@ $("#coding-done-button").addEventListener("click", () => {
   updateSummary();
   listQuestions(true);
 });
+
+for(const [buttonId,result] of [["#coding-correct-button","correct"],["#coding-wrong-button","incorrect"]]){
+ $(buttonId).addEventListener("click",()=>{
+  if(!current||$("#coding-answer").hidden)return;
+  const id=current.id;
+  if(result==="correct")doneIds.add(id);else doneIds.delete(id);
+  setSafe(DONE_KEY,JSON.stringify([...doneIds]));
+  void recordCloudAttempt({bank:"coding",questionId:id,result,gradingMethod:"self",answerText:$("#coding-editor").value});
+  $("#coding-feedback").textContent=result==="correct"?"정답으로 기록했습니다. (자가 평가)":"오답노트에 기록했습니다. (자가 평가)";
+  updateSummary();listQuestions(true);
+ });
+}
+void getAccount().then(async account=>{
+ if(!account.active&&!account.readOnly)return;
+ cloudOwner=account.user.id;
+ const rows=await getCloudProgress("coding");
+ // Never merge another user's legacy local completion flags automatically.
+ doneIds=new Set(rows.filter(x=>["correct","completed"].includes(x.last_result)).map(x=>x.question_id));
+ setSafe(DONE_KEY,JSON.stringify([...doneIds]));
+ updateSummary();listQuestions(true);
+ if(current)showQuestion(current);
+}).catch(()=>{});
+
 $("#coding-next-button").addEventListener("click", () => {
   const items = matching();
   if (!items.length) return;
@@ -667,7 +708,7 @@ void import("./coding-editor.js?v=20261024-autocomplete-1")
       host:$("#coding-editor-host"),
       language:current.language,
       autocompleteEnabled,
-      onChange(value) { setSafe(DRAFT_PREFIX + current.id, value); }
+      onChange(value) { setSafe(DRAFT_PREFIX + current.id, value); scheduleCloudDraft(); }
     });
     autocompleteToggle.disabled = false;
     refreshAutocompleteStatus();
