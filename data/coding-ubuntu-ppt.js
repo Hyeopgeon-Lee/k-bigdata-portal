@@ -1062,8 +1062,8 @@ export const ubuntuPptProblems = [
     "code": "alias ls='ls -F'\nalias",
     "hint": "자주 쓰는 명령어에 기본 옵션을 지정한 뒤 등록된 별명 목록을 확인한다.",
     "explanation": "alias ls='ls -F'는 ls를 입력할 때 파일 종류를 표시하는 -F 옵션을 기본 적용하도록 별명을 지정한다. 인자 없이 alias를 실행하면 현재 별명 설정을 확인할 수 있다.",
-    "initialState": "현재 셸에 ll 별명이 없는 상태",
-    "afterState": "ll 실행 결과로 현재 디렉터리의 상세 정보가 표시됨",
+    "initialState": "Ubuntu 터미널에서 ls를 기본 동작으로 사용하고 있는 상태",
+    "afterState": "alias 출력에서 ls='ls -F' 설정을 확인할 수 있음",
     "commandParts": [
       {
         "token": "alias",
