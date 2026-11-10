@@ -188,6 +188,12 @@ for (const id of ["C-090","PY-099"]) {
   assert.equal(p.input,"4 2 3");
   assert.equal(p.output,"8");
 }
+// The actual C solution annotations should explain function definitions, not label them as variable declarations.
+const cCalculator = byId.get("C-090").code;
+assert.match(cCalculator, /add 함수를 정의합니다/);
+assert.match(cCalculator, /sub 함수를 정의합니다/);
+assert.match(cCalculator, /mul 함수를 정의합니다/);
+
 assert.equal(byId.get("JAVA-090").output,"7\n8");
 assert.equal(byId.get("C-094").output,"3 2");
 assert.equal(byId.get("PY-073").output,"1 2 3 4 5");
