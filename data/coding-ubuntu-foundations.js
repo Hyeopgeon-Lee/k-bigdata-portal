@@ -32,7 +32,7 @@ export const ubuntuFoundationProblems = [
     "title": "현재 디렉터리 내용 목록",
     "level": "입문",
     "statement": "현재 디렉터리의 파일과 폴더 이름을 확인하시오.",
-    "input": "student@ubuntu:~/lab$ touch a.txt\nstudent@ubuntu:~/lab$ mkdir docs",
+    "input": "현재 디렉터리에 빈 a.txt 파일과 docs 디렉터리가 이미 있는 상태",
     "output": "student@ubuntu:~/lab$ ls\na.txt  docs",
     "code": "ls",
     "hint": "ls를 옵션 없이 실행하면 현재 디렉터리의 파일·폴더 이름을 보여 줍니다. 숨김 항목은 기본적으로 보이지 않습니다.",
