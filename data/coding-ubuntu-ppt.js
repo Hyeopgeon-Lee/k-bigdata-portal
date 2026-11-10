@@ -694,7 +694,7 @@ export const ubuntuPptProblems = [
     "level": "기초 응용",
     "topic": "파일 링크",
     "title": "하드 링크와 심볼릭 링크 비교하기",
-    "statement": "현재 디렉터리에 data.txt가 있습니다. data-hard라는 하드 링크와 data-link라는 심볼릭 링크를 각각 생성하시오. 원본과 두 링크의 inode 번호를 비교하고, 상세 목록에서 링크 종류와 하드 링크 개수를 확인하시오.",
+    "statement": "현재 디렉터리에 있는 data.txt를 이용하여 data-hard 하드 링크와 data-link 심볼릭 링크를 각각 생성하시오. 원본과 두 링크의 inode 번호를 비교하고, 상세 목록에서 링크 종류와 하드 링크 개수를 확인하시오.",
     "input": "student@ubuntu:~/lab$ ls -l data.txt\n-rw-r--r-- 1 student student 12 Nov 11 09:00 data.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\nstudent@ubuntu:~/lab$ [명령어 입력]\nstudent@ubuntu:~/lab$ [명령어 입력]\n123456 data-hard\n123457 data-link\n123456 data.txt\nstudent@ubuntu:~/lab$ [명령어 입력]\n-rw-r--r-- 2 student student 12 Nov 11 09:00 data-hard\nlrwxrwxrwx 1 student student 8 Nov 11 09:00 data-link -> data.txt\n-rw-r--r-- 2 student student 12 Nov 11 09:00 data.txt",
     "code": "ln data.txt data-hard\nln -s data.txt data-link\nls -i data.txt data-hard data-link\nls -l data.txt data-hard data-link",
