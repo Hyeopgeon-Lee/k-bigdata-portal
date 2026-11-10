@@ -140,7 +140,7 @@ function updateUbuntuGuide(q) {
   const isUbuntu = q.language === "linux";
   const guide = isUbuntu ? q : null;
   document.body.classList.toggle("coding-ubuntu-mode",isUbuntu);
-  document.body.classList.toggle("coding-ubuntu-terminal-demo",q.id === "LINUX-004");
+  document.body.classList.toggle("coding-ubuntu-terminal-demo",isUbuntu);
   $("#coding-work-heading").textContent = isUbuntu ? "명령어 직접 작성" : "직접 코딩하기";
   $("#coding-input-label").textContent = isUbuntu ? "초기 실행 환경" : "입력 예제";
   $("#coding-output-label").textContent = isUbuntu ? "기대 결과" : "출력 예제";
@@ -160,8 +160,6 @@ function updateUbuntuGuide(q) {
   $("#coding-ubuntu-guide").hidden = !isUbuntu;
   if(!isUbuntu) return;
   $("#coding-code").textContent = guide.code;
-  $("#coding-ubuntu-before").textContent = guide.initialState;
-  $("#coding-ubuntu-after").textContent = guide.afterState;
   $("#coding-ubuntu-verify").textContent = guide.verification;
   $("#coding-ubuntu-verify-note").textContent = guide.verificationDetail || guide.output;
   $("#coding-ubuntu-mistake").textContent = guide.commonMistake;
@@ -231,6 +229,9 @@ function showQuestion(q) {
   $("#coding-statement").textContent = q.statement;
   $("#coding-input").textContent = visibleExampleText(q, q.input);
   $("#coding-output").textContent = visibleExampleText(q, q.output);
+  const ubuntuOutputNote = $("#coding-ubuntu-output-note");
+  ubuntuOutputNote.textContent = q.language === "linux" ? (q.outputNote || "") : "";
+  ubuntuOutputNote.hidden = !ubuntuOutputNote.textContent;
   renderExtraExamples(q);
   $("#coding-editor").value = getSafe(DRAFT_PREFIX + q.id);
   $("#coding-hint-text").textContent = q.hint;
