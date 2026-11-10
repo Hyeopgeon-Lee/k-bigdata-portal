@@ -1,11 +1,11 @@
-import {codingProblems as sampleProblems} from "../data/coding-samples.js?v=20261024-help-122";
-import {javaProblems} from "../data/coding-java-98.js?v=20261024-help-122";
-import {cFoundationProblems} from "../data/coding-c-foundations.js?v=20261024-help-122";
-import {cAdvancedProblems} from "../data/coding-c-advanced.js?v=20261024-help-122";
-import {pythonFoundationProblems} from "../data/coding-python-foundations.js?v=20261024-help-122";
-import {pythonAdvancedProblems} from "../data/coding-python-advanced.js?v=20261024-help-122";
-import {ubuntuFoundationProblems} from "../data/coding-ubuntu-foundations.js?v=20261024-help-122";
-import {ubuntuAdvancedProblems} from "../data/coding-ubuntu-advanced.js?v=20261024-help-122";
+import {codingProblems as sampleProblems} from "../data/coding-samples.js?v=20261110-classroom-1";
+import {javaProblems} from "../data/coding-java-98.js?v=20261110-classroom-1";
+import {cFoundationProblems} from "../data/coding-c-foundations.js?v=20261110-classroom-1";
+import {cAdvancedProblems} from "../data/coding-c-advanced.js?v=20261110-classroom-1";
+import {pythonFoundationProblems} from "../data/coding-python-foundations.js?v=20261110-classroom-1";
+import {pythonAdvancedProblems} from "../data/coding-python-advanced.js?v=20261110-classroom-1";
+import {ubuntuFoundationProblems} from "../data/coding-ubuntu-foundations.js?v=20261110-classroom-1";
+import {ubuntuAdvancedProblems} from "../data/coding-ubuntu-advanced.js?v=20261110-classroom-1";
 import {ubuntuLegacyGuides} from "../data/coding-ubuntu-legacy-guides.js?v=20261020-ubuntu50";
 import {learningReportUrl} from "./learning-report.js?v=20261020-study-share-1";
 const codingProblems = [...sampleProblems, ...javaProblems, ...cFoundationProblems, ...cAdvancedProblems, ...pythonFoundationProblems, ...pythonAdvancedProblems, ...ubuntuFoundationProblems, ...ubuntuAdvancedProblems].sort((a,b) =>
@@ -113,17 +113,21 @@ function listQuestions(syncPage=false) {
   }
   items.slice(listPage*PAGE_SIZE,(listPage+1)*PAGE_SIZE).forEach(q=>{
     const li=document.createElement("li");
-    const button=document.createElement("button");
-    button.type="button";
-    button.setAttribute("aria-current",String(q.id===current.id));
+    const link=document.createElement("a");
+    link.href=currentProblemLink(q);
+    if(q.id===current.id)link.setAttribute("aria-current","page");
     const title=document.createElement("strong");
     title.textContent=q.title;
     const subtitle=document.createElement("small");
     subtitle.textContent=q.id+" · "+q.level+(doneIds.has(q.id)?" · 완료 ✓":"");
     if(doneIds.has(q.id))subtitle.className="coding-done";
-    button.append(title,subtitle);
-    button.addEventListener("click",()=>showQuestion(q));
-    li.append(button);
+    link.append(title,subtitle);
+    link.addEventListener("click",event=>{
+      if(event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
+      event.preventDefault();
+      showQuestion(q);
+    });
+    li.append(link);
     list.append(li);
   });
 }
@@ -141,6 +145,12 @@ function updateUbuntuGuide(q) {
   $("#coding-answer-button").textContent = isUbuntu ? "정답 명령어 및 해설" : "정답과 줄별 주석";
   $("#coding-answer-heading").textContent = isUbuntu ? "정답 명령어" : "정답 코드와 한 줄 주석";
   $("#coding-copy").textContent = isUbuntu ? "명령어 복사" : "주석 없는 코드 복사";
+  $("#coding-copy-tip").textContent = ({
+    c:"복사한 C 코드를 vim에 붙여 넣어 직접 주석을 작성하고, 터미널에서 gcc 또는 make로 컴파일해 확인하세요.",
+    java:"Java 코드를 IntelliJ에서 실행하며 각 줄이 어떤 역할을 하는지 주석으로 설명해 보세요.",
+    python:"Python 코드를 VS Code, PyCharm 또는 터미널에서 실행하며 각 줄에 직접 주석을 달아 보세요.",
+    linux:"Ubuntu 터미널의 안전한 실습 디렉터리에서 명령어를 직접 확인하세요."
+  })[q.language];
   $("#coding-editor").placeholder = isUbuntu ? "Ubuntu 터미널에서 사용할 명령어를 직접 작성해 보세요." : "여기에 스스로 정답을 작성해 보세요.";
   $("#coding-answer-note").hidden = isUbuntu;
   $("#coding-trace-button").hidden = isUbuntu;
@@ -174,6 +184,7 @@ function showQuestion(q) {
   const url = new URL(location.href);
   url.searchParams.set("id", q.id);
   history.replaceState(null, "", url);
+  $("#coding-report-button").href = learningReportUrl("coding",q,labels[q.language] + " · " + q.title);
   $("#coding-id").textContent = q.id;
   $("#coding-level").textContent = q.level;
   $("#coding-topic").textContent = q.topic;
@@ -273,16 +284,8 @@ async function copyCurrentProblemLink() {
     setShareStatus("복사할 수 없습니다. 브라우저의 클립보드 권한을 확인해 주세요.");
   }
 }
-function reportCurrentProblem() {
-  if (!current) return;
-  const url = learningReportUrl("coding",current,labels[current.language] + " · " + current.title);
-  if (url) location.assign(url);
-  else setShareStatus("오류 신고 페이지를 열 수 없습니다.");
-}
-
 $("#coding-share-button").addEventListener("click", () => { void shareCurrentProblem(); });
 $("#coding-link-button").addEventListener("click", () => { void copyCurrentProblemLink(); });
-$("#coding-report-button").addEventListener("click", reportCurrentProblem);
 $("#coding-hint-button").addEventListener("click", () => reveal("#coding-hint","#coding-hint-button"));
 $("#coding-answer-button").addEventListener("click", () => reveal("#coding-answer","#coding-answer-button"));
 $("#coding-trace-button").addEventListener("click", () => reveal("#coding-trace","#coding-trace-button"));
