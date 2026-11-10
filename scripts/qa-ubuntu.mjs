@@ -16,7 +16,7 @@ const errors=[];
 const assert=(ok,message)=>{if(!ok)errors.push(message)};
 assert(problems.length===50,"Problem count must equal 50");
 const observed={};
-const allowed=new Set("mkdir vim ls chmod pwd cd rmdir cat cp mv tail grep find which ln umask echo printf alias ll date ps pgrep df du shutdown apt-cache tar gzip zcat who groups crontab useradd".split(" "));
+const allowed=new Set("mkdir vim ls chmod pwd cd rmdir cat cp mv tail grep find which ln umask echo printf alias date ps pgrep df du shutdown apt-cache tar gzip zcat who groups crontab useradd".split(" "));
 for(let n=1;n<=50;n++){
  const p=problems[n-1], id="LINUX-"+String(n).padStart(3,"0");
  if(!p){errors.push("missing "+id);continue;}
