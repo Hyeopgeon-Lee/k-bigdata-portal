@@ -286,3 +286,12 @@
 
 /* Clearly mark where students type a command without revealing the solution. */
 .coding-ubuntu-terminal-demo .coding-io .ubuntu-command-placeholder{color:#ffd58e;font-weight:750}
+
+/* Guide Vim beginners without presenting editor keystrokes as shell commands. */
+.coding-vim-steps[hidden]{display:none!important}
+.coding-vim-steps{margin-top:16px;padding:16px;border:1px solid #cad8ec;border-radius:12px;background:#f5f9ff;color:#1d3554}
+.coding-vim-steps h3{font-size:16px;margin:0 0 8px;line-height:1.5}
+.coding-vim-steps>p{font-size:13px;line-height:1.6;margin:0 0 10px;color:#49627e}
+.coding-vim-steps ol{margin:0;padding-left:23px;display:grid;gap:9px}
+.coding-vim-steps li{padding-left:4px;line-height:1.7;overflow-wrap:anywhere;white-space:normal}
+@media(max-width:530px){.coding-vim-steps{padding:12px}.coding-vim-steps ol{gap:8px}}
