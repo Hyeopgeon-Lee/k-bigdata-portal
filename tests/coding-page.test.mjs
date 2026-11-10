@@ -56,7 +56,9 @@ assert.ok(html.includes('coding-ubuntu-output-note'),'Output note is available w
 assert.ok(!html.includes('id="coding-vim-steps"')&&!html.includes('id="coding-vim-steps-list"'),'Vim duplicate section removed');
 assert.ok(!html.includes('id="coding-ubuntu-vim-steps"')&&!html.includes('id="coding-ubuntu-vim-list"'),'Duplicated Vim instructions removed');
 assert.ok(!js.includes('function renderVimSteps(q)')&&!js.includes('const vimList ='),'No duplicated Vim instruction renderer remains');
-assert.ok(js.includes('isUbuntu && !Array.isArray(q.vimSteps)'),'Vim uses the existing single explanation section');
+assert.ok(html.includes('id="coding-vim-explanation-list"'),'Vim uses one numbered list in the existing explanation section');
+assert.ok(js.includes('vimList.append(item)')&&js.includes('$("#coding-explanation").hidden = vimSteps.length > 0'),'Vim list replaces duplicate inline explanation');
+assert.ok(css.includes('.coding-vim-instruction-list li'),'Vim steps retain readable spacing');
 
 assert.match(linux003.statement,/하시오\.$/,'question uses imperative phrasing');
 assert.equal(linux003.code,'pwd','answer remains available in the answer panel');
