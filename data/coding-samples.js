@@ -83,7 +83,7 @@ export const codingProblems = [
     "input": "3 5",
     "output": "8",
     "hint": "scanf로 정수 두 개를 입력받아 변수 a, b에 저장합니다.",
-    "code": "#include <stdio.h> // 표준 입력과 출력 함수를 사용\nint main(void) { // 프로그램 시작\n    int a, b; // 정수형 변수 a와 b 선언(아직 값 없음)\n    scanf(\"%d %d\", &a, &b); // 예제 3 5 입력 → a=3, b=5\n    int sum = a + b; // 3+5 계산 → sum=8\n    printf(\"%d\\n\", sum); // sum의 값 8을 출력\n    return 0; // 프로그램 정상 종료\n} // main 함수 종료",
+    "code": "#include <stdio.h> // 표준 입력과 출력 함수를 사용\nint main(void) { // 프로그램 시작\n    int a; // 첫 번째 정수를 받을 변수 선언\n    int b; // 두 번째 정수를 받을 변수 선언\n    scanf(\"%d %d\", &a, &b); // 예제 3 5 입력 → a=3, b=5\n    int sum = a + b; // 3+5 계산 → sum=8\n    printf(\"%d\\n\", sum); // sum의 값 8을 출력\n    return 0; // 프로그램 정상 종료\n} // main 함수 종료",
     "explanation": "scanf의 &a와 &b는 입력값을 저장할 변수의 주소를 전달합니다. a와 b가 정해진 뒤에야 sum의 값을 계산합니다.",
     "trace": [
       [
