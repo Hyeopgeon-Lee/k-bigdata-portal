@@ -203,10 +203,10 @@ export const cBlueprint = [
     "topic": "변수·연산",
     "title": "1씩 증가·감소",
     "level": "입문",
-    "statement": "정수 N을 한 개 입력받아 N+1과 N-1을 이 순서대로 공백으로 구분해 한 줄에 출력하시오.",
+    "statement": "정수 N(-100 ≤ N ≤ 100)을 한 개 입력받아 N+1과 N-1을 공백으로 구분해 한 줄에 출력하시오.",
     "input": "5",
     "output": "6 4",
-    "boundary": "음수,0, 경계",
+    "boundary": "N=-100·0·100",
     "traceFocus": "n,up,down"
   },
   {
