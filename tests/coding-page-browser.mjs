@@ -159,6 +159,27 @@ try{
     }
     await context.close();
   }
+  // Regression: no Linux exercise should expose its command in a visible terminal example.
+  const maskContext=await browser.newContext({viewport:{width:390,height:820}});
+  const maskedPage=await maskContext.newPage();
+  maskedPage.on("pageerror",e=>failures.push("mask-test: "+e.message));
+  for(const id of ["LINUX-003","LINUX-004","LINUX-042"]){
+    await maskedPage.goto("http://127.0.0.1:8765/coding.html?id="+id,{waitUntil:"domcontentloaded"});
+    await maskedPage.locator("#coding-id").filter({hasText:id}).waitFor({timeout:15000});
+    const before=await maskedPage.locator("#coding-input").innerText();
+    const after=await maskedPage.locator("#coding-output").innerText();
+    assert.ok(before.includes("[명령어 입력]"),id+" must have a starting command input marker");
+    assert.ok(after.includes("[명령어 입력]"),id+" must have an expected-output command input marker");
+    assert.ok(!/^student@ubuntu:[^\n$]*\$\s*(?:pwd|ls|ps\s+-ef)/m.test(after),id+" expected output must not show the solution");
+    assert.ok(await maskedPage.locator("#coding-answer").isHidden(),id+" answer panel hidden before click");
+    assert.ok((await maskedPage.locator("#coding-output .ubuntu-command-placeholder").count())>=1,id+" visibly highlights the input position");
+  }
+  await maskedPage.goto("http://127.0.0.1:8765/coding.html?id=LINUX-003",{waitUntil:"domcontentloaded"});
+  await maskedPage.locator("#coding-id").filter({hasText:"LINUX-003"}).waitFor({timeout:15000});
+  await maskedPage.locator("#coding-answer-button").click();
+  assert.ok(await maskedPage.locator("#coding-answer").isVisible(),"student can reveal the solution on demand");
+  assert.match(await maskedPage.locator("#coding-code").innerText(),/^pwd$/,"revealed answer is intact");
+  await maskContext.close();
   assert.deepEqual(failures,[],"no JavaScript runtime errors in learning UI");
   console.log("PASS: learning/practical navigation parity at 360/390/430/768/1280, sharing, reporting, layout and saved drafts");
 }finally{await browser.close();}
