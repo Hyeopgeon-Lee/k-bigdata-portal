@@ -287,14 +287,11 @@
 /* Clearly mark where students type a command without revealing the solution. */
 .coding-ubuntu-terminal-demo .coding-io .ubuntu-command-placeholder{color:#ffd58e;font-weight:750}
 
-/* Guide Vim beginners without presenting editor keystrokes as shell commands. */
-.coding-vim-steps[hidden]{display:none!important}
-.coding-vim-steps{margin-top:16px;padding:16px;border:1px solid #cad8ec;border-radius:12px;background:#f5f9ff;color:#1d3554}
-.coding-vim-steps h3{font-size:16px;margin:0 0 8px;line-height:1.5}
-.coding-vim-steps>p{font-size:13px;line-height:1.6;margin:0 0 10px;color:#49627e}
-.coding-vim-steps ol{margin:0;padding-left:23px;display:grid;gap:9px}
-.coding-vim-steps li{padding-left:4px;line-height:1.7;overflow-wrap:anywhere;white-space:normal}
-@media(max-width:530px){.coding-vim-steps{padding:12px}.coding-vim-steps ol{gap:8px}}
+/* Keep one readable numbered Vim list within the existing explanation area. */
+.coding-vim-instruction-list[hidden]{display:none!important}
+.coding-vim-instruction-list{margin:0;padding:16px 16px 16px 40px;border:1px solid #cad8ec;border-radius:12px;background:#f5f9ff;color:#1d3554;display:grid;gap:10px}
+.coding-vim-instruction-list li{padding-left:5px;line-height:1.75;overflow-wrap:anywhere;white-space:normal}
+@media(max-width:530px){.coding-vim-instruction-list{padding:12px 12px 12px 34px;gap:9px}}
 
 /* Beginner Ubuntu explanations: retain deliberate numbered paragraphs. */
 .coding-ubuntu-mode #coding-explanation{white-space:pre-line;line-height:1.85}
