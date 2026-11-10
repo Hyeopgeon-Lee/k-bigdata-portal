@@ -302,3 +302,75 @@
 
 /* Beginner Ubuntu explanations: retain deliberate numbered paragraphs. */
 .coding-ubuntu-mode #coding-explanation{white-space:pre-line;line-height:1.85}
+
+
+/* Mobile readability: learning instructions, terminal samples, and Ubuntu reference tables. */
+@media (max-width:800px){
+  .coding-page{padding-bottom:52px}
+  .coding-workspace{gap:15px}
+  .coding-direct-link .coding-workspace .coding-detail{order:-1}
+  .coding-detail h2{font-size:clamp(23px,5vw,28px);line-height:1.45;word-break:keep-all}
+  .coding-desc{font-size:16px;line-height:1.85;word-break:keep-all}
+  .coding-detail .coding-section h3,
+  .coding-detail .coding-ubuntu-guide h3{font-size:17px;line-height:1.5}
+  .coding-reveal{padding:15px}
+  .coding-reveal p,.coding-ubuntu-info,.coding-ubuntu-mode #coding-explanation{
+    font-size:15px;line-height:1.85;word-break:keep-all;overflow-wrap:anywhere;
+  }
+  .coding-code pre{font-size:14px;line-height:1.8;padding:14px;-webkit-overflow-scrolling:touch}
+  .coding-io pre,.coding-ubuntu-terminal-demo .coding-io>div pre{
+    font-size:14px;line-height:1.8;-webkit-overflow-scrolling:touch;
+  }
+  .coding-io b{font-size:14px}
+  .coding-ubuntu-output-note{font-size:13px;line-height:1.75}
+  .coding-ubuntu-guide .coding-trace{font-size:14px;line-height:1.7}
+  .coding-vim-instruction-list li{font-size:15px;line-height:1.8}
+  .coding-page .coding-actions--help>.coding-btn,
+  .coding-page .coding-actions--progress>.coding-btn{font-size:15px;min-height:48px;line-height:1.4}
+  #coding-title{scroll-margin-top:calc(var(--portal-header-height, 72px) + 20px)}
+  .coding-jump-link{display:none}
+  .coding-direct-link .coding-jump-link{
+    display:inline-flex;align-items:center;min-height:44px;padding:10px 14px;
+    margin-top:10px;border:1px solid #b8cae8;border-radius:10px;
+    background:#edf5ff;color:#143e7b;font-size:14px;font-weight:800;text-decoration:none;
+  }
+  .coding-jump-link:focus-visible{outline:3px solid #17a2d4;outline-offset:2px}
+}
+@media (max-width:600px){
+  .coding-detail{padding:15px}
+  .coding-io>div{padding:12px}
+  .coding-reveal{padding:13px}
+  .coding-code pre{padding:13px;font-size:14px}
+  .coding-ubuntu-terminal-demo .coding-io>div pre{
+    max-width:100%;overflow-x:auto;overflow-wrap:normal;white-space:pre;scrollbar-width:thin;
+  }
+  .coding-ubuntu-guide :is(#coding-ubuntu-parts-wrap,#coding-ubuntu-ls-options,#coding-ubuntu-vim-reference) .coding-trace{
+    display:block;width:100%;min-width:0;border:0;
+  }
+  .coding-ubuntu-guide :is(#coding-ubuntu-parts-wrap,#coding-ubuntu-ls-options,#coding-ubuntu-vim-reference) .coding-trace thead{
+    position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;
+  }
+  .coding-ubuntu-guide :is(#coding-ubuntu-parts-wrap,#coding-ubuntu-ls-options,#coding-ubuntu-vim-reference) .coding-trace tbody{
+    display:grid;gap:10px;
+  }
+  .coding-ubuntu-guide :is(#coding-ubuntu-parts-wrap,#coding-ubuntu-ls-options,#coding-ubuntu-vim-reference) .coding-trace tbody tr{
+    display:grid;gap:5px;padding:12px;border:1px solid #dbe5f3;border-radius:11px;background:#fff;
+  }
+  .coding-ubuntu-guide :is(#coding-ubuntu-parts-wrap,#coding-ubuntu-ls-options,#coding-ubuntu-vim-reference) .coding-trace tbody td{
+    display:block;width:auto;border:0;padding:1px 0;font-size:14px;
+    line-height:1.7;font-weight:400;color:#344761;white-space:normal;overflow-wrap:anywhere;word-break:keep-all;
+  }
+  .coding-ubuntu-guide :is(#coding-ubuntu-parts-wrap,#coding-ubuntu-ls-options) .coding-trace tbody td:first-child{
+    font-size:15px;font-weight:800;color:#173d7a;
+  }
+  .coding-ubuntu-guide :is(#coding-ubuntu-parts-wrap,#coding-ubuntu-ls-options) .coding-trace tbody td:nth-child(3){
+    padding:7px 10px;border-radius:7px;background:#f1f5fb;color:#1a3c70;
+    font:600 13px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace;
+  }
+  .coding-ubuntu-guide #coding-ubuntu-vim-reference .coding-trace tbody td:first-child{
+    color:#587198;font-size:12px;font-weight:750;
+  }
+  .coding-ubuntu-guide #coding-ubuntu-vim-reference .coding-trace tbody td:nth-child(2){
+    font-size:15px;font-weight:800;color:#173d7a;
+  }
+}
