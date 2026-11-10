@@ -1,9 +1,22 @@
 # K-BigData 통합 서비스 포털
 
 한국폴리텍대학 서울강서캠퍼스 빅데이터소프트웨어공학과의 학생용 학습·프로젝트·취업 통합 포털입니다.
-Vanilla HTML/CSS/JavaScript 기반 GitHub Pages 정적 사이트이며 로그인·개인정보 저장·서버·상용 API를 추가하지 않습니다.
+Vanilla HTML/CSS/JavaScript 기반 GitHub Pages 정적 사이트입니다. 기존 공개 학습 화면은 유지하면서, 별도 학과 포털 Supabase 프로젝트에 학생 로그인·학습이력·학적 관리 기능을 선택적으로 연결할 수 있도록 확장했습니다. 서버 설정 전에는 기존 브라우저 저장 기능만 작동합니다.
 
-운영 주소: https://portal.k-bigdata.kr/
+운영 주소: https://portal.k-bigdata.kr
+
+## 학생 로그인·학습이력 관리 (운영 연결 전)
+
+- login.html: 이메일 OTP 로그인/회원가입. 학생 이름과 학번 필수, 관리자 승인을 받아야 학습기록 서버 저장 가능.
+- my-learning.html: 계정별 진도·오답·지난 7일 학습·개인 주간 이메일 수신 설정.
+- students-admin.html: hglee67@kopo.ac.kr 슈퍼 관리자 전용 학생 승인·재학/휴학/자퇴/졸업 관리.
+- 기초 350제·NCP·정보처리 학습이력은 기존 localStorage를 보존하며, 로그인한 경우 신규 Supabase API로 동기화됩니다.
+- 로그인 인증 상태는 Supabase SDK localStorage로 복원하되, 서버에서 90일 만료·학적 상태를 검증합니다.
+- 교수 리포트 수신자는 지정된 슈퍼 관리자 1명뿐입니다. 실제 이메일 발송은 별도 Edge Function·비밀키·Cron 구성이 필요합니다.
+- **중요:** GitHub Pages에 올린 정적 문제·정답 파일을 인증 기능만으로 숨길 수는 없습니다. 개인정보와 학습기록은 서버 DB RLS로 제한합니다.
+
+배포 절차와 미완료 설정은 [학습 계정 배포 안내](docs/learning-auth-deployment.md)를 참고하세요.
+/
 
 GA4 접속 통계: 9개 페이지에 학생 포털 전용 측정 ID `G-8PMMKFNRY7`을 설정했습니다. [설치·개인정보 보호·보고서 안내](docs/analytics-setup.md)를 참고하세요.
 
