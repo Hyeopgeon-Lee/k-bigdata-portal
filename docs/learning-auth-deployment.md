@@ -1,7 +1,7 @@
 # 학과 포털 로그인·학습이력 기능 — 배포 안내
 
 2026-11-11 작업 브랜치: feat/learning-auth-20261111
-**현재 운영 사이트는 변경하지 않았으며 신규 Supabase 프로젝트는 생성되지 않았습니다.**
+**2026-11-11: Supabase 서울 리전 신규 프로젝트 생성, DB·RLS 마이그레이션 적용, Edge Functions 배포, 공개 클라이언트 키 연결까지 완료했습니다. 운영 GitHub Pages(main)는 아직 변경하지 않았습니다.**
 
 ## 주요 추가 파일
 - login.html, my-learning.html, students-admin.html
@@ -12,15 +12,15 @@
 - tests/learning-auth-design.test.mjs
 
 ## 인프라 준비
-1. 기존 kopo-professor-union 프로젝트에는 적용하지 않습니다. 학과 포털 전용 Supabase 프로젝트를 승인된 조직에 별도로 생성합니다.
-2. SQL 마이그레이션을 검토·적용하고 Supabase Security Advisor를 점검합니다.
-3. js/learning-config.js에 신규 Supabase 프로젝트 URL 및 publishable key만 설정합니다. service-role 또는 secret 키는 저장소에 절대 넣지 않습니다.
-4. Auth 이메일 OTP 템플릿에는 {{ .Token }}을 적용하고 인증번호 발송을 위한 커스텀 SMTP를 설정합니다.
-5. 인증 도메인은 https://portal.k-bigdata.kr 로 설정합니다.
-6. learning-admin Edge Function은 JWT 검증을 활성화해 배포합니다.
-7. weekly-learning-report Edge Function은 JWT 검증을 비활성화하되, LEARNING_REPORT_CRON_SECRET 요청 헤더 확인으로 보호합니다.
-8. 주간 메일 발송에는 RESEND_API_KEY, REPORT_FROM_EMAIL을 비밀 설정으로 등록하고 발신 도메인을 검증합니다.
-9. 주간 보고서는 월요일 08:00 KST = 전날 23:00 UTC에 Cron으로 트리거합니다. cron 비밀번호는 Supabase Vault 등에 안전하게 보관합니다.
+1. 전용 Supabase 프로젝트 **k-bigdata-portal / zjsindkakjfzmjgrkaou / ap-northeast-2** 생성 완료. 기존 교수회 프로젝트는 미변경.
+2. DB 마이그레이션 `learning_auth_initial` 및 `learning_auth_indexes` 적용 완료. 10개 테이블 RLS 활성화 및 주요 역할 권한 검증 완료. Security Advisor의 공개 authenticated SECURITY DEFINER RPC 경고는 신원 확인/세션 확인 후 본인에 한정해 작동하도록 설계된 함수로 확인해야 합니다.
+3. js/learning-config.js에 URL 및 공개 publishable key 연결 완료. service-role 또는 secret 키는 저장소에 넣지 않았습니다.
+4. **필수 미완료:** Supabase Authentication > Email Templates > Magic Link에서 `supabase/templates/magic_link_otp.html` 내용을 적용하세요. 반드시 `{{ .Token }}`을 포함해야 6자리 OTP가 메일로 발송됩니다. Authentication > SMTP Settings에서 커스텀 SMTP 계정을 연결해 학과 학생 이메일로 발송되도록 설정해야 합니다. 기본 SMTP는 조직 팀 메일 외 수신처 제한이 있어 실제 학생 가입에 사용할 수 없습니다.
+5. **미완료:** Authentication > URL Configuration에서 Site URL을 `https://portal.k-bigdata.kr`로 설정하고 Redirect URLs에 동일 출처를 등록하세요.
+6. `learning-admin` Edge Function v2 배포 완료 (JWT 검증 활성화).
+7. `weekly-learning-report` Edge Function v2 배포 완료 (JWT 검증 비활성화). **실제 발송은 미활성**: `LEARNING_REPORT_CRON_SECRET` 헤더 보호 및 Resend 자격증명 검증 후 사용해야 합니다.
+8. **미완료:** Resend 등 메일 서비스에서 도메인 검증 후 `RESEND_API_KEY`, `REPORT_FROM_EMAIL`을 Supabase Edge Function Secrets에 등록하세요.
+9. **미완료:** 주간 보고서는 월요일 08:00 KST = 전날 23:00 UTC에 Cron으로 트리거해야 합니다. cron 비밀번호는 Supabase Vault 등에 안전하게 보관하세요. 리포트는 슈퍼 관리자 `hglee67@kopo.ac.kr` 한 사람에게만 집계본이 발송되도록 코드가 제한합니다.
 
 ## 회원 정책
 - 이메일 인증번호로 로그인하며 이름과 학번을 제출한 학생은 관리자 승인 후 이용 가능합니다.
@@ -43,12 +43,11 @@
 - 실제 Supabase 프로젝트에서 학생 A/B 접근 격리, 로그인 후 학적변경 시 즉시 차단, 만료 세션, PC↔모바일 동기화, 이메일 수신 동의 및 주간 중복 발송을 테스트합니다.
 
 ## 배포 전까지 남은 일
-- Supabase 프로젝트 조직 선택 및 비용 조건 확인
-- 프로젝트 생성, SQL 실행, 보안 점검
-- OTP 메일 SMTP 및 주간 리포트 메일 API 연동
-- Edge Function 배포와 Cron 설정
-- 실제 학생/슈퍼 관리자 이메일로 통합 테스트
-- 검증 후 GitHub Pull Request 병합
+- 완료: 신규 Supabase 프로젝트 생성, SQL/인덱스 적용, RLS 10개 테이블 검증, 2개 Edge Functions 배포, 공개 URL·키 GitHub 코드 연결
+- 미완료: OTP 이메일 템플릿 적용, 실제 학생 대상 SMTP 연결
+- 미완료: 주간 리포트 메일 공급자/비밀키 및 Cron 설정
+- 미완료: 로그인된 슈퍼 관리자와 학생으로 실제 회원가입·RLS·90일 만료·학적 관리 테스트
+- 미완료: GitHub PR #32 브라우저 전체 검수 완료 및 main 병합
 
 ### 유의사항
 GitHub Pages의 정적 문제/정답 파일은 로그인만으로 완전히 비공개가 되지 않습니다. 서버의 학생 학습기록과 계정정보만 인증과 RLS로 보호하도록 설계했습니다.
