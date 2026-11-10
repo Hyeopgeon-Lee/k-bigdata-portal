@@ -7,7 +7,7 @@ import {pythonAdvancedProblems} from "../data/coding-python-advanced.js?v=202611
 
 
 
-import {ubuntuPptProblems} from "../data/coding-ubuntu-ppt.js?v=20261111-vim-explanation-deduplicate-2";
+import {ubuntuPptProblems} from "../data/coding-ubuntu-ppt.js?v=20261111-permission-guide-1";
 import {learningReportUrl} from "./learning-report.js?v=20261020-study-share-1";
 const codingProblems = [...sampleProblems.filter(p=>p.language!=="linux"), ...javaProblems, ...cFoundationProblems, ...cAdvancedProblems, ...pythonFoundationProblems, ...pythonAdvancedProblems, ...ubuntuPptProblems].sort((a,b) =>
   a.language.localeCompare(b.language) || Number(a.id.split("-").at(-1))-Number(b.id.split("-").at(-1))
