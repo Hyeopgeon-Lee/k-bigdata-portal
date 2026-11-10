@@ -5,7 +5,7 @@ export const cBlueprint = [
     "topic": "입출력",
     "title": "두 정수의 합",
     "level": "입문",
-    "statement": "한 줄에 입력된 두 정수를 더한 결과를 출력하시오. 각 정수는 -100 이상 100 이하입니다.",
+    "statement": "한 줄에 입력된 두 정수를 더한 결과를 출력하시오.",
     "input": "3 5",
     "output": "8",
     "boundary": "두 음수, 0, 양수와 음수",
