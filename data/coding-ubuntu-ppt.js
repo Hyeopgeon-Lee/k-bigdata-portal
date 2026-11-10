@@ -863,9 +863,10 @@ export const ubuntuPptProblems = [
     "statement": "Vim에서 memo.txt의 두 번째 줄을 삭제하시오. 파일을 저장한 후 남은 내용을 확인하시오.",
     "input": "student@ubuntu:~/lab$ cat memo.txt\none\ntwo\nthree\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\none\nthree",
-    "code": "vim memo.txt",
+    "code": "vim memo.txt\ncat memo.txt",
     "vimSteps": [
       "터미널에서 vim memo.txt를 실행하여 Vim을 여시오.",
+      "Esc 키를 눌러 일반 모드임을 확인하시오.",
       "Vim 안에서 :2를 입력하고 Enter를 눌러 두 번째 줄로 이동하시오.",
       "일반 모드에서 dd 키를 차례로 눌러 현재 줄(two)을 삭제하시오.",
       ":wq를 입력하고 Enter를 눌러 저장한 뒤 Vim을 종료하시오.",
@@ -909,9 +910,10 @@ export const ubuntuPptProblems = [
     "statement": "Vim에서 memo.txt에 들어 있는 linux를 모두 Linux로 변경하시오. 저장한 후 바뀐 파일 내용을 확인하시오.",
     "input": "student@ubuntu:~/lab$ cat memo.txt\nlinux intro\nlearn linux\nlinux lab\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\nLinux intro\nlearn Linux\nLinux lab",
-    "code": "vim memo.txt",
+    "code": "vim memo.txt\ncat memo.txt",
     "vimSteps": [
       "터미널에서 vim memo.txt를 실행하여 Vim을 여시오.",
+      "Esc 키를 눌러 일반 모드임을 확인하시오.",
       "Vim 안에서 :%s/linux/Linux/g를 입력하고 Enter를 눌러 파일 전체의 linux를 Linux로 바꾸시오.",
       ":wq를 입력하고 Enter를 눌러 저장한 뒤 Vim을 종료하시오.",
       "터미널에서 cat memo.txt를 실행하여 모든 줄의 Linux 표기를 확인하시오."
