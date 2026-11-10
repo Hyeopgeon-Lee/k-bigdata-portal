@@ -821,14 +821,14 @@ export const ubuntuPptProblems = [
     "level": "기초 응용",
     "topic": "파일 권한",
     "title": "기호 모드로 쓰기 권한 제거",
-    "statement": "note.txt 파일에서 소유자의 쓰기 권한만 제거하고 결과를 확인한다.",
-    "input": "note.txt의 현재 권한이 rw-rw-r--임",
-    "output": "권한이 r--rw-r--로 변경됨",
+    "statement": "note.txt 파일의 소유자에게 부여된 쓰기 권한만 제거하시오. 다른 사용자의 권한은 그대로 두고 변경 결과를 확인하시오.",
+    "input": "student@ubuntu:~/lab$ ls -l note.txt\n-rw-rw-r-- 1 student student 6 Nov 11 10:00 note.txt",
+    "output": "student@ubuntu:~/lab$ ls -l note.txt\n-r--rw-r-- 1 student student 6 Nov 11 10:00 note.txt",
     "code": "chmod u-w note.txt\nls -l note.txt",
     "hint": "권한 기호의 사용자·연산자·권한 문자를 구분한다.",
     "explanation": "chmod u-w는 소유자(u)의 쓰기(w) 권한을 제거한다.",
-    "initialState": "note.txt의 현재 권한이 rw-rw-r--임",
-    "afterState": "권한이 r--rw-r--로 변경됨",
+    "initialState": "student@ubuntu:~/lab$ ls -l note.txt\n-rw-rw-r-- 1 student student 6 Nov 11 10:00 note.txt",
+    "afterState": "student@ubuntu:~/lab$ ls -l note.txt\n-r--rw-r-- 1 student student 6 Nov 11 10:00 note.txt",
     "commandParts": [
       {
         "token": "chmod",
@@ -847,7 +847,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "chmod u-w는 소유자(u)의 쓰기(w) 권한을 제거한다.",
     "commonMistake": "그룹이나 기타 사용자의 권한은 변경하지 않는다.",
     "trace": [],
-    "pptSource": "5장 8~10쪽"
+    "pptSource": "5장 8~10쪽",
+    "outputNote": "권한 이외의 파일 속성은 실습 환경에 따라 달라질 수 있습니다."
   },
   {
     "id": "LINUX-027",
@@ -855,14 +856,14 @@ export const ubuntuPptProblems = [
     "level": "기초 응용",
     "topic": "파일 권한",
     "title": "그룹에 두 가지 권한 추가",
-    "statement": "note.txt 파일의 그룹에 쓰기와 실행 권한을 추가한다.",
-    "input": "note.txt의 권한이 rw-r-----임",
-    "output": "권한이 rw-rwx---로 변경됨",
+    "statement": "note.txt 파일의 그룹에 쓰기와 실행 권한을 추가하시오. 기존 읽기 권한은 유지하고 변경된 결과를 확인하시오.",
+    "input": "student@ubuntu:~/lab$ ls -l note.txt\n-rw-r----- 1 student student 6 Nov 11 10:00 note.txt",
+    "output": "student@ubuntu:~/lab$ ls -l note.txt\n-rw-rwx--- 1 student student 6 Nov 11 10:00 note.txt",
     "code": "chmod g+wx note.txt\nls -l note.txt",
     "hint": "권한의 추가와 특정 값으로 덮어쓰기를 구별한다.",
     "explanation": "chmod g+wx는 그룹에 쓰기와 실행 권한을 더한다. 이미 있던 읽기 권한은 유지한다.",
-    "initialState": "note.txt의 권한이 rw-r-----임",
-    "afterState": "권한이 rw-rwx---로 변경됨",
+    "initialState": "student@ubuntu:~/lab$ ls -l note.txt\n-rw-r----- 1 student student 6 Nov 11 10:00 note.txt",
+    "afterState": "student@ubuntu:~/lab$ ls -l note.txt\n-rw-rwx--- 1 student student 6 Nov 11 10:00 note.txt",
     "commandParts": [
       {
         "token": "chmod",
@@ -881,7 +882,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "chmod g+wx는 그룹에 쓰기와 실행 권한을 더한다. 이미 있던 읽기 권한은 유지한다.",
     "commonMistake": "+ 연산자는 지정하지 않은 기존 권한을 제거하지 않는다.",
     "trace": [],
-    "pptSource": "5장 8~11쪽"
+    "pptSource": "5장 8~11쪽",
+    "outputNote": "파일 소유자와 수정 시각은 실습 환경에 따라 달라질 수 있습니다."
   },
   {
     "id": "LINUX-028",
@@ -889,14 +891,14 @@ export const ubuntuPptProblems = [
     "level": "기초 응용",
     "topic": "파일 권한",
     "title": "기본 권한 마스크 문자로 확인",
-    "statement": "현재 셸에서 적용 중인 기본 권한 마스크를 문자 형식으로 출력한다.",
-    "input": "일반 사용자로 로그인한 Ubuntu 터미널",
-    "output": "u, g, o 범주별 기본 권한 설정이 문자로 표시됨",
+    "statement": "현재 셸에서 사용하는 기본 파일 접근 권한 마스크를 문자 형식으로 출력하시오.",
+    "input": "student@ubuntu:~/lab$ ",
+    "output": "student@ubuntu:~/lab$ umask -S\nu=rwx,g=rx,o=rx",
     "code": "umask -S",
     "hint": "기본 권한을 확인하는 동작과 파일 권한을 바꾸는 동작을 구별한다.",
     "explanation": "umask -S는 마스크 설정을 문자 형태로 출력한다.",
-    "initialState": "일반 사용자로 로그인한 Ubuntu 터미널",
-    "afterState": "u, g, o 범주별 기본 권한 설정이 문자로 표시됨",
+    "initialState": "student@ubuntu:~/lab$ ",
+    "afterState": "student@ubuntu:~/lab$ umask -S\nu=rwx,g=rx,o=rx",
     "commandParts": [
       {
         "token": "umask",
@@ -911,7 +913,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "umask -S는 마스크 설정을 문자 형태로 출력한다.",
     "commonMistake": "기본 umask 값은 시스템 설정에 따라 달라질 수 있다.",
     "trace": [],
-    "pptSource": "5장 20쪽"
+    "pptSource": "5장 20쪽",
+    "outputNote": "표시된 값은 일반적인 설정의 예시입니다. 실제 기본 권한은 시스템 설정에 따라 다를 수 있습니다."
   },
   {
     "id": "LINUX-029",
@@ -919,14 +922,14 @@ export const ubuntuPptProblems = [
     "level": "기초 응용",
     "topic": "셸 출력",
     "title": "줄바꿈 없이 문자열 출력하기",
-    "statement": "터미널에서 Hello를 출력한 뒤 명령 자체의 줄바꿈을 생략한다.",
-    "input": "Ubuntu 터미널에서 실행하는 상태",
-    "output": "화면에 Hello가 출력되고 명령의 마지막 줄바꿈이 추가되지 않음",
+    "statement": "Hello라는 문자열을 출력하되, 출력 끝에 줄바꿈 문자가 추가되지 않도록 하시오.",
+    "input": "student@ubuntu:~/lab$ ",
+    "output": "student@ubuntu:~/lab$ echo -n Hello\nHellostudent@ubuntu:~/lab$ ",
     "code": "echo -n Hello",
     "hint": "문자열의 내용과 출력 끝의 줄바꿈을 구별한다.",
     "explanation": "echo -n은 문자열 출력 후 줄바꿈을 추가하지 않는다.",
-    "initialState": "Ubuntu 터미널에서 실행하는 상태",
-    "afterState": "화면에 Hello가 출력되고 명령의 마지막 줄바꿈이 추가되지 않음",
+    "initialState": "student@ubuntu:~/lab$ ",
+    "afterState": "student@ubuntu:~/lab$ echo -n Hello\nHellostudent@ubuntu:~/lab$ ",
     "commandParts": [
       {
         "token": "echo",
@@ -941,7 +944,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "echo -n은 문자열 출력 후 줄바꿈을 추가하지 않는다.",
     "commonMistake": "-n은 출력 문자열을 지우는 옵션이 아니다.",
     "trace": [],
-    "pptSource": "4장 4쪽"
+    "pptSource": "4장 4쪽",
+    "outputNote": "Hello 뒤에 새 줄 없이 다음 프롬프트가 이어서 나타나는 상태를 표현했습니다."
   },
   {
     "id": "LINUX-030",
@@ -949,14 +953,14 @@ export const ubuntuPptProblems = [
     "level": "기초 응용",
     "topic": "셸 출력",
     "title": "정수와 줄바꿈 형식 지정",
-    "statement": "숫자 12를 십진 정수로 출력하고 다음 행으로 줄바꿈한다.",
-    "input": "Ubuntu 터미널에서 실행하는 상태",
-    "output": "12가 출력된 뒤 줄바꿈됨",
+    "statement": "정수 12를 십진 정수 형식으로 출력한 뒤 줄바꿈하시오.",
+    "input": "student@ubuntu:~/lab$ ",
+    "output": "student@ubuntu:~/lab$ printf '%d\\n' 12\n12",
     "code": "printf '%d\\n' 12",
     "hint": "서식 지정 문자와 줄바꿈 문자의 기능을 구분한다.",
     "explanation": "printf의 %d는 십진 정수, \\n은 줄바꿈을 뜻한다.",
-    "initialState": "Ubuntu 터미널에서 실행하는 상태",
-    "afterState": "12가 출력된 뒤 줄바꿈됨",
+    "initialState": "student@ubuntu:~/lab$ ",
+    "afterState": "student@ubuntu:~/lab$ printf '%d\\n' 12\n12",
     "commandParts": [
       {
         "token": "printf",
@@ -975,7 +979,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "printf의 %d는 십진 정수, \\n은 줄바꿈을 뜻한다.",
     "commonMistake": "서식 문자열에서 줄바꿈 기호를 빠뜨리면 출력 끝에 개행이 없다.",
     "trace": [],
-    "pptSource": "4장 5쪽"
+    "pptSource": "4장 5쪽",
+    "outputNote": ""
   },
   {
     "id": "LINUX-031",
@@ -983,14 +988,14 @@ export const ubuntuPptProblems = [
     "level": "기초 응용",
     "topic": "셸 특수문자",
     "title": "변숫값과 문자 그대로 출력 비교",
-    "statement": "SHELL 환경 변수에 저장된 값과 '$SHELL' 문자열을 각각 출력한다.",
-    "input": "SHELL 변수가 설정된 Ubuntu 셸",
-    "output": "첫 줄에는 셸 경로, 두 번째 줄에는 $SHELL 문자열이 표시됨",
+    "statement": "SHELL 환경 변수에 저장된 경로를 출력하시오. 이어서 변수 대신 $SHELL이라는 글자가 그대로 나오도록 출력하시오.",
+    "input": "student@ubuntu:~/lab$ ",
+    "output": "student@ubuntu:~/lab$ echo \"$SHELL\"\n/bin/bash\nstudent@ubuntu:~/lab$ echo '$SHELL'\n$SHELL",
     "code": "echo \"$SHELL\"\necho '$SHELL'",
     "hint": "작은따옴표와 큰따옴표에서 변수 해석이 다른 점을 생각한다.",
     "explanation": "큰따옴표 안에서는 $SHELL 변수를 확장하며 작은따옴표 안에서는 문자 그대로 출력한다.",
-    "initialState": "SHELL 변수가 설정된 Ubuntu 셸",
-    "afterState": "첫 줄에는 셸 경로, 두 번째 줄에는 $SHELL 문자열이 표시됨",
+    "initialState": "student@ubuntu:~/lab$ ",
+    "afterState": "student@ubuntu:~/lab$ echo \"$SHELL\"\n/bin/bash\nstudent@ubuntu:~/lab$ echo '$SHELL'\n$SHELL",
     "commandParts": [
       {
         "token": "echo",
@@ -1009,7 +1014,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "큰따옴표 안에서는 $SHELL 변수를 확장하며 작은따옴표 안에서는 문자 그대로 출력한다.",
     "commonMistake": "두 인용 부호를 바꾸면 출력 내용이 달라진다.",
     "trace": [],
-    "pptSource": "4장 10쪽"
+    "pptSource": "4장 10쪽",
+    "outputNote": "SHELL 값은 로그인 셸 설정에 따라 달라질 수 있습니다."
   },
   {
     "id": "LINUX-032",
@@ -1017,14 +1023,14 @@ export const ubuntuPptProblems = [
     "level": "기초 응용",
     "topic": "셸 리다이렉션",
     "title": "출력을 파일에 저장하기",
-    "statement": "echo로 출력하는 'hello'를 화면 대신 result.txt에 저장한다.",
-    "input": "result.txt 파일이 없는 상태",
-    "output": "result.txt에 hello 한 줄이 저장됨",
+    "statement": "hello 문자열을 화면에 출력하지 말고 result.txt 파일에 저장하시오. 저장한 파일의 내용을 확인하시오.",
+    "input": "student@ubuntu:~/lab$ ls\nnote.txt",
+    "output": "student@ubuntu:~/lab$ cat result.txt\nhello",
     "code": "echo hello > result.txt",
     "hint": "표준 출력과 출력 파일을 연결하는 문법을 생각한다.",
     "explanation": "출력 리다이렉션 >는 명령의 표준 출력을 파일로 보낸다. 파일이 이미 있으면 내용을 대체한다.",
-    "initialState": "result.txt 파일이 없는 상태",
-    "afterState": "result.txt에 hello 한 줄이 저장됨",
+    "initialState": "student@ubuntu:~/lab$ ls\nnote.txt",
+    "afterState": "student@ubuntu:~/lab$ cat result.txt\nhello",
     "commandParts": [
       {
         "token": "echo",
@@ -1039,7 +1045,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "출력 리다이렉션 >는 명령의 표준 출력을 파일로 보낸다. 파일이 이미 있으면 내용을 대체한다.",
     "commonMistake": "기존 파일에서 >를 사용하면 원래 내용이 지워질 수 있다.",
     "trace": [],
-    "pptSource": "4장 13~15쪽"
+    "pptSource": "4장 13~15쪽",
+    "outputNote": ""
   },
   {
     "id": "LINUX-033",
@@ -1047,14 +1054,14 @@ export const ubuntuPptProblems = [
     "level": "기초 응용",
     "topic": "셸 리다이렉션",
     "title": "기존 파일 끝에 내용 추가",
-    "statement": "result.txt의 기존 hello 뒤에 world 한 줄을 추가한다.",
-    "input": "result.txt의 첫 줄에 hello가 저장되어 있음",
-    "output": "hello와 world가 차례로 두 줄에 표시됨",
+    "statement": "result.txt 파일의 기존 hello 아래에 world를 새 줄로 추가하시오. 기존 내용을 유지한 상태에서 파일 전체를 확인하시오.",
+    "input": "student@ubuntu:~/lab$ cat result.txt\nhello",
+    "output": "student@ubuntu:~/lab$ cat result.txt\nhello\nworld",
     "code": "echo world >> result.txt\ncat result.txt",
     "hint": "내용을 덮어쓰는 경우와 끝에 추가하는 경우를 구별한다.",
     "explanation": "출력 리다이렉션 >>는 기존 내용 뒤에 출력 결과를 이어 붙인다.",
-    "initialState": "result.txt의 첫 줄에 hello가 저장되어 있음",
-    "afterState": "hello와 world가 차례로 두 줄에 표시됨",
+    "initialState": "student@ubuntu:~/lab$ cat result.txt\nhello",
+    "afterState": "student@ubuntu:~/lab$ cat result.txt\nhello\nworld",
     "commandParts": [
       {
         "token": "echo",
@@ -1073,7 +1080,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "출력 리다이렉션 >>는 기존 내용 뒤에 출력 결과를 이어 붙인다.",
     "commonMistake": "기존 내용을 보존하려면 >가 아니라 >>를 사용한다.",
     "trace": [],
-    "pptSource": "4장 17쪽"
+    "pptSource": "4장 17쪽",
+    "outputNote": ""
   },
   {
     "id": "LINUX-034",
@@ -1081,14 +1089,14 @@ export const ubuntuPptProblems = [
     "level": "기초 응용",
     "topic": "셸 에일리어스",
     "title": "명령어 별명 설정과 확인",
-    "statement": "현재 셸에서 ls 명령을 실행할 때 파일 종류 기호가 표시되도록 별명을 설정하고, 설정된 별명 목록을 확인한다.",
-    "input": "Ubuntu 터미널에서 ls를 기본 동작으로 사용하고 있는 상태",
-    "output": "alias 출력에서 ls='ls -F' 설정을 확인할 수 있음",
+    "statement": "현재 셸에서 ls 명령을 실행할 때 파일 종류 기호를 함께 표시하도록 별명을 설정하시오. 등록한 별명을 확인하시오.",
+    "input": "student@ubuntu:~/lab$ ",
+    "output": "student@ubuntu:~/lab$ alias\nalias ls='ls -F'",
     "code": "alias ls='ls -F'\nalias",
     "hint": "자주 쓰는 명령어에 기본 옵션을 지정한 뒤 등록된 별명 목록을 확인한다.",
     "explanation": "alias ls='ls -F'는 ls를 입력할 때 파일 종류를 표시하는 -F 옵션을 기본 적용하도록 별명을 지정한다. 인자 없이 alias를 실행하면 현재 별명 설정을 확인할 수 있다.",
-    "initialState": "Ubuntu 터미널에서 ls를 기본 동작으로 사용하고 있는 상태",
-    "afterState": "alias 출력에서 ls='ls -F' 설정을 확인할 수 있음",
+    "initialState": "student@ubuntu:~/lab$ ",
+    "afterState": "student@ubuntu:~/lab$ alias\nalias ls='ls -F'",
     "commandParts": [
       {
         "token": "alias",
@@ -1103,7 +1111,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "alias 목록에 ls='ls -F'가 표시되면 설정이 완료된 것이다.",
     "commonMistake": "ls 명령 자체를 변경하는 것이 아니라 현재 셸에 적용되는 별명을 만드는 것이다.",
     "trace": [],
-    "pptSource": "4장 22~25쪽"
+    "pptSource": "4장 22~25쪽",
+    "outputNote": "여러 별명이 등록된 환경에서는 다른 별명들도 함께 표시됩니다."
   },
   {
     "id": "LINUX-035",
@@ -1111,14 +1120,14 @@ export const ubuntuPptProblems = [
     "level": "기초 응용",
     "topic": "셸 명령 연결",
     "title": "세 가지 명령을 차례로 실행",
-    "statement": "현재 날짜·시간, 현재 디렉터리 목록, 작업 디렉터리 경로를 순서대로 출력한다.",
-    "input": "Ubuntu 터미널이 열린 상태",
-    "output": "날짜·시간 → 목록 → 현재 경로 순서로 표시됨",
+    "statement": "현재 날짜와 시각을 표시하고, 이어서 현재 폴더의 목록과 작업 디렉터리 경로를 순서대로 출력하시오.",
+    "input": "student@ubuntu:~/lab$ ls\ndocs  note.txt",
+    "output": "student@ubuntu:~/lab$ date; ls; pwd\nWed Nov 11 10:00:00 KST 2026\ndocs  note.txt\n/home/student/lab",
     "code": "date; ls; pwd",
     "hint": "명령어 사이의 구분 기호가 실행 순서에 미치는 영향을 생각한다.",
     "explanation": "세미콜론은 연결된 명령을 왼쪽부터 순서대로 실행한다.",
-    "initialState": "Ubuntu 터미널이 열린 상태",
-    "afterState": "날짜·시간 → 목록 → 현재 경로 순서로 표시됨",
+    "initialState": "student@ubuntu:~/lab$ ls\ndocs  note.txt",
+    "afterState": "student@ubuntu:~/lab$ date; ls; pwd\nWed Nov 11 10:00:00 KST 2026\ndocs  note.txt\n/home/student/lab",
     "commandParts": [
       {
         "token": "date",
@@ -1141,7 +1150,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "세미콜론은 연결된 명령을 왼쪽부터 순서대로 실행한다.",
     "commonMistake": "세미콜론은 왼쪽 명령의 결과를 오른쪽 입력으로 전달하는 파이프와 다르다.",
     "trace": [],
-    "pptSource": "1장 35쪽, 2장 10·13쪽, 4장 9쪽"
+    "pptSource": "1장 35쪽, 2장 10·13쪽, 4장 9쪽",
+    "outputNote": "날짜·시간·파일 목록은 실습하는 시점과 컴퓨터 상태에 따라 달라집니다."
   },
   {
     "id": "LINUX-036",
@@ -1149,14 +1159,14 @@ export const ubuntuPptProblems = [
     "level": "기초 응용",
     "topic": "프로세스",
     "title": "현재 터미널 프로세스 상세 보기",
-    "statement": "현재 터미널에서 실행한 프로세스들의 PID, PPID, 실행 명령 등 상세 정보를 확인한다.",
-    "input": "Ubuntu 터미널이 실행 중인 상태",
-    "output": "PID, PPID, CMD 등 자세한 프로세스 항목이 표시됨",
+    "statement": "현재 터미널에서 실행 중인 프로세스의 PID, 부모 프로세스 번호(PPID), 실행 명령 등 자세한 정보를 출력하시오.",
+    "input": "student@ubuntu:~/lab$ ",
+    "output": "student@ubuntu:~/lab$ ps -f\nUID          PID    PPID  C STIME TTY          TIME CMD\nstudent     1842    1841  0 10:00 pts/0    00:00:00 bash\nstudent     1901    1842  0 10:05 pts/0    00:00:00 ps -f",
     "code": "ps -f",
     "hint": "기본 프로세스 목록과 상세 목록 항목을 비교한다.",
     "explanation": "ps -f는 현재 터미널 관련 프로세스의 상세 정보를 표시한다.",
-    "initialState": "Ubuntu 터미널이 실행 중인 상태",
-    "afterState": "PID, PPID, CMD 등 자세한 프로세스 항목이 표시됨",
+    "initialState": "student@ubuntu:~/lab$ ",
+    "afterState": "student@ubuntu:~/lab$ ps -f\nUID          PID    PPID  C STIME TTY          TIME CMD\nstudent     1842    1841  0 10:00 pts/0    00:00:00 bash\nstudent     1901    1842  0 10:05 pts/0    00:00:00 ps -f",
     "commandParts": [
       {
         "token": "ps",
@@ -1171,7 +1181,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "ps -f는 현재 터미널 관련 프로세스의 상세 정보를 표시한다.",
     "commonMistake": "PID와 부모 PID인 PPID는 서로 다른 값이다.",
     "trace": [],
-    "pptSource": "6장 4~5쪽"
+    "pptSource": "6장 4~5쪽",
+    "outputNote": "PID, PPID, 시각 및 프로세스 수는 실행할 때마다 달라집니다."
   },
   {
     "id": "LINUX-037",
@@ -1179,14 +1190,14 @@ export const ubuntuPptProblems = [
     "level": "기초 응용",
     "topic": "프로세스",
     "title": "시스템 전체 프로세스 자세히 보기",
-    "statement": "시스템에서 실행 중인 전체 프로세스의 자세한 정보를 확인한다.",
-    "input": "Ubuntu 시스템이 동작 중인 상태",
-    "output": "시스템 전체 프로세스의 UID·PID·PPID·CMD 등이 출력됨",
+    "statement": "현재 터미널뿐 아니라 시스템 전체에서 실행 중인 프로세스의 상세 정보를 출력하시오.",
+    "input": "student@ubuntu:~/lab$ ",
+    "output": "student@ubuntu:~/lab$ ps -ef\nUID          PID    PPID  C STIME TTY          TIME CMD\nroot           1       0  0 09:00 ?        00:00:02 /sbin/init\nstudent     1842    1841  0 10:00 pts/0    00:00:00 bash",
     "code": "ps -ef",
     "hint": "전체 범위 선택 옵션과 상세 항목 선택 옵션을 결합한다.",
     "explanation": "ps -ef는 유닉스 형식의 -e 전체와 -f 상세 출력 옵션을 함께 적용한다.",
-    "initialState": "Ubuntu 시스템이 동작 중인 상태",
-    "afterState": "시스템 전체 프로세스의 UID·PID·PPID·CMD 등이 출력됨",
+    "initialState": "student@ubuntu:~/lab$ ",
+    "afterState": "student@ubuntu:~/lab$ ps -ef\nUID          PID    PPID  C STIME TTY          TIME CMD\nroot           1       0  0 09:00 ?        00:00:02 /sbin/init\nstudent     1842    1841  0 10:00 pts/0    00:00:00 bash",
     "commandParts": [
       {
         "token": "ps",
@@ -1205,7 +1216,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "ps -ef는 유닉스 형식의 -e 전체와 -f 상세 출력 옵션을 함께 적용한다.",
     "commonMistake": "ps -f만 사용하면 시스템 전체가 아니라 현재 터미널 중심의 정보가 표시된다.",
     "trace": [],
-    "pptSource": "6장 4쪽, 9쪽"
+    "pptSource": "6장 4쪽, 9쪽",
+    "outputNote": "이 출력은 전체 목록 중 일부를 보여주는 예시입니다. 실행 중인 프로세스는 환경마다 다릅니다."
   },
   {
     "id": "LINUX-038",
@@ -1213,14 +1225,14 @@ export const ubuntuPptProblems = [
     "level": "기초 응용",
     "topic": "프로세스",
     "title": "bash 프로세스 이름 함께 검색",
-    "statement": "bash라는 이름이 포함된 프로세스의 PID와 프로세스 이름을 확인한다.",
-    "input": "현재 시스템에 bash 프로세스가 실행 중인 상태",
-    "output": "PID와 bash 프로세스 이름이 출력됨",
+    "statement": "이름에 bash가 포함된 프로세스의 PID와 프로세스 이름을 함께 출력하시오.",
+    "input": "student@ubuntu:~/lab$ ",
+    "output": "student@ubuntu:~/lab$ pgrep -l bash\n1842 bash",
     "code": "pgrep -l bash",
     "hint": "PID만 확인하는 방법과 이름까지 확인하는 방법을 구별한다.",
     "explanation": "pgrep -l은 패턴에 일치하는 프로세스의 PID와 이름을 보여준다.",
-    "initialState": "현재 시스템에 bash 프로세스가 실행 중인 상태",
-    "afterState": "PID와 bash 프로세스 이름이 출력됨",
+    "initialState": "student@ubuntu:~/lab$ ",
+    "afterState": "student@ubuntu:~/lab$ pgrep -l bash\n1842 bash",
     "commandParts": [
       {
         "token": "pgrep",
@@ -1235,7 +1247,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "pgrep -l은 패턴에 일치하는 프로세스의 PID와 이름을 보여준다.",
     "commonMistake": "검색 결과의 PID 값은 실행 시점마다 달라질 수 있다.",
     "trace": [],
-    "pptSource": "6장 14~15쪽"
+    "pptSource": "6장 14~15쪽",
+    "outputNote": "프로세스 PID 및 검색 결과의 개수는 실행할 때마다 달라질 수 있습니다."
   },
   {
     "id": "LINUX-039",
@@ -1243,14 +1256,14 @@ export const ubuntuPptProblems = [
     "level": "기초 응용",
     "topic": "프로세스",
     "title": "CPU·메모리 사용량 함께 확인",
-    "statement": "시스템에서 실행 중인 프로세스의 사용자, CPU 비율, 메모리 비율을 확인한다.",
-    "input": "Ubuntu 시스템이 동작 중인 상태",
-    "output": "USER, %CPU, %MEM 등을 포함한 프로세스 정보가 출력됨",
+    "statement": "시스템에서 실행 중인 프로세스의 사용자 이름, CPU 사용 비율, 메모리 사용 비율을 함께 출력하시오.",
+    "input": "student@ubuntu:~/lab$ ",
+    "output": "student@ubuntu:~/lab$ ps aux\nUSER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND\nstudent     1842  0.0  0.1  10560  5200 pts/0    Ss   10:00   0:00 bash",
     "code": "ps aux",
     "hint": "BSD 옵션은 하이픈 없이 사용하는 형식이다.",
     "explanation": "ps aux는 BSD 형식으로 전체 프로세스의 자세한 자원 사용량을 표시한다.",
-    "initialState": "Ubuntu 시스템이 동작 중인 상태",
-    "afterState": "USER, %CPU, %MEM 등을 포함한 프로세스 정보가 출력됨",
+    "initialState": "student@ubuntu:~/lab$ ",
+    "afterState": "student@ubuntu:~/lab$ ps aux\nUSER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND\nstudent     1842  0.0  0.1  10560  5200 pts/0    Ss   10:00   0:00 bash",
     "commandParts": [
       {
         "token": "ps",
@@ -1273,7 +1286,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "ps aux는 BSD 형식으로 전체 프로세스의 자세한 자원 사용량을 표시한다.",
     "commonMistake": "BSD 방식의 aux 앞에는 하이픈을 붙이지 않는다.",
     "trace": [],
-    "pptSource": "6장 4쪽, 11쪽"
+    "pptSource": "6장 4쪽, 11쪽",
+    "outputNote": "전체 목록 중 일부를 표시한 예시입니다. CPU·메모리 사용 비율과 PID는 매번 달라집니다."
   },
   {
     "id": "LINUX-040",
@@ -1281,14 +1295,14 @@ export const ubuntuPptProblems = [
     "level": "기초 응용",
     "topic": "디스크",
     "title": "파일 시스템의 남은 공간 확인",
-    "statement": "디스크 사용량과 남은 공간을 GB·MB 등 읽기 쉬운 단위로 표시한다.",
-    "input": "Ubuntu 파일 시스템이 마운트되어 있음",
-    "output": "파일 시스템별 전체·사용·남은 공간 등이 읽기 쉬운 단위로 표시됨",
+    "statement": "현재 파일 시스템의 전체 용량, 사용한 공간, 남은 공간을 GB·MB 등 읽기 쉬운 단위로 표시하시오.",
+    "input": "student@ubuntu:~/lab$ ",
+    "output": "student@ubuntu:~/lab$ df -h\nFilesystem      Size  Used Avail Use% Mounted on\n/dev/sda2        40G   12G   26G  32% /",
     "code": "df -h",
     "hint": "파일 시스템 전체 용량과 개별 디렉터리 사용량은 서로 다른 항목이다.",
     "explanation": "df -h는 파일 시스템별 용량을 사람이 읽기 쉬운 크기 단위로 출력한다.",
-    "initialState": "Ubuntu 파일 시스템이 마운트되어 있음",
-    "afterState": "파일 시스템별 전체·사용·남은 공간 등이 읽기 쉬운 단위로 표시됨",
+    "initialState": "student@ubuntu:~/lab$ ",
+    "afterState": "student@ubuntu:~/lab$ df -h\nFilesystem      Size  Used Avail Use% Mounted on\n/dev/sda2        40G   12G   26G  32% /",
     "commandParts": [
       {
         "token": "df",
@@ -1303,7 +1317,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "df -h는 파일 시스템별 용량을 사람이 읽기 쉬운 크기 단위로 출력한다.",
     "commonMistake": "df 결과는 디스크 상태에 따라 달라진다.",
     "trace": [],
-    "pptSource": "7장 2~4쪽"
+    "pptSource": "7장 2~4쪽",
+    "outputNote": "표에 제시된 용량과 장치명은 예시이며 실제 디스크 상태에 따라 달라집니다."
   },
   {
     "id": "LINUX-041",
@@ -1311,14 +1326,14 @@ export const ubuntuPptProblems = [
     "level": "종합 활용",
     "topic": "디스크 종합",
     "title": "파일 시스템 유형과 폴더 사용량 비교",
-    "statement": "파일 시스템 종류를 확인한 뒤 docs 폴더가 사용한 총 공간을 읽기 쉬운 단위로 표시한다.",
-    "input": "docs 디렉터리가 있고 파일이 포함되어 있음",
-    "output": "첫 명령에서 파일 시스템 종류, 두 번째 명령에서 docs 폴더의 총사용량을 확인함",
+    "statement": "먼저 파일 시스템의 종류를 확인하시오. 이어서 docs 폴더가 사용하는 전체 공간을 읽기 쉬운 단위로 출력하시오.",
+    "input": "student@ubuntu:~/lab$ ls docs\nnote.txt",
+    "output": "student@ubuntu:~/lab$ df -T\nFilesystem     Type     1K-blocks    Used Available Use% Mounted on\n/dev/sda2      ext4      41943040 12582912  27262976  32% /\nstudent@ubuntu:~/lab$ du -sh docs\n4.0K    docs",
     "code": "df -T\ndu -sh docs",
     "hint": "파일 시스템 단위 통계와 디렉터리 단위 통계를 구별한다.",
     "explanation": "df -T는 파일 시스템 종류를 보여준다. du의 -s와 -h는 지정한 디렉터리의 합계 사용량을 읽기 쉬운 단위로 표시한다.",
-    "initialState": "docs 디렉터리가 있고 파일이 포함되어 있음",
-    "afterState": "첫 명령에서 파일 시스템 종류, 두 번째 명령에서 docs 폴더의 총사용량을 확인함",
+    "initialState": "student@ubuntu:~/lab$ ls docs\nnote.txt",
+    "afterState": "student@ubuntu:~/lab$ df -T\nFilesystem     Type     1K-blocks    Used Available Use% Mounted on\n/dev/sda2      ext4      41943040 12582912  27262976  32% /\nstudent@ubuntu:~/lab$ du -sh docs\n4.0K    docs",
     "commandParts": [
       {
         "token": "df",
@@ -1345,7 +1360,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "df -T는 파일 시스템 종류를 보여준다. du의 -s와 -h는 지정한 디렉터리의 합계 사용량을 읽기 쉬운 단위로 표시한다.",
     "commonMistake": "df와 du가 나타내는 사용량의 측정 대상은 서로 다르다.",
     "trace": [],
-    "pptSource": "7장 2·5~8쪽"
+    "pptSource": "7장 2·5~8쪽",
+    "outputNote": "파일 시스템과 폴더의 용량은 예시입니다. 실제 출력은 컴퓨터에 따라 달라집니다."
   },
   {
     "id": "LINUX-042",
@@ -1353,14 +1369,14 @@ export const ubuntuPptProblems = [
     "level": "종합 활용",
     "topic": "프로세스 종합",
     "title": "전체 목록에서 특정 이름의 프로세스 찾기",
-    "statement": "시스템 전체 프로세스 목록에서 bash 문자열이 포함된 줄만 검색한다.",
-    "input": "Ubuntu에서 bash 프로세스가 실행 중인 상태",
-    "output": "bash가 포함된 프로세스 정보 행들이 표시됨",
+    "statement": "시스템 전체 프로세스의 상세 목록에서 bash라는 문자열이 들어 있는 줄만 검색하여 출력하시오.",
+    "input": "student@ubuntu:~/lab$ ",
+    "output": "student@ubuntu:~/lab$ ps -ef | grep bash\nstudent     1842    1841  0 10:00 pts/0    00:00:00 bash\nstudent     1907    1842  0 10:05 pts/0    00:00:00 grep bash",
     "code": "ps -ef | grep bash",
     "hint": "앞 명령의 출력 결과를 뒤 명령의 검색 입력으로 전달한다.",
     "explanation": "|는 앞 명령의 출력을 뒤 명령의 입력으로 연결한다. ps -ef 결과를 grep이 검색한다.",
-    "initialState": "Ubuntu에서 bash 프로세스가 실행 중인 상태",
-    "afterState": "bash가 포함된 프로세스 정보 행들이 표시됨",
+    "initialState": "student@ubuntu:~/lab$ ",
+    "afterState": "student@ubuntu:~/lab$ ps -ef | grep bash\nstudent     1842    1841  0 10:00 pts/0    00:00:00 bash\nstudent     1907    1842  0 10:05 pts/0    00:00:00 grep bash",
     "commandParts": [
       {
         "token": "ps -ef",
@@ -1383,7 +1399,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "|는 앞 명령의 출력을 뒤 명령의 입력으로 연결한다. ps -ef 결과를 grep이 검색한다.",
     "commonMistake": "검색 명령 자신이 검색 결과에 포함될 수도 있다.",
     "trace": [],
-    "pptSource": "6장 9쪽, 13쪽, 2장 53쪽"
+    "pptSource": "6장 9쪽, 13쪽, 2장 53쪽",
+    "outputNote": "프로세스 정보는 예시입니다. 검색을 수행하는 grep 자신이 결과에 포함될 수도 있습니다."
   },
   {
     "id": "LINUX-043",
@@ -1391,14 +1408,14 @@ export const ubuntuPptProblems = [
     "level": "종합 활용",
     "topic": "시스템 종료",
     "title": "예정된 시스템 재시작 취소하기",
-    "statement": "기존에 예약한 shutdown 재시작 작업을 취소하는 명령을 작성한다. 실제 종료·재시작은 수행하지 않는다.",
-    "input": "관리자가 재시작을 예약한 상태라고 가정",
-    "output": "기존에 예약된 shutdown 작업이 취소됨",
+    "statement": "시스템 재시작이 예약되어 있을 때 해당 예약을 취소하는 명령을 작성하시오. 실제 시스템을 종료하거나 재시작하지 않고 예약 취소 명령만 작성하시오.",
+    "input": "student@ubuntu:~/lab$ ",
+    "output": "student@ubuntu:~/lab$ shutdown -c\nstudent@ubuntu:~/lab$ ",
     "code": "shutdown -c",
     "hint": "시스템 종료 예약과 기존 예약의 취소 기능을 구분한다.",
     "explanation": "shutdown -c는 이전에 예약한 shutdown 작업을 취소한다.",
-    "initialState": "관리자가 재시작을 예약한 상태라고 가정",
-    "afterState": "기존에 예약된 shutdown 작업이 취소됨",
+    "initialState": "student@ubuntu:~/lab$ ",
+    "afterState": "student@ubuntu:~/lab$ shutdown -c\nstudent@ubuntu:~/lab$ ",
     "commandParts": [
       {
         "token": "shutdown",
@@ -1413,7 +1430,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "shutdown -c는 이전에 예약한 shutdown 작업을 취소한다.",
     "commonMistake": "shutdown -r과 -h는 실제로 시스템을 재시작하거나 종료할 수 있으므로 이 문제에서는 사용하지 않는다.",
     "trace": [],
-    "pptSource": "8장 3~5쪽"
+    "pptSource": "8장 3~5쪽",
+    "outputNote": "취소할 예약이 없으면 오류 또는 안내 메시지가 표시될 수 있습니다. 이 문제는 예약 취소 방법을 학습하는 상황입니다."
   },
   {
     "id": "LINUX-044",
@@ -1421,14 +1439,14 @@ export const ubuntuPptProblems = [
     "level": "종합 활용",
     "topic": "패키지 관리",
     "title": "패키지 검색 후 의존성 확인",
-    "statement": "APT 캐시에서 vim 관련 패키지를 검색한 뒤 vim 패키지의 의존성 및 역의존성을 조회한다.",
-    "input": "APT 패키지 정보가 저장된 Ubuntu 환경",
-    "output": "vim 관련 패키지 목록과 의존성 정보가 차례로 표시됨",
+    "statement": "APT 캐시에서 이름이나 설명에 vim이 들어 있는 패키지를 검색하시오. 이어서 vim 패키지의 의존성 정보를 조회하시오.",
+    "input": "student@ubuntu:~/lab$ ",
+    "output": "student@ubuntu:~/lab$ apt-cache search vim\nvim - Vi IMproved - enhanced vi editor\nvim-common - Vi IMproved - Common files\nstudent@ubuntu:~/lab$ apt-cache showpkg vim\nPackage: vim\nVersions:",
     "code": "apt-cache search vim\napt-cache showpkg vim",
     "hint": "키워드 검색과 특정 패키지의 의존성 검색을 구분한다.",
     "explanation": "apt-cache search는 키워드 검색, showpkg는 패키지 의존성 및 역의존성 정보 표시다.",
-    "initialState": "APT 패키지 정보가 저장된 Ubuntu 환경",
-    "afterState": "vim 관련 패키지 목록과 의존성 정보가 차례로 표시됨",
+    "initialState": "student@ubuntu:~/lab$ ",
+    "afterState": "student@ubuntu:~/lab$ apt-cache search vim\nvim - Vi IMproved - enhanced vi editor\nvim-common - Vi IMproved - Common files\nstudent@ubuntu:~/lab$ apt-cache showpkg vim\nPackage: vim\nVersions:",
     "commandParts": [
       {
         "token": "apt-cache",
@@ -1447,7 +1465,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "apt-cache search는 키워드 검색, showpkg는 패키지 의존성 및 역의존성 정보 표시다.",
     "commonMistake": "패키지 설치가 아니라 저장된 패키지 정보만 확인하는 문제다.",
     "trace": [],
-    "pptSource": "9장 3쪽, 6~8쪽"
+    "pptSource": "9장 3쪽, 6~8쪽",
+    "outputNote": "패키지 목록과 버전 정보는 길거나 달라질 수 있어 출력 일부만 예시로 제시했습니다."
   },
   {
     "id": "LINUX-045",
@@ -1455,14 +1474,14 @@ export const ubuntuPptProblems = [
     "level": "종합 활용",
     "topic": "파일 아카이브",
     "title": "디렉터리를 묶고 목록 확인하기",
-    "statement": "docs 디렉터리를 backup.tar 아카이브로 묶은 뒤 아카이브에 들어 있는 내용을 확인한다.",
-    "input": "docs 폴더에 note.txt 파일이 있음. backup.tar는 없음",
-    "output": "backup.tar가 생성되고 내부 목록에 docs 및 note.txt가 나타남",
+    "statement": "docs 폴더와 그 안의 note.txt 파일을 backup.tar 파일로 묶으시오. 이어서 아카이브 안에 들어 있는 파일 목록을 확인하시오.",
+    "input": "student@ubuntu:~/lab$ ls -R docs\ndocs:\nnote.txt",
+    "output": "student@ubuntu:~/lab$ tar tvf backup.tar\ndrwxr-xr-x student/student   0 2026-11-11 10:00 docs/\n-rw-r--r-- student/student   6 2026-11-11 10:00 docs/note.txt",
     "code": "tar cvf backup.tar docs\ntar tvf backup.tar",
     "hint": "아카이브 생성 기능과 내용 보기 기능을 구분한다.",
     "explanation": "tar c는 새 아카이브 생성, t는 목록 출력, v는 처리 파일 표시, f는 아카이브 이름 지정이다.",
-    "initialState": "docs 폴더에 note.txt 파일이 있음. backup.tar는 없음",
-    "afterState": "backup.tar가 생성되고 내부 목록에 docs 및 note.txt가 나타남",
+    "initialState": "student@ubuntu:~/lab$ ls -R docs\ndocs:\nnote.txt",
+    "afterState": "student@ubuntu:~/lab$ tar tvf backup.tar\ndrwxr-xr-x student/student   0 2026-11-11 10:00 docs/\n-rw-r--r-- student/student   6 2026-11-11 10:00 docs/note.txt",
     "commandParts": [
       {
         "token": "tar",
@@ -1489,7 +1508,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "tar c는 새 아카이브 생성, t는 목록 출력, v는 처리 파일 표시, f는 아카이브 이름 지정이다.",
     "commonMistake": "아카이브를 생성해도 docs의 원본 파일은 유지된다.",
     "trace": [],
-    "pptSource": "9장 20~23쪽"
+    "pptSource": "9장 20~23쪽",
+    "outputNote": "아카이브에 기록되는 파일 크기·권한·시각은 예시입니다."
   },
   {
     "id": "LINUX-046",
@@ -1497,14 +1517,14 @@ export const ubuntuPptProblems = [
     "level": "종합 활용",
     "topic": "파일 아카이브",
     "title": "기존 아카이브 파일 추출하기",
-    "statement": "현재 디렉터리의 backup.tar에서 원래 파일과 디렉터리를 추출한다.",
-    "input": "backup.tar에 docs/note.txt가 저장되어 있고 현재 위치에는 docs 폴더가 없음",
-    "output": "docs/note.txt가 추출되어 존재함",
+    "statement": "현재 폴더에 있는 backup.tar 아카이브에서 docs 폴더와 note.txt 파일을 추출하시오. 추출한 파일을 확인하시오.",
+    "input": "student@ubuntu:~/lab$ ls\nbackup.tar",
+    "output": "student@ubuntu:~/lab$ tar xvf backup.tar\ndocs/\ndocs/note.txt\nstudent@ubuntu:~/lab$ ls -R docs\ndocs:\nnote.txt",
     "code": "tar xvf backup.tar",
     "hint": "아카이브 생성, 내용 확인, 추출의 기능 문자를 비교한다.",
     "explanation": "tar xvf는 아카이브의 원래 파일을 추출한다.",
-    "initialState": "backup.tar에 docs/note.txt가 저장되어 있고 현재 위치에는 docs 폴더가 없음",
-    "afterState": "docs/note.txt가 추출되어 존재함",
+    "initialState": "student@ubuntu:~/lab$ ls\nbackup.tar",
+    "afterState": "student@ubuntu:~/lab$ tar xvf backup.tar\ndocs/\ndocs/note.txt\nstudent@ubuntu:~/lab$ ls -R docs\ndocs:\nnote.txt",
     "commandParts": [
       {
         "token": "tar",
@@ -1527,7 +1547,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "tar xvf는 아카이브의 원래 파일을 추출한다.",
     "commonMistake": "이미 같은 경로에 파일이 있으면 추출 과정에서 영향을 받을 수 있다.",
     "trace": [],
-    "pptSource": "9장 20~24쪽"
+    "pptSource": "9장 20~24쪽",
+    "outputNote": ""
   },
   {
     "id": "LINUX-047",
@@ -1535,14 +1556,14 @@ export const ubuntuPptProblems = [
     "level": "종합 활용",
     "topic": "파일 압축",
     "title": "압축 후 압축 파일의 내용 확인",
-    "statement": "report.txt를 gzip으로 압축하고 압축을 해제하지 않은 채 내용을 화면에 표시한다.",
-    "input": "report.txt에 hello 한 줄이 저장되어 있고 report.txt.gz는 없음",
-    "output": "report.txt.gz가 생성되고 내용 확인 결과 hello가 표시됨",
+    "statement": "report.txt 파일을 gzip 형식으로 압축하시오. 압축을 해제하지 않고 압축된 파일의 내용을 화면에 출력하시오.",
+    "input": "student@ubuntu:~/lab$ cat report.txt\nhello",
+    "output": "student@ubuntu:~/lab$ gzip report.txt\nstudent@ubuntu:~/lab$ ls\nreport.txt.gz\nstudent@ubuntu:~/lab$ zcat report.txt.gz\nhello",
     "code": "gzip report.txt\nzcat report.txt.gz",
     "hint": "압축 파일 자체를 읽는 방식과 압축을 푸는 방식을 구별한다.",
     "explanation": "gzip은 .gz 압축 파일을 생성한다. zcat은 gzip 압축 파일의 내용을 화면에 출력한다.",
-    "initialState": "report.txt에 hello 한 줄이 저장되어 있고 report.txt.gz는 없음",
-    "afterState": "report.txt.gz가 생성되고 내용 확인 결과 hello가 표시됨",
+    "initialState": "student@ubuntu:~/lab$ cat report.txt\nhello",
+    "afterState": "student@ubuntu:~/lab$ gzip report.txt\nstudent@ubuntu:~/lab$ ls\nreport.txt.gz\nstudent@ubuntu:~/lab$ zcat report.txt.gz\nhello",
     "commandParts": [
       {
         "token": "gzip",
@@ -1557,7 +1578,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "gzip은 .gz 압축 파일을 생성한다. zcat은 gzip 압축 파일의 내용을 화면에 출력한다.",
     "commonMistake": "gzip 실행 후에는 원본 report.txt가 사라질 수 있다.",
     "trace": [],
-    "pptSource": "9장 28~30쪽"
+    "pptSource": "9장 28~30쪽",
+    "outputNote": ""
   },
   {
     "id": "LINUX-048",
@@ -1565,14 +1587,14 @@ export const ubuntuPptProblems = [
     "level": "종합 활용",
     "topic": "사용자 정보",
     "title": "로그인 사용자와 소속 그룹 확인",
-    "statement": "접속 중인 사용자 정보를 제목과 함께 출력하고 현재 사용자의 소속 그룹을 확인한다.",
-    "input": "Ubuntu에 로그인하여 터미널을 실행 중인 상태",
-    "output": "로그인 사용자 정보 항목 제목과 현재 소속 그룹 이름들이 표시됨",
+    "statement": "현재 시스템에 로그인한 사용자의 정보를 제목과 함께 출력하시오. 이어서 현재 사용자가 속한 그룹을 출력하시오.",
+    "input": "student@ubuntu:~/lab$ ",
+    "output": "student@ubuntu:~/lab$ who -H\nNAME     LINE         TIME             COMMENT\nstudent  pts/0        2026-11-11 10:00\nstudent@ubuntu:~/lab$ groups\nstudent adm cdrom sudo dip plugdev",
     "code": "who -H\ngroups",
     "hint": "현재 접속한 사용자 정보와 계정의 그룹 소속 정보를 구분한다.",
     "explanation": "who -H는 로그인 사용자 정보의 제목을 함께 표시하고 groups는 사용자 소속 그룹을 보여준다.",
-    "initialState": "Ubuntu에 로그인하여 터미널을 실행 중인 상태",
-    "afterState": "로그인 사용자 정보 항목 제목과 현재 소속 그룹 이름들이 표시됨",
+    "initialState": "student@ubuntu:~/lab$ ",
+    "afterState": "student@ubuntu:~/lab$ who -H\nNAME     LINE         TIME             COMMENT\nstudent  pts/0        2026-11-11 10:00\nstudent@ubuntu:~/lab$ groups\nstudent adm cdrom sudo dip plugdev",
     "commandParts": [
       {
         "token": "who",
@@ -1591,7 +1613,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "who -H는 로그인 사용자 정보의 제목을 함께 표시하고 groups는 사용자 소속 그룹을 보여준다.",
     "commonMistake": "로그인 사용자 수와 그룹 수는 서로 다른 개념이다.",
     "trace": [],
-    "pptSource": "10장 41~42쪽, 45쪽"
+    "pptSource": "10장 41~42쪽, 45쪽",
+    "outputNote": "로그인 상태와 사용자 그룹 설정에 따라 출력 내용은 달라질 수 있습니다."
   },
   {
     "id": "LINUX-049",
@@ -1599,14 +1622,14 @@ export const ubuntuPptProblems = [
     "level": "종합 활용",
     "topic": "작업 예약",
     "title": "현재 예약된 반복 작업 확인",
-    "statement": "현재 사용자에게 설정된 crontab 반복 작업 목록을 읽기 전용으로 확인한다.",
-    "input": "현재 사용자에게 crontab 작업이 있을 수도 없을 수도 있음",
-    "output": "설정된 작업이 있으면 목록이 표시되고 없으면 crontab이 없다는 메시지가 나올 수 있음",
+    "statement": "현재 사용자에게 등록된 반복 실행 예약 작업을 확인하시오. 예약 작업이 없는 경우 표시되는 메시지도 확인하시오.",
+    "input": "student@ubuntu:~/lab$ ",
+    "output": "student@ubuntu:~/lab$ crontab -l\nno crontab for student",
     "code": "crontab -l",
     "hint": "반복 작업 조회와 반복 작업 편집·삭제를 구별한다.",
     "explanation": "crontab -l은 현재 사용자에게 등록된 반복 실행 예약 내용을 조회한다.",
-    "initialState": "현재 사용자에게 crontab 작업이 있을 수도 없을 수도 있음",
-    "afterState": "설정된 작업이 있으면 목록이 표시되고 없으면 crontab이 없다는 메시지가 나올 수 있음",
+    "initialState": "student@ubuntu:~/lab$ ",
+    "afterState": "student@ubuntu:~/lab$ crontab -l\nno crontab for student",
     "commandParts": [
       {
         "token": "crontab",
@@ -1621,7 +1644,8 @@ export const ubuntuPptProblems = [
     "verificationDetail": "crontab -l은 현재 사용자에게 등록된 반복 실행 예약 내용을 조회한다.",
     "commonMistake": "-e는 편집, -r은 삭제이므로 조회용 -l과 구분한다.",
     "trace": [],
-    "pptSource": "6장 37~39쪽"
+    "pptSource": "6장 37~39쪽",
+    "outputNote": "예시는 현재 사용자에게 등록된 crontab이 없는 경우입니다. 예약된 작업이 있다면 해당 작업 목록이 표시됩니다."
   },
   {
     "id": "LINUX-050",
@@ -1629,14 +1653,14 @@ export const ubuntuPptProblems = [
     "level": "종합 활용",
     "topic": "사용자 계정",
     "title": "사용자 생성 기본 설정 확인",
-    "statement": "새 계정을 생성하지 않고 useradd 명령이 사용할 기본 그룹과 홈 디렉터리 등의 설정을 확인한다.",
-    "input": "Ubuntu에서 사용자 계정 관리 기본 설정이 준비된 상태",
-    "output": "GROUP, HOME, INACTIVE, EXPIRE, SHELL 등의 기본 설정 항목이 표시됨",
+    "statement": "새 계정을 만들지 않고 사용자 계정 생성 명령의 기본 그룹·홈 디렉터리·셸 설정을 출력하시오.",
+    "input": "student@ubuntu:~/lab$ ",
+    "output": "student@ubuntu:~/lab$ useradd -D\nGROUP=100\nHOME=/home\nINACTIVE=-1\nEXPIRE=\nSHELL=/bin/sh\nSKEL=/etc/skel\nCREATE_MAIL_SPOOL=no",
     "code": "useradd -D",
     "hint": "사용자 계정 생성과 계정 생성 시 사용할 기본값 확인을 구별한다.",
     "explanation": "useradd -D는 계정을 새로 만들지 않고 useradd의 기본 설정값을 출력한다.",
-    "initialState": "Ubuntu에서 사용자 계정 관리 기본 설정이 준비된 상태",
-    "afterState": "GROUP, HOME, INACTIVE, EXPIRE, SHELL 등의 기본 설정 항목이 표시됨",
+    "initialState": "student@ubuntu:~/lab$ ",
+    "afterState": "student@ubuntu:~/lab$ useradd -D\nGROUP=100\nHOME=/home\nINACTIVE=-1\nEXPIRE=\nSHELL=/bin/sh\nSKEL=/etc/skel\nCREATE_MAIL_SPOOL=no",
     "commandParts": [
       {
         "token": "useradd",
@@ -1651,6 +1675,7 @@ export const ubuntuPptProblems = [
     "verificationDetail": "useradd -D는 계정을 새로 만들지 않고 useradd의 기본 설정값을 출력한다.",
     "commonMistake": "useradd에 실제 로그인 ID를 지정하는 것은 이 문제의 목적이 아니다.",
     "trace": [],
-    "pptSource": "10장 14쪽, 17~18쪽"
+    "pptSource": "10장 14쪽, 17~18쪽",
+    "outputNote": "표시된 기본 설정값은 Ubuntu 버전 및 관리자의 설정에 따라 달라질 수 있습니다."
   }
 ];
