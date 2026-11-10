@@ -10,9 +10,14 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ ls\n\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\nproject:\nsrc\n\nproject/src:\nmain.py",
     "code": "mkdir -p project/src\nvim project/src/main.py\nls -R project",
-    "vimSteps": ["Vim 화면이 열리면 Esc 키를 눌러 일반 모드인지 확인하시오.","아무 글자도 입력하지 말고 :wq를 입력하시오.","Enter 키를 눌러 빈 main.py 파일을 저장하고 Vim을 종료하시오."],
+    "vimSteps": [
+      "터미널에서 mkdir -p project/src를 실행하여 폴더를 만드시오.",
+      "터미널에서 vim project/src/main.py를 실행하여 Vim을 여시오.",
+      "Vim 안에서 :wq를 입력하고 Enter를 누르시오. (빈 파일을 저장하고 Vim 종료)",
+      "터미널로 돌아와 ls -R project를 실행하여 main.py를 확인하시오."
+    ],
     "hint": "먼저 폴더를 만든 뒤 편집기를 사용합니다. 마지막에는 폴더 안의 구조를 확인합니다.",
-    "explanation": "mkdir -p로 중간 디렉터리를 만들고 Vim에서 :wq와 Enter로 저장·종료한다. ls -R은 하위 내용도 표시한다.",
+    "explanation": "mkdir -p로 폴더를 만든 뒤 vim project/src/main.py를 실행한다. Vim 안에서 :wq를 입력하고 Enter로 저장·종료한다. 터미널에서 ls -R project로 확인한다.",
     "initialState": "student@ubuntu:~/lab$ ls\n\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\nproject:\nsrc\n\nproject/src:\nmain.py",
     "commandParts": [
@@ -42,7 +47,7 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "ls -R project",
-    "verificationDetail": "mkdir -p로 중간 디렉터리를 만들고 Vim에서 :wq와 Enter로 저장·종료한다. ls -R은 하위 내용도 표시한다.",
+    "verificationDetail": "mkdir -p로 폴더를 만든 뒤 vim project/src/main.py를 실행한다. Vim 안에서 :wq를 입력하고 Enter로 저장·종료한다. 터미널에서 ls -R project로 확인한다.",
     "commonMistake": "Vim을 열기만 하고 :wq로 저장하지 않으면 파일이 생성되지 않을 수 있다.",
     "trace": [],
     "pptSource": "2장 22쪽, 3장 4~5쪽",
@@ -58,9 +63,14 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ ls\n\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\n-rw-r----- 1 student student 0 Nov 11 09:00 report.txt",
     "code": "vim report.txt\nchmod 640 report.txt\nls -l report.txt",
-    "vimSteps": ["Vim 화면이 열리면 Esc 키를 눌러 일반 모드인지 확인하시오.","아무 글자도 입력하지 말고 :wq를 입력하시오.","Enter 키를 눌러 빈 report.txt 파일을 저장하고 Vim을 종료하시오.","터미널로 돌아와 chmod 640 report.txt를 실행한 뒤 ls -l report.txt로 권한을 확인하시오."],
+    "vimSteps": [
+      "터미널에서 vim report.txt를 실행하여 Vim을 여시오.",
+      "Vim 안에서 :wq를 입력하고 Enter를 누르시오. (빈 파일을 저장하고 Vim 종료)",
+      "터미널에서 chmod 640 report.txt를 실행하시오.",
+      "터미널에서 ls -l report.txt로 -rw-r----- 권한을 확인하시오."
+    ],
     "hint": "소유자·그룹·기타 사용자 순서로 필요한 읽기·쓰기·실행 권한을 생각해 보세요.",
-    "explanation": "Vim에서 :wq로 빈 파일을 저장한다. chmod 640은 rw- / r-- / ---이다. ls -l로 확인한다.",
+    "explanation": "vim report.txt로 빈 파일을 열고 Vim 안에서 :wq를 입력한 뒤 Enter로 저장·종료한다. 터미널에서 chmod 640 report.txt를 실행하고 ls -l report.txt로 권한을 확인한다.",
     "initialState": "student@ubuntu:~/lab$ ls\n\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\n-rw-r----- 1 student student 0 Nov 11 09:00 report.txt",
     "commandParts": [
@@ -86,7 +96,7 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "ls -l report.txt",
-    "verificationDetail": "Vim에서 :wq로 빈 파일을 저장한다. chmod 640은 rw- / r-- / ---이다. ls -l로 확인한다.",
+    "verificationDetail": "vim report.txt로 빈 파일을 열고 Vim 안에서 :wq를 입력한 뒤 Enter로 저장·종료한다. 터미널에서 chmod 640 report.txt를 실행하고 ls -l report.txt로 권한을 확인한다.",
     "commonMistake": "640과 604를 혼동하면 소유자·그룹·기타 권한이 달라진다.",
     "trace": [],
     "pptSource": "3장 4~5쪽, 5장 13~15쪽",
@@ -346,9 +356,13 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ ls\n\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\n-rw-r--r-- 1 student student 0 Nov 11 09:00 note.txt",
     "code": "vim note.txt\nls -l note.txt",
-    "vimSteps": ["Vim 화면이 열리면 Esc 키를 눌러 일반 모드인지 확인하시오.","아무 글자도 입력하지 말고 :wq를 입력하시오.","Enter 키를 눌러 빈 note.txt 파일을 저장하고 Vim을 종료하시오.","터미널에서 ls -l note.txt로 생성된 파일을 확인하시오."],
+    "vimSteps": [
+      "터미널에서 vim note.txt를 실행하여 Vim을 여시오.",
+      "Vim 안에서 :wq를 입력하고 Enter를 누르시오. (빈 파일을 저장하고 Vim 종료)",
+      "터미널에서 ls -l note.txt로 파일이 만들어졌는지 확인하시오."
+    ],
     "hint": "Vim에서 파일을 열고 저장·종료하는 순서를 떠올려 보세요.",
-    "explanation": "Vim 실행 후 :wq와 Enter로 저장·종료한다. 내용이 없어도 새 파일을 저장할 수 있다.",
+    "explanation": "vim note.txt로 Vim을 열고 :wq, Enter 순서로 빈 파일을 저장·종료한다. 터미널로 돌아와 ls -l note.txt로 파일이 있는지 확인한다.",
     "initialState": "student@ubuntu:~/lab$ ls\n\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\n-rw-r--r-- 1 student student 0 Nov 11 09:00 note.txt",
     "commandParts": [
@@ -362,7 +376,7 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "ls -l note.txt",
-    "verificationDetail": "Vim 실행 후 :wq와 Enter로 저장·종료한다. 내용이 없어도 새 파일을 저장할 수 있다.",
+    "verificationDetail": "vim note.txt로 Vim을 열고 :wq, Enter 순서로 빈 파일을 저장·종료한다. 터미널로 돌아와 ls -l note.txt로 파일이 있는지 확인한다.",
     "commonMistake": "저장하지 않고 종료하면 새 파일이 남지 않을 수 있다.",
     "trace": [],
     "pptSource": "3장 2~5쪽",
@@ -715,9 +729,16 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ ls\n\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\nlinux study",
     "code": "vim memo.txt\ncat memo.txt",
-    "vimSteps": ["Vim 화면에서 i 키를 눌러 입력 모드로 바꾸시오.","첫 번째 줄에 linux study를 정확히 입력하시오.","Esc 키를 눌러 일반 모드로 돌아오시오.",":wq를 입력하고 Enter 키를 눌러 저장한 뒤 Vim을 종료하시오.","터미널에서 cat memo.txt를 실행해 linux study가 출력되는지 확인하시오."],
+    "vimSteps": [
+      "터미널에서 vim memo.txt를 실행하여 Vim을 여시오.",
+      "Vim 안에서 i 키를 눌러 입력 모드로 전환하시오.",
+      "linux study를 입력하시오. (첫 번째 줄의 파일 내용)",
+      "Esc 키를 눌러 일반 모드로 돌아오시오.",
+      ":wq를 입력하고 Enter를 눌러 저장한 뒤 Vim을 종료하시오.",
+      "터미널에서 cat memo.txt를 실행하여 linux study가 출력되는지 확인하시오."
+    ],
     "hint": "Vim의 입력 모드와 저장·종료 순서를 떠올려 보세요.",
-    "explanation": "Vim에서 i를 눌러 문장을 입력하고 Esc 후 :wq와 Enter로 저장·종료한다.",
+    "explanation": "터미널에서 vim memo.txt 실행 → Vim 안에서 i 입력 → linux study 입력 → Esc → :wq 입력 후 Enter → 터미널에서 cat memo.txt로 확인한다.",
     "initialState": "student@ubuntu:~/lab$ ls\n\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\nlinux study",
     "commandParts": [
@@ -739,8 +760,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "cat memo.txt",
-    "verificationDetail": "Vim에서 i를 눌러 문장을 입력하고 Esc 후 :wq와 Enter로 저장·종료한다.",
-    "commonMistake": "입력 후 Esc로 명령 입력 상태로 돌아와야 :wq가 동작한다.",
+    "verificationDetail": "터미널에서 vim memo.txt 실행 → Vim 안에서 i 입력 → linux study 입력 → Esc → :wq 입력 후 Enter → 터미널에서 cat memo.txt로 확인한다.",
+    "commonMistake": "vim memo.txt 명령만 실행하면 문장이 저장되지 않는다. Vim 안에서 i → linux study → Esc → :wq → Enter 순서로 직접 입력하시오.",
     "trace": [],
     "pptSource": "3장 5~7쪽",
     "outputNote": ""
@@ -755,9 +776,15 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ cat memo.txt\none\ntwo\nthree\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\none\nthree",
     "code": "vim memo.txt\ncat memo.txt",
-    "vimSteps": ["Vim 화면에서 Esc 키를 눌러 일반 모드인지 확인하시오.",":2를 입력하고 Enter 키를 눌러 두 번째 줄로 이동하시오.","dd를 눌러 현재 줄(two)을 삭제하시오.",":wq를 입력하고 Enter 키를 눌러 저장한 뒤 Vim을 종료하시오.","터미널에서 cat memo.txt를 실행해 one과 three만 남았는지 확인하시오."],
+    "vimSteps": [
+      "터미널에서 vim memo.txt를 실행하여 Vim을 여시오.",
+      "Vim 안에서 :2를 입력하고 Enter를 눌러 두 번째 줄로 이동하시오.",
+      "일반 모드에서 dd 키를 차례로 눌러 현재 줄(two)을 삭제하시오.",
+      ":wq를 입력하고 Enter를 눌러 저장한 뒤 Vim을 종료하시오.",
+      "터미널에서 cat memo.txt를 실행하여 one과 three만 남았는지 확인하시오."
+    ],
     "hint": "Vim에서는 현재 커서가 놓인 행을 기준으로 편집 명령을 실행합니다.",
-    "explanation": "Vim에서 :2로 두 번째 행에 이동하고 dd로 행을 지운 다음 :wq로 저장한다.",
+    "explanation": "터미널에서 vim memo.txt 실행 → Vim 안에서 :2 입력 후 Enter로 두 번째 행 이동 → 일반 모드에서 dd로 행 삭제 → :wq 입력 후 Enter → 터미널에서 cat memo.txt로 확인한다.",
     "initialState": "student@ubuntu:~/lab$ cat memo.txt\none\ntwo\nthree\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\none\nthree",
     "commandParts": [
@@ -779,7 +806,7 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "cat memo.txt",
-    "verificationDetail": "Vim에서 :2로 두 번째 행에 이동하고 dd로 행을 지운 다음 :wq로 저장한다.",
+    "verificationDetail": "터미널에서 vim memo.txt 실행 → Vim 안에서 :2 입력 후 Enter로 두 번째 행 이동 → 일반 모드에서 dd로 행 삭제 → :wq 입력 후 Enter → 터미널에서 cat memo.txt로 확인한다.",
     "commonMistake": "dd는 한 글자가 아니라 커서의 현재 행을 삭제한다.",
     "trace": [],
     "pptSource": "3장 14쪽, 18~20쪽",
@@ -795,9 +822,14 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ cat memo.txt\nlinux intro\nlearn linux\nlinux lab\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\nLinux intro\nlearn Linux\nLinux lab",
     "code": "vim memo.txt\ncat memo.txt",
-    "vimSteps": ["Vim 화면에서 Esc 키를 눌러 일반 모드인지 확인하시오.",":%s/linux/Linux/g를 입력하고 Enter 키를 눌러 파일 전체의 linux를 Linux로 변경하시오.",":wq를 입력하고 Enter 키를 눌러 저장한 뒤 Vim을 종료하시오.","터미널에서 cat memo.txt를 실행해 세 줄 모두 Linux로 바뀌었는지 확인하시오."],
+    "vimSteps": [
+      "터미널에서 vim memo.txt를 실행하여 Vim을 여시오.",
+      "Vim 안에서 :%s/linux/Linux/g를 입력하고 Enter를 눌러 파일 전체의 linux를 Linux로 바꾸시오.",
+      ":wq를 입력하고 Enter를 눌러 저장한 뒤 Vim을 종료하시오.",
+      "터미널에서 cat memo.txt를 실행하여 모든 줄의 Linux 표기를 확인하시오."
+    ],
     "hint": "일부만이 아니라 파일 전체를 대상으로 문자열을 바꾸어야 합니다.",
-    "explanation": "Vim에서 :%s/linux/Linux/g를 실행하고 :wq로 저장한다.",
+    "explanation": "터미널에서 vim memo.txt 실행 → Vim 안에서 :%s/linux/Linux/g 입력 후 Enter로 파일 전체 변경 → :wq 입력 후 Enter로 저장·종료 → 터미널에서 cat memo.txt로 확인한다.",
     "initialState": "student@ubuntu:~/lab$ cat memo.txt\nlinux intro\nlearn linux\nlinux lab\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\nLinux intro\nlearn Linux\nLinux lab",
     "commandParts": [
@@ -815,7 +847,7 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "cat memo.txt",
-    "verificationDetail": "Vim에서 :%s/linux/Linux/g를 실행하고 :wq로 저장한다.",
+    "verificationDetail": "터미널에서 vim memo.txt 실행 → Vim 안에서 :%s/linux/Linux/g 입력 후 Enter로 파일 전체 변경 → :wq 입력 후 Enter로 저장·종료 → 터미널에서 cat memo.txt로 확인한다.",
     "commonMistake": "마지막 g가 빠지면 한 행의 모든 일치 항목을 바꾸지 못할 수 있다.",
     "trace": [],
     "pptSource": "3장 27~29쪽",
