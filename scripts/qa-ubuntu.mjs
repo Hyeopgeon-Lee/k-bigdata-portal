@@ -63,6 +63,11 @@ for(let n=1;n<=50;n++){
  const syntax=spawnSync("bash",["-n"],{input:p.code,encoding:"utf8",timeout:3000});
  assert(syntax.status===0,id+" shell syntax: "+syntax.stderr?.slice(0,100));
 }
+// Link practice covers both link types and their observable differences.
+assert(problems[20].code.includes("ln -s data.txt data-link"),"LINUX-021 symbolic link");
+assert(problems[21].code.includes("ln data.txt data-hard")&&problems[21].code.includes("ln -s data.txt data-link"),"LINUX-022 both link types");
+assert(problems[21].code.includes("ls -li data.txt data-hard data-link"),"LINUX-022 inode/type/count comparison");
+assert(problems[21].output.includes("data-hard")&&problems[21].output.includes("data-link -> data.txt"),"LINUX-022 terminal results");
 assert(observed["입문"]===15,"expected 15 introductory tasks");
 assert(observed["기초 응용"]===25,"expected 25 intermediate tasks");
 assert(observed["종합 활용"]===10,"expected 10 comprehensive tasks");
@@ -93,7 +98,7 @@ const smoke=[
  [18,"printf 'INFO\nERROR first\nINFO\nINFO\nERROR second\n' > app.log","test \"$(grep -n 'ERROR' app.log | wc -l)\" -eq 2"],
  [20,"","which mv"],
  [21,"printf 'data\n' > data.txt","test \"$(readlink data-link)\" = data.txt"],
- [22,"printf 'data\n' > data.txt","test \"$(ls -i data.txt | awk '{print $1}')\" = \"$(ls -i data-hard | awk '{print $1}')\""],
+ [22,"printf 'data\n' > data.txt","test \"$(readlink data-link)\" = data.txt && test \"$(stat -c %i data.txt)\" = \"$(stat -c %i data-hard)\" && test \"$(stat -c %i data.txt)\" != \"$(stat -c %i data-link)\" && test \"$(stat -c %h data.txt)\" -eq 2"],
  [26,"printf a > note.txt; chmod 664 note.txt","test \"$(stat -c %a note.txt)\" = 464"],
  [27,"printf a > note.txt; chmod 640 note.txt","test \"$(stat -c %a note.txt)\" = 670"],
  [28,"","umask -S"],
