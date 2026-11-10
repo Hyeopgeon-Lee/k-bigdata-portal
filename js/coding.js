@@ -351,7 +351,7 @@ $("#coding-next-button").addEventListener("click", () => {
 });
 $("#coding-copy").addEventListener("click", async () => {
   const comment = current.language === "python" ? /\s+#.*$/ : /\s+\/\/.*$/;
-  const plainCode = current.language === "linux" ? (ubuntuLegacyGuides[current.id]?.code || current.code) : current.code.split("\n").map(line => line.replace(comment,"")).join("\n");
+  const plainCode = current.language === "linux" ? current.code : current.code.split("\n").map(line => line.replace(comment,"")).join("\n");
   try {
     await navigator.clipboard.writeText(plainCode);
     const includesVim = current.language === "linux" && /(^|\n)\s*vim\s+\S+/.test(plainCode);
