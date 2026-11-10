@@ -46,9 +46,10 @@ for(const [id,parts] of Object.entries({
  assert.match(p.verification,/cat memo\.txt/,id+" needs verification after Vim");
 }
 const html=readFileSync(new URL("../coding.html",import.meta.url),"utf8");
-assert.match(html,/id="coding-vim-steps"/,"answer panel includes Vim step section");
+assert.doesNotMatch(html,/id="coding-vim-steps"/,"duplicated Vim step section is removed");
 const js=readFileSync(new URL("../js/coding.js",import.meta.url),"utf8");
-assert.match(js,/function renderVimSteps/,"Vim answer-step renderer exists");
+assert.doesNotMatch(js,/function renderVimSteps/,"no duplicated Vim step renderer");
+assert.match(js,/isUbuntu && !Array\.isArray\(q\.vimSteps\)/,"Vim explanation is shown only once in the existing answer section");
 assert.match(js,/const includesVim/,"copy feedback handles Vim interactively");
 assert.match(js,/터미널 명령은 한 줄씩 실행/);
 console.log("PASS: six active PPT-based Vim editing exercises and 50 editor-policy checks.");
