@@ -262,23 +262,31 @@ export const ubuntuFoundationProblems = [
     "topic": "파일·디렉터리 관리",
     "title": "빈 파일 생성하기",
     "level": "입문",
-    "statement": "연습 폴더에 note.txt라는 빈 파일을 만드시오.",
+    "statement": "Vim 편집기를 사용하여 연습 폴더에 빈 note.txt 파일을 생성하고 저장하시오.",
     "input": "현재 연습 폴더에 note.txt가 없음",
     "output": "빈 note.txt 파일 생성",
-    "code": "touch note.txt",
-    "hint": "touch는 파일이 없으면 빈 파일을 생성하며 기존 파일이 있으면 시간 정보만 갱신합니다.",
-    "explanation": "touch — 파일이 없으면 빈 파일을 만들고 있으면 시간 정보를 갱신",
+    "code": "vim note.txt  # Vim에서 :wq 입력 후 Enter로 빈 파일 저장·종료",
+    "hint": "vim note.txt로 새 파일을 열고, 일반 모드에서 :wq를 입력한 뒤 Enter를 눌러 저장·종료하시오. 내용을 입력하지 않아도 빈 파일을 저장할 수 있습니다.",
+    "explanation": "vim note.txt — Vim 편집기로 파일 열기 / :wq — 비어 있는 파일을 저장하고 편집기 종료 / Enter — 저장 명령 실행",
     "initialState": "현재 연습 폴더에 note.txt가 없음",
     "afterState": "파일 없음 → note.txt 파일 존재",
     "commandParts": [
       {
-        "token": "touch",
-        "meaning": "파일이 없으면 빈 파일을 만들고 있으면 시간 정보를 갱신"
+        "token": "vim note.txt",
+        "meaning": "Vim 편집기로 새 파일을 엽니다"
+      },
+      {
+        "token": ":wq",
+        "meaning": "파일을 저장하고 Vim을 종료합니다"
+      },
+      {
+        "token": "Enter",
+        "meaning": ":wq 명령을 실행합니다"
       }
     ],
     "verification": "ls -l note.txt",
     "verificationDetail": "ls -l note.txt",
-    "commonMistake": "기존 파일에 touch를 적용하면 내용이 삭제되는 것이 아니라 시간 정보가 갱신됩니다.",
+    "commonMistake": "Vim을 열기만 하고 저장하지 않으면 빈 파일이 생성되지 않을 수 있습니다. :wq와 Enter로 저장·종료하시오.",
     "warning": "자신의 개인 실습 디렉터리에서만 변경 명령어를 실행하세요.",
     "trace": []
   },
@@ -500,7 +508,7 @@ export const ubuntuFoundationProblems = [
     "input": "memo.txt가 이미 존재하고 내용을 보존해야 함",
     "output": "memo.txt 내용 보존, 수정 시간 갱신",
     "code": "touch memo.txt",
-    "hint": "touch memo.txt를 사용해 새 빈 파일을 만들 수 있습니다. 기존 파일 내용은 삭제되지 않습니다.",
+    "hint": "이 문제는 파일 내용을 편집하는 것이 아니라 기존 memo.txt의 수정 시각을 갱신하는 문제입니다. touch memo.txt를 사용하시오.",
     "explanation": "touch — 파일이 존재하면 접근·수정 시간 정보를 현재 시각으로 갱신",
     "initialState": "memo.txt가 이미 존재하고 내용을 보존해야 함",
     "afterState": "파일 내용 유지, 수정 시각 갱신",
@@ -512,7 +520,7 @@ export const ubuntuFoundationProblems = [
     ],
     "verification": "stat -c '%y' memo.txt",
     "verificationDetail": "stat -c '%y' memo.txt",
-    "commonMistake": "touch는 기존 파일을 비우지 않습니다. 파일이 없다면 새 빈 파일이 생성됩니다.",
+    "commonMistake": "파일을 새로 작성하거나 내용을 바꾸는 작업과 파일의 시간 정보만 갱신하는 작업을 혼동하지 마시오.",
     "warning": "자신의 개인 실습 디렉터리에서만 변경 명령어를 실행하세요.",
     "trace": []
   },
