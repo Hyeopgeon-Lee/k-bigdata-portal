@@ -208,7 +208,34 @@ function renderExtraExamples(q) {
   }
 }
 
-// Mask the solution in the initially visible terminal example.
+// Keep executable answers behind the explicit answer-reveal button.
+function visibleUbuntuConsole(q, transcript, expected=false) {
+  if (q.language !== "linux") return String(transcript);
+  const answerLines = new Set(q.code.split("\n").map(line => line.trim()));
+  return String(transcript).split("\n").map(line => {
+    const match = line.match(/^(student@ubuntu:[^\n$]*\$\s*)(.*)$/);
+    if (!match) return line;
+    const entered = match[2].trim();
+    if (!entered || entered === "[명령어 입력]") return line;
+    return (expected || answerLines.has(entered)) ? match[1] + "[명령어 입력]" : line;
+  }).join("\n");
+}
+
+// A highlighted placeholder is rendered safely, without interpreting markup.
+function renderConsoleText(pre, transcript, isUbuntu) {
+  if (!isUbuntu) { pre.textContent = transcript; return; }
+  const sections = transcript.split("[명령어 입력]");
+  pre.replaceChildren();
+  sections.forEach((section, index) => {
+    pre.append(document.createTextNode(section));
+    if (index < sections.length - 1) {
+      const marker = document.createElement("span");
+      marker.className = "ubuntu-command-placeholder";
+      marker.textContent = "[명령어 입력]";
+      pre.append(marker);
+    }
+  });
+}
 
 function showQuestion(q) {
   if (!q) return;
@@ -223,8 +250,8 @@ function showQuestion(q) {
   $("#coding-topic").textContent = q.topic;
   $("#coding-title").textContent = q.title;
   $("#coding-statement").textContent = q.statement;
-  $("#coding-input").textContent = q.input;
-  $("#coding-output").textContent = q.output;
+  renderConsoleText($("#coding-input"),visibleUbuntuConsole(q,q.input),q.language==="linux");
+  renderConsoleText($("#coding-output"),visibleUbuntuConsole(q,q.output,true),q.language==="linux");
   const ubuntuOutputNote = $("#coding-ubuntu-output-note");
   ubuntuOutputNote.textContent = q.language === "linux" ? (q.outputNote || "") : "";
   ubuntuOutputNote.hidden = !ubuntuOutputNote.textContent;
