@@ -160,7 +160,7 @@ create table if not exists public.user_preferences (
  weekly_email_opt_in boolean not null default false,
  updated_at timestamptz not null default now()
 );
-create table if not exists private.report_deliveries (
+create table if not exists public.report_deliveries (
  id bigint generated always as identity primary key,
  recipient_user_id uuid references auth.users(id) on delete set null,
  recipient_email text not null,
@@ -205,7 +205,7 @@ alter table public.learning_drafts enable row level security;
 alter table public.learning_preferences enable row level security;
 alter table public.user_preferences enable row level security;
 alter table private.portal_sessions enable row level security;
-alter table private.report_deliveries enable row level security;
+alter table public.report_deliveries enable row level security;
 
 create policy profiles_self_read on public.profiles for select to authenticated
 using (user_id=(select auth.uid()));
@@ -254,3 +254,18 @@ grant usage on schema private to authenticated;
 grant execute on function private.portal_read_allowed(),private.portal_write_allowed() to authenticated;
 -- Private schema stays unexposed to the Data API. Service-side admin code should
 -- use public tables + a service key or carefully scoped SECURITY DEFINER RPC.
+
+-- A JWT-bound, server-enforced session/admin check, for Edge Function authorization.
+create or replace function public.portal_super_admin_allowed()
+returns boolean language sql stable security definer
+set search_path = '' as $$
+ select private.portal_read_allowed()
+ and exists(
+  select 1 from public.account_roles r join public.profiles p on p.user_id=r.user_id
+  where r.user_id=(select auth.uid()) and r.role='super_admin'
+  and lower(p.email)='hglee67@kopo.ac.kr'
+ )
+$$;
+revoke all on function public.portal_super_admin_allowed() from public,anon;
+grant execute on function public.portal_super_admin_allowed() to authenticated;
+-- No grants on public.report_deliveries for anon/authenticated; only backend service access.
