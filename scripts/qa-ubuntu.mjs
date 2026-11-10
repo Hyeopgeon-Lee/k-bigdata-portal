@@ -38,7 +38,7 @@ if(syntax.status!==0)errors.push("coding.js syntax: "+syntax.stderr);
 const dataByID=Object.fromEntries(ubuntu.map(x=>[x.id,x]));
 if(ubuntu.some(p=>Object.hasOwn(p,"warning")))errors.push("Ubuntu exercises should not contain per-exercise safety notices");
 if(html.includes("실습 안전 안내")||html.includes("coding-ubuntu-warning")||js.includes("coding-ubuntu-warning"))errors.push("safety notice UI is still present");
-if(dataByID["LINUX-004"].input!=="student@ubuntu:~/lab$ touch a.txt\nstudent@ubuntu:~/lab$ mkdir docs")errors.push("LINUX-004 setup transcript incorrect");
+if(dataByID["LINUX-004"].input!=="현재 디렉터리에 빈 a.txt 파일과 docs 디렉터리가 이미 있는 상태")errors.push("LINUX-004 setup description incorrect");
 if(dataByID["LINUX-004"].output!=="student@ubuntu:~/lab$ ls\na.txt  docs")errors.push("LINUX-004 expected terminal output incorrect");
 
 const smoke=[
