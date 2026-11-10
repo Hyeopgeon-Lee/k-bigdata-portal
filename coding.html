@@ -10,7 +10,7 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css?v=20261026-schedule-align-1">
   <link rel="stylesheet" href="css/portal-ux.css?v=20261026-schedule-align-1">
-  <link rel="stylesheet" href="css/coding.css?v=20261111-vim-readable-list-2">
+  <link rel="stylesheet" href="css/coding.css?v=20261111-vim-reference-1">
   <script defer src="js/analytics.js?v=20261008-ga4-3"></script>
 <!-- portal:assets:start (generated; edit scripts/portal-shell-template.mjs) -->
 <link rel="stylesheet" href="css/portal-navigation.css?v=20261026-schedule-align-1">
@@ -137,8 +137,13 @@
               <p class="coding-copy-tip" id="coding-copy-tip">복사한 코드를 실습 환경에 붙여 넣고 직접 주석을 달아 보세요.</p>
               <section id="coding-overall-explanation" class="coding-section" aria-label="풀이 방법"><h3>전체 해설</h3><p id="coding-explanation"></p><ol id="coding-vim-explanation-list" class="coding-vim-instruction-list" aria-label="Vim 조작 단계" hidden></ol></section>
               <section id="coding-ubuntu-guide" class="coding-ubuntu-guide" aria-label="Ubuntu 명령어 해설" hidden>
-                <h3>명령어·옵션 설명</h3>
-                <div class="coding-scroll"><table class="coding-trace"><thead><tr><th scope="col">명령어 / 옵션</th><th scope="col">역할</th><th scope="col" id="coding-ubuntu-example-head" hidden>사용 예시</th></tr></thead><tbody id="coding-ubuntu-parts"></tbody></table></div>
+                <h3 id="coding-ubuntu-parts-heading">명령어·옵션 설명</h3>
+                <div id="coding-ubuntu-parts-wrap" class="coding-scroll"><table class="coding-trace"><thead><tr><th scope="col">명령어 / 옵션</th><th scope="col">역할</th><th scope="col" id="coding-ubuntu-example-head" hidden>사용 예시</th></tr></thead><tbody id="coding-ubuntu-parts"></tbody></table></div>
+                <section id="coding-ubuntu-vim-reference" class="coding-vim-reference" aria-label="Vim 주요 명령어 및 옵션" hidden>
+                  <h3>Vim 주요 명령어·옵션 표</h3>
+                  <p class="coding-ubuntu-info">터미널 명령어(vim 파일명)와 Vim 편집기 안에서 누르는 키를 구분하세요. 콜론(:) 명령은 일반 모드에서 입력 후 Enter를 누릅니다. (운영체제 실습 PPT 3장)</p>
+                  <div class="coding-scroll"><table class="coding-trace"><thead><tr><th scope="col">구분</th><th scope="col">명령어 / 키</th><th scope="col">기능 및 사용 예</th></tr></thead><tbody id="coding-ubuntu-vim-rows"></tbody></table></div>
+                </section>
                 <section id="coding-ubuntu-ls-options" aria-label="ls 주요 옵션 비교" hidden>
                   <h3>ls 주요 옵션 비교표</h3>
                   <p class="coding-ubuntu-info">ls는 파일·디렉터리 목록을 표시하며, 옵션에 따라 표시되는 정보가 달라집니다.</p>
@@ -180,7 +185,7 @@
     }
   }
   </script>
-  <script type="module" src="js/coding.js?v=20261111-ls-table-all-19-1"></script>
+  <script type="module" src="js/coding.js?v=20261111-vim-reference-1"></script>
   <script type="module" src="js/portal-shell-entry.js?v=20261026-schedule-align-1"></script>
 </body>
 </html>
