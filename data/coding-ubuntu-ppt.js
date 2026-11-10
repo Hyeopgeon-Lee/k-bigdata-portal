@@ -98,11 +98,11 @@ export const ubuntuPptProblems = [
     "title": "현재 위치 확인하기",
     "statement": "현재 작업 중인 디렉터리의 전체 경로를 출력하시오.",
     "input": "student@ubuntu:~/lab$ ",
-    "output": "student@ubuntu:~/lab$ [명령어 입력]\n/home/student/lab",
+    "output": "student@ubuntu:~/lab$ pwd\n/home/student/lab",
     "code": "pwd",
     "hint": "현재 위치를 확인하는 명령을 떠올려 보세요.",
     "explanation": "pwd는 현재 작업 디렉터리의 절대경로를 출력한다.",
-    "initialState": "student@ubuntu:~/lab$ pwd\n/home/student/lab",
+    "initialState": "student@ubuntu:~/lab$ ",
     "afterState": "student@ubuntu:~/lab$ pwd\n/home/student/lab",
     "commandParts": [
       {
@@ -115,7 +115,7 @@ export const ubuntuPptProblems = [
     "commonMistake": "사용자에 따라 실제 출력되는 경로는 달라질 수 있다.",
     "trace": [],
     "pptSource": "2장 10쪽",
-    "outputNote": ""
+    "outputNote": "현재 위치의 전체 경로는 사용자 계정과 실습 환경에 따라 달라질 수 있습니다."
   },
   {
     "id": "LINUX-004",
@@ -398,26 +398,26 @@ export const ubuntuPptProblems = [
     "level": "입문",
     "topic": "파일 내용",
     "title": "텍스트 파일 내용 확인하기",
-    "statement": "Ubuntu의 /etc/hosts 파일에 저장된 내용을 터미널에 출력하시오.",
-    "input": "student@ubuntu:~/lab$ ls -l /etc/hosts\n-rw-r--r-- 1 root root 240 Nov 11 09:00 /etc/hosts",
-    "output": "student@ubuntu:~/lab$ cat /etc/hosts\n127.0.0.1 localhost\n127.0.1.1 ubuntu",
-    "code": "cat /etc/hosts",
+    "statement": "readme.txt 파일에 저장된 글을 터미널에 출력하시오.",
+    "input": "student@ubuntu:~/lab$ ls\nreadme.txt",
+    "output": "student@ubuntu:~/lab$ cat readme.txt\nHello Linux\nUbuntu",
+    "code": "cat readme.txt",
     "hint": "파일 내용을 수정하지 않고 화면에 그대로 표시하면 됩니다.",
-    "explanation": "cat은 지정한 파일의 내용을 화면에 출력한다.",
-    "initialState": "student@ubuntu:~/lab$ ls -l /etc/hosts\n-rw-r--r-- 1 root root 240 Nov 11 09:00 /etc/hosts",
-    "afterState": "student@ubuntu:~/lab$ cat /etc/hosts\n127.0.0.1 localhost\n127.0.1.1 ubuntu",
+    "explanation": "cat 명령은 파일에 저장된 내용을 변경하지 않고 터미널에 출력합니다.",
+    "initialState": "student@ubuntu:~/lab$ ls\nreadme.txt",
+    "afterState": "student@ubuntu:~/lab$ cat readme.txt\nHello Linux\nUbuntu",
     "commandParts": [
       {
         "token": "cat",
         "meaning": "파일 내용 출력"
       }
     ],
-    "verification": "cat /etc/hosts",
-    "verificationDetail": "cat은 지정한 파일의 내용을 화면에 출력한다.",
-    "commonMistake": "출력은 PC의 hosts 설정에 따라 달라질 수 있다.",
+    "verification": "cat readme.txt",
+    "verificationDetail": "cat 명령은 파일에 저장된 내용을 변경하지 않고 터미널에 출력합니다.",
+    "commonMistake": "파일을 변경하는 명령이 아니라 파일 내용을 확인하는 명령을 사용하세요.",
     "trace": [],
     "pptSource": "2장 24쪽",
-    "outputNote": "파일의 실제 내용과 크기는 Ubuntu 환경에 따라 다릅니다. 화면에는 일부 내용만 표시했습니다."
+    "outputNote": "readme.txt에는 Hello Linux와 Ubuntu가 한 줄씩 저장되어 있는 실습 상황입니다."
   },
   {
     "id": "LINUX-014",
@@ -514,14 +514,14 @@ export const ubuntuPptProblems = [
     "level": "기초 응용",
     "topic": "파일 내용",
     "title": "파일의 마지막 일곱 줄 확인",
-    "statement": "/etc/services 파일의 맨 마지막 7줄만 화면에 출력하시오.",
-    "input": "student@ubuntu:~/lab$ ls -l /etc/services\n-rw-r--r-- 1 root root 12813 Nov 11 09:00 /etc/services",
-    "output": "student@ubuntu:~/lab$ tail -7 /etc/services\n# Local services\n#\n# Additional entries\n#\n# Reserved services\n#\n# End of file",
+    "statement": "현재 폴더에 있는 log.txt 파일의 마지막 7줄만 출력하시오.",
+    "input": "student@ubuntu:~/lab$ cat log.txt\nline1\nline2\nline3\nline4\nline5\nline6\nline7\nline8\nline9\nline10",
+    "output": "student@ubuntu:~/lab$ tail -7 log.txt\nline4\nline5\nline6\nline7\nline8\nline9\nline10",
     "code": "tail -7 log.txt",
     "hint": "파일의 시작 부분이 아니라 마지막 부분을 보는 방법을 생각해 보세요.",
     "explanation": "tail은 파일의 끝에서부터 지정한 줄 수만큼 출력합니다. -7은 마지막 일곱 줄을 뜻합니다.",
-    "initialState": "student@ubuntu:~/lab$ ls -l /etc/services\n-rw-r--r-- 1 root root 12813 Nov 11 09:00 /etc/services",
-    "afterState": "student@ubuntu:~/lab$ tail -7 /etc/services\n# Local services\n#\n# Additional entries\n#\n# Reserved services\n#\n# End of file",
+    "initialState": "student@ubuntu:~/lab$ cat log.txt\nline1\nline2\nline3\nline4\nline5\nline6\nline7\nline8\nline9\nline10",
+    "afterState": "student@ubuntu:~/lab$ tail -7 log.txt\nline4\nline5\nline6\nline7\nline8\nline9\nline10",
     "commandParts": [
       {
         "token": "tail",
@@ -533,11 +533,11 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "tail -7 log.txt",
-    "verificationDetail": "tail은 파일의 끝에서부터 지정한 줄 수만큼 출력합니다. -7은 마지막 일곱 줄을 뜻합니다.",
+    "verificationDetail": "tail -7은 파일의 끝에서 7줄을 출력합니다. log.txt의 4~10번째 줄이 나오는지 확인합니다.",
     "commonMistake": "처음 일곱 줄이 아니라 마지막 일곱 줄을 출력해야 합니다.",
     "trace": [],
     "pptSource": "2장 28~29쪽",
-    "outputNote": "파일의 실제 마지막 7줄은 Ubuntu 버전 및 파일 내용에 따라 달라집니다. 화면은 출력 형식 예시입니다."
+    "outputNote": "10줄짜리 실습 파일을 기준으로 마지막 7줄만 표시했습니다."
   },
   {
     "id": "LINUX-018",
