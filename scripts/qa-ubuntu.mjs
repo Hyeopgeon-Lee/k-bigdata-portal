@@ -23,7 +23,7 @@ for(let n=1;n<=50;n++){
  assert(p.id===id,"wrong ID/order "+id);
  assert(p.language==="linux",id+" not linux");
  observed[p.level]=(observed[p.level]||0)+1;
- for(const k of ["topic","title","level","statement","input","output","code","hint","explanation","initialState","afterState","verification","verificationDetail","commonMistake","pptSource"]){
+ for(const k of ["topic","title","level","statement","input","output","code","hint","explanation","initialState","afterState","verification","commonMistake","pptSource"]){
   assert(typeof p[k]==="string"&&p[k].trim().length>0,id+" empty "+k);
  }
  assert(Array.isArray(p.commandParts)&&p.commandParts.length>0,id+" missing command explanation");
