@@ -344,26 +344,26 @@
   .coding-ubuntu-terminal-demo .coding-io>div pre{
     max-width:100%;overflow-x:auto;overflow-wrap:normal;white-space:pre;scrollbar-width:thin;
   }
-  .coding-ubuntu-guide :is(#coding-ubuntu-parts-wrap,#coding-ubuntu-ls-options,#coding-ubuntu-vim-reference) .coding-trace{
+  .coding-ubuntu-guide :is(#coding-ubuntu-parts-wrap,#coding-ubuntu-ls-options,#coding-ubuntu-vim-reference,#coding-ubuntu-related-options) .coding-trace{
     display:block;width:100%;min-width:0;border:0;
   }
-  .coding-ubuntu-guide :is(#coding-ubuntu-parts-wrap,#coding-ubuntu-ls-options,#coding-ubuntu-vim-reference) .coding-trace thead{
+  .coding-ubuntu-guide :is(#coding-ubuntu-parts-wrap,#coding-ubuntu-ls-options,#coding-ubuntu-vim-reference,#coding-ubuntu-related-options) .coding-trace thead{
     position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;
   }
-  .coding-ubuntu-guide :is(#coding-ubuntu-parts-wrap,#coding-ubuntu-ls-options,#coding-ubuntu-vim-reference) .coding-trace tbody{
+  .coding-ubuntu-guide :is(#coding-ubuntu-parts-wrap,#coding-ubuntu-ls-options,#coding-ubuntu-vim-reference,#coding-ubuntu-related-options) .coding-trace tbody{
     display:grid;gap:10px;
   }
-  .coding-ubuntu-guide :is(#coding-ubuntu-parts-wrap,#coding-ubuntu-ls-options,#coding-ubuntu-vim-reference) .coding-trace tbody tr{
+  .coding-ubuntu-guide :is(#coding-ubuntu-parts-wrap,#coding-ubuntu-ls-options,#coding-ubuntu-vim-reference,#coding-ubuntu-related-options) .coding-trace tbody tr{
     display:grid;gap:5px;padding:12px;border:1px solid #dbe5f3;border-radius:11px;background:#fff;
   }
-  .coding-ubuntu-guide :is(#coding-ubuntu-parts-wrap,#coding-ubuntu-ls-options,#coding-ubuntu-vim-reference) .coding-trace tbody td{
+  .coding-ubuntu-guide :is(#coding-ubuntu-parts-wrap,#coding-ubuntu-ls-options,#coding-ubuntu-vim-reference,#coding-ubuntu-related-options) .coding-trace tbody td{
     display:block;width:auto;border:0;padding:1px 0;font-size:14px;
     line-height:1.7;font-weight:400;color:#344761;white-space:normal;overflow-wrap:anywhere;word-break:keep-all;
   }
-  .coding-ubuntu-guide :is(#coding-ubuntu-parts-wrap,#coding-ubuntu-ls-options) .coding-trace tbody td:first-child{
+  .coding-ubuntu-guide :is(#coding-ubuntu-parts-wrap,#coding-ubuntu-ls-options,#coding-ubuntu-related-options) .coding-trace tbody td:first-child{
     font-size:15px;font-weight:800;color:#173d7a;
   }
-  .coding-ubuntu-guide :is(#coding-ubuntu-parts-wrap,#coding-ubuntu-ls-options) .coding-trace tbody td:nth-child(3){
+  .coding-ubuntu-guide :is(#coding-ubuntu-parts-wrap,#coding-ubuntu-ls-options,#coding-ubuntu-related-options) .coding-trace tbody td:nth-child(3){
     padding:7px 10px;border-radius:7px;background:#f1f5fb;color:#1a3c70;
     font:600 13px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace;
   }
@@ -373,4 +373,12 @@
   .coding-ubuntu-guide #coding-ubuntu-vim-reference .coding-trace tbody td:nth-child(2){
     font-size:15px;font-weight:800;color:#173d7a;
   }
+}
+
+/* Ubuntu reference examples read as separate, labeled cards on phones. */
+.coding-ubuntu-guide #coding-ubuntu-related-options{margin-top:22px}
+.coding-ubuntu-guide #coding-ubuntu-related-options .coding-trace td:first-child,
+.coding-ubuntu-guide #coding-ubuntu-related-options .coding-trace td:nth-child(3){font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+@media(max-width:600px){
+ .coding-ubuntu-guide #coding-ubuntu-related-options .coding-trace td:nth-child(3){background:#f1f5fb;padding:7px 10px;border-radius:7px;font-size:13px;color:#173d7a}
 }
