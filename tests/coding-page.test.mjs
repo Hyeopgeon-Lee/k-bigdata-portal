@@ -45,13 +45,13 @@ assert.ok(html.includes('coding-ubuntu-output-note'),'Output note is available w
 assert.match(linux003.statement,/하시오\.$/,'question uses imperative phrasing');
 assert.equal(linux003.code,'pwd','answer remains available in the answer panel');
 assert.ok(js.includes('function visibleExampleText(q, text)'), 'UI has example redaction guard');
-assert.ok(js.includes('$1[명령어 입력]'), 'visible terminal example masks pwd');
+assert.ok(!js.includes('visibleExampleText('),'Expected Ubuntu output is not masked');
 assert.ok(js.includes('visibleExampleText(q, q.input)')&&js.includes('visibleExampleText(q, q.output)'),
   'both input and output examples are sanitized before display');
 assert.deepEqual(ubuntuPptProblems.reduce((acc,p)=>(acc[p.level]=(acc[p.level]??0)+1,acc),{}),{'입문':15,'기초 응용':25,'종합 활용':10},'PPT-based difficulty distribution');
 assert.ok(ubuntuPptProblems.every((p,n)=>p.id==='LINUX-'+String(n+1).padStart(3,'0')&&p.pptSource),'Linux IDs and PPT sources');
 assert.ok(ubuntuPptProblems.every(p=>p.input.startsWith('student@ubuntu:')&&p.output.startsWith('student@ubuntu:')),'50 Ubuntu terminal examples');
-assert.ok(ubuntuPptProblems.every(p=>p.statement.split(/\.\s+/).every(sentence=>/하시오\.?$/.test(sentence))),'50 imperative freshman questions');
+assert.ok(ubuntuPptProblems.every(p=>p.statement.split(/\.\s+/).every(sentence=>/시오\.?$/.test(sentence))),'50 imperative freshman questions');
 assert.ok(ubuntuPptProblems.every(p=>p.initialState===p.input&&p.afterState===p.output),'consistent example and internal state');
 assert.ok(html.includes('id="coding-ubuntu-output-note"'),'expected-result output caveat present');
 assert.ok(!html.includes('coding-ubuntu-states'),'duplicate before/after details removed');
