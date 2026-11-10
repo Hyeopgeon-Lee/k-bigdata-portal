@@ -247,6 +247,20 @@ function renderConsoleText(pre, transcript, isUbuntu) {
   });
 }
 
+// Reveal step-by-step Vim keystrokes only with the answer (never as shell commands).
+function renderVimSteps(q) {
+  const section = $("#coding-vim-steps");
+  const list = $("#coding-vim-steps-list");
+  const steps = q.language === "linux" && Array.isArray(q.vimSteps) ? q.vimSteps : [];
+  list.replaceChildren();
+  section.hidden = steps.length === 0;
+  for (const step of steps) {
+    const item = document.createElement("li");
+    item.textContent = step;
+    list.append(item);
+  }
+}
+
 function showQuestion(q) {
   if (!q) return;
   current = q;
@@ -269,6 +283,7 @@ function showQuestion(q) {
   $("#coding-editor").value = getSafe(DRAFT_PREFIX + q.id);
   $("#coding-hint-text").textContent = q.hint;
   $("#coding-code").textContent = q.code;
+  renderVimSteps(q);
   $("#coding-explanation").textContent = q.explanation;
   updateUbuntuGuide(q);
   codeEditor?.setContent($("#coding-editor").value, q.language, $("#coding-editor").placeholder);
