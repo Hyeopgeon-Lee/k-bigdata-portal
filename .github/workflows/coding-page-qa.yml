@@ -13,6 +13,7 @@ on:
       - "tests/coding-page.test.mjs"
       - "tests/coding-c-help-regression.test.mjs"
       - "tests/coding-function-contracts.test.mjs"
+      - "tests/coding-ubuntu-vim.test.mjs"
       - "tests/coding-c-printf-format.test.mjs"
       - "tests/coding-20261110-help.test.mjs"
       - "tests/coding-20261022-help.test.mjs"
@@ -36,6 +37,8 @@ jobs:
         run: node tests/coding-c-help-regression.test.mjs
       - name: Verify function role descriptions in 27 C Java Python problems
         run: node tests/coding-function-contracts.test.mjs
+      - name: Verify all 50 Ubuntu lessons use Vim for file authoring
+        run: node tests/coding-ubuntu-vim.test.mjs
       - name: Verify 100 C exercises use printf and consistently indent nested blocks
         run: node tests/coding-c-printf-format.test.mjs
       - name: Verify Oct 22 Help report regression coverage
