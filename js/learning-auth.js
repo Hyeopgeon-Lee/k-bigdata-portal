@@ -41,6 +41,8 @@ export async function verifyCode(email,token,{fullName="",studentNo=""}={}){
  return getAccount();
 }
 export async function getAccount(){
+ if(!isConfigured())return {configured:false,loggedIn:false};
+ if(typeof localStorage==="undefined"||!localStorage.getItem("kbigdata-learning-auth"))return {configured:true,loggedIn:false};
  const client=await getClient();if(!client)return {configured:false,loggedIn:false};
  const {data:{session},error}=await client.auth.getSession();
  if(error||!session)return {configured:true,loggedIn:false};
