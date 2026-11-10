@@ -105,7 +105,7 @@
 .coding-vim-reference{margin-top:20px;padding-top:5px}
 .coding-vim-reference .coding-ubuntu-info{margin:0 0 12px;line-height:1.7}
 .coding-vim-reference .coding-trace{min-width:570px}
-.coding-vim-reference .coding-trace th:first-child{width:19%;white-space:normal}
+.coding-ubuntu-guide .coding-vim-reference .coding-trace th:first-child{width:19%;white-space:normal}
 .coding-vim-reference .coding-trace th:nth-child(2){width:26%}
 .coding-vim-reference .coding-trace td:nth-child(2){font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-weight:700;white-space:normal}
 
