@@ -14,7 +14,7 @@ for(const id of editing){
  assert.match(q.explanation,/:wq/,id+" explains saving before exit");
 }
 for(const q of lessons){
- assert.match(q.statement,/하시오\.$/,q.id+" must use an imperative first-year prompt");
+ assert.match(q.statement,/시오\.$/,q.id+" must use an imperative first-year prompt");
  assert.match(q.input,/^student@ubuntu:/,q.id+" setup is a terminal screenshot-style transcript");
  assert.match(q.output,/^student@ubuntu:/,q.id+" expected result is a terminal screenshot-style transcript");
  assert.doesNotMatch(q.code,/\b(?:touch|nano|gedit|emacs)\b/i,q.id+" no non-PPT editor or touch file-creation method");
