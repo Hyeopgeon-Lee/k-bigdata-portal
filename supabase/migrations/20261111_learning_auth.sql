@@ -282,3 +282,33 @@ $$;
 revoke all on function public.portal_super_admin_allowed() from public,anon;
 grant execute on function public.portal_super_admin_allowed() to authenticated;
 -- No grants on public.report_deliveries for anon/authenticated; only backend service access.
+
+
+-- Transactional admin mutation: audited with the status change in one transaction.
+-- Only the server's service_role may call this RPC; client roles are denied.
+create or replace function public.admin_change_student(
+ p_actor_user_id uuid,p_target_user_id uuid,p_approval_status text,p_enrollment_status text)
+returns void language plpgsql security definer set search_path = '' as $$
+declare old_row public.profiles%rowtype;
+begin
+ if not exists(
+  select 1 from public.account_roles r join public.profiles p on p.user_id=r.user_id
+  where r.user_id=p_actor_user_id and r.role='super_admin' and p.approval_status='approved'
+  and lower(p.email)='hglee67@kopo.ac.kr'
+ ) then raise exception 'ADMIN_NOT_AUTHORIZED'; end if;
+ if p_approval_status not in ('pending','approved','rejected','suspended')
+ or p_enrollment_status not in ('enrolled','leave','withdrawn','graduated')
+ then raise exception 'INVALID_STATUS'; end if;
+ select * into old_row from public.profiles where user_id=p_target_user_id for update;
+ if old_row.user_id is null then raise exception 'STUDENT_NOT_FOUND'; end if;
+ if exists(select 1 from public.account_roles where user_id=old_row.user_id and role='super_admin')
+ then raise exception 'CANNOT_CHANGE_ADMIN'; end if;
+ update public.profiles set approval_status=p_approval_status,enrollment_status=p_enrollment_status,
+ updated_at=now() where user_id=p_target_user_id;
+ insert into public.admin_audit_log(actor_user_id,target_user_id,old_status,new_status)
+ values(p_actor_user_id,p_target_user_id,
+  old_row.approval_status||'/'||old_row.enrollment_status,
+  p_approval_status||'/'||p_enrollment_status);
+end $$;
+revoke all on function public.admin_change_student(uuid,uuid,text,text) from public,anon,authenticated;
+grant execute on function public.admin_change_student(uuid,uuid,text,text) to service_role;
