@@ -621,6 +621,13 @@ export const javaProblems = [
     "statement": "정수 n(절댓값 10000 이하)을 입력받으시오. 짝수이면 EVEN, 홀수이면 ODD를 출력하시오.",
     "input": "-7",
     "output": "ODD",
+    "examples": [
+      {
+        "input": "7",
+        "output": "ODD",
+        "reason": "홀수이므로 ODD를 출력합니다."
+      }
+    ],
     "hint": "나머지가 0인 경우에만 짝수입니다.",
     "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        int n=sc.nextInt(); // 입력 -7 → n=-7\n        if(n%2==0){ // -7%2=-1이므로 조건 거짓\n            System.out.println(\"EVEN\"); // 짝수일 때만 출력(예제는 미실행)\n        }else{ // 짝수 조건을 만족하지 않음\n            System.out.println(\"ODD\"); // 예제에서는 ODD 출력\n        } // 조건 분기 종료\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
     "explanation": "입력 -7 → n=-7. -7%2=-1이므로 조건 거짓. 짝수일 때만 출력(예제는 미실행). 예제 실행 결과는 n%2==0 → 거짓, else → ODD입니다. 확인할 조건: 음수·0.",
@@ -657,6 +664,18 @@ export const javaProblems = [
     "statement": "정수 하나를 입력받으시오. 양수이면 POSITIVE, 음수이면 NEGATIVE, 0이면 ZERO를 출력하시오.",
     "input": "0",
     "output": "ZERO",
+    "examples": [
+      {
+        "input": "0",
+        "output": "ZERO",
+        "reason": "0이면 ZERO를 출력합니다."
+      },
+      {
+        "input": "-7",
+        "output": "NEGATIVE",
+        "reason": "음수이면 NEGATIVE를 출력합니다."
+      }
+    ],
     "hint": "0은 양수나 음수에 포함되지 않습니다.",
     "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        int n=sc.nextInt(); // 입력 0 → n=0\n        if(n>0){ // 0>0은 거짓\n            System.out.println(\"POSITIVE\"); // 양수일 때 출력\n        }else if(n<0){ // 0<0도 거짓\n            System.out.println(\"NEGATIVE\"); // 음수일 때 출력\n        }else{ // 양수도 음수도 아님\n            System.out.println(\"ZERO\"); // 입력 0이므로 ZERO 출력\n        } // 분기 종료\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
     "explanation": "입력 0 → n=0. 0>0은 거짓. 양수일 때 출력. 예제 실행 결과는 n → 0, n>0 / n<0 → ZERO입니다. 확인할 조건: 0 경계.",
@@ -687,6 +706,13 @@ export const javaProblems = [
     "statement": "나이(0~120)를 입력받으시오. 19세 이상이면 ADULT, 그렇지 않으면 MINOR를 출력하시오.",
     "input": "19",
     "output": "ADULT",
+    "examples": [
+      {
+        "input": "19",
+        "output": "ADULT",
+        "reason": "19세부터 ADULT로 분류합니다."
+      }
+    ],
     "hint": "이 문제에서 성인 기준은 만 19세 이상으로 고정합니다.",
     "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        int age=sc.nextInt(); // 입력 19 → age=19\n        if(age>=19){ // 19>=19 참\n            System.out.println(\"ADULT\"); // 성인 출력\n        }else{ // 19세 미만일 때의 분기\n            System.out.println(\"MINOR\"); // 예제는 미실행\n        } // 분기 종료\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
     "explanation": "입력 19 → age=19. 19>=19 참. 성인 출력. 예제 실행 결과는 age → 19, age>=19 → ADULT입니다. 확인할 조건: 18·19 경계.",
@@ -783,6 +809,18 @@ export const javaProblems = [
     "statement": "점수(0~100)를 입력받으시오. 90점 이상은 A, 80점 이상 90점 미만은 B, 70점 이상 80점 미만은 C, 60점 이상 70점 미만은 D, 60점 미만은 F를 출력하시오.",
     "input": "85",
     "output": "B",
+    "examples": [
+      {
+        "input": "90",
+        "output": "A",
+        "reason": "90점 이상은 A등급입니다."
+      },
+      {
+        "input": "59",
+        "output": "F",
+        "reason": "60점 미만은 F등급입니다."
+      }
+    ],
     "hint": "조건은 큰 점수부터 검사해야 합니다.",
     "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        int score=sc.nextInt(); // 입력 85 → score=85\n        char grade; // 등급을 저장할 문자 변수 선언\n        if(score>=90) grade='A'; // 85>=90 거짓\n        else if(score>=80) grade='B'; // 85>=80 참 → grade=B\n        else if(score>=70) grade='C'; // 앞 조건 미충족 시 검사\n        else if(score>=60) grade='D'; // 앞 조건 미충족 시 검사\n        else grade='F'; // 60 미만일 때\n        System.out.println(grade); // B 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
     "explanation": "입력 85 → score=85. 등급을 저장할 문자 변수 선언. 85>=90 거짓. 예제 실행 결과는 score>=90 → 계속, score>=80 → B입니다. 확인할 조건: 59·60·89·90 경계.",
@@ -849,6 +887,13 @@ export const javaProblems = [
     "statement": "양의 정수 n을 입력받으시오. 3과 5로 모두 나누어떨어지면 YES, 그렇지 않으면 NO를 출력하시오.",
     "input": "30",
     "output": "YES",
+    "examples": [
+      {
+        "input": "9",
+        "output": "NO",
+        "reason": "3의 배수여도 5의 배수가 아니면 NO입니다."
+      }
+    ],
     "hint": "15로 나눈 나머지가 0인지 검사합니다.",
     "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        int n=sc.nextInt(); // 예제 n=30 저장\n        boolean match=n%15==0; // 30%15=0 → match=true\n        System.out.println(match?\"YES\":\"NO\"); // 조건 만족 시 YES 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
     "explanation": "예제 n=30 저장. 30%15=0 → match=true. 조건 만족 시 YES 출력. 예제 실행 결과는 n → 30, n%15 → YES입니다. 확인할 조건: 15·3·5.",
@@ -879,6 +924,13 @@ export const javaProblems = [
     "statement": "연도(1583~9999)를 입력받으시오. 그레고리력 윤년 규칙에 따라 윤년이면 LEAP, 아니면 COMMON을 출력하시오.",
     "input": "2000",
     "output": "LEAP",
+    "examples": [
+      {
+        "input": "1900",
+        "output": "COMMON",
+        "reason": "1900년은 100의 배수이지만 400의 배수가 아니므로 평년입니다."
+      }
+    ],
     "hint": "400의 배수이거나, 4의 배수이면서 100의 배수가 아닌 경우 윤년입니다.",
     "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        int year=sc.nextInt(); // 예제 year=2000 저장\n        boolean leap=(year%400==0) || (year%4==0 && year%100!=0); // 2000%400=0 → 참\n        System.out.println(leap?\"LEAP\":\"COMMON\"); // LEAP 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
     "explanation": "예제 year=2000 저장. 2000%400=0 → 참. LEAP 출력. 예제 실행 결과는 year%400 → 참, leap → LEAP입니다. 확인할 조건: 1900·2000·2024.",
@@ -915,6 +967,13 @@ export const javaProblems = [
     "statement": "세 양의 정수를 공백으로 구분해 세 변의 길이로 입력받아 삼각형을 만들 수 있으면 YES, 아니면 NO를 출력하시오. 모든 두 변 길이의 합은 나머지 한 변보다 반드시 커야 하며, 같으면 NO입니다. 각 길이는 1 이상 10000 이하입니다.",
     "input": "3 4 5",
     "output": "YES",
+    "examples": [
+      {
+        "input": "1 2 3",
+        "output": "NO",
+        "reason": "두 변의 합이 나머지 한 변과 같으면 삼각형을 만들 수 없습니다."
+      }
+    ],
     "hint": "모든 두 변의 합이 나머지 변보다 커야 합니다.",
     "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        long a=sc.nextLong(); // 첫 변 3\n        long b=sc.nextLong(); // 둘째 변 4\n        long c=sc.nextLong(); // 셋째 변 5\n        boolean ok=a+b>c && a+c>b && b+c>a; // 3+4>5 등을 모두 만족 → 참\n        System.out.println(ok?\"YES\":\"NO\"); // YES 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
     "explanation": "첫 변 3. 둘째 변 4. 셋째 변 5. 예제 실행 결과는 a,b,c → 3,4,5, 세 부등식 → 참입니다. 확인할 조건: 합=나머지 한 변.",
@@ -945,6 +1004,13 @@ export const javaProblems = [
     "statement": "정수 좌표 x, y(둘 다 0이 아님)를 입력받으시오. 해당 좌표가 위치한 사분면의 번호(1~4)를 출력하시오.",
     "input": "-3 4",
     "output": "2",
+    "examples": [
+      {
+        "input": "3 -2",
+        "output": "4",
+        "reason": "x는 양수이고 y는 음수이므로 제4사분면입니다."
+      }
+    ],
     "hint": "x와 y의 부호를 조합해 사분면을 구분하세요.",
     "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        int x=sc.nextInt(); // x=-3\n        int y=sc.nextInt(); // y=4\n        int quadrant; // 사분면 번호 저장 변수\n        if(x>0 && y>0) quadrant=1; // 오른쪽 위\n        else if(x<0 && y>0) quadrant=2; // 왼쪽 위, 예제 조건 참\n        else if(x<0) quadrant=3; // 왼쪽 아래\n        else quadrant=4; // 오른쪽 아래\n        System.out.println(quadrant); // 2 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
     "explanation": "x=-3. y=4. 사분면 번호 저장 변수. 예제 실행 결과는 x,y → -3,4, x<0 && y>0 → 2입니다. 확인할 조건: 부호 조합.",
@@ -975,6 +1041,13 @@ export const javaProblems = [
     "statement": "월을 나타내는 정수(1~12)를 입력받으시오. 평년을 기준으로 해당 월의 날짜 수(28, 30 또는 31)를 출력하시오.",
     "input": "2",
     "output": "28",
+    "examples": [
+      {
+        "input": "4",
+        "output": "30",
+        "reason": "4월은 30일까지 있습니다."
+      }
+    ],
     "hint": "윤년이 아닌 평년만 다룹니다.",
     "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        int month=sc.nextInt(); // 입력 2 → month=2\n        int days; // 해당 월의 날짜 수\n        if(month==2) days=28; // 평년 2월은 28일\n        else if(month==4 || month==6 || month==9 || month==11) days=30; // 30일인 네 달\n        else days=31; // 나머지 달은 31일\n        System.out.println(days); // 28 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
     "explanation": "입력 2 → month=2. 해당 월의 날짜 수. 평년 2월은 28일. 예제 실행 결과는 month → 2, month==2 → 28입니다. 확인할 조건: 2월·4월.",
@@ -1005,6 +1078,13 @@ export const javaProblems = [
     "statement": "구매 금액(0~100000원)을 입력받으시오. 10000원 이상이면 10%를 할인하고, 그렇지 않으면 할인하지 마시오. 할인액은 정수 나눗셈으로 계산하여 최종 결제 금액을 출력하시오.",
     "input": "15000",
     "output": "13500",
+    "examples": [
+      {
+        "input": "9999",
+        "output": "9999",
+        "reason": "10000원 미만은 할인하지 않습니다."
+      }
+    ],
     "hint": "정수 나눗셈의 몫을 할인액으로 사용합니다.",
     "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        int price=sc.nextInt(); // 구매금액 15000원 저장\n        int payment=price; // payment 초기값=15000\n        if(price>=10000){ // 15000>=10000 참\n            payment=price-price/10; // 할인 1500원 → payment:15000→13500\n        } // 할인 조건 검사 종료\n        System.out.println(payment); // 13500 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
     "explanation": "구매금액 15000원 저장. payment 초기값=15000. 15000>=10000 참. 예제 실행 결과는 payment → 15000, payment → 13500입니다. 확인할 조건: 9999·10000.",
@@ -1077,6 +1157,13 @@ export const javaProblems = [
     "statement": "월(1~12)을 입력받으시오. 3~5월은 SPRING, 6~8월은 SUMMER, 9~11월은 FALL, 12월과 1~2월은 WINTER를 출력하시오.",
     "input": "12",
     "output": "WINTER",
+    "examples": [
+      {
+        "input": "6",
+        "output": "SUMMER",
+        "reason": "6월은 여름입니다."
+      }
+    ],
     "hint": "월의 범위를 네 구간으로 나누세요.",
     "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        int month=sc.nextInt(); // 12월 입력\n        String season; // 계절을 저장할 변수\n        if(month>=3 && month<=5) season=\"SPRING\"; // 3~5월\n        else if(month>=6 && month<=8) season=\"SUMMER\"; // 6~8월\n        else if(month>=9 && month<=11) season=\"FALL\"; // 9~11월\n        else season=\"WINTER\"; // 12~2월, 예제는 겨울\n        System.out.println(season); // WINTER 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
     "explanation": "12월 입력. 계절을 저장할 변수. 3~5월. 예제 실행 결과는 month → 12, season → WINTER입니다. 확인할 조건: 3·6·9·12.",
@@ -1635,6 +1722,13 @@ export const javaProblems = [
     "statement": "첫 줄에서 정수를 차례대로 입력받다가 -1이 나오면 멈추시오. -1 앞에는 정수 0~10개가 있으며, 각 값은 -100~100 범위이고 -1은 포함되지 않습니다. -1을 제외한 입력값의 합을 출력하시오.",
     "input": "3 4 -5 -1",
     "output": "2",
+    "examples": [
+      {
+        "input": "-1",
+        "output": "0",
+        "reason": "종료값 -1만 입력하면 합계는 0입니다."
+      }
+    ],
     "hint": "-1은 합산하지 않는 종료 신호입니다.",
     "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        int sum=0; // 합 초기값 0\n        while(true){ // 종료값을 만날 때까지 입력 반복\n            int value=sc.nextInt(); // 순서대로 3,4,-5,-1 입력\n            if(value==-1) break; // -1이면 더하지 않고 반복 종료\n            sum+=value; // sum:0→3→7→2\n        } // 종료값을 만나 반복 종료\n        System.out.println(sum); // 2 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
     "explanation": "합 초기값 0. 종료값을 만날 때까지 입력 반복. 순서대로 3,4,-5,-1 입력. 예제 실행 결과는 sum → 2, sum → 2입니다. 확인할 조건: 바로 -1.",
@@ -1731,6 +1825,18 @@ export const javaProblems = [
     "statement": "정수 N(1~100000)을 입력받으시오. 소수이면 PRIME, 합성수이면 COMPOSITE, 1이면 NEITHER를 출력하시오.",
     "input": "17",
     "output": "PRIME",
+    "examples": [
+      {
+        "input": "1",
+        "output": "NEITHER",
+        "reason": "1은 소수도 합성수도 아닙니다."
+      },
+      {
+        "input": "4",
+        "output": "COMPOSITE",
+        "reason": "4는 2로도 나누어떨어지는 합성수입니다."
+      }
+    ],
     "hint": "1은 NEITHER, 2 이상의 자연수는 제곱근까지만 약수를 검사해도 됩니다.",
     "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        int n=sc.nextInt(); // n=17 입력\n        if(n==1){ // 1은 소수도 합성수도 아님\n            System.out.println(\"NEITHER\"); // 1일 때만 출력\n        }else{ // n>=2에서 소수 여부 검사\n            boolean prime=true; // 현재까지 약수가 없다고 가정\n            for(int d=2;d<=n/d;d++){ // 2부터 제곱근 이하의 약수만 확인\n                if(n%d==0){ prime=false; break; } // 나누어떨어지면 합성수로 변경 후 중단\n            } // 약수 탐색 종료\n            System.out.println(prime?\"PRIME\":\"COMPOSITE\"); // 17은 PRIME 출력\n        } // 결과 분기 종료\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
     "explanation": "n=17 입력. 1은 소수도 합성수도 아님. 1일 때만 출력. 예제 실행 결과는 n%d → true, prime → PRIME입니다. 확인할 조건: 1·2·4·97.",
@@ -2169,6 +2275,13 @@ export const javaProblems = [
     "statement": "정수 N(1~100), 정수 N개, 찾을 정수 target을 입력받으시오. 배열에서 target이 처음 나타나는 위치(0부터 시작)를 출력하시오. 없으면 -1을 출력하시오.",
     "input": "5 7 8 7 9 7 7",
     "output": "0",
+    "examples": [
+      {
+        "input": "3 1 2 3 9",
+        "output": "-1",
+        "reason": "찾는 값이 배열에 없으면 -1을 출력합니다."
+      }
+    ],
     "hint": "첫 발견 즉시 break 하면 첫 번째 인덱스를 얻습니다.",
     "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        int n=sc.nextInt(); // 배열에 저장할 숫자 개수를 입력받음\n        int[] arr=new int[n]; // n개 크기의 정수 배열을 생성\n        for(int i=0;i<n;i++){ // i를 0부터 n-1까지 증가\n            arr[i]=sc.nextInt(); // i번째 위치에 다음 정수를 저장\n        } // 전체 배열 입력을 완료\n        int target=sc.nextInt(); // 찾을 값 7 입력\n        int index=-1; // 찾지 못했을 때의 반환값 -1\n        for(int i=0;i<n;i++){ // 인덱스 0부터 순서대로 검사\n            if(arr[i]==target){ index=i; break; } // i=0에서 발견 → index=0, 종료\n        } // 탐색 완료\n        System.out.println(index); // 첫 일치 위치 0 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
     "explanation": "배열에 저장할 숫자 개수를 입력받음. n개 크기의 정수 배열을 생성. i를 0부터 n-1까지 증가. 예제 실행 결과는 arr[i] → 참, index → 0입니다. 확인할 조건: 중복값·없음.",
@@ -2247,6 +2360,13 @@ export const javaProblems = [
     "statement": "정수 N(1~100)과 정수 N개를 입력받으시오. 배열이 앞에서 뒤로 오름차순 또는 같은 값이 이어지는 순서라면 YES, 그렇지 않으면 NO를 출력하시오.",
     "input": "4 1 2 2 4",
     "output": "YES",
+    "examples": [
+      {
+        "input": "4 1 3 2 4",
+        "output": "NO",
+        "reason": "앞의 3보다 작은 2가 뒤에 있으므로 정렬된 상태가 아닙니다."
+      }
+    ],
     "hint": "같은 값은 허용하며 arr[i-1] > arr[i]만 위반입니다.",
     "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        int n=sc.nextInt(); // 배열에 저장할 숫자 개수를 입력받음\n        int[] arr=new int[n]; // n개 크기의 정수 배열을 생성\n        for(int i=0;i<n;i++){ // i를 0부터 n-1까지 증가\n            arr[i]=sc.nextInt(); // i번째 위치에 다음 정수를 저장\n        } // 전체 배열 입력을 완료\n        boolean sorted=true; // 비감소 배열이라고 가정\n        for(int i=1;i<n;i++){ // 앞 원소와 다음 원소를 비교\n            if(arr[i-1]>arr[i]){ sorted=false; break; } // 내림 구간 발견 시 false\n        } // 순서 검사 완료\n        System.out.println(sorted?\"YES\":\"NO\"); // 1,2,2,4 → YES 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
     "explanation": "배열에 저장할 숫자 개수를 입력받음. n개 크기의 정수 배열을 생성. i를 0부터 n-1까지 증가. 예제 실행 결과는 arr → 4개, sorted → true입니다. 확인할 조건: 같은 값 허용.",
@@ -2505,6 +2625,13 @@ export const javaProblems = [
     "statement": "공백 없는 문자열과 접두어를 입력받으시오. 문자열이 해당 접두어로 시작하면 YES, 그렇지 않으면 NO를 출력하시오.",
     "input": "spring springb",
     "output": "NO",
+    "examples": [
+      {
+        "input": "spring spring",
+        "output": "YES",
+        "reason": "문자열 전체가 접두어와 같아도 해당 접두어로 시작하는 것입니다."
+      }
+    ],
     "hint": "startsWith는 문자열 전체 접두어를 비교합니다.",
     "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        String s=sc.next(); // 대상 문자열 \"spring\" 입력\n        String prefix=sc.next(); // 접두어 후보 \"springb\" 입력\n        boolean starts=s.startsWith(prefix); // spring은 springb로 시작하지 않음 → false\n        System.out.println(starts?\"YES\":\"NO\"); // NO 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
     "explanation": "대상 문자열 \"spring\" 입력. 접두어 후보 \"springb\" 입력. spring은 springb로 시작하지 않음 → false. 예제 실행 결과는 s,prefix → 2개, starts → NO입니다. 확인할 조건: 같은 길이.",
@@ -2571,6 +2698,13 @@ export const javaProblems = [
     "statement": "공백 없는 문자열 2개를 입력받으시오. 내용이 같으면 SAME, 다르면 DIFFERENT를 출력하시오.",
     "input": "java java",
     "output": "SAME",
+    "examples": [
+      {
+        "input": "java Java",
+        "output": "DIFFERENT",
+        "reason": "영문 대소문자를 구분하므로 다른 문자열입니다."
+      }
+    ],
     "hint": "문자열 내용 비교는 ==가 아니라 equals를 사용합니다.",
     "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        String a=sc.next(); // 첫 문자열 a=\"java\"\n        String b=sc.next(); // 둘째 문자열 b=\"java\"\n        boolean same=a.equals(b); // 두 문자열의 내용이 같으므로 true\n        System.out.println(same?\"SAME\":\"DIFFERENT\"); // SAME 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
     "explanation": "첫 문자열 a=\"java\". 둘째 문자열 b=\"java\". 두 문자열의 내용이 같으므로 true. 예제 실행 결과는 a,b → 2개, same → SAME입니다. 확인할 조건: 대소문자 다름.",
@@ -3394,6 +3528,13 @@ export const javaProblems = [
     "statement": "정수 N(1~30), 정수 N개, 찾을 값 target을 입력받으시오. ArrayList의 contains 메서드로 target이 있는지 검사하여 있으면 YES, 없으면 NO를 출력하시오.",
     "input": "4 4 8 2 8 2",
     "output": "YES",
+    "examples": [
+      {
+        "input": "3 4 8 2 9",
+        "output": "NO",
+        "reason": "target 9가 리스트에 없으므로 NO를 출력합니다."
+      }
+    ],
     "hint": "contains는 동일한 Integer 값을 포함하는지 검사합니다.",
     "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        int n=sc.nextInt(); // 정수 4개 입력\n        ArrayList<Integer> values=new ArrayList<>(); // 비어 있는 정수 리스트 생성\n        for(int i=0;i<n;i++){ // n개 숫자 저장\n            values.add(sc.nextInt()); // values=[4,8,2,8]\n        } // 리스트 입력 완료\n        int target=sc.nextInt(); // 찾을 값 2 입력\n        boolean found=values.contains(target); // 2가 있으므로 true 반환\n        System.out.println(found?\"YES\":\"NO\"); // YES 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
     "explanation": "정수 4개 입력. 비어 있는 정수 리스트 생성. n개 숫자 저장. 예제 실행 결과는 target → 2, found → YES입니다. 확인할 조건: 없음·중복.",
@@ -3468,6 +3609,13 @@ export const javaProblems = [
     "statement": "정수 N(1~20)을 입력받고 도서 N개의 제목 한 단어와 대출 여부(0 또는 1)를 차례대로 입력받으시오. Book 클래스의 title, borrowed 필드를 사용해 대출할 수 있는 도서의 제목만 입력 순서대로 한 줄에 하나씩 출력하시오. 해당 도서가 없으면 NONE을 출력하시오.",
     "input": "3 Java 0 Cloud 1 Python 0",
     "output": "Java\nPython",
+    "examples": [
+      {
+        "input": "2 Java 1 Cloud 1",
+        "output": "NONE",
+        "reason": "모든 도서가 대출 중이면 NONE을 출력합니다."
+      }
+    ],
     "hint": "0은 대출 가능, 1은 대출 중입니다. 책 목록에 대출 가능한 책이 없으면 NONE을 출력합니다.",
     "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    static class Book { // 책 정보를 표현하는 클래스\n        String title; // 책 제목 필드\n        boolean borrowed; // 대출 중인지 여부를 저장한 필드\n        Book(String title,boolean borrowed){ // 제목과 상태를 입력받는 생성자\n            this.title=title; // 책 제목 필드를 초기화\n            this.borrowed=borrowed; // 대출 상태 필드를 초기화\n        } // Book 생성자 종료\n    } // Book 클래스 종료\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        int n=sc.nextInt(); // 책 개수 n=3\n        ArrayList<Book> books=new ArrayList<>(); // 도서를 저장할 리스트\n        for(int i=0;i<n;i++){ // n개의 책 정보 입력\n            String title=sc.next(); // Java, Cloud, Python 순서로 책 제목 입력\n            int borrowed=sc.nextInt(); // 대출 상태 0,1,0 입력\n            books.add(new Book(title,borrowed==1)); // Book 객체를 생성해 리스트에 추가\n        } // 책 데이터 입력 완료\n        boolean any=false; // 출력한 대출 가능 책 존재 여부\n        for(Book book:books){ // 입력 순서대로 책 검사\n            if(!book.borrowed){ // borrowed가 false면 대출 가능\n                System.out.println(book.title); // Java와 Python 출력\n                any=true; // 대출 가능 도서 발견 표시\n            } // 현재 책 상태 검사 종료\n        } // 전체 책 확인 완료\n        if(!any) System.out.println(\"NONE\"); // 모두 대출 중일 때만 NONE 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
     "explanation": "책 정보를 표현하는 클래스. 책 제목 필드. 대출 중인지 여부를 저장한 필드. 예제 실행 결과는 borrowed → —, any → Python입니다. 확인할 조건: 모두 대출 중.",
