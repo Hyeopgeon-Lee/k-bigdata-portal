@@ -438,12 +438,12 @@ export const javaProblems = [
     "level": "입문",
     "topic": "변수·자료형·연산",
     "title": "초를 분과 초로 변환",
-    "statement": "0 이상의 정수 초를 입력받으시오. 이를 분과 남은 초로 나누어 공백으로 구분해 출력하시오.",
+    "statement": "0 이상의 정수 초를 입력받으시오. 60으로 나눈 몫은 분, 나머지는 초로 계산하시오. 계산 결과를 2분 5초와 같이 한글 단위를 붙여 한 줄에 출력하시오.",
     "input": "125",
-    "output": "2 5",
+    "output": "2분 5초",
     "hint": "나누기의 몫은 분, 나머지는 초입니다.",
-    "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        int seconds=sc.nextInt(); // 입력 125 → seconds=125\n        int minutes=seconds/60; // 125/60=2 → minutes=2\n        int remain=seconds%60; // 125%60=5 → remain=5\n        System.out.println(minutes + \" \" + remain); // 2 5 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
-    "explanation": "입력 125 → seconds=125. 125/60=2 → minutes=2. 125%60=5 → remain=5. 예제 실행 결과는 minutes → 2, remain → 5입니다. 확인할 조건: 60·0 경계.",
+    "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        int seconds=sc.nextInt(); // 입력 125 → seconds=125\n        int minutes=seconds/60; // 125/60=2 → minutes=2\n        int remain=seconds%60; // 125%60=5 → remain=5\n        System.out.println(minutes + \"분 \" + remain + \"초\"); // 2분 5초 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
+    "explanation": "입력 125 → seconds=125. 125/60=2 → minutes=2. 125%60=5 → remain=5. 분과 초를 각각 계산한 뒤 한글 단위를 붙여 2분 5초로 출력합니다. 확인할 조건: 60초는 1분 0초, 0초는 0분 0초로 출력합니다.",
     "trace": [
       [
         "입력",
