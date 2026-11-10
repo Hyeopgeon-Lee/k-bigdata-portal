@@ -643,80 +643,90 @@ export const ubuntuAdvancedProblems = [
   {
     "id": "LINUX-047",
     "language": "linux",
-    "topic": "Vim 파일 편집",
-    "title": "Vim으로 새 텍스트 파일 저장",
+    "topic": "Vim 편집",
+    "title": "Vim으로 새 텍스트 파일 작성",
     "level": "종합 활용",
-    "statement": "Vim 편집기를 사용하여 greeting.txt 파일을 만들고 hello를 한 줄 입력한 뒤 저장하시오.",
+    "statement": "Vim 편집기를 사용해 greeting.txt 파일을 새로 만들고 hello를 한 줄 입력하여 저장하시오. 저장한 내용을 확인하시오.",
     "input": "greeting.txt가 없는 개인 연습 폴더",
     "output": "greeting.txt 내용이 hello 한 줄",
-    "code": "vim greeting.txt  # Vim에서 i → hello 입력 → Esc → :wq → Enter",
-    "hint": "vim greeting.txt로 파일을 열고 i를 눌러 입력 모드에서 hello를 작성하시오. Esc를 누른 뒤 :wq와 Enter로 저장·종료하시오.",
-    "explanation": "vim greeting.txt — Vim 편집기로 파일 열기 / i — 입력 모드 시작 / hello — 파일에 작성할 내용 / Esc — 일반 모드로 돌아가기 / :wq — 저장 후 종료(Enter로 실행)",
-    "initialState": "greeting.txt가 없는 개인 연습 폴더",
-    "afterState": "greeting.txt 없음 → 내용 hello가 포함된 파일 생성",
+    "code": "vim greeting.txt  # i → hello 입력 → Esc → :wq 입력 후 Enter로 저장·종료\ncat greeting.txt  # hello가 저장됐는지 확인",
+    "hint": "vim greeting.txt로 새 파일을 연 뒤 i로 입력 모드에 들어가 hello를 입력하시오. Esc로 일반 모드로 돌아온 다음 :wq와 Enter로 저장·종료하시오.",
+    "explanation": "vim greeting.txt — Vim으로 파일 열기 / i — 입력 모드 시작 / hello — 텍스트 입력 / Esc — 일반 모드 복귀 / :wq + Enter — 저장하고 종료 / cat greeting.txt — 저장된 내용 확인",
+    "initialState": "개인 실습 폴더에 greeting.txt가 없는 상태",
+    "afterState": "새 greeting.txt 파일에 hello가 한 줄 저장됨",
     "commandParts": [
       {
         "token": "vim greeting.txt",
-        "meaning": "Vim에서 새 파일을 엽니다"
+        "meaning": "Vim으로 새 파일 열기"
       },
       {
         "token": "i",
-        "meaning": "입력 모드로 전환합니다"
+        "meaning": "입력 모드 전환"
       },
       {
         "token": "Esc",
-        "meaning": "일반 모드로 돌아갑니다"
+        "meaning": "일반 모드 복귀"
       },
       {
-        "token": ":wq",
-        "meaning": "파일을 저장하고 종료합니다(Enter로 실행)"
+        "token": ":wq + Enter",
+        "meaning": "저장 후 종료"
+      },
+      {
+        "token": "cat greeting.txt",
+        "meaning": "파일 내용 확인"
       }
     ],
     "verification": "cat greeting.txt",
-    "verificationDetail": "cat greeting.txt를 실행했을 때 hello 한 줄이 출력되는지 확인하시오.",
-    "commonMistake": "입력 모드에서 :wq를 입력하면 파일 내용으로 기록됩니다. Esc를 눌러 일반 모드로 돌아온 뒤 :wq와 Enter를 입력하시오.",
-    "trace": []
+    "verificationDetail": "hello가 한 줄 출력되는지 확인합니다.",
+    "commonMistake": "i를 눌러야 문자를 입력할 수 있습니다. :q!는 저장하지 않고 종료하므로 :wq로 저장하세요.",
+    "trace": [],
+    "warning": "기존 파일이 없는 개인 실습 디렉터리에서만 실행하세요."
   },
   {
     "id": "LINUX-048",
     "language": "linux",
-    "topic": "Vim 파일 편집",
-    "title": "Vim으로 파일 끝에 한 줄 추가",
+    "topic": "Vim 편집",
+    "title": "Vim으로 기존 파일에 줄 추가",
     "level": "종합 활용",
-    "statement": "Vim 편집기로 기존 greeting.txt를 열어 첫 줄의 hello를 유지하면서 다음 줄에 world를 추가하고 저장하시오.",
+    "statement": "Vim 편집기를 사용해 기존 greeting.txt 파일을 열고 hello 다음 줄에 world를 추가하시오. 기존 hello는 그대로 유지하고 저장된 내용을 확인하시오.",
     "input": "greeting.txt에 hello 한 줄과 마지막 개행이 저장되어 있음",
     "output": "hello 다음 줄에 world가 추가",
-    "code": "vim greeting.txt  # Vim에서 G → o → world 입력 → Esc → :wq → Enter",
-    "hint": "Vim에서 G로 마지막 줄로 이동하고 o로 다음 줄을 연 뒤 world를 입력하시오. Esc → :wq → Enter로 저장·종료하시오.",
-    "explanation": "vim greeting.txt — 기존 파일을 Vim으로 열기 / G — 마지막 줄로 이동 / o — 현재 줄 아래에 새 줄을 만들고 입력 모드 시작 / world — 새 줄에 추가할 내용 / Esc — 일반 모드 / :wq — 변경 사항 저장 후 종료(Enter로 실행)",
-    "initialState": "greeting.txt에 hello 한 줄과 마지막 개행이 저장되어 있음",
-    "afterState": "greeting.txt: hello 한 줄 → hello와 world 두 줄",
+    "code": "vim greeting.txt  # G → o → world 입력 → Esc → :wq 입력 후 Enter로 저장·종료\ncat greeting.txt  # hello와 world 두 줄 확인",
+    "hint": "vim에서 G를 누르면 마지막 줄로 이동하고, o를 누르면 아래에 새 줄이 열리면서 입력 모드로 전환됩니다. world 입력 후 Esc, :wq, Enter로 저장하시오.",
+    "explanation": "vim greeting.txt — 기존 파일 열기 / G — 파일 마지막 줄로 이동 / o — 다음 줄 만들고 입력 모드 시작 / world — 새 줄에 입력 / Esc — 일반 모드 복귀 / :wq + Enter — 저장하고 종료 / cat greeting.txt — 두 줄 확인",
+    "initialState": "greeting.txt에 hello 한 줄과 줄바꿈이 저장되어 있음",
+    "afterState": "기존 hello 다음 줄에 world가 추가됨",
     "commandParts": [
       {
         "token": "vim greeting.txt",
-        "meaning": "기존 파일을 Vim으로 엽니다"
+        "meaning": "기존 파일을 Vim으로 열기"
       },
       {
         "token": "G",
-        "meaning": "파일의 마지막 줄로 이동합니다"
+        "meaning": "마지막 줄로 이동"
       },
       {
         "token": "o",
-        "meaning": "아래에 새 줄을 만들고 입력 모드로 전환합니다"
+        "meaning": "아래에 새 줄 생성 및 입력 모드 전환"
       },
       {
         "token": "Esc",
-        "meaning": "일반 모드로 돌아갑니다"
+        "meaning": "일반 모드 복귀"
       },
       {
-        "token": ":wq",
-        "meaning": "변경한 파일을 저장하고 Vim을 종료합니다"
+        "token": ":wq + Enter",
+        "meaning": "저장 후 종료"
+      },
+      {
+        "token": "cat greeting.txt",
+        "meaning": "저장된 내용 확인"
       }
     ],
     "verification": "cat greeting.txt",
-    "verificationDetail": "cat greeting.txt에서 첫 줄 hello, 둘째 줄 world가 순서대로 출력되는지 확인하시오.",
-    "commonMistake": "i로 기존 줄의 hello를 덮어쓰지 않도록 주의하시오. G로 마지막 줄에 이동한 다음 o로 새 줄을 열어 입력하시오.",
-    "trace": []
+    "verificationDetail": "첫째 줄 hello, 둘째 줄 world가 출력됩니다.",
+    "commonMistake": "기존 hello를 지우지 않도록 G 다음 o를 사용하세요. :q!로 끝내면 수정 내용이 저장되지 않습니다.",
+    "trace": [],
+    "warning": "기존 파일을 수정하므로 개인 실습 파일에서만 실행하세요."
   },
   {
     "id": "LINUX-049",
