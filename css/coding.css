@@ -295,3 +295,6 @@
 .coding-vim-steps ol{margin:0;padding-left:23px;display:grid;gap:9px}
 .coding-vim-steps li{padding-left:4px;line-height:1.7;overflow-wrap:anywhere;white-space:normal}
 @media(max-width:530px){.coding-vim-steps{padding:12px}.coding-vim-steps ol{gap:8px}}
+
+/* Beginner Ubuntu explanations: retain deliberate numbered paragraphs. */
+.coding-ubuntu-mode #coding-explanation{white-space:pre-line;line-height:1.85}
