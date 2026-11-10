@@ -15,7 +15,7 @@
 1. 전용 Supabase 프로젝트 **k-bigdata-portal / zjsindkakjfzmjgrkaou / ap-northeast-2** 생성 완료. 기존 교수회 프로젝트는 미변경.
 2. DB 마이그레이션 `learning_auth_initial` 및 `learning_auth_indexes` 적용 완료. 10개 테이블 RLS 활성화 및 주요 역할 권한 검증 완료. Security Advisor의 공개 authenticated SECURITY DEFINER RPC 경고는 신원 확인/세션 확인 후 본인에 한정해 작동하도록 설계된 함수로 확인해야 합니다.
 3. js/learning-config.js에 URL 및 공개 publishable key 연결 완료. service-role 또는 secret 키는 저장소에 넣지 않았습니다.
-4. **필수 미완료:** Supabase Authentication > Email Templates > Magic Link에서 `supabase/templates/magic_link_otp.html` 내용을 적용하세요. 반드시 `{{ .Token }}`을 포함해야 6자리 OTP가 메일로 발송됩니다. Authentication > SMTP Settings에서 커스텀 SMTP 계정을 연결해 학과 학생 이메일로 발송되도록 설정해야 합니다. 기본 SMTP는 조직 팀 메일 외 수신처 제한이 있어 실제 학생 가입에 사용할 수 없습니다.
+4. **필수 미완료:** Supabase Authentication > Email Templates > Magic Link에서 `supabase/templates/magic_link_otp.txt` 내용을 적용하세요. 반드시 `{{ .Token }}`을 포함해야 6자리 OTP가 메일로 발송됩니다. Authentication > SMTP Settings에서 커스텀 SMTP 계정을 연결해 학과 학생 이메일로 발송되도록 설정해야 합니다. 기본 SMTP는 조직 팀 메일 외 수신처 제한이 있어 실제 학생 가입에 사용할 수 없습니다.
 5. **미완료:** Authentication > URL Configuration에서 Site URL을 `https://portal.k-bigdata.kr`로 설정하고 Redirect URLs에 동일 출처를 등록하세요.
 6. `learning-admin` Edge Function v2 배포 완료 (JWT 검증 활성화).
 7. `weekly-learning-report` Edge Function v2 배포 완료 (JWT 검증 비활성화). **실제 발송은 미활성**: `LEARNING_REPORT_CRON_SECRET` 헤더 보호 및 Resend 자격증명 검증 후 사용해야 합니다.
