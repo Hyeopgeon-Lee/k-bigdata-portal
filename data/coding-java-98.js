@@ -189,9 +189,9 @@ export const javaProblems = [
     "statement": "실수를 입력받아 소수 둘째 자리까지 출력한다\n입력 조건: 절댓값 100 이하 실수. 출력 규격: 소수 둘째 자리 고정.",
     "input": "3.14159",
     "output": "3.14",
-    "hint": "소수 둘째 자리 고정은 printf의 %.2f를 사용합니다.",
-    "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        double value=sc.nextDouble(); // 입력 3.14159 → value=3.14159\n        System.out.printf(Locale.US,\"%.2f%n\",value); // 소수 둘째 자리 반올림 → 3.14\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
-    "explanation": "입력 3.14159 → value=3.14159. 소수 둘째 자리 반올림 → 3.14. 예제 실행 결과는 value → 3.14159, value → 3.14입니다. 확인할 조건: 반올림·서식.",
+    "hint": "Scanner로 실수를 입력받고 printf의 %.2f로 소수 둘째 자리까지 출력하세요.",
+    "code": "import java.util.Scanner; // Scanner 클래스를 사용합니다.\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        double value = sc.nextDouble(); // 입력된 실수를 저장합니다.\n        System.out.printf(\"%.2f%n\", value); // 소수 둘째 자리까지 표시합니다.\n        sc.close();\n    }\n}",
+    "explanation": "실수 3.14159를 double 변수에 저장한 뒤 %.2f로 3.14를 출력합니다. %n은 줄바꿈입니다. 기본 형식 지정자만 사용하며 Locale 설정은 학습 대상이 아닙니다.",
     "trace": [
       [
         "입력",
@@ -1863,9 +1863,9 @@ export const javaProblems = [
     "statement": "첫 N개의 피보나치 수를 0 1 1 2 순으로 출력한다\n입력 조건: 1≤N≤30. 출력 규격: 공백 구분한 N개 항.",
     "input": "7",
     "output": "0 1 1 2 3 5 8",
-    "hint": "a, b 두 변수를 순서대로 갱신하세요.",
-    "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        int n=sc.nextInt(); // n=7 입력\n        long a=0,b=1; // 첫 두 피보나치 수 0,1로 초기화\n        StringBuilder out=new StringBuilder(); // 출력 문자열 준비\n        for(int i=0;i<n;i++){ // 정확히 n번 반복\n            if(i>0) out.append(\" \"); // 항 사이 공백 삽입\n            out.append(a); // 현재 a를 수열 항으로 기록\n            long next=a+b; // 다음 항을 계산\n            a=b; // a를 이전 b 값으로 변경\n            b=next; // b에 새 항 저장\n        } // n개 항 출력 준비 완료\n        System.out.println(out); // 0 1 1 2 3 5 8 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
-    "explanation": "n=7 입력. 첫 두 피보나치 수 0,1로 초기화. 출력 문자열 준비. 예제 실행 결과는 출력 a → 1, 출력 a → 8입니다. 확인할 조건: N=1·2.",
+    "hint": "a=0, b=1로 시작해 반복문에서 현재 a를 출력하고 두 변수를 차례대로 갱신하세요.",
+    "code": "import java.util.Scanner;\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt(); // 출력할 항의 개수\n        int a = 0, b = 1; // 시작하는 두 수\n        for (int i = 0; i < n; i++) {\n            if (i > 0) System.out.print(\" \"); // 두 번째 항부터 공백\n            System.out.print(a); // 현재 수 출력\n            int next = a + b; // 다음 수 계산\n            a = b;\n            b = next;\n        }\n        System.out.println(); // 마지막 줄바꿈\n        sc.close();\n    }\n}",
+    "explanation": "a와 b는 연속된 피보나치 수입니다. 현재 a를 출력한 뒤 next=a+b, a=b, b=next 순서로 갱신하면 첫 N개 항이 출력됩니다. 두 번째 항부터 공백을 출력해 항을 구분합니다. N≤30이므로 int로 계산할 수 있습니다.",
     "trace": [
       [
         "초기",
