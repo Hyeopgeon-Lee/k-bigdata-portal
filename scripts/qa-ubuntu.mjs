@@ -31,7 +31,19 @@ for(let n=1;n<=50;n++){
  assert(/^student@ubuntu:[^\n]+\$ /.test(p.input),id+" initial environment must be Ubuntu terminal");
  assert(/^student@ubuntu:[^\n]+\$ /.test(p.output),id+" expected result must be Ubuntu terminal");
  assert(p.input===p.initialState && p.output===p.afterState,id+" duplicated state mismatch");
- assert(!p.input.includes("[명령어 입력]")&&!p.output.includes("[명령어 입력]"),id+" placeholder in console");
+
+ assert(p.input.includes("[명령어 입력]"),id+" initial command input marker missing");
+ assert(p.output.includes("[명령어 입력]"),id+" expected command input marker missing");
+ const solutionLines=new Set(p.code.split("\n").map(x=>x.trim()).filter(Boolean));
+ for(const line of p.input.split("\n")){
+  const m=line.match(/^student@ubuntu:[^\n$]*\$\s*(.*)$/);
+  if(m)assert(!solutionLines.has(m[1].trim()),id+" setup leaks a full answer command");
+ }
+ for(const line of p.output.split("\n")){
+  const m=line.match(/^student@ubuntu:[^\n$]*\$\s*(.*)$/);
+  if(m)assert(!m[1].trim() || m[1].trim()==="[명령어 입력]",id+" expected output leaks an answer command");
+ }
+
 
  assert(p.input.startsWith("student@ubuntu:"),id+" initial environment must be Ubuntu terminal");
  assert(p.output.startsWith("student@ubuntu:"),id+" expected result must be Ubuntu terminal");
