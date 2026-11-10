@@ -10,7 +10,7 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css?v=20261026-schedule-align-1">
   <link rel="stylesheet" href="css/portal-ux.css?v=20261026-schedule-align-1">
-  <link rel="stylesheet" href="css/coding.css?v=20261111-ubuntu-terminal-1">
+  <link rel="stylesheet" href="css/coding.css?v=20261111-ubuntu-console-50-v2">
   <script defer src="js/analytics.js?v=20261008-ga4-3"></script>
 <!-- portal:assets:start (generated; edit scripts/portal-shell-template.mjs) -->
 <link rel="stylesheet" href="css/portal-navigation.css?v=20261026-schedule-align-1">
@@ -102,7 +102,7 @@
           <p id="coding-statement" class="coding-desc">JavaScript가 활성화되면 문제 내용이 표시됩니다.</p>
           <div class="coding-io" aria-label="입출력 예제">
             <div><b id="coding-input-label">입력 예제</b><pre id="coding-input">—</pre></div>
-            <div><b id="coding-output-label">출력 예제</b><pre id="coding-output">—</pre></div>
+            <div><b id="coding-output-label">출력 예제</b><pre id="coding-output">—</pre><p id="coding-ubuntu-output-note" class="coding-ubuntu-output-note" hidden></p></div>
           </div>
           <section id="coding-extra-examples" class="coding-extra-examples" aria-labelledby="coding-extra-examples-title" hidden>
             <h3 id="coding-extra-examples-title">추가 입출력 예제</h3>
@@ -139,8 +139,6 @@
               <section id="coding-ubuntu-guide" class="coding-ubuntu-guide" aria-label="Ubuntu 명령어 해설" hidden>
                 <h3>명령어·옵션 설명</h3>
                 <div class="coding-scroll"><table class="coding-trace"><thead><tr><th scope="col">명령어 / 옵션</th><th scope="col">역할</th></tr></thead><tbody id="coding-ubuntu-parts"></tbody></table></div>
-                <h3>실행 전후 상태</h3>
-                <div class="coding-ubuntu-states"><div><strong>실행 전</strong><p id="coding-ubuntu-before"></p></div><div><strong>실행 후</strong><p id="coding-ubuntu-after"></p></div></div>
                 <h3>실행 결과 확인</h3>
                 <div class="coding-code"><pre><code id="coding-ubuntu-verify"></code></pre></div>
                 <p id="coding-ubuntu-verify-note" class="coding-ubuntu-info"></p>
@@ -177,7 +175,7 @@
     }
   }
   </script>
-  <script type="module" src="js/coding.js?v=20261111-linux003-ui-mask-2"></script>
+  <script type="module" src="js/coding.js?v=20261111-ubuntu-console-50-v2"></script>
   <script type="module" src="js/portal-shell-entry.js?v=20261026-schedule-align-1"></script>
 </body>
 </html>
