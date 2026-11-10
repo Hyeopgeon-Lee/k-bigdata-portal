@@ -1,9 +1,9 @@
-import {codingProblems as sampleProblems} from "../data/coding-samples.js?v=20261110-declarations-1";
-import {javaProblems} from "../data/coding-java-98.js?v=20261110-function-contracts-1";
-import {cFoundationProblems} from "../data/coding-c-foundations.js?v=20261110-function-contracts-2";
-import {cAdvancedProblems} from "../data/coding-c-advanced.js?v=20261110-function-contracts-2";
-import {pythonFoundationProblems} from "../data/coding-python-foundations.js?v=20261110-function-contracts-1";
-import {pythonAdvancedProblems} from "../data/coding-python-advanced.js?v=20261110-function-contracts-1";
+import {codingProblems as sampleProblems} from "../data/coding-samples.js?v=20261110-beginner-wording-1";
+import {javaProblems} from "../data/coding-java-98.js?v=20261110-beginner-wording-1";
+import {cFoundationProblems} from "../data/coding-c-foundations.js?v=20261110-beginner-wording-1";
+import {cAdvancedProblems} from "../data/coding-c-advanced.js?v=20261110-beginner-wording-1";
+import {pythonFoundationProblems} from "../data/coding-python-foundations.js?v=20261110-beginner-wording-1";
+import {pythonAdvancedProblems} from "../data/coding-python-advanced.js?v=20261110-beginner-wording-1";
 import {ubuntuFoundationProblems} from "../data/coding-ubuntu-foundations.js?v=20261110-classroom-1";
 import {ubuntuAdvancedProblems} from "../data/coding-ubuntu-advanced.js?v=20261110-classroom-1";
 import {ubuntuLegacyGuides} from "../data/coding-ubuntu-legacy-guides.js?v=20261020-ubuntu50";
