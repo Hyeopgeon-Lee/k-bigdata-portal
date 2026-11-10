@@ -31,7 +31,6 @@ export const ubuntuAdvancedProblems = [
     "verification": "grep -n 'ERROR' app.log",
     "verificationDetail": "grep -n 'ERROR' app.log",
     "commonMistake": "grep는 기본적으로 대문자와 소문자를 구분합니다.",
-    "warning": "운영체제 상태가 달라질 수 있는 명령어는 개인 실습 환경에서만 확인하세요.",
     "trace": []
   },
   {
@@ -65,7 +64,6 @@ export const ubuntuAdvancedProblems = [
     "verification": "grep -i 'ubuntu' notes.txt",
     "verificationDetail": "grep -i 'ubuntu' notes.txt",
     "commonMistake": "-i 옵션이 없으면 'Ubuntu'와 'ubuntu'는 별개로 인식됩니다.",
-    "warning": "운영체제 상태가 달라질 수 있는 명령어는 개인 실습 환경에서만 확인하세요.",
     "trace": []
   },
   {
@@ -103,7 +101,6 @@ export const ubuntuAdvancedProblems = [
     "verification": "find . -type f -name '*.py'",
     "verificationDetail": "find . -type f -name '*.py'",
     "commonMistake": "*.py를 따옴표로 묶지 않으면 셸이 현재 디렉터리 파일 이름으로 먼저 확장할 수 있습니다.",
-    "warning": "운영체제 상태가 달라질 수 있는 명령어는 개인 실습 환경에서만 확인하세요.",
     "trace": []
   },
   {
@@ -141,7 +138,6 @@ export const ubuntuAdvancedProblems = [
     "verification": "grep -rn 'TODO' src",
     "verificationDetail": "grep -rn 'TODO' src",
     "commonMistake": "바이너리 파일이 혼재된 디렉터리에서는 결과가 복잡할 수 있으니 코드 실습 폴더로 범위를 좁힙니다.",
-    "warning": "운영체제 상태가 달라질 수 있는 명령어는 개인 실습 환경에서만 확인하세요.",
     "trace": []
   },
   {
@@ -175,7 +171,6 @@ export const ubuntuAdvancedProblems = [
     "verification": "LC_ALL=C sort names.txt",
     "verificationDetail": "LC_ALL=C sort names.txt",
     "commonMistake": "sort는 기본적으로 원본 파일을 수정하지 않습니다. 파일 저장은 리다이렉션을 별도로 사용합니다.",
-    "warning": "운영체제 상태가 달라질 수 있는 명령어는 개인 실습 환경에서만 확인하세요.",
     "trace": []
   },
   {
@@ -205,7 +200,6 @@ export const ubuntuAdvancedProblems = [
     "verification": "ls -l note.txt",
     "verificationDetail": "ls -l note.txt",
     "commonMistake": "권한 표시는 파일 종류 문자와 사용자·그룹·기타 권한 순서로 읽습니다.",
-    "warning": "운영체제 상태가 달라질 수 있는 명령어는 개인 실습 환경에서만 확인하세요.",
     "trace": []
   },
   {
@@ -243,7 +237,6 @@ export const ubuntuAdvancedProblems = [
     "verification": "ls -l run.sh",
     "verificationDetail": "ls -l run.sh",
     "commonMistake": "chmod u+x는 실행 권한을 부여하지만 스크립트 내용의 안전성을 보장하지는 않습니다.",
-    "warning": "운영체제 상태가 달라질 수 있는 명령어는 개인 실습 환경에서만 확인하세요.",
     "trace": []
   },
   {
@@ -277,7 +270,6 @@ export const ubuntuAdvancedProblems = [
     "verification": "stat -c '%a %n' secret.txt",
     "verificationDetail": "stat -c '%a %n' secret.txt",
     "commonMistake": "chmod 600은 일반 파일의 권한 설정입니다. 소유자나 특수 ACL 상황에 따라 추가 권한 해석이 달라질 수 있습니다.",
-    "warning": "운영체제 상태가 달라질 수 있는 명령어는 개인 실습 환경에서만 확인하세요.",
     "trace": []
   },
   {
@@ -307,7 +299,6 @@ export const ubuntuAdvancedProblems = [
     "verification": "stat -c '%a %n' tool.sh",
     "verificationDetail": "stat -c '%a %n' tool.sh",
     "commonMistake": "다른 사용자의 실행이 필요하지 않은 개인 스크립트에는 과도하게 넓은 권한을 주지 않는 편이 안전합니다.",
-    "warning": "운영체제 상태가 달라질 수 있는 명령어는 개인 실습 환경에서만 확인하세요.",
     "trace": []
   },
   {
@@ -337,7 +328,6 @@ export const ubuntuAdvancedProblems = [
     "verification": "id -un\ngroups",
     "verificationDetail": "id -un",
     "commonMistake": "실제 사용자 이름과 그룹 이름은 컴퓨터마다 다르므로 정해진 문자열을 출력값으로 쓰지 않습니다.",
-    "warning": "운영체제 상태가 달라질 수 있는 명령어는 개인 실습 환경에서만 확인하세요.",
     "trace": []
   },
   {
@@ -367,7 +357,6 @@ export const ubuntuAdvancedProblems = [
     "verification": "uname -r",
     "verificationDetail": "uname -r",
     "commonMistake": "Ubuntu 배포판 버전과 Linux 커널 버전은 서로 다른 정보입니다.",
-    "warning": "운영체제 상태가 달라질 수 있는 명령어는 개인 실습 환경에서만 확인하세요.",
     "trace": []
   },
   {
@@ -401,7 +390,6 @@ export const ubuntuAdvancedProblems = [
     "verification": "df -h .",
     "verificationDetail": "df -h .",
     "commonMistake": "df는 디스크 파일 시스템 용량을 보여 줍니다. 특정 폴더 크기는 du를 사용합니다.",
-    "warning": "운영체제 상태가 달라질 수 있는 명령어는 개인 실습 환경에서만 확인하세요.",
     "trace": []
   },
   {
@@ -431,7 +419,6 @@ export const ubuntuAdvancedProblems = [
     "verification": "free -h",
     "verificationDetail": "free -h",
     "commonMistake": "available은 단순 free와 다릅니다. 캐시 회수 가능량 등을 고려한 사용 가능 메모리의 추정치입니다.",
-    "warning": "운영체제 상태가 달라질 수 있는 명령어는 개인 실습 환경에서만 확인하세요.",
     "trace": []
   },
   {
@@ -465,7 +452,6 @@ export const ubuntuAdvancedProblems = [
     "verification": "ps -ef",
     "verificationDetail": "ps -ef",
     "commonMistake": "PID 값은 실행할 때마다 달라질 수 있습니다. 출력값을 고정 정답으로 취급하지 마세요.",
-    "warning": "운영체제 상태가 달라질 수 있는 명령어는 개인 실습 환경에서만 확인하세요.",
     "trace": []
   },
   {
@@ -491,7 +477,6 @@ export const ubuntuAdvancedProblems = [
     "verification": "uptime",
     "verificationDetail": "uptime",
     "commonMistake": "로드 평균은 CPU 사용률과 같은 숫자가 아니며 프로세스 대기 상태도 반영합니다.",
-    "warning": "운영체제 상태가 달라질 수 있는 명령어는 개인 실습 환경에서만 확인하세요.",
     "trace": []
   },
   {
@@ -525,7 +510,6 @@ export const ubuntuAdvancedProblems = [
     "verification": "ip -br addr",
     "verificationDetail": "ip -br addr",
     "commonMistake": "장치 이름과 IP 주소는 컴퓨터마다 다릅니다. lo는 루프백 인터페이스입니다.",
-    "warning": "운영체제 상태가 달라질 수 있는 명령어는 개인 실습 환경에서만 확인하세요.",
     "trace": []
   },
   {
@@ -555,7 +539,6 @@ export const ubuntuAdvancedProblems = [
     "verification": "ip route",
     "verificationDetail": "ip route",
     "commonMistake": "기본 게이트웨이 주소와 인터페이스 이름은 컴퓨터마다 다릅니다.",
-    "warning": "운영체제 상태가 달라질 수 있는 명령어는 개인 실습 환경에서만 확인하세요.",
     "trace": []
   },
   {
@@ -589,7 +572,6 @@ export const ubuntuAdvancedProblems = [
     "verification": "getent ahostsv4 example.com",
     "verificationDetail": "getent ahostsv4 example.com",
     "commonMistake": "인터넷 또는 DNS가 끊겨 있다면 명령이 실패할 수 있습니다. IP는 시점·환경에 따라 달라질 수 있습니다.",
-    "warning": "운영체제 상태가 달라질 수 있는 명령어는 개인 실습 환경에서만 확인하세요.",
     "trace": []
   },
   {
@@ -623,7 +605,6 @@ export const ubuntuAdvancedProblems = [
     "verification": "apt-cache policy python3",
     "verificationDetail": "apt-cache policy python3",
     "commonMistake": "apt-cache 조회 결과는 배포판 및 패키지 목록 갱신 시점에 따라 다릅니다.",
-    "warning": "운영체제 상태가 달라질 수 있는 명령어는 개인 실습 환경에서만 확인하세요.",
     "trace": []
   },
   {
@@ -657,7 +638,6 @@ export const ubuntuAdvancedProblems = [
     "verification": "dpkg -s python3",
     "verificationDetail": "Status: install ok installed 행이 있으면 설치된 상태입니다. Version 행에는 버전이 표시됩니다.",
     "commonMistake": "설치하지 않은 패키지는 상태 조회에 실패할 수 있습니다. 이 명령은 설치·제거하지 않습니다.",
-    "warning": "운영체제 상태가 달라질 수 있는 명령어는 개인 실습 환경에서만 확인하세요.",
     "trace": []
   },
   {
@@ -695,7 +675,6 @@ export const ubuntuAdvancedProblems = [
     "verification": "cat greeting.txt",
     "verificationDetail": "cat greeting.txt를 실행했을 때 hello 한 줄이 출력되는지 확인하시오.",
     "commonMistake": "입력 모드에서 :wq를 입력하면 파일 내용으로 기록됩니다. Esc를 눌러 일반 모드로 돌아온 뒤 :wq와 Enter를 입력하시오.",
-    "warning": "개인 실습 폴더의 greeting.txt를 사용하고, 편집한 내용을 확인한 뒤 저장하시오.",
     "trace": []
   },
   {
@@ -737,7 +716,6 @@ export const ubuntuAdvancedProblems = [
     "verification": "cat greeting.txt",
     "verificationDetail": "cat greeting.txt에서 첫 줄 hello, 둘째 줄 world가 순서대로 출력되는지 확인하시오.",
     "commonMistake": "i로 기존 줄의 hello를 덮어쓰지 않도록 주의하시오. G로 마지막 줄에 이동한 다음 o로 새 줄을 열어 입력하시오.",
-    "warning": "기존 greeting.txt의 내용을 변경하는 실습이므로 개인 실습 폴더의 파일에서만 실행하시오.",
     "trace": []
   },
   {
@@ -771,7 +749,6 @@ export const ubuntuAdvancedProblems = [
     "verification": "grep 'ERROR' app.log | wc -l",
     "verificationDetail": "grep 'ERROR' app.log | wc -l",
     "commonMistake": "grep는 기본적으로 대소문자를 구분합니다. ERROR와 error는 다르게 취급합니다.",
-    "warning": "운영체제 상태가 달라질 수 있는 명령어는 개인 실습 환경에서만 확인하세요.",
     "trace": []
   },
   {
@@ -809,7 +786,6 @@ export const ubuntuAdvancedProblems = [
     "verification": "LC_ALL=C sort names.txt | uniq",
     "verificationDetail": "LC_ALL=C sort names.txt | uniq",
     "commonMistake": "uniq는 연속된 중복 행만 제거합니다. 먼저 sort하지 않으면 떨어진 중복은 남을 수 있습니다.",
-    "warning": "운영체제 상태가 달라질 수 있는 명령어는 개인 실습 환경에서만 확인하세요.",
     "trace": []
   }
 ];
