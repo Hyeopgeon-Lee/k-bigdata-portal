@@ -235,12 +235,12 @@ export const codingProblems = [
     "level": "입문",
     "topic": "파일·디렉터리",
     "title": "프로젝트 디렉터리와 파일 만들기",
-    "statement": "현재 디렉터리 아래에 project/src 디렉터리를 만들고, 그 안에 빈 main.py 파일을 생성하시오. 파일이 만들어졌는지 확인하시오. 개인 실습 디렉터리에서 실행하시오.",
+    "statement": "현재 디렉터리 아래에 project/src 디렉터리를 만들고, Vim 편집기로 빈 main.py 파일을 생성하시오. Vim에서 :wq로 저장·종료한 뒤 파일 경로를 확인하시오. 개인 실습 디렉터리에서 실행하시오.",
     "input": "현재 디렉터리에 project가 없다고 가정",
     "output": "project/src/main.py",
-    "hint": "mkdir -p는 중간 디렉터리까지 함께 만들고, touch는 빈 파일을 생성합니다.",
-    "code": "mkdir -p project/src  # 현재 위치 아래 project와 src 디렉터리 생성\ntouch project/src/main.py  # src 안에 빈 main.py 생성\nfind project -type f  # project 아래 파일 목록 확인",
-    "explanation": "1행 직후 project/src 경로가 존재합니다. 2행에서 main.py가 추가됩니다. 3행은 디렉터리 자체가 아니라 파일만 표시합니다.",
+    "hint": "mkdir -p로 중간 디렉터리까지 만들고, vim으로 새 파일을 연 뒤 :wq와 Enter를 입력해 빈 파일을 저장·종료하시오.",
+    "code": "mkdir -p project/src  # project/src 디렉터리 생성\nvim project/src/main.py  # Vim에서 :wq 입력 후 Enter로 빈 파일 저장·종료\nfind project -type f  # 생성된 파일 경로 확인",
+    "explanation": "mkdir -p로 project/src를 생성합니다. vim project/src/main.py로 새 파일을 열고 일반 모드에서 :wq를 입력한 뒤 Enter를 누르면 빈 main.py 파일이 저장됩니다. 편집기가 닫힌 다음 find project -type f로 파일 경로를 확인합니다. Vim을 연 다음에는 저장·종료할 때까지 다른 터미널 명령을 실행하지 마시오.",
     "trace": [
       [
         "시작",
@@ -255,10 +255,10 @@ export const codingProblems = [
         "디렉터리 있음"
       ],
       [
-        "touch",
+        "Vim",
         "파일",
-        "project/src/main.py 생성",
-        "파일 있음"
+        "main.py를 :wq로 저장·종료",
+        "빈 파일 있음"
       ],
       [
         "find",
@@ -274,18 +274,18 @@ export const codingProblems = [
     "level": "기초 응용",
     "topic": "파일 권한",
     "title": "파일 접근 권한 설정",
-    "statement": "학습용 report.txt를 만들고 소유자는 읽기·쓰기, 그룹은 읽기, 기타 사용자는 접근할 수 없도록 권한을 설정하시오.",
+    "statement": "Vim 편집기로 빈 report.txt 파일을 생성하고 :wq로 저장·종료하시오. 소유자는 읽기·쓰기, 그룹은 읽기, 기타 사용자는 접근할 수 없도록 권한을 설정한 뒤 확인하시오.",
     "input": "일반 사용자 홈의 실습 폴더에서 수행",
     "output": "-rw-r----- (권한 표시 부분)",
-    "hint": "소유자 rw=6, 그룹 r=4, 기타 ---=0이므로 chmod 640을 사용합니다.",
-    "code": "touch report.txt  # 빈 report.txt 파일 생성(기존 파일이 있으면 시간정보 갱신)\nchmod 640 report.txt  # 소유자=rw-, 그룹=r--, 기타=---로 권한 변경\nls -l report.txt  # 변경된 파일 권한 표시",
-    "explanation": "chmod 640에서 6은 4(읽기)+2(쓰기), 4는 읽기, 0은 아무 권한도 없음을 뜻합니다. ls -l 출력에는 권한 외 소유자와 시간 정보 등이 함께 표시됩니다.",
+    "hint": "Vim에서 빈 파일을 :wq로 저장·종료하시오. 소유자 rw=6, 그룹 r=4, 기타 ---=0이므로 chmod 640을 사용합니다.",
+    "code": "vim report.txt  # Vim에서 :wq 입력 후 Enter로 빈 파일 저장·종료\nchmod 640 report.txt  # 소유자=rw-, 그룹=r--, 기타=---로 권한 변경\nls -l report.txt  # 변경된 파일 권한 표시",
+    "explanation": "vim report.txt로 파일을 열고 일반 모드에서 :wq를 입력한 뒤 Enter를 누르면 빈 report.txt가 생성됩니다. 편집기를 종료한 다음 chmod 640으로 소유자 읽기·쓰기, 그룹 읽기, 기타 권한 없음으로 설정합니다. ls -l 출력의 권한 표시 부분이 -rw-r-----인지 확인합니다.",
     "trace": [
       [
-        "touch",
+        "Vim",
         "파일",
-        "report.txt 존재",
-        "생성 또는 유지"
+        "report.txt를 :wq로 저장·종료",
+        "빈 파일 생성"
       ],
       [
         "chmod",
