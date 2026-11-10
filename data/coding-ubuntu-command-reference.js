@@ -69,9 +69,9 @@ export const ubuntuCommandOptionCatalog = {
   ],
   "grep": [
     [
-      "grep 검색어 파일명",
-      "검색어가 포함된 줄을 출력합니다. 기본적으로 대소문자를 구분합니다.",
-      "grep bash"
+      "grep 검색어 [파일명]",
+      "검색어가 포함된 줄을 출력합니다. 파일을 생략하고 파이프로 연결하면 앞 명령어의 출력을 검색합니다.",
+      "ps -ef | grep bash"
     ],
     [
       "grep -n 검색어 파일명",
