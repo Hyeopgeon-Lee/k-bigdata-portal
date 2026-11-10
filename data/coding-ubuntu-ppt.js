@@ -769,7 +769,7 @@ export const ubuntuPptProblems = [
     ],
     "verification": "cat memo.txt",
     "verificationDetail": "터미널에서 vim memo.txt 실행 → Vim 안에서 i 입력 → linux study 입력 → Esc → :wq 입력 후 Enter → 터미널에서 cat memo.txt로 확인한다.",
-    "commonMistake": "vim memo.txt 명령만 실행하면 문장이 저장되지 않는다. Vim 안에서 i → linux study → Esc → :wq → Enter 순서로 직접 입력하시오.",
+    "commonMistake": "입력 모드에서 Esc를 누르지 않고 :wq를 입력하면 명령이 아니라 문서 내용에 입력될 수 있다.",
     "trace": [],
     "pptSource": "3장 5~7쪽",
     "outputNote": ""
