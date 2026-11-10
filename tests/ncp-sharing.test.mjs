@@ -22,7 +22,7 @@ for(const q of ncpQuestions){
  assert.ok(!report.href.includes(encodeURIComponent(q.explanation)));
 }
 
-for(const action of ["share-problem","copy-problem-link","report-problem"])
+for(const action of ["share-problem","copy-problem-link"])
  assert.ok(ui.includes('data-action="'+action+'"'),"Missing NCP action: "+action);
 assert.match(ui,/function problemShareUrl\(q\)/);
 assert.match(ui,/url\.searchParams\.set\("id",q\.id\)/);
@@ -31,11 +31,12 @@ assert.match(ui,/navigator\.share/);
 assert.match(ui,/navigator\.clipboard\?\.writeText/);
 assert.match(ui,/document\.execCommand\("copy"\)/);
 assert.match(ui,/learningReportUrl\("ncp",q/);
+assert.ok(ui.includes("'<a href='"),"NCP report is a real link");
 assert.match(ui,/id="ncp-share-status".*role="status"/);
 const shareText=ui.slice(ui.indexOf("function problemShareText"),ui.indexOf("async function copyText"));
 assert.ok(!/\.answer|\.explanation|\.options|state\.answers/.test(shareText),"Do not reveal model answers in shared text");
 assert.match(css,/\.ncp-share-row/);
 assert.match(css,/grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
-assert.match(html,/ncp-quiz\.js\?v=20261027-ncp-share-1/);
-assert.match(html,/ncp-quiz\.css\?rev=20261027-ncp-share-1/);
+assert.match(html,/ncp-quiz\.js\?v=20261110-semantic-report-1/);
+assert.match(html,/ncp-quiz\.css\?rev=20261110-semantic-report-1/);
 console.log("PASS: NCP problem sharing and reporting link all 75 IDs without leaking answers.");
