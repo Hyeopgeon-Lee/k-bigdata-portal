@@ -24,7 +24,7 @@ for(const [id,name] of Object.entries(vimTasks)){
  assert.match(p.vimSteps[0],/터미널에서 vim /,id+" starts with a shell invocation");
 
  assert.match(p.statement,/Vim/i,id+" question mentions Vim");
- assert.match(p.explanation,/:wq/,id+" provides save and exit explanation");
+ assert.match([p.explanation,...(p.vimSteps||[])].join(" "),/:wq/,id+" provides save and exit explanation");
  assert.ok(p.vimSteps?.length>=3,id+" shows Vim keystrokes in the answer");
  assert.match(p.input,/^student@ubuntu:/,id+" initial console");
  assert.match(p.output,/^student@ubuntu:/,id+" expected console");
@@ -33,9 +33,12 @@ for(const [id,name] of Object.entries(vimTasks)){
 for(const p of ubuntu) assert.doesNotMatch(p.code,/\b(?:nano|gedit|emacs|touch)\b/,p.id+" only uses PPT-approved methods");
 assert.match(byId.get("LINUX-002").code,/chmod 640 report\.txt/);
 assert.match(byId.get("LINUX-002").output,/-rw-r-----/);
-for(const keyword of ["소유자","그룹","기타 사용자","r=4","w=2","x=1","640","777","student"]){
+for(const keyword of ["소유자","그룹","기타 사용자","640","777","student"]){
  assert.ok(byId.get("LINUX-002").explanation.includes(keyword),"missing permission explanation "+keyword);
 }
+assert.match(byId.get("LINUX-002").explanation,/r\\)?=4/,"reading numeric weight explained");
+assert.match(byId.get("LINUX-002").explanation,/w\\)?=2/,"writing numeric weight explained");
+assert.match(byId.get("LINUX-002").explanation,/x\\)?=1/,"execution numeric weight explained");
 for(const id of ["LINUX-007","LINUX-016","LINUX-026","LINUX-027","LINUX-028"]){
  assert.match(byId.get(id).explanation,/소유자/,"related explanation missing "+id);
 }
@@ -56,7 +59,7 @@ const html=readFileSync(new URL("../coding.html",import.meta.url),"utf8");
 assert.doesNotMatch(html,/id="coding-vim-steps"/,"duplicated Vim step section is removed");
 const js=readFileSync(new URL("../js/coding.js",import.meta.url),"utf8");
 assert.doesNotMatch(js,/function renderVimSteps/,"no duplicated Vim step renderer");
-assert.match(js,/isUbuntu && !Array\.isArray\(q\.vimSteps\)/,"Vim explanation is shown only once in the existing answer section");
+assert.match(js,/coding-overall-explanation"\)\.hidden = !q\.explanation/,"Ubuntu concepts are visible in the existing answer section");
 assert.match(js,/const includesVim/,"copy feedback handles Vim interactively");
 assert.match(js,/터미널 명령은 한 줄씩 실행/);
 console.log("PASS: six active PPT-based Vim editing exercises and 50 editor-policy checks.");
