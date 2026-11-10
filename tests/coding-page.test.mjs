@@ -8,8 +8,9 @@ import {cFoundationProblems} from '../data/coding-c-foundations.js';
 import {cAdvancedProblems} from '../data/coding-c-advanced.js';
 import {pythonFoundationProblems} from '../data/coding-python-foundations.js';
 import {pythonAdvancedProblems} from '../data/coding-python-advanced.js';
-import {ubuntuFoundationProblems} from '../data/coding-ubuntu-foundations.js';
-import {ubuntuAdvancedProblems} from '../data/coding-ubuntu-advanced.js';
+
+
+import {ubuntuPptProblems} from '../data/coding-ubuntu-ppt.js';
 import {learningReportUrl} from '../js/learning-report.js';
 import {completionCatalog, codingCompletionOptions} from '../js/coding-completion-data.js';
 
@@ -18,7 +19,7 @@ const js=readFileSync(new URL('../js/coding.js',import.meta.url),'utf8');
 const css=readFileSync(new URL('../css/coding.css',import.meta.url),'utf8');
 const services=readFileSync(new URL('../js/services.js',import.meta.url),'utf8');
 const index=readFileSync(new URL('../index.html',import.meta.url),'utf8');
-const list=[...seeds,...javaProblems,...cFoundationProblems,...cAdvancedProblems,...pythonFoundationProblems,...pythonAdvancedProblems,...ubuntuFoundationProblems,...ubuntuAdvancedProblems];
+const list=[...seeds.filter(p=>p.language!=='linux'),...javaProblems,...cFoundationProblems,...cAdvancedProblems,...pythonFoundationProblems,...pythonAdvancedProblems,...ubuntuPptProblems];
 assert.equal(list.length,350,'all 350 exercises must be present');
 
 const java016=list.find(p=>p.id==='JAVA-016');
@@ -31,6 +32,11 @@ assert.match(java016.explanation,/2분 5초/,'JAVA-016 explanation matches outpu
 
 const unique=new Set(list.map(p=>p.id));
 assert.equal(unique.size,350,'exercise IDs must be unique');
+assert.equal(ubuntuPptProblems.length,50,'PPT-based Linux exercises count');
+assert.deepEqual(ubuntuPptProblems.reduce((acc,p)=>(acc[p.level]=(acc[p.level]??0)+1,acc),{}),{'입문':15,'기초 응용':25,'종합 활용':10},'PPT-based difficulty distribution');
+assert.ok(ubuntuPptProblems.every((p,n)=>p.id==='LINUX-'+String(n+1).padStart(3,'0')&&p.pptSource),'Linux IDs and PPT sources');
+assert.ok(js.includes('...ubuntuPptProblems')&&!js.includes('ubuntuLegacyGuides'),'browser uses only the PPT Linux data');
+assert.ok(html.includes('js/coding.js?v=20261111-ppt-50-v1'),'up-to-date script reference');
 const firstVisitAutocomplete=html.includes('id="coding-autocomplete-toggle" type="checkbox" role="switch"')
   && !/<input[^>]+id="coding-autocomplete-toggle"[^>]+checked/.test(html);
 assert.ok(firstVisitAutocomplete,'autocomplete switch exists and is initially unchecked');
@@ -79,4 +85,4 @@ const original=new URL(reported.searchParams.get('url'));
 assert.equal(original.href,'https://portal.k-bigdata.kr/coding.html?id=LINUX-025');
 assert.equal(learningReportUrl('unknown',{id:'test'}),'');
 assert.match(index, /type="module" src="js\/app\.js\?v=[^"]+"/,'home loads versioned service registry entry');
-console.log('PASS: 350 unique questions, refreshed learning title, responsive share controls, canonical links, report URL and unchanged language views');
+console.log('PASS: 350 unique questions including 50 PPT-grounded Linux exercises, difficulty breakdown and unchanged other languages');
