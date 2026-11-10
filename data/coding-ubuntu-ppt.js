@@ -16,8 +16,8 @@ export const ubuntuPptProblems = [
       "Vim 안에서 :wq를 입력하고 Enter를 누르시오. (빈 파일을 저장하고 Vim 종료)",
       "터미널로 돌아와 ls -R project를 실행하여 main.py를 확인하시오."
     ],
-    "hint": "먼저 폴더를 만든 뒤 편집기를 사용합니다. 마지막에는 폴더 안의 구조를 확인합니다.",
-    "explanation": "mkdir -p로 폴더를 만든 뒤 vim project/src/main.py를 실행한다. Vim 안에서 :wq를 입력하고 Enter로 저장·종료한다. 터미널에서 ls -R project로 확인한다.",
+    "hint": "폴더를 만든 다음 Vim에서 빈 파일을 저장하고, 폴더 구조를 확인해 보세요.",
+    "explanation": "중간 디렉터리가 없는 상태에서도 하위 경로까지 만들 수 있습니다. 새 파일은 Vim에서 저장을 완료해야 파일 시스템에 남습니다.",
     "initialState": "student@ubuntu:~/lab$ ls\n\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\nproject:\nsrc\n\nproject/src:\nmain.py",
     "commandParts": [
@@ -47,8 +47,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "ls -R project",
-    "verificationDetail": "mkdir -p로 폴더를 만든 뒤 vim project/src/main.py를 실행한다. Vim 안에서 :wq를 입력하고 Enter로 저장·종료한다. 터미널에서 ls -R project로 확인한다.",
-    "commonMistake": "Vim을 열기만 하고 :wq로 저장하지 않으면 파일이 생성되지 않을 수 있다.",
+    "verificationDetail": "",
+    "commonMistake": "Vim을 종료하기 전에 저장하지 않으면 새 파일이 생성되지 않을 수 있습니다.",
     "trace": [],
     "pptSource": "2장 22쪽, 3장 4~5쪽",
     "outputNote": ""
@@ -69,8 +69,8 @@ export const ubuntuPptProblems = [
       "터미널에서 chmod 640 report.txt를 실행하시오.",
       "터미널에서 ls -l report.txt로 -rw-r----- 권한을 확인하시오."
     ],
-    "hint": "소유자·그룹·기타 사용자의 세 묶음을 구분하시오. r=4, w=2, x=1을 더해 각 묶음의 숫자를 결정하시오.",
-    "explanation": "1. 소유자·그룹·기타 사용자: 리눅스는 파일 접근 대상을 소유자(u, 파일을 소유한 사용자), 그룹(g, 파일에 지정된 그룹의 구성원), 기타 사용자(o, 앞의 두 범주에 해당하지 않는 사용자)로 구분합니다. 예시의 `-rw-r----- 1 student student 0 ... report.txt`에서 첫 번째 student는 소유자, 두 번째 student는 소유 그룹입니다.\n\n2. 권한 기호: r은 읽기(read), w는 쓰기(write), x는 실행(execute), -는 해당 권한이 없다는 뜻입니다. `-rw-r-----`의 맨 앞 -는 일반 파일을 뜻하고, 뒤의 세 묶음 `rw- / r-- / ---`가 차례대로 소유자·그룹·기타 사용자의 권한입니다.\n\n3. 숫자 권한 계산: 읽기(r)=4, 쓰기(w)=2, 실행(x)=1, 권한 없음(-)=0으로 놓고 각 대상의 값을 더합니다. `rw-`는 4+2=6, `r--`는 4, `---`는 0이므로 `640`입니다. 숫자 세 자리의 순서는 언제나 소유자 → 그룹 → 기타 사용자입니다.\n\n4. 대표적인 권한 비교: `777`은 rwx/rwx/rwx(모든 사용자에게 읽기·쓰기·실행), `755`는 rwx/r-x/r-x, `644`는 rw-/r--/r--, `600`은 rw-/---/---입니다. 특히 777은 다른 사용자에게도 쓰기를 허용하므로 일반 파일에 무조건 부여하면 위험합니다.\n\n5. 문제 해결과 확인: Vim에서 빈 파일을 저장한 뒤 `chmod 640 report.txt`로 권한을 설정하고 `ls -l report.txt`로 첫 10자리 `-rw-r-----`를 확인합니다. `chmod`는 파일의 접근 권한을 바꿀 뿐 소유자나 소유 그룹 자체를 변경하지는 않습니다.",
+    "hint": "소유자·그룹·기타 사용자의 권한을 각각 숫자로 계산해 보세요. 읽기 4, 쓰기 2, 실행 1을 사용합니다.",
+    "explanation": "파일 권한은 소유자(u)·그룹(g)·기타 사용자(o) 순서로 해석합니다. ls -l 출력에서 첫 번째 student는 소유자, 두 번째 student는 소유 그룹입니다.\n\n권한은 읽기(r)=4, 쓰기(w)=2, 실행(x)=1을 더하여 계산합니다. rw-는 6, r--는 4, ---는 0이므로 640입니다. 대표적으로 777은 rwx/rwx/rwx, 755는 rwx/r-x/r-x, 644는 rw-/r--/r--, 600은 rw-/---/---입니다.\n\n첫 번째 권한 기호 -는 일반 파일을 뜻하며 숫자 세 자리에 포함하지 않습니다. chmod는 권한만 변경하고 소유자와 소유 그룹은 변경하지 않습니다.",
     "initialState": "student@ubuntu:~/lab$ ls\n\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\n-rw-r----- 1 student student 0 Nov 11 09:00 report.txt",
     "commandParts": [
@@ -128,8 +128,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "ls -l report.txt",
-    "verificationDetail": "ls -l 결과의 첫 열 -rw-r-----는 일반 파일(-), 소유자 rw-(6), 그룹 r--(4), 기타 사용자 ---(0)를 뜻합니다. 출력의 두 student 중 앞은 소유자, 뒤는 그룹입니다.",
-    "commonMistake": "숫자 640은 소유자·그룹·기타 순서입니다. 604처럼 순서를 바꾸지 마세요. 777은 모든 사용자에게 쓰기도 허용하므로 이 문제의 정답이 아닙니다.",
+    "verificationDetail": "",
+    "commonMistake": "640을 604로 바꾸면 그룹과 기타 사용자의 권한이 달라집니다. 777은 모든 사용자에게 쓰기까지 허용하므로 이 문제에 사용하면 안 됩니다.",
     "trace": [],
     "pptSource": "3장 4~5쪽, 5장 13~15쪽",
     "outputNote": "권한 외의 소유자·날짜 등은 실행 환경에 따라 달라질 수 있습니다."
@@ -144,8 +144,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\n/home/student/lab",
     "code": "pwd",
-    "hint": "현재 위치를 확인하는 명령을 떠올려 보세요.",
-    "explanation": "pwd는 현재 작업 디렉터리의 절대경로를 출력한다.",
+    "hint": "터미널이 현재 어느 디렉터리에 있는지 확인하는 명령어를 떠올려 보세요.",
+    "explanation": "현재 위치를 조회해도 작업 디렉터리는 바뀌지 않습니다. 출력되는 절대경로는 사용자 계정과 실습 위치에 따라 다를 수 있습니다.",
     "initialState": "student@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\n/home/student/lab",
     "commandParts": [
@@ -155,8 +155,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "pwd",
-    "verificationDetail": "pwd는 현재 작업 디렉터리의 절대경로를 출력한다.",
-    "commonMistake": "사용자에 따라 실제 출력되는 경로는 달라질 수 있다.",
+    "verificationDetail": "",
+    "commonMistake": "예시 경로를 외워 입력하지 말고, 실제 터미널에 표시되는 경로를 확인하세요.",
     "trace": [],
     "pptSource": "2장 10쪽",
     "outputNote": "현재 위치의 전체 경로는 사용자 계정과 실습 환경에 따라 달라질 수 있습니다."
@@ -171,8 +171,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ [명령어 입력]\na.txt  docs",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\na.txt  docs",
     "code": "ls",
-    "hint": "현재 폴더에 어떤 항목이 있는지 표시하는 기본 명령을 생각해 보세요.",
-    "explanation": "ls는 현재 디렉터리의 파일과 폴더 이름을 표시하는 명령어입니다. 옵션을 붙이지 않으면 점(.)으로 시작하는 숨김 항목은 표시하지 않습니다. 아래 표에서 주요 ls 옵션의 기능과 사용 예시를 비교해 보세요. ls 명령어와 아래 옵션들은 파일을 생성·수정·삭제하지 않고 목록의 표시 방식만 바꿉니다.",
+    "hint": "현재 디렉터리의 파일과 폴더 이름을 표시하는 기본 명령어를 떠올려 보세요.",
+    "explanation": "초기 화면에 a.txt와 docs가 이미 있습니다. 새 파일이나 디렉터리를 만들지 않고 현재 목록을 조회하는 문제입니다.",
     "optionGuideHeading": "ls 주요 옵션 비교표",
     "initialState": "student@ubuntu:~/lab$ [명령어 입력]\na.txt  docs",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\na.txt  docs",
@@ -214,8 +214,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "ls",
-    "verificationDetail": "ls는 현재 디렉터리의 파일과 하위 디렉터리 이름을 표시한다.",
-    "commonMistake": "파일이 이미 존재하므로 새로 생성하지 않는다.",
+    "verificationDetail": "",
+    "commonMistake": "목록을 확인하는 과정에서 기존 파일을 새로 생성하거나 변경할 필요는 없습니다.",
     "trace": [],
     "pptSource": "2장 13쪽",
     "outputNote": ""
@@ -230,8 +230,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ ls\nnote.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\n.  ..  .profile  note.txt",
     "code": "ls -a",
-    "hint": "일반 파일 목록에는 점으로 시작하는 항목이 보이지 않는 이유를 생각해 보세요.",
-    "explanation": "ls -a는 숨김 항목과 . 및 ..도 표시한다.",
+    "hint": "점(.)으로 시작하는 숨김 항목도 보이도록 목록 옵션을 생각해 보세요.",
+    "explanation": "목록에 .과 ..이 보이면 각각 현재 디렉터리와 상위 디렉터리를 가리키는 항목입니다. 숨김 파일을 표시해도 파일 자체는 변경되지 않습니다.",
     "initialState": "student@ubuntu:~/lab$ ls\nnote.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\n.  ..  .profile  note.txt",
     "commandParts": [
@@ -245,8 +245,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "ls -a",
-    "verificationDetail": "ls -a는 숨김 항목과 . 및 ..도 표시한다.",
-    "commonMistake": "일반 ls에서는 .으로 시작하는 파일이 보이지 않는다.",
+    "verificationDetail": "",
+    "commonMistake": "일반 목록에서 숨김 파일이 보이지 않는 것은 파일이 삭제되었다는 뜻이 아닙니다.",
     "trace": [],
     "pptSource": "2장 14쪽",
     "outputNote": ""
@@ -261,8 +261,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ ls\ndocs  note.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\ndocs/  note.txt",
     "code": "ls -F",
-    "hint": "파일과 디렉터리는 목록에 서로 다른 구분 기호를 붙일 수 있습니다.",
-    "explanation": "ls -F는 디렉터리에 /, 심벌릭 링크에 @, 실행 파일에 *를 붙인다.",
+    "hint": "디렉터리와 실행 파일을 이름 뒤 기호로 구분하는 옵션을 떠올려 보세요.",
+    "explanation": "파일 이름 뒤에 표시되는 /·@·*는 항목 유형을 구별하기 위한 표시입니다. 실제 파일 이름에 해당 기호가 추가된 것은 아닙니다.",
     "initialState": "student@ubuntu:~/lab$ ls\ndocs  note.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\ndocs/  note.txt",
     "commandParts": [
@@ -276,8 +276,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "ls -F",
-    "verificationDetail": "ls -F는 디렉터리에 /, 심벌릭 링크에 @, 실행 파일에 *를 붙인다.",
-    "commonMistake": "-F의 / 표시는 디렉터리 이름 일부가 아니다.",
+    "verificationDetail": "",
+    "commonMistake": "디렉터리 뒤의 /를 실제 디렉터리 이름에 포함해서 입력하지 마세요.",
     "trace": [],
     "pptSource": "2장 15쪽",
     "outputNote": ""
@@ -292,8 +292,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ ls\nnote.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\n-rw-r--r-- 1 student student 6 Nov 11 09:00 note.txt",
     "code": "ls -l note.txt",
-    "hint": "파일 이름만 보는 목록과 상세 정보 목록의 차이를 생각해 보세요.",
-    "explanation": "1. `ls -l note.txt`는 파일 이름만이 아니라 종류·접근 권한·소유자·그룹·크기·수정 시각까지 표시합니다.\n\n2. 예시 `-rw-r--r-- 1 student student 6 Nov 11 09:00 note.txt`에서 맨 앞 `-`는 일반 파일이며, `rw- / r-- / r--`는 소유자·그룹·기타 사용자 권한입니다. r=4, w=2이므로 숫자 권한은 644입니다.\n\n3. 그다음 `1`은 하드 링크 수, 첫 번째 `student`는 소유자, 두 번째 `student`는 소유 그룹, `6`은 파일 크기(바이트), `Nov 11 09:00`은 수정 시각, `note.txt`는 파일명입니다. 소유자와 그룹은 같은 이름으로 표시될 수도 있지만 서로 다른 항목입니다.",
+    "hint": "파일 이름만 나열하는 출력과 권한·소유자·그룹까지 표시하는 출력을 비교해 보세요.",
+    "explanation": "ls -l 출력의 첫 문자는 파일 유형이고, 다음 아홉 문자는 소유자·그룹·기타 사용자의 권한입니다. -rw-r--r--는 일반 파일이며 숫자 권한은 644입니다.\n\n출력에서 권한 다음의 1은 하드 링크 수, 첫 번째 student는 소유자, 두 번째 student는 소유 그룹, 6은 바이트 단위 파일 크기, Nov 11 09:00은 수정 시각입니다.",
     "initialState": "student@ubuntu:~/lab$ ls\nnote.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\n-rw-r--r-- 1 student student 6 Nov 11 09:00 note.txt",
     "commandParts": [
@@ -319,8 +319,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "ls -l note.txt",
-    "verificationDetail": "첫 열의 권한은 일반 파일(-)과 소유자·그룹·기타 세 묶음으로 나뉩니다. 세 번째 열은 소유자, 네 번째 열은 그룹입니다.",
-    "commonMistake": "ls -l에서 같은 이름이 두 번 나와도 첫 번째는 소유자, 두 번째는 그룹입니다. 권한의 맨 앞 파일 유형 기호(-)를 숫자 세 자리 계산에 넣지 마세요.",
+    "verificationDetail": "",
+    "commonMistake": "소유자와 그룹의 이름이 같아도 의미는 다릅니다. 파일 유형 기호를 권한 숫자에 포함하지 마세요.",
     "trace": [],
     "pptSource": "2장 16~17쪽",
     "outputNote": "파일 크기와 수정 시간은 실제 파일 상태에 따라 다릅니다."
@@ -335,8 +335,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab/project$ [명령어 입력]\n/home/student/lab/project",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\n/home/student/lab",
     "code": "cd ..\npwd",
-    "hint": "현재 디렉터리와 상위 디렉터리를 나타내는 기호가 서로 다릅니다.",
-    "explanation": "cd ..으로 한 단계 위로 이동하고 pwd로 확인한다.",
+    "hint": "상위 디렉터리를 나타내는 기호와 이동 후 경로를 확인하는 방법을 생각해 보세요.",
+    "explanation": "상위 디렉터리로 이동하면 이후에 표시되는 작업 경로도 달라집니다. .은 현재 디렉터리, ..은 한 단계 위 디렉터리를 뜻합니다.",
     "initialState": "student@ubuntu:~/lab/project$ [명령어 입력]\n/home/student/lab/project",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\n/home/student/lab",
     "commandParts": [
@@ -354,8 +354,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "pwd",
-    "verificationDetail": "cd ..으로 한 단계 위로 이동하고 pwd로 확인한다.",
-    "commonMistake": "..과 .은 서로 다른 위치를 나타낸다.",
+    "verificationDetail": "",
+    "commonMistake": "현재 디렉터리(.)와 상위 디렉터리(..)를 혼동하지 마세요.",
     "trace": [],
     "pptSource": "2장 5~8쪽, 11쪽",
     "outputNote": ""
@@ -370,8 +370,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:/tmp$ [명령어 입력]\n/tmp",
     "output": "student@ubuntu:~$ [명령어 입력]\n/home/student",
     "code": "cd ~\npwd",
-    "hint": "현재 폴더가 어디든 홈 디렉터리로 이동할 수 있습니다.",
-    "explanation": "~는 현재 사용자의 홈 디렉터리이고 cd ~는 해당 경로로 이동한다.",
+    "hint": "현재 위치와 관계없이 홈 디렉터리로 이동하는 방법을 생각해 보세요.",
+    "explanation": "물결표(~)는 현재 로그인한 사용자의 홈 디렉터리를 가리킵니다. 홈 경로는 사용자마다 다를 수 있습니다.",
     "initialState": "student@ubuntu:/tmp$ [명령어 입력]\n/tmp",
     "afterState": "student@ubuntu:~$ [명령어 입력]\n/home/student",
     "commandParts": [
@@ -389,8 +389,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "pwd",
-    "verificationDetail": "~는 현재 사용자의 홈 디렉터리이고 cd ~는 해당 경로로 이동한다.",
-    "commonMistake": "실행 사용자의 홈 디렉터리 경로가 ubuntu와 다를 수 있다.",
+    "verificationDetail": "",
+    "commonMistake": "홈 디렉터리의 경로를 모든 계정에서 동일하다고 가정하지 마세요.",
     "trace": [],
     "pptSource": "2장 6쪽, 12쪽",
     "outputNote": ""
@@ -405,8 +405,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ ls\n\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\nreports/",
     "code": "mkdir reports",
-    "hint": "폴더를 생성하는 명령을 떠올리고, 생성 후 목록을 확인해 보세요.",
-    "explanation": "mkdir는 지정한 이름의 디렉터리를 만든다.",
+    "hint": "새 디렉터리를 만들고 목록으로 확인하는 순서를 생각해 보세요.",
+    "explanation": "디렉터리 생성에 성공하면 별도 출력이 없을 수 있습니다. 생성된 reports가 목록에 나타나는지 확인합니다.",
     "initialState": "student@ubuntu:~/lab$ ls\n\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\nreports/",
     "commandParts": [
@@ -416,8 +416,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "ls -F",
-    "verificationDetail": "mkdir는 지정한 이름의 디렉터리를 만든다.",
-    "commonMistake": "동일한 디렉터리가 이미 있다면 일반 mkdir는 생성에 실패한다.",
+    "verificationDetail": "",
+    "commonMistake": "기존에 reports가 있다면 동일한 이름으로 다시 생성할 때 오류가 발생할 수 있습니다.",
     "trace": [],
     "pptSource": "2장 20쪽",
     "outputNote": ""
@@ -437,8 +437,8 @@ export const ubuntuPptProblems = [
       "Vim 안에서 :wq를 입력하고 Enter를 누르시오. (빈 파일을 저장하고 Vim 종료)",
       "터미널에서 ls -l note.txt로 파일이 만들어졌는지 확인하시오."
     ],
-    "hint": "Vim에서 파일을 열고 저장·종료하는 순서를 떠올려 보세요.",
-    "explanation": "vim note.txt로 Vim을 열고 :wq, Enter 순서로 빈 파일을 저장·종료한다. 터미널로 돌아와 ls -l note.txt로 파일이 있는지 확인한다.",
+    "hint": "Vim에서 내용을 입력하지 않은 새 파일을 저장·종료하는 방법을 떠올려 보세요.",
+    "explanation": "빈 문서는 텍스트를 입력하지 않더라도 Vim에서 저장하면 파일로 남습니다. 저장 후 터미널로 돌아와 파일의 존재를 확인합니다.",
     "initialState": "student@ubuntu:~/lab$ ls\n\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\n-rw-r--r-- 1 student student 0 Nov 11 09:00 note.txt",
     "commandParts": [
@@ -452,8 +452,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "ls -l note.txt",
-    "verificationDetail": "vim note.txt로 Vim을 열고 :wq, Enter 순서로 빈 파일을 저장·종료한다. 터미널로 돌아와 ls -l note.txt로 파일이 있는지 확인한다.",
-    "commonMistake": "저장하지 않고 종료하면 새 파일이 남지 않을 수 있다.",
+    "verificationDetail": "",
+    "commonMistake": "빈 파일은 편집기를 열기만 한 상태와 저장을 완료한 상태를 구분해야 합니다.",
     "trace": [],
     "pptSource": "3장 2~5쪽",
     "outputNote": "파일 소유자·날짜·기본 권한은 실습 환경에 따라 달라질 수 있습니다."
@@ -468,8 +468,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ ls -F\nempty/\nstudent@ubuntu:~/lab$ ls empty\n\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\n",
     "code": "rmdir empty",
-    "hint": "비어 있는 디렉터리만 삭제하는 명령을 떠올려 보세요.",
-    "explanation": "rmdir은 빈 디렉터리를 삭제한다.",
+    "hint": "내용이 없는 디렉터리만 삭제하는 명령어를 떠올려 보세요.",
+    "explanation": "삭제 성공 여부는 목록에서 empty 디렉터리가 사라졌는지 확인합니다. 이 문제의 대상은 비어 있는 디렉터리입니다.",
     "initialState": "student@ubuntu:~/lab$ ls -F\nempty/\nstudent@ubuntu:~/lab$ ls empty\n\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\n",
     "commandParts": [
@@ -479,8 +479,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "ls",
-    "verificationDetail": "rmdir은 빈 디렉터리를 삭제한다.",
-    "commonMistake": "내용이 들어 있는 디렉터리는 rmdir만으로 지울 수 없다.",
+    "verificationDetail": "",
+    "commonMistake": "디렉터리 안에 파일이 남아 있으면 삭제할 수 없습니다.",
     "trace": [],
     "pptSource": "2장 23쪽",
     "outputNote": ""
@@ -495,8 +495,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ ls\nreadme.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\nHello Linux\nUbuntu",
     "code": "cat readme.txt",
-    "hint": "파일 내용을 수정하지 않고 화면에 그대로 표시하면 됩니다.",
-    "explanation": "cat 명령은 파일에 저장된 내용을 변경하지 않고 터미널에 출력합니다.",
+    "hint": "파일을 편집하지 않고 내용만 터미널에 표시하는 방법을 생각해 보세요.",
+    "explanation": "파일 내용을 읽어 출력할 뿐, 원본 문서의 글자는 바뀌지 않습니다. 출력된 문자열을 초기 파일 내용과 비교해 보세요.",
     "initialState": "student@ubuntu:~/lab$ ls\nreadme.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\nHello Linux\nUbuntu",
     "commandParts": [
@@ -506,8 +506,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "cat readme.txt",
-    "verificationDetail": "cat 명령은 파일에 저장된 내용을 변경하지 않고 터미널에 출력합니다.",
-    "commonMistake": "파일을 변경하는 명령이 아니라 파일 내용을 확인하는 명령을 사용하세요.",
+    "verificationDetail": "",
+    "commonMistake": "내용 확인을 위해 편집기로 다시 저장할 필요는 없습니다.",
     "trace": [],
     "pptSource": "2장 24쪽",
     "outputNote": "readme.txt에는 Hello Linux와 Ubuntu가 한 줄씩 저장되어 있는 실습 상황입니다."
@@ -522,8 +522,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ ls\nnote.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\nbackup.txt  note.txt",
     "code": "cp note.txt backup.txt",
-    "hint": "원본을 남기면서 새 이름으로 복제하는 기능이 필요합니다.",
-    "explanation": "cp는 원본 파일을 남기고 지정한 이름의 복사본을 만든다.",
+    "hint": "원본을 보존하면서 다른 이름으로 복제하는 작업을 생각해 보세요.",
+    "explanation": "복사 뒤에는 원본 note.txt와 새 파일 backup.txt가 모두 남습니다. 두 파일 이름이 함께 표시되는지 확인합니다.",
     "initialState": "student@ubuntu:~/lab$ ls\nnote.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\nbackup.txt  note.txt",
     "commandParts": [
@@ -533,8 +533,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "ls",
-    "verificationDetail": "cp는 원본 파일을 남기고 지정한 이름의 복사본을 만든다.",
-    "commonMistake": "복사는 원본 파일을 삭제하지 않는다.",
+    "verificationDetail": "",
+    "commonMistake": "복사는 이름 변경과 달리 원본 파일을 없애지 않습니다.",
     "trace": [],
     "pptSource": "2장 30쪽",
     "outputNote": ""
@@ -549,8 +549,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ ls\ndraft.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\nfinal.txt",
     "code": "mv draft.txt final.txt",
-    "hint": "새 이름으로 바꾼 뒤 이전 이름이 남아 있는지 확인해 보세요.",
-    "explanation": "mv는 파일의 위치를 이동하거나 파일 이름을 변경한다.",
+    "hint": "파일을 복제하지 않고 이름만 바꾸는 방법을 생각해 보세요.",
+    "explanation": "이름 변경 뒤에는 기존 draft.txt 대신 final.txt가 표시됩니다. 파일 복사와 구별하여 목록을 확인합니다.",
     "initialState": "student@ubuntu:~/lab$ ls\ndraft.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\nfinal.txt",
     "commandParts": [
@@ -560,8 +560,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "ls",
-    "verificationDetail": "mv는 파일의 위치를 이동하거나 파일 이름을 변경한다.",
-    "commonMistake": "이름 변경과 복사는 원본 파일 존재 여부가 다르다.",
+    "verificationDetail": "",
+    "commonMistake": "이름만 바꾸는 작업에서 원본 이름과 새 이름이 모두 남아 있다고 판단하지 마세요.",
     "trace": [],
     "pptSource": "2장 34~35쪽",
     "outputNote": ""
@@ -576,8 +576,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ ls -F\ndocs/\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\ndrwxr-xr-x 2 student student 4096 Nov 11 09:00 docs",
     "code": "ls -ld docs",
-    "hint": "디렉터리 안의 항목 목록과 디렉터리 자체의 정보를 구별해 보세요.",
-    "explanation": "ls -ld docs의 -l은 상세 정보, -d는 디렉터리 자체를 의미합니다. drwxr-xr-x의 맨 앞 d는 디렉터리이며, rwx=7(소유자), r-x=5(그룹), r-x=5(기타 사용자)이므로 숫자 권한은 755입니다. r=4, w=2, x=1입니다. 일반 파일의 x는 실행 권한이지만 디렉터리의 x는 그 디렉터리에 진입하거나 경로를 통과할 권한입니다. 'student student'는 소유자와 그룹입니다.",
+    "hint": "폴더 안의 목록과 폴더 자체의 권한을 표시하는 방식이 어떻게 다른지 살펴보세요.",
+    "explanation": "디렉터리 자체의 상세 정보를 조회하면 첫 글자가 d로 시작합니다. drwxr-xr-x는 소유자 7(rwx), 그룹 5(r-x), 기타 사용자 5(r-x)이므로 755입니다. 읽기(r)=4, 쓰기(w)=2, 실행(x)=1을 사용합니다.\n\n디렉터리의 실행(x) 권한은 해당 경로로 진입하거나 경로를 통과할 수 있는 권한입니다. 상세 출력의 두 student는 각각 소유자와 그룹입니다.",
     "initialState": "student@ubuntu:~/lab$ ls -F\ndocs/\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\ndrwxr-xr-x 2 student student 4096 Nov 11 09:00 docs",
     "commandParts": [
@@ -599,8 +599,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "ls -ld docs",
-    "verificationDetail": "drwxr-xr-x는 디렉터리(d)와 권한 755를 나타냅니다. 이 문제에서는 권한을 변경하지 않고 표시만 합니다.",
-    "commonMistake": "-d가 없으면 폴더 내부 목록이 출력될 수 있다.",
+    "verificationDetail": "",
+    "commonMistake": "디렉터리 자체의 정보를 보려는 경우 내부 목록만 출력하지 않도록 주의하세요.",
     "trace": [],
     "pptSource": "2장 16쪽, 18쪽",
     "outputNote": "권한, 소유자, 크기와 수정 시간은 실제 시스템에 따라 달라집니다."
@@ -615,8 +615,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ cat log.txt\nline1\nline2\nline3\nline4\nline5\nline6\nline7\nline8\nline9\nline10\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\nline4\nline5\nline6\nline7\nline8\nline9\nline10",
     "code": "tail -7 log.txt",
-    "hint": "파일의 시작 부분이 아니라 마지막 부분을 보는 방법을 생각해 보세요.",
-    "explanation": "tail은 파일의 끝에서부터 지정한 줄 수만큼 출력합니다. -7은 마지막 일곱 줄을 뜻합니다.",
+    "hint": "파일 시작 부분이 아니라 끝부분에서 정해진 줄 수만 보는 방법을 생각해 보세요.",
+    "explanation": "예시 파일이 10줄로 구성되어 있다면 마지막 7줄은 4번째 줄부터 10번째 줄까지입니다. 출력 행 수와 순서를 함께 확인합니다.",
     "initialState": "student@ubuntu:~/lab$ cat log.txt\nline1\nline2\nline3\nline4\nline5\nline6\nline7\nline8\nline9\nline10\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\nline4\nline5\nline6\nline7\nline8\nline9\nline10",
     "commandParts": [
@@ -630,8 +630,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "tail -7 log.txt",
-    "verificationDetail": "tail -7은 파일의 끝에서 7줄을 출력합니다. log.txt의 4~10번째 줄이 나오는지 확인합니다.",
-    "commonMistake": "처음 일곱 줄이 아니라 마지막 일곱 줄을 출력해야 합니다.",
+    "verificationDetail": "",
+    "commonMistake": "처음 7줄을 출력하면 문제의 요구와 다른 결과가 됩니다.",
     "trace": [],
     "pptSource": "2장 28~29쪽",
     "outputNote": "10줄짜리 실습 파일을 기준으로 마지막 7줄만 표시했습니다."
@@ -646,8 +646,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ cat app.log\nINFO start\nERROR first\nINFO running\nINFO done\nERROR second\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\n2:ERROR first\n5:ERROR second",
     "code": "grep -n 'ERROR' app.log",
-    "hint": "문자열 검색 결과에 줄 번호를 함께 표시해야 합니다.",
-    "explanation": "grep -n은 일치하는 행 앞에 해당 행 번호를 함께 표시한다.",
+    "hint": "검색어가 있는 줄 앞에 해당 줄 번호도 표시하는 옵션을 생각해 보세요.",
+    "explanation": "검색 결과의 2:와 5:처럼 콜론 앞에 표시되는 숫자는 원본 파일에서의 행 번호입니다. 검색 문자열의 대문자와 소문자도 구별됩니다.",
     "initialState": "student@ubuntu:~/lab$ cat app.log\nINFO start\nERROR first\nINFO running\nINFO done\nERROR second\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\n2:ERROR first\n5:ERROR second",
     "commandParts": [
@@ -661,8 +661,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "grep -n 'ERROR' app.log",
-    "verificationDetail": "grep -n은 일치하는 행 앞에 해당 행 번호를 함께 표시한다.",
-    "commonMistake": "ERROR와 error는 대소문자가 달라 서로 구분될 수 있다.",
+    "verificationDetail": "",
+    "commonMistake": "ERROR와 error는 기본 검색에서 같은 문자열로 처리되지 않습니다.",
     "trace": [],
     "pptSource": "2장 53쪽",
     "outputNote": ""
@@ -677,8 +677,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ ls -l\ntotal 8\ndrwxr-xr-x 2 student student 4096 Nov 11 09:00 docs\n-rw-r--r-- 1 teacher teacher   20 Nov 11 09:00 note.txt\nstudent@ubuntu:~/lab$ ls -l docs\ntotal 8\n-rw-r--r-- 1 teacher teacher 18 Nov 11 09:00 guide.txt\n-rw-r--r-- 1 student student 15 Nov 11 09:00 memo.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\n.\n./docs\n./docs/memo.txt",
     "code": "find . -user student",
-    "hint": "소유자는 파일 목록의 세 번째 열에서 확인할 수 있습니다. 파일 이름 대신 소유자 조건으로 검색하시오.",
-    "explanation": "파일 목록의 세 번째 열은 소유자입니다. student가 소유한 현재 디렉터리(.), docs 디렉터리, docs/memo.txt만 검색 결과에 포함됩니다. teacher 소유인 note.txt와 docs/guide.txt는 제외됩니다.",
+    "hint": "파일 이름이 아니라 소유자 이름을 기준으로 현재 경로 아래를 검색해 보세요.",
+    "explanation": "소유자는 파일 목록의 세 번째 열에서 확인합니다. 현재 디렉터리(.)와 그 하위 경로에서 student가 소유한 항목만 찾고, teacher 소유인 항목은 제외합니다.",
     "initialState": "student@ubuntu:~/lab$ ls -l\ntotal 8\ndrwxr-xr-x 2 student student 4096 Nov 11 09:00 docs\n-rw-r--r-- 1 teacher teacher   20 Nov 11 09:00 note.txt\nstudent@ubuntu:~/lab$ ls -l docs\ntotal 8\n-rw-r--r-- 1 teacher teacher 18 Nov 11 09:00 guide.txt\n-rw-r--r-- 1 student student 15 Nov 11 09:00 memo.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\n.\n./docs\n./docs/memo.txt",
     "commandParts": [
@@ -696,8 +696,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "find . -user student",
-    "verificationDetail": "find는 현재 디렉터리와 하위 폴더에서 조건에 맞는 항목을 검색합니다. -user student는 소유자가 student인 항목을 찾는 조건입니다.",
-    "commonMistake": "파일에 대한 접근 권한이 있다고 해서 소유자인 것은 아닙니다. 목록의 세 번째 열에 적힌 사용자 이름을 확인하시오.",
+    "verificationDetail": "",
+    "commonMistake": "파일을 읽을 수 있다는 사실만으로 해당 파일의 소유자라고 판단하지 마세요.",
     "trace": [],
     "pptSource": "2장 54쪽",
     "outputNote": "검색 결과는 student 소유 항목만 표시합니다. 출력 순서는 환경에 따라 달라질 수 있습니다."
@@ -712,8 +712,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\n/usr/bin/mv",
     "code": "which mv",
-    "hint": "명령어 이름을 입력할 때 시스템이 찾는 실행 파일 위치를 확인합니다.",
-    "explanation": "which는 명령어가 저장된 실행 파일 경로를 보여준다.",
+    "hint": "명령어 이름으로 실행 파일의 경로를 확인하는 방법을 떠올려 보세요.",
+    "explanation": "명령어를 입력했을 때 셸이 찾는 실행 파일의 경로를 보여줍니다. 실행 파일이 설치된 위치는 환경에 따라 달라질 수 있습니다.",
     "initialState": "student@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\n/usr/bin/mv",
     "commandParts": [
@@ -723,8 +723,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "which mv",
-    "verificationDetail": "which는 명령어가 저장된 실행 파일 경로를 보여준다.",
-    "commonMistake": "반환 경로는 시스템 환경에 따라 달라질 수 있다.",
+    "verificationDetail": "",
+    "commonMistake": "실행 파일 경로를 예시와 똑같이 출력해야 정답이라고 판단하지 마세요.",
     "trace": [],
     "pptSource": "2장 55쪽",
     "outputNote": "mv 실행 파일의 경로는 환경에 따라 다를 수 있습니다."
@@ -739,8 +739,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ ls -l data.txt\n-rw-r--r-- 1 student student 12 Nov 11 09:00 data.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\nstudent@ubuntu:~/lab$ [명령어 입력]\nlrwxrwxrwx 1 student student 8 Nov 11 09:00 data-link -> data.txt\nstudent@ubuntu:~/lab$ [명령어 입력]\n123457 data-link\n123456 data.txt",
     "code": "ln -s data.txt data-link\nls -l data-link\nls -i data.txt data-link",
-    "hint": "링크 생성 명령어의 옵션을 생각해 보세요. 상세 목록의 화살표(->)와 inode 번호를 살펴보세요.",
-    "explanation": "심볼릭 링크는 원본 파일의 경로를 가리키는 별도의 파일입니다. ln -s로 생성하며, ls -l에서 첫 글자 l과 'data-link -> data.txt'를 확인합니다. ls -i에서는 원본과 심볼릭 링크의 inode 번호가 서로 다르게 나타납니다.",
+    "hint": "링크가 가리키는 경로와 원본·링크의 inode 번호를 비교해 보세요.",
+    "explanation": "심볼릭 링크는 대상의 경로를 가리키므로 원본과 다른 inode 번호를 갖습니다. 상세 목록에서는 링크 유형 l과 연결 대상(data-link -> data.txt)을 확인합니다.",
     "initialState": "student@ubuntu:~/lab$ ls -l data.txt\n-rw-r--r-- 1 student student 12 Nov 11 09:00 data.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\nstudent@ubuntu:~/lab$ [명령어 입력]\nlrwxrwxrwx 1 student student 8 Nov 11 09:00 data-link -> data.txt\nstudent@ubuntu:~/lab$ [명령어 입력]\n123457 data-link\n123456 data.txt",
     "commandParts": [
@@ -762,8 +762,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "ls -l data-link\nls -i data.txt data-link",
-    "verificationDetail": "data-link의 목록은 l로 시작하며 -> data.txt가 표시됩니다. 원본과 심볼릭 링크의 inode 번호는 다릅니다.",
-    "commonMistake": "심볼릭 링크는 파일 내용을 복사한 것이 아닙니다. 대상 경로가 사라지면 링크가 끊어져 파일에 접근하지 못할 수 있습니다.",
+    "verificationDetail": "",
+    "commonMistake": "심볼릭 링크는 원본 데이터를 복사한 파일이 아닙니다. 대상이 사라지면 링크가 끊어질 수 있습니다.",
     "trace": [],
     "pptSource": "2장 49~50쪽",
     "outputNote": "inode 번호, 시간, 크기는 예시입니다. 원본과 심볼릭 링크의 inode가 서로 다른지 확인하시오."
@@ -778,8 +778,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ ls -l data.txt\n-rw-r--r-- 1 student student 12 Nov 11 09:00 data.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\nstudent@ubuntu:~/lab$ [명령어 입력]\nstudent@ubuntu:~/lab$ [명령어 입력]\n123456 data-hard\n123457 data-link\n123456 data.txt\nstudent@ubuntu:~/lab$ [명령어 입력]\n-rw-r--r-- 2 student student 12 Nov 11 09:00 data-hard\nlrwxrwxrwx 1 student student 8 Nov 11 09:00 data-link -> data.txt\n-rw-r--r-- 2 student student 12 Nov 11 09:00 data.txt",
     "code": "ln data.txt data-hard\nln -s data.txt data-link\nls -i data.txt data-hard data-link\nls -l data.txt data-hard data-link",
-    "hint": "두 종류의 링크를 생성한 뒤 inode 번호를 비교해 보세요. ls -l의 첫 글자와 파일 이름 앞의 링크 개수도 확인하세요.",
-    "explanation": "하드 링크는 ln으로 생성하며 원본과 같은 inode 및 파일 내용을 공유합니다. 이름이 하나 추가되어 ls -l에서 링크 개수가 2가 됩니다. 기존 파일 이름을 삭제해도 남은 하드 링크로 파일 내용에 접근할 수 있습니다. 심볼릭 링크는 ln -s로 생성하며 파일의 경로를 가리키는 별도 inode를 가집니다. ls -l에 l과 '-> data.txt'가 표시됩니다. 원본 경로가 사라지면 심볼릭 링크는 끊어집니다. ls -i는 inode, ls -l은 파일 종류와 링크 개수 확인에 사용합니다.",
+    "hint": "하드 링크와 심볼릭 링크의 inode가 각각 원본과 같은지 비교해 보세요.",
+    "explanation": "하드 링크는 원본과 동일한 inode를 공유합니다. 심볼릭 링크는 원본 경로를 가리키는 별도 inode를 사용합니다.\n\n두 링크를 생성한 뒤 inode를 비교하고, 상세 목록에서 하드 링크 수와 심볼릭 링크의 연결 경로를 각각 확인합니다. 일반적으로 서로 다른 파일 시스템 사이에는 하드 링크를 만들 수 없습니다.",
     "initialState": "student@ubuntu:~/lab$ ls -l data.txt\n-rw-r--r-- 1 student student 12 Nov 11 09:00 data.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\nstudent@ubuntu:~/lab$ [명령어 입력]\nstudent@ubuntu:~/lab$ [명령어 입력]\n123456 data-hard\n123457 data-link\n123456 data.txt\nstudent@ubuntu:~/lab$ [명령어 입력]\n-rw-r--r-- 2 student student 12 Nov 11 09:00 data-hard\nlrwxrwxrwx 1 student student 8 Nov 11 09:00 data-link -> data.txt\n-rw-r--r-- 2 student student 12 Nov 11 09:00 data.txt",
     "commandParts": [
@@ -801,8 +801,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "ls -i data.txt data-hard data-link\nls -l data.txt data-hard data-link",
-    "verificationDetail": "data.txt와 data-hard는 inode 번호가 같고, data-link는 다릅니다. ls -l에서 data.txt와 data-hard의 링크 개수는 2이고, data-link는 l로 시작하며 -> data.txt가 표시됩니다.",
-    "commonMistake": "하드 링크는 원본 파일의 복사본이 아닙니다. 심볼릭 링크의 화살표는 원본 경로 표시이지 동일한 inode를 뜻하지 않습니다. 하드 링크는 일반적으로 서로 다른 파일 시스템 사이에서 만들 수 없습니다.",
+    "verificationDetail": "",
+    "commonMistake": "파일 이름이 같거나 화살표로 연결되어 보인다고 해서 inode도 같다고 판단하지 마세요.",
     "trace": [],
     "pptSource": "2장 44~50쪽",
     "outputNote": "inode 번호, 시간, 파일 크기는 예시입니다. 동일 inode 여부, 하드 링크 개수(2), 심볼릭 링크 표시(l, ->)를 확인하시오."
@@ -825,8 +825,8 @@ export const ubuntuPptProblems = [
       ":wq를 입력하고 Enter를 눌러 저장한 뒤 Vim을 종료하시오.",
       "터미널에서 cat memo.txt를 실행하여 linux study가 출력되는지 확인하시오."
     ],
-    "hint": "Vim의 입력 모드와 저장·종료 순서를 떠올려 보세요.",
-    "explanation": "터미널에서 vim memo.txt 실행 → Vim 안에서 i 입력 → linux study 입력 → Esc → :wq 입력 후 Enter → 터미널에서 cat memo.txt로 확인한다.",
+    "hint": "Vim에서 입력 모드로 전환한 후 일반 모드로 돌아와 저장하는 순서를 생각해 보세요.",
+    "explanation": "텍스트를 작성할 때는 입력 모드로 전환해야 합니다. 저장 명령을 실행할 때는 일반 모드로 돌아와야 하며, :wq는 저장과 종료를 함께 수행합니다.",
     "initialState": "student@ubuntu:~/lab$ ls\n\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\nlinux study",
     "commandParts": [
@@ -848,8 +848,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "cat memo.txt",
-    "verificationDetail": "터미널에서 vim memo.txt 실행 → Vim 안에서 i 입력 → linux study 입력 → Esc → :wq 입력 후 Enter → 터미널에서 cat memo.txt로 확인한다.",
-    "commonMistake": "입력 모드에서 Esc를 누르지 않고 :wq를 입력하면 명령이 아니라 문서 내용에 입력될 수 있다.",
+    "verificationDetail": "",
+    "commonMistake": "입력 모드에서 :wq를 입력하면 명령이 아니라 문서 내용으로 들어갈 수 있습니다.",
     "trace": [],
     "pptSource": "3장 5~7쪽",
     "outputNote": ""
@@ -872,8 +872,8 @@ export const ubuntuPptProblems = [
       ":wq를 입력하고 Enter를 눌러 저장한 뒤 Vim을 종료하시오.",
       "터미널에서 cat memo.txt를 실행하여 one과 three만 남았는지 확인하시오."
     ],
-    "hint": "Vim에서는 현재 커서가 놓인 행을 기준으로 편집 명령을 실행합니다.",
-    "explanation": "터미널에서 vim memo.txt 실행 → Vim 안에서 :2 입력 후 Enter로 두 번째 행 이동 → 일반 모드에서 dd로 행 삭제 → :wq 입력 후 Enter → 터미널에서 cat memo.txt로 확인한다.",
+    "hint": "Vim에서 편집할 행으로 이동한 후 해당 행 전체를 삭제하는 방법을 떠올려 보세요.",
+    "explanation": "dd는 한 글자가 아니라 커서가 있는 줄 전체를 삭제합니다. 삭제 후 남는 줄의 순서를 확인합니다.",
     "initialState": "student@ubuntu:~/lab$ [명령어 입력]\none\ntwo\nthree\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\none\nthree",
     "commandParts": [
@@ -895,8 +895,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "cat memo.txt",
-    "verificationDetail": "터미널에서 vim memo.txt 실행 → Vim 안에서 :2 입력 후 Enter로 두 번째 행 이동 → 일반 모드에서 dd로 행 삭제 → :wq 입력 후 Enter → 터미널에서 cat memo.txt로 확인한다.",
-    "commonMistake": "dd는 한 글자가 아니라 커서의 현재 행을 삭제한다.",
+    "verificationDetail": "",
+    "commonMistake": "dd를 문자 두 개를 지우는 명령으로 오해하지 마세요.",
     "trace": [],
     "pptSource": "3장 14쪽, 18~20쪽",
     "outputNote": ""
@@ -918,8 +918,8 @@ export const ubuntuPptProblems = [
       ":wq를 입력하고 Enter를 눌러 저장한 뒤 Vim을 종료하시오.",
       "터미널에서 cat memo.txt를 실행하여 모든 줄의 Linux 표기를 확인하시오."
     ],
-    "hint": "일부만이 아니라 파일 전체를 대상으로 문자열을 바꾸어야 합니다.",
-    "explanation": "터미널에서 vim memo.txt 실행 → Vim 안에서 :%s/linux/Linux/g 입력 후 Enter로 파일 전체 변경 → :wq 입력 후 Enter로 저장·종료 → 터미널에서 cat memo.txt로 확인한다.",
+    "hint": "한 줄의 일부가 아니라 문서 전체에 나타나는 동일한 문자열을 바꾸어 보세요.",
+    "explanation": "파일 전체 치환에서 %는 모든 줄을 대상으로 지정하고, 마지막 g는 각 줄에 있는 모든 일치 항목을 변경합니다.",
     "initialState": "student@ubuntu:~/lab$ [명령어 입력]\nlinux intro\nlearn linux\nlinux lab\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\nLinux intro\nlearn Linux\nLinux lab",
     "commandParts": [
@@ -937,8 +937,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "cat memo.txt",
-    "verificationDetail": "터미널에서 vim memo.txt 실행 → Vim 안에서 :%s/linux/Linux/g 입력 후 Enter로 파일 전체 변경 → :wq 입력 후 Enter로 저장·종료 → 터미널에서 cat memo.txt로 확인한다.",
-    "commonMistake": "마지막 g가 빠지면 한 행의 모든 일치 항목을 바꾸지 못할 수 있다.",
+    "verificationDetail": "",
+    "commonMistake": "마지막 g가 없으면 각 줄의 첫 번째 일치 항목만 변경됩니다.",
     "trace": [],
     "pptSource": "3장 27~29쪽",
     "outputNote": ""
@@ -953,8 +953,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ [명령어 입력]\n-rw-rw-r-- 1 student student 6 Nov 11 10:00 note.txt",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\n-r--rw-r-- 1 student student 6 Nov 11 10:00 note.txt",
     "code": "chmod u-w note.txt\nls -l note.txt",
-    "hint": "권한 기호의 사용자·연산자·권한 문자를 구분한다.",
-    "explanation": "소유자(u), 그룹(g), 기타 사용자(o)는 서로 다른 권한 대상입니다. `chmod u-w note.txt`에서 u는 소유자, -는 권한 제거, w는 쓰기 권한입니다. 즉 소유자의 쓰기 권한만 제거하고 그룹과 기타 사용자의 권한은 그대로 둡니다.\n\n초기 `-rw-rw-r--`는 소유자 rw-(6), 그룹 rw-(6), 기타 r--(4)입니다. 실행 후 `-r--rw-r--`가 되어 소유자 r--(4), 그룹 rw-(6), 기타 r--(4), 즉 664에서 464로 바뀝니다. `ls -l note.txt`로 확인합니다.",
+    "hint": "소유자에게만 적용되는 권한 제거 기호를 생각해 보세요.",
+    "explanation": "문자형 권한 변경은 u(소유자)·g(그룹)·o(기타 사용자), 연산자(+·-), 권한 문자(r·w·x)를 조합합니다.\n\n초기 -rw-rw-r--(664)에서 소유자의 쓰기 권한만 제거하면 -r--rw-r--(464)가 됩니다. 그룹과 기타 사용자 권한은 유지됩니다.",
     "initialState": "student@ubuntu:~/lab$ [명령어 입력]\n-rw-rw-r-- 1 student student 6 Nov 11 10:00 note.txt",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\n-r--rw-r-- 1 student student 6 Nov 11 10:00 note.txt",
     "commandParts": [
@@ -984,8 +984,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "ls -l note.txt",
-    "verificationDetail": "변경 전 -rw-rw-r--(664), 변경 후 -r--rw-r--(464)입니다. 소유자 부분만 바뀌었는지 확인합니다.",
-    "commonMistake": "u는 소유자이고 g는 그룹입니다. `u-w`는 소유자 변경이 아니라 소유자의 쓰기 권한만 제거하는 뜻입니다.",
+    "verificationDetail": "",
+    "commonMistake": "u-w는 소유자를 바꾸는 명령이 아니라 소유자의 쓰기 권한만 제거하는 명령입니다.",
     "trace": [],
     "pptSource": "5장 8~10쪽",
     "outputNote": "권한 이외의 파일 속성은 실습 환경에 따라 달라질 수 있습니다."
@@ -1000,8 +1000,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ [명령어 입력]\n-rw-r----- 1 student student 6 Nov 11 10:00 note.txt",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\n-rw-rwx--- 1 student student 6 Nov 11 10:00 note.txt",
     "code": "chmod g+wx note.txt\nls -l note.txt",
-    "hint": "권한의 추가와 특정 값으로 덮어쓰기를 구별한다.",
-    "explanation": "소유자(u), 그룹(g), 기타 사용자(o) 중 g는 파일에 지정된 그룹입니다. `chmod g+wx note.txt`의 +는 기존 권한을 유지한 채 새 권한을 추가한다는 뜻이고, w는 쓰기(2), x는 실행(1)입니다.\n\n초기 `-rw-r-----`에서 그룹 부분은 r--(4)입니다. 그룹에 w(2)와 x(1)를 더하면 4+2+1=7, 즉 rwx가 됩니다. 결과는 `-rw-rwx---`(소유자 6, 그룹 7, 기타 0 → 670)이며, 다른 두 묶음은 바뀌지 않습니다.",
+    "hint": "그룹의 기존 권한을 유지하면서 쓰기·실행 권한을 추가하는 방법을 생각해 보세요.",
+    "explanation": "문자형 권한 변경에서 +는 기존 권한을 유지하면서 새 권한을 더합니다. 그룹의 r--(4)에 쓰기(2)와 실행(1)을 추가하면 rwx(7)가 됩니다.\n\n따라서 -rw-r-----(640)은 -rw-rwx---(670)으로 바뀌며, 소유자와 기타 사용자 권한은 유지됩니다.",
     "initialState": "student@ubuntu:~/lab$ [명령어 입력]\n-rw-r----- 1 student student 6 Nov 11 10:00 note.txt",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\n-rw-rwx--- 1 student student 6 Nov 11 10:00 note.txt",
     "commandParts": [
@@ -1027,8 +1027,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "ls -l note.txt",
-    "verificationDetail": "출력은 -rw-r-----(640)에서 -rw-rwx---(670)으로 변경되며, 가운데 그룹 권한만 r--에서 rwx로 변합니다.",
-    "commonMistake": "`+`는 기존 읽기 권한을 지우지 않습니다. 그룹 권한 7을 소유자나 기타 사용자에 적용하지 마세요.",
+    "verificationDetail": "",
+    "commonMistake": "권한 추가 연산자는 기존 읽기 권한을 제거하지 않습니다.",
     "trace": [],
     "pptSource": "5장 8~11쪽",
     "outputNote": "파일 소유자와 수정 시각은 실습 환경에 따라 달라질 수 있습니다."
@@ -1043,8 +1043,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\nu=rwx,g=rx,o=rx",
     "code": "umask -S",
-    "hint": "기본 권한을 확인하는 동작과 파일 권한을 바꾸는 동작을 구별한다.",
-    "explanation": "`umask -S`는 현재 셸의 기본 권한 마스크를 사람이 읽기 쉬운 문자 형식으로 보여줍니다. 예시 `u=rwx,g=rx,o=rx`에서 u는 소유자, g는 그룹, o는 기타 사용자이고 r/w/x는 읽기/쓰기/실행입니다. 이 출력은 새 파일·디렉터리를 만들 때 적용되는 기본 권한 제한을 이해하기 위한 것이며, 기존 파일 하나의 현재 권한을 표시하거나 변경한 결과는 아닙니다. 실제 값은 셸 설정에 따라 달라질 수 있습니다.",
+    "hint": "새 파일의 기본 권한 제한을 문자 형식으로 확인하는 방법을 떠올려 보세요.",
+    "explanation": "umask는 새 파일과 디렉터리를 만들 때 적용되는 기본 권한 제한을 나타냅니다. 예시 u=rwx,g=rx,o=rx는 umask 022의 문자 표현이며 소유자·그룹·기타 사용자 순서입니다.\n\numask를 조회하는 작업과 기존 파일에 chmod를 적용하는 작업은 다릅니다. 실제 출력은 셸 설정에 따라 달라질 수 있습니다.",
     "initialState": "student@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\nu=rwx,g=rx,o=rx",
     "commandParts": [
@@ -1070,8 +1070,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "umask -S",
-    "verificationDetail": "u=rwx,g=rx,o=rx는 일반적인 umask 022의 문자 표현 예시이며 실제 값은 환경마다 다릅니다. 새 일반 파일의 실행 권한은 별도로 구분합니다.",
-    "commonMistake": "기본 umask 값은 시스템 설정에 따라 달라질 수 있다.",
+    "verificationDetail": "",
+    "commonMistake": "umask 조회 결과를 기존 파일 하나에 설정된 권한으로 해석하지 마세요.",
     "trace": [],
     "pptSource": "5장 20쪽",
     "outputNote": "표시된 값은 일반적인 설정의 예시입니다. 실제 기본 권한은 시스템 설정에 따라 다를 수 있습니다."
@@ -1086,8 +1086,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\nHellostudent@ubuntu:~/lab$ ",
     "code": "echo -n Hello",
-    "hint": "문자열의 내용과 출력 끝의 줄바꿈을 구별한다.",
-    "explanation": "echo -n은 문자열 출력 후 줄바꿈을 추가하지 않는다.",
+    "hint": "문자열을 출력한 뒤 줄바꿈을 하지 않는 옵션을 생각해 보세요.",
+    "explanation": "-n을 사용하면 Hello 뒤에 줄바꿈이 없으므로 다음 셸 프롬프트가 같은 줄에 이어질 수 있습니다.",
     "initialState": "student@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\nHellostudent@ubuntu:~/lab$ ",
     "commandParts": [
@@ -1101,8 +1101,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "echo -n Hello",
-    "verificationDetail": "echo -n은 문자열 출력 후 줄바꿈을 추가하지 않는다.",
-    "commonMistake": "-n은 출력 문자열을 지우는 옵션이 아니다.",
+    "verificationDetail": "",
+    "commonMistake": "줄바꿈이 없는 출력은 문자열이 사라졌다는 뜻이 아닙니다.",
     "trace": [],
     "pptSource": "4장 4쪽",
     "outputNote": "Hello 뒤에 새 줄 없이 다음 프롬프트가 이어서 나타나는 상태를 표현했습니다."
@@ -1117,8 +1117,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\n12",
     "code": "printf '%d\\n' 12",
-    "hint": "서식 지정 문자와 줄바꿈 문자의 기능을 구분한다.",
-    "explanation": "printf의 %d는 십진 정수, \\n은 줄바꿈을 뜻한다.",
+    "hint": "정수를 출력할 서식 기호와 줄바꿈 문자를 함께 사용해 보세요.",
+    "explanation": "%d는 정수를 십진수로 표시하는 서식이며 \\n은 출력 끝의 줄바꿈을 뜻합니다. 값 12는 서식에 따라 출력됩니다.",
     "initialState": "student@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\n12",
     "commandParts": [
@@ -1136,8 +1136,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "printf '%d\\n' 12",
-    "verificationDetail": "printf의 %d는 십진 정수, \\n은 줄바꿈을 뜻한다.",
-    "commonMistake": "서식 문자열에서 줄바꿈 기호를 빠뜨리면 출력 끝에 개행이 없다.",
+    "verificationDetail": "",
+    "commonMistake": "서식 문자열에 \\n을 빠뜨리면 출력 뒤에 줄바꿈이 생기지 않습니다.",
     "trace": [],
     "pptSource": "4장 5쪽",
     "outputNote": ""
@@ -1152,8 +1152,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\n/bin/bash\nstudent@ubuntu:~/lab$ [명령어 입력]\n$SHELL",
     "code": "echo \"$SHELL\"\necho '$SHELL'",
-    "hint": "작은따옴표와 큰따옴표에서 변수 해석이 다른 점을 생각한다.",
-    "explanation": "큰따옴표 안에서는 $SHELL 변수를 확장하며 작은따옴표 안에서는 문자 그대로 출력한다.",
+    "hint": "큰따옴표와 작은따옴표에서 변수 이름이 다르게 처리되는 이유를 생각해 보세요.",
+    "explanation": "같은 $SHELL도 큰따옴표에서는 변수의 값으로 바뀌고, 작은따옴표에서는 문자 자체가 표시됩니다. 두 출력 결과를 비교해 보세요.",
     "initialState": "student@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\n/bin/bash\nstudent@ubuntu:~/lab$ [명령어 입력]\n$SHELL",
     "commandParts": [
@@ -1171,8 +1171,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "echo '$SHELL'",
-    "verificationDetail": "큰따옴표 안에서는 $SHELL 변수를 확장하며 작은따옴표 안에서는 문자 그대로 출력한다.",
-    "commonMistake": "두 인용 부호를 바꾸면 출력 내용이 달라진다.",
+    "verificationDetail": "",
+    "commonMistake": "따옴표 종류를 바꾸면 변수 확장 여부가 달라집니다.",
     "trace": [],
     "pptSource": "4장 10쪽",
     "outputNote": "SHELL 값은 로그인 셸 설정에 따라 달라질 수 있습니다."
@@ -1187,8 +1187,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ ls\nnote.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\nhello",
     "code": "echo hello > result.txt",
-    "hint": "표준 출력과 출력 파일을 연결하는 문법을 생각한다.",
-    "explanation": "출력 리다이렉션 >는 명령의 표준 출력을 파일로 보낸다. 파일이 이미 있으면 내용을 대체한다.",
+    "hint": "터미널 출력이 아닌 파일에 결과를 기록하는 리다이렉션을 생각해 보세요.",
+    "explanation": "파일로 출력을 보내는 >는 기존 파일 내용이 있을 때 이를 덮어씁니다. 이 문제에서는 result.txt 안에 hello만 남는지 확인합니다.",
     "initialState": "student@ubuntu:~/lab$ ls\nnote.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\nhello",
     "commandParts": [
@@ -1202,8 +1202,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "cat result.txt",
-    "verificationDetail": "출력 리다이렉션 >는 명령의 표준 출력을 파일로 보낸다. 파일이 이미 있으면 내용을 대체한다.",
-    "commonMistake": "기존 파일에서 >를 사용하면 원래 내용이 지워질 수 있다.",
+    "verificationDetail": "",
+    "commonMistake": "기존 내용이 필요한 파일에 >를 사용하면 원래 내용이 사라질 수 있습니다.",
     "trace": [],
     "pptSource": "4장 13~15쪽",
     "outputNote": ""
@@ -1218,8 +1218,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ [명령어 입력]\nhello",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\nhello\nworld",
     "code": "echo world >> result.txt\ncat result.txt",
-    "hint": "내용을 덮어쓰는 경우와 끝에 추가하는 경우를 구별한다.",
-    "explanation": "출력 리다이렉션 >>는 기존 내용 뒤에 출력 결과를 이어 붙인다.",
+    "hint": "기존 파일을 덮어쓰지 않고 끝에 내용을 덧붙이는 기호를 떠올려 보세요.",
+    "explanation": ">>는 기존 내용을 보존한 채 파일 끝에 새 내용을 추가합니다. 예시에서는 hello 다음 줄에 world가 이어져야 합니다.",
     "initialState": "student@ubuntu:~/lab$ [명령어 입력]\nhello",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\nhello\nworld",
     "commandParts": [
@@ -1237,8 +1237,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "cat result.txt",
-    "verificationDetail": "출력 리다이렉션 >>는 기존 내용 뒤에 출력 결과를 이어 붙인다.",
-    "commonMistake": "기존 내용을 보존하려면 >가 아니라 >>를 사용한다.",
+    "verificationDetail": "",
+    "commonMistake": "기존 내용을 남겨야 한다면 >와 >>를 혼동하지 마세요.",
     "trace": [],
     "pptSource": "4장 17쪽",
     "outputNote": ""
@@ -1253,8 +1253,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\nalias ls='ls -F'",
     "code": "alias ls='ls -F'\nalias",
-    "hint": "자주 쓰는 명령어에 기본 옵션을 지정한 뒤 등록된 별명 목록을 확인한다.",
-    "explanation": "alias ls='ls -F'는 ls를 입력할 때 파일 종류를 표시하는 -F 옵션을 기본 적용하도록 별명을 지정한다. 인자 없이 alias를 실행하면 현재 별명 설정을 확인할 수 있다.",
+    "hint": "기존 명령어에 기본 옵션을 붙이는 별명을 등록한 뒤 목록으로 확인해 보세요.",
+    "explanation": "별명을 등록하면 현재 셸에서 ls를 입력할 때 지정한 옵션을 함께 적용할 수 있습니다. 별명 목록에서 설정값을 확인합니다.",
     "initialState": "student@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\nalias ls='ls -F'",
     "commandParts": [
@@ -1268,8 +1268,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "alias",
-    "verificationDetail": "alias 목록에 ls='ls -F'가 표시되면 설정이 완료된 것이다.",
-    "commonMistake": "ls 명령 자체를 변경하는 것이 아니라 현재 셸에 적용되는 별명을 만드는 것이다.",
+    "verificationDetail": "",
+    "commonMistake": "별명을 등록하는 작업은 원래 명령어 파일 자체를 수정하지 않습니다.",
     "trace": [],
     "pptSource": "4장 22~25쪽",
     "outputNote": "여러 별명이 등록된 환경에서는 다른 별명들도 함께 표시됩니다."
@@ -1284,8 +1284,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ ls\ndocs  note.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\nWed Nov 11 10:00:00 KST 2026\ndocs  note.txt\n/home/student/lab",
     "code": "date; ls; pwd",
-    "hint": "명령어 사이의 구분 기호가 실행 순서에 미치는 영향을 생각한다.",
-    "explanation": "세미콜론은 연결된 명령을 왼쪽부터 순서대로 실행한다.",
+    "hint": "여러 명령을 한 줄에 입력하고 차례대로 실행하는 구분 기호를 생각해 보세요.",
+    "explanation": "세미콜론은 각 명령을 왼쪽부터 순서대로 실행합니다. 앞 명령의 출력을 뒤 명령의 입력으로 보내는 파이프와는 다릅니다.",
     "initialState": "student@ubuntu:~/lab$ ls\ndocs  note.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\nWed Nov 11 10:00:00 KST 2026\ndocs  note.txt\n/home/student/lab",
     "commandParts": [
@@ -1307,8 +1307,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "date; ls; pwd",
-    "verificationDetail": "세미콜론은 연결된 명령을 왼쪽부터 순서대로 실행한다.",
-    "commonMistake": "세미콜론은 왼쪽 명령의 결과를 오른쪽 입력으로 전달하는 파이프와 다르다.",
+    "verificationDetail": "",
+    "commonMistake": "명령을 순서대로 실행하는 세미콜론과 출력을 전달하는 파이프를 혼동하지 마세요.",
     "trace": [],
     "pptSource": "1장 35쪽, 2장 10·13쪽, 4장 9쪽",
     "outputNote": "날짜·시간·파일 목록은 실습하는 시점과 컴퓨터 상태에 따라 달라집니다."
@@ -1323,8 +1323,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\nUID          PID    PPID  C STIME TTY          TIME CMD\nstudent     1842    1841  0 10:00 pts/0    00:00:00 bash\nstudent     1901    1842  0 10:05 pts/0    00:00:00 ps -f",
     "code": "ps -f",
-    "hint": "기본 프로세스 목록과 상세 목록 항목을 비교한다.",
-    "explanation": "ps -f는 현재 터미널 관련 프로세스의 상세 정보를 표시한다.",
+    "hint": "프로세스 목록을 자세히 표시하여 PID와 PPID 항목을 확인해 보세요.",
+    "explanation": "상세 목록에서 PID는 프로세스 번호, PPID는 해당 프로세스를 실행한 부모 프로세스 번호입니다.",
     "initialState": "student@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\nUID          PID    PPID  C STIME TTY          TIME CMD\nstudent     1842    1841  0 10:00 pts/0    00:00:00 bash\nstudent     1901    1842  0 10:05 pts/0    00:00:00 ps -f",
     "commandParts": [
@@ -1338,8 +1338,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "ps -f",
-    "verificationDetail": "ps -f는 현재 터미널 관련 프로세스의 상세 정보를 표시한다.",
-    "commonMistake": "PID와 부모 PID인 PPID는 서로 다른 값이다.",
+    "verificationDetail": "",
+    "commonMistake": "PID와 PPID를 같은 값으로 해석하지 마세요.",
     "trace": [],
     "pptSource": "6장 4~5쪽",
     "outputNote": "PID, PPID, 시각 및 프로세스 수는 실행할 때마다 달라집니다."
@@ -1354,8 +1354,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\nUID          PID    PPID  C STIME TTY          TIME CMD\nroot           1       0  0 09:00 ?        00:00:02 /sbin/init\nstudent     1842    1841  0 10:00 pts/0    00:00:00 bash",
     "code": "ps -ef",
-    "hint": "전체 범위 선택 옵션과 상세 항목 선택 옵션을 결합한다.",
-    "explanation": "ps -ef는 유닉스 형식의 -e 전체와 -f 상세 출력 옵션을 함께 적용한다.",
+    "hint": "모든 프로세스를 대상으로 상세 목록을 출력하는 옵션 조합을 생각해 보세요.",
+    "explanation": "전체 프로세스를 출력할 때는 현재 터미널에 연결되지 않은 프로세스도 표시됩니다. 실행 범위와 상세 출력 여부를 구분해 보세요.",
     "initialState": "student@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\nUID          PID    PPID  C STIME TTY          TIME CMD\nroot           1       0  0 09:00 ?        00:00:02 /sbin/init\nstudent     1842    1841  0 10:00 pts/0    00:00:00 bash",
     "commandParts": [
@@ -1373,8 +1373,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "ps -ef",
-    "verificationDetail": "ps -ef는 유닉스 형식의 -e 전체와 -f 상세 출력 옵션을 함께 적용한다.",
-    "commonMistake": "ps -f만 사용하면 시스템 전체가 아니라 현재 터미널 중심의 정보가 표시된다.",
+    "verificationDetail": "",
+    "commonMistake": "현재 터미널만 조회하는 결과와 시스템 전체 결과를 같은 것으로 보지 마세요.",
     "trace": [],
     "pptSource": "6장 4쪽, 9쪽",
     "outputNote": "이 출력은 전체 목록 중 일부를 보여주는 예시입니다. 실행 중인 프로세스는 환경마다 다릅니다."
@@ -1389,8 +1389,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\n1842 bash",
     "code": "pgrep -l bash",
-    "hint": "PID만 확인하는 방법과 이름까지 확인하는 방법을 구별한다.",
-    "explanation": "pgrep -l은 패턴에 일치하는 프로세스의 PID와 이름을 보여준다.",
+    "hint": "프로세스 이름을 검색하면서 PID와 이름을 함께 확인하는 옵션을 생각해 보세요.",
+    "explanation": "프로세스 이름으로 검색할 때 결과에는 PID와 실행 중인 이름이 함께 표시됩니다. PID는 실행 시점마다 달라집니다.",
     "initialState": "student@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\n1842 bash",
     "commandParts": [
@@ -1404,8 +1404,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "pgrep -l bash",
-    "verificationDetail": "pgrep -l은 패턴에 일치하는 프로세스의 PID와 이름을 보여준다.",
-    "commonMistake": "검색 결과의 PID 값은 실행 시점마다 달라질 수 있다.",
+    "verificationDetail": "",
+    "commonMistake": "예시에 표시된 PID와 실제 시스템의 PID가 다르더라도 오류는 아닙니다.",
     "trace": [],
     "pptSource": "6장 14~15쪽",
     "outputNote": "프로세스 PID 및 검색 결과의 개수는 실행할 때마다 달라질 수 있습니다."
@@ -1420,8 +1420,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\nUSER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND\nstudent     1842  0.0  0.1  10560  5200 pts/0    Ss   10:00   0:00 bash",
     "code": "ps aux",
-    "hint": "BSD 옵션은 하이픈 없이 사용하는 형식이다.",
-    "explanation": "ps aux는 BSD 형식으로 전체 프로세스의 자세한 자원 사용량을 표시한다.",
+    "hint": "자원 사용량까지 포함한 프로세스 목록을 표시하는 BSD 형식을 떠올려 보세요.",
+    "explanation": "BSD 형식인 aux는 하이픈 없이 사용합니다. 사용자, CPU·메모리 사용량, 명령 정보 등의 열을 확인합니다.",
     "initialState": "student@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\nUSER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND\nstudent     1842  0.0  0.1  10560  5200 pts/0    Ss   10:00   0:00 bash",
     "commandParts": [
@@ -1443,8 +1443,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "ps aux",
-    "verificationDetail": "ps aux는 BSD 형식으로 전체 프로세스의 자세한 자원 사용량을 표시한다.",
-    "commonMistake": "BSD 방식의 aux 앞에는 하이픈을 붙이지 않는다.",
+    "verificationDetail": "",
+    "commonMistake": "ps aux 앞의 aux에 유닉스식 하이픈을 붙이지 마세요.",
     "trace": [],
     "pptSource": "6장 4쪽, 11쪽",
     "outputNote": "전체 목록 중 일부를 표시한 예시입니다. CPU·메모리 사용 비율과 PID는 매번 달라집니다."
@@ -1459,8 +1459,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\nFilesystem      Size  Used Avail Use% Mounted on\n/dev/sda2        40G   12G   26G  32% /",
     "code": "df -h",
-    "hint": "파일 시스템 전체 용량과 개별 디렉터리 사용량은 서로 다른 항목이다.",
-    "explanation": "df -h는 파일 시스템별 용량을 사람이 읽기 쉬운 크기 단위로 출력한다.",
+    "hint": "파일 시스템 사용량을 읽기 쉬운 크기 단위로 표시하는 옵션을 생각해 보세요.",
+    "explanation": "파일 시스템별 전체 용량과 사용량을 나타냅니다. -h는 표시 단위만 바꾸며 사용량 자체를 변경하지 않습니다.",
     "initialState": "student@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\nFilesystem      Size  Used Avail Use% Mounted on\n/dev/sda2        40G   12G   26G  32% /",
     "commandParts": [
@@ -1474,8 +1474,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "df -h",
-    "verificationDetail": "df -h는 파일 시스템별 용량을 사람이 읽기 쉬운 크기 단위로 출력한다.",
-    "commonMistake": "df 결과는 디스크 상태에 따라 달라진다.",
+    "verificationDetail": "",
+    "commonMistake": "현재 디스크의 실제 사용량은 예시 숫자와 다를 수 있습니다.",
     "trace": [],
     "pptSource": "7장 2~4쪽",
     "outputNote": "표에 제시된 용량과 장치명은 예시이며 실제 디스크 상태에 따라 달라집니다."
@@ -1490,8 +1490,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ ls docs\nnote.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\nFilesystem     Type     1K-blocks    Used Available Use% Mounted on\n/dev/sda2      ext4      41943040 12582912  27262976  32% /\nstudent@ubuntu:~/lab$ [명령어 입력]\n4.0K    docs",
     "code": "df -T\ndu -sh docs",
-    "hint": "파일 시스템 단위 통계와 디렉터리 단위 통계를 구별한다.",
-    "explanation": "df -T는 파일 시스템 종류를 보여준다. du의 -s와 -h는 지정한 디렉터리의 합계 사용량을 읽기 쉬운 단위로 표시한다.",
+    "hint": "파일 시스템 종류와 특정 디렉터리의 전체 사용량을 각각 확인해 보세요.",
+    "explanation": "df는 파일 시스템 단위의 통계를, du는 지정한 디렉터리의 사용량을 보여줍니다. 두 명령의 집계 대상을 구분하여 읽습니다.",
     "initialState": "student@ubuntu:~/lab$ ls docs\nnote.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\nFilesystem     Type     1K-blocks    Used Available Use% Mounted on\n/dev/sda2      ext4      41943040 12582912  27262976  32% /\nstudent@ubuntu:~/lab$ [명령어 입력]\n4.0K    docs",
     "commandParts": [
@@ -1517,8 +1517,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "du -sh docs",
-    "verificationDetail": "df -T는 파일 시스템 종류를 보여준다. du의 -s와 -h는 지정한 디렉터리의 합계 사용량을 읽기 쉬운 단위로 표시한다.",
-    "commonMistake": "df와 du가 나타내는 사용량의 측정 대상은 서로 다르다.",
+    "verificationDetail": "",
+    "commonMistake": "파일 시스템 전체 사용량과 docs 디렉터리 사용량을 같은 수치로 비교하지 마세요.",
     "trace": [],
     "pptSource": "7장 2·5~8쪽",
     "outputNote": "파일 시스템과 폴더의 용량은 예시입니다. 실제 출력은 컴퓨터에 따라 달라집니다."
@@ -1533,8 +1533,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\nstudent     1842    1841  0 10:00 pts/0    00:00:00 bash\nstudent     1907    1842  0 10:05 pts/0    00:00:00 grep bash",
     "code": "ps -ef | grep bash",
-    "hint": "앞 명령의 출력 결과를 뒤 명령의 검색 입력으로 전달한다.",
-    "explanation": "|는 앞 명령의 출력을 뒤 명령의 입력으로 연결한다. ps -ef 결과를 grep이 검색한다.",
+    "hint": "전체 프로세스 출력에서 bash가 들어 있는 줄만 선별하는 연결 방식을 생각해 보세요.",
+    "explanation": "파이프(|)는 왼쪽 명령의 출력을 오른쪽 명령의 입력으로 전달합니다. 검색 결과에는 실행 중인 grep 명령 자체가 포함될 수도 있습니다.",
     "initialState": "student@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\nstudent     1842    1841  0 10:00 pts/0    00:00:00 bash\nstudent     1907    1842  0 10:05 pts/0    00:00:00 grep bash",
     "commandParts": [
@@ -1556,8 +1556,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "ps -ef | grep bash",
-    "verificationDetail": "|는 앞 명령의 출력을 뒤 명령의 입력으로 연결한다. ps -ef 결과를 grep이 검색한다.",
-    "commonMistake": "검색 명령 자신이 검색 결과에 포함될 수도 있다.",
+    "verificationDetail": "",
+    "commonMistake": "파이프가 단순히 명령 두 개를 순서대로 실행하는 기호라고 생각하지 마세요.",
     "trace": [],
     "pptSource": "6장 9쪽, 13쪽, 2장 53쪽",
     "outputNote": "프로세스 정보는 예시입니다. 검색을 수행하는 grep 자신이 결과에 포함될 수도 있습니다."
@@ -1572,8 +1572,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\nstudent@ubuntu:~/lab$ ",
     "code": "shutdown -c",
-    "hint": "시스템 종료 예약과 기존 예약의 취소 기능을 구분한다.",
-    "explanation": "shutdown -c는 이전에 예약한 shutdown 작업을 취소한다.",
+    "hint": "시스템 종료를 새로 예약하는 기능과 기존 예약을 취소하는 기능을 구분해 보세요.",
+    "explanation": "기존에 예약한 시스템 종료가 있을 때 취소하는 작업입니다. 실제로 종료하거나 재시작하는 명령은 실행하지 않습니다.",
     "initialState": "student@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\nstudent@ubuntu:~/lab$ ",
     "commandParts": [
@@ -1587,8 +1587,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "shutdown -c",
-    "verificationDetail": "shutdown -c는 이전에 예약한 shutdown 작업을 취소한다.",
-    "commonMistake": "shutdown -r과 -h는 실제로 시스템을 재시작하거나 종료할 수 있으므로 이 문제에서는 사용하지 않는다.",
+    "verificationDetail": "",
+    "commonMistake": "시스템 종료나 재시작을 수행하는 다른 옵션을 사용하지 마세요.",
     "trace": [],
     "pptSource": "8장 3~5쪽",
     "outputNote": "취소할 예약이 없으면 오류 또는 안내 메시지가 표시될 수 있습니다. 이 문제는 예약 취소 방법을 학습하는 상황입니다."
@@ -1603,8 +1603,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\nvim - Vi IMproved - enhanced vi editor\nvim-common - Vi IMproved - Common files\nstudent@ubuntu:~/lab$ [명령어 입력]\nPackage: vim\nVersions:",
     "code": "apt-cache search vim\napt-cache showpkg vim",
-    "hint": "키워드 검색과 특정 패키지의 의존성 검색을 구분한다.",
-    "explanation": "apt-cache search는 키워드 검색, showpkg는 패키지 의존성 및 역의존성 정보 표시다.",
+    "hint": "패키지 검색과 패키지 상세 정보 조회를 순서대로 수행하는 방법을 생각해 보세요.",
+    "explanation": "패키지 이름을 검색한 뒤 해당 패키지의 버전·의존성 등의 캐시 정보를 조회합니다. 이 과정에서는 패키지를 설치하지 않습니다.",
     "initialState": "student@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\nvim - Vi IMproved - enhanced vi editor\nvim-common - Vi IMproved - Common files\nstudent@ubuntu:~/lab$ [명령어 입력]\nPackage: vim\nVersions:",
     "commandParts": [
@@ -1622,8 +1622,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "apt-cache showpkg vim",
-    "verificationDetail": "apt-cache search는 키워드 검색, showpkg는 패키지 의존성 및 역의존성 정보 표시다.",
-    "commonMistake": "패키지 설치가 아니라 저장된 패키지 정보만 확인하는 문제다.",
+    "verificationDetail": "",
+    "commonMistake": "정보 조회를 패키지 설치 작업과 혼동하지 마세요.",
     "trace": [],
     "pptSource": "9장 3쪽, 6~8쪽",
     "outputNote": "패키지 목록과 버전 정보는 길거나 달라질 수 있어 출력 일부만 예시로 제시했습니다."
@@ -1638,8 +1638,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ ls -R docs\ndocs:\nnote.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\ndrwxr-xr-x student/student   0 2026-11-11 10:00 docs/\n-rw-r--r-- student/student   6 2026-11-11 10:00 docs/note.txt",
     "code": "tar cvf backup.tar docs\ntar tvf backup.tar",
-    "hint": "아카이브 생성 기능과 내용 보기 기능을 구분한다.",
-    "explanation": "tar c는 새 아카이브 생성, t는 목록 출력, v는 처리 파일 표시, f는 아카이브 이름 지정이다.",
+    "hint": "디렉터리를 아카이브로 묶은 뒤 아카이브에 들어 있는 항목을 조회해 보세요.",
+    "explanation": "tar 아카이브를 생성해도 원본 docs 디렉터리는 그대로 남습니다. 생성된 파일을 추출하지 않고도 내부 목록을 확인할 수 있습니다.",
     "initialState": "student@ubuntu:~/lab$ ls -R docs\ndocs:\nnote.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\ndrwxr-xr-x student/student   0 2026-11-11 10:00 docs/\n-rw-r--r-- student/student   6 2026-11-11 10:00 docs/note.txt",
     "commandParts": [
@@ -1665,8 +1665,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "tar tvf backup.tar",
-    "verificationDetail": "tar c는 새 아카이브 생성, t는 목록 출력, v는 처리 파일 표시, f는 아카이브 이름 지정이다.",
-    "commonMistake": "아카이브를 생성해도 docs의 원본 파일은 유지된다.",
+    "verificationDetail": "",
+    "commonMistake": "아카이브 파일을 만들었다고 해서 원본 디렉터리가 삭제되지는 않습니다.",
     "trace": [],
     "pptSource": "9장 20~23쪽",
     "outputNote": "아카이브에 기록되는 파일 크기·권한·시각은 예시입니다."
@@ -1681,8 +1681,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ ls\nbackup.tar\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\ndocs/\ndocs/note.txt",
     "code": "tar xvf backup.tar",
-    "hint": "아카이브 생성, 내용 확인, 추출의 기능 문자를 비교한다.",
-    "explanation": "tar xvf는 아카이브의 원래 파일을 추출한다.",
+    "hint": "생성이나 내부 목록 조회가 아닌 아카이브의 내용 추출 옵션을 떠올려 보세요.",
+    "explanation": "x는 아카이브에 들어 있는 항목을 현재 작업 위치에 추출합니다. 추출 후 docs와 그 아래 파일이 나타나는지 확인합니다.",
     "initialState": "student@ubuntu:~/lab$ ls\nbackup.tar\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\ndocs/\ndocs/note.txt",
     "commandParts": [
@@ -1704,8 +1704,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "ls -R docs",
-    "verificationDetail": "tar xvf는 아카이브의 원래 파일을 추출한다.",
-    "commonMistake": "이미 같은 경로에 파일이 있으면 추출 과정에서 영향을 받을 수 있다.",
+    "verificationDetail": "",
+    "commonMistake": "기존 경로에 같은 이름의 파일이 있으면 추출 과정에서 영향을 받을 수 있습니다.",
     "trace": [],
     "pptSource": "9장 20~24쪽",
     "outputNote": ""
@@ -1720,8 +1720,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ cat report.txt\nhello\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\nstudent@ubuntu:~/lab$ [명령어 입력]\nhello",
     "code": "gzip report.txt\nzcat report.txt.gz",
-    "hint": "압축 파일 자체를 읽는 방식과 압축을 푸는 방식을 구별한다.",
-    "explanation": "gzip은 .gz 압축 파일을 생성한다. zcat은 gzip 압축 파일의 내용을 화면에 출력한다.",
+    "hint": "압축 파일을 만든 뒤 압축을 풀어 저장하지 않고 내용만 확인해 보세요.",
+    "explanation": "gzip은 보통 원본 파일을 .gz 압축 파일로 대체합니다. zcat은 압축을 해제하여 별도 파일을 만들지 않고 내용을 터미널에 출력합니다.",
     "initialState": "student@ubuntu:~/lab$ cat report.txt\nhello\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\nstudent@ubuntu:~/lab$ [명령어 입력]\nhello",
     "commandParts": [
@@ -1735,8 +1735,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "zcat report.txt.gz",
-    "verificationDetail": "gzip은 .gz 압축 파일을 생성한다. zcat은 gzip 압축 파일의 내용을 화면에 출력한다.",
-    "commonMistake": "gzip 실행 후에는 원본 report.txt가 사라질 수 있다.",
+    "verificationDetail": "",
+    "commonMistake": "압축한 뒤에도 원본 report.txt가 반드시 남는다고 가정하지 마세요.",
     "trace": [],
     "pptSource": "9장 28~30쪽",
     "outputNote": ""
@@ -1751,8 +1751,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\nNAME     LINE         TIME             COMMENT\nstudent  pts/0        2026-11-11 10:00\nstudent@ubuntu:~/lab$ [명령어 입력]\nstudent adm cdrom sudo dip plugdev",
     "code": "who -H\ngroups",
-    "hint": "현재 접속한 사용자 정보와 계정의 그룹 소속 정보를 구분한다.",
-    "explanation": "who -H는 로그인 사용자 정보의 제목을 함께 표시하고 groups는 사용자 소속 그룹을 보여준다.",
+    "hint": "로그인 사용자 정보와 소속 그룹 정보를 각각 표시하는 방법을 생각해 보세요.",
+    "explanation": "who로 현재 로그인한 사용자 목록을 확인하고, groups로 사용자 계정의 소속 그룹을 확인합니다. 두 출력은 서로 다른 정보를 나타냅니다.",
     "initialState": "student@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\nNAME     LINE         TIME             COMMENT\nstudent  pts/0        2026-11-11 10:00\nstudent@ubuntu:~/lab$ [명령어 입력]\nstudent adm cdrom sudo dip plugdev",
     "commandParts": [
@@ -1770,8 +1770,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "groups",
-    "verificationDetail": "who -H는 로그인 사용자 정보의 제목을 함께 표시하고 groups는 사용자 소속 그룹을 보여준다.",
-    "commonMistake": "로그인 사용자 수와 그룹 수는 서로 다른 개념이다.",
+    "verificationDetail": "",
+    "commonMistake": "현재 접속 인원과 사용자에게 배정된 그룹 수를 같은 개념으로 보지 마세요.",
     "trace": [],
     "pptSource": "10장 41~42쪽, 45쪽",
     "outputNote": "로그인 상태와 사용자 그룹 설정에 따라 출력 내용은 달라질 수 있습니다."
@@ -1786,8 +1786,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\nno crontab for student",
     "code": "crontab -l",
-    "hint": "반복 작업 조회와 반복 작업 편집·삭제를 구별한다.",
-    "explanation": "crontab -l은 현재 사용자에게 등록된 반복 실행 예약 내용을 조회한다.",
+    "hint": "반복 작업을 변경하지 않고 등록된 목록만 확인하는 옵션을 떠올려 보세요.",
+    "explanation": "예약된 작업이 없다면 'no crontab for ...'와 같은 메시지가 나올 수 있습니다. 작업 조회와 신규 등록·편집은 다른 동작입니다.",
     "initialState": "student@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\nno crontab for student",
     "commandParts": [
@@ -1801,8 +1801,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "crontab -l",
-    "verificationDetail": "crontab -l은 현재 사용자에게 등록된 반복 실행 예약 내용을 조회한다.",
-    "commonMistake": "-e는 편집, -r은 삭제이므로 조회용 -l과 구분한다.",
+    "verificationDetail": "",
+    "commonMistake": "조회 목적이라면 편집이나 삭제 옵션을 사용하지 마세요.",
     "trace": [],
     "pptSource": "6장 37~39쪽",
     "outputNote": "예시는 현재 사용자에게 등록된 crontab이 없는 경우입니다. 예약된 작업이 있다면 해당 작업 목록이 표시됩니다."
@@ -1817,8 +1817,8 @@ export const ubuntuPptProblems = [
     "input": "student@ubuntu:~/lab$ [명령어 입력]",
     "output": "student@ubuntu:~/lab$ [명령어 입력]\nGROUP=100\nHOME=/home\nINACTIVE=-1\nEXPIRE=\nSHELL=/bin/sh\nSKEL=/etc/skel\nCREATE_MAIL_SPOOL=no",
     "code": "useradd -D",
-    "hint": "사용자 계정 생성과 계정 생성 시 사용할 기본값 확인을 구별한다.",
-    "explanation": "useradd -D는 계정을 새로 만들지 않고 useradd의 기본 설정값을 출력한다.",
+    "hint": "실제 계정을 만들지 않고 사용자 생성 기본 설정만 확인하는 옵션을 생각해 보세요.",
+    "explanation": "-D로 사용자 생성 시 적용할 기본값을 조회합니다. 이 작업만으로 새로운 로그인 계정이 생성되지는 않습니다.",
     "initialState": "student@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\nGROUP=100\nHOME=/home\nINACTIVE=-1\nEXPIRE=\nSHELL=/bin/sh\nSKEL=/etc/skel\nCREATE_MAIL_SPOOL=no",
     "commandParts": [
@@ -1832,8 +1832,8 @@ export const ubuntuPptProblems = [
       }
     ],
     "verification": "useradd -D",
-    "verificationDetail": "useradd -D는 계정을 새로 만들지 않고 useradd의 기본 설정값을 출력한다.",
-    "commonMistake": "useradd에 실제 로그인 ID를 지정하는 것은 이 문제의 목적이 아니다.",
+    "verificationDetail": "",
+    "commonMistake": "사용자 이름을 지정해 계정을 생성하는 동작과 기본값 조회를 혼동하지 마세요.",
     "trace": [],
     "pptSource": "10장 14쪽, 17~18쪽",
     "outputNote": "표시된 기본 설정값은 Ubuntu 버전 및 관리자의 설정에 따라 달라질 수 있습니다."
