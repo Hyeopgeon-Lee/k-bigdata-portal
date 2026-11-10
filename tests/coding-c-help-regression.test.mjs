@@ -39,6 +39,22 @@ assert.match(q("C-062").statement,/둘째 줄/);
 assert.match(q("C-063").statement,/a\[i\+1\]-a\[i\]/);
 assert.equal(q("C-066").title,"문자의 ASCII 코드 출력");
 assert.match(q("C-069").statement,/최대 20글자/);
+
+const c075=q("C-075");
+assert.match(c075.statement,/더 짧은 단어/);
+assert.equal(c075.input,"apple banana");
+assert.equal(c075.output,"FIRST");
+assert.equal(c075.examples.length,4,"C-075 needs four additional input/output examples");
+for(const example of c075.examples){
+  const words=example.input.split(" ");
+  assert.equal(words.length,2,"two space-separated words");
+  const [first,second]=words;
+  assert.ok(/^[a-z]{1,20}$/.test(first)&&/^[a-z]{1,20}$/.test(second));
+  assert.equal(example.output,first===second?"EQUAL":first<second?"FIRST":"SECOND",example.input);
+  assert.ok(example.reason.length>12,"explain the example result");
+}
+assert.deepEqual(c075.examples.map(example=>example.output),["SECOND","EQUAL","FIRST","SECOND"]);
+
 for(let i=70;i<=80;i++){
  assert.match(q("C-"+String(i).padStart(3,"0")).statement,/글자/, "string lengths "+i);
 }

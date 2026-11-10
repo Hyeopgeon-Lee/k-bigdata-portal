@@ -819,9 +819,31 @@ export const cBlueprint = [
     "topic": "C 문자열 API",
     "title": "문자열 사전순 비교",
     "level": "기초 응용",
-    "statement": "공백 없는 ASCII 소문자 단어 두 개(각각 1글자 이상 20글자 이하)를 공백으로 구분해 입력받으시오. strcmp 기준으로 첫 단어가 사전순으로 앞서면 FIRST, 두 번째가 앞서면 SECOND, 같으면 EQUAL을 출력하시오.",
+    "statement": "영어 소문자(a~z)로만 이루어진 단어 두 개(각각 1~20글자)를 공백으로 구분해 한 줄에 입력받으시오. 두 단어를 왼쪽 글자부터 사전순으로 비교합니다. 처음 서로 다른 글자가 나오면 알파벳 순서가 빠른 단어가 앞서고, 앞부분이 모두 같으면 더 짧은 단어가 앞섭니다. 첫 번째 단어가 앞서면 FIRST, 두 번째 단어가 앞서면 SECOND, 완전히 같으면 EQUAL을 한 줄에 출력하시오. strcmp의 결과 부호를 이용하세요.",
     "input": "apple banana",
     "output": "FIRST",
+    "examples": [
+      {
+        "input": "banana apple",
+        "output": "SECOND",
+        "reason": "banana의 첫 글자 b가 apple의 a보다 뒤이므로 두 번째 단어 apple이 앞섭니다."
+      },
+      {
+        "input": "apple apple",
+        "output": "EQUAL",
+        "reason": "두 단어의 모든 글자와 길이가 같으므로 EQUAL입니다."
+      },
+      {
+        "input": "app apple",
+        "output": "FIRST",
+        "reason": "app은 apple의 앞부분과 같지만 더 짧으므로 첫 번째 단어가 앞섭니다."
+      },
+      {
+        "input": "apple app",
+        "output": "SECOND",
+        "reason": "앞부분 app이 같고 두 번째 단어 app이 더 짧으므로 SECOND입니다."
+      }
+    ],
     "boundary": "접두사·같음",
     "traceFocus": "strcmp 부호"
   },

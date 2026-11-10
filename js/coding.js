@@ -1,7 +1,7 @@
 import {codingProblems as sampleProblems} from "../data/coding-samples.js?v=20261110-declarations-1";
 import {javaProblems} from "../data/coding-java-98.js?v=20261110-classroom-1";
 import {cFoundationProblems} from "../data/coding-c-foundations.js?v=20261110-c069-example-1";
-import {cAdvancedProblems} from "../data/coding-c-advanced.js?v=20261110-c069-example-1";
+import {cAdvancedProblems} from "../data/coding-c-advanced.js?v=20261110-c075-examples-1";
 import {pythonFoundationProblems} from "../data/coding-python-foundations.js?v=20261110-classroom-1";
 import {pythonAdvancedProblems} from "../data/coding-python-advanced.js?v=20261110-classroom-1";
 import {ubuntuFoundationProblems} from "../data/coding-ubuntu-foundations.js?v=20261110-classroom-1";
@@ -177,6 +177,38 @@ function updateUbuntuGuide(q) {
   }
 }
 
+
+function renderExtraExamples(q) {
+  const section = $("#coding-extra-examples");
+  const list = $("#coding-extra-examples-list");
+  const examples = Array.isArray(q.examples) ? q.examples : [];
+  list.replaceChildren();
+  section.hidden = examples.length === 0;
+  if (!examples.length) return;
+  for (const [index, example] of examples.entries()) {
+    const item = document.createElement("div");
+    item.className = "coding-extra-example";
+    const heading = document.createElement("h4");
+    heading.textContent = "예제 " + (index + 2);
+    const io = document.createElement("div");
+    io.className = "coding-io";
+    for (const [label, content] of [["입력", example.input], ["출력", example.output]]) {
+      const cell = document.createElement("div");
+      const caption = document.createElement("b");
+      caption.textContent = label;
+      const value = document.createElement("pre");
+      value.textContent = content;
+      cell.append(caption, value);
+      io.append(cell);
+    }
+    const reason = document.createElement("p");
+    reason.className = "coding-example-reason";
+    reason.textContent = example.reason || "";
+    item.append(heading, io, reason);
+    list.append(item);
+  }
+}
+
 function showQuestion(q) {
   if (!q) return;
   current = q;
@@ -192,6 +224,7 @@ function showQuestion(q) {
   $("#coding-statement").textContent = q.statement;
   $("#coding-input").textContent = q.input;
   $("#coding-output").textContent = q.output;
+  renderExtraExamples(q);
   $("#coding-editor").value = getSafe(DRAFT_PREFIX + q.id);
   $("#coding-hint-text").textContent = q.hint;
   $("#coding-code").textContent = q.code;

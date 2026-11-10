@@ -1,4 +1,4 @@
-import {cBlueprint} from "./coding-c-blueprint.js?v=20261110-c069-example-1";
+import {cBlueprint} from "./coding-c-blueprint.js?v=20261110-c075-examples-1";
 import {cGuidance} from "./coding-c-guidance.js?v=20261110-c069-example-1";
 const byNumber = new Map(cBlueprint.map(p=>[Number(p.id.slice(2)),p]));
 const stdIncludes = ["#include <stdio.h>"];
@@ -105,6 +105,7 @@ export function makeCProblem(n,body,options={}) {
     id:spec.id,language:"c",level:spec.level,topic:spec.topic,
     title:spec.title,statement:spec.statement,
     input:spec.input,output:spec.output,
+    examples:spec.examples || [],
     hint:guidance[0],
     code:annotate(program,options.trace||"",spec.input),
     explanation:guidance[1],

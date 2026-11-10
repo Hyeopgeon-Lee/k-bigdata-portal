@@ -45,6 +45,13 @@
 .coding-io>div{min-width:0;padding:14px;border-radius:11px;background:#f5f7fb;border:1px solid #e6eaf3}
 .coding-io b{font-size:13px;display:block;margin-bottom:8px;color:#40526e}
 .coding-io pre{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;font:14px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace}
+.coding-extra-examples{margin-top:18px}
+.coding-extra-examples[hidden]{display:none}
+.coding-extra-examples>h3{font-size:16px;line-height:1.4;margin:0 0 11px;color:#253853}
+.coding-extra-example+.coding-extra-example{margin-top:15px}
+.coding-extra-example h4{font-size:14px;line-height:1.5;margin:0 0 7px;color:#334a69}
+.coding-example-reason{font-size:13px;line-height:1.7;color:#52627c;margin:7px 2px 0}
+
 .coding-detail textarea{display:block;resize:vertical;width:100%;min-height:165px;background:#fafbfe;border:1px solid #cbd7e9;border-radius:10px;padding:14px;font:13px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace;color:#1d2940}
 .coding-notice{font-size:13px;color:#67758e;line-height:1.65;margin:9px 0}
 .coding-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
