@@ -70,34 +70,42 @@ export const ubuntuPptProblems = [
       "터미널에서 ls -l report.txt로 -rw-r----- 권한을 확인하시오."
     ],
     "hint": "소유자·그룹·기타 사용자 순서로 필요한 읽기·쓰기·실행 권한을 생각해 보세요.",
-    "explanation": "vim report.txt로 빈 파일을 열고 Vim 안에서 :wq를 입력한 뒤 Enter로 저장·종료한다. 터미널에서 chmod 640 report.txt를 실행하고 ls -l report.txt로 권한을 확인한다.",
+    "explanation": "① 권한 대상: 파일의 접근 권한은 소유자(user/u), 그룹(group/g), 기타 사용자(other/o) 순서로 지정합니다. 소유자는 파일을 가진 계정, 그룹은 해당 그룹 구성원, 기타는 그 외 사용자입니다.\n\n② 권한의 숫자: 읽기 r=4, 쓰기 w=2, 실행 x=1입니다. 숫자를 더해 rwx=7(4+2+1), rw-=6(4+2), r-x=5(4+1), r--=4, --x=1, ---=0을 만듭니다.\n\n③ 640 계산: 첫 자리 6은 소유자 rw-, 둘째 자리 4는 그룹 r--, 마지막 0은 기타 사용자 ---입니다. 따라서 chmod 640 report.txt를 실행합니다.\n\n④ 777과 비교: chmod 777은 소유자·그룹·기타 모두에게 rwx를 부여한 777(rwxrwxrwx)입니다. 755는 rwxr-xr-x, 644는 rw-r--r--, 600은 rw-------입니다. 이 문제는 기타 사용자에게 권한을 주면 안 되므로 777은 오답이며, 불필요하게 모든 사용자에게 쓰기 권한을 허용하는 것은 위험할 수 있습니다.\n\n⑤ 출력 읽기: '-rw-r----- 1 student student 0 ... report.txt'에서 첫 '-'는 일반 파일, 'rw-'는 소유자, 'r--'는 그룹, '---'는 기타 사용자입니다. 숫자 1은 링크 수이며 첫 번째 student는 소유자, 두 번째 student는 그룹입니다. chmod는 권한을 바꾸지만 소유자는 바꾸지 않습니다.\n\n⑥ 실습 확인: Vim에서 빈 파일을 :wq, Enter로 저장·종료한 뒤 chmod 640 report.txt와 ls -l report.txt를 실행합니다. 결과의 맨 앞이 -rw-r-----이면 됩니다. 일반 파일의 x는 실행 권한이고, 디렉터리의 x는 진입·경로 통과 권한입니다.",
     "initialState": "student@ubuntu:~/lab$ ls\n\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\n-rw-r----- 1 student student 0 Nov 11 09:00 report.txt",
     "commandParts": [
       {
-        "token": "vim",
-        "meaning": "Vim 편집기"
-      },
-      {
-        "token": ":wq",
-        "meaning": "저장·종료"
+        "token": "vim report.txt",
+        "meaning": "Vim으로 새 파일을 연 뒤 :wq, Enter로 저장·종료"
       },
       {
         "token": "chmod",
-        "meaning": "파일 접근 권한 변경"
+        "meaning": "파일 또는 디렉터리 접근 권한 변경"
+      },
+      {
+        "token": "u / g / o",
+        "meaning": "소유자(user) / 그룹(group) / 기타 사용자(other)"
+      },
+      {
+        "token": "r=4 / w=2 / x=1",
+        "meaning": "읽기 4, 쓰기 2, 실행 1을 더해 각 자리 계산"
       },
       {
         "token": "640",
-        "meaning": "소유자 읽기·쓰기, 그룹 읽기, 기타 권한 없음"
+        "meaning": "소유자 6(rw-), 그룹 4(r--), 기타 0(---)"
       },
       {
-        "token": "ls -l",
-        "meaning": "상세 정보 표시"
+        "token": "777 (비교)",
+        "meaning": "세 범주 모두 rwx=7로 설정. 이 문제의 정답이 아님"
+      },
+      {
+        "token": "ls -l report.txt",
+        "meaning": "권한·소유자·그룹을 포함한 상세 정보 확인"
       }
     ],
     "verification": "ls -l report.txt",
-    "verificationDetail": "vim report.txt로 빈 파일을 열고 Vim 안에서 :wq를 입력한 뒤 Enter로 저장·종료한다. 터미널에서 chmod 640 report.txt를 실행하고 ls -l report.txt로 권한을 확인한다.",
-    "commonMistake": "640과 604를 혼동하면 소유자·그룹·기타 권한이 달라진다.",
+    "verificationDetail": "ls -l 결과의 첫 열 -rw-r-----는 일반 파일(-), 소유자 rw-(6), 그룹 r--(4), 기타 사용자 ---(0)를 뜻합니다. 출력의 두 student 중 앞은 소유자, 뒤는 그룹입니다.",
+    "commonMistake": "권한 세 자리는 소유자·그룹·기타 순서입니다. 640과 604는 다르며, 777은 모두에게 읽기·쓰기·실행 권한을 주므로 사용하면 안 됩니다.",
     "trace": [],
     "pptSource": "3장 4~5쪽, 5장 13~15쪽",
     "outputNote": "권한 외의 소유자·날짜 등은 실행 환경에 따라 달라질 수 있습니다."
@@ -229,21 +237,29 @@ export const ubuntuPptProblems = [
     "output": "student@ubuntu:~/lab$ [명령어 입력]\n-rw-r--r-- 1 student student 6 Nov 11 09:00 note.txt",
     "code": "ls -l note.txt",
     "hint": "파일 이름만 보는 목록과 상세 정보 목록의 차이를 생각해 보세요.",
-    "explanation": "ls -l은 파일 접근 권한과 소유자·크기·수정 시각 등의 상세 속성을 보여준다.",
+    "explanation": "ls -l 출력의 첫 열 -rw-r--r--를 해석하면 일반 파일(-), 소유자 rw-=6, 그룹 r--=4, 기타 사용자 r--=4이므로 644입니다. r=4(읽기), w=2(쓰기), x=1(실행)을 더해 각 자리 값을 만듭니다. 예를 들어 777은 모든 사용자에게 rwx를 허용한 상태입니다. 출력의 숫자 1은 링크 수이고, 'student student'는 차례로 소유자와 그룹입니다. 그 뒤에 파일 크기, 수정 시각, 이름이 나옵니다.",
     "initialState": "student@ubuntu:~/lab$ ls\nnote.txt\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\n-rw-r--r-- 1 student student 6 Nov 11 09:00 note.txt",
     "commandParts": [
       {
-        "token": "ls",
-        "meaning": "목록 출력"
+        "token": "ls -l",
+        "meaning": "권한·링크 수·소유자·그룹·크기·수정 시각·이름 확인"
       },
       {
-        "token": "-l",
-        "meaning": "상세 정보 표시"
+        "token": "-rw-r--r--",
+        "meaning": "일반 파일(-), 소유자 rw-(6), 그룹 r--(4), 기타 r--(4): 644"
+      },
+      {
+        "token": "student student",
+        "meaning": "첫 번째는 파일 소유자, 두 번째는 그룹"
+      },
+      {
+        "token": "r / w / x",
+        "meaning": "읽기=4 / 쓰기=2 / 실행=1"
       }
     ],
     "verification": "ls -l note.txt",
-    "verificationDetail": "ls -l은 파일 접근 권한과 소유자·크기·수정 시각 등의 상세 속성을 보여준다.",
+    "verificationDetail": "첫 열의 권한은 일반 파일(-)과 소유자·그룹·기타 세 묶음으로 나뉩니다. 세 번째 열은 소유자, 네 번째 열은 그룹입니다.",
     "commonMistake": "파일 권한은 출력 첫 번째 열에서 확인한다.",
     "trace": [],
     "pptSource": "2장 16~17쪽",
@@ -501,25 +517,29 @@ export const ubuntuPptProblems = [
     "output": "student@ubuntu:~/lab$ [명령어 입력]\ndrwxr-xr-x 2 student student 4096 Nov 11 09:00 docs",
     "code": "ls -ld docs",
     "hint": "디렉터리 안의 항목 목록과 디렉터리 자체의 정보를 구별해 보세요.",
-    "explanation": "ls -l의 상세 표시와 -d의 디렉터리 자체 표시를 함께 사용한다.",
+    "explanation": "ls -ld docs의 -l은 상세 정보, -d는 디렉터리 자체를 의미합니다. drwxr-xr-x의 맨 앞 d는 디렉터리이며, rwx=7(소유자), r-x=5(그룹), r-x=5(기타 사용자)이므로 숫자 권한은 755입니다. r=4, w=2, x=1입니다. 일반 파일의 x는 실행 권한이지만 디렉터리의 x는 그 디렉터리에 진입하거나 경로를 통과할 권한입니다. 'student student'는 소유자와 그룹입니다.",
     "initialState": "student@ubuntu:~/lab$ ls -F\ndocs/\nstudent@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\ndrwxr-xr-x 2 student student 4096 Nov 11 09:00 docs",
     "commandParts": [
       {
-        "token": "ls",
-        "meaning": "파일·디렉터리 목록"
+        "token": "ls -ld",
+        "meaning": "-l 상세 표시, -d 디렉터리 자체 표시"
       },
       {
-        "token": "-l",
-        "meaning": "상세 정보"
+        "token": "d",
+        "meaning": "첫 글자 d는 디렉터리, -는 일반 파일"
       },
       {
-        "token": "-d",
-        "meaning": "디렉터리 자체 정보"
+        "token": "rwxr-xr-x",
+        "meaning": "소유자 7(rwx), 그룹 5(r-x), 기타 5(r-x): 755"
+      },
+      {
+        "token": "student student",
+        "meaning": "앞이 소유자, 뒤가 그룹"
       }
     ],
     "verification": "ls -ld docs",
-    "verificationDetail": "ls -l의 상세 표시와 -d의 디렉터리 자체 표시를 함께 사용한다.",
+    "verificationDetail": "drwxr-xr-x는 디렉터리(d)와 권한 755를 나타냅니다. 이 문제에서는 권한을 변경하지 않고 표시만 합니다.",
     "commonMistake": "-d가 없으면 폴더 내부 목록이 출력될 수 있다.",
     "trace": [],
     "pptSource": "2장 16쪽, 18쪽",
@@ -872,25 +892,33 @@ export const ubuntuPptProblems = [
     "output": "student@ubuntu:~/lab$ [명령어 입력]\n-r--rw-r-- 1 student student 6 Nov 11 10:00 note.txt",
     "code": "chmod u-w note.txt\nls -l note.txt",
     "hint": "권한 기호의 사용자·연산자·권한 문자를 구분한다.",
-    "explanation": "chmod u-w는 소유자(u)의 쓰기(w) 권한을 제거한다.",
+    "explanation": "chmod의 기호 모드에서 u는 소유자, g는 그룹, o는 기타 사용자입니다. r은 읽기(4), w는 쓰기(2), x는 실행(1)이며, '-'는 지정한 권한만 제거하는 연산자입니다. chmod u-w note.txt는 소유자 rw-(6)에서 쓰기 w(2)를 제거해 r--(4)로 바꿉니다. 따라서 -rw-rw-r--(664)가 -r--rw-r--(464)로 바뀌며 그룹 rw-(6)과 기타 r--(4)는 유지됩니다.",
     "initialState": "student@ubuntu:~/lab$ [명령어 입력]\n-rw-rw-r-- 1 student student 6 Nov 11 10:00 note.txt",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\n-r--rw-r-- 1 student student 6 Nov 11 10:00 note.txt",
     "commandParts": [
       {
         "token": "chmod",
-        "meaning": "접근 권한 변경"
+        "meaning": "파일 접근 권한 변경"
+      },
+      {
+        "token": "u / g / o",
+        "meaning": "소유자 / 그룹 / 기타 사용자"
+      },
+      {
+        "token": "+ / -",
+        "meaning": "기존 권한에 추가 / 해당 권한 제거"
       },
       {
         "token": "u-w",
-        "meaning": "소유자 쓰기 권한 제거"
+        "meaning": "소유자 쓰기(w=2)만 제거: rw- → r--"
       },
       {
         "token": "ls -l",
-        "meaning": "권한 확인"
+        "meaning": "권한 변경 결과 확인"
       }
     ],
     "verification": "ls -l note.txt",
-    "verificationDetail": "chmod u-w는 소유자(u)의 쓰기(w) 권한을 제거한다.",
+    "verificationDetail": "변경 전 -rw-rw-r--(664), 변경 후 -r--rw-r--(464)입니다. 소유자 부분만 바뀌었는지 확인합니다.",
     "commonMistake": "그룹이나 기타 사용자의 권한은 변경하지 않는다.",
     "trace": [],
     "pptSource": "5장 8~10쪽",
@@ -907,25 +935,33 @@ export const ubuntuPptProblems = [
     "output": "student@ubuntu:~/lab$ [명령어 입력]\n-rw-rwx--- 1 student student 6 Nov 11 10:00 note.txt",
     "code": "chmod g+wx note.txt\nls -l note.txt",
     "hint": "권한의 추가와 특정 값으로 덮어쓰기를 구별한다.",
-    "explanation": "chmod g+wx는 그룹에 쓰기와 실행 권한을 더한다. 이미 있던 읽기 권한은 유지한다.",
+    "explanation": "chmod g+wx note.txt에서 g는 그룹, +는 권한 추가, w는 쓰기(2), x는 실행(1)입니다. 소유자(u)·그룹(g)·기타(o) 세 범주별로 r=4, w=2, x=1을 더해 계산합니다. 기존 그룹 r--(4)에 wx(2+1)를 추가하면 rwx(7)입니다. 따라서 -rw-r-----(640)은 -rw-rwx---(670)이 됩니다. 기존 소유자 rw-(6), 기타 ---(0) 권한은 유지됩니다. 세 범주에 모두 rwx를 주는 777과는 다릅니다.",
     "initialState": "student@ubuntu:~/lab$ [명령어 입력]\n-rw-r----- 1 student student 6 Nov 11 10:00 note.txt",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\n-rw-rwx--- 1 student student 6 Nov 11 10:00 note.txt",
     "commandParts": [
       {
         "token": "chmod",
-        "meaning": "접근 권한 변경"
+        "meaning": "파일 접근 권한 변경"
+      },
+      {
+        "token": "u / g / o",
+        "meaning": "소유자 / 그룹 / 기타 사용자"
       },
       {
         "token": "g+wx",
-        "meaning": "그룹의 쓰기·실행 권한 추가"
+        "meaning": "그룹에 쓰기(2)와 실행(1)을 추가하고 읽기(4)는 유지"
+      },
+      {
+        "token": "640 → 670",
+        "meaning": "rw- r-- --- → rw- rwx ---"
       },
       {
         "token": "ls -l",
-        "meaning": "권한 확인"
+        "meaning": "권한 세 묶음 비교"
       }
     ],
     "verification": "ls -l note.txt",
-    "verificationDetail": "chmod g+wx는 그룹에 쓰기와 실행 권한을 더한다. 이미 있던 읽기 권한은 유지한다.",
+    "verificationDetail": "출력은 -rw-r-----(640)에서 -rw-rwx---(670)으로 변경되며, 가운데 그룹 권한만 r--에서 rwx로 변합니다.",
     "commonMistake": "+ 연산자는 지정하지 않은 기존 권한을 제거하지 않는다.",
     "trace": [],
     "pptSource": "5장 8~11쪽",
@@ -942,21 +978,33 @@ export const ubuntuPptProblems = [
     "output": "student@ubuntu:~/lab$ [명령어 입력]\nu=rwx,g=rx,o=rx",
     "code": "umask -S",
     "hint": "기본 권한을 확인하는 동작과 파일 권한을 바꾸는 동작을 구별한다.",
-    "explanation": "umask -S는 마스크 설정을 문자 형태로 출력한다.",
+    "explanation": "umask는 앞으로 생성할 파일·디렉터리의 기본 권한에 영향을 주는 마스크입니다. umask -S의 예시 u=rwx,g=rx,o=rx는 일반적으로 숫자 마스크 022에 대응합니다. u는 소유자, g는 그룹, o는 기타 사용자이며 r=4, w=2, x=1입니다. 기본 생성 권한은 보통 일반 파일 666(rw-rw-rw-), 디렉터리 777(rwxrwxrwx)입니다. 마스크가 022이면 새 일반 파일은 644(rw-r--r--), 새 디렉터리는 755(rwxr-xr-x)가 됩니다. 따라서 -S의 u=rwx 표시가 새 일반 파일에 실행 권한을 자동 부여한다는 뜻은 아닙니다. chmod는 기존 항목의 권한을 변경하고, umask는 생성 시 기본 권한에 관여합니다.",
     "initialState": "student@ubuntu:~/lab$ [명령어 입력]",
     "afterState": "student@ubuntu:~/lab$ [명령어 입력]\nu=rwx,g=rx,o=rx",
     "commandParts": [
       {
-        "token": "umask",
-        "meaning": "기본 권한 마스크 확인 또는 설정"
+        "token": "umask -S",
+        "meaning": "기본 권한 마스크를 문자 형식으로 표시"
       },
       {
-        "token": "-S",
-        "meaning": "마스크를 문자 형식으로 출력"
+        "token": "u / g / o",
+        "meaning": "소유자 / 그룹 / 기타 사용자"
+      },
+      {
+        "token": "r / w / x",
+        "meaning": "읽기=4 / 쓰기=2 / 실행=1"
+      },
+      {
+        "token": "022 (예시)",
+        "meaning": "일반 파일 666 → 644, 디렉터리 777 → 755"
+      },
+      {
+        "token": "chmod와 차이",
+        "meaning": "umask는 생성 기본값, chmod는 기존 권한 변경"
       }
     ],
     "verification": "umask -S",
-    "verificationDetail": "umask -S는 마스크 설정을 문자 형태로 출력한다.",
+    "verificationDetail": "u=rwx,g=rx,o=rx는 일반적인 umask 022의 문자 표현 예시이며 실제 값은 환경마다 다릅니다. 새 일반 파일의 실행 권한은 별도로 구분합니다.",
     "commonMistake": "기본 umask 값은 시스템 설정에 따라 달라질 수 있다.",
     "trace": [],
     "pptSource": "5장 20쪽",
