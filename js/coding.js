@@ -246,7 +246,7 @@ function updateUbuntuGuide(q) {
     c:"복사한 C 코드를 vim에 붙여 넣어 직접 주석을 작성하고, 터미널에서 gcc 또는 make로 컴파일해 확인하세요.",
     java:"Java 코드를 IntelliJ에서 실행하며 각 줄이 어떤 역할을 하는지 주석으로 설명해 보세요.",
     python:"Python 코드를 VS Code, PyCharm 또는 터미널에서 실행하며 각 줄에 직접 주석을 달아 보세요.",
-    linux:Array.isArray(q.vimSteps) ? "터미널 명령어를 한 줄씩 실행하고, 아래 'Vim 조작 방법'의 키 입력을 따라 하세요." : "Ubuntu 터미널에서 명령어를 한 줄씩 실행하고 결과를 확인하세요."
+    linux:Array.isArray(q.vimSteps) ? "터미널 명령어를 한 줄씩 실행하고, 아래 'Vim 조작 순서'의 키 입력을 따라 하세요." : "Ubuntu 터미널에서 명령어를 한 줄씩 실행하고 결과를 확인하세요."
   })[q.language];
   $("#coding-editor").placeholder = isUbuntu ? "Ubuntu 터미널에서 사용할 명령어를 직접 작성해 보세요." : "여기에 스스로 정답을 작성해 보세요.";
   $("#coding-answer-note").hidden = isUbuntu;
@@ -265,7 +265,7 @@ function updateUbuntuGuide(q) {
   const checkAlreadyIncluded = checkLines.length > 0 && checkLines.every(line=>enteredLines.has(line));
   $("#coding-ubuntu-verification").hidden = !checkLines.length || checkAlreadyIncluded;
   // Avoid repeating the same Vim procedure below the verification command.
-  $("#coding-ubuntu-verify-note").textContent = Array.isArray(q.vimSteps) ? "" : (guide.verificationDetail || guide.output);
+  $("#coding-ubuntu-verify-note").textContent = guide.verificationDetail || "";
   $("#coding-ubuntu-verify-note").hidden = !$("#coding-ubuntu-verify-note").textContent;
   $("#coding-ubuntu-mistake").textContent = guide.commonMistake;
   // Include the same ls reference table whenever ls appears in an answer or a verification command.
