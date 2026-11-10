@@ -12,7 +12,7 @@ try{
     const page=await context.newPage();
     page.on("pageerror",e=>failures.push(width+": "+e.message));
     await page.goto("http://127.0.0.1:8765/coding.html?id=LINUX-002",{waitUntil:"domcontentloaded"});
-    await page.locator("#coding-title").filter({hasText:"파일 접근 권한 설정"}).waitFor({timeout:15000});
+    await page.locator("#coding-title").filter({hasText:"접근 권한 설정"}).waitFor({timeout:15000});
     assert.match(await page.locator("#coding-heading").innerText(),/기초 프로그래밍·명령어 350제/);
     assert.equal(await page.locator("#coding-available").innerText(),"350문제");
     assert.equal((await page.locator("#coding-language button[data-lang=linux] span").innerText()),"50문제");
