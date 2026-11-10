@@ -20,6 +20,15 @@ const services=readFileSync(new URL('../js/services.js',import.meta.url),'utf8')
 const index=readFileSync(new URL('../index.html',import.meta.url),'utf8');
 const list=[...seeds,...javaProblems,...cFoundationProblems,...cAdvancedProblems,...pythonFoundationProblems,...pythonAdvancedProblems,...ubuntuFoundationProblems,...ubuntuAdvancedProblems];
 assert.equal(list.length,350,'all 350 exercises must be present');
+
+const java016=list.find(p=>p.id==='JAVA-016');
+assert.ok(java016,'JAVA-016 is present');
+assert.match(java016.statement,/분.*초.*한글 단위/,'JAVA-016 question requires Korean time units');
+assert.equal(java016.input,'125','JAVA-016 sample input is preserved');
+assert.equal(java016.output,'2분 5초','JAVA-016 expected output has Korean units');
+assert.match(java016.code,/System\.out\.println\(minutes \+ "분 " \+ remain \+ "초"\)/,'JAVA-016 Java code prints minute/second labels');
+assert.match(java016.explanation,/2분 5초/,'JAVA-016 explanation matches output');
+
 const unique=new Set(list.map(p=>p.id));
 assert.equal(unique.size,350,'exercise IDs must be unique');
 const firstVisitAutocomplete=html.includes('id="coding-autocomplete-toggle" type="checkbox" role="switch"')
