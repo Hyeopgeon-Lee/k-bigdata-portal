@@ -84,6 +84,8 @@ try{
     assert.equal(await page.locator("#coding-ubuntu-guide").isVisible(),true);
     assert.ok((await page.locator("#coding-ubuntu-parts").innerText()).includes("chmod"));
     assert.ok((await page.locator("#coding-ubuntu-verify").innerText()).includes("ls -l report.txt"));
+    assert.equal(await page.locator("#coding-output-label").innerText(),"예상 실행 결과","Ubuntu examples use a clear expected output label");
+    assert.equal(await page.locator("#coding-ubuntu-guide h3").nth(1).innerText(),"실행 결과 확인 명령어","verification section distinguishes the checking command");
 
     await page.locator("#coding-language button[data-lang=java]").click();
     assert.equal(await page.locator("#coding-trace-button").isVisible(),true);
