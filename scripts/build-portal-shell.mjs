@@ -4,6 +4,8 @@ import path from 'node:path';
 import {portalPages,navigationItems,shellVersion} from '../js/portal-navigation-model.mjs';
 import {renderHeader,renderServiceNavigation,renderToolbar} from './portal-shell-template.mjs';
 const root=fileURLToPath(new URL('../',import.meta.url));
+// Keep the responsive account/menu loader cache-busted when regenerating page shells.
+const navigationScriptVersion='20261111-header-controls-1';
 function discover(dir){return readdirSync(dir,{withFileTypes:true}).flatMap(item=>item.name.startsWith('.')||['node_modules','ui-screenshots','test-results'].includes(item.name)?[]:item.isDirectory()?discover(path.join(dir,item.name)):item.name.endsWith('.html')?[path.relative(root,path.join(dir,item.name)).replaceAll('\\','/')]:[]);}
 export const htmlPages=discover(root).sort();
 const region=(name,content)=>`<!-- portal:${name}:start (generated; edit scripts/portal-shell-template.mjs) -->\n${content}\n<!-- portal:${name}:end -->`;
@@ -23,7 +25,7 @@ for(const file of htmlPages){
   else html=removeRegion(html,'toolbar');
   if(page.group){const pattern=/<nav\b[^>]*data-learning-nav[^>]*>[\s\S]*?<\/nav>/;if(!pattern.test(html)&&!html.includes('portal:services:start'))html=html.replace(/(<main\b[^>]*>)/,'$1\n'+region('services',renderServiceNavigation(page,id)));else html=replaceRegion(html,'services',renderServiceNavigation(page,id),pattern);}
   else html=removeRegion(html,'services');
-  const assets=`<link rel="stylesheet" href="css/portal-navigation.css?v=${shellVersion}">\n<script defer src="js/portal-navigation.js?v=${shellVersion}"></script>`;
+  const assets=`<link rel="stylesheet" href="css/portal-navigation.css?v=${shellVersion}">\n<script defer src="js/portal-navigation.js?v=${navigationScriptVersion}"></script>`;
   if(html.includes('portal:assets:start'))html=replaceRegion(html,'assets',assets);else html=html.replace('</head>',region('assets',assets)+'\n</head>');
   // Coding/learning UI assets have their own content versions and can be updated
   // without unnecessarily invalidating the shared portal shell.
