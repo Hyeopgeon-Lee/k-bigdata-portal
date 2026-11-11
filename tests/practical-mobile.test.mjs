@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {buildBank,canSubmit,canReveal,remainingSeconds,remainingAnswerSeconds,hintAvailable,answerDeadlineReached,recommendFive,matchesExam,shuffle,escapeHTML,gradeAnswer} from '../js/practical-core.js';
+import {buildBank,canSubmit,canReveal,remainingSeconds,remainingAnswerSeconds,hintAvailable,answerDeadlineReached,recommendFive,matchesExam,shuffle,escapeHTML,gradeAnswer,canResumeUnfinishedAttempt} from '../js/practical-core.js';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const base=JSON.parse(read('data/practical/questions.json')),imported=JSON.parse(read('data/practical/normalized.json'));
 const bank=buildBank([...base,...imported.questions],JSON.parse(read('data/practical/exam-history.json')));
@@ -24,6 +24,11 @@ const late={...a,viewedExplanation:true,submittedAt:startedAt+60000,autoRevealed
 assert.equal(canSubmit(late,'later answer',startedAt+70000),true);
 assert.equal(canSubmit({...late,lateSubmittedAt:startedAt+70000},'next',startedAt+80000),false);
 assert.equal(canSubmit(a,'',startedAt),false);
+assert.equal(canResumeUnfinishedAttempt({...a,viewedExplanation:false},startedAt+1000),true,'unfinished question resumes draft');
+assert.equal(canResumeUnfinishedAttempt({...a,viewedExplanation:true},startedAt+1000),false,'revealed question must reopen as a fresh editable attempt');
+assert.equal(canResumeUnfinishedAttempt({...a,submittedAt:startedAt+1000,viewedExplanation:false},startedAt+1000),false,'submitted question must not reopen locked');
+assert.equal(canResumeUnfinishedAttempt({...a,startedAt:startedAt+2000},startedAt+1000),false,'future session timestamp is invalid');
+assert.equal(canResumeUnfinishedAttempt(null,startedAt+1000),false);
 const fake=()=>{const data=new Map();return {getItem:k=>data.get(k)||null,setItem:(k,v)=>data.set(k,v),removeItem:k=>data.delete(k)};};
 globalThis.localStorage=fake();globalThis.sessionStorage=fake();
 const store=await import('../js/practical-store.js');
@@ -54,6 +59,7 @@ assert.match(html,/<meta name="robots" content="noindex, nofollow">/);
 assert.ok(ui.includes('정답·해설 보기'));
 assert.ok(ui.includes('id="solve-hint"'));
 assert.ok(ui.includes('bindReview('));
+assert.ok(ui.includes('canResumeUnfinishedAttempt(previous,now)'),'question reopening must use the unfinished-session guard');
 assert.doesNotMatch(ui,/setInterval\(updateGate|autoRevealAnswer|answerDeadlineReached\(/);
 
 assert.ok(ui.includes('aliases[id]||id'));assert.ok(ui.includes('params.get("exam")'));
