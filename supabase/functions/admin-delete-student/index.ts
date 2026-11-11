@@ -12,7 +12,7 @@ async function isAdministrator(request:Request){
   const {data:identity,error:identityError}=await caller.auth.getUser(token);
   if(identityError||identity.user?.email?.toLowerCase()!=="hglee67@kopo.ac.kr"||!identity.user.email_confirmed_at)return false;
   const {data:allowed,error}=await caller.rpc("portal_super_admin_allowed");
-  return !error&&allowed===true;
+  return !error&&allowed===true ? identity.user.id : null;
 }
 async function getStudent(userId:string){
   const {data,error}=await admin.from("profiles").select("user_id,full_name,email,student_no,signup_type,enrollment_status,updated_at")
@@ -115,7 +115,8 @@ Deno.serve(async request=>{
   if(request.method!=="POST")return respond({error:"METHOD_NOT_ALLOWED"},405);
   if(request.headers.get("origin")&&request.headers.get("origin")!=="https://portal.k-bigdata.kr")
     return respond({error:"ORIGIN_DENIED"},403);
-  if(!await isAdministrator(request))return respond({error:"ADMIN_DENIED"},403);
+  const actorId=await isAdministrator(request);
+  if(!actorId)return respond({error:"ADMIN_DENIED"},403);
   try{
     const input=await request.json();
     if(!isUUID(input?.userId)||!["preview","delete"].includes(input?.action))return respond({error:"INVALID_REQUEST"},400);
@@ -124,7 +125,12 @@ Deno.serve(async request=>{
     if(input.fullName!==student.full_name||input.confirmWord!=="영구삭제"||input.version!==stock.version)
       return respond({error:"CONFIRMATION_MISMATCH"},409);
     await erase(student,stock);
-    return respond({ok:true,deleted:true});
+    // Retain an accountable deletion event without restoring the removed student's identity.
+    const {error:auditError}=await admin.from("admin_audit_log").insert({
+      actor_user_id:actorId,target_user_id:null,old_status:"withdrawn",new_status:"permanently_deleted"
+    });
+    if(auditError)console.error("STUDENT_DELETION_AUDIT_FAILED");
+    return respond({ok:true,deleted:true,auditRecorded:!auditError});
   }catch(error){
     const message=error instanceof Error?error.message:"UNKNOWN_ERROR";
     console.error("admin-delete-student:",message);
