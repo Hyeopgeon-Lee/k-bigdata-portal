@@ -44,9 +44,19 @@ function setRoom(code,openForm=false){
 }
 function buildDates(){
  const container=byId('room-dates');container.replaceChildren();
+ const weekday=new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',weekday:'short'});
  for(let offset=0;offset<5;offset++){
-  const date=dateAfter(offset);const btn=element('button',offset===0?'오늘 · '+prettyDate(date):prettyDate(date),'room-date');
-  btn.type='button';btn.setAttribute('aria-pressed',String(selectedDate===date));
+  const date=dateAfter(offset);
+  const [month,day]=date.slice(5).split('-').map(Number);
+  const dayName=weekday.format(new Date(date+'T12:00:00+09:00'));
+  const btn=element('button',null,'room-date');
+  btn.type='button';
+  btn.setAttribute('aria-pressed',String(selectedDate===date));
+  btn.setAttribute('aria-label',(offset===0?'오늘, ':'')+prettyDate(date)+' 예약 현황');
+  btn.append(
+   element('span',offset===0?'오늘':dayName,'room-date-weekday'),
+   element('strong',month+'.'+day,'room-date-number')
+  );
   btn.addEventListener('click',()=>{selectedDate=date;byId('room-date').value=date;buildDates();loadSchedule();});
   container.append(btn);
  }
@@ -55,11 +65,13 @@ function drawSchedule(items){
  const root=byId('room-schedule');root.replaceChildren();
  for(const room of rooms){
   const reservations=items.filter(x=>x.room_code===room);
-  const card=element('article',null,'room-tile');
+  const card=element('article',null,'room-tile'+(reservations.length?'':' is-available'));
   const heading=element('div',null,'room-tile-head');
-  heading.append(element('h3',room+'호'),element('span',reservations.length+'건','room-pill'));
+  heading.append(element('h3',room+'호'),
+   element('span',reservations.length?'예약 '+reservations.length+'건':'예약 없음',
+    'room-pill'+(reservations.length?'':' is-available')));
   card.append(heading);
-  if(!reservations.length)card.append(element('p','예약이 없습니다. 사용 가능한 시간대를 선택하세요.','room-muted'));
+  if(!reservations.length)card.append(element('p','현재 등록된 예약이 없습니다.','room-availability'));
   else for(const item of reservations){
     const slot=element('div',null,'room-booked');
     slot.append(element('strong',koreanTime(item.starts_at)+'–'+koreanTime(item.ends_at)));
