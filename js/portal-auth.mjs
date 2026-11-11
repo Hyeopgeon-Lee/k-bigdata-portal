@@ -344,7 +344,7 @@ async function renderWithdrawnDeletion(member){
     '<p id="portal-delete-loading" class="portal-auth-note">삭제 대상 기록을 확인하고 있습니다.</p>'+
     '<ul id="portal-delete-counts" class="portal-delete-counts" hidden></ul>'+
     '<div id="portal-delete-confirm" class="portal-delete-confirm" hidden>'+
-      '<p class="portal-delete-warning">영구 삭제 시 계정, 연결된 학습 기록, 개인 설정, 예약, 요청 및 첨부파일이 제거됩니다. 계정과 연결되지 않은 과거 기록이나 외부 서비스의 별도 데이터는 자동 삭제 대상이 아닙니다.</p>'+
+      '<p class="portal-delete-warning">영구 삭제 시 계정, 연결된 학습 기록, 개인 설정, 예약, 요청 및 첨부파일이 제거됩니다. 학번과 이름이 일치하지 않는 구형 기록 및 포털 외부 서비스의 데이터는 별도 확인이 필요합니다.</p>'+
       '<label>확인할 학생 이름<input id="portal-delete-name" type="text" autocomplete="off" placeholder="학생 이름을 정확히 입력"></label>'+
       '<label>확인 문구<input id="portal-delete-word" type="text" autocomplete="off" placeholder="영구삭제"></label>'+
       '<button id="portal-delete-confirm-button" type="button" class="portal-auth-danger" disabled>이 학생의 데이터 영구 삭제</button>'+
