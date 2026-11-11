@@ -64,7 +64,54 @@ const html=(title:string,date:string,body:string)=>'<main style="max-width:650px
  '<p style="color:#687d96;font-size:13px">정답률은 자동 채점 시험 점수가 아닙니다. 자가평가와 브라우저 답안 비교를 구분합니다.</p>'+
  '<p><a href="https://portal.k-bigdata.kr/my-learning.html">나의 학습현황</a></p></main>';
 function pct(correct:number,total:number){return total?Math.round(correct/total*100)+"%":"집계 없음";}
-async function deliver(userId:string|null,email:string,kind:"super_admin",period:string,subject:string,body:string){
+async function reportControls(){
+ const {data,error}=await db.from("weekly_report_controls").select("report_type,enabled");
+ if(error||!data||!["super_admin","student"].every(type=>data.some(s=>s.report_type===type)))throw Error("REPORT_CONTROLS_UNAVAILABLE");
+ return {faculty:data.find(x=>x.report_type==="super_admin")?.enabled===true,
+   students:data.find(x=>x.report_type==="student")?.enabled===true};
+}
+const questionKey=(item:any)=>item.bank+":"+item.question_id;
+const judged=(rows:any[])=>rows.filter(x=>["correct","incorrect"].includes(x.result));
+function studentBody(student:any,all:any[],period:{start:string;end:string;date:string}){
+ const mine=all.filter(x=>x.user_id===student.user_id).sort((a,b)=>Date.parse(a.submitted_at)-Date.parse(b.submitted_at));
+ const week=mine.filter(x=>x.submitted_at>=period.start);
+ const previous=mine.filter(x=>x.submitted_at<period.start);
+ const evaluated=judged(week),self=evaluated.filter(x=>x.grading_method==="self");
+ const automatic=evaluated.filter(x=>x.grading_method==="automatic");
+ const oldLatest=new Map<string,string>(),latest=new Map<string,string>(),errors=new Map<string,number>();
+ for(const x of previous)if(["correct","incorrect","ungraded"].includes(x.result))oldLatest.set(questionKey(x),x.result);
+ const improved=new Set<string>(),wrongSeen=new Set<string>();
+ for(const x of week){
+   const key=questionKey(x);
+   if(x.result==="incorrect"){wrongSeen.add(key);errors.set(key,(errors.get(key)||0)+1);}
+   if(x.result==="correct"&&(wrongSeen.has(key)||oldLatest.get(key)==="incorrect"))improved.add(key);
+   if(["correct","incorrect","ungraded"].includes(x.result))latest.set(key,x.result);
+ }
+ for(const [key,value] of oldLatest)if(!latest.has(key))latest.set(key,value);
+ const review=[...latest].filter(([key,result])=>result==="incorrect"||result==="ungraded")
+   .sort((a,b)=>(errors.get(b[0])||0)-(errors.get(a[0])||0)).slice(0,5);
+ const link=(key:string)=>{
+   const cut=key.indexOf(":");if(cut<0)return escape(key);
+   const bank=key.slice(0,cut),question=key.slice(cut+1),path=({coding:"coding.html",ncp:"ncp.html",practical:"practical.html"} as Record<string,string>)[bank];
+   return path&&/^[\\w-]{1,100}$/.test(question)?
+      '<a href="https://portal.k-bigdata.kr/'+path+'?id='+encodeURIComponent(question)+'">'+escape(question)+'</a>':escape(question);
+ };
+ const recovered=[...improved].filter(key=>latest.get(key)==="correct").slice(0,8);
+ const difference=week.length-previous.length;
+ const studentName=String(student.full_name||"학생").trim().slice(0,80);
+ const part='<p>'+escape(studentName)+' 학생의 최근 1주일 학습 요약입니다.</p>'+
+   '<p>풀이 '+week.length+'회 / 서로 다른 문제 '+new Set(week.map(questionKey)).size+'개 · 지난주 '+previous.length+
+     '회 대비 '+(difference>0?"+":"")+difference+'회</p>'+
+   '<p>자가평가 정답률 '+pct(self.filter(x=>x.result==="correct").length,self.length)+
+     ' · 브라우저 답안 비교 '+pct(automatic.filter(x=>x.result==="correct").length,automatic.length)+'</p>'+
+   '<h3>오답에서 정답으로 개선한 문제</h3><ul>'+
+     (recovered.length?recovered.map(x=>'<li>'+link(x)+'</li>').join(""):"<li>이번 주 개선 기록 없음</li>")+'</ul>'+
+   '<h3>다음 주 추천 복습 문제</h3><ol>'+
+     (review.length?review.map(([key])=>'<li>'+link(key)+'</li>').join(""):"<li>기록된 오답·미판정 문제 없음</li>")+'</ol>'+
+   '<p>복습 추천은 실제 학습 기록을 기준으로 하며 시험 성적을 보장하지 않습니다.</p>';
+ return html("주간 개인 학습 리포트",period.date,part);
+}
+async function deliver(userId:string|null,email:string,kind:"super_admin"|"student",period:string,subject:string,body:string){
  const q=db.from("report_deliveries");
  const {data:existing,error:lookupError}=await q.select("id,status,created_at").eq("recipient_email",email).eq("report_type",kind).eq("week_start",period).maybeSingle();
  if(lookupError)throw lookupError;
@@ -108,25 +155,31 @@ Deno.serve(async(req:Request)=>{
  try{payload=await req.json();}catch{}
  const dryRun=payload.dry_run===true;
  if(event==="push"&&!dryRun)return response({error:"PUSH_MUST_DRY_RUN"},403);
- if(!mailKey&&!dryRun)return response({error:"RESEND_API_KEY_NOT_CONFIGURED"},503);
  try{
+  const controls=await reportControls();
   const period=lastWeek();
+  if(!controls.faculty&&!controls.students)return response({ok:true,weekStart:period.date,controls,skipped:"both_disabled",counts:{sent:0,failed:0,duplicate:0}});
+  if(!mailKey&&!dryRun)return response({error:"RESEND_API_KEY_NOT_CONFIGURED"},503);
+  const priorStart=new Date(Date.parse(period.start)-7*86400000).toISOString();
   const [attempts,profiles,admins]=await Promise.all([
-   allAttempts(period.start,period.end),
+   allAttempts(priorStart,period.end),
    db.from("profiles").select("user_id,email,full_name,approval_status,enrollment_status").eq("approval_status","approved"),
    db.from("account_roles").select("user_id").eq("role","super_admin")
   ]);
   if(profiles.error||admins.error)throw Error("Recipient lookup failed");
   const adminId=admins.data?.find(x=>(profiles.data||[]).some(p=>p.user_id===x.user_id&&p.email?.toLowerCase()===adminMail))?.user_id;
-  if(!adminId)throw Error("Missing verified super admin profile");
-  const verified=await db.auth.admin.getUserById(adminId);
-  if(verified.error||verified.data.user?.email?.toLowerCase()!==adminMail||!verified.data.user?.email_confirmed_at)throw Error("Unverified super admin");
+  if(controls.faculty){
+   if(!adminId)throw Error("Missing verified super admin profile");
+   const verified=await db.auth.admin.getUserById(adminId);
+   if(verified.error||verified.data.user?.email?.toLowerCase()!==adminMail||!verified.data.user?.email_confirmed_at)throw Error("Unverified super admin");
+  }
   const students=(profiles.data||[]).filter(p=>p.enrollment_status==="enrolled"&&p.user_id!==adminId);
   const studentSet=new Set(students.map(s=>s.user_id));
-  const cohort=attempts.filter(x=>studentSet.has(x.user_id));
-  if(dryRun)return response({ok:true,dry_run:true,oidc:event,weekStart:period.date,
-    cohortSize:students.length,attempts:cohort.length,studentEmailRecipients:0,
-    adminEmailRecipients:1,emailProviderConfigured:!!mailKey,senderConfigured:!!sender});
+  const cohort=attempts.filter(x=>studentSet.has(x.user_id)&&x.submitted_at>=period.start);
+  if(dryRun)return response({ok:true,dry_run:true,oidc:event,weekStart:period.date,controls,
+    cohortSize:students.length,attempts:cohort.length,
+    studentEmailRecipients:controls.students?students.filter(s=>s.email).length:0,
+    adminEmailRecipients:controls.faculty?1:0,emailProviderConfigured:!!mailKey,senderConfigured:!!sender});
   const counts={sent:0,failed:0,duplicate:0};
   const subjectKey=(x:any)=>x.bank==="coding"?String(x.question_id).split("-")[0]:x.bank==="ncp"?"NCP":"PRACTICAL";
   const subjects=["JAVA","C","PYTHON","LINUX","NCP","PRACTICAL"].map(key=>
@@ -148,10 +201,31 @@ Deno.serve(async(req:Request)=>{
      " · 브라우저 답안 비교 "+pct(automatic.filter(x=>x.result==="correct").length,automatic.length)+"</p>"+
     "<h3>과목별 시도</h3><ul>"+subjects+"</ul><h3>반복 오답 문제</h3><ol>"+top+"</ol>"+
     '<p><a href="https://portal.k-bigdata.kr/teacher-learning.html">교수 전용 학급 학습통계 확인</a></p>');
-  const adminResult=await deliver(null,adminMail,"super_admin",period.date,"[학과 포털] 주간 학급 학습 보고서",body);
-  if(adminResult==="sent")counts.sent++;
-  else if(adminResult==="failed")counts.failed++;
-  else if(adminResult==="duplicate")counts.duplicate++;
-  return response({ok:true,counts,adminResult,studentSendingPaused:true,weekStart:period.date});
+  let adminResult="disabled";
+  if(controls.faculty){
+    adminResult=await deliver(null,adminMail,"super_admin",period.date,"[학과 포털] 주간 학급 학습 보고서",body);
+    counts[adminResult as keyof typeof counts]++;
+  }
+  let skippedUnverified=0;
+  if(controls.students){
+    for(const student of students){
+      if(!student.email){skippedUnverified++;continue;}
+      // Never email an account that has not verified its address.
+      const {data:verified,error:checkError}=await db.auth.admin.getUserById(student.user_id);
+      if(checkError||!verified.user?.email_confirmed_at||
+         verified.user.email?.toLowerCase()!==student.email.toLowerCase()){
+        skippedUnverified++;continue;
+      }
+      // Recheck before each delivery so a newly disabled switch stops the remainder.
+      const live=await reportControls();
+      if(!live.students)break;
+      const body=studentBody(student,attempts,period);
+      const state=await deliver(student.user_id,student.email,"student",period.date,
+        "[학과 포털] 나의 주간 학습 리포트",body);
+      counts[state as keyof typeof counts]++;
+      await new Promise(resolve=>setTimeout(resolve,650));
+    }
+  }
+  return response({ok:true,controls,counts,adminResult,skippedUnverified,weekStart:period.date});
  }catch(error){console.error("Weekly learning report failed",error);return response({error:"REPORT_FAILED"},500);}
 });
