@@ -113,7 +113,7 @@ Deno.serve(async(req:Request)=>{
   const period=lastWeek();
   const [attempts,profiles,prefs,admins]=await Promise.all([
    allAttempts(period.start,period.end),
-   db.from("profiles").select("user_id,email,full_name,approval_status,enrollment_status").eq("approval_status","approved"),
+   db.from("profiles").select("user_id,email,full_name,approval_status,enrollment_status,signup_type").eq("approval_status","approved"),
    db.from("user_preferences").select("user_id,weekly_email_opt_in").eq("weekly_email_opt_in",true),
    db.from("account_roles").select("user_id").eq("role","super_admin")
   ]);
@@ -122,7 +122,7 @@ Deno.serve(async(req:Request)=>{
   if(!adminId)throw Error("Missing verified super admin profile");
   const verified=await db.auth.admin.getUserById(adminId);
   if(verified.error||verified.data.user?.email?.toLowerCase()!==adminMail||!verified.data.user?.email_confirmed_at)throw Error("Unverified super admin");
-  const students=(profiles.data||[]).filter(p=>p.enrollment_status==="enrolled"&&p.user_id!==adminId);
+  const students=(profiles.data||[]).filter(p=>(p.enrollment_status==="enrolled"||(p.signup_type==="alumni"&&p.enrollment_status==="graduated"))&&p.user_id!==adminId);
   const studentSet=new Set(students.map(s=>s.user_id));
   const byUser=new Map<string,any[]>();
   for(const a of attempts)byUser.set(a.user_id,[...(byUser.get(a.user_id)||[]),a]);
