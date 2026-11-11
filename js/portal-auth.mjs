@@ -437,8 +437,9 @@ async function renderAdmin(){
     const mailTd=document.createElement("td");mailTd.dataset.label="주간 메일";
     const mailStatus=document.createElement("span");mailStatus.className="portal-admin-mail-status";
     const updateMailStatus=()=>{
-      const eligible=approval.value==="approved"&&enrollment.value==="enrolled"&&member.signup_type!=="alumni";
-      mailStatus.textContent=eligible?"발송 후보":"발송 제외";
+      const eligible=member.approval_status==="approved"&&member.enrollment_status==="enrolled"&&member.signup_type!=="alumni";
+      const unsaved=approval.value!==member.approval_status||enrollment.value!==member.enrollment_status;
+      mailStatus.textContent=(eligible?"발송 후보":"발송 제외")+(unsaved?" · 저장 전":"");
       mailStatus.dataset.eligible=String(eligible);
     };
     approval.addEventListener("change",updateMailStatus);
@@ -457,6 +458,7 @@ async function renderAdmin(){
       if(error){status("저장 실패: 관리자 권한과 입력값을 확인하세요.");save.disabled=false;return;}
       member.approval_status=approval.value;
       member.enrollment_status=enrollment.value;
+      updateMailStatus();
       syncDeleteButton();
       status(member.full_name+" 학생의 학적 상태를 저장했습니다.");
       updateResults();
