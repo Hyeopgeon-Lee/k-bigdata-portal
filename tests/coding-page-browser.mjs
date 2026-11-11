@@ -82,6 +82,31 @@ try{
     const shareText=await page.evaluate(()=>navigator.clipboard.readText());
     assert.ok(shareText.includes("LINUX-002"),"problem share must preserve unique question link");
 
+    // Regression: desktop Ubuntu has two full-width help actions, a separate
+    // progress row and no empty third grid track from the hidden trace button.
+    const ubuntuActions=await page.evaluate(()=>{
+      const rect=selector=>document.querySelector(selector).getBoundingClientRect();
+      const row=rect(".coding-actions--help");
+      const hint=rect("#coding-hint-button");
+      const answer=rect("#coding-answer-button");
+      const progress=rect(".coding-actions--progress");
+      const trace=document.querySelector("#coding-trace-button");
+      return {
+        rowWidth:row.width,
+        hintLeft:hint.left,
+        rowLeft:row.left,
+        answerRight:answer.right,
+        rowRight:row.right,
+        gapBelowHelp:progress.top-row.bottom,
+        traceDisplay:getComputedStyle(trace).display
+      };
+    });
+    assert.equal(ubuntuActions.traceDisplay,"none","Ubuntu trace action is truly hidden at "+width);
+    if(width>=801){
+      assert.ok(Math.abs(ubuntuActions.hintLeft-ubuntuActions.rowLeft)<=2,"Ubuntu hint starts at left edge "+width);
+      assert.ok(Math.abs(ubuntuActions.answerRight-ubuntuActions.rowRight)<=2,"Ubuntu answer fills row, without empty third column "+width+" "+JSON.stringify(ubuntuActions));
+      assert.ok(ubuntuActions.gapBelowHelp>=18,"desktop completion actions are visually separated "+width+" "+JSON.stringify(ubuntuActions));
+    }
     await page.locator("#coding-answer-button").click();
     assert.equal(await page.locator("#coding-ubuntu-guide").isVisible(),true);
     assert.ok((await page.locator("#coding-ubuntu-parts").innerText()).includes("chmod"));
