@@ -542,108 +542,107 @@ html:not([data-portal-access="approved"]) body > :not(#portal-auth-layer) { visi
   .site-header .brand-copy strong { font-size: 12px; }
 }
 
-/* Member administration: the mobile list uses compact cards instead of a wide table. */
+/* Member administration: true two-column cards on phones, table on desktop. */
 .portal-admin-scroll { max-width: 100%; }
+.portal-admin-table td[hidden] { display:none !important; }
 @media (max-width: 767px) {
   .portal-auth-card:has(.portal-admin-table) {
     width: min(100%, 520px);
     min-width: 0;
     overflow-x: hidden;
   }
-  .portal-admin-scroll {
-    max-height: none;
-    overflow: visible;
-    border: 0;
-    border-radius: 0;
-  }
+  .portal-admin-scroll { max-height:none; overflow:visible; border:0; border-radius:0; }
   .portal-admin-table {
-    display: block;
-    width: 100%;
-    min-width: 0;
-    border-collapse: separate;
-    font-size: 13px;
+    display:block; width:100%; min-width:0; border-collapse:separate; font-size:14px;
   }
-  .portal-admin-table thead { display: none; }
-  .portal-admin-table tbody {
-    display: grid;
-    width: 100%;
-    min-width: 0;
-    gap: 10px;
-  }
+  .portal-admin-table thead { display:none; }
+  .portal-admin-table tbody { display:grid; width:100%; min-width:0; gap:12px; }
   .portal-admin-table tbody tr {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 9px 10px;
-    min-width: 0;
-    padding: 13px;
-    border: 1px solid #d9e3f1;
-    border-radius: 13px;
-    background: #f9fbff;
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px 12px;
+    min-width:0;
+    padding:16px;
+    border:1px solid #d9e3f1;
+    border-radius:15px;
+    background:#fff;
+    box-shadow:0 3px 12px rgba(22,55,105,.035);
   }
   .portal-admin-table td {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    min-width: 0;
-    padding: 0;
-    border: 0;
-    white-space: normal;
-    overflow-wrap: anywhere;
-    word-break: break-word;
-    line-height: 1.4;
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    min-width:0;
+    padding:0;
+    border:0;
+    white-space:normal;
+    overflow-wrap:anywhere;
+    word-break:normal;
+    line-height:1.5;
   }
   .portal-admin-table td::before {
-    content: attr(data-label);
-    color: #697b97;
-    font-size: 11px;
-    font-weight: 700;
-    line-height: 1.3;
+    content:attr(data-label);
+    color:#657792;
+    font-size:12px;
+    font-weight:750;
+    line-height:1.3;
   }
   .portal-admin-table td:nth-child(1) {
-    justify-content: flex-end;
-    color: #182d53;
-    font-size: 15px;
-    font-weight: 800;
+    grid-column:1; grid-row:1;
+    color:#182d53; font-size:17px; font-weight:800;
+    justify-content:center;
   }
-  .portal-admin-table td:nth-child(1)::before { display: none; }
-  .portal-admin-table td:nth-child(3)::before { content: "학번·졸업"; }
+  .portal-admin-table td:nth-child(1)::before,
+  .portal-admin-table td:nth-child(2)::before,
+  .portal-admin-table td:nth-child(3)::before { display:none; }
+  .portal-admin-table td:nth-child(2) {
+    grid-column:2; grid-row:1;
+    justify-self:end;
+    align-self:center;
+    padding:4px 10px;
+    border-radius:999px;
+    background:#edf3ff;
+    color:#28508a;
+    font-size:12px;
+    font-weight:800;
+  }
+  .portal-admin-table td:nth-child(3) {
+    grid-column:1 / -1; grid-row:2;
+    color:#64758e; font-size:12px;
+    margin-top:-6px;
+  }
   .portal-admin-table td:nth-child(4) {
-    grid-column: 1 / -1;
-    padding-top: 8px;
-    border-top: 1px solid #e3e9f3;
-    font-size: 12px;
+    grid-column:1 / -1; grid-row:3;
+    padding-top:12px;
+    border-top:1px solid #e3e9f3;
+    font-size:14px;
+    word-break:break-word;
   }
-  .portal-admin-table td:nth-child(5),
-  .portal-admin-table td:nth-child(6) { justify-content: flex-end; }
+  .portal-admin-table td:nth-child(5) { grid-column:1; grid-row:4; }
+  .portal-admin-table td:nth-child(6) { grid-column:2; grid-row:4; }
   .portal-admin-table select {
-    box-sizing: border-box;
-    width: 100%;
-    min-width: 0;
-    max-width: 100%;
-    min-height: 37px;
-    padding: 6px 5px;
-    font-size: 12px;
-    background: #fff;
+    box-sizing:border-box;
+    width:100%; min-width:0; max-width:100%; min-height:44px;
+    padding:8px 10px;
+    border-radius:9px;
+    font-size:16px;
+    background:#fff;
   }
+  .portal-admin-table select:disabled { background:#f1f4fa; color:#66758c; }
   .portal-admin-table td:nth-child(7) {
-    justify-content: flex-end;
-    padding-top: 8px;
+    grid-column:1 / -1; grid-row:5;
+    flex-direction:row; align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:6px 0;
   }
   .portal-admin-table td:nth-child(8) {
-    justify-content: flex-end;
-    padding-top: 8px;
+    grid-column:1 / -1; grid-row:6;
+    padding-top:2px;
   }
-  .portal-admin-table td:nth-child(8)::before { display: none; }
-  .portal-admin-table td:nth-child(8) button {
-    box-sizing: border-box;
-    width: 100%;
-    min-width: 0;
-    min-height: 37px;
-    padding: 6px;
-    font-size: 12px;
-  }
-  .portal-auth-card:has(.portal-admin-table) .portal-auth-lead { margin-bottom: 15px; }
-  .portal-auth-card:has(.portal-admin-table) .portal-auth-actions { margin-top: 12px; }
+  .portal-admin-table td:nth-child(8)::before { display:none; }
+  .portal-auth-card:has(.portal-admin-table) .portal-auth-lead { margin-bottom:15px; }
+  .portal-auth-card:has(.portal-admin-table) .portal-auth-actions { margin-top:12px; }
 }
 
 /* Student administration: search, academic status and mail eligibility. */
@@ -710,10 +709,10 @@ html:not([data-portal-access="approved"]) body > :not(#portal-auth-layer) { visi
 @media (max-width: 767px) {
   .portal-admin-toolbar { grid-template-columns: minmax(0, 1fr); gap: 10px; }
   .portal-admin-table { min-width: 0; }
-  .portal-admin-table tbody tr { grid-template-columns: repeat(3, minmax(0,1fr)); }
-  .portal-admin-table td:nth-child(7) { grid-column: 1 / 2; }
-  .portal-admin-table td:nth-child(8) { grid-column: 2 / -1; }
-  .portal-admin-table td:nth-child(8) button { min-height: 42px; font-size: 13px; }
+  .portal-admin-table tbody tr { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .portal-admin-table td:nth-child(7),
+  .portal-admin-table td:nth-child(8) { grid-column: 1 / -1; }
+  .portal-admin-table td:nth-child(8) button { min-height: 44px; font-size: 14px; }
 }
 
 
@@ -804,8 +803,14 @@ html:not([data-portal-access="approved"]) body > :not(#portal-auth-layer) { visi
 .portal-auth-card .portal-auth-danger:hover { background:#8e2626; }
 .portal-auth-card .portal-auth-danger:disabled { background:#f6dede;color:#805d5d; }
 @media (max-width:767px) {
-  .portal-admin-row-actions { display:grid;grid-template-columns:repeat(2,minmax(0,1fr)); }
-  .portal-admin-row-actions button { width:100%; }
+  .portal-admin-row-actions { display:grid;grid-template-columns:minmax(0,1fr);gap:8px; }
+  .portal-admin-row-actions button { width:100%;min-height:44px; }
+  .portal-auth-card .portal-admin-row-actions button:first-child {
+    border-color:#214e97;background:#214e97;color:#fff;
+  }
+  .portal-auth-card .portal-admin-row-actions button:first-child:hover {
+    border-color:#173c7a;background:#173c7a;
+  }
   .portal-delete-counts { grid-template-columns:1fr; }
 }
 
