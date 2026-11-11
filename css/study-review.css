@@ -2,8 +2,18 @@
 .study-review h3 {margin:0 0 .65rem}
 .study-review [role=group],.study-nav {display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
 .study-review button,.study-open,.study-nav button,.study-list-link {min-height:44px;padding:.45rem .85rem;border-radius:8px;border:1px solid #698096;background:white;color:#18354e;font:inherit;cursor:pointer}
-.study-review button[aria-pressed=true],.study-open {background:#173d64;color:white}
+.study-open {background:#173d64;color:white}
+/* Shared self-assessment controls: coding, NCP, information-processing exams. */
+.study-review [role="group"] button[data-grade] {flex:1 1 0;min-width:0;min-height:48px;padding:.6rem .45rem;border-width:1.5px;border-style:solid;border-radius:10px;font-weight:700;line-height:1.35;white-space:nowrap;transition:background-color .15s,border-color .15s,color .15s}
+.study-review button[data-grade="correct"] {background:#e9f7ef;border-color:#62ad7d;color:#17623a}
+.study-review button[data-grade="incorrect"] {background:#fff0ef;border-color:#df8a87;color:#a92d35}
+.study-review button[data-grade="ungraded"] {background:#eef1f5;border-color:#a2adba;color:#455568}
+.study-review button[data-grade="correct"][aria-pressed="true"] {background:#167442;border-color:#167442;color:#fff}
+.study-review button[data-grade="incorrect"][aria-pressed="true"] {background:#b52d3a;border-color:#b52d3a;color:#fff}
+.study-review button[data-grade="ungraded"][aria-pressed="true"] {background:#536174;border-color:#536174;color:#fff}
+.study-review button[data-grade]:disabled {opacity:1;cursor:default}
 .study-review button[aria-pressed=true]::before {content:"✓ "}
+@media (prefers-reduced-motion:reduce) {.study-review [role="group"] button[data-grade] {transition:none}}
 .study-review [role=status]:empty {display:none}
 .study-nav {justify-content:space-between}
 :is(.study-review,.study-nav) button:focus-visible,.study-open:focus-visible {outline:3px solid #176bb8;outline-offset:3px}
