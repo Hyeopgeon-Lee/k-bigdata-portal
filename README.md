@@ -1,7 +1,7 @@
 # K-BigData 통합 서비스 포털
 
 한국폴리텍대학 서울강서캠퍼스 빅데이터소프트웨어공학과의 학생용 학습·프로젝트·취업 통합 포털입니다.
-Vanilla HTML/CSS/JavaScript 기반 GitHub Pages 정적 사이트이며 로그인·개인정보 저장·서버·상용 API를 추가하지 않습니다.
+Vanilla HTML/CSS/JavaScript 기반 GitHub Pages 정적 사이트이며, 회원가입·로그인은 Supabase Auth로 처리하고 가입/학적 정보는 서버 RLS로 관리합니다. 기존 학습 UI의 브라우저 로컬 기록은 자동 동기화 대상이 아닙니다. 계정 설정 및 최초 교수 관리자 권한 부여는 [인증 운영 가이드](docs/auth-setup.md)를 참고하세요.
 
 운영 주소: https://portal.k-bigdata.kr/
 
