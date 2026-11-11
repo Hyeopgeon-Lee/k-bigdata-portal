@@ -24,7 +24,8 @@ assert.match(my,/id="learn-opt-in"/);
 assert.match(my,/id="learn-review"/);
 assert.match(teacher,/id="teacher-summary"/);
 assert.match(teacher,/id="teacher-wrong"/);
-assert.match(service,/id:"my-learning"/);
+assert.match(read('js/portal-auth.mjs'),/my-learning\.html/);
+assert.match(read('js/portal-auth.mjs'),/teacher-learning\.html/);
 for(const html of [my,teacher]){assert.match(html,/id="learning-lock"/);assert.match(html,/data-module="js\/(?:my|teacher)-learning\.js/);}
 const mail=read('supabase/functions/weekly-learning-report/index.ts');
 const admin=read('supabase/functions/learning-admin/index.ts');
