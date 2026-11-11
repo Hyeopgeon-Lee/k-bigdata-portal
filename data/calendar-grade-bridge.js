@@ -17,3 +17,10 @@ export function publishedGrade(event,normalizedTitle){
   const tag=String(event?.title||"").match(/^\[(1학년|2학년)\]\s*/);
   return tag?(tag[1]==="1학년"?"1":"2"):"all";
 }
+
+// Published common events are visible to students in either grade.
+// Grade-specific events must not leak into the other grade's dashboard.
+export function visibleToGrade(event,grade){
+  return (grade==="1" || grade==="2") &&
+    (event?.targetGrade===grade || event?.targetGrade==="all");
+}
