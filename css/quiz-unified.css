@@ -53,7 +53,7 @@ body.shared-question-bank .quiz-heading .quiz-title{
 .quiz-badges{order:1;display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 17px}
 .quiz-badges .quiz-badge{display:inline-flex;align-items:center;justify-content:center;
   min-height:31px;box-sizing:border-box;padding:5px 11px;border:1px solid transparent;
-  border-radius:9px;background:#f0f3f8;color:#4c5b73;font:700 13px/1.4 inherit}
+  border-radius:9px;background:#f0f3f8;color:#4c5b73;font-family:inherit;font-size:13px;font-weight:700;line-height:1.4}
 .quiz-badges .quiz-badge-primary{background:#e7eefb;border-color:#c3d3e9;color:var(--quiz-primary)}
 .quiz-actions{order:2;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
   gap:10px!important;margin:0!important;width:100%}
@@ -77,6 +77,7 @@ body.shared-question-bank .quiz-answer{box-sizing:border-box;padding:20px;margin
   border:1px solid var(--quiz-border);background:#fff;border-radius:var(--quiz-card-radius)}
 body.shared-question-bank .quiz-answer>h3,
 body.shared-question-bank .quiz-answer #coding-work-heading,
+body.shared-question-bank .quiz-answer>label,
 body.shared-question-bank .quiz-answer>form>label{font-size:18px;font-weight:800;line-height:1.5;color:var(--quiz-text);margin:0 0 13px}
 body.shared-question-bank .quiz-answer :is(input[type=text],textarea){background:#fff;border:1px solid #b9c9de;
   color:var(--quiz-text);border-radius:var(--quiz-button-radius);min-height:50px;max-width:100%;font-size:16px}
