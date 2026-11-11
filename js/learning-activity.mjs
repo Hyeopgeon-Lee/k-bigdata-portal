@@ -39,23 +39,14 @@ export async function flushLearningQueue(){
  const user=await account();
  const records=pending(user.id);
  if(!records.length)return {state:'saved'};
- let failures=0,already=0;
+ const remain=[];
  for(const record of records){
-  const {error}=await db().from('learning_attempts').insert(record);
-  if(!error||error.code==='23505'){already++;continue;}
-  failures++;
+  try{
+   const {error}=await db().from('learning_attempts').insert(record);
+   if(error&&error.code!=='23505')remain.push(record);
+  }catch{remain.push(record);}
  }
- if(already)setPending(user.id,records.slice(already));
- // A failed item must not be discarded just because later items succeeded.
- if(failures){ // retry each non-duplicate item without assuming the failures were ordered.
-  const remain=[];
-  for(const record of pending(user.id)){
-   const {data,error}=await db().from('learning_attempts')
-     .select('id').eq('client_attempt_id',record.client_attempt_id).eq('user_id',user.id).maybeSingle();
-   if(error||!data)remain.push(record);
-  }
-  setPending(user.id,remain);
- }
+ setPending(user.id,remain);
  const count=pending(user.id).length;
  const state=count?'pending':'saved';
  notify(state,count?'일부 학습 기록이 기기에 대기 중입니다. 인터넷 연결 후 다시 동기화합니다.':'학습 결과가 클라우드에 저장되었습니다.');
