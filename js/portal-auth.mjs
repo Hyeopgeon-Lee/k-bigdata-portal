@@ -46,7 +46,7 @@ function renderLogin(message=""){
     btn.disabled=true;status("로그인 중입니다...");
     try{
       const {error}=await client.auth.signInWithPassword({email:String(fd.get("email")).trim(),password:String(fd.get("password"))});
-      if(error)throw error;await activate();
+      if(error)throw error;await activate(true);
     }catch(error){status(statusText(error));btn.disabled=false;}
   });
   $('[data-view="signup"]').addEventListener("click",()=>renderSignup());
@@ -137,7 +137,7 @@ function renderComplete(user){
       p_student_no:isProfessor?null:form.elements.student_no.value.trim()
     });
     if(error){status(statusText(error));return;}
-    await activate();
+    await activate(true);
   });
 }
 async function logout(){
@@ -155,7 +155,13 @@ function showAccount(){
   }
   if(!btn)return;
   btn.textContent=currentUser?"내 계정":"로그인";
-  btn.onclick=()=>currentUser?renderAccount():renderLogin();
+  btn.onclick=()=>{
+    if(!currentUser)return renderLogin();
+    if(!currentProfile)return renderComplete(currentUser);
+    if(currentProfile.approval_status!=="approved" ||
+       !["enrolled","leave"].includes(currentProfile.enrollment_status))return renderPending(currentProfile);
+    return renderAccount();
+  };
 }
 function renderAccount(){
   card("내 계정",'<p id="portal-account-info" class="portal-auth-lead"></p>'+
@@ -203,7 +209,7 @@ async function renderAdmin(){
   }
   if(!data?.length)status("등록된 학생 계정이 없습니다.");
 }
-async function activate(){
+async function activate(interactive=false){
   if(inRecovery)return;
   const {data:{user},error}=await client.auth.getUser();
   if(error||!user){
@@ -214,15 +220,27 @@ async function activate(){
   currentUser=user;
   let profile=null;
   const {data:found,error:readError}=await client.from("profiles").select("*").eq("user_id",user.id).maybeSingle();
-  if(readError){renderLogin("회원 정보를 확인하지 못했습니다.");return;}
+  if(readError){
+    if(interactive)renderLogin("회원 정보를 확인하지 못했습니다.");
+    else root.hidden=true;
+    return;
+  }
   if(found)profile=found;
   else{
     const name=String(user.user_metadata?.full_name||"").trim();
-    if(!name){renderComplete(user);return;}
+    if(!name){
+      if(interactive)renderComplete(user);
+      else root.hidden=true;
+      showAccount();return;
+    }
     const {data:registered,error:regError}=await client.rpc("register_portal_member",{
       p_name:name,p_student_no:user.user_metadata?.student_no||null
     });
-    if(regError){renderComplete(user);status("회원 정보를 확인해 다시 입력해 주세요.");return;}
+    if(regError){
+      if(interactive){renderComplete(user);status("회원 정보를 확인해 다시 입력해 주세요.");}
+      else root.hidden=true;
+      showAccount();return;
+    }
     profile=registered;
   }
   const {data:expiry,error:sessionError}=await client.rpc("start_portal_session");
@@ -230,7 +248,8 @@ async function activate(){
     await client.auth.signOut();
     currentUser=null;currentProfile=null;isAdmin=false;
     showAccount();
-    renderLogin("로그인 세션이 만료되었거나 취소되었습니다. 다시 로그인해 주세요.");
+    if(interactive)renderLogin("로그인 세션이 만료되었거나 취소되었습니다. 다시 로그인해 주세요.");
+    else root.hidden=true;
     return;
   }
   currentProfile=profile;
@@ -238,7 +257,9 @@ async function activate(){
   isAdmin=allowed===true;
   if(profile.approval_status!=="approved" || !["enrolled","leave"].includes(profile.enrollment_status)){
     showAccount();
-    renderPending(profile);return;
+    if(interactive)renderPending(profile);
+    else root.hidden=true;
+    return;
   }
   root.hidden=true;
   showAccount();
