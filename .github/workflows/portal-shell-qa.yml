@@ -22,8 +22,6 @@ jobs:
           node-version: '22'
       - name: Verify generated shell and source contracts
         run: |
-          node scripts/build-portal-shell.mjs
-          git diff -- practical.html
           node scripts/build-portal-shell.mjs --check
           node tests/portal-shell.test.mjs
           node tests/ncp-source-audit.test.mjs
