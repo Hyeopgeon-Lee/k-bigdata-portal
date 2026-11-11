@@ -63,20 +63,15 @@ assert.ok(searchUI.includes('event.preventDefault()'));
 assert.equal(services.length,18,'the complete service registry is retained');
 assert.equal(services.find(s=>s.id==='practical').name,'정보처리 기출문제');
 assert.equal(services.find(s=>s.id==='ncp').name,'NCP 기출문제');
-const store=new Map();
-globalThis.portalLearning={read:true,write:true,expires:Date.now()+60000};
-globalThis.localStorage={
- getItem:key=>store.get(key)||null,
- setItem:(key,value)=>store.set(key,value),
- removeItem:key=>store.delete(key)
-};
+// Account-backed shortcuts are inaccessible without an authorized Supabase session.
+const personal=read('js/portal-personal.js');
+assert.ok(personal.includes('from("user_favorites")'),'favorites use Supabase');
+assert.ok(personal.includes('from("user_recent_services")'),'recent services use Supabase');
+assert.ok(personal.includes('portalLearning?.write'),'write requires an approved account');
+assert.ok(personal.includes('importLegacyShortcuts'),'old browser data requires explicit import');
 assert.deepEqual(getFavorites(),[]);
 assert.deepEqual(getRecent(),[]);
-assert.equal(toggleFavorite('practical'),true);
-assert.deepEqual(getFavorites(),['practical']);
-assert.equal(toggleFavorite('practical'),false);
-recordService('practical');recordService('interview');recordService('practical');
-assert.deepEqual(getRecent(),['practical','interview']);
-store.set('kbigdata-portal-ui-v1','{broken-json');
-assert.deepEqual(getFavorites(),[],'broken device state handled safely');
-console.log('PASS: simplified launcher, grade dashboard, separate 18-service directory, exam labels, search and device-only favorites.');
+assert.equal(toggleFavorite('practical'),false,'unauthorized favorite writes are rejected');
+recordService('practical');
+assert.deepEqual(getRecent(),[],'unauthorized visits are not recorded');
+console.log('PASS: account-backed dashboard, 18 services, authenticated-only shortcuts and search.');
