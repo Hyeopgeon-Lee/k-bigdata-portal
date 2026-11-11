@@ -7,6 +7,7 @@ const client=createClient("https://zjsindkakjfzmjgrkaou.supabase.co", "sb_publis
 });
 const root=document.createElement("div");
 root.id="portal-auth-layer";
+root.hidden=true; // Public portal is always usable without signing in.
 document.body.append(root);
 const css=document.createElement("link");
 css.rel="stylesheet";
@@ -25,12 +26,14 @@ const status=(message)=>{const node=$("#portal-auth-status");if(node)node.textCo
 function card(title,inner){
   root.hidden=false;
   root.innerHTML='<section class="portal-auth-card" role="dialog" aria-modal="true" aria-labelledby="portal-auth-title">'+
-    '<p class="portal-auth-eyebrow">K-BIGDATA STUDENT PORTAL</p><h1 id="portal-auth-title">'+title+'</h1>'+inner+
+    '<button type="button" class="portal-auth-dismiss" id="portal-auth-dismiss" aria-label="닫고 포털 이용하기">닫기</button>'+
+    '<p class="portal-auth-eyebrow">K-BIGDATA STUDENT PORTAL</p><h1 id="portal-auth-title" tabindex="-1">'+title+'</h1>'+inner+
     '<p id="portal-auth-status" role="status" aria-live="polite"></p></section>';
+  $("#portal-auth-dismiss").addEventListener("click",()=>root.hidden=true);
   $("#portal-auth-title")?.focus?.();
 }
 function renderLogin(message=""){
-  card("포털 로그인",'<p class="portal-auth-lead">이메일 인증 후 승인된 계정만 이용할 수 있습니다.</p>'+
+  card("포털 로그인",'<p class="portal-auth-lead">로그인하지 않아도 포털의 공개 학습 자료를 이용할 수 있습니다. 로그인은 선택 기능이며, 개인 학습기록의 기기 간 동기화는 별도 구현 예정입니다.</p>'+
    '<form id="portal-login-form" class="portal-auth-form">'+
    '<label>이메일<input name="email" type="email" autocomplete="username" required></label>'+
    '<label>비밀번호<input name="password" type="password" autocomplete="current-password" required></label>'+
@@ -43,7 +46,7 @@ function renderLogin(message=""){
     btn.disabled=true;status("로그인 중입니다...");
     try{
       const {error}=await client.auth.signInWithPassword({email:String(fd.get("email")).trim(),password:String(fd.get("password"))});
-      if(error)throw error;await activate();
+      if(error)throw error;await activate(true);
     }catch(error){status(statusText(error));btn.disabled=false;}
   });
   $('[data-view="signup"]').addEventListener("click",()=>renderSignup());
@@ -134,17 +137,15 @@ function renderComplete(user){
       p_student_no:isProfessor?null:form.elements.student_no.value.trim()
     });
     if(error){status(statusText(error));return;}
-    await activate();
+    await activate(true);
   });
 }
 async function logout(){
   try{await client.rpc("revoke_portal_session");}catch{}
   await client.auth.signOut();
   currentUser=null;currentProfile=null;isAdmin=false;
-  document.body.setAttribute("data-portal-auth-lock","");
-  root.hidden=false;
-  document.querySelector("#portal-account-button")?.remove();
-  renderLogin();
+  showAccount();
+  root.hidden=true;
 }
 function showAccount(){
   let btn=document.getElementById("portal-account-button");
@@ -153,8 +154,14 @@ function showAccount(){
     document.querySelector(".site-header .header-inner")?.append(btn);
   }
   if(!btn)return;
-  btn.textContent="내 계정";
-  btn.addEventListener("click",()=>renderAccount());
+  btn.textContent=currentUser?"내 계정":"로그인";
+  btn.onclick=()=>{
+    if(!currentUser)return renderLogin();
+    if(!currentProfile)return renderComplete(currentUser);
+    if(currentProfile.approval_status!=="approved" ||
+       !["enrolled","leave"].includes(currentProfile.enrollment_status))return renderPending(currentProfile);
+    return renderAccount();
+  };
 }
 function renderAccount(){
   card("내 계정",'<p id="portal-account-info" class="portal-auth-lead"></p>'+
@@ -202,33 +209,59 @@ async function renderAdmin(){
   }
   if(!data?.length)status("등록된 학생 계정이 없습니다.");
 }
-async function activate(){
+async function activate(interactive=false){
   if(inRecovery)return;
   const {data:{user},error}=await client.auth.getUser();
-  if(error||!user){renderLogin();return;}
+  if(error||!user){
+    currentUser=null;currentProfile=null;isAdmin=false;
+    showAccount();root.hidden=true;
+    return;
+  }
   currentUser=user;
+  currentProfile=null;isAdmin=false;
   let profile=null;
   const {data:found,error:readError}=await client.from("profiles").select("*").eq("user_id",user.id).maybeSingle();
-  if(readError){renderLogin("회원 정보를 확인하지 못했습니다.");return;}
+  if(readError){
+    if(interactive)renderLogin("회원 정보를 확인하지 못했습니다.");
+    else root.hidden=true;
+    return;
+  }
   if(found)profile=found;
   else{
     const name=String(user.user_metadata?.full_name||"").trim();
-    if(!name){renderComplete(user);return;}
+    if(!name){
+      if(interactive)renderComplete(user);
+      else root.hidden=true;
+      showAccount();return;
+    }
     const {data:registered,error:regError}=await client.rpc("register_portal_member",{
       p_name:name,p_student_no:user.user_metadata?.student_no||null
     });
-    if(regError){renderComplete(user);status("회원 정보를 확인해 다시 입력해 주세요.");return;}
+    if(regError){
+      if(interactive){renderComplete(user);status("회원 정보를 확인해 다시 입력해 주세요.");}
+      else root.hidden=true;
+      showAccount();return;
+    }
     profile=registered;
   }
   const {data:expiry,error:sessionError}=await client.rpc("start_portal_session");
-  if(sessionError){await client.auth.signOut();renderLogin("로그인 세션이 만료되었거나 취소되었습니다. 다시 로그인해 주세요.");return;}
+  if(sessionError){
+    await client.auth.signOut();
+    currentUser=null;currentProfile=null;isAdmin=false;
+    showAccount();
+    if(interactive)renderLogin("로그인 세션이 만료되었거나 취소되었습니다. 다시 로그인해 주세요.");
+    else root.hidden=true;
+    return;
+  }
   currentProfile=profile;
   const {data:allowed}=await client.rpc("portal_super_admin_allowed");
   isAdmin=allowed===true;
   if(profile.approval_status!=="approved" || !["enrolled","leave"].includes(profile.enrollment_status)){
-    renderPending(profile);return;
+    showAccount();
+    if(interactive)renderPending(profile);
+    else root.hidden=true;
+    return;
   }
-  document.body.removeAttribute("data-portal-auth-lock");
   root.hidden=true;
   showAccount();
   const until=new Date(expiry);
@@ -237,4 +270,8 @@ async function activate(){
 client.auth.onAuthStateChange((event)=>{
   if(event==="PASSWORD_RECOVERY")queueMicrotask(()=>renderNewPassword());
 });
-try{await activate();}catch(error){console.error("Portal Auth initialization error",error);renderLogin("계정 확인 중 오류가 발생했습니다. 다시 로그인해 주세요.");}
+showAccount();
+try{await activate();}catch(error){
+  console.error("Portal Auth initialization error",error);
+  showAccount();root.hidden=true; // An auth error never blocks public materials.
+}
