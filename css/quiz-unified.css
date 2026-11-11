@@ -13,16 +13,16 @@ body.shared-question-bank :is(.ncp-study-page,.practical-page,.coding-page){colo
 /* Identical width, border, spacing and padding for all problem cards. */
 body.shared-question-bank .ncp-workspace,
 body.shared-question-bank .coding-workspace,
-body.shared-question-bank .practical-page .learning-content,
-body.shared-question-bank .practical-page #bank-content,
+body.shared-question-bank.practical-page .learning-content,
+body.shared-question-bank.practical-page #bank-content,
 body.shared-question-bank .coding-page .coding-workspace{width:100%;max-width:960px;margin-inline:auto}
 body.shared-question-bank .ncp-workspace,
 body.shared-question-bank .coding-page .coding-workspace,
-body.shared-question-bank .practical-page #bank-content.study-split{display:block}
+body.shared-question-bank.practical-page #bank-content.study-split{display:block}
 body.shared-question-bank :is(.ncp-sidebar,.coding-list-panel,.study-side-list){display:none!important}
 body.shared-question-bank .ncp-panel,
 body.shared-question-bank .coding-page .coding-detail,
-body.shared-question-bank .practical-page .bank-solve{
+body.shared-question-bank.practical-page .bank-solve{
   display:block;box-sizing:border-box;width:100%;max-width:960px;margin:0 auto;
   padding:var(--quiz-padding-desktop)!important;
   background:var(--quiz-card)!important;border:1px solid var(--quiz-border)!important;
@@ -72,7 +72,7 @@ body.shared-question-bank .quiz-navigation .quiz-nav-button:hover{background:var
 .quiz-question{font-size:17px;line-height:1.75;color:var(--quiz-text);overflow-wrap:anywhere;min-width:0}
 body.shared-question-bank .ncp-question-text{font-size:17px;line-height:1.75;margin:0 0 16px;color:var(--quiz-text);font-weight:650;word-break:keep-all}
 body.shared-question-bank .coding-page #coding-statement,
-body.shared-question-bank .practical-page .solve-question{font-size:17px;line-height:1.75;color:var(--quiz-text);margin:0 0 18px}
+body.shared-question-bank.practical-page .solve-question{font-size:17px;line-height:1.75;color:var(--quiz-text);margin:0 0 18px}
 body.shared-question-bank .quiz-answer{box-sizing:border-box;padding:20px;margin:22px 0 14px;
   border:1px solid var(--quiz-border);background:#fff;border-radius:var(--quiz-card-radius)}
 body.shared-question-bank .quiz-answer>h3,
@@ -131,7 +131,7 @@ body.shared-question-bank :is(.coding-code pre,.code-scroll pre,.coding-scroll t
  body.shared-question-bank .ncp-study-page{width:calc(100% - 24px)!important;padding-top:12px}
  body.shared-question-bank .ncp-panel,
  body.shared-question-bank .coding-page .coding-detail,
- body.shared-question-bank .practical-page .bank-solve{padding:var(--quiz-padding-mobile)!important}
+ body.shared-question-bank.practical-page .bank-solve{padding:var(--quiz-padding-mobile)!important}
  .quiz-navigation{gap:7px;padding-bottom:12px;margin-bottom:18px}
  .quiz-navigation .quiz-nav-button{padding:8px 9px;font-size:13px}
  .quiz-navigation .quiz-counter{font-size:15px}
