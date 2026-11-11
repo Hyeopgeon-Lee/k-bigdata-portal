@@ -2,9 +2,9 @@ name: Shared portal shell QA
 on:
   push:
     branches: [main]
-    paths: ['**/*.html', 'css/**', 'js/**', 'data/ncp-*.js', 'scripts/build-portal-shell.mjs', 'scripts/portal-shell-template.mjs', 'tests/portal-shell*', 'tests/ncp-source-audit.test.mjs', '.github/workflows/portal-shell-qa.yml']
+    paths: ['**/*.html', 'css/**', 'js/**', 'data/ncp-*.js', 'scripts/build-portal-shell.mjs', 'scripts/portal-shell-template.mjs', 'tests/portal-shell*', 'tests/ncp-source-audit.test.mjs', 'tests/portal-auth.test.mjs', 'supabase/functions/admin-delete-student/**', '.github/workflows/portal-shell-qa.yml']
   pull_request:
-    paths: ['**/*.html', 'css/**', 'js/**', 'scripts/build-portal-shell.mjs', 'scripts/portal-shell-template.mjs', 'tests/portal-shell*', '.github/workflows/portal-shell-qa.yml']
+    paths: ['**/*.html', 'css/**', 'js/**', 'scripts/build-portal-shell.mjs', 'scripts/portal-shell-template.mjs', 'tests/portal-shell*', 'tests/portal-auth.test.mjs', 'supabase/functions/admin-delete-student/**', '.github/workflows/portal-shell-qa.yml']
   workflow_dispatch:
 permissions:
   contents: read
