@@ -1,3 +1,5 @@
+/* Prevent access to portal UI until Supabase confirms an approved account. */
+html:not([data-portal-access="approved"]) body > :not(#portal-auth-layer) { visibility:hidden !important; pointer-events:none !important; }
 :root {
   --color-primary: #142d70;
   --color-primary-dark: #0b1739;
