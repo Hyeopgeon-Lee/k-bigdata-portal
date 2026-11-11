@@ -187,7 +187,7 @@ try{
       await page.waitForFunction(()=>document.querySelector("#coding-editor")?.value==="print('연습')");
       assert.equal(await page.locator("#coding-editor").inputValue(),"print('연습')","draft survives reload");
       await page.route("**/help.html**",route=>route.fulfill({status:200,contentType:"text/html",body:"<html><body>신고 양식으로 이동</body></html>"}));
-      await page.locator(".coding-detail details").filter({has:page.locator("#coding-report-button")}).locator("summary").click();
+      assert.equal(await page.locator("#coding-report-button").isVisible(),true,"Report action is always visible");
       await Promise.all([
         page.waitForURL(/\/help\.html/, {timeout:12000}),
         page.locator("#coding-report-button").click()
