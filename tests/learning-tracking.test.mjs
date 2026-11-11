@@ -19,7 +19,7 @@ for(const source of [src,ncp,read('js/practical-ui.js')])assert.match(source,/bi
 assert.match(src,/debounceCloudDraft/);
 assert.match(practical,/saveAttempt\(/);
 assert.doesNotMatch(coding,/coding-done-button/);
-assert.match(my,/주간 이메일 발송을 잠시 보류/);
+assert.doesNotMatch(my,/주간 이메일 발송을 잠시 보류/);
 assert.match(my,/id="learn-review"/);
 assert.match(teacher,/id="teacher-summary"/);
 assert.match(teacher,/id="teacher-wrong"/);
