@@ -15,6 +15,7 @@ export const portalPages = {
   recruit: {title:'채용공고', group:'career'},
   'project-guide': {title:'프로젝트 가이드', group:'project'},
   schedule: {title:'학과 주요 일정', group:'campus'},
+  room: {title:'프로젝트실 예약', group:'campus', locked:true},
   help: {title:'학과 요청·문의', group:'campus', locked:true}
 };
 export const groups = Object.values(categories);

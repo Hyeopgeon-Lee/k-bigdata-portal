@@ -141,7 +141,7 @@ export const services = [
     "category": "campus",
     "description": "빅데이터소프트웨어공학과 프로젝트실 8318호와 8319호의 예약 및 사용 현황을 확인하는 서비스",
     "shortDescription": "프로젝트실 8318 · 8319를 예약하세요.",
-    "url": "https://room.k-bigdata.kr/",
+    "url": "room.html",
     "icon": "calendar",
     "accent": "cyan",
     "tags": [
@@ -325,7 +325,7 @@ export const portalNavLinks = [
   {id:"project-guide",label:"프로젝트가이드",group:"project"},
   {id:"portfolio",label:"포트폴리오 ↗",group:"project"},
   {id:"schedule",label:"학과일정",group:"campus"},
-  {id:"room",label:"프로젝트실 ↗",group:"campus"},
+  {id:"room",label:"프로젝트실",group:"campus"},
   {id:"help",label:"학과요청",group:"campus"}
 ];
 // Backward-compatible alias for older code/tests.
