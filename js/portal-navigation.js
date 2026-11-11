@@ -30,37 +30,14 @@
 })();
 
 
-// The existing generated navigation is unchanged; authorization is added separately.
-// Static GitHub Pages files remain publicly downloadable. Database records are
-// protected by Supabase RLS and server-side portal sessions, not this overlay.
+// Optional account controls: all portal pages remain accessible as guests.
+// Supabase RLS protects personal records and administrator operations.
 (()=>{
   if(typeof location==="undefined" || !document.body)return;
-  const params=new URLSearchParams(location.search);
-  const production=location.hostname==="portal.k-bigdata.kr";
-  // Pilot first: an empty membership table must not lock every student out.
-  // Visit ?portal-auth-preview=1 to opt this browser in; use =0 to opt out.
-  if(production){
-    try{
-      if(params.get("portal-auth-preview")==="1")localStorage.setItem("portal-auth-pilot","on");
-      if(params.get("portal-auth-preview")==="0")localStorage.removeItem("portal-auth-pilot");
-    }catch{}
-  }
-  let pilot=false;
-  try{pilot=localStorage.getItem("portal-auth-pilot")==="on";}catch{}
-  const enabled=(production && pilot) || (!production && params.get("portal-auth-preview")==="1");
-  if(!enabled)return;
-  const rule=document.createElement("style");
-  rule.textContent='body[data-portal-auth-lock] > :not(#portal-auth-layer) { visibility: hidden !important; }';
-  document.head.append(rule);
-  document.body.setAttribute("data-portal-auth-lock","");
+  const preview=new URLSearchParams(location.search).get("portal-auth-preview")==="1";
+  if(location.hostname!=="portal.k-bigdata.kr" && !preview)return;
   import("./portal-auth.mjs").catch(error=>{
-    console.error("Portal authentication module failed",error);
-    let box=document.getElementById("portal-auth-layer");
-    if(!box){box=document.createElement("div");box.id="portal-auth-layer";document.body.append(box);}
-    box.setAttribute("style","position:fixed;inset:0;z-index:99999;display:grid;place-items:center;background:#0b1739;padding:20px;");
-    const panel=document.createElement("section");
-    panel.setAttribute("style","max-width:470px;padding:28px;background:white;border-radius:14px;color:#12244a;font:16px/1.6 sans-serif;");
-    panel.textContent="인증 시스템을 불러오지 못했습니다. 네트워크 연결을 확인한 후 새로고침해 주세요.";
-    box.replaceChildren(panel);
+    // Login availability must never break access to public lessons or resources.
+    console.error("Optional portal login unavailable",error);
   });
 })();
