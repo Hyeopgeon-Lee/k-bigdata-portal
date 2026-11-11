@@ -99,8 +99,8 @@ assert.match(source,/member.enrollment_status!=="withdrawn"/,"delete action requ
 assert.match(source,/admin-delete-student/,"delete action calls the protected backend");
 assert.match(source,/confirmWord:\s*word\.value\.trim\(\)/,"explicit confirmation phrase is sent");
 assert.match(deletionApi,/portal_super_admin_allowed/,"backend checks server verified admin authorization");
-assert.match(deletionApi,/student\.enrollment_status!=="withdrawn"/,"backend independently checks withdrawal");
-assert.match(deletionApi,/student\.signup_type==="alumni"/,"backend blocks alumni deletion");
+assert.match(deletionApi,/data\.enrollment_status!=="withdrawn"/,"backend independently checks withdrawal");
+assert.match(deletionApi,/data\.signup_type==="alumni"/,"backend blocks alumni deletion");
 assert.match(deletionApi,/role\.role==="super_admin"/,"backend blocks admin deletion");
 assert.match(deletionApi,/confirmWord!=="영구삭제"/,"backend demands irreversible action confirmation");
 assert.match(deletionApi,/admin\.auth\.admin\.deleteUser/,"backend removes Supabase Auth account");
