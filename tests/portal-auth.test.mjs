@@ -26,6 +26,11 @@ assert.match(source,/resetPasswordForEmail/);
 assert.match(source,/PASSWORD_RECOVERY/);
 assert.match(source,/textContent=item/,"student-supplied values use safe DOM APIs");
 assert.match(loader,/import\("\.\/portal-auth\.mjs/);
+const authVersion=loader.match(/portal-auth\.mjs\?v=([^"]+)/)?.[1];
+assert.ok(authVersion,"shared auth module is versioned");
+for(const page of ["my-learning","teacher-learning","room","help"])
+ assert.ok(read(page+".html").includes("portal-auth.mjs?v="+authVersion),"direct auth import matches shared module on "+page);
+
 assert.match(source,/portal_learning_access/);
 assert.match(source,/portalAccess="approved"/,'portal requires verified session to unlock');
 assert.match(source,/renderLogin\(\)/,'unauthenticated visits present login');
