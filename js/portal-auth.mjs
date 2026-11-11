@@ -12,7 +12,7 @@ root.hidden=true; // The whole portal requires an authorized account.
 document.body.append(root);
 const css=document.createElement("link");
 css.rel="stylesheet";
-css.href="css/portal-auth.css?v=20261112-signup-approval-1";
+css.href="css/portal-auth.css?v=20261112-member-mobile-2";
 document.head.append(css);
 
 const locked=document.getElementById("learning-lock");
@@ -502,14 +502,14 @@ async function renderApprovalRequests(){
 async function renderAdmin(){
   if(!isAdmin){renderAccount();return;}
   card("학생 계정 관리",
-    '<p class="portal-auth-lead">승인 대기 신청은 별도의 ‘가입 승인 요청’에서 관리합니다. 이곳에서는 기존 회원의 계정·학적 상태를 변경합니다. 휴학 회원은 주간 학습 메일에서 제외됩니다.</p>'+
+    '<p class="portal-auth-lead">승인 대기 신청은 별도의 ‘가입 승인 요청’에서 관리합니다. 이곳에서는 기존 회원의 가입 상태와 학적을 관리합니다. 주간 학습 메일은 승인된 재학생에게만 발송합니다.</p>'+
     '<div class="portal-admin-toolbar">'+
       '<label>학생 검색<input id="portal-admin-search" type="search" placeholder="이름 · 학번 · 이메일" autocomplete="off"></label>'+
       '<label>학적 상태<select id="portal-admin-filter"><option value="all">전체 학생</option><option value="enrolled">재학</option><option value="leave">휴학</option><option value="withdrawn">자퇴</option><option value="graduated">졸업</option></select></label>'+
     '</div>'+
     '<p class="portal-admin-summary" id="portal-admin-summary" aria-live="polite"></p>'+
     '<div class="portal-admin-scroll"><table class="portal-admin-table"><thead><tr><th>이름</th><th>가입 유형</th><th>학번 / 졸업년도</th><th>이메일</th><th>가입 상태</th><th>학적</th><th>주간 메일</th><th>변경</th></tr></thead><tbody id="portal-student-list"></tbody></table></div>'+
-    '<p class="portal-auth-note">주간 메일은 승인된 재학생만 발송 후보입니다. 실제 발송은 이메일 인증 여부 및 학급 학습통계의 전체 발송 스위치도 적용됩니다. 자퇴 학생은 학적을 저장한 후 해당 학생의 영구 삭제 버튼을 눌러 별도 확인할 수 있습니다.</p>'+
+    '<p class="portal-auth-note">졸업생·휴학생·자퇴생은 주간 메일 대상이 아닙니다. 실제 발송은 이메일 인증과 전체 발송 스위치에 따릅니다. 자퇴생의 영구 삭제는 학적 저장 후 별도로 진행합니다.</p>'+
     '<div class="portal-auth-actions"><button type="button" id="portal-admin-close">닫기</button></div>');
   $("#portal-admin-close").addEventListener("click",renderAccount);
   const {data,error}=await client.rpc("admin_list_students");
@@ -523,6 +523,7 @@ async function renderAdmin(){
   const rows=[];
   for(const member of (data||[]).filter(member=>member.approval_status!=="pending")){
     const tr=document.createElement("tr");
+    tr.className="portal-admin-member-row";
     const identity=[member.full_name,member.signup_type==="alumni"?"졸업생":"재학생",
        member.signup_type==="alumni"?member.graduation_year+"년 졸업":member.student_no||"-",member.email];
     identity.forEach((item,index)=>{
@@ -540,7 +541,10 @@ async function renderAdmin(){
     const mailTd=document.createElement("td");mailTd.dataset.label="주간 메일";
     const mailStatus=document.createElement("span");mailStatus.className="portal-admin-mail-status";
     const updateMailStatus=()=>{
-      const eligible=member.approval_status==="approved"&&member.enrollment_status==="enrolled"&&member.signup_type!=="alumni";
+      const graduated=member.signup_type==="alumni"||enrollment.value==="graduated";
+      // No weekly mail controls for alumni, including graduates who originally signed up as students.
+      mailTd.hidden=graduated;
+      const eligible=approval.value==="approved"&&enrollment.value==="enrolled"&&member.signup_type!=="alumni";
       const unsaved=approval.value!==member.approval_status||enrollment.value!==member.enrollment_status;
       mailStatus.textContent=(eligible?"발송 후보":"발송 제외")+(unsaved?" · 저장 전":"");
       mailStatus.dataset.eligible=String(eligible);
