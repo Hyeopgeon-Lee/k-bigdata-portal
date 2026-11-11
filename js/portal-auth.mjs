@@ -37,6 +37,9 @@ setInterval(()=>checkLearning().catch(resetLearning),60000);
 const professorEmail="hglee67@kopo.ac.kr";
 let currentUser=null;
 let currentProfile=null;
+// Share the verified, server-backed display name across all portal pages.
+// An email address must never be used as a visible member-name fallback.
+window.portalMemberName=()=>String(currentProfile?.full_name||"").trim()||"이름 미등록";
 let isAdmin=false;
 let inRecovery=false;
 const resetLink=location.origin+"/index.html";
@@ -247,7 +250,6 @@ function renderAccount(){
       '<span id="portal-account-avatar" class="portal-account-avatar" aria-hidden="true"></span>'+
       '<div class="portal-account-identity">'+
         '<p id="portal-account-name" class="portal-account-name"></p>'+
-        '<p id="portal-account-email" class="portal-account-email"></p>'+
         '<span id="portal-account-role" class="portal-account-role"></span>'+
       '</div>'+
     '</div><div id="portal-account-actions"></div>');
@@ -257,9 +259,9 @@ function renderAccount(){
   dismiss.setAttribute("aria-label","내 계정 창 닫기");dismiss.textContent="×";
   dismiss.addEventListener("click",()=>{root.hidden=true;opener?.focus();});
   $(".portal-auth-card").insertBefore(dismiss,$(".portal-account-profile"));
-  $("#portal-account-avatar").textContent=(currentProfile?.full_name||"U").trim().slice(0,1)||"U";
-  $("#portal-account-name").textContent=currentProfile?.full_name||"사용자";
-  $("#portal-account-email").textContent=currentUser?.email||"";
+  const memberName=window.portalMemberName();
+  $("#portal-account-avatar").textContent=memberName==="이름 미등록"?"?":memberName.slice(0,1);
+  $("#portal-account-name").textContent=memberName;
   $("#portal-account-role").textContent=isAdmin?"관리자":
     currentProfile?.signup_type==="alumni"?"졸업생 · "+currentProfile.graduation_year+"년 졸업":
     currentProfile?.enrollment_status==="leave"?"휴학 · 학습 기록 읽기 전용":"재학생";
