@@ -22,7 +22,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/style.css?v=20261111-account-sync-1">
 <link rel="stylesheet" href="css/portal-ux.css?v=20261111-account-sync-1">
-<link rel="stylesheet" href="css/room.css?v=20261111-account-sync-1">
+<link rel="stylesheet" href="css/room.css?v=20261111-room-compact-1">
 <!-- portal:assets:start (generated; edit scripts/portal-shell-template.mjs) -->
 <link rel="stylesheet" href="css/portal-navigation.css?v=20261111-account-sync-1">
 <script defer src="js/portal-navigation.js?v=20261111-header-controls-1"></script>
@@ -71,11 +71,19 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <button type="button" data-room-tab="admin" id="room-admin-tab" aria-selected="false" hidden>전체 예약 관리</button>
 </nav>
 <section class="room-panel" data-room-panel="status" aria-label="예약 현황">
-<h2>프로젝트실 사용 현황</h2>
-<p class="room-muted">09:00~22:00 · 30분 단위 · 1회 최대 3시간. 예약자의 이름과 학번은 공개되지 않습니다.</p>
-<div id="room-dates" class="room-datebar" aria-label="조회 날짜"></div>
-<button id="room-refresh" type="button" class="room-secondary">현황 새로고침</button>
+<div class="room-panel-heading">
+  <div>
+    <h2>프로젝트실 사용 현황</h2>
+    <p class="room-muted">09:00–22:00 <span aria-hidden="true">·</span> 30분 단위 <span aria-hidden="true">·</span> 최대 3시간</p>
+  </div>
+  <button id="room-refresh" type="button" class="room-secondary room-refresh-btn" aria-label="예약 현황 새로고침">
+    <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v5h-5"/><path d="M4 17v-5h5"/><path d="M5.8 9a7 7 0 0 1 12-2L20 12M4 12l2.2 5a7 7 0 0 0 12-2"/></svg>
+    <span>새로고침</span>
+  </button>
+</div>
+<div id="room-dates" class="room-datebar" role="group" aria-label="조회 날짜"></div>
 <div id="room-schedule" class="room-rooms" aria-live="polite"></div>
+<p class="room-privacy-note">예약자의 이름과 학번은 공개되지 않습니다.</p>
 <div class="room-notice"><strong>이용 안내</strong><span>학과 재학생용 학습·프로젝트 공간입니다. 식사 및 음료 섭취 목적으로 예약할 수 없습니다.</span></div>
 </section>
 <section class="room-panel" data-room-panel="new" hidden aria-label="새 예약">
@@ -122,7 +130,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <div class="container footer-bottom"><p>학생용 학습·프로젝트·취업 통합 포털입니다.</p><p>© <span id="current-year"></span> K-BigData Service Portal</p></div>
 </footer>
 <script type="module" src="js/portal-auth.mjs?v=20261111-header-controls-1"></script>
-<script type="application/x-learning" data-module="js/room.js?v=20261111-1"></script>
+<script type="application/x-learning" data-module="js/room.js?v=20261111-room-compact-1"></script>
 <script type="application/x-learning" data-module="js/portal-shell-entry.js?v=20261111-account-sync-1"></script>
 </body>
 </html>
