@@ -34,20 +34,33 @@ function validate(data){
  if(data.gradingMethod==='automatic'&&data.bank==='coding')throw new Error('INVALID_CODING_GRADE');
  if(data.gradingMethod==='self'&&data.bank==='ncp')throw new Error('INVALID_NCP_GRADE');
 }
-export async function flushLearningQueue(){
+let syncing=null;
+export function flushLearningQueue(){
+ if(syncing)return syncing;
+ syncing=flushLearningInternal().finally(()=>{syncing=null;});
+ return syncing;
+}
+async function flushLearningInternal(){
  if(!writable())return {state:'readonly'};
  const user=await account();
- const records=pending(user.id);
- if(!records.length)return {state:'saved'};
- const remain=[];
- for(const record of records){
-  try{
-   const {error}=await db().from('learning_attempts').insert(record);
-   if(error&&error.code!=='23505')remain.push(record);
-  }catch{remain.push(record);}
+ let count=0;
+ // Drain queued events in order; concurrent clicks must not discard new events.
+ for(let iteration=0;iteration<5;iteration++){
+  const records=pending(user.id);
+  if(!records.length)break;
+  const remain=[];
+  for(const record of records){
+   try{
+    const {error}=await db().from('learning_attempts').insert(record);
+    if(error&&error.code!=='23505')remain.push(record);
+   }catch{remain.push(record);}
+  }
+  const processed=new Set(records.map(r=>r.client_attempt_id));
+  const incoming=pending(user.id).filter(r=>!processed.has(r.client_attempt_id));
+  setPending(user.id,[...remain,...incoming]);
+  if(remain.length || !incoming.length)break;
  }
- setPending(user.id,remain);
- const count=pending(user.id).length;
+ count=pending(user.id).length;
  const state=count?'pending':'saved';
  notify(state,count?'일부 학습 기록이 기기에 대기 중입니다. 인터넷 연결 후 다시 동기화합니다.':'학습 결과가 클라우드에 저장되었습니다.');
  return {state,count};
