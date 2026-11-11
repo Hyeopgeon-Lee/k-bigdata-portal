@@ -197,3 +197,30 @@ body[data-page="my-learning"] .learn-sr-only{position:absolute!important;width:1
  [data-page="teacher-learning"] .learn-tools .learn-filter{grid-template-columns:1fr}
  [data-page="teacher-learning"] .learn-grid{grid-template-columns:1fr}
 }
+
+
+/* Weekly email opt-in controls: visible ON/OFF switch backed by secured server settings. */
+[data-page="teacher-learning"] .learn-mail-switch-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:16px}
+[data-page="teacher-learning"] .learn-mail-switch-list[hidden]{display:none}
+[data-page="teacher-learning"] .learn-mail-switch-card{display:flex;align-items:center;justify-content:space-between;gap:16px;min-width:0;padding:19px 20px;border:1px solid #d8e5f3;border-radius:14px;background:#f8fbff}
+[data-page="teacher-learning"] .learn-mail-switch-description{min-width:0}
+[data-page="teacher-learning"] .learn-mail-switch-description h3{margin:0 0 8px;font-size:17px;line-height:1.4;font-weight:800;letter-spacing:-.02em;color:#193e6b}
+[data-page="teacher-learning"] .learn-mail-switch-description p{margin:0 0 8px;font-size:14px;line-height:1.65;color:#455e7b}
+[data-page="teacher-learning"] .learn-mail-switch-description small{display:block;font-size:12px;line-height:1.5;color:#54708f;overflow-wrap:anywhere}
+[data-page="teacher-learning"] .learn-mail-switch-action{display:flex;flex:none;flex-direction:column;align-items:center;justify-content:center;gap:7px;padding:7px 3px;cursor:pointer}
+[data-page="teacher-learning"] .learn-mail-switch-word{font-size:12px;line-height:1.4;font-weight:850;color:#64748b;white-space:nowrap}
+[data-page="teacher-learning"] .learn-mail-switch-word[data-enabled="true"]{color:#1b5d47}
+[data-page="teacher-learning"] .learn-mail-switch-action input[type="checkbox"]{appearance:none;-webkit-appearance:none;display:block;position:relative;width:55px;height:32px;flex:none;border:2px solid #aebbc9;border-radius:999px;background:#d6dee8;cursor:pointer;margin:0;transition:background-color .15s,border-color .15s}
+[data-page="teacher-learning"] .learn-mail-switch-action input[type="checkbox"]::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.17);transition:transform .15s}
+[data-page="teacher-learning"] .learn-mail-switch-action input[type="checkbox"]:checked{background:#197451;border-color:#197451}
+[data-page="teacher-learning"] .learn-mail-switch-action input[type="checkbox"]:checked::after{transform:translateX(22px)}
+[data-page="teacher-learning"] .learn-mail-switch-action input[type="checkbox"]:disabled{opacity:.48;cursor:wait}
+[data-page="teacher-learning"] .learn-mail-switch-action input[type="checkbox"]:focus-visible{outline:3px solid #91bef1;outline-offset:4px}
+[data-page="teacher-learning"] .learn-mail-footnote{margin:14px 0 0;font-size:13px;color:#546a84;line-height:1.7}
+@media(max-width:800px){[data-page="teacher-learning"] .learn-mail-switch-list{grid-template-columns:1fr}}
+@media(max-width:530px){[data-page="teacher-learning"] .learn-mail-switch-card{padding:15px 13px;gap:12px}
+[data-page="teacher-learning"] .learn-mail-switch-description h3{font-size:15px}
+[data-page="teacher-learning"] .learn-mail-switch-description p{font-size:13px}
+[data-page="teacher-learning"] .learn-mail-switch-action{min-width:60px}
+}
+@media(prefers-reduced-motion:reduce){[data-page="teacher-learning"] .learn-mail-switch-action input[type="checkbox"],[data-page="teacher-learning"] .learn-mail-switch-action input[type="checkbox"]::after{transition:none}}
