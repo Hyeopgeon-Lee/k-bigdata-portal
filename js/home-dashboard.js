@@ -1,4 +1,3 @@
-import {learningLocal} from "./learning-storage.mjs";
 // Main dashboard: favorites, recent shortcuts and published recruitment deadlines.
 import {services} from "./services.js?v=20261026-card-label-1";
 import {getFavorites,getRecent,toggleFavorite} from "./portal-personal.js?v=20261111-db-sync-1";
@@ -8,7 +7,6 @@ const serviceById=id=>services.find(service=>service.id===id);
 const link=service=>{const ext=/^https:\/\//.test(service.url);return '<a href="'+esc(service.url)+'"'+(ext?' target="_blank" rel="noopener noreferrer"':'')+'>'+esc(service.name)+' <span aria-hidden="true">'+(ext?'↗':'→')+'</span>'+(ext?'<span class="sr-only">외부 사이트 새 창</span>':'')+'</a>';};
 
 // Presentation preference only: does not grant access or hide any service.
-const GRADE_KEY="kbigdata:home-grade:v1";
 let accountGrade=null;
 const readSavedGrade=()=>accountGrade;
 let selectedGrade=readSavedGrade()||"1";
