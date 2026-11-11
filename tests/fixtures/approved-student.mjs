@@ -3,7 +3,7 @@ export async function approvedStudent(context){
  await context.route("https://esm.sh/@supabase/supabase-js@*",route=>route.fulfill({
   contentType:"application/javascript",
   headers:{"Access-Control-Allow-Origin":"*"},
-  body: String.raw\`export const createClient=()=>{
+  body: String.raw`export const createClient=()=>{
    const key="__qa_supabase_storage_v2";
    function database(){try{return JSON.parse(localStorage.getItem(key)||"{}");}catch{return {};}}
    function save(db){localStorage.setItem(key,JSON.stringify(db));}
@@ -73,6 +73,6 @@ export async function approvedStudent(context){
     async rpc(name){return {data:({start_portal_session:new Date(Date.now()+90*86400000).toISOString(),
      portal_learning_access:{read:true,write:true},portal_super_admin_allowed:false})[name]};}
    };
-  };\`
+  };`
  }));
 }
