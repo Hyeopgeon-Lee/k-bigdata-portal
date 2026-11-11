@@ -59,3 +59,19 @@ body[data-portal-home] .home-today-primary:focus-visible,body[data-portal-home] 
 @media(prefers-reduced-motion:reduce){
  body[data-portal-home] .home-today-primary,body[data-portal-home] .home-today-mark{transition:none}
 }
+
+
+/* Account-backed personal to-dos in today's tracker. */
+.home-custom-task-form { display:flex; align-items:stretch; gap:8px; margin-top:16px; width:100%; }
+.home-custom-task-form[hidden] { display:none !important; }
+.home-custom-task-form input { flex:1; min-width:0; min-height:44px; border:1px solid #b9c8dd; border-radius:10px; padding:9px 12px; font:inherit; font-size:16px; background:#fff; color:#14223b; }
+.home-custom-task-form input:focus-visible { outline:3px solid #155fd3; outline-offset:2px; }
+.home-custom-task-form button { min-width:64px; min-height:44px; padding:8px 14px; border:0; border-radius:10px; background:#163d8b; color:#fff; font:inherit; font-weight:750; cursor:pointer; }
+.home-custom-task-form button:disabled { opacity:.55; cursor:wait; }
+.home-today-delete { flex:none; min-height:38px; padding:6px 8px; border:1px solid #d5ddeb; border-radius:8px; color:#5e6b81; background:#fff; font:inherit; font-size:12px; cursor:pointer; }
+.home-today-delete:focus-visible { outline:3px solid #155fd3; outline-offset:2px; }
+@media(max-width:480px) {
+ .home-today-task { flex-wrap:wrap; }
+ .home-today-task-body { min-width:0; flex:1 1 58%; }
+ .home-today-delete { min-height:36px; }
+}
