@@ -1,7 +1,7 @@
 /* Compact student launcher. 2026-10-26. Overrides legacy home layers without deleting existing student state. */
 body[data-portal-home] {background:#f5f7fb}
 body[data-portal-home] #main-content{padding:0 0 60px}
-body[data-portal-home] .dashboard-hero{padding-top:28px;padding-bottom:0;display:grid;gap:18px}
+body[data-portal-home] .dashboard-hero{padding-top:28px;padding-bottom:0;display:flex;flex-direction:column;align-items:stretch;gap:18px}
 body[data-portal-home] .portal-welcome{display:flex;justify-content:space-between;align-items:center;gap:24px;margin:0}
 body[data-portal-home] .portal-welcome h1{font-size:clamp(25px,2.7vw,34px);margin:0 0 4px;line-height:1.35}
 body[data-portal-home] .portal-welcome .eyebrow{font-size:11px;letter-spacing:.1em;margin:0 0 8px}
@@ -13,14 +13,14 @@ body[data-portal-home] .home-grade-options{display:flex;gap:3px;padding:3px;bord
 body[data-portal-home] .home-grade-button{font-family:inherit;font-weight:700;font-size:13px;line-height:1.2;border:0;border-radius:8px;background:transparent;color:#365579;min-height:42px;padding:10px 17px;cursor:pointer}
 body[data-portal-home] .home-grade-button[aria-pressed=true]{background:#153d80;color:white}
 body[data-portal-home] .home-grade-status{font-size:11px;line-height:1.35;text-align:right;color:#5d6d82;margin:0;max-width:260px}
-body[data-portal-home] .portal-search{grid-row:2;width:100%;margin:0;padding:17px 21px;border:1px solid #d9e3f1;border-radius:14px;background:#fff;box-shadow:none}
+body[data-portal-home] .portal-search{width:100%;margin:0;padding:17px 21px;border:1px solid #d9e3f1;border-radius:14px;background:#fff;box-shadow:none}
 body[data-portal-home] .portal-search h2{font-size:16px;margin:0 0 10px;color:#183b72}
 body[data-portal-home] .portal-search-controls{display:flex;gap:8px}
 body[data-portal-home] #portal-query{flex:1;min-width:0;min-height:48px;border-radius:9px;font-size:15px}
 body[data-portal-home] .portal-search-submit{min-width:85px;min-height:48px;border-radius:9px;font-weight:750}
 body[data-portal-home] .portal-search #search-status{font-size:11px;margin:7px 0 0}
 body[data-portal-home] #search-results:empty{display:none}
-body[data-portal-home] .dashboard-start{grid-row:3;padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important}
+body[data-portal-home] .dashboard-start{padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important}
 body[data-portal-home] .dashboard-start .dashboard-panel-heading{margin:0 0 10px;display:flex;align-items:baseline;justify-content:space-between}
 body[data-portal-home] .dashboard-start h2{margin:0!important;font-size:20px!important;color:#17376d}
 body[data-portal-home] .dashboard-start .dashboard-action-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px}
