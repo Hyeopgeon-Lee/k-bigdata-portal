@@ -186,6 +186,7 @@ function listQuestions(syncPage=false) {
   const list = $("#coding-questions");
   list.replaceChildren();
   const items = matching();
+  $(".coding-detail").hidden=!items.length;
   if(syncPage){
     const position=items.findIndex(q=>q.id===current.id);
     if(position>=0)listPage=Math.floor(position/PAGE_SIZE);
@@ -219,11 +220,9 @@ function listQuestions(syncPage=false) {
       if(event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
       event.preventDefault();
       showQuestion(q);
-      // On phones the long list can otherwise hide the newly selected exercise.
-      if (window.matchMedia("(max-width:800px)").matches) {
-        const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        $("#coding-title").scrollIntoView({behavior:reduceMotion ? "auto" : "smooth",block:"start"});
-      }
+      document.body.dataset.codingView="question";
+      if(matchMedia("(max-width:800px)").matches)$("#coding-title").focus();
+
     });
     li.append(link);
     list.append(li);
@@ -582,10 +581,15 @@ $("#coding-editor").addEventListener("input", event => {
   setSafe(DRAFT_PREFIX + current.id, event.target.value);
   debounceCloudDraft("coding",current.id,event.target.value);
 });
+function openCodingList(){
+  document.body.dataset.codingView="list";
+  $("#coding-list-anchor").focus();
+}
+$("#coding-show-list").addEventListener("click",openCodingList);
 function moveCoding(offset) {
   const items=matching(),index=items.findIndex(item=>item.id===current.id);
   const next=items[index+offset];
-  if (!next) {$("#coding-list-anchor").focus();return;}
+  if (!next) {openCodingList();return;}
   showQuestion(next);
   $("#coding-title").scrollIntoView({block:"start"});
 }
@@ -678,6 +682,7 @@ nativeEditor.addEventListener("keydown", event => {
   notifyNativeEdit();
 });
 
+document.body.dataset.codingView=new URL(location.href).searchParams.has("id")?"question":"list";
 refreshFilters();
 showQuestion(current);
 void import("./coding-editor.js?v=20261024-autocomplete-1")

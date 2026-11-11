@@ -184,7 +184,7 @@ function renderHome(){
 }
 function syncFilters(){
  document.querySelectorAll("[data-filter]").forEach(b=>b.setAttribute("aria-pressed",String(filters[b.dataset.filter]===b.dataset.value)));
- const labels={exam:examLabels[filters.exam],language:filters.language,source:compactLabels[filters.source],difficulty:filters.difficulty,type:typeLabels[filters.type],completion:filters.completion==="unseen"?"미풀이":filters.completion==="solved"?"풀이 완료":null,year:filters.year,round:filters.round==="all"?null:filters.round+"회"};
+ const labels={query:filters.query,exam:examLabels[filters.exam],language:filters.language,source:compactLabels[filters.source],difficulty:filters.difficulty,type:typeLabels[filters.type],completion:filters.completion==="unseen"?"미풀이":filters.completion==="solved"?"풀이 완료":null,year:filters.year,round:filters.round==="all"?null:filters.round+"회"};
  $("#active-filters").innerHTML=Object.entries(labels).filter(([key,label])=>label&&filters[key]!=="all").map(([key,label])=>button("remove-filter",label+" ×",'data-key="'+key+'"')).join("");
 }
 function render(){
@@ -335,7 +335,7 @@ root.addEventListener("click",event=>{
    }
  }
  if(action==="home-view")selectView("home");
- if(action==="remove-filter"){const key=b.dataset.key;if(key in filters){filters[key]="all";$("#"+key+"-filter").value="all";if(key==="exam"){const url=new URL(location.href);url.searchParams.delete("exam");history.replaceState(null,"",url);}pageLimit=24;render();}}
+
  if(action==="random-again")selectView("random");
  if(action==="start-random"){
    const exam=$("#random-exam").value,language=$("#random-language").value,source=$("#random-source").value;
@@ -351,7 +351,22 @@ document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",(
 for(const key of ["exam","language","source","difficulty","type","sort","completion","year","round"]){$("#"+key+"-filter").addEventListener("change",event=>{filters[key]=event.target.value;pageLimit=24;render();});}
 document.querySelectorAll("[data-filter]").forEach(b=>b.addEventListener("click",()=>{filters[b.dataset.filter]=b.dataset.value;$("#"+b.dataset.filter+"-filter").value=b.dataset.value;pageLimit=24;const url=new URL(location.href);if(filters.exam==="all")url.searchParams.delete("exam");else url.searchParams.set("exam",filters.exam);history.replaceState(null,"",url);render();}));
 let bankSearchTimer=0;$("#bank-query").addEventListener("input",event=>{const value=event.target.value;clearTimeout(bankSearchTimer);bankSearchTimer=window.setTimeout(()=>{filters.query=value;pageLimit=24;render();},80);});
-function resetFilters(){Object.assign(filters,{exam:"all",language:"all",source:"reconstructed",difficulty:"all",type:"all",sort:"latest",query:"",completion:"unseen",year:"all",round:"all"});for(const key of ["exam","language","source","difficulty","type","sort","completion","year","round"])$("#"+key+"-filter").value=filters[key];$("#bank-query").value="";const url=new URL(location.href);url.searchParams.delete("exam");history.replaceState(null,"",url);selectView("bank");}
+$("#active-filters").addEventListener("click",event=>{
+ const chip=event.target.closest("button[data-key]");
+ if(!chip)return;
+ const key=chip.dataset.key;
+ if(key==="query"){
+   clearTimeout(bankSearchTimer);filters.query="";$("#bank-query").value="";
+ }else{
+   filters[key]="all";$("#"+key+"-filter").value="all";
+ }
+ if(key==="exam"){
+   const url=new URL(location.href);url.searchParams.delete("exam");history.replaceState(null,"",url);
+ }
+ pageLimit=24;render();
+ ($("#active-filters button")||$("#source-filter")).focus({preventScroll:true});
+});
+function resetFilters(){clearTimeout(bankSearchTimer);Object.assign(filters,{exam:"all",language:"all",source:"all",difficulty:"all",type:"all",sort:"latest",query:"",completion:"all",year:"all",round:"all"});for(const key of ["exam","language","source","difficulty","type","sort","completion","year","round"])$("#"+key+"-filter").value=filters[key];$("#bank-query").value="";const url=new URL(location.href);url.searchParams.delete("exam");history.replaceState(null,"",url);selectView("bank");}
 $("#bank-reset").addEventListener("click",resetFilters);
 loadPracticalBank().then(result=>{
  bank=result.bank;aliases=result.aliases||{};

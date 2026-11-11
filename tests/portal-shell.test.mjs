@@ -7,7 +7,7 @@ import {portalPages,groups,navigationItems,shellVersion} from '../js/portal-navi
 import {renderHeader,renderServiceNavigation,renderToolbar} from '../scripts/portal-shell-template.mjs';
 
 const root=fileURLToPath(new URL('../',import.meta.url));
-const read=file=>readFileSync(path.join(root,file),'utf8');
+const read=file=>readFileSync(path.join(root,file),'utf8').replaceAll('\r\n','\n');
 const discover=dir=>readdirSync(dir,{withFileTypes:true}).flatMap(entry=>entry.name.startsWith('.')||['node_modules','ui-screenshots','test-results'].includes(entry.name)?[]:entry.isDirectory()?discover(path.join(dir,entry.name)):entry.name.endsWith('.html')?[path.relative(root,path.join(dir,entry.name)).replaceAll('\\','/')]:[]);
 const files=discover(root).sort();
 assert.equal(files.length,Object.keys(portalPages).length,'all discovered HTML pages must have an explicit page identity');

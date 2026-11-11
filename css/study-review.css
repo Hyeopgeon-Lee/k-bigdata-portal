@@ -29,3 +29,19 @@
 }
 .ncp-sidebar .ncp-list{grid-template-columns:repeat(auto-fit,minmax(64px,1fr))}
 .ncp-sidebar .ncp-list button{min-height:44px;height:auto;padding:.4rem;line-height:1.35;word-break:keep-all}
+
+.study-return{display:none}
+#active-filters:empty{display:none}
+@media(max-width:800px){
+ .study-return{display:inline-flex;align-items:center;min-height:44px;border:0;padding:0 .25rem;background:transparent;color:#234c77;font:inherit;font-weight:650}
+ .study-return:focus-visible{outline:2px solid currentColor}
+ [data-coding-view=list] .coding-detail,[data-coding-view=question] :is(.coding-list-panel,#coding-language,.coding-toolbar,.coding-filterbar,.coding-hero),
+ [data-ncp-view=list] .ncp-workspace>.ncp-panel,[data-ncp-view=question] :is(.ncp-sidebar,.ncp-tools){display:none!important}
+ #coding-title,#coding-list-anchor,#ncp-list,.ncp-question-title{scroll-margin-top:5rem}
+ .coding-detail .coding-tagrow{margin-top:.45rem}
+ .coding-workspace .coding-list-panel{position:static;max-height:none}
+}
+.coding-detail[hidden]{display:none!important}
+
+.study-nav{margin-top:1.25rem}
+#ncp-question{scroll-margin-top:5rem}

@@ -11,7 +11,7 @@ const removeRegion=(html,name)=>html.replace(new RegExp(`<!-- portal:${name}:sta
 function replaceRegion(html,name,content,fallback){const pattern=new RegExp(`<!-- portal:${name}:start[^>]*-->[\\s\\S]*?<!-- portal:${name}:end -->`);if(pattern.test(html))return html.replace(pattern,region(name,content));if(fallback&&fallback.test(html))return html.replace(fallback,region(name,content));throw new Error('Missing '+name+' region');}
 const outdated=[];
 for(const file of htmlPages){
-  let original=readFileSync(path.join(root,file),'utf8'),html=original;
+  let original=readFileSync(path.join(root,file),'utf8').replaceAll('\r\n','\n'),html=original;
   const id=path.basename(file,'.html');
   html=html.replace(/<html\b([^>]*)>/,(_,attributes)=>`<html${attributes.replace(/\sdata-portal-page="[^"]*"/,'')} data-portal-page="${id}">`);
   // One metadata entry registers a page; templates and markup never need copying.
@@ -28,7 +28,7 @@ for(const file of htmlPages){
   // Coding/learning UI assets have their own content versions and can be updated
   // without unnecessarily invalidating the shared portal shell.
   html=html.replace(/(href="css\/[^"?]+\.css)(?:\?v=[^"]+)?"/g,(match,asset)=>
-    ['href="css/coding.css','href="css/home-refresh.css','href="css/learning-dashboard.css'].includes(asset) ? match : `${asset}?v=${shellVersion}"`);
+    ['href="css/study-review.css','href="css/coding.css','href="css/home-refresh.css','href="css/learning-dashboard.css'].includes(asset) ? match : `${asset}?v=${shellVersion}"`);
   html=html.replace(/(src="js\/(?:app|home-dashboard|learning-ui|portal-shell-entry|coding)\.js)(?:\?v=[^"]+)?"/g,(match,asset)=>
     (asset==='src="js/coding.js' || asset==='src="js/learning-ui.js') ? match : `${asset}?v=${shellVersion}"`);
   html=html.replace(/<main\b([^>]*)(?<!tabindex="-1")>/,match=>match.includes('tabindex=')?match:match.slice(0,-1)+' tabindex="-1">');

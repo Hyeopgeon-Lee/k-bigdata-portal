@@ -37,6 +37,6 @@ const shareText=ui.slice(ui.indexOf("function problemShareText"),ui.indexOf("asy
 assert.ok(!/\.answer|\.explanation|\.options|state\.answers/.test(shareText),"Do not reveal model answers in shared text");
 assert.match(css,/\.ncp-share-row/);
 assert.match(css,/grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
-assert.match(html,/ncp-quiz\.js\?v=20261111-study-layout/);
+assert.match(html,/ncp-quiz\.js\?v=20261111-mobile-list-2/);
 assert.match(html,/ncp-quiz\.css\?rev=20261111-original-link-1/);
 console.log("PASS: NCP problem sharing and reporting link all 75 IDs without leaking answers.");
