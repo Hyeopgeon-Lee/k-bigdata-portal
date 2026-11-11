@@ -33,6 +33,7 @@ function monitor(page,label){
 async function ready(page,file){
   await page.goto(url(file),{waitUntil:'domcontentloaded'});
   await page.waitForFunction(()=>document.documentElement.dataset.portalNavigationReady==='true');
+  await page.waitForFunction(()=>document.documentElement.dataset.portalAccess==='approved',null,{timeout:20000});
   // Protected pages temporarily hide the header until login validation completes.
   // Snapshotting before unlock yields false zero-height layout failures.
   const path=new URL(page.url()).pathname.split('/').pop()?.replace(/\.html$/,'');
@@ -147,19 +148,26 @@ try{
     await ready(page,'coding.html?id=LINUX-002');await page.locator('input').first().focus();await page.setViewportSize({width:390,height:420});
     assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'focused input in a short viewport does not overflow');
   }catch(error){record(engine+' deep-link/state/back/keyboard regression',error);}finally{await context.close();}
+  // Fail closed: without JavaScript there is no authenticated session.
   const noScript=await browser.newContext({javaScriptEnabled:false,viewport:{width:390,height:844}});await prepare(noScript);
   for(const id of Object.keys(portalPages)){
     const page=await noScript.newPage();
-    try{await page.goto(url(id+'.html'));if(portalPages[id].group==='learning'||portalPages[id].locked){assert.equal(await page.locator('main').isVisible(),false);continue;}assert.equal(await page.locator('#portal-nav a').count(),6);assert.equal(await page.locator('#portal-nav').isVisible(),true,'native details fallback keeps header links usable');const state=await snapshot(page),reference=evidence.find(row=>row.page===id&&row.width===390);assert.deepEqual(state.header,reference.header,'source header has identical geometry and styles before enhancement');assert.deepEqual(state.buttons,reference.buttons,'service menu does not shift when content JavaScript starts');await page.locator('.portal-menu > summary').click();assert.equal(await page.locator('#portal-nav').isVisible(),false,'native summary closes panel without JavaScript');if(id!=='index'){await page.locator('.portal-nav-more > summary').click();assert.equal(await page.locator('.portal-nav-other').isVisible(),true);}}
-    catch(error){record(engine+' no-JavaScript '+id,error);}finally{await page.close();}
+    try{
+      await page.goto(url(id+'.html'));
+      assert.equal(await page.locator('main').isVisible(),false,'no-JS portal content must stay hidden');
+    }catch(error){record(engine+' no-JavaScript '+id,error);}finally{await page.close();}
   }
   await noScript.close();
   const failedContent=await browser.newContext({viewport:{width:390,height:900}});await prepare(failedContent);
   await failedContent.route('**/js/**',route=>route.request().url().includes('/portal-navigation.js')?route.continue():route.fulfill({status:200,contentType:'application/javascript',body:''}));
+  // A missing authentication module must never expose the portal layout.
   for(const id of Object.keys(portalPages)){
     const page=await failedContent.newPage();
-    try{await ready(page,id+'.html');if(portalPages[id].group==='learning'||portalPages[id].locked){assert.equal(await page.locator('main').isVisible(),false);continue;}const state=await snapshot(page),reference=evidence.find(row=>row.page===id&&row.width===390);assert.deepEqual(state.header,reference.header,'shell layout survives failed content modules');assert.deepEqual(state.buttons,reference.buttons,'service layout survives failed content modules');await interactions(page,390,id);}
-    catch(error){record(engine+' failed-content-module fallback '+id,error);}finally{await page.close();}
+    try{
+      await page.goto(url(id+'.html'),{waitUntil:'domcontentloaded'});
+      await page.waitForFunction(()=>document.documentElement.dataset.portalNavigationReady==='true');
+      assert.equal(await page.locator('main').isVisible(),false,'auth-module failure is closed by default');
+    }catch(error){record(engine+' failed-auth-module fallback '+id,error);}finally{await page.close();}
   }
   await failedContent.close();
 }finally{
