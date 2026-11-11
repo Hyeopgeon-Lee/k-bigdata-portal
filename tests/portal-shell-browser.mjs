@@ -74,7 +74,7 @@ async function interactions(page,width,id){
     await summary.click();await page.locator('main').click({position:{x:2,y:2}});
     assert.equal(await menu.getAttribute('open'),null,'outside click closes menu');
   }else assert.equal(await page.locator('#portal-nav').isVisible(),true,'desktop links visible');
-  if(id!=='index'){
+  if(portalPages[id].group){
     const other=page.locator('.portal-nav-more'),toggle=other.locator(':scope > summary');
     await toggle.click();assert.equal(await other.getAttribute('open'),'','other services expand');
     assert.equal(await other.locator('.portal-nav-other').isVisible(),true);
