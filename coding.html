@@ -148,6 +148,17 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
               <div class="coding-code"><pre><code id="coding-code" aria-label="주석 포함 정답 코드"></code></pre></div>
               <div class="coding-actions"><button class="coding-btn" id="coding-copy" type="button">주석 없는 코드 복사</button></div>
               <p class="coding-copy-tip" id="coding-copy-tip">복사한 코드를 실습 환경에 붙여 넣고 직접 주석을 달아 보세요.</p>
+              <section id="coding-self-review" class="coding-self-review" aria-label="자가 학습 결과 기록">
+                <h3>내 풀이 결과 기록하기</h3>
+                <p>정답과 해설을 비교한 뒤 직접 선택하세요. 자동 채점이 아닌 자기평가이며, 틀린 문제는 나중에 복습할 수 있습니다.</p>
+                <div class="coding-self-choices" role="group" aria-label="정답 여부 자기평가">
+                  <button type="button" class="coding-btn" data-learning-grade="correct">정답이에요</button>
+                  <button type="button" class="coding-btn" data-learning-grade="incorrect">틀렸어요</button>
+                  <button type="button" class="coding-btn" data-learning-grade="ungraded">아직 판단하지 못했어요</button>
+                </div>
+                <p id="coding-self-status" role="status" aria-live="polite"></p>
+                <a href="my-learning.html" class="coding-review-link">내 학습현황 및 오답 복습 보기</a>
+              </section>
               <section id="coding-overall-explanation" class="coding-section" aria-label="풀이 방법"><h3>전체 해설</h3><p id="coding-explanation"></p><ol id="coding-vim-explanation-list" class="coding-vim-instruction-list" aria-label="Vim 조작 단계" hidden></ol></section>
               <section id="coding-ubuntu-guide" class="coding-ubuntu-guide" aria-label="Ubuntu 명령어 해설" hidden>
                 <section id="coding-ubuntu-concept" class="coding-ubuntu-card" aria-label="핵심 개념">
@@ -179,24 +190,14 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
                 <h3>주의할 점</h3>
                 <p id="coding-ubuntu-mistake" class="coding-ubuntu-info"></p>
               </section>
-              <section id="coding-self-review" class="coding-self-review" aria-label="자가 학습 결과 기록">
-                <h3>내 풀이 결과 기록하기</h3>
-                <p>정답과 해설을 비교한 뒤 직접 선택하세요. 자동 채점이 아닌 자기평가이며, 틀린 문제는 나중에 복습할 수 있습니다.</p>
-                <div class="coding-self-choices" role="group" aria-label="정답 여부 자기평가">
-                  <button type="button" class="coding-btn" data-learning-grade="correct">정답이에요</button>
-                  <button type="button" class="coding-btn" data-learning-grade="incorrect">틀렸어요</button>
-                  <button type="button" class="coding-btn" data-learning-grade="ungraded">아직 판단하지 못했어요</button>
-                </div>
-                <p id="coding-self-status" role="status" aria-live="polite"></p>
-                <a href="my-learning.html" class="coding-review-link">내 학습현황 및 오답 복습 보기</a>
-              </section>
+
             </div>
             <div id="coding-trace" class="coding-reveal" hidden>
               <h3>실행 단계와 값 변화</h3>
               <div class="coding-scroll"><table class="coding-trace"><thead><tr><th scope="col">단계</th><th scope="col">대상</th><th scope="col">연산·상태 변화</th><th scope="col">결과</th></tr></thead><tbody id="coding-trace-rows"></tbody></table></div>
             </div>
             <div class="coding-actions coding-actions--progress">
-              <button id="coding-done-button" class="coding-btn" type="button" aria-pressed="false">스스로 풀었어요 ✓</button>
+              <button id="coding-done-button" class="coding-btn" type="button" aria-pressed="false">학습 완료 표시</button>
               <button id="coding-next-button" class="coding-btn" type="button">다음 문제 →</button>
             </div>
             <p id="coding-feedback" class="coding-feedback" role="status" aria-live="polite"></p>
