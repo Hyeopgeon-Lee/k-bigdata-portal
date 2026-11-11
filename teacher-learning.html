@@ -53,13 +53,6 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <div class="container learn-container">
 <div class="learn-tools"><p class="learn-note">학습 통계: 월요일 00:00 ~ 다음 월요일 00:00 · 한국시간</p><button id="teacher-refresh" type="button">통계 새로고침</button></div>
 <p id="teacher-status" class="learn-status" role="status" aria-live="polite">관리자 권한을 확인하고 있습니다.</p>
-<div id="teacher-content" hidden>
-<div class="learn-grid" id="teacher-summary"></div>
-<section class="learn-section"><h2>과목별 학습 활동</h2><div id="teacher-subjects" class="learn-table-wrap"></div></section>
-<section class="learn-section"><h2>자가평가와 복습 성과</h2><div id="teacher-rates" class="learn-rate-grid"></div></section>
-<section class="learn-section"><h2>반복 오답이 많은 문제</h2><p>학습 지원이 필요한 문제를 파악하기 위한 집계입니다. 개인별 점수나 순위는 제공하지 않습니다.</p><div id="teacher-wrong" class="learn-review-list"></div></section>
-<section class="learn-section"><h2>지난주 대비</h2><div id="teacher-comparison" class="learn-table-wrap"></div></section>
-
 <section class="learn-section learn-mail-section" aria-labelledby="teacher-mail-heading">
   <div class="learn-section-heading">
     <div><p class="learn-section-kicker">WEEKLY EMAIL</p><h2 id="teacher-mail-heading">주간 리포트 이메일 설정</h2></div>
@@ -95,6 +88,14 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
   </div>
   <p class="learn-mail-footnote">학생 발송을 켜면 승인된 재학생 중 이메일 인증을 완료한 계정에만 발송합니다. 스위치를 끄면 다음 자동 발송부터 중지됩니다.</p>
 </section>
+<div id="teacher-content" hidden>
+<div class="learn-grid" id="teacher-summary"></div>
+<section class="learn-section"><h2>과목별 학습 활동</h2><div id="teacher-subjects" class="learn-table-wrap"></div></section>
+<section class="learn-section"><h2>자가평가와 복습 성과</h2><div id="teacher-rates" class="learn-rate-grid"></div></section>
+<section class="learn-section"><h2>반복 오답이 많은 문제</h2><p>학습 지원이 필요한 문제를 파악하기 위한 집계입니다. 개인별 점수나 순위는 제공하지 않습니다.</p><div id="teacher-wrong" class="learn-review-list"></div></section>
+<section class="learn-section"><h2>지난주 대비</h2><div id="teacher-comparison" class="learn-table-wrap"></div></section>
+
+
 </div>
 </div>
 </main>
