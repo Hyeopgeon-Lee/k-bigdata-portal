@@ -12,7 +12,7 @@ root.hidden=true; // The whole portal requires an authorized account.
 document.body.append(root);
 const css=document.createElement("link");
 css.rel="stylesheet";
-css.href="css/portal-auth.css?v=20261111-account-required-1";
+css.href="css/portal-auth.css?v=20261111-account-readable-2";
 document.head.append(css);
 
 const locked=document.getElementById("learning-lock");
@@ -231,28 +231,63 @@ function showAccount(){
     return renderAccount();
   };
 }
+
 function renderAccount(){
-  card("내 계정",'<p id="portal-account-info" class="portal-auth-lead"></p>'+
-    '<div class="portal-auth-actions" id="portal-account-actions"></div>');
-  $("#portal-account-info").textContent=(currentProfile?.full_name||"사용자")+" · "+(currentUser?.email||"")+
-    (currentProfile?.signup_type==="alumni"?" · 졸업생 ("+currentProfile.graduation_year+"년 졸업)":
-      currentProfile?.enrollment_status==="leave"?" · 휴학(학습 기록 읽기 전용)":"");
+  card("내 계정",
+    '<div class="portal-account-profile" aria-label="현재 로그인 계정">'+
+      '<p id="portal-account-name" class="portal-account-name"></p>'+
+      '<p id="portal-account-email" class="portal-account-email"></p>'+
+      '<span id="portal-account-role" class="portal-account-role"></span>'+
+    '</div><div id="portal-account-actions"></div>');
+  $(".portal-auth-card").classList.add("portal-account-card");
+  $("#portal-account-name").textContent=currentProfile?.full_name||"사용자";
+  $("#portal-account-email").textContent=currentUser?.email||"";
+  $("#portal-account-role").textContent=isAdmin?"관리자":
+    currentProfile?.signup_type==="alumni"?"졸업생 · "+currentProfile.graduation_year+"년 졸업":
+    currentProfile?.enrollment_status==="leave"?"휴학 · 학습 기록 읽기 전용":"재학생";
+
   const area=$("#portal-account-actions");
-  const learning=document.createElement("a");learning.href="my-learning.html";learning.className="portal-auth-action-link";
-  learning.textContent="나의 학습현황 · 오답 복습";area.append(learning);
-  if(isAdmin){
-    const report=document.createElement("a");report.href="teacher-learning.html";
-    report.className="portal-auth-action-link";report.textContent="학급 주간 학습통계";area.append(report);
+  const addSection=(heading)=>{
+    const section=document.createElement("section");
+    section.className="portal-account-section";
+    const title=document.createElement("h2");title.textContent=heading;
+    const list=document.createElement("div");list.className="portal-account-list";
+    section.append(title,list);area.append(section);return list;
+  };
+  const addAction=(list,{title,detail,href,onClick,secondary=false})=>{
+    const element=document.createElement(href?"a":"button");
+    element.className="portal-account-action"+(secondary?" portal-account-secondary":"");
+    if(href)element.href=href;
+    else {element.type="button";element.addEventListener("click",onClick);}
+    const copy=document.createElement("span");copy.className="portal-account-copy";
+    const name=document.createElement("span");name.className="portal-account-action-title";name.textContent=title;
+    const description=document.createElement("span");description.className="portal-account-action-detail";description.textContent=detail;
+    const chevron=document.createElement("span");chevron.className="portal-account-chevron";
+    chevron.setAttribute("aria-hidden","true");chevron.textContent=href?"→":"›";
+    copy.append(name,description);element.append(copy,chevron);list.append(element);
+  };
+
+  const learning=addSection("학습");
+  addAction(learning,{title:"나의 학습현황",detail:"풀이 기록과 오답 복습",href:"my-learning.html"});
+  if(isAdmin)addAction(learning,{title:"학급 주간 학습통계",detail:"학생들의 주간 학습 결과 확인",href:"teacher-learning.html"});
+
+  if(activeWrite){
+    const settings=addSection("개인 설정");
+    addAction(settings,{title:"기존 기록 가져오기",detail:"이 기기의 즐겨찾기·할 일을 계정으로 옮기기",onClick:importDevicePersonalData,secondary:true});
   }
-  if(activeWrite){const transfer=document.createElement("button");transfer.type="button";transfer.textContent="이 기기의 기존 즐겨찾기·할 일 가져오기";
-    transfer.addEventListener("click",importDevicePersonalData);area.append(transfer);}
-  if(isAdmin){const admin=document.createElement("button");admin.type="button";admin.textContent="학생 계정 관리";
-    admin.addEventListener("click",renderAdmin);area.append(admin);}
+  if(isAdmin){
+    const management=addSection("관리자 기능");
+    addAction(management,{title:"학생 계정 관리",detail:"가입 승인 및 학적 상태 변경",onClick:renderAdmin,secondary:true});
+  }
+
+  const footer=document.createElement("div");footer.className="portal-account-footer";
   const close=document.createElement("button");close.type="button";close.textContent="닫기";
-  close.addEventListener("click",()=>{if(locked&&!activeUser)location.assign("/");else {root.hidden=true;opener?.focus();}});area.append(close);
-  const out=document.createElement("button");out.type="button";out.textContent="로그아웃";
-  out.addEventListener("click",logout);area.append(out);
+  close.addEventListener("click",()=>{root.hidden=true;opener?.focus();});
+  const out=document.createElement("button");out.type="button";out.className="portal-account-logout";out.textContent="로그아웃";
+  out.addEventListener("click",logout);
+  footer.append(close,out);area.after(footer);
 }
+
 async function importDevicePersonalData(){
  if(!currentUser||!activeWrite)return;
  if(!window.confirm("현재 기기에 남아 있는 즐겨찾기·오늘의 할 일이 본인의 기록인지 확인하세요. 확인을 누르면 이 계정으로 가져옵니다."))return;
