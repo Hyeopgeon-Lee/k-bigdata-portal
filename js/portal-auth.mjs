@@ -12,7 +12,7 @@ root.hidden=true; // The whole portal requires an authorized account.
 document.body.append(root);
 const css=document.createElement("link");
 css.rel="stylesheet";
-css.href="css/portal-auth.css?v=20261111-admin-delete-1";
+css.href="css/portal-auth.css?v=20261112-signup-approval-1";
 document.head.append(css);
 
 const locked=document.getElementById("learning-lock");
@@ -297,7 +297,8 @@ function renderAccount(){
   }
   if(isAdmin){
     const management=addSection("관리자 기능");
-    addAction(management,{title:"학생 계정 관리",detail:"가입 승인 및 학적 상태 변경",onClick:renderAdmin,secondary:true});
+    addAction(management,{title:"가입 승인 요청",detail:"승인을 기다리는 가입 신청만 확인",onClick:renderApprovalRequests,secondary:true});
+    addAction(management,{title:"학생 계정 관리",detail:"기존 계정과 학적 상태 관리",onClick:renderAdmin,secondary:true});
   }
 
   const footer=document.createElement("div");footer.className="portal-account-footer";
@@ -394,6 +395,108 @@ async function renderWithdrawnDeletion(member){
     await renderAdmin();
     status(preview.fullName+" 학생의 계정과 연결 데이터를 영구 삭제했습니다.");
   });
+}
+
+
+async function approvePortalMember(member,enrollmentStatus){
+  const {data,error}=await client.functions.invoke("approve-portal-signup",{
+    body:{action:"approve",userId:member.user_id,enrollmentStatus:enrollmentStatus||member.enrollment_status}
+  });
+  if(error||!data?.approved)throw error||Error("APPROVAL_FAILED");
+  return data;
+}
+async function retryApprovalEmail(member){
+  const {data,error}=await client.functions.invoke("approve-portal-signup",{
+    body:{action:"retry",userId:member.user_id}
+  });
+  if(error||!data?.approved)throw error||Error("EMAIL_RETRY_FAILED");
+  return data;
+}
+async function renderApprovalRequests(){
+  if(!isAdmin){renderAccount();return;}
+  card("가입 승인 요청",
+    '<p class="portal-auth-lead">가입 신청 후 이메일 인증을 마친 회원의 승인 요청만 표시합니다. 승인 시 신청자에게 포털 이용 안내 메일이 발송됩니다.</p>'+
+    '<p id="portal-approval-count" class="portal-approval-count" role="status">승인 대기 목록 확인 중…</p>'+
+    '<div id="portal-approval-list" class="portal-approval-list" aria-label="가입 승인 대기 목록"></div>'+
+    '<div id="portal-approval-retry" class="portal-approval-retry" hidden></div>'+
+    '<div class="portal-auth-actions"><button id="portal-approval-back" type="button">내 계정으로 돌아가기</button></div>');
+  $(".portal-auth-card").classList.add("portal-requests-card");
+  $("#portal-approval-back").addEventListener("click",renderAccount);
+  const {data,error}=await client.rpc("admin_list_students");
+  const list=$("#portal-approval-list");
+  if(!list)return;
+  if(error){$("#portal-approval-count").textContent="승인 요청을 불러오지 못했습니다.";return;}
+  const pending=(data||[]).filter(member=>member.approval_status==="pending");
+  const count=$("#portal-approval-count");
+  let remaining=pending.length;
+  const redraw=()=>{
+    count.textContent=remaining?"승인 대기 "+remaining+"명":"현재 승인 대기 중인 가입 요청이 없습니다.";
+    if(!remaining){
+      const empty=document.createElement("p");
+      empty.className="portal-approval-empty";
+      empty.textContent="새로운 가입 신청이 들어오면 이곳에 표시됩니다.";
+      list.replaceChildren(empty);
+    }
+  };
+  for(const member of pending){
+    const item=document.createElement("article");item.className="portal-approval-item";
+    const top=document.createElement("div");top.className="portal-approval-item-header";
+    const title=document.createElement("h2");title.textContent=member.full_name||"이름 미등록";
+    const badge=document.createElement("span");badge.className="portal-approval-badge";
+    badge.textContent=member.signup_type==="alumni"?"졸업생":"재학생";
+    top.append(title,badge);
+    const details=document.createElement("div");details.className="portal-approval-meta";
+    const id=document.createElement("span");id.textContent=member.signup_type==="alumni"?
+      "졸업년도 · "+(member.graduation_year||"-")+"년":"학번 · "+(member.student_no||"-");
+    const email=document.createElement("span");email.textContent=member.email||"";
+    const date=document.createElement("span");
+    date.textContent="신청일 · "+(member.created_at?new Date(member.created_at).toLocaleDateString("ko-KR"):"-");
+    details.append(id,email,date);
+    const actions=document.createElement("div");actions.className="portal-approval-buttons";
+    const approve=document.createElement("button");approve.type="button";approve.className="portal-approval-accept";
+    approve.textContent="승인 및 이메일 발송";
+    const reject=document.createElement("button");reject.type="button";reject.className="portal-approval-reject";
+    reject.textContent="반려";
+    const busy=(value)=>{approve.disabled=value;reject.disabled=value;};
+    approve.addEventListener("click",async()=>{
+      if(!window.confirm(member.full_name+"님의 가입을 승인하고 알림 메일을 발송하시겠습니까?"))return;
+      busy(true);status("승인 및 안내 메일을 처리하고 있습니다.");
+      try{
+        const result=await approvePortalMember(member);
+        item.remove();remaining--;redraw();
+        if(result.notificationStatus==="sent")status(member.full_name+"님 승인 완료 · 안내 메일 발송 성공");
+        else if(result.notificationStatus==="sending")status(member.full_name+"님 승인 완료 · 메일 발송 처리 중입니다.");
+        else{
+          status(member.full_name+"님 승인 완료 · 메일 발송 실패 (재시도 가능)");
+          const retry=$("#portal-approval-retry");retry.hidden=false;retry.replaceChildren();
+          const message=document.createElement("p");
+          message.textContent=member.full_name+"님의 계정은 승인되었지만 메일 발송에 실패했습니다.";
+          const button=document.createElement("button");button.type="button";button.textContent="안내 메일 재시도";
+          button.addEventListener("click",async()=>{
+            button.disabled=true;
+            try{
+              const sent=await retryApprovalEmail(member);
+              if(sent.notificationStatus==="sent"){retry.hidden=true;status("승인 안내 메일이 발송되었습니다.");}
+              else{status("메일 발송 처리 중입니다. 잠시 후 확인해 주세요.");button.disabled=false;}
+            }catch{status("메일 재시도에 실패했습니다.");button.disabled=false;}
+          });
+          retry.append(message,button);
+        }
+      }catch{status("승인에 실패했습니다. 관리자 권한과 네트워크 상태를 확인해 주세요.");busy(false);}
+    });
+    reject.addEventListener("click",async()=>{
+      if(!window.confirm(member.full_name+"님의 가입 신청을 반려하시겠습니까?"))return;
+      busy(true);
+      const {error:rejectError}=await client.rpc("admin_update_student",{
+        p_target_user_id:member.user_id,p_approval_status:"rejected",
+        p_enrollment_status:member.enrollment_status
+      });
+      if(rejectError){status("반려 처리에 실패했습니다.");busy(false);return;}
+      item.remove();remaining--;redraw();status(member.full_name+"님의 가입 요청을 반려했습니다.");
+    });
+    actions.append(approve,reject);item.append(top,details,actions);list.append(item);
+  }
+  redraw();
 }
 
 async function renderAdmin(){
