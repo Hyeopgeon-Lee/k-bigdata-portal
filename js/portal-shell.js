@@ -1,5 +1,5 @@
 import {initPortalUX} from "./portal-ux.js?v=20261026-card-label-1";
-import {initRecentTracking} from "./portal-personal.js?v=20261026-card-label-1";
+import {initRecentTracking} from "./portal-personal.js?v=20261111-db-sync-1";
 import {initGroupedSearch} from "./search-ui.js?v=20261026-card-label-1";
 import {footerLinks} from "./services.js?v=20261026-card-label-1";
 
