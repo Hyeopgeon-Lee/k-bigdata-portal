@@ -46,11 +46,11 @@ for(const id of ["home-today","home-today-subtitle","home-today-primary","home-t
   assert.ok(html.includes('id="'+id+'"'),id+" is mounted");
 assert.ok(html.indexOf('id="home-today"')<html.indexOf('id="home-alerts-title"'));
 assert.ok(html.indexOf('class="dashboard-action-grid"')<html.indexOf('id="home-today"'));
-assert.ok(html.includes('js/home-engagement.js?v=20261020-engagement-1'));
+assert.ok(html.includes('js/home-engagement.js?v=20261111-daily-sync-1'));
 assert.match(html,/css\/home-engagement\.css\?v=[^"']+/);
 assert.ok(ui.includes('kbigdata:home-gradechange'),"grade changes refresh the checklist");
 assert.ok(ui.includes('visibilitychange'),"practice progress refreshes on return");
 assert.ok(ui.includes('aria-pressed'),"manual completion is accessible");
 assert.ok(css.includes('@media(max-width:767px)'),"mobile layout is present");
 assert.ok(css.includes('min-width:0'),"dashboard supports narrow screens");
-console.log("PASS: grade-specific daily goals, authentic practical count, independent local marks, daily reset and integration contracts.");
+console.log("PASS: grade-specific daily goals, authentic practical count, per-user Supabase marks, daily reset and integration contracts.");
