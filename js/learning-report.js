@@ -4,7 +4,7 @@ export function learningReportUrl(source, question, label = "") {
   const page = {practical: "practical.html", interview: "interview.html", coding: "coding.html", ncp: "ncp.html"}[source];
   const problem = new URL(page, typeof location === 'undefined' ? 'https://portal.k-bigdata.kr' : location.origin);
   problem.searchParams.set("id", String(question.id));
-  const report = new URL("https://help.k-bigdata.kr/request.html");
+  const report = new URL("help.html", typeof location === 'undefined' ? 'https://portal.k-bigdata.kr/' : location.origin + '/');
   report.searchParams.set("source", source);
   report.searchParams.set("id", String(question.id).slice(0, 80));
   if (source !== "coding" && question.code) report.searchParams.set("code", String(question.code).slice(0, 40));
