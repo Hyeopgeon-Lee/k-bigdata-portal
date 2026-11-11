@@ -1,4 +1,4 @@
-import {quizNavigation,quizHeading,quizFeedback,scrollToQuizAnswer} from "./quiz-unified.js";
+import {quizNavigation,quizHeading,quizFeedback,scrollToQuizAnswer,mountQuizDisclosure} from "./quiz-unified.js";
 import {createQuestionBrowser} from "./question-browser.js";
 import {bindReview,reviewControls,gradeLabels} from "./study-review.js";
 import {learningLocal as localStorage, learningSession as sessionStorage} from "./learning-storage.mjs";
@@ -435,6 +435,7 @@ document.getElementById("coding-quiz-heading").innerHTML=quizHeading({
     {id:"coding-report-button",label:"오류 신고",href:"help.html",ariaLabel:"현재 문제 오류 신고"}
   ]
 });
+mountQuizDisclosure(document.getElementById("coding-answer"),{title:"해설",open:true});
 let codingAttemptId;
 function showQuestion(q) {
   codingAttemptId=getSafe("coding-attempt-"+q.id)||crypto.randomUUID();
