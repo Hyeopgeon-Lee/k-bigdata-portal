@@ -65,6 +65,57 @@ Deno.serve(async(req:Request)=>{
    if(changeError)throw changeError;
    return json({ok:true});
   }
+
+  if(action==="deliveries"){
+    // Only the verified super administrator can read delivery records. RLS remains closed to clients.
+    const now=new Date();
+    const thisMonday=Date.parse(mondayStartUTC());
+    const lastCompleted=thisMonday-7*86400000;
+    const kstDate=(stamp:number)=>new Date(stamp+9*3600000).toISOString().slice(0,10);
+    const weeks=Array.from({length:8},(_,i)=>kstDate(lastCompleted-i*7*86400000));
+    const nextRunThisWeek=thisMonday+8*3600000;
+    const nextScheduledAt=new Date(nextRunThisWeek>now.getTime()?nextRunThisWeek:nextRunThisWeek+7*86400000).toISOString();
+    const [logResult,profileResult,preferenceResult]=await Promise.all([
+      admin.from("report_deliveries")
+        .select("id,recipient_email,report_type,week_start,status,created_at,sent_at,error_message")
+        .gte("week_start",weeks[weeks.length-1]).lte("week_start",weeks[0])
+        .order("week_start",{ascending:false}).order("created_at",{ascending:false}).limit(2000),
+      admin.from("profiles")
+        .select("user_id,email").eq("approval_status","approved").eq("enrollment_status","enrolled")
+        .neq("email","hglee67@kopo.ac.kr").limit(2000),
+      admin.from("user_preferences").select("user_id,weekly_email_opt_in").eq("weekly_email_opt_in",true).limit(2000)
+    ]);
+    if(logResult.error||profileResult.error||preferenceResult.error)throw Error("DELIVERY_DATA_UNAVAILABLE");
+    const logs=logResult.data||[];
+    const recipients=profileResult.data||[];
+    const opted=new Set((preferenceResult.data||[]).map(x=>x.user_id));
+    const count=(rows:any[])=>({
+      sent:rows.filter(x=>x.status==="sent").length,
+      failed:rows.filter(x=>x.status==="failed").length,
+      pending:rows.filter(x=>x.status==="pending").length,
+      total:rows.length
+    });
+    const history=weeks.map(weekStart=>{
+      const items=logs.filter(x=>x.week_start===weekStart);
+      const faculty=items.filter(x=>x.report_type==="super_admin");
+      const students=items.filter(x=>x.report_type==="student");
+      return {weekStart,faculty:count(faculty),students:count(students),
+        facultyLastSentAt:faculty.find(x=>x.status==="sent")?.sent_at||null};
+    });
+    const recentStudents=logs.filter(x=>x.report_type==="student").slice(0,30).map(x=>({
+      id:x.id,recipientEmail:x.recipient_email,weekStart:x.week_start,
+      status:x.status,sentAt:x.sent_at,errorMessage:x.status==="failed"?x.error_message:null
+    }));
+    const recentFaculty=logs.filter(x=>x.report_type==="super_admin").slice(0,8).map(x=>({
+      weekStart:x.week_start,status:x.status,sentAt:x.sent_at,
+      errorMessage:x.status==="failed"?x.error_message:null
+    }));
+    return json({ok:true,checkedAt:now.toISOString(),lastCompletedWeek:weeks[0],
+      nextScheduledAt,studentSendingPaused:true,
+      activeStudents:recipients.length,
+      optedInStudents:recipients.filter(x=>opted.has(x.user_id)).length,
+      history,recentFaculty,recentStudents});
+  }
   if(action==="summary"){
     const activeRows=await admin.from("profiles").select("user_id,academic_year,class_name")
       .eq("approval_status","approved").eq("enrollment_status","enrolled").neq("email","hglee67@kopo.ac.kr");
