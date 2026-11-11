@@ -75,107 +75,72 @@ async function load(){
  status.textContent='학습통계 기준 주: '+date(data.weekStart)+'부터 · 참여 인원 '+a.activeStudents+'명 · 아직 학습기록이 없으면 0으로 표시합니다.';
 }
 
-const deliveryStates={
- sent:['발송 요청 완료','sent'],
- failed:['발송 실패','failed'],
- pending:['처리 중','pending'],
- paused:['발송 보류','paused'],
- none:['발송 기록 없음','none']
+
+const mailInputs={
+ super_admin:get('teacher-mail-faculty'),
+ student:get('teacher-mail-students')
 };
-function formatSentAt(iso){
- if(!iso)return '—';
- const value=new Date(iso);
- if(Number.isNaN(value.getTime()))return '—';
- return new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).format(value);
+const mailLabels={
+ super_admin:get('teacher-mail-faculty-label'),
+ student:get('teacher-mail-students-label')
+};
+const mailStatus=get('teacher-mail-status');
+function showMailState(type,enabled){
+ const checkbox=mailInputs[type];
+ if(!checkbox)return;
+ checkbox.checked=enabled;
+ mailLabels[type].textContent=enabled?'발송 ON':'발송 OFF';
+ mailLabels[type].dataset.enabled=String(enabled);
 }
-function weekLabel(day){
- const beginning=new Date(day+'T00:00:00+09:00');
- if(Number.isNaN(beginning.getTime()))return day||'—';
- const end=new Date(beginning.getTime()+6*86400000);
- return date(beginning)+' ~ '+date(end);
-}
-function mailCard(title,state,value,description){
- const item=node('article',null,'learn-mail-card');
- const head=node('div',null,'learn-mail-card-head');
- const badge=node('span',deliveryStates[state]?.[0]||'확인 필요','learn-mail-tag');
- badge.dataset.state=state;
- head.append(node('strong',title),badge);
- item.append(head,node('div',value,'learn-mail-card-value'),node('p',description));
- return item;
-}
-function latestFaculty(history){
- const item=(history||[]).find(entry=>entry.weekStart);
- return item?.status||'none';
-}
-function renderMail(data){
- const period=(data.history||[])[0];
- const rec=(data.recentFaculty||[]).find(x=>x.weekStart===data.lastCompletedWeek);
- const state=rec?.status||'none';
- const facultyMessage=state==='sent'?'서비스 접수 시각: '+formatSentAt(rec.sentAt):
-   state==='failed'?'발송 오류가 기록되었습니다. '+(rec.errorMessage||'오류 정보를 확인하세요.'):
-   state==='pending'?'발송 요청을 처리 중입니다.':'이번 집계 주의 발송 기록이 없습니다.';
- const facultyValue=state==='sent'?'접수 완료':state==='failed'?'실패':state==='pending'?'대기 중':'기록 없음';
- const studentPaused=data.studentSendingPaused===true;
- const studentCount=period?.students?.sent||0;
- const studentState=studentPaused?'paused':period?.students?.failed?'failed':studentCount?'sent':period?.students?.pending?'pending':'none';
- const studentDescription=studentPaused?
-   '학생용 이메일은 현재 발송하지 않습니다. 과거 기록은 아래에서 확인할 수 있습니다.':
-   '실패 '+(period?.students?.failed||0)+'건 · 처리 중 '+(period?.students?.pending||0)+'건';
- get('teacher-mail-period').textContent='최근 완료 집계 주: '+weekLabel(data.lastCompletedWeek)+' (한국시간)';
- get('teacher-mail-cards').replaceChildren(
-  mailCard('교수자 주간 리포트',state,facultyValue,facultyMessage),
-  mailCard('학생 주간 리포트',studentState,studentPaused?'발송 중지':studentCount+'건 접수',studentDescription)
- );
- const meta=get('teacher-mail-meta');meta.replaceChildren();
- const metaRows=[
-  '교수자 수신 계정: hglee67@kopo.ac.kr',
-  '다음 예약 시각: '+formatSentAt(data.nextScheduledAt),
-  '승인된 재학생: '+(data.activeStudents??0)+'명',
-  '학생 이메일 신청: '+(data.optedInStudents??0)+'명',
-  '기록 조회 시각: '+formatSentAt(data.checkedAt),
-  '학생 발송 정책: '+(studentPaused?'일시 보류':'사용 중')
- ];
- for(const entry of metaRows)meta.append(node('p',entry));
- const history=(data.history||[]).map(item=>{
-  const f=item.faculty||{},s=item.students||{};
-  const faculty=f.sent?'접수 완료':f.failed?'실패':f.pending?'처리 중':'기록 없음';
-  return [weekLabel(item.weekStart),faculty,(s.sent||0)+'건',(s.failed||0)+'건',(s.pending||0)+'건'];
- });
- get('teacher-mail-history').replaceChildren(history.length?
-  table(['학습 집계 주','교수자','학생 접수','학생 실패','학생 대기'],history):
-  node('p','확인할 주간 발송 기록이 없습니다.','learn-empty')
- );
- const recipients=data.recentStudents||[];
- get('teacher-mail-student-count').textContent='('+recipients.length+'건)';
- const studentRows=recipients.map(x=>[
-  weekLabel(x.weekStart),x.recipientEmail,
-  deliveryStates[x.status]?.[0]||'확인 필요',
-  formatSentAt(x.sentAt),x.status==='failed'?(x.errorMessage||'오류 원인 미확인'):'—'
- ]);
- get('teacher-mail-students').replaceChildren(studentRows.length?
-  table(['학습 집계 주','수신 이메일','발송 상태','접수 시각','실패 정보'],studentRows):
-  node('p',studentPaused?'학생 이메일 발송이 보류되어 발송 기록이 없습니다.':'학생에게 발송한 리포트 기록이 없습니다.','learn-empty')
- );
- get('teacher-mail-content').hidden=false;
- const total=(data.history||[]).reduce((n,entry)=>n+(entry.students?.total||0),0);
- get('teacher-mail-status').textContent='최근 8주 서버 발송 기록을 확인했습니다. 학생 기록 '+total+'건 · 교수자와 학생의 상태를 분리해 표시합니다.';
-}
-async function loadDeliveries(){
- const status=get('teacher-mail-status');
- if(!status)return;
- status.textContent='실제 이메일 발송 기록을 확인하고 있습니다.';
- const {data,error}=await db.functions.invoke('learning-admin',{body:{action:'deliveries'}});
- if(error||!data?.ok||!Array.isArray(data.history)){
-  get('teacher-mail-content').hidden=true;
-  status.textContent='발송 기록을 조회하지 못했습니다. 관리자 로그인과 서버 연결을 확인한 뒤 다시 시도해 주세요.';
+async function loadMailSettings(){
+ mailStatus.textContent='메일 발송 설정을 확인하고 있습니다.';
+ const {data,error}=await db.functions.invoke('learning-admin',{body:{action:'mail_settings'}});
+ if(error||!data?.ok||!Array.isArray(data.settings)){
+  get('teacher-mail-settings').hidden=true;
+  mailStatus.textContent='메일 설정을 불러올 수 없습니다. 슈퍼 관리자 로그인과 서버 연결을 확인하세요.';
   return;
  }
- renderMail(data);
+ const faculty=data.settings.find(x=>x.report_type==='super_admin');
+ const students=data.settings.find(x=>x.report_type==='student');
+ if(typeof faculty?.enabled!=='boolean'||typeof students?.enabled!=='boolean'){
+  get('teacher-mail-settings').hidden=true;
+  mailStatus.textContent='서버의 발송 설정이 올바르지 않습니다.';
+  return;
+ }
+ showMailState('super_admin',faculty.enabled);
+ showMailState('student',students.enabled);
+ for(const input of Object.values(mailInputs))input.disabled=false;
+ get('teacher-mail-student-recipient').textContent='등록된 발송 대상: '+(data.studentRecipientCount??0)+'명 · 인증된 이메일만 발송';
+ get('teacher-mail-settings').hidden=false;
+ mailStatus.textContent='현재 서버에 저장된 발송 설정입니다. 스위치를 변경하면 자동 저장됩니다.';
+}
+async function saveMailSetting(type,enabled){
+ const input=mailInputs[type];
+ const previous=!enabled;
+ input.disabled=true;
+ mailStatus.textContent=(type==='super_admin'?'교수자':'학생')+' 리포트 발송 설정을 저장하고 있습니다...';
+ try{
+  const {data,error}=await db.functions.invoke('learning-admin',{body:{
+   action:'update_mail_setting',reportType:type,enabled
+  }});
+  if(error||!data?.ok||data.setting?.report_type!==type||data.setting?.enabled!==enabled)
+   throw new Error('MAIL_SETTING_NOT_SAVED');
+  showMailState(type,enabled);
+  mailStatus.textContent=(type==='super_admin'?'교수자':'학생')+' 리포트의 자동 발송을 '+(enabled?'켰습니다.':'껐습니다.')+' 다음 예약 발송부터 적용됩니다.';
+ }catch(error){
+  console.error('Weekly mail setting update failed',error);
+  showMailState(type,previous);
+  mailStatus.textContent='설정을 저장하지 못했습니다. 이전 상태로 복구했습니다. 다시 시도해 주세요.';
+ }finally{
+  input.disabled=false;
+ }
+}
+for(const [type,input] of Object.entries(mailInputs)){
+ input?.addEventListener('change',()=>{void saveMailSetting(type,input.checked);});
 }
 get('teacher-refresh').addEventListener('click',()=>{
  const button=get('teacher-refresh');button.disabled=true;button.textContent='새로고침 중...';
- void Promise.allSettled([load(),loadDeliveries()]).finally(()=>{button.disabled=false;button.textContent='통계 새로고침';});
+ void Promise.allSettled([load(),loadMailSettings()]).finally(()=>{button.disabled=false;button.textContent='통계 새로고침';});
 });
 load().catch(error=>{console.error('Professor learning report',error);get('teacher-status').textContent='학급 통계 조회에 실패했습니다. 슈퍼 관리자 계정으로 로그인해 주세요.';});
-loadDeliveries().catch(error=>{console.error('Weekly email record lookup',error);get('teacher-mail-status').textContent='발송 이력을 불러오지 못했습니다. 다시 시도해 주세요.';});
-
+loadMailSettings().catch(error=>{console.error('Weekly mail settings',error);mailStatus.textContent='발송 설정을 불러오지 못했습니다. 다시 시도해 주세요.';});
