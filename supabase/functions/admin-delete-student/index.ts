@@ -15,7 +15,7 @@ async function isAdministrator(request:Request){
   return !error&&allowed===true;
 }
 async function getStudent(userId:string){
-  const {data,error}=await admin.from("profiles").select("user_id,full_name,email,signup_type,enrollment_status,updated_at")
+  const {data,error}=await admin.from("profiles").select("user_id,full_name,email,student_no,signup_type,enrollment_status,updated_at")
     .eq("user_id",userId).maybeSingle();
   if(error)throw Error("PROFILE_READ_FAILED");
   if(!data)throw Error("NOT_FOUND");
@@ -41,8 +41,30 @@ async function count(table:string,column:string,id:string){
   if(error)throw Error("COUNT_FAILED_"+table);
   return count||0;
 }
+async function legacyEntries(table:string,student:any){
+  if(!student.student_no||!student.full_name)return [];
+  const {data,error}=await admin.from(table).select("id")
+    .eq("source","legacy").is("owner_id",null)
+    .eq("legacy_student_no",student.student_no).eq("legacy_student_name",student.full_name)
+    .limit(5001);
+  if(error||(data||[]).length>5000)throw Error("LEGACY_LOOKUP_FAILED");
+  return data||[];
+}
+async function removeLegacy(table:string,student:any,ids:string[]){
+  for(let i=0;i<ids.length;i+=100){
+    const {error}=await admin.from(table).delete().in("id",ids.slice(i,i+100))
+      .eq("source","legacy").is("owner_id",null)
+      .eq("legacy_student_no",student.student_no).eq("legacy_student_name",student.full_name);
+    if(error)throw Error("LEGACY_CLEANUP_FAILED_"+table);
+  }
+}
+
 async function inventory(student:any){
-  const requests=await findMany("help_requests","owner_id",student.user_id,"id");
+  const [ownedRequests,legacyRequests,legacyRooms]=await Promise.all([
+    findMany("help_requests","owner_id",student.user_id,"id"),
+    legacyEntries("help_requests",student),legacyEntries("room_reservations",student)
+  ]);
+  const requests=[...ownedRequests,...legacyRequests];
   const ownFiles=await findMany("help_attachments","uploader_id",student.user_id,"storage_path");
   const paths=new Set<string>(ownFiles.map(x=>x.storage_path).filter(Boolean));
   for(let i=0;i<requests.length;i+=100){
@@ -61,7 +83,9 @@ async function inventory(student:any){
     count("user_favorites","user_id",student.user_id)
   ]);
   return {version:student.updated_at,paths:[...paths],
-    counts:{learning,progress,drafts,reservations,mail,messages,favorites,requests:requests.length,files:paths.size}};
+    legacyRequestIds:legacyRequests.map(x=>x.id),legacyRoomIds:legacyRooms.map(x=>x.id),
+    counts:{learning,progress,drafts,reservations:reservations+legacyRooms.length,mail,messages,favorites,
+      requests:requests.length,files:paths.size}};
 }
 async function removeRows(table:string,column:string,value:string){
   const {error}=await admin.from(table).delete().eq(column,value);
@@ -76,7 +100,9 @@ async function erase(student:any,stock:any){
   await removeRows("help_messages","author_id",id);
   await removeRows("help_attachments","uploader_id",id);
   await removeRows("help_requests","owner_id",id);
+  await removeLegacy("help_requests",student,stock.legacyRequestIds);
   await removeRows("room_reservations","owner_id",id);
+  await removeLegacy("room_reservations",student,stock.legacyRoomIds);
   await removeRows("report_deliveries","recipient_user_id",id);
   if(student.email)await removeRows("report_deliveries","recipient_email",student.email);
   await removeRows("admin_audit_log","target_user_id",id);
