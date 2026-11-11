@@ -42,7 +42,7 @@ for(const group of ['learning','career','project','campus'])
   assert.ok(home.includes('href="services.html#'+group+'"'),group+' category shortcut');
 assert.ok(dashboard.includes('actions:["coding","practical","certifications","docs"]'),'1st-year launcher');
 assert.ok(dashboard.includes('actions:["recruit","apply","interview","ready"]'),'2nd-year launcher');
-assert.ok(dashboard.includes('kbigdata:home-grade:v1'),'local grade setting is preserved');
+assert.ok(dashboard.includes('user_preferences'),'grade is saved in the user preferences table');
 assert.ok(dashboard.includes('renderQuickActions()'));
 assert.ok(dashboard.includes('renderPersonal()'));
 assert.ok(dashboard.includes('chooseGrade('));
