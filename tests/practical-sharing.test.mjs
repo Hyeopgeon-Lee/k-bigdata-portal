@@ -16,8 +16,9 @@ assert.match(ui,/navigator\.share/,'native Web Share API should be used when ava
 assert.match(ui,/navigator\.clipboard\?\.writeText/,'clipboard API fallback should exist');
 assert.match(ui,/document\.execCommand\("copy"\)/,'legacy copy fallback should exist');
 
-assert.match(ui,/data-action="share-problem"|button\("share-problem","문제 공유"/);
-assert.match(ui,/button\("copy-problem-link","링크 복사"/);
+assert.match(ui,/quizHeading\(/);
+assert.match(ui,/action:"share-problem"/);
+assert.match(ui,/action:"copy-problem-link"/);
 assert.match(ui,/id="share-status"/);
 assert.match(ui,/if\(action==="share-problem"\)void shareCurrentProblem\(\)/);
 assert.match(ui,/if\(action==="copy-problem-link"\)void copyCurrentProblemLink\(\)/);
@@ -30,7 +31,9 @@ assert.match(ui,/if\(!shared&&id&&savedQueue/,'shared links must not inherit a l
 const shareTextBlock=ui.slice(ui.indexOf('function problemShareText'),ui.indexOf('async function copyText'));
 assert.ok(!/answer|hint|attempt|submittedAt|correct/.test(shareTextBlock),'share card must not include answer, hint, attempt, or grading state');
 
-assert.match(css,/\.solve-share-row/);
+assert.match(ui,/quizNavigation\(/);
+const sharedCSS=readFileSync(new URL("css/quiz-unified.css",root),"utf8");
+assert.match(sharedCSS,/\.quiz-actions/);
 assert.ok(!ui.includes('<summary>더보기</summary><div class="solve-share-row"'), 'Share buttons must remain visible');
 assert.match(css,/grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/,'mobile share actions should fit in three equal columns');
 assert.match(css,/\.share-status:empty\{display:none\}/);
