@@ -35,8 +35,19 @@
 // protected by Supabase RLS and server-side portal sessions, not this overlay.
 (()=>{
   if(typeof location==="undefined" || !document.body)return;
-  const enabled=location.hostname==="portal.k-bigdata.kr" ||
-    new URLSearchParams(location.search).has("portal-auth-preview");
+  const params=new URLSearchParams(location.search);
+  const production=location.hostname==="portal.k-bigdata.kr";
+  // Pilot first: an empty membership table must not lock every student out.
+  // Visit ?portal-auth-preview=1 to opt this browser in; use =0 to opt out.
+  if(production){
+    try{
+      if(params.get("portal-auth-preview")==="1")localStorage.setItem("portal-auth-pilot","on");
+      if(params.get("portal-auth-preview")==="0")localStorage.removeItem("portal-auth-pilot");
+    }catch{}
+  }
+  let pilot=false;
+  try{pilot=localStorage.getItem("portal-auth-pilot")==="on";}catch{}
+  const enabled=(production && pilot) || (!production && params.get("portal-auth-preview")==="1");
   if(!enabled)return;
   const rule=document.createElement("style");
   rule.textContent='body[data-portal-auth-lock] > :not(#portal-auth-layer) { visibility: hidden !important; }';
