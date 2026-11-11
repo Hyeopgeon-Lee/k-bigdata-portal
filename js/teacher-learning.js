@@ -80,45 +80,42 @@ const mailInputs={
  super_admin:get('teacher-mail-faculty'),
  student:get('teacher-mail-students')
 };
-const mailLabels={
- super_admin:get('teacher-mail-faculty-label'),
- student:get('teacher-mail-students-label')
-};
 const mailStatus=get('teacher-mail-status');
+function setMailStatus(message,visible=false){
+ mailStatus.textContent=message;
+ mailStatus.classList.toggle('learn-sr-only',!visible);
+}
 function showMailState(type,enabled){
- const checkbox=mailInputs[type];
- if(!checkbox)return;
- checkbox.checked=enabled;
- mailLabels[type].textContent=enabled?'발송 ON':'발송 OFF';
- mailLabels[type].dataset.enabled=String(enabled);
+ const input=mailInputs[type];
+ if(input)input.checked=enabled;
 }
 async function loadMailSettings(){
- mailStatus.textContent='메일 발송 설정을 확인하고 있습니다.';
+ setMailStatus('설정 확인 중…',true);
+ for(const input of Object.values(mailInputs))input.disabled=true;
  const {data,error}=await db.functions.invoke('learning-admin',{body:{action:'mail_settings'}});
  if(error||!data?.ok||!Array.isArray(data.settings)){
   get('teacher-mail-settings').hidden=true;
-  mailStatus.textContent='메일 설정을 불러올 수 없습니다. 슈퍼 관리자 로그인과 서버 연결을 확인하세요.';
+  setMailStatus('메일 설정을 불러오지 못했습니다. 새로고침 후 다시 시도하세요.',true);
   return;
  }
  const faculty=data.settings.find(x=>x.report_type==='super_admin');
  const students=data.settings.find(x=>x.report_type==='student');
  if(typeof faculty?.enabled!=='boolean'||typeof students?.enabled!=='boolean'){
   get('teacher-mail-settings').hidden=true;
-  mailStatus.textContent='서버의 발송 설정이 올바르지 않습니다.';
+  setMailStatus('메일 설정을 확인할 수 없습니다.',true);
   return;
  }
  showMailState('super_admin',faculty.enabled);
  showMailState('student',students.enabled);
  for(const input of Object.values(mailInputs))input.disabled=false;
- get('teacher-mail-student-recipient').textContent='등록된 발송 대상: '+(data.studentRecipientCount??0)+'명 · 인증된 이메일만 발송';
  get('teacher-mail-settings').hidden=false;
- mailStatus.textContent='현재 서버에 저장된 발송 설정입니다. 스위치를 변경하면 자동 저장됩니다.';
+ setMailStatus('메일 발송 설정을 불러왔습니다.');
 }
 async function saveMailSetting(type,enabled){
  const input=mailInputs[type];
  const previous=!enabled;
  input.disabled=true;
- mailStatus.textContent=(type==='super_admin'?'교수자':'학생')+' 리포트 발송 설정을 저장하고 있습니다...';
+ setMailStatus('설정 저장 중…');
  try{
   const {data,error}=await db.functions.invoke('learning-admin',{body:{
    action:'update_mail_setting',reportType:type,enabled
@@ -126,11 +123,11 @@ async function saveMailSetting(type,enabled){
   if(error||!data?.ok||data.setting?.report_type!==type||data.setting?.enabled!==enabled)
    throw new Error('MAIL_SETTING_NOT_SAVED');
   showMailState(type,enabled);
-  mailStatus.textContent=(type==='super_admin'?'교수자':'학생')+' 리포트의 자동 발송을 '+(enabled?'켰습니다.':'껐습니다.')+' 다음 예약 발송부터 적용됩니다.';
+  setMailStatus('저장되었습니다.');
  }catch(error){
   console.error('Weekly mail setting update failed',error);
   showMailState(type,previous);
-  mailStatus.textContent='설정을 저장하지 못했습니다. 이전 상태로 복구했습니다. 다시 시도해 주세요.';
+  setMailStatus('저장하지 못했습니다. 다시 시도하세요.',true);
  }finally{
   input.disabled=false;
  }
@@ -143,4 +140,4 @@ get('teacher-refresh').addEventListener('click',()=>{
  void Promise.allSettled([load(),loadMailSettings()]).finally(()=>{button.disabled=false;button.textContent='통계 새로고침';});
 });
 load().catch(error=>{console.error('Professor learning report',error);get('teacher-status').textContent='학급 통계 조회에 실패했습니다. 슈퍼 관리자 계정으로 로그인해 주세요.';});
-loadMailSettings().catch(error=>{console.error('Weekly mail settings',error);mailStatus.textContent='발송 설정을 불러오지 못했습니다. 다시 시도해 주세요.';});
+loadMailSettings().catch(error=>{console.error('Weekly mail settings',error);setMailStatus('발송 설정을 불러오지 못했습니다. 다시 시도해 주세요.',true);});
