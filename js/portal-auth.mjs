@@ -8,7 +8,7 @@ const client=createClient("https://zjsindkakjfzmjgrkaou.supabase.co", "sb_publis
 window.portalSupabaseClient=client;
 const root=document.createElement("div");
 root.id="portal-auth-layer";
-root.hidden=true; // Public portal is always usable without signing in.
+root.hidden=true; // The whole portal requires an authorized account.
 document.body.append(root);
 const css=document.createElement("link");
 css.rel="stylesheet";
@@ -20,9 +20,9 @@ let activeUser=null;
 let activeWrite=false;
 let expires=0;
 function resetLearning(){
-  if(!activeUser)return;
   activeUser=null;
   window.portalLearning=null;
+  delete document.documentElement.dataset.portalAccess;
   document.documentElement.style.visibility="hidden";
   location.reload();
 }
@@ -45,7 +45,7 @@ const $=(selector)=>root.querySelector(selector);
 const status=(message)=>{const node=$("#portal-auth-status");if(node)node.textContent=message;};
 let opener=null;
 root.addEventListener("keydown",event=>{
-  if(event.key==="Escape"){$("#portal-auth-dismiss").click();return;}
+  if(event.key==="Escape"){if(document.documentElement.dataset.portalAccess==="approved"){root.hidden=true;opener?.focus();}return;}
   if(event.key!=="Tab")return;
   const fields=[...root.querySelectorAll("button:not(:disabled),input:not(:disabled),select:not(:disabled),a[href]")].filter(el=>el.getClientRects().length);
   const target=event.shiftKey?fields.at(-1):fields[0];
@@ -55,14 +55,12 @@ function card(title,inner){
   if(root.hidden)opener=document.activeElement;
   root.hidden=false;
   root.innerHTML='<section class="portal-auth-card" role="dialog" aria-modal="true" aria-labelledby="portal-auth-title">'+
-    '<button type="button" class="portal-auth-dismiss" id="portal-auth-dismiss" aria-label="닫고 포털 이용하기">닫기</button>'+
     '<p class="portal-auth-eyebrow">K-BIGDATA STUDENT PORTAL</p><h1 id="portal-auth-title" tabindex="-1">'+title+'</h1>'+inner+
     '<p id="portal-auth-status" role="status" aria-live="polite"></p></section>';
-  $("#portal-auth-dismiss").addEventListener("click",()=>{if(locked&&!activeUser)location.assign("/");else {root.hidden=true;opener?.focus();}});
   $("#portal-auth-title")?.focus?.();
 }
 function renderLogin(message=""){
-  card("포털 로그인",'<p class="portal-auth-lead">포털 안내는 누구나 볼 수 있습니다. 학습 자료와 이 브라우저의 학습 기록은 이메일 인증 및 계정 승인 후 이용할 수 있습니다.</p>'+
+  card("포털 로그인",'<p class="portal-auth-lead">학과 통합 포털은 로그인 후 이용할 수 있습니다. 재학생과 졸업생은 이메일 인증 및 계정 승인 후 사용할 수 있습니다.</p>'+
    '<form id="portal-login-form" class="portal-auth-form">'+
    '<label>이메일<input name="email" type="email" autocomplete="username" required></label>'+
    '<label>비밀번호<input name="password" type="password" autocomplete="current-password" required></label>'+
@@ -213,7 +211,9 @@ async function logout(){
   await client.auth.signOut();
   currentUser=null;currentProfile=null;isAdmin=false;
   showAccount();
-  root.hidden=true;
+  delete document.documentElement.dataset.portalAccess;
+  window.portalLearning=null;
+  renderLogin();
 }
 function showAccount(){
   let btn=document.getElementById("portal-account-button");
@@ -286,12 +286,12 @@ async function renderAdmin(){
   }
   if(!data?.length)status("등록된 학생 계정이 없습니다.");
 }
-async function activate(interactive=Boolean(locked)){
+async function activate(interactive=true){
   if(inRecovery)return;
   const {data:{user},error}=await client.auth.getUser();
   if(error||!user){
     currentUser=null;currentProfile=null;isAdmin=false;
-    showAccount();if(locked)renderLogin();else root.hidden=true;
+    showAccount();renderLogin();
     return;
   }
   currentUser=user;
@@ -299,16 +299,14 @@ async function activate(interactive=Boolean(locked)){
   let profile=null;
   const {data:found,error:readError}=await client.from("profiles").select("*").eq("user_id",user.id).maybeSingle();
   if(readError){
-    if(interactive)renderLogin("회원 정보를 확인하지 못했습니다.");
-    else root.hidden=true;
+    renderLogin("회원 정보를 확인하지 못했습니다.");
     return;
   }
   if(found)profile=found;
   else{
     const name=String(user.user_metadata?.full_name||"").trim();
     if(!name){
-      if(interactive)renderComplete(user);
-      else root.hidden=true;
+      renderComplete(user);
       showAccount();return;
     }
     const {data:registered,error:regError}=await client.rpc("register_portal_member_v2",{
@@ -316,8 +314,7 @@ async function activate(interactive=Boolean(locked)){
       p_signup_type:user.user_metadata?.signup_type||"student",p_graduation_year:user.user_metadata?.graduation_year||null
     });
     if(regError){
-      if(interactive){renderComplete(user);status("회원 정보를 확인해 다시 입력해 주세요.");}
-      else root.hidden=true;
+      renderComplete(user);status("회원 정보를 확인해 다시 입력해 주세요.");
       showAccount();return;
     }
     profile=registered;
@@ -327,8 +324,7 @@ async function activate(interactive=Boolean(locked)){
     await client.auth.signOut();
     currentUser=null;currentProfile=null;isAdmin=false;
     showAccount();
-    if(interactive)renderLogin("로그인 세션이 만료되었거나 취소되었습니다. 다시 로그인해 주세요.");
-    else root.hidden=true;
+    renderLogin("로그인 세션이 만료되었거나 취소되었습니다. 다시 로그인해 주세요.");
     return;
   }
   currentProfile=profile;
@@ -336,15 +332,14 @@ async function activate(interactive=Boolean(locked)){
   isAdmin=allowed===true;
   if(profile.approval_status!=="approved" || !eligible(profile)){
     showAccount();
-    if(interactive)renderPending(profile);
-    else root.hidden=true;
+    renderPending(profile);
     return;
   }
   expires=Date.parse(expiry);
-  if(!Number.isFinite(expires)||expires<=Date.now()){await logout();if(locked)renderLogin();return;}
+  if(!Number.isFinite(expires)||expires<=Date.now()){await logout();return;}
   const {data:access,error:accessError}=await client.rpc("portal_learning_access");
   if(accessError || access?.read!==true){
-    if(interactive)renderPending(profile);
+    renderPending(profile);
     return;
   }
   if(activeUser && activeUser!==user.id){resetLearning();return;}
@@ -356,6 +351,7 @@ async function activate(interactive=Boolean(locked)){
   }
   expire();
   window.portalLearning={read:true,write:activeWrite,expires};
+  document.documentElement.dataset.portalAccess="approved";
   root.hidden=true;
   showAccount();
   for(const entry of document.querySelectorAll("script[data-module]")){
@@ -374,5 +370,5 @@ client.auth.onAuthStateChange((event,session)=>{
 showAccount();
 try{await activate();}catch(error){
   console.error("Portal Auth initialization error",error);
-  showAccount();if(locked)renderLogin("학습 권한을 확인하지 못했습니다. 새로고침해 주세요.");else root.hidden=true;
+  showAccount();renderLogin("학습 권한을 확인하지 못했습니다. 새로고침해 주세요.");
 }
