@@ -91,3 +91,7 @@
   background: transparent !important;
 }
 .portal-auth-card:has(.portal-auth-dismiss) { padding-top: 50px; }
+
+.portal-auth-card .portal-auth-action-link{display:inline-flex;align-items:center;justify-content:center;min-height:43px;padding:9px 14px;border:1px solid #9bbde3;border-radius:9px;background:#ecf4ff;color:#174987;font-size:14px;font-weight:750;text-decoration:none}
+.portal-auth-card .portal-auth-action-link:hover{background:#dceeff}
+.portal-auth-card .portal-auth-action-link:focus-visible{outline:3px solid #1d4ed8;outline-offset:2px}

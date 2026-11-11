@@ -9,6 +9,10 @@ on:
       - "js/coding-editor.js"
       - "js/coding-completion-data.js"
       - "js/learning-report.js"
+      - "js/learning-activity.mjs"
+      - "js/my-learning.js"
+      - "js/teacher-learning.js"
+      - "tests/learning-tracking.test.mjs"
       - "js/services.js"
       - "tests/coding-page.test.mjs"
       - "tests/coding-c-help-regression.test.mjs"
@@ -32,6 +36,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
+      - name: Validate authenticated learning event logging and weekly report contracts
+        run: node tests/learning-tracking.test.mjs
       - name: Validate question registry, links, share and report UI
         run: node tests/coding-page.test.mjs
       - name: Verify C issue regression and per-question guidance

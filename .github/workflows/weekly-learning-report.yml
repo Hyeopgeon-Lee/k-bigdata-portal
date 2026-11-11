@@ -1,0 +1,40 @@
+name: Weekly student learning reports
+on:
+  # Sunday 23:00 UTC = Monday 08:00 Asia/Seoul.
+  schedule:
+    - cron: "0 23 * * 0"
+  workflow_dispatch:
+  # Verify GitHub OIDC without sending mail when this workflow is first deployed.
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/weekly-learning-report.yml"
+permissions:
+  contents: read
+  id-token: write
+jobs:
+  send-weekly-reports:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - name: Obtain short-lived GitHub Actions OIDC token and call report function
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          FUNCTION_URL: https://zjsindkakjfzmjgrkaou.supabase.co/functions/v1/weekly-learning-report
+        shell: bash
+        run: |
+          set -euo pipefail
+          response=$(curl --fail --silent --show-error --retry 3 --max-time 12 \
+            -H "Authorization: Bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" \
+            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=kbigdata-weekly-learning-report")
+          id_token=$(printf '%s' "$response" | python3 -c 'import json,sys; print(json.load(sys.stdin)["value"])')
+          payload='{"dry_run":false}'
+          if [[ "$EVENT_NAME" == "push" ]]; then
+            payload='{"dry_run":true}'
+          fi
+          curl --fail-with-body --silent --show-error --retry 2 --max-time 80 \
+            -X POST "$FUNCTION_URL" \
+            -H "Authorization: Bearer $id_token" \
+            -H "Content-Type: application/json" \
+            --data "$payload"
+          echo

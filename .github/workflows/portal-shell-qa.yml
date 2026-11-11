@@ -27,6 +27,7 @@ jobs:
           node tests/ncp-source-audit.test.mjs
           node --check js/portal-navigation.js
           node tests/portal-auth.test.mjs
+          node tests/learning-tracking.test.mjs
           node --check js/room.js
           node tests/room-integration.test.mjs
       - name: Preserve related portal, learning, calendar and analytics behavior

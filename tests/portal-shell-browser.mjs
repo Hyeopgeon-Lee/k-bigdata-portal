@@ -33,6 +33,13 @@ function monitor(page,label){
 async function ready(page,file){
   await page.goto(url(file),{waitUntil:'domcontentloaded'});
   await page.waitForFunction(()=>document.documentElement.dataset.portalNavigationReady==='true');
+  // Protected pages temporarily hide the header until login validation completes.
+  // Snapshotting before unlock yields false zero-height layout failures.
+  const path=new URL(page.url()).pathname.split('/').pop()?.replace(/\.html$/,'');
+  const model=portalPages[path];
+  if(model?.locked || model?.group==='learning'){
+    await page.waitForFunction(()=>!document.getElementById('learning-lock') && document.querySelector('.site-header')?.getBoundingClientRect().height>0,{timeout:16000});
+  }
   await page.evaluate(async()=>{await document.fonts.ready;await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));});
 }
 async function snapshot(page){
@@ -67,7 +74,7 @@ async function interactions(page,width,id){
     await summary.click();await page.locator('main').click({position:{x:2,y:2}});
     assert.equal(await menu.getAttribute('open'),null,'outside click closes menu');
   }else assert.equal(await page.locator('#portal-nav').isVisible(),true,'desktop links visible');
-  if(id!=='index'){
+  if(portalPages[id].group){
     const other=page.locator('.portal-nav-more'),toggle=other.locator(':scope > summary');
     await toggle.click();assert.equal(await other.getAttribute('open'),'','other services expand');
     assert.equal(await other.locator('.portal-nav-other').isVisible(),true);
