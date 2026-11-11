@@ -33,6 +33,20 @@ export function quizDisclosure(title,html,{open=false,className=""}={}){
   return '<details class="quiz-disclosure'+(className?' '+escapeHTML(className):'')+'"'+(open?' open':'')+'>'+
     '<summary>'+escapeHTML(title)+'</summary><div class="quiz-disclosure-body">'+html+'</div></details>';
 }
+/* Keep dynamic editor/content nodes and their listeners intact when installing
+ * the same explanation accordion as the other two services. */
+export function mountQuizDisclosure(container,{title="해설",open=true}={}){
+  if(!container)return null;
+  const existing=container.querySelector(":scope > .quiz-disclosure");
+  if(existing)return existing;
+  const details=document.createElement("details");
+  details.className="quiz-disclosure";details.open=open;
+  const summary=document.createElement("summary");summary.textContent=title;
+  const body=document.createElement("div");body.className="quiz-disclosure-body";
+  while(container.firstChild)body.append(container.firstChild);
+  details.append(summary,body);container.append(details);
+  return details;
+}
 export function quizFeedback({label="",details="",kind="neutral"}={}){
   const safeKind=["correct","incorrect","neutral"].includes(kind)?kind:"neutral";
   return '<div class="quiz-feedback quiz-feedback-'+safeKind+'" role="status"><strong>'+escapeHTML(label)+'</strong>'+
