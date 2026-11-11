@@ -12,7 +12,7 @@ root.hidden=true; // The whole portal requires an authorized account.
 document.body.append(root);
 const css=document.createElement("link");
 css.rel="stylesheet";
-css.href="css/portal-auth.css?v=20261111-header-controls-1";
+css.href="css/portal-auth.css?v=20261111-admin-cards-1";
 document.head.append(css);
 
 const locked=document.getElementById("learning-lock");
@@ -350,15 +350,23 @@ async function renderAdmin(){
     select.value=value;return select;};
   for(const member of data||[]){
     const tr=document.createElement("tr");
-    for(const item of [member.full_name,member.signup_type==="alumni"?"졸업생":"재학생",
-       member.signup_type==="alumni"?member.graduation_year+"년 졸업":member.student_no||"-",member.email]){
-      const td=document.createElement("td");td.textContent=item;tr.append(td);
-    }
+    const identity=[member.full_name,member.signup_type==="alumni"?"졸업생":"재학생",
+       member.signup_type==="alumni"?member.graduation_year+"년 졸업":member.student_no||"-",member.email];
+    identity.forEach((item,index)=>{
+      const td=document.createElement("td");td.textContent=item;
+      td.dataset.label=["이름","가입 유형","학번 / 졸업년도","이메일"][index];tr.append(td);
+    });
     const approval=options([["pending","대기"],["approved","승인"],["rejected","반려"],["suspended","정지"]],member.approval_status);
     const enrollment=options([["enrolled","재학"],["leave","휴학"],["withdrawn","자퇴"],["graduated","졸업"]],member.enrollment_status);
      if(member.signup_type==="alumni"){enrollment.value="graduated";enrollment.disabled=true;enrollment.title="졸업생의 학적은 졸업으로 유지됩니다.";}
-    for(const select of [approval,enrollment]){const td=document.createElement("td");td.append(select);tr.append(td);}
-    const td=document.createElement("td");const save=document.createElement("button");save.type="button";save.textContent="저장";
+    approval.setAttribute("aria-label",member.full_name+" 가입 승인");
+    enrollment.setAttribute("aria-label",member.full_name+" 학적");
+    for(const [select,label] of [[approval,"가입 승인"],[enrollment,"학적"]]){
+      const td=document.createElement("td");td.dataset.label=label;td.append(select);tr.append(td);
+    }
+    const td=document.createElement("td");td.dataset.label="변경";
+    const save=document.createElement("button");save.type="button";save.textContent="저장";
+    save.setAttribute("aria-label",member.full_name+" 계정 상태 저장");
     save.addEventListener("click",async()=>{
       if(!window.confirm("선택한 회원의 계정 상태를 변경하시겠습니까?"))return;
       save.disabled=true;
