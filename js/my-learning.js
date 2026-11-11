@@ -1,5 +1,4 @@
 import {fetchLearningAttempts,fetchLearningProgress,flushLearningQueue} from './learning-activity.mjs';
-const db=window.portalSupabaseClient;
 const get=id=>document.getElementById(id);
 const label={coding:'기초 350제',ncp:'NCP 기출',practical:'정보처리 기출'};
 const grade={correct:'정답',incorrect:'오답',ungraded:'미판정',completed:'완료 표시',timeout:'시간 초과'};
@@ -52,7 +51,10 @@ function buildTable(headers,rows){
 async function load(){
  get('learn-status').textContent='학습기록을 클라우드에서 불러오는 중입니다...';
  const [attempts,progress]=await Promise.all([fetchLearningAttempts(),fetchLearningProgress()]);
- const week=attempts.filter(a=>Date.parse(a.submitted_at)>=thisMonday());
+ const monday=thisMonday();
+ const week=attempts.filter(a=>Date.parse(a.submitted_at)>=monday);
+ const previous=attempts.filter(a=>Date.parse(a.submitted_at)>=monday-7*86400000&&Date.parse(a.submitted_at)<monday);
+ const difference=week.length-previous.length;
  const unique=new Set(week.map(a=>a.bank+':'+a.question_id));
  const graded=week.filter(a=>['correct','incorrect'].includes(a.result));
  const self=graded.filter(a=>a.grading_method==='self');
@@ -60,6 +62,7 @@ async function load(){
  const pending=week.filter(a=>a.result==='ungraded'||a.result==='timeout');
  const latest=new Map(),everWrong=new Set();
  for(const a of [...attempts].reverse()){
+  if(!['correct','incorrect'].includes(a.result))continue;
   latest.set(a.bank+':'+a.question_id,a);
   if(a.result==='incorrect')everWrong.add(a.bank+':'+a.question_id);
  }
@@ -71,7 +74,7 @@ async function load(){
  });
  get('learn-summary').replaceChildren(
   stat('이번 주 풀이 문제',unique.size+'개','서로 다른 문제 수'),
-  stat('이번 주 시도',week.length+'회','재풀이까지 포함'),
+  stat('이번 주 시도',week.length+'회','지난주 전체 '+previous.length+'회 대비 '+(difference>0?'+':'')+difference+'회'),
   stat('자가평가 정답률',rate(self),'정답 '+self.filter(a=>a.result==='correct').length+' / 판정 '+self.length),
   stat('복습이 필요한 문제',review.length+'개','오답·다시 확인하기')
  );
@@ -93,7 +96,7 @@ async function load(){
  );
  const reviewRoot=get('learn-review');reviewRoot.replaceChildren();
  if(!review.length)reviewRoot.append(element('p','현재 복습 대기 오답이 없습니다.','learn-empty'));
- else for(const p of review.slice(0,45)){
+ else for(const p of review.sort((a,b)=>b.incorrect_count-a.incorrect_count).slice(0,45)){
   const card=element('article',null,'learn-review-card');
   const section=element('div');section.append(element('strong',subjectName[subject(p)]+' · '+p.question_id),element('small','틀린 횟수 '+p.incorrect_count+'회 / 누적 '+p.attempts_count+'시도'));
   const anchor=element('a','다시 풀기');anchor.href=link(p);card.append(section,anchor);reviewRoot.append(card);
@@ -118,25 +121,8 @@ async function load(){
  }
  get('learn-status').textContent='클라우드 기록 '+attempts.length+'회 · 누적 '+progress.length+'문제 · 오답 복습 완료 '+recovered.length+'문제';
 }
-async function setupPreference(){
- const {data:{user}}=await db.auth.getUser();if(!user)return;
- const box=get('learn-opt-in'),info=get('learn-opt-status');
- if(!window.portalLearning?.write){box.disabled=true;info.textContent='휴학 등 읽기 전용 상태에서는 변경할 수 없습니다.';}
- const {data,error}=await db.from('user_preferences').select('weekly_email_opt_in').eq('user_id',user.id).maybeSingle();
- if(error){info.textContent='이메일 수신 설정을 확인하지 못했습니다.';return;}
- box.checked=data?.weekly_email_opt_in===true;
- info.textContent='수신은 기본적으로 꺼져 있으며, 재학생이 동의할 때만 개인 리포트가 발송됩니다.';
- box.addEventListener('change',async()=>{
-  box.disabled=true;
-  const desired=box.checked;
-  const {error}=await db.from('user_preferences').upsert({user_id:user.id,weekly_email_opt_in:desired},{onConflict:'user_id'});
-  box.disabled=!window.portalLearning?.write;
-  if(error){box.checked=!desired;info.textContent='저장에 실패했습니다. 로그인 상태를 확인해 주세요.';}
-  else info.textContent=desired?'개인 이메일 학습 리포트 수신에 동의했습니다.':'개인 이메일 리포트 수신을 해제했습니다.';
- });
-}
 get('learn-refresh').addEventListener('click',()=>{void load().catch(()=>get('learn-status').textContent='학습기록을 불러오지 못했습니다. 다시 시도해 주세요.');});
-Promise.all([flushLearningQueue().catch(()=>{}),setupPreference()]).then(()=>load()).catch(error=>{
+flushLearningQueue().catch(()=>{}).then(()=>load()).catch(error=>{
  console.error('Learning dashboard init',error);
  get('learn-status').textContent='학습현황을 확인하지 못했습니다. 로그인 상태를 확인해 주세요.';
 });

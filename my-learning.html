@@ -56,9 +56,9 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <div class="learn-grid" id="learn-summary" aria-label="이번 주 학습 지표"></div>
 <section class="learn-section"><h2>과목별 학습 진도</h2><p>서로 다른 문제를 한 번 이상 푼 기준입니다. 미판정도 풀이 수에는 포함됩니다.</p><div class="learn-progress-list" id="learn-subjects"></div></section>
 <section class="learn-section"><h2>정답률 · 직접 비교 기준</h2><p>자가평가와 브라우저 판정을 따로 표시합니다. 미판정과 단순 완료는 정답률에서 제외합니다.</p><div id="learn-rates" class="learn-rate-grid"></div></section>
-<section class="learn-section"><h2>오답 복습하기</h2><p>이전에 틀렸고 최근 평가도 정답이 아닌 문제입니다. 다시 풀어 정답으로 평가하면 복습 완료로 분류합니다.</p><div id="learn-review" class="learn-review-list"></div></section>
+<section class="learn-section"><h2>다음 주 복습 추천</h2><p>이전에 틀렸고 최근 평가도 정답이 아닌 문제입니다. 다시 풀어 정답으로 평가하면 복습 완료로 분류합니다.</p><div id="learn-review" class="learn-review-list"></div></section>
 <section class="learn-section"><h2>최근 학습 기록</h2><div id="learn-recent" class="learn-table-wrap"></div></section>
-<section class="learn-section"><h2>이메일 학습 리포트</h2><label class="learn-consent"><input type="checkbox" id="learn-opt-in"><span>매주 월요일 지난주 개인 학습 요약을 내 가입 이메일로 받겠습니다.</span></label><p id="learn-opt-status" class="learn-note" role="status"></p><p class="learn-note">교수님에게는 학생별 점수나 답안 원문이 아닌 학급 단위 통계가 별도로 발송됩니다.</p></section>
+<section class="learn-section"><h2>이메일 학습 리포트</h2><p>학생 대상 주간 이메일 발송을 잠시 보류했습니다. 학습기록은 이 화면에서 확인할 수 있습니다.</p><p class="learn-note">교수님에게는 학생별 점수나 답안 원문이 아닌 학급 단위 통계가 별도로 발송됩니다.</p></section>
 </div>
 </main>
 <footer class="site-footer">
@@ -66,6 +66,6 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <div class="container footer-bottom"><p>학생용 학습·프로젝트·취업 통합 포털입니다.</p><p>© <span id="current-year"></span> K-BigData Service Portal</p></div>
 </footer>
 <script type="module" src="js/portal-auth.mjs?v=20261111-member-cards"></script>
-<script type="application/x-learning" data-module="js/my-learning.js?v=20261111-student-v1"></script>
+<script type="application/x-learning" data-module="js/my-learning.js?v=20261111-student-v2"></script>
 <script type="application/x-learning" data-module="js/portal-shell-entry.js?v=20261026-schedule-align-1"></script>
 </body></html>

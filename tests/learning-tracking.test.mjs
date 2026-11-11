@@ -1,3 +1,4 @@
+import {fileURLToPath} from 'node:url';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {spawnSync} from 'node:child_process';
@@ -6,7 +7,7 @@ for(const path of [
  'js/learning-activity.mjs','js/my-learning.js','js/teacher-learning.js',
  'js/coding.js','js/ncp-quiz.js','js/practical-store.js','js/practical-ui.js'
 ]){
- const check=spawnSync(process.execPath,['--check',new URL('../'+path,import.meta.url).pathname],{encoding:'utf8'});
+ const check=spawnSync(process.execPath,['--check',fileURLToPath(new URL('../'+path,import.meta.url))],{encoding:'utf8'});
  assert.equal(check.status,0,path+' syntax: '+check.stderr);
 }
 const coding=read('coding.html'),src=read('js/coding.js'),ncp=read('js/ncp-quiz.js'),practical=read('js/practical-store.js');
@@ -20,7 +21,7 @@ assert.match(src,/debounceCloudDraft/);
 assert.match(ncp,/gradeMethod|gradingMethod:"automatic"/);
 assert.match(practical,/recordLearningAttempt\(/);
 assert.match(practical,/item\.viewedExplanation/);
-assert.match(my,/id="learn-opt-in"/);
+assert.match(my,/주간 이메일 발송을 잠시 보류/);
 assert.match(my,/id="learn-review"/);
 assert.match(teacher,/id="teacher-summary"/);
 assert.match(teacher,/id="teacher-wrong"/);
@@ -37,7 +38,8 @@ assert.match(mail,/crypto\.subtle\.verify/);
 assert.match(mail,/workflow_ref/);
 assert.match(mail,/githubIdentity/);
 assert.match(mail,/report_deliveries/);
-assert.match(mail,/studentEmailRecipients/);
+assert.match(mail,/studentEmailRecipients:0/);
+assert.doesNotMatch(mail,/deliver\(p\.user_id/);
 assert.match(admin,/smallCohortHidden/);
 assert.doesNotMatch(read('js/learning-activity.mjs'),/service_role|sb_secret_/);
 // Test an offline student submission followed by a successful sync.

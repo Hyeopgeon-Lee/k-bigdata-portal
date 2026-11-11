@@ -1,4 +1,4 @@
-name: Weekly student learning reports
+name: Weekly faculty learning report
 on:
   # Sunday 23:00 UTC = Monday 08:00 Asia/Seoul.
   schedule:
