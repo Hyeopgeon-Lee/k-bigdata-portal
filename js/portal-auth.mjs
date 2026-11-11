@@ -501,14 +501,14 @@ async function renderApprovalRequests(){
 
 async function renderAdmin(){
   if(!isAdmin){renderAccount();return;}
-  card("학생 계정·학적 관리",
-    '<p class="portal-auth-lead">가입 승인과 재학·휴학·자퇴·졸업 상태를 관리합니다. 휴학 학생은 학습 기록을 보존하며 주간 학습 메일 발송 대상에서 제외됩니다.</p>'+
+  card("학생 계정 관리",
+    '<p class="portal-auth-lead">승인 대기 신청은 별도의 ‘가입 승인 요청’에서 관리합니다. 이곳에서는 기존 회원의 계정·학적 상태를 변경합니다. 휴학 회원은 주간 학습 메일에서 제외됩니다.</p>'+
     '<div class="portal-admin-toolbar">'+
       '<label>학생 검색<input id="portal-admin-search" type="search" placeholder="이름 · 학번 · 이메일" autocomplete="off"></label>'+
       '<label>학적 상태<select id="portal-admin-filter"><option value="all">전체 학생</option><option value="enrolled">재학</option><option value="leave">휴학</option><option value="withdrawn">자퇴</option><option value="graduated">졸업</option></select></label>'+
     '</div>'+
     '<p class="portal-admin-summary" id="portal-admin-summary" aria-live="polite"></p>'+
-    '<div class="portal-admin-scroll"><table class="portal-admin-table"><thead><tr><th>이름</th><th>가입 유형</th><th>학번 / 졸업년도</th><th>이메일</th><th>가입 승인</th><th>학적</th><th>주간 메일</th><th>변경</th></tr></thead><tbody id="portal-student-list"></tbody></table></div>'+
+    '<div class="portal-admin-scroll"><table class="portal-admin-table"><thead><tr><th>이름</th><th>가입 유형</th><th>학번 / 졸업년도</th><th>이메일</th><th>가입 상태</th><th>학적</th><th>주간 메일</th><th>변경</th></tr></thead><tbody id="portal-student-list"></tbody></table></div>'+
     '<p class="portal-auth-note">주간 메일은 승인된 재학생만 발송 후보입니다. 실제 발송은 이메일 인증 여부 및 학급 학습통계의 전체 발송 스위치도 적용됩니다. 자퇴 학생은 학적을 저장한 후 해당 학생의 영구 삭제 버튼을 눌러 별도 확인할 수 있습니다.</p>'+
     '<div class="portal-auth-actions"><button type="button" id="portal-admin-close">닫기</button></div>');
   $("#portal-admin-close").addEventListener("click",renderAccount);
@@ -521,7 +521,7 @@ async function renderAdmin(){
     select.value=value;return select;
   };
   const rows=[];
-  for(const member of data||[]){
+  for(const member of (data||[]).filter(member=>member.approval_status!=="pending")){
     const tr=document.createElement("tr");
     const identity=[member.full_name,member.signup_type==="alumni"?"졸업생":"재학생",
        member.signup_type==="alumni"?member.graduation_year+"년 졸업":member.student_no||"-",member.email];
@@ -529,12 +529,12 @@ async function renderAdmin(){
       const td=document.createElement("td");td.textContent=item;
       td.dataset.label=["이름","가입 유형","학번 / 졸업년도","이메일"][index];tr.append(td);
     });
-    const approval=options([["pending","대기"],["approved","승인"],["rejected","반려"],["suspended","정지"]],member.approval_status);
+    const approval=options([["approved","승인"],["rejected","반려"],["suspended","정지"]],member.approval_status);
     const enrollment=options([["enrolled","재학"],["leave","휴학"],["withdrawn","자퇴"],["graduated","졸업"]],member.enrollment_status);
     if(member.signup_type==="alumni"){enrollment.value="graduated";enrollment.disabled=true;enrollment.title="졸업생의 학적은 졸업으로 유지됩니다.";}
-    approval.setAttribute("aria-label",member.full_name+" 가입 승인");
+    approval.setAttribute("aria-label",member.full_name+" 가입 상태");
     enrollment.setAttribute("aria-label",member.full_name+" 학적");
-    for(const [select,label] of [[approval,"가입 승인"],[enrollment,"학적"]]){
+    for(const [select,label] of [[approval,"가입 상태"],[enrollment,"학적"]]){
       const td=document.createElement("td");td.dataset.label=label;td.append(select);tr.append(td);
     }
     const mailTd=document.createElement("td");mailTd.dataset.label="주간 메일";
@@ -555,17 +555,29 @@ async function renderAdmin(){
     save.addEventListener("click",async()=>{
       if(!window.confirm(member.full_name+" 학생의 계정 상태를 변경하시겠습니까?"))return;
       save.disabled=true;
-      const {error}=await client.rpc("admin_update_student",{
-        p_target_user_id:member.user_id,p_approval_status:approval.value,p_enrollment_status:enrollment.value
-      });
-      if(error){status("저장 실패: 관리자 권한과 입력값을 확인하세요.");save.disabled=false;return;}
-      member.approval_status=approval.value;
-      member.enrollment_status=enrollment.value;
-      updateMailStatus();
-      syncDeleteButton();
-      status(member.full_name+" 학생의 학적 상태를 저장했습니다.");
-      updateResults();
-      save.disabled=false;
+      try{
+        let result=null;
+        if(approval.value==="approved"&&member.approval_status!=="approved")
+          result=await approvePortalMember(member,enrollment.value);
+        else{
+          const {error}=await client.rpc("admin_update_student",{
+            p_target_user_id:member.user_id,p_approval_status:approval.value,p_enrollment_status:enrollment.value
+          });
+          if(error)throw error;
+        }
+        member.approval_status=approval.value;
+        member.enrollment_status=enrollment.value;
+        updateMailStatus();syncDeleteButton();updateResults();
+        if(result?.notificationStatus==="failed"){
+          retryMail.hidden=false;
+          status("계정 승인은 완료되었으나 메일 발송에 실패했습니다. ‘메일 재시도’를 선택하세요.");
+        }else if(result?.notificationStatus==="sending"){
+          status(member.full_name+"님의 계정 승인 완료 · 메일 발송 중");
+        }else if(result?.notificationStatus==="sent"){
+          retryMail.hidden=true;status(member.full_name+"님의 계정 승인 및 안내 메일 발송 완료");
+        }else status(member.full_name+"님의 계정·학적 상태를 저장했습니다.");
+      }catch{status("저장 실패: 관리자 권한과 입력값을 확인해 주세요.");}
+      finally{save.disabled=false;}
     });
     const actions=document.createElement("div");actions.className="portal-admin-row-actions";
     const deleteButton=document.createElement("button");
@@ -578,8 +590,20 @@ async function renderAdmin(){
     };
     enrollment.addEventListener("change",syncDeleteButton);
     deleteButton.addEventListener("click",()=>renderWithdrawnDeletion(member));
-    actions.append(save,deleteButton);td.append(actions);tr.append(td);body.append(tr);
-    rows.push({member,tr,searchText:identity.join(" ").toLowerCase()});
+    const retryMail=document.createElement("button");
+    retryMail.type="button";retryMail.className="portal-admin-retry-mail";
+    retryMail.textContent="메일 재시도";retryMail.hidden=true;
+    retryMail.addEventListener("click",async()=>{
+      retryMail.disabled=true;
+      try{
+        const result=await retryApprovalEmail(member);
+        if(result.notificationStatus==="sent"){retryMail.hidden=true;status(member.full_name+"님의 승인 안내 메일 발송 완료");}
+        else status("메일 처리 중입니다. 잠시 후 확인해 주세요.");
+      }catch{status("메일 재시도에 실패했습니다.");}
+      retryMail.disabled=false;
+    });
+    actions.append(save,retryMail,deleteButton);td.append(actions);tr.append(td);body.append(tr);
+    rows.push({member,tr,searchText:identity.join(" ").toLowerCase(),retryMail});
     syncDeleteButton();
   }
   const updateResults=()=>{
@@ -598,6 +622,14 @@ async function renderAdmin(){
   $("#portal-admin-search").addEventListener("input",updateResults);
   $("#portal-admin-filter").addEventListener("change",updateResults);
   updateResults();
+  const {data:mailRecords,error:mailError}=await client.functions.invoke("approve-portal-signup",{
+    body:{action:"email_statuses"}
+  });
+  if(!mailError&&mailRecords?.notifications&&$("#portal-student-list")===body){
+    const failed=new Set(mailRecords.notifications.filter(n=>n.delivery_status==="failed").map(n=>n.user_id));
+    for(const row of rows)if(row.member.approval_status==="approved"&&failed.has(row.member.user_id))
+      row.retryMail.hidden=false;
+  }
 }
 async function activate(interactive=true){
   if(inRecovery)return;
