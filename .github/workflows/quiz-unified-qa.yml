@@ -1,0 +1,60 @@
+name: Unified quiz UI QA
+on:
+  push:
+    paths:
+      - "js/quiz-unified.js"
+      - "css/quiz-unified.css"
+      - "js/ncp-quiz.js"
+      - "js/practical-ui.js"
+      - "js/coding.js"
+      - "ncp.html"
+      - "practical.html"
+      - "coding.html"
+      - "tests/quiz-unified.test.mjs"
+      - "tests/quiz-unified-browser.mjs"
+      - "tests/ncp-sharing.test.mjs"
+      - "tests/practical-sharing.test.mjs"
+      - "tests/coding-page.test.mjs"
+      - "tests/coding-page-browser.mjs"
+      - ".github/workflows/quiz-unified-qa.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  unified-design-regression:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate JavaScript module syntax
+        run: |
+          node --check js/quiz-unified.js
+          node --check js/practical-ui.js
+          node --check js/ncp-quiz.js
+          node --check js/coding.js
+      - name: Verify visual contracts and existing feature regressions
+        run: |
+          node tests/quiz-unified.test.mjs
+          node tests/ncp-sharing.test.mjs
+          node tests/practical-sharing.test.mjs
+          node tests/coding-page.test.mjs
+          node tests/practical-mobile.test.mjs
+          node tests/learning-tracking.test.mjs
+      - name: Install Chromium for responsive screenshot comparisons
+        run: |
+          npm install --no-save --no-package-lock playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Compare quiz UI across six viewport widths and three services
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/quiz-unified.log 2>&1 &
+          node tests/quiz-unified-browser.mjs
+      - name: Attach 390px and 1440px comparison screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unified-quiz-mobile-desktop
+          path: ui-screenshots/quiz-unified
+          if-no-files-found: ignore
