@@ -28,3 +28,39 @@
   function currentGroup(){if(!document.body.hasAttribute('data-portal-home'))return;const group=location.hash.slice(1);document.querySelectorAll('#portal-nav a').forEach(link=>{link.removeAttribute('aria-current');if(link.dataset.portalGroup===group)link.setAttribute('aria-current','location');});if(!document.querySelector('#portal-nav [aria-current]'))document.querySelector('#portal-nav a')?.setAttribute('aria-current','page');}
   currentGroup();window.addEventListener('hashchange',currentGroup);
 })();
+
+
+// The existing generated navigation is unchanged; authorization is added separately.
+// Static GitHub Pages files remain publicly downloadable. Database records are
+// protected by Supabase RLS and server-side portal sessions, not this overlay.
+(()=>{
+  if(typeof location==="undefined" || !document.body)return;
+  const params=new URLSearchParams(location.search);
+  const production=location.hostname==="portal.k-bigdata.kr";
+  // Pilot first: an empty membership table must not lock every student out.
+  // Visit ?portal-auth-preview=1 to opt this browser in; use =0 to opt out.
+  if(production){
+    try{
+      if(params.get("portal-auth-preview")==="1")localStorage.setItem("portal-auth-pilot","on");
+      if(params.get("portal-auth-preview")==="0")localStorage.removeItem("portal-auth-pilot");
+    }catch{}
+  }
+  let pilot=false;
+  try{pilot=localStorage.getItem("portal-auth-pilot")==="on";}catch{}
+  const enabled=(production && pilot) || (!production && params.get("portal-auth-preview")==="1");
+  if(!enabled)return;
+  const rule=document.createElement("style");
+  rule.textContent='body[data-portal-auth-lock] > :not(#portal-auth-layer) { visibility: hidden !important; }';
+  document.head.append(rule);
+  document.body.setAttribute("data-portal-auth-lock","");
+  import("./portal-auth.mjs").catch(error=>{
+    console.error("Portal authentication module failed",error);
+    let box=document.getElementById("portal-auth-layer");
+    if(!box){box=document.createElement("div");box.id="portal-auth-layer";document.body.append(box);}
+    box.setAttribute("style","position:fixed;inset:0;z-index:99999;display:grid;place-items:center;background:#0b1739;padding:20px;");
+    const panel=document.createElement("section");
+    panel.setAttribute("style","max-width:470px;padding:28px;background:white;border-radius:14px;color:#12244a;font:16px/1.6 sans-serif;");
+    panel.textContent="인증 시스템을 불러오지 못했습니다. 네트워크 연결을 확인한 후 새로고침해 주세요.";
+    box.replaceChildren(panel);
+  });
+})();

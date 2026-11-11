@@ -2,7 +2,7 @@
 export function learningReportUrl(source, question, label = "") {
   if (!["practical", "interview", "coding", "ncp"].includes(source) || !question?.id) return "";
   const page = {practical: "practical.html", interview: "interview.html", coding: "coding.html", ncp: "ncp.html"}[source];
-  const problem = new URL(page, location.origin);
+  const problem = new URL(page, typeof location === 'undefined' ? 'https://portal.k-bigdata.kr' : location.origin);
   problem.searchParams.set("id", String(question.id));
   const report = new URL("https://help.k-bigdata.kr/request.html");
   report.searchParams.set("source", source);

@@ -10,7 +10,7 @@ permissions:
   contents: read
 jobs:
   verify-shell:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
@@ -26,6 +26,7 @@ jobs:
           node tests/portal-shell.test.mjs
           node tests/ncp-source-audit.test.mjs
           node --check js/portal-navigation.js
+          node tests/portal-auth.test.mjs
       - name: Preserve related portal, learning, calendar and analytics behavior
         run: |
           for test in analytics browser-compatibility coding-page content-cleanup course-publication home-engagement performance-architecture portal-dashboard portal-ux interview-session interview-mobile interview-sharing interview-glossary calendar-grade-bridge schedule-integration schedule-registration schedule-page schedule-sharing; do
