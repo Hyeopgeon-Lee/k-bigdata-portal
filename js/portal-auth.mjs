@@ -12,7 +12,7 @@ root.hidden=true; // The whole portal requires an authorized account.
 document.body.append(root);
 const css=document.createElement("link");
 css.rel="stylesheet";
-css.href="css/portal-auth.css?v=20261111-account-readable-3";
+css.href="css/portal-auth.css?v=20261111-header-controls-1";
 document.head.append(css);
 
 const locked=document.getElementById("learning-lock");
@@ -222,8 +222,17 @@ function showAccount(){
     document.querySelector(".site-header .header-inner")?.append(btn);
   }
   if(!btn)return;
-  btn.textContent=currentUser?"내 계정":"로그인";
+  const label=currentUser?"내 계정":"로그인";
+  btn.classList.add("portal-account-trigger");
+  btn.dataset.signedIn=currentUser?"true":"false";
+  btn.setAttribute("aria-label",currentUser?"내 계정 열기":"로그인");
+  btn.title=label;
+  btn.innerHTML='<svg class="portal-account-trigger-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+
+    '<circle cx="12" cy="8" r="3.5"/><path d="M5 20v-1.5a7 7 0 0 1 14 0V20"/></svg>'+
+    '<span class="portal-account-button-text">'+label+'</span>';
   btn.onclick=()=>{
+    const menu=document.querySelector(".site-header .portal-menu");
+    if(menu?.open && window.matchMedia("(max-width: 1240px)").matches)menu.open=false;
     if(!currentUser)return renderLogin();
     if(!currentProfile)return renderComplete(currentUser);
     if(currentProfile.approval_status!=="approved" ||
