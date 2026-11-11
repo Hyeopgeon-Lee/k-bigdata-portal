@@ -25,7 +25,7 @@ try{
     assert.equal(await page.locator(".coding-ubuntu-terminal-demo").count(),1,"terminal mode enabled");
     assert.equal(await page.locator("#coding-ubuntu-output-note").isVisible(),true,"environment-dependent output note visible");
 
-    await page.locator(".coding-detail details").filter({has:page.locator("#coding-share-button")}).locator("summary").click();
+    assert.equal(await page.locator(".coding-detail .quiz-actions details").count(),0,"Share controls must not be inside a disclosure");
     assert.equal(await page.locator("#coding-share-button").isVisible(),true);
     assert.equal(await page.locator("#coding-link-button").isVisible(),true);
     assert.equal(await page.locator("#coding-report-button").isVisible(),true);
