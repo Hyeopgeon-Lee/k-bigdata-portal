@@ -35,7 +35,7 @@ assert.ok(ui.includes('formatCodeForDisplay'),'all practical code must pass thro
 assert.ok(ui.includes('function codeNeedsFocus(q)'),'complex code needs mobile focus classification');
 assert.ok(ui.includes('button("code-focus"')&&ui.includes('action==="code-focus"'),'complex code needs a full-screen reader trigger and handler');
 assert.ok(ui.includes('code-scroll--complex'),'complex code needs bounded mobile height');
-assert.match(read('js/practical-core.js'),/CROSS JOIN\|JOIN\|ON\|FROM/,'shared SQL formatter must break plain JOIN and ON as well as FROM');
+assert.match(formatCodeForDisplay('SELECT * FROM A CROSS JOIN B JOIN C ON B.id=C.id','SQL'),/SELECT \*\nFROM A\nCROSS JOIN B\nJOIN C\n {4}ON B\.id = C\.id/,'shared SQL formatter must indent JOIN ON and split FROM');
 assert.ok(css.includes('.code-dialog'),'full-screen code dialog styles must exist');
 assert.ok(css.includes('max-height:52svh'),'complex inline code must not consume the entire phone viewport');
 assert.ok(css.includes('.solve-question br'),'long prompts must visually separate sentences');
