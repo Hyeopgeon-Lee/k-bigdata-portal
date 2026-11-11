@@ -1,3 +1,4 @@
+import {learningLocal as localStorage, learningSession as sessionStorage} from "./learning-storage.mjs";
 import {codingProblems as sampleProblems} from "../data/coding-samples.js?v=20261111-ubuntu-vim-only-2";
 import {javaProblems} from "../data/coding-java-98.js?v=20261111-java016-korean-units-1";
 import {cFoundationProblems} from "../data/coding-c-foundations.js?v=20261111-essential-ranges-1";

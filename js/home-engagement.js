@@ -1,3 +1,4 @@
+import {learningLocal as localStorage, learningSession as sessionStorage} from "./learning-storage.mjs";
 // Student-facing daily action dashboard: two grades, no account and no network.
 import {DAILY_STATE_KEY,PRACTICAL_STATE_KEY,koreaDay,freshDailyState,validDailyState,makeDailyPlan} from "./home-engagement-core.mjs";
 import {getAttempts,getPreferences} from "./practical-store.js";

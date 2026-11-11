@@ -1,3 +1,4 @@
+import {learningLocal as localStorage, learningSession as sessionStorage} from "./learning-storage.mjs";
 import {ncpQuestions} from "../data/ncp-questions.js?v=20261026-quizfocus-2";
 import {initPortalShell} from "./portal-shell.js?v=20261026-card-label-1";
 import {learningReportUrl} from "./learning-report.js?v=20261027-ncp-report-1";

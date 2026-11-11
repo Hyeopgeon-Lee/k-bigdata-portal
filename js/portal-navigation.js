@@ -30,14 +30,7 @@
 })();
 
 
-// Optional account controls: all portal pages remain accessible as guests.
-// Supabase RLS protects personal records and administrator operations.
-(()=>{
-  if(typeof location==="undefined" || !document.body)return;
-  const preview=new URLSearchParams(location.search).get("portal-auth-preview")==="1";
-  if(location.hostname!=="portal.k-bigdata.kr" && !preview)return;
-  import("./portal-auth.mjs").catch(error=>{
-    // Login availability must never break access to public lessons or resources.
-    console.error("Optional portal login unavailable",error);
-  });
-})();
+import("./portal-auth.mjs?v=learning1").catch(() => {
+  const notice=document.getElementById("learning-notice");
+  if(notice)notice.prepend("로그인 서비스를 연결할 수 없습니다. 새로고침해 주세요. ");
+});

@@ -26,7 +26,7 @@ export function initGroupedSearch(){
   status.textContent="검색 데이터를 준비하는 중입니다.";
   try{
    const {groupSearchResultsExpanded}=await loadSearch();
-   const nextGroups=await groupSearchResultsExpanded(query);
+   const nextGroups=await groupSearchResultsExpanded(query,window.portalLearning?.read===true && Date.now()<window.portalLearning.expires);
    if(query!==input.value.trim())return;
    groups=nextGroups;
    status.textContent=groups.reduce((n,g)=>n+g.items.length,0)+"개 결과 · 유형별로 표시합니다.";

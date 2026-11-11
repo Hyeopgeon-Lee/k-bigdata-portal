@@ -1,3 +1,4 @@
+import {learningLocal} from "./learning-storage.mjs";
 // Main dashboard: favorites, recent shortcuts and published recruitment deadlines.
 import {services} from "./services.js?v=20261026-card-label-1";
 import {getFavorites,getRecent,toggleFavorite} from "./portal-personal.js?v=20261026-card-label-1";
@@ -161,7 +162,7 @@ function installFavoriteButtons(){
 }
 function practicalRecent(){
   try{
-    const data=JSON.parse(localStorage.getItem("kbigdata-practical-preferences-v1")||"null");
+    const data=JSON.parse(learningLocal.getItem("kbigdata-practical-preferences-v1")||"null");
     const id=data?.lastQuestionId;
     if(typeof id==="string" && /^[\w-]{1,80}$/.test(id))
       return '<a href="practical.html?id='+encodeURIComponent(id)+'">마지막 실기 문제 다시 보기 <span aria-hidden="true">→</span></a>';
@@ -219,3 +220,5 @@ window.addEventListener("storage",event=>{
  if(event.key==="kbigdata-portal-ui-v1"){renderPersonal();renderQuickActions();}
  if(event.key===GRADE_KEY){selectedGrade=readSavedGrade()||"1";renderGrade();}
 });
+
+window.addEventListener("portal-learning-ready",renderGrade);

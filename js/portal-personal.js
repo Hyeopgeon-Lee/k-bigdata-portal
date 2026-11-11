@@ -1,3 +1,4 @@
+import {learningLocal as localStorage, learningSession as sessionStorage} from "./learning-storage.mjs";
 // Device-only shortcuts: no identity, login or network transmission.
 import {services} from "./services.js?v=20261026-card-label-1";
 const KEY = "kbigdata-portal-ui-v1";

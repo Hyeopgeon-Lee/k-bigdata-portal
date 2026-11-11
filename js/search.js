@@ -32,14 +32,14 @@ export function groupSearchResults(query,index=searchIndex){
 // Load question-level and recruitment indices only on actual search input.
 // Existing synchronous groupSearchResults remains available to other pages/tests.
 const koreaToday=()=>new Date(Date.now()+9*60*60*1000).toISOString().slice(0,10);
-export async function groupSearchResultsExpanded(query){
+export async function groupSearchResultsExpanded(query,includeLearning=true){
  if(!query.trim())return [];
  const [practical,recruit]=await Promise.allSettled([
-  import("../data/practical/search-index.js?v=20261016-1"),
+  includeLearning && import("../data/practical/search-index.js?v=20261016-1"),
   import("../data/recruitments.js?v=20261016-2")
  ]);
  const extra=[];
- if(practical.status==="fulfilled")extra.push(...practical.value.practicalSearchItems);
+ if(includeLearning && practical.status==="fulfilled")extra.push(...practical.value.practicalSearchItems);
  if(recruit.status==="fulfilled"&&typeof window!=="undefined"){
   const today=koreaToday();
   for(const job of window.K_BIGDATA_RECRUITMENTS||[]){
@@ -49,5 +49,5 @@ export async function groupSearchResultsExpanded(query){
    extra.push({title,type:"추천 채용공고",url:"recruit.html?job="+encodeURIComponent(job.id),text});
   }
  }
- return groupSearchResults(query,[...searchIndex,...extra]);
+ return groupSearchResults(query,[...(includeLearning?searchIndex:searchIndex.filter(item=>!["IT 자격증","개발 공식문서","기술면접","기술면접 문제"].includes(item.type))),...extra]);
 }

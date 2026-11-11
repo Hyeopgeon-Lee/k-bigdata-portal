@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 const fake=()=>{const data=new Map();return {getItem:k=>data.get(k)||null,setItem:(k,v)=>data.set(k,v),removeItem:k=>data.delete(k)};};
 globalThis.localStorage=fake();globalThis.sessionStorage=fake();
+globalThis.portalLearning={read:true,write:true,expires:Date.now()+60000};
 const store=await import('../js/practical-store.js');
 const running={id:'a',questionId:'R-PY-0002',startedAt:1000,answer:'draft',submittedAt:null};
 store.saveSession(running.questionId,running);

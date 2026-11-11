@@ -1,8 +1,9 @@
+import {learningLocal as localStorage, learningSession as sessionStorage} from "./learning-storage.mjs";
 // Replace this adapter to integrate an approved backend later. Nothing is transmitted.
 const key="kbigdata-practical-v1", sessionKey="kbigdata-practical-attempt-v1", preferencesKey="kbigdata-practical-preferences-v1";
 let memory=[],sessions={},preferences={};
 export let storageAvailable=true;
-function read(kind,key,fallback){try{return JSON.parse(globalThis[kind].getItem(key))||fallback;}catch{storageAvailable=false;return fallback;}}
+function read(kind,key,fallback){try{return JSON.parse((kind==="localStorage"?localStorage:sessionStorage).getItem(key))||fallback;}catch{storageAvailable=false;return fallback;}}
 export function getAttempts(){const data=read("localStorage",key,memory);return Array.isArray(data)?data.filter(a=>a&&typeof a.questionId==="string"&&Number.isFinite(a.submittedAt)&&Number.isFinite(a.elapsedSeconds)):[];}
 function writeAttempts(items){memory=items;try{localStorage.setItem(key,JSON.stringify(items));}catch{storageAvailable=false;}}
 export function saveAttempt(item){const items=getAttempts(),index=items.findIndex(a=>a.id===item.id);if(index<0)items.push(item);else items[index]=item;writeAttempts(items);}

@@ -14,6 +14,25 @@ css.rel="stylesheet";
 css.href="css/portal-auth.css?v=20261111";
 document.head.append(css);
 
+const locked=document.getElementById("learning-lock");
+let activeUser=null;
+let activeWrite=false;
+let expires=0;
+function resetLearning(){
+  if(!activeUser)return;
+  activeUser=null;
+  window.portalLearning=null;
+  document.documentElement.style.visibility="hidden";
+  location.reload();
+}
+async function checkLearning(){
+  if(!activeUser)return;
+  const {data,error}=await client.rpc("portal_learning_access");
+  if(error || !data?.read || data.write!==activeWrite || Date.now()>=expires)resetLearning();
+}
+window.addEventListener("pageshow",event=>{if(event.persisted)location.reload();});
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)checkLearning().catch(resetLearning);});
+setInterval(()=>checkLearning().catch(resetLearning),60000);
 const professorEmail="hglee67@kopo.ac.kr";
 let currentUser=null;
 let currentProfile=null;
@@ -29,11 +48,11 @@ function card(title,inner){
     '<button type="button" class="portal-auth-dismiss" id="portal-auth-dismiss" aria-label="닫고 포털 이용하기">닫기</button>'+
     '<p class="portal-auth-eyebrow">K-BIGDATA STUDENT PORTAL</p><h1 id="portal-auth-title" tabindex="-1">'+title+'</h1>'+inner+
     '<p id="portal-auth-status" role="status" aria-live="polite"></p></section>';
-  $("#portal-auth-dismiss").addEventListener("click",()=>root.hidden=true);
+  $("#portal-auth-dismiss").addEventListener("click",()=>{if(locked&&!activeUser)location.assign("/");else root.hidden=true;});
   $("#portal-auth-title")?.focus?.();
 }
 function renderLogin(message=""){
-  card("포털 로그인",'<p class="portal-auth-lead">로그인하지 않아도 포털의 공개 학습 자료를 이용할 수 있습니다. 로그인은 선택 기능이며, 개인 학습기록의 기기 간 동기화는 별도 구현 예정입니다.</p>'+
+  card("포털 로그인",'<p class="portal-auth-lead">포털 안내는 누구나 볼 수 있습니다. 학습 자료와 이 브라우저의 학습 기록은 이메일 인증 및 계정 승인 후 이용할 수 있습니다.</p>'+
    '<form id="portal-login-form" class="portal-auth-form">'+
    '<label>이메일<input name="email" type="email" autocomplete="username" required></label>'+
    '<label>비밀번호<input name="password" type="password" autocomplete="current-password" required></label>'+
@@ -78,7 +97,7 @@ function renderSignup(){
     try{
       const {error}=await client.auth.signUp({
         email,password:String(fd.get("password")),
-        options:{emailRedirectTo:resetLink,data:{full_name,student_no}}
+        options:{emailRedirectTo:locked?location.href:resetLink,data:{full_name,student_no}}
       });
       if(error)throw error;
       renderLogin("가입 요청이 접수되었습니다. 이메일의 인증 링크를 클릭한 후 로그인하세요. 학생 계정은 관리자 승인 후 이용할 수 있습니다.");
@@ -172,7 +191,7 @@ function renderAccount(){
   if(isAdmin){const admin=document.createElement("button");admin.type="button";admin.textContent="학생 계정 관리";
     admin.addEventListener("click",renderAdmin);area.append(admin);}
   const close=document.createElement("button");close.type="button";close.textContent="닫기";
-  close.addEventListener("click",()=>root.hidden=true);area.append(close);
+  close.addEventListener("click",()=>{if(locked&&!activeUser)location.assign("/");else root.hidden=true;});area.append(close);
   const out=document.createElement("button");out.type="button";out.textContent="로그아웃";
   out.addEventListener("click",logout);area.append(out);
 }
@@ -209,12 +228,12 @@ async function renderAdmin(){
   }
   if(!data?.length)status("등록된 학생 계정이 없습니다.");
 }
-async function activate(interactive=false){
+async function activate(interactive=Boolean(locked)){
   if(inRecovery)return;
   const {data:{user},error}=await client.auth.getUser();
   if(error||!user){
     currentUser=null;currentProfile=null;isAdmin=false;
-    showAccount();root.hidden=true;
+    showAccount();if(locked)renderLogin();else root.hidden=true;
     return;
   }
   currentUser=user;
@@ -262,16 +281,39 @@ async function activate(interactive=false){
     else root.hidden=true;
     return;
   }
+  expires=Date.parse(expiry);
+  if(!Number.isFinite(expires)||expires<=Date.now()){await logout();if(locked)renderLogin();return;}
+  const {data:access,error:accessError}=await client.rpc("portal_learning_access");
+  if(accessError || access?.read!==true){
+    if(interactive)renderPending(profile);
+    return;
+  }
+  if(activeUser && activeUser!==user.id){resetLearning();return;}
+  activeUser=user.id;
+  activeWrite=access.write===true;
+  function expire(){
+    if(Date.now()>=expires)resetLearning();
+    else setTimeout(expire,Math.min(expires-Date.now(),2147483647));
+  }
+  expire();
+  window.portalLearning={read:true,write:activeWrite,expires};
   root.hidden=true;
   showAccount();
-  const until=new Date(expiry);
-  if(Number.isFinite(until.getTime())&&until<=new Date()){await logout();}
+  for(const entry of document.querySelectorAll("script[data-module]")){
+    await import(new URL(entry.dataset.module,document.baseURI).href);
+    entry.removeAttribute("data-module");
+  }
+  document.getElementById("learning-notice")?.remove();
+  locked?.remove();
+  window.dispatchEvent(new Event("portal-learning-ready"));
+
 }
-client.auth.onAuthStateChange((event)=>{
+client.auth.onAuthStateChange((event,session)=>{
+  if(activeUser && (event==="SIGNED_OUT" || (session && session.user.id!==activeUser)))resetLearning();
   if(event==="PASSWORD_RECOVERY")queueMicrotask(()=>renderNewPassword());
 });
 showAccount();
 try{await activate();}catch(error){
   console.error("Portal Auth initialization error",error);
-  showAccount();root.hidden=true; // An auth error never blocks public materials.
+  showAccount();if(locked)renderLogin("학습 권한을 확인하지 못했습니다. 새로고침해 주세요.");else root.hidden=true;
 }
