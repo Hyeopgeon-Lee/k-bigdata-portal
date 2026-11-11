@@ -1,3 +1,4 @@
+import {quizNavigation,quizHeading,quizDisclosure,quizFeedback,scrollToQuizAnswer} from "./quiz-unified.js";
 import {createQuestionBrowser} from "./question-browser.js";
 import {bindReview,reviewControls,gradeLabels} from "./study-review.js";
 import {learningLocal as localStorage, learningSession as sessionStorage} from "./learning-storage.mjs";
@@ -146,17 +147,28 @@ function render(){
   '<div><strong>복원정보 · 원문 '+esc(q.originalNumber)+'번</strong><p>위 문제와 선택지는 학습용으로 재서술되어 원문과 다를 수 있습니다.</p></div>'+
   '<a href="'+esc(sourceURL)+'" target="_blank" rel="noopener noreferrer" aria-label="'+esc(q.exam)+' 공개 복원자료 원문 '+esc(q.originalNumber)+'번 새 창에서 확인">문제·선택지 원문 확인 ↗</a></section>';
  const result=answered?
-  '<section class="ncp-answer" tabindex="-1" aria-label="학습용 정답 확인"><div class="ncp-answer-head"><strong>학습용 정답 '+numerals[letters.indexOf(q.answer)]+'</strong><span class="'+(answered.choice===q.answer?"ncp-answer-match":"ncp-answer-diff")+'">'+(!answered.choice?"미입력":answered.choice===q.answer?"일치":"불일치")+'</span></div><p>'+esc(q.explanation)+'</p><button type="button" class="ncp-retry" data-retry>이 문제 다시 풀기</button></section>':"";
- el.question.innerHTML='<div class="ncp-question-meta"><span>'+esc(q.exam)+'</span><span>'+esc(q.topic)+'</span></div>'+
-  '<button type="button" class="study-return" data-list>‹ 문제 목록</button>'+
-  '<h2 tabindex="-1">'+esc(q.question)+'</h2>'+
-  '<div class="ncp-share-row" role="group" aria-label="현재 문제 공유 및 오류 신고">'+
-  '<button type="button" data-action="share-problem" aria-label="현재 NCP 문제 공유">문제 공유</button>'+
-  '<button type="button" data-action="copy-problem-link" aria-label="현재 NCP 문제 링크 복사">링크 복사</button>'+
-  '<a href="'+esc(learningReportUrl("ncp",q,q.exam+" · 원문 "+q.originalNumber+"번"))+'" aria-label="현재 NCP 문제 오류 신고">오류 신고</a></div>'+
-  '<p id="ncp-share-status" class="ncp-share-status" role="status" aria-live="polite"></p>'+
-  '<div class="ncp-options" role="group" aria-label="선택지">' +options+'</div>'+(answered?result+reviewControls():'<button class="study-open" data-open>정답·해설 보기</button>')+
-  originalReference;
+   '<section class="ncp-answer quiz-results" tabindex="-1" aria-label="학습용 정답 확인">'+
+   quizFeedback({label:"학습용 정답 "+numerals[letters.indexOf(q.answer)],
+     details:!answered.choice?"선택하지 않음":answered.choice===q.answer?"선택한 답안과 일치":"선택한 답안과 불일치",
+     kind:!answered.choice?"neutral":answered.choice===q.answer?"correct":"incorrect"})+
+   quizDisclosure("해설",'<p>'+esc(q.explanation)+'</p>',{open:true})+
+   '<button type="button" class="ncp-retry" data-retry>이 문제 다시 풀기</button></section>':"";
+ const sourceDisclosure=quizDisclosure("복원정보 / 원문 출처",originalReference);
+ const actions=[
+   {label:"문제 공유",action:"share-problem",ariaLabel:"현재 NCP 문제 공유"},
+   {label:"링크 복사",action:"copy-problem-link",ariaLabel:"현재 NCP 문제 링크 복사"},
+   {label:"오류 신고",href:learningReportUrl("ncp",q,q.exam+" · 원문 "+q.originalNumber+"번"),ariaLabel:"현재 NCP 문제 오류 신고"}
+ ];
+ el.question.innerHTML=
+   quizNavigation({count:(state.index+1)+" / "+state.list.length,listAction:"ncp-list",jumpAction:"ncp-answer-jump"})+
+   quizHeading({title:"공개 복원자료 원문 "+q.originalNumber+"번",
+     titleId:"ncp-question-title",badges:[q.exam,q.topic],actions})+
+   '<p id="ncp-share-status" class="ncp-share-status" role="status" aria-live="polite"></p>'+
+   '<p class="quiz-question ncp-question-text">'+esc(q.question)+'</p>'+
+   '<section class="quiz-answer" id="ncp-answer-entry"><h3>정답 입력</h3>'+
+   '<div class="ncp-options" role="group" aria-label="선택지">'+options+'</div>'+
+   (answered?"":'<button class="study-open" data-open type="button">정답·해설 보기</button>')+
+   '</section>'+(answered?result+reviewControls():"")+sourceDisclosure;
  if(answered)bindReview(el.question.querySelector(".study-review"),{bank:"ncp",questionId:q.id,
    clientAttemptId:draft.id,answerText:answered.choice,metadata:{exam:q.exam,choice_matches:answered.choice?answered.choice===q.answer:null,verified_server_grade:false}},
    prior?.grade,result=>{state.answers[q.id]={choice:answered.choice,grade:result};save();renderNumbers();updateProgress();});
@@ -190,6 +202,7 @@ el.question.addEventListener("click",event=>{
  const action=event.target.closest("button[data-action]")?.dataset.action;
  if(action==="share-problem"){void shareCurrentProblem(q);return;}
  if(action==="copy-problem-link"){void copyCurrentProblemLink(q);return;}
+ if(action==="ncp-answer-jump"){scrollToQuizAnswer(el.question);return;}
  if(answer&&!recordFor(q.id)){
   drafts.get(q.id).choice=answer.dataset.choice;render();
   el.question.querySelector('[data-choice="'+answer.dataset.choice+'"]').focus();return;
