@@ -15,7 +15,7 @@ for(const q of questions){
  assert.ok(!browse.includes('interview-share-row'),q.id);
  const report=new URL(learningReportUrl("interview",q,q.group));
  assert.equal(report.origin,"https://portal.k-bigdata.kr");
- assert.equal(report.pathname,"/request.html");
+ assert.equal(report.pathname,"/help.html");
  assert.equal(report.searchParams.get("source"),"interview");
  assert.equal(report.searchParams.get("id"),q.id);
  assert.equal(report.searchParams.get("code"),q.code);
