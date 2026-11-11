@@ -149,6 +149,9 @@ Deno.serve(async(req:Request)=>{
     "<h3>과목별 시도</h3><ul>"+subjects+"</ul><h3>반복 오답 문제</h3><ol>"+top+"</ol>"+
     '<p><a href="https://portal.k-bigdata.kr/teacher-learning.html">교수 전용 학급 학습통계 확인</a></p>');
   const adminResult=await deliver(null,adminMail,"super_admin",period.date,"[학과 포털] 주간 학급 학습 보고서",body);
-  return response({ok:true,counts,adminResult,weekStart:period.date});
+  if(adminResult==="sent")counts.sent++;
+  else if(adminResult==="failed")counts.failed++;
+  else if(adminResult==="duplicate")counts.duplicate++;
+  return response({ok:true,counts,adminResult,studentSendingPaused:true,weekStart:period.date});
  }catch(error){console.error("Weekly learning report failed",error);return response({error:"REPORT_FAILED"},500);}
 });
