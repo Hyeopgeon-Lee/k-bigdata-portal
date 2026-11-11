@@ -14,7 +14,7 @@ for(const q of questions){
  assert.ok(practice.includes("문제 공유")&&practice.includes("링크 복사"),q.id);
  assert.ok(!browse.includes('interview-share-row'),q.id);
  const report=new URL(learningReportUrl("interview",q,q.group));
- assert.equal(report.origin,"https://help.k-bigdata.kr");
+ assert.equal(report.origin,"https://portal.k-bigdata.kr");
  assert.equal(report.pathname,"/request.html");
  assert.equal(report.searchParams.get("source"),"interview");
  assert.equal(report.searchParams.get("id"),q.id);
