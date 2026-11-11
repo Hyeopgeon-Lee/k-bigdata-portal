@@ -1,6 +1,18 @@
 <!doctype html>
 <html lang="ko" data-portal-page="help">
-<head><style id="learning-lock">body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}</style>
+<head><style id="learning-lock">
+body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
+#learning-notice{position:fixed;inset:0;margin:0;display:grid;place-items:center;background:#f7f9fc;color:transparent;font-size:0;line-height:0;z-index:1}
+#learning-notice a{display:none}
+#learning-notice::after{content:"";width:32px;height:32px;border:3px solid #dce6f3;border-top-color:#245791;border-radius:50%;animation:portal-loading-spin .8s linear infinite,portal-loading-appear .18s .4s both}
+@keyframes portal-loading-spin{to{transform:rotate(360deg)}}
+@keyframes portal-loading-appear{from{opacity:0}to{opacity:1}}
+@media(prefers-reduced-motion:reduce){#learning-notice::after{animation:none;opacity:1}}
+</style><noscript><style>
+#learning-notice{position:static;display:block;padding:32px 20px;color:#23415f;font-size:16px;line-height:1.6}
+#learning-notice::after{display:none}
+#learning-notice a{display:inline}
+</style></noscript>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">

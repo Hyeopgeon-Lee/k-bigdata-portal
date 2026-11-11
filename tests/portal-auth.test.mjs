@@ -30,6 +30,10 @@ assert.match(source,/portal_learning_access/);
 for(const page of ["coding","practical","ncp","docs","interview","certifications"]){
  const html=read(page+".html");
  assert.match(html,/id="learning-lock"/);
+ assert.match(html,/#learning-notice\{position:fixed/,"loading notice is styled before first paint");
+ assert.match(html,/#learning-notice a\{display:none\}/,"no flashing text/link");
+ assert.match(html,/portal-loading-appear/,"spinner fades in only for slower transitions");
+ assert.match(html,/<noscript><style>/,"no-JavaScript fallback stays readable");
  assert.match(html,/data-module=/);
  assert.doesNotMatch(html,/<script type="module" src=/);
 }
