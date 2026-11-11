@@ -715,3 +715,96 @@ html:not([data-portal-access="approved"]) body > :not(#portal-auth-layer) { visi
   .portal-admin-table td:nth-child(8) { grid-column: 2 / -1; }
   .portal-admin-table td:nth-child(8) button { min-height: 42px; font-size: 13px; }
 }
+
+
+/* Withdrawn accounts: permanent deletion controls, visible only after saved status. */
+.portal-admin-row-actions {
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:7px;
+}
+.portal-admin-row-actions button {
+  min-height:38px;
+  white-space:nowrap;
+}
+.portal-auth-card .portal-admin-delete-button {
+  border-color:#e4b5b5;
+  background:#fff5f4;
+  color:#9f3232;
+}
+.portal-auth-card .portal-admin-delete-button:hover { background:#ffe8e6; }
+.portal-admin-delete-button[hidden],
+.portal-delete-counts[hidden],
+.portal-delete-confirm[hidden] { display:none!important; }
+.portal-delete-member {
+  margin:4px 0 15px;
+  padding:11px 13px;
+  border:1px solid #d8e2f2;
+  border-radius:10px;
+  background:#f5f8fd;
+  color:#1c3558;
+  font-size:15px;
+  font-weight:750;
+  overflow-wrap:anywhere;
+}
+.portal-delete-counts {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+  margin:15px 0;
+  padding:0;
+  list-style:none;
+}
+.portal-delete-counts li {
+  min-width:0;
+  padding:10px;
+  border:1px solid #e1e8f2;
+  border-radius:9px;
+  color:#314763;
+  background:#fafbfe;
+  font-size:13px;
+  line-height:1.5;
+}
+.portal-delete-confirm { display:grid;gap:12px;margin:18px 0 5px; }
+.portal-delete-confirm label {
+  display:grid;
+  gap:6px;
+  color:#263754;
+  font-size:14px;
+  font-weight:750;
+}
+.portal-delete-confirm input {
+  width:100%;
+  min-height:46px;
+  box-sizing:border-box;
+  padding:10px 12px;
+  border:1px solid #b7c7dd;
+  border-radius:9px;
+  color:#172d4b;
+  font:inherit;
+  font-size:16px;
+}
+.portal-delete-warning {
+  margin:0;
+  padding:11px 13px;
+  border-left:3px solid #a33b3b;
+  background:#fff8f8;
+  color:#713333;
+  font-size:13px;
+  line-height:1.65;
+}
+.portal-auth-card .portal-auth-danger {
+  width:100%;
+  min-height:48px;
+  border-color:#a92e2e;
+  background:#ad3434;
+  color:#fff;
+}
+.portal-auth-card .portal-auth-danger:hover { background:#8e2626; }
+.portal-auth-card .portal-auth-danger:disabled { background:#f6dede;color:#805d5d; }
+@media (max-width:767px) {
+  .portal-admin-row-actions { display:grid;grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .portal-admin-row-actions button { width:100%; }
+  .portal-delete-counts { grid-template-columns:1fr; }
+}
