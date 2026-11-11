@@ -1,3 +1,4 @@
+import {quizNavigation,quizHeading,quizDisclosure,quizFeedback} from "./quiz-unified.js";
 import {createQuestionBrowser} from "./question-browser.js";
 import {bindReview,reviewControls,gradeLabels} from "./study-review.js";
 import {loadPracticalBank} from "./practical-data.js?v=20261006-audit-2";
@@ -246,7 +247,17 @@ function renderQuestion(){
  const multiline=q.questionType==="sql_write"||q.answer.includes("\n"), lateEditable=attempt.autoRevealed&&!attempt.lateSubmittedAt,attributes='id="my-answer" maxlength="10000" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-describedby="answer-hint" '+((revealed||submitted)&&!lateEditable?'disabled':'');
  const input=multiline?'<textarea '+attributes+' rows="'+(q.questionType==="sql_write"?7:4)+'">'+esc(attempt.answer||"")+'</textarea>':'<input '+attributes+' type="text" enterkeyhint="done" value="'+esc(attempt.answer||"")+'">';
  const shownCode=displayCode(q);
- root.innerHTML='<article class="bank-solve"><div class="solve-progress">'+button("back","← 문제 목록")+'<strong>'+(queue.length?(queueIndex+1)+' / '+queue.length:'문제풀이')+'</strong>'+button("answer-jump","답 입력 ↓",'aria-label="정답 입력란으로 이동"')+'</div><h2 id="solve-title" tabindex="-1">'+esc(solveHeading(q))+'</h2>'+metadata(q)+'<div class="solve-share-row" aria-label="문제 공유">'+button("share-problem","문제 공유",'aria-label="현재 문제 카드 공유"')+button("copy-problem-link","링크 복사",'aria-label="현재 문제 링크 복사"')+'<a class="button button-secondary" href="'+esc(learningReportUrl("practical",q,solveHeading(q)))+'" aria-label="현재 실기문제 오류 신고">오류 신고</a>'+'</div><p id="share-status" class="share-status" role="status" aria-live="polite"></p><p class="solve-question">'+formatQuestion(q.question)+'</p>'+tablesHTML(q)+(q.code?'<div class="code-scroll'+(q.language==="SQL"?' code-scroll--sql':'')+(codeNeedsFocus(q)?' code-scroll--complex':'')+'" tabindex="0" role="region" aria-label="'+esc(q.language)+' 문제 코드'+(q.language==="SQL"?'':' · 좌우 스크롤 가능')+'" data-scroll-hint="code-scroll-hint"><pre><code>'+highlightCode(shownCode)+'</code></pre></div><p id="code-scroll-hint" class="scroll-hint code-scroll-hint" hidden aria-hidden="true">← 좌우로 밀어 코드 보기 →</p>'+codeToolsHTML(q,shownCode):'')+(q.inputData?'<h3>입력 데이터</h3><pre class="input-data">'+esc(q.inputData)+'</pre>':'')+'<form id="answer-form"><label for="my-answer">내가 생각한 정답</label>'+input+'<p class="hint" id="answer-hint">'+(q.grading==="self"?'SQL은 예시답과 직접 비교해 판정합니다.':'출력의 대소문자와 줄바꿈을 확인하세요.')+'</p></form><details id="solve-hint"><summary>힌트 보기</summary><p>'+esc(q.hint||"실행 흐름을 단계별로 추적해 보세요.")+'</p></details><button id="submit-answer" class="study-open" form="answer-form">정답·해설 보기</button><div id="answer-result"></div><nav class="study-nav">'+button("previous","이전 문제",queueIndex<=0?'disabled':'')+button("next",queue.length&&queueIndex===queue.length-1?(queueKind==="bank"?"목록으로":"세트 결과 보기"):"다음 문제")+'</nav></article>';
+ root.innerHTML='<article class="bank-solve">'+
+  quizNavigation({count:queue.length?(queueIndex+1)+" / "+queue.length:(bank.findIndex(item=>item.id===q.id)+1)+" / "+bank.length,
+    listAction:"back",jumpAction:"answer-jump"})+
+  quizHeading({title:solveHeading(q),titleId:"solve-title",
+    badges:[compactLabels[q.sourceType]||q.sourceType,q.language,q.difficulty],
+    actions:[
+      {label:"문제 공유",action:"share-problem",ariaLabel:"현재 문제 카드 공유"},
+      {label:"링크 복사",action:"copy-problem-link",ariaLabel:"현재 문제 링크 복사"},
+      {label:"오류 신고",href:learningReportUrl("practical",q,solveHeading(q)),ariaLabel:"현재 실기문제 오류 신고"}
+    ]})+
+  '<p id="share-status" class="share-status" role="status" aria-live="polite"></p><p class="solve-question">'+formatQuestion(q.question)+'</p>'+tablesHTML(q)+(q.code?'<div class="code-scroll'+(q.language==="SQL"?' code-scroll--sql':'')+(codeNeedsFocus(q)?' code-scroll--complex':'')+'" tabindex="0" role="region" aria-label="'+esc(q.language)+' 문제 코드'+(q.language==="SQL"?'':' · 좌우 스크롤 가능')+'" data-scroll-hint="code-scroll-hint"><pre><code>'+highlightCode(shownCode)+'</code></pre></div><p id="code-scroll-hint" class="scroll-hint code-scroll-hint" hidden aria-hidden="true">← 좌우로 밀어 코드 보기 →</p>'+codeToolsHTML(q,shownCode):'')+(q.inputData?'<h3>입력 데이터</h3><pre class="input-data">'+esc(q.inputData)+'</pre>':'')+'<form id="answer-form" class="quiz-answer"><label for="my-answer">내가 생각한 정답</label>'+input+'<p class="hint" id="answer-hint">'+(q.grading==="self"?'SQL은 예시답과 직접 비교해 판정합니다.':'출력의 대소문자와 줄바꿈을 확인하세요.')+'</p></form><details id="solve-hint"><summary>힌트 보기</summary><p>'+esc(q.hint||"실행 흐름을 단계별로 추적해 보세요.")+'</p></details><button id="submit-answer" class="study-open" form="answer-form">정답·해설 보기</button><div id="answer-result"></div><nav class="study-nav">'+button("previous","이전 문제",queueIndex<=0?'disabled':'')+button("next",queue.length&&queueIndex===queue.length-1?(queueKind==="bank"?"목록으로":"세트 결과 보기"):"다음 문제")+'</nav></article>';
  const choices=queue.length?queue:sorted(basicPool());
  const sidebar=document.createElement("aside");
  sidebar.className="study-side-list";
@@ -272,14 +283,19 @@ function revealAnswer(){
  const traceItems=solutionTrace(q);
  const traceTitle=String(q.solution?.traceTitle||"실행 순서와 값 변화");
  const traceBlock=traceItems.length?'<section class="beginner-section beginner-trace"><p class="beginner-kicker">1 · '+esc(traceTitle)+'</p><p class="line-guide">앞 단계에서 나온 값을 다음 단계의 현재 값으로 이어서 확인합니다.</p><ol class="bank-steps trace-steps">'+traceItems.map(item=>'<li>'+esc(item)+'</li>').join("")+'</ol></section>':'';
- const sourceDetails=q.history.length||q.sources.length?'<details class="bank-sources"><summary>출제 이력 · 출처</summary>'+(q.history.length?'<ul>'+q.history.map(h=>'<li>'+esc(historyLabel(h))+'</li>').join("")+'</ul>':'')+(q.sources.length?'<ul>'+q.sources.map(s=>'<li><a href="'+esc(s.url)+'" target="_blank" rel="noopener noreferrer">'+esc(s.name==="데이터셋 참고 출처 (문항·회차 일치 미검증)"?"학습 자료":s.name)+' ↗<span class="sr-only"> 외부 자료, 새 창</span></a></li>').join("")+'</ul>':'')+'</details>':'';
+ const sourceDetails=q.history.length||q.sources.length?'<details class="bank-sources quiz-disclosure"><summary>복원정보 / 원문 출처</summary><div class="quiz-disclosure-body">'+(q.history.length?'<ul>'+q.history.map(h=>'<li>'+esc(historyLabel(h))+'</li>').join("")+'</ul>':'')+(q.sources.length?'<ul>'+q.sources.map(s=>'<li><a href="'+esc(s.url)+'" target="_blank" rel="noopener noreferrer">'+esc(s.name==="데이터셋 참고 출처 (문항·회차 일치 미검증)"?"학습 자료":s.name)+' ↗<span class="sr-only"> 외부 자료, 새 창</span></a></li>').join("")+'</ul>':'')+'</div></details>':'';
  const whyNo=traceItems.length?2:1,memoryNo=whyNo+1;
- const learningGuide='<div class="beginner-flow" aria-label="기초부터 보는 문제 풀이">'
-   +traceBlock
-   +'<section class="beginner-section beginner-why"><p class="beginner-kicker">'+whyNo+' · 왜 이 답인가?</p><p class="beginner-explanation">'+esc(extraExplanation)+'</p></section>'
-   +'<section class="beginner-section beginner-memory"><p class="beginner-kicker">'+memoryNo+' · 시험에서 꼭 기억할 것</p><p>'+esc(examMemory(q))+'</p></section>'
-   +'</div>';
- $("#answer-result").innerHTML='<section class="bank-result"><h3 tabindex="-1" id="result-heading">정답·해설</h3><div class="answer-pair"><div><h4>내 답</h4><pre>'+esc(attempt.answer||"미입력")+'</pre></div><div><h4>'+(q.grading==="self"?"예시 답안":"정답")+'</h4><pre>'+esc(displayAnswer(q))+'</pre></div></div>'+learningGuide+sourceDetails+reviewControls()+button("retry","다시 풀기")+'</section>';
+ const conceptBlock='<section class="beginner-section beginner-memory"><p class="beginner-kicker">'+memoryNo+' · 시험에서 꼭 기억할 것</p><p>'+esc(examMemory(q))+'</p></section>';
+ const learningGuide='<div class="beginner-flow" aria-label="기초부터 보는 문제 풀이">'+traceBlock+
+   '<section class="beginner-section beginner-why"><p class="beginner-kicker">'+whyNo+' · 왜 이 답인가?</p><p class="beginner-explanation">'+esc(extraExplanation)+'</p></section></div>';
+ $("#answer-result").innerHTML='<section class="bank-result quiz-results">'+
+   '<h3 tabindex="-1" id="result-heading">정답·해설</h3>'+
+   quizFeedback({label:"정답·해설 공개",details:"예시 답안과 비교한 후 내 풀이 결과를 선택하세요."})+
+   '<div class="answer-pair"><div><h4>내 답</h4><pre>'+esc(attempt.answer||"미입력")+
+   '</pre></div><div><h4>'+(q.grading==="self"?"예시 답안":"정답")+'</h4><pre>'+esc(displayAnswer(q))+'</pre></div></div>'+
+   quizDisclosure("해설",learningGuide,{open:true})+
+   quizDisclosure("관련 개념",conceptBlock)+sourceDetails+
+   reviewControls()+button("retry","다시 풀기")+'</section>';
  const item=attempt;
  bindReview(root.querySelector(".study-review"),{bank:"practical",questionId:q.id,clientAttemptId:item.id,answerText:item.answer,
    elapsedSeconds:Math.round((Date.now()-item.startedAt)/1000),usedHint:item.usedHint},
