@@ -3,6 +3,15 @@
 운영 도메인: https://portal.k-bigdata.kr/  
 Supabase 프로젝트: \`k-bigdata-portal\` (\`zjsindkakjfzmjgrkaou\`)
 
+## 단계적 적용 (현재 파일럿)
+
+기존 포털을 바로 잠그지 않기 위해 계정 기능은 **테스트 브라우저에서만 먼저 활성화**합니다.
+
+- 등록·로그인 테스트: https://portal.k-bigdata.kr/?portal-auth-preview=1
+- 해당 브라우저에서 테스트 해제: https://portal.k-bigdata.kr/?portal-auth-preview=0
+- 이 브라우저에서는 파일럿 ON 상태를 localStorage에 저장하므로 포털 다른 페이지에서도 인증 화면을 볼 수 있습니다.
+- 이메일 인증, 교수 계정 최초 승인, 학생 가입 승인까지 검증 후 모든 학생에게 필수 로그인 적용을 별도로 진행합니다.
+
 ## 준비 상태
 
 - Resend 발송 도메인: \`noreply.k-bigdata.kr\` (Verified)
