@@ -86,7 +86,9 @@ export function formatSqlForDisplay(sql){
   return "\uE000"+(protectedParts.length-1)+"\uE001";
  });
  const clauses=/\b(?:RIGHT(?:\s+OUTER)?\s+JOIN|LEFT(?:\s+OUTER)?\s+JOIN|FULL(?:\s+OUTER)?\s+JOIN|INNER\s+JOIN|CROSS\s+JOIN|GROUP\s+BY|ORDER\s+BY|UNION(?:\s+ALL)?|JOIN|FROM|WHERE|HAVING|ON|SET|VALUES|LIMIT|OFFSET)\b/gi;
- const withSubqueries=hidden.replace(/\(\s*(?=(?:SELECT|WITH)\b)/gi,"(\n");
+ const withSubqueries=hidden
+  .replace(/(?<![<>!=])\s*=\s*(?![=])/g," = ")
+  .replace(/\(\s*(?=(?:SELECT|WITH)\b)/gi,"(\n");
  const separated=withSubqueries
   .replace(clauses,(keyword,offset,whole)=>{
    const previous=whole.slice(0,offset);
