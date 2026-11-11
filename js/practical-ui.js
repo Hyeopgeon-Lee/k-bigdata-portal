@@ -1,7 +1,7 @@
 import {createQuestionBrowser} from "./question-browser.js";
 import {bindReview,reviewControls,gradeLabels} from "./study-review.js";
 import {loadPracticalBank} from "./practical-data.js?v=20261006-audit-2";
-import {examLabels,typeLabels,languages,escapeHTML as esc,questionText,shuffle,recommendFive,matchesExam,localDay,summarizeAttempts,highlightCode,formatCodeForDisplay} from "./practical-core.js?v=20261112-syntax-1";
+import {examLabels,typeLabels,languages,escapeHTML as esc,questionText,shuffle,recommendFive,matchesExam,localDay,summarizeAttempts,highlightCode,formatCodeForDisplay,canResumeUnfinishedAttempt} from "./practical-core.js?v=20261112-practical-resume-1";
 import {getAttempts,saveAttempt,getSession,saveSession,clearLocalLearning,storageAvailable,getPreferences,savePreferences,exportLearning,importLearning} from "./practical-store.js";
 import {matches} from "./search-core.js?v=20261005-perf-1";
 import {beginnerExplanation,examMemory,solutionTrace} from "./practical-explanation.js?v=20261006-audit-2";
@@ -236,7 +236,7 @@ function openQuestion(id,fresh=false){
  const q=bank.find(q=>q.id===id);if(!q)return;
  const previous=getSession(id),now=Date.now();current=q;
  // Wrong-note reattempts and explicit retries always start a fresh thinking period.
- if(!fresh&&previous&&Number.isFinite(previous.startedAt)&&previous.startedAt<=now&&(!previous.submittedAt||view!=="wrong"))attempt=previous;
+ if(!fresh&&view!=="wrong"&&canResumeUnfinishedAttempt(previous,now))attempt=previous;
  else attempt={id:globalThis.crypto?.randomUUID?.()||id+"-"+now,questionId:id,startedAt:now,submittedAt:null,answer:"",correct:null,viewedExplanation:false,hintShownAt:null,usedHint:false,autoRevealed:false,revealReason:null,retryCount:getAttempts().filter(a=>a.questionId===id).length};
  saveSession(id,attempt);savePreferences({lastQuestionId:id,learningQueue:queue.length?{ids:queue.map(q=>q.id),index:queueIndex,kind:queueKind}:null});setUrl(id);render();$("#solve-title").focus({preventScroll:true});window.scrollTo({top:0,behavior:"auto"});
 }
