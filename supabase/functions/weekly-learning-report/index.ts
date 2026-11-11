@@ -163,7 +163,7 @@ Deno.serve(async(req:Request)=>{
   const priorStart=new Date(Date.parse(period.start)-7*86400000).toISOString();
   const [attempts,profiles,admins]=await Promise.all([
    allAttempts(priorStart,period.end),
-   db.from("profiles").select("user_id,email,full_name,approval_status,enrollment_status").eq("approval_status","approved"),
+   db.from("profiles").select("user_id,email,full_name,approval_status,enrollment_status,signup_type").eq("approval_status","approved"),
    db.from("account_roles").select("user_id").eq("role","super_admin")
   ]);
   if(profiles.error||admins.error)throw Error("Recipient lookup failed");
@@ -173,7 +173,7 @@ Deno.serve(async(req:Request)=>{
    const verified=await db.auth.admin.getUserById(adminId);
    if(verified.error||verified.data.user?.email?.toLowerCase()!==adminMail||!verified.data.user?.email_confirmed_at)throw Error("Unverified super admin");
   }
-  const students=(profiles.data||[]).filter(p=>p.enrollment_status==="enrolled"&&p.email?.toLowerCase()!==adminMail&&p.user_id!==adminId);
+  const students=(profiles.data||[]).filter(p=>p.enrollment_status==="enrolled"&&p.signup_type!=="alumni"&&p.email?.toLowerCase()!==adminMail&&p.user_id!==adminId);
   const studentSet=new Set(students.map(s=>s.user_id));
   const cohort=attempts.filter(x=>studentSet.has(x.user_id)&&x.submitted_at>=period.start);
   if(dryRun)return response({ok:true,dry_run:true,oidc:event,weekStart:period.date,controls,
