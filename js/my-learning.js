@@ -62,12 +62,12 @@ async function load(){
  const pending=week.filter(a=>a.result==='ungraded'||a.result==='timeout');
  const latest=new Map(),everWrong=new Set();
  for(const a of [...attempts].reverse()){
-  if(!['correct','incorrect'].includes(a.result))continue;
+  if(!['correct','incorrect'].includes(a.result)&&!(a.result==='ungraded'&&a.grading_method==='self'))continue;
   latest.set(a.bank+':'+a.question_id,a);
   if(a.result==='incorrect')everWrong.add(a.bank+':'+a.question_id);
  }
  const review=progress.filter(p=>{
-  const k=p.bank+':'+p.question_id;return everWrong.has(k)&&latest.get(k)?.result!=='correct';
+  const k=p.bank+':'+p.question_id;return ['incorrect','ungraded'].includes(latest.get(k)?.result);
  });
  const recovered=progress.filter(p=>{
   const k=p.bank+':'+p.question_id;return everWrong.has(k)&&latest.get(k)?.result==='correct';
@@ -95,7 +95,7 @@ async function load(){
   (()=>{const node=element('div',null,'learn-rate');node.append(element('span','브라우저 답안 비교 (학습용)'),element('strong',rate(auto)),element('small','정답 '+auto.filter(a=>a.result==='correct').length+' / '+auto.length+'건 · 서버 검증 시험 아님'));return node;})()
  );
  const reviewRoot=get('learn-review');reviewRoot.replaceChildren();
- if(!review.length)reviewRoot.append(element('p','현재 복습 대기 오답이 없습니다.','learn-empty'));
+ if(!review.length)reviewRoot.append(element('p','현재 복습할 오답·판단 보류 문제가 없습니다.','learn-empty'));
  else for(const p of review.sort((a,b)=>b.incorrect_count-a.incorrect_count).slice(0,45)){
   const card=element('article',null,'learn-review-card');
   const section=element('div');section.append(element('strong',subjectName[subject(p)]+' · '+p.question_id),element('small','틀린 횟수 '+p.incorrect_count+'회 / 누적 '+p.attempts_count+'시도'));
@@ -115,7 +115,7 @@ async function load(){
    }
    const td=element('td');const anchor=element('a',a.question_id);anchor.href=link(a);td.append(anchor);row.append(td);
    row.append(element('td',a.grading_method==='self'?'자가평가':a.grading_method==='automatic'?'브라우저 비교':'진도 기록'));
-   row.append(element('td',grade[a.result]||'미판정'));body.append(row);
+   row.append(element('td',a.result==='ungraded'&&a.grading_method==='self'?'판단 보류':grade[a.result]||'미판정'));body.append(row);
   }
   table.append(body);recent.append(table);
  }

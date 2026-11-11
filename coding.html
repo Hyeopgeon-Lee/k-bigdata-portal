@@ -28,7 +28,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <link rel="stylesheet" href="css/portal-navigation.css?v=20261111-account-sync-1">
 <script defer src="js/portal-navigation.js?v=20261111-account-sync-1"></script>
 <!-- portal:assets:end -->
-</head>
+<link rel="stylesheet" href="css/study-review.css"></head>
 <body data-page="coding"><p id="learning-notice" role="status">학습 권한을 확인하고 있습니다. <a href="/">포털 메인</a></p>
   <a class="skip-link" href="#main-content">본문으로 바로가기</a>
   <!-- portal:header:start (generated; edit scripts/portal-shell-template.mjs) -->
@@ -95,7 +95,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
       </div>
       <div class="coding-workspace">
         <aside class="coding-panel coding-list-panel" aria-label="문제 목록">
-          <div class="coding-panel-heading"><h2>문제 목록</h2><span id="coding-list-count" class="coding-count"></span></div>
+          <div class="coding-panel-heading"><h2 id="coding-list-anchor" tabindex="-1">문제 목록</h2><span id="coding-list-count" class="coding-count"></span></div>
           <ul class="coding-question-list" id="coding-questions"></ul>
           <div class="coding-pagination" role="group" aria-label="문제 목록 페이지 이동">
             <button id="coding-page-prev" type="button" aria-label="이전 문제 목록">← 이전</button>
@@ -103,15 +103,15 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
             <button id="coding-page-next" type="button" aria-label="다음 문제 목록">다음 →</button>
           </div>
         </aside>
-        <article class="coding-panel coding-detail" aria-label="선택한 문제">
+        <article class="coding-panel coding-detail" aria-label="선택한 문제"><a class="study-list-link" href="#coding-list-anchor">문제 목록</a>
           <div class="coding-tagrow"><span id="coding-id" class="coding-chip">JAVA-001</span><span id="coding-level" class="coding-chip coding-chip--muted">입문</span><span id="coding-topic" class="coding-chip coding-chip--muted">출력</span></div>
           <h2 id="coding-title" tabindex="-1">문제를 불러오고 있습니다.</h2>
-          <div class="coding-share-actions" role="group" aria-label="현재 문제 공유 및 오류 신고">
+          <details><summary>더보기</summary><div class="coding-share-actions" role="group" aria-label="현재 문제 공유 및 오류 신고">
             <button id="coding-share-button" class="button button-secondary" type="button" aria-label="현재 문제 공유">문제 공유</button>
             <button id="coding-link-button" class="button button-secondary" type="button" aria-label="현재 문제 링크 복사">링크 복사</button>
             <a id="coding-report-button" class="button button-secondary" href="help.html" aria-label="현재 문제 오류 신고">오류 신고</a>
           </div>
-          <p id="coding-share-status" class="coding-share-status" role="status" aria-live="polite"></p>
+          </details><p id="coding-share-status" class="coding-share-status" role="status" aria-live="polite"></p>
           <p id="coding-statement" class="coding-desc">JavaScript가 활성화되면 문제 내용이 표시됩니다.</p>
           <div class="coding-io" aria-label="입출력 예제">
             <div><b id="coding-input-label">입력 예제</b><pre id="coding-input">—</pre></div>
@@ -135,7 +135,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
             <div id="coding-editor-tools" class="coding-editor-tools" role="toolbar" aria-label="코드 입력 도구" hidden></div>
             <div id="coding-editor-host" class="coding-editor-host" hidden></div>
             <textarea id="coding-editor" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="여기에 스스로 정답을 작성해 보세요."></textarea>
-            <p class="coding-notice">답안은 이 브라우저에 저장됩니다. 실행·자동 채점 기능은 없습니다.</p>
+            <p class="coding-notice">직접 작성한 답을 정답·해설과 비교한 뒤 내 풀이 결과를 선택하세요.</p>
             <div class="coding-actions coding-actions--help">
               <button id="coding-hint-button" class="coding-btn" type="button" aria-expanded="false" aria-controls="coding-hint">힌트 보기</button>
               <button id="coding-answer-button" class="coding-btn coding-btn-primary" type="button" aria-expanded="false" aria-controls="coding-answer">정답과 줄별 주석</button>
@@ -148,17 +148,6 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
               <div class="coding-code"><pre><code id="coding-code" aria-label="주석 포함 정답 코드"></code></pre></div>
               <div class="coding-actions"><button class="coding-btn" id="coding-copy" type="button">주석 없는 코드 복사</button></div>
               <p class="coding-copy-tip" id="coding-copy-tip">복사한 코드를 실습 환경에 붙여 넣고 직접 주석을 달아 보세요.</p>
-              <section id="coding-self-review" class="coding-self-review" aria-label="자가 학습 결과 기록">
-                <h3>내 풀이 결과 기록하기</h3>
-                <p>정답과 해설을 비교한 뒤 직접 선택하세요. 자동 채점이 아닌 자기평가이며, 틀린 문제는 나중에 복습할 수 있습니다.</p>
-                <div class="coding-self-choices" role="group" aria-label="정답 여부 자기평가">
-                  <button type="button" class="coding-btn" data-learning-grade="correct">정답이에요</button>
-                  <button type="button" class="coding-btn" data-learning-grade="incorrect">틀렸어요</button>
-                  <button type="button" class="coding-btn" data-learning-grade="ungraded">아직 판단하지 못했어요</button>
-                </div>
-                <p id="coding-self-status" role="status" aria-live="polite"></p>
-                <a href="my-learning.html" class="coding-review-link">내 학습현황 및 오답 복습 보기</a>
-              </section>
               <section id="coding-overall-explanation" class="coding-section" aria-label="풀이 방법"><h3>전체 해설</h3><p id="coding-explanation"></p><ol id="coding-vim-explanation-list" class="coding-vim-instruction-list" aria-label="Vim 조작 단계" hidden></ol></section>
               <section id="coding-ubuntu-guide" class="coding-ubuntu-guide" aria-label="Ubuntu 명령어 해설" hidden>
                 <section id="coding-ubuntu-concept" class="coding-ubuntu-card" aria-label="핵심 개념">
@@ -196,8 +185,8 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
               <h3>실행 단계와 값 변화</h3>
               <div class="coding-scroll"><table class="coding-trace"><thead><tr><th scope="col">단계</th><th scope="col">대상</th><th scope="col">연산·상태 변화</th><th scope="col">결과</th></tr></thead><tbody id="coding-trace-rows"></tbody></table></div>
             </div>
-            <div class="coding-actions coding-actions--progress">
-              <button id="coding-done-button" class="coding-btn" type="button" aria-pressed="false">학습 완료 표시</button>
+            <div id="coding-review-slot" hidden></div><div class="study-nav">
+              <button id="coding-prev-button" class="coding-btn" type="button">이전 문제</button>
               <button id="coding-next-button" class="coding-btn" type="button">다음 문제 →</button>
             </div>
             <p id="coding-feedback" class="coding-feedback" role="status" aria-live="polite"></p>
@@ -221,7 +210,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
     }
   }
   </script>
-  <script type="application/x-learning" data-module="js/coding.js?v=20261111-student-review-1"></script>
+  <script type="application/x-learning" data-module="js/coding.js?v=20261111-study-layout"></script>
   <script type="application/x-learning" data-module="js/portal-shell-entry.js?v=20261111-account-sync-1"></script>
 </body>
 </html>

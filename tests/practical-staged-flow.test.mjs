@@ -41,22 +41,10 @@ const ui=read('js/practical-ui.js');
 const css=read('css/practical.css');
 const html=read('practical.html');
 
-assert.ok(ui.includes('답 제출하고 풀이 보기'));
-assert.ok(ui.includes('hintAvailable(attempt,now)'));
-assert.ok(ui.includes('answerDeadlineReached(attempt,now)'));
-assert.ok(ui.includes('autoRevealAnswer(now)'));
-assert.ok(ui.includes('revealAnswer("submitted",now)'));
-assert.ok(ui.includes('revealAnswer("timeout",now)'));
-assert.ok(ui.includes('correct:null'));
-assert.ok(ui.includes('autoRevealed:true'));
-assert.ok(ui.includes('usedHint:true'));
-assert.ok(!ui.includes('풀이·정답 확인</button>'),'manual delayed-reveal button must be removed');
-
-const formEnd=ui.indexOf('</form><aside id="solve-hint"');
-assert.ok(formEnd>=0,'hint panel should be after the answer form to avoid moving the active input');
-assert.ok(css.includes('.solve-hint[hidden]{display:none !important}'));
-assert.ok(css.includes('@media(max-width:767px)'));
-assert.ok(css.includes('.bank-timer.hint-stage'));
+assert.ok(ui.includes('정답·해설 보기'));
+assert.ok(ui.includes('id="solve-hint"'));
+assert.ok(ui.includes('bindReview('));
+assert.doesNotMatch(ui,/setInterval\(updateGate|autoRevealAnswer|answerDeadlineReached\(/);
 assert.match(html,/css\/practical\.css\?v=[\w-]+/);
 assert.match(html,/js\/practical-ui\.js\?v=[\w-]+/);
 

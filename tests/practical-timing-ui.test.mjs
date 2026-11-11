@@ -30,18 +30,10 @@ assert.equal(canSubmit(late,'late answer',startedAt+90_000),true);
 assert.equal(canSubmit({...late,lateSubmittedAt:startedAt+90_000},'another',startedAt+95_000),false);
 
 const ui=readText('js/practical-ui.js');
-assert.ok(ui.includes('답 제출하고 풀이 보기'));
+assert.ok(ui.includes('정답·해설 보기'));
 assert.ok(ui.includes('id="solve-hint"'));
-assert.ok(ui.includes('hintAvailable(attempt,now)'));
-assert.ok(ui.includes('answerDeadlineReached(attempt,now)'));
-assert.ok(ui.includes('function autoRevealAnswer'));
-assert.ok(ui.includes('revealAnswer("submitted",now)'));
-assert.ok(ui.includes('revealAnswer("timeout",now)'));
-assert.ok(ui.includes('usedHint:true'));
-assert.ok(ui.includes('autoRevealed:true'));
-assert.ok(!ui.includes('id="reveal-answer"'));
-assert.ok(!ui.includes('60초 이후 풀이·정답을 확인하세요'));
-
+assert.ok(ui.includes('bindReview('));
+assert.doesNotMatch(ui,/setInterval\(updateGate|autoRevealAnswer|answerDeadlineReached\(/);
 const css=readText('css/practical.css');
 assert.ok(css.includes('.solve-hint'));
 assert.ok(css.includes('.bank-timer.hint-stage'));

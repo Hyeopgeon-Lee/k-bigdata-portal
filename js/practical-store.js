@@ -1,5 +1,5 @@
 import {learningLocal as localStorage, learningSession as sessionStorage} from "./learning-storage.mjs";
-import {recordLearningAttempt} from "./learning-activity.mjs";
+
 // Replace this adapter to integrate an approved backend later. Nothing is transmitted.
 const key="kbigdata-practical-v1", sessionKey="kbigdata-practical-attempt-v1", preferencesKey="kbigdata-practical-preferences-v1";
 let memory=[],sessions={},preferences={};
@@ -11,17 +11,6 @@ export function saveAttempt(item){
  const items=getAttempts(),index=items.findIndex(a=>a.id===item.id);
  if(index<0)items.push(item);else items[index]=item;
  writeAttempts(items);
- // The initial SQL submission is ungraded until the student compares the answer.
- // Record only a finalized assessment, or a timeout, with a stable attempt id.
- if(!item.viewedExplanation || (item.correct===null&&!item.autoRevealed))return;
- const result=item.correct===true?"correct":item.correct===false?"incorrect":item.autoRevealed?"timeout":"ungraded";
- const gradingMethod=result==="timeout"?"none":item.selfGraded?"self":result==="ungraded"?"none":"automatic";
- void recordLearningAttempt({
-  bank:"practical",questionId:item.questionId,result,gradingMethod,
-  answerText:item.answer,elapsedSeconds:item.elapsedSeconds,usedHint:item.usedHint,
-  clientAttemptId:String(item.id),metadata:{assessment:gradingMethod==="self"?"student_self_review":"browser_learning_comparison",
-   timed_out:!!item.autoRevealed,verified_server_grade:false}
- }).catch(()=>{});
 }
 export function getSession(id){const data=read("localStorage",sessionKey,null)||read("sessionStorage",sessionKey,sessions);sessions=data&&typeof data==="object"&&!Array.isArray(data)?data:{};return sessions[id];}
 export function saveSession(id,item){getSession(id);sessions[id]=item;try{localStorage.setItem(sessionKey,JSON.stringify(sessions));sessionStorage.setItem(sessionKey,JSON.stringify(sessions));}catch{storageAvailable=false;}}

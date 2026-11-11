@@ -1,5 +1,6 @@
+import {bindReview,reviewControls,gradeLabels} from "./study-review.js";
 import {learningLocal as localStorage, learningSession as sessionStorage} from "./learning-storage.mjs";
-import {recordLearningAttempt,debounceCloudDraft,fetchCloudDraft} from "./learning-activity.mjs";
+import {debounceCloudDraft,fetchCloudDraft} from "./learning-activity.mjs";
 import {codingProblems as sampleProblems} from "../data/coding-samples.js?v=20261111-ubuntu-vim-only-2";
 import {javaProblems} from "../data/coding-java-98.js?v=20261111-java016-korean-units-1";
 import {cFoundationProblems} from "../data/coding-c-foundations.js?v=20261111-essential-ranges-1";
@@ -211,7 +212,7 @@ function listQuestions(syncPage=false) {
     const title=document.createElement("strong");
     title.textContent=q.title;
     const subtitle=document.createElement("small");
-    subtitle.textContent=q.id+" · "+q.level+(doneIds.has(q.id)?" · 완료 ✓":"");
+    subtitle.textContent=q.id+" · "+q.level+(gradeLabels[getSafe("coding-review-"+q.id)]?" · "+gradeLabels[getSafe("coding-review-"+q.id)]:(doneIds.has(q.id)?" · 완료 기록":""));
     if(doneIds.has(q.id))subtitle.className="coding-done";
     link.append(title,subtitle);
     link.addEventListener("click",event=>{
@@ -420,7 +421,10 @@ function renderConsoleText(pre, transcript, isUbuntu) {
   });
 }
 
+let codingAttemptId;
 function showQuestion(q) {
+  codingAttemptId=getSafe("coding-attempt-"+q.id)||crypto.randomUUID();
+  setSafe("coding-attempt-"+q.id,codingAttemptId);
   if (!q) return;
   current = q;
   language = q.language;
@@ -440,8 +444,6 @@ function showQuestion(q) {
   ubuntuOutputNote.hidden = !ubuntuOutputNote.textContent;
   renderExtraExamples(q);
   $("#coding-editor").value = getSafe(DRAFT_PREFIX + q.id);
-  $("#coding-self-status").textContent = "풀이를 마친 뒤 정답 여부를 직접 기록해 주세요.";
-  for(const button of document.querySelectorAll("[data-learning-grade]"))button.setAttribute("aria-pressed","false");
   if(!$("#coding-editor").value){
     const questionId=q.id;
     void fetchCloudDraft("coding",questionId).then(text=>{
@@ -482,9 +484,11 @@ function showQuestion(q) {
   resetReveal("#coding-trace","#coding-trace-button");
   $("#coding-feedback").textContent = "";
   $("#coding-share-status").textContent = "";
-  const done = doneIds.has(q.id);
-  $("#coding-done-button").setAttribute("aria-pressed",String(done));
-  $("#coding-done-button").textContent = done ? "완료 표시 취소" : "학습 완료 표시";
+  const items=matching(), index=items.findIndex(item=>item.id===q.id);
+  $("#coding-answer-button").textContent="정답·해설 보기";
+  $("#coding-prev-button").disabled=index<=0;
+  $("#coding-next-button").textContent=index===items.length-1?"목록으로":"다음 문제";
+  $("#coding-review-slot").hidden=true;
   updateSummary();
   listQuestions(true);
 }
@@ -555,70 +559,38 @@ async function copyCurrentProblemLink() {
 $("#coding-share-button").addEventListener("click", () => { void shareCurrentProblem(); });
 $("#coding-link-button").addEventListener("click", () => { void copyCurrentProblemLink(); });
 $("#coding-hint-button").addEventListener("click", () => reveal("#coding-hint","#coding-hint-button"));
-$("#coding-answer-button").addEventListener("click", () => reveal("#coding-answer","#coding-answer-button"));
+$("#coding-answer-button").addEventListener("click", () => {
+  reveal("#coding-answer","#coding-answer-button");
+  const slot=$("#coding-review-slot"),q=current;
+  slot.hidden=$("#coding-answer").hidden;
+  if(slot.hidden)return;
+  slot.innerHTML=reviewControls();
+  const key="coding-review-"+q.id;
+  bindReview(slot,{bank:"coding",questionId:q.id,clientAttemptId:codingAttemptId,
+    answerText:$("#coding-editor").value,usedHint:!$("#coding-hint").hidden,metadata:{language:q.language}},
+    getSafe(key),result=>{
+      setSafe(key,result);doneIds.add(q.id);setSafe(DONE_KEY,JSON.stringify([...doneIds]));
+      if(current.id===q.id){updateSummary();listQuestions(true);}
+    });
+  if(getSafe(key)){
+    const retry=document.createElement("button");retry.textContent="다시 풀기";
+    retry.onclick=()=>{setSafe(key,"");setSafe("coding-attempt-"+q.id,"");showQuestion(q);};slot.append(retry);
+  }
+});
 $("#coding-trace-button").addEventListener("click", () => reveal("#coding-trace","#coding-trace-button"));
 $("#coding-editor").addEventListener("input", event => {
   setSafe(DRAFT_PREFIX + current.id, event.target.value);
   debounceCloudDraft("coding",current.id,event.target.value);
 });
-document.querySelectorAll("[data-learning-grade]").forEach(button=>button.addEventListener("click",async()=>{
-  const id=current.id,result=button.dataset.learningGrade;
-  const status=$("#coding-self-status");
-  for(const item of document.querySelectorAll("[data-learning-grade]"))item.disabled=true;
-  status.textContent="자가평가를 기록하는 중입니다...";
-  try{
-    const editorText=getSafe(DRAFT_PREFIX+id) || $("#coding-editor").value;
-    const response=await recordLearningAttempt({
-      bank:"coding",questionId:id,result,
-      gradingMethod:result==="ungraded"?"none":"self",
-      answerText:editorText,
-      usedHint:$("#coding-hint-button").getAttribute("aria-expanded")==="true",
-      metadata:{language:current.language,question_title:current.title.slice(0,100)}
-    });
-    if(current.id!==id)return;
-    for(const item of document.querySelectorAll("[data-learning-grade]"))item.setAttribute("aria-pressed",String(item===button));
-    if(response.state==="saved"||response.state==="pending"){
-      doneIds.add(id);
-      setSafe(DONE_KEY,JSON.stringify([...doneIds]));
-      $("#coding-done-button").setAttribute("aria-pressed","true");
-      $("#coding-done-button").textContent="완료 표시 취소";
-      updateSummary();listQuestions(true);
-    }
-    status.textContent=response.state==="saved"?"자가평가가 클라우드에 저장되었습니다. 재풀이하면 새 기록으로 누적됩니다.":
-      response.state==="pending"?"현재 기기에 보관했습니다. 네트워크 복구 후 다시 동기화합니다.":
-      "이 계정은 학습기록을 작성할 수 없습니다.";
-  }catch(error){
-    if(current.id===id)status.textContent="저장하지 못했습니다. 로그인 상태와 네트워크를 확인해 주세요.";
-  }finally{
-    if(current.id===id)for(const item of document.querySelectorAll("[data-learning-grade]"))item.disabled=false;
-  }
-}));
-$("#coding-done-button").addEventListener("click", () => {
-  if (doneIds.has(current.id)) {
-    doneIds.delete(current.id);
-    $("#coding-feedback").textContent = "완료 표시를 취소했습니다.";
-  } else {
-    doneIds.add(current.id);
-    $("#coding-feedback").textContent = "학습 완료로 표시했습니다. 정답 여부는 해설 아래의 자가평가 버튼에서 별도로 선택하세요.";
-  }
-  setSafe(DONE_KEY, JSON.stringify([...doneIds]));
-  if(doneIds.has(current.id)){
-    void recordLearningAttempt({bank:"coding",questionId:current.id,result:"completed",gradingMethod:"completion"}).catch(()=>{});
-  }
-  const done = doneIds.has(current.id);
-  $("#coding-done-button").setAttribute("aria-pressed",String(done));
-  $("#coding-done-button").textContent = done ? "완료 표시 취소" : "학습 완료 표시";
-  updateSummary();
-  listQuestions(true);
-});
-$("#coding-next-button").addEventListener("click", () => {
-  const items = matching();
-  if (!items.length) return;
-  const pos = items.findIndex(q => q.id === current.id);
-  const next = items[(pos + 1) % items.length];
+function moveCoding(offset) {
+  const items=matching(),index=items.findIndex(item=>item.id===current.id);
+  const next=items[index+offset];
+  if (!next) {$("#coding-list-anchor").focus();return;}
   showQuestion(next);
-  $("#coding-title").scrollIntoView({behavior:"smooth",block:"start"});
-});
+  $("#coding-title").scrollIntoView({block:"start"});
+}
+$("#coding-prev-button").addEventListener("click",()=>moveCoding(-1));
+$("#coding-next-button").addEventListener("click",()=>moveCoding(1));
 $("#coding-copy").addEventListener("click", async () => {
   const comment = current.language === "python" ? /\s+#.*$/ : /\s+\/\/.*$/;
   const plainCode = current.language === "linux" ? current.code : current.code.split("\n").map(line => line.replace(comment,"")).join("\n");

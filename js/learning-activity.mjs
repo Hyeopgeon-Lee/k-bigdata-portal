@@ -32,7 +32,6 @@ function validate(data){
  if(!VALID_BANKS.has(data.bank)||!VALID_RESULTS.has(data.result)||!VALID_METHODS.has(data.gradingMethod))throw new Error('INVALID_LEARNING_EVENT');
  if(!/^[A-Za-z0-9_-]{1,90}$/.test(String(data.questionId||'')))throw new Error('INVALID_QUESTION_ID');
  if(data.gradingMethod==='automatic'&&data.bank==='coding')throw new Error('INVALID_CODING_GRADE');
- if(data.gradingMethod==='self'&&data.bank==='ncp')throw new Error('INVALID_NCP_GRADE');
 }
 let syncing=null;
 export function flushLearningQueue(){

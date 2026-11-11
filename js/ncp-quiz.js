@@ -1,5 +1,6 @@
+import {bindReview,reviewControls,gradeLabels} from "./study-review.js";
 import {learningLocal as localStorage, learningSession as sessionStorage} from "./learning-storage.mjs";
-import {recordLearningAttempt} from "./learning-activity.mjs";
+const drafts=new Map();
 import {ncpQuestions} from "../data/ncp-questions.js?v=20261026-quizfocus-2";
 import {initPortalShell} from "./portal-shell.js?v=20261026-card-label-1";
 import {learningReportUrl} from "./learning-report.js?v=20261027-ncp-report-1";
@@ -25,11 +26,11 @@ const el={exam:byId("ncp-exam"),search:byId("ncp-search"),question:byId("ncp-que
 const cloudStatus=document.createElement("p");
 cloudStatus.id="ncp-cloud-status";cloudStatus.setAttribute("role","status");
 cloudStatus.setAttribute("aria-live","polite");cloudStatus.className="ncp-status";
-cloudStatus.textContent="풀이 결과가 로그인 계정의 학습이력에 저장됩니다.";
+cloudStatus.textContent="";
 el.summary.insertAdjacentElement("afterend",cloudStatus);
 const recordFor=id=>{
  const record=state.answers[id];
- return record&&letters.includes(record.choice)?record:null;
+ return record&&(record.grade||letters.includes(record.choice))?record:null;
 };
 function save(){try{localStorage.setItem(KEY,JSON.stringify(state.answers));}catch{}}
 function shuffle(array){
@@ -108,10 +109,10 @@ async function copyCurrentProblemLink(q){
 function renderNumbers(){
  el.list.innerHTML=state.list.map((q,i)=>{
   const record=recordFor(q.id);
-  const status=record?(record.choice===q.answer?"matched":"unmatched"):"";
-  const desc=record?(record.choice===q.answer?"학습용 정답 일치":"학습용 정답 불일치"):"미풀이";
+  const status=record?.grade?(record.grade==="correct"?"matched":record.grade==="incorrect"?"unmatched":""):(record?(record.choice===q.answer?"matched":"unmatched"):"");
+  const desc=gradeLabels[record?.grade] || (record?(record.choice===q.answer?"학습용 정답 일치":"학습용 정답 불일치"):"미평가");
   return '<button type="button" data-index="'+i+'" class="'+(i===state.index?"current ":"")+status+
-   '" aria-label="'+(i+1)+'번 · 공개 복원 원문 '+q.originalNumber+'번 · '+desc+'"'+(i===state.index?' aria-current="true"':'')+'>'+String(i+1)+'</button>';
+   '" aria-label="'+(i+1)+'번 · 공개 복원 원문 '+q.originalNumber+'번 · '+desc+'"'+(i===state.index?' aria-current="true"':'')+'>'+String(i+1)+(record?.grade?' · '+gradeLabels[record.grade]:'')+'</button>';
  }).join("");
 }
 function render(){
@@ -119,16 +120,20 @@ function render(){
  renderNumbers();
  const q=state.list[state.index];
  el.prev.disabled=!q||state.index<=0;
- el.next.disabled=!q||state.index>=state.list.length-1;
+ el.next.disabled=!q;
+ el.next.textContent=state.index===state.list.length-1?"목록으로":"다음 문제";
  if(!q){
   el.status.textContent="검색 결과 없음";
   el.question.innerHTML='<div class="ncp-empty"><h2>검색된 문제가 없습니다.</h2><p>시험을 바꾸거나 검색어를 수정하세요.</p></div>';
   return;
  }
  el.status.textContent=(state.index+1)+' / '+state.list.length+'번';
- const answered=recordFor(q.id);
+ let draft=drafts.get(q.id);
+ if(!draft){draft={id:crypto.randomUUID(),choice:"",open:false};drafts.set(q.id,draft);}
+ const prior=recordFor(q.id);
+ const answered=prior || (draft.open?draft:null);
  const options=q.options.map((option,i)=>{
-  const letter=letters[i],selected=answered?.choice===letter,matched=!!answered&&letter===q.answer;
+  const letter=letters[i],selected=(answered||draft).choice===letter,matched=!!answered&&letter===q.answer;
   const cls=(selected?" is-selected":"")+(matched?" is-answer":"")+(answered&&selected&&!matched?" is-mismatch":"");
   return '<button type="button" class="ncp-choice'+cls+'" data-choice="'+letter+'" aria-pressed="'+Boolean(selected)+
    '"'+(answered?' disabled':'')+'><span class="ncp-choice-index" aria-hidden="true">'+numerals[i]+'</span><span>'+esc(option)+'</span></button>';
@@ -138,16 +143,20 @@ function render(){
   '<div><strong>공개 복원자료 원문 '+esc(q.originalNumber)+'번</strong><p>아래 문제와 선택지는 학습용으로 재서술되어 원문과 다를 수 있습니다.</p></div>'+
   '<a href="'+esc(sourceURL)+'" target="_blank" rel="noopener noreferrer" aria-label="'+esc(q.exam)+' 공개 복원자료 원문 '+esc(q.originalNumber)+'번 새 창에서 확인">문제·선택지 원문 확인 ↗</a></section>';
  const result=answered?
-  '<section class="ncp-answer" tabindex="-1" aria-label="학습용 정답 확인"><div class="ncp-answer-head"><strong>학습용 정답 '+numerals[letters.indexOf(q.answer)]+'</strong><span class="'+(answered.choice===q.answer?"ncp-answer-match":"ncp-answer-diff")+'">'+(answered.choice===q.answer?"일치":"불일치")+'</span></div><p>'+esc(q.explanation)+'</p><button type="button" class="ncp-retry" data-retry>이 문제 다시 풀기</button></section>':"";
+  '<section class="ncp-answer" tabindex="-1" aria-label="학습용 정답 확인"><div class="ncp-answer-head"><strong>학습용 정답 '+numerals[letters.indexOf(q.answer)]+'</strong><span class="'+(answered.choice===q.answer?"ncp-answer-match":"ncp-answer-diff")+'">'+(!answered.choice?"미입력":answered.choice===q.answer?"일치":"불일치")+'</span></div><p>'+esc(q.explanation)+'</p><button type="button" class="ncp-retry" data-retry>이 문제 다시 풀기</button></section>':"";
  el.question.innerHTML='<div class="ncp-question-meta"><span>'+esc(q.exam)+'</span><span>'+esc(q.topic)+'</span></div>'+
+  '<a class="study-list-link" href="#ncp-list">문제 목록</a>'+
   originalReference+
   '<h2 tabindex="-1">'+esc(q.question)+'</h2>'+
-  '<div class="ncp-share-row" role="group" aria-label="현재 문제 공유 및 오류 신고">'+
+  '<details><summary>더보기</summary><div class="ncp-share-row" role="group" aria-label="현재 문제 공유 및 오류 신고">'+
   '<button type="button" data-action="share-problem" aria-label="현재 NCP 문제 공유">문제 공유</button>'+
   '<button type="button" data-action="copy-problem-link" aria-label="현재 NCP 문제 링크 복사">링크 복사</button>'+
-  '<a href="'+esc(learningReportUrl("ncp",q,q.exam+" · 원문 "+q.originalNumber+"번"))+'" aria-label="현재 NCP 문제 오류 신고">오류 신고</a></div>'+
+  '<a href="'+esc(learningReportUrl("ncp",q,q.exam+" · 원문 "+q.originalNumber+"번"))+'" aria-label="현재 NCP 문제 오류 신고">오류 신고</a></div></details>'+
   '<p id="ncp-share-status" class="ncp-share-status" role="status" aria-live="polite"></p>'+
-  '<div class="ncp-options" role="group" aria-label="선택지">'+options+'</div>'+result;
+  '<div class="ncp-options" role="group" aria-label="선택지">' +options+'</div>'+(answered?result+reviewControls():'<button class="study-open" data-open>정답·해설 보기</button>');
+ if(answered)bindReview(el.question.querySelector(".study-review"),{bank:"ncp",questionId:q.id,
+   clientAttemptId:draft.id,answerText:answered.choice,metadata:{exam:q.exam,choice_matches:answered.choice?answered.choice===q.answer:null,verified_server_grade:false}},
+   prior?.grade,result=>{state.answers[q.id]={choice:answered.choice,grade:result};save();renderNumbers();updateProgress();});
 }
 function focusQuestion(){el.question.querySelector("h2")?.focus({preventScroll:true});}
 function updateFilters(){
@@ -176,35 +185,24 @@ el.question.addEventListener("click",event=>{
  const action=event.target.closest("button[data-action]")?.dataset.action;
  if(action==="share-problem"){void shareCurrentProblem(q);return;}
  if(action==="copy-problem-link"){void copyCurrentProblemLink(q);return;}
- if(answer&&!recordFor(q.id)&&letters.includes(answer.dataset.choice)){
-  state.answers[q.id]={choice:answer.dataset.choice,at:new Date().toISOString()};
-  save();render();
-  cloudStatus.textContent="결과를 저장하는 중입니다...";
-  void recordLearningAttempt({
-    bank:"ncp",questionId:q.id,result:answer.dataset.choice===q.answer?"correct":"incorrect",
-    gradingMethod:"automatic",answerText:answer.dataset.choice,
-    metadata:{exam:q.exam,assessment:"browser_choice_comparison",verified_server_grade:false}
-  }).then(response=>{
-    cloudStatus.textContent=response.state==="saved"?"이번 풀이 결과를 클라우드에 저장했습니다.":
-      response.state==="pending"?"일시적으로 기기에 보관했습니다. 온라인 복구 시 동기화됩니다.":
-      "읽기 전용 계정이어서 기록할 수 없습니다.";
-  }).catch(()=>{cloudStatus.textContent="저장 오류: 다시 로그인한 후 문제를 풀어주세요.";});
-  el.question.querySelector(".ncp-answer")?.focus({preventScroll:true});
-  return;
+ if(answer&&!recordFor(q.id)){
+  drafts.get(q.id).choice=answer.dataset.choice;render();
+  el.question.querySelector('[data-choice="'+answer.dataset.choice+'"]').focus();return;
  }
+ if(event.target.closest("[data-open]")){drafts.get(q.id).open=true;render();el.question.querySelector(".ncp-answer").focus();return;}
  if(event.target.closest("[data-retry]")){
-  delete state.answers[q.id];save();render();focusQuestion();
+  drafts.delete(q.id);delete state.answers[q.id];save();render();focusQuestion();
  }
 });
 el.prev.addEventListener("click",()=>{
  if(state.index>0){state.index--;render();focusQuestion();}
 });
 el.next.addEventListener("click",()=>{
- if(state.index<state.list.length-1){state.index++;render();focusQuestion();}
+ if(state.index<state.list.length-1){state.index++;render();focusQuestion();}else el.list.focus();
 });
 byId("ncp-reset").addEventListener("click",()=>{
  if(!confirm("이 기기에 표시된 답안 선택만 초기화할까요? 클라우드 풀이 이력은 삭제되지 않습니다."))return;
- state.answers={};save();render();cloudStatus.textContent="화면 선택 내역을 초기화했습니다. 이전 학습 결과는 클라우드에 보존됩니다.";
+ drafts.clear();state.answers={};save();render();cloudStatus.textContent="화면 선택 내역을 초기화했습니다. 이전 학습 결과는 클라우드에 보존됩니다.";
 });
 const initialID=params.get("id");
 const initial=ncpQuestions.find(q=>q.id===initialID);

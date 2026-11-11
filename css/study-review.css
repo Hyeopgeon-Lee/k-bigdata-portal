@@ -1,0 +1,31 @@
+.study-review {margin-block:1.2rem;padding:1rem;border:1px solid #ccd6e1;border-radius:12px;background:#f6f9fc;color:#142f48}
+.study-review h3 {margin:0 0 .65rem}
+.study-review [role=group],.study-nav {display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.study-review button,.study-open,.study-nav button,.study-list-link {min-height:44px;padding:.45rem .85rem;border-radius:8px;border:1px solid #698096;background:white;color:#18354e;font:inherit;cursor:pointer}
+.study-review button[aria-pressed=true],.study-open {background:#173d64;color:white}
+.study-review button[aria-pressed=true]::before {content:"✓ "}
+.study-review [role=status]:empty {display:none}
+.study-nav {justify-content:space-between}
+:is(.study-review,.study-nav) button:focus-visible,.study-open:focus-visible {outline:3px solid #176bb8;outline-offset:3px}
+@media(max-width:700px){.study-review{padding:.75rem}.study-review button{flex:1;padding-inline:.35rem}.study-list-link{display:inline-flex;align-items:center}}
+
+.study-side-list{min-width:0;background:white;border:1px solid #d9e1e9;border-radius:12px;padding:1rem}
+.study-side-list h2{font-size:1.1rem}
+.study-side-list [role=list]{display:grid;gap:.3rem;max-height:64vh;overflow:auto}
+.study-side-list button{text-align:left;border:0;background:transparent;padding:.65rem;border-radius:6px;color:#233d56}
+.study-side-list [aria-current=true]{background:#e5edf5;font-weight:700}
+.study-split>.bank-solve{min-width:0}
+@media(min-width:801px){
+ .study-split,.ncp-workspace,.coding-workspace{display:grid;grid-template-columns:minmax(190px,26%) minmax(0,1fr);gap:1.25rem;align-items:start}
+ .ncp-workspace>.ncp-sidebar{grid-column:1;grid-row:1}
+ .ncp-workspace>.ncp-panel{grid-column:2;grid-row:1;min-width:0}
+ .study-side-list{position:sticky;top:1rem}
+}
+@media(max-width:800px){
+ .study-side-list{display:none}
+ .coding-workspace,.ncp-workspace{display:flex;flex-direction:column}
+ .coding-workspace>.coding-detail,.ncp-workspace>.ncp-panel{order:-1}
+ .coding-workspace>*,.ncp-workspace>*{width:100%;max-width:100%;min-width:0}
+}
+.ncp-sidebar .ncp-list{grid-template-columns:repeat(auto-fit,minmax(64px,1fr))}
+.ncp-sidebar .ncp-list button{min-height:44px;height:auto;padding:.4rem;line-height:1.35;word-break:keep-all}
