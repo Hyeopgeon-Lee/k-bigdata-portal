@@ -32,7 +32,7 @@ assert.match(teacherUI,/action:'deliveries'/);
 assert.match(teacherUI,/studentSendingPaused/);
 assert.match(teacherUI,/latestFaculty|renderMail/);
 assert.match(teacherCSS,/data-page="teacher-learning"/);
-assert.match(teacherCSS,/@media\\(max-width:700px\\)/);
+assert.ok(teacherCSS.includes("@media(max-width:700px)"));
 assert.match(read('js/portal-auth.mjs'),/my-learning\.html/);
 assert.match(read('js/portal-auth.mjs'),/teacher-learning\.html/);
 for(const html of [my,teacher]){assert.match(html,/id="learning-lock"/);assert.match(html,/data-module="js\/(?:my|teacher)-learning\.js/);}
@@ -49,7 +49,7 @@ assert.match(mail,/report_deliveries/);
 assert.match(mail,/studentEmailRecipients:0/);
 assert.doesNotMatch(mail,/deliver\(p\.user_id/);
 assert.match(admin,/smallCohortHidden/);
-assert.match(admin,/if\\(action==="deliveries"\\)/);
+assert.ok(admin.includes('if(action==="deliveries")'));
 assert.match(admin,/studentSendingPaused:true/);
 assert.match(admin,/report_deliveries/);
 assert.doesNotMatch(read('js/learning-activity.mjs'),/service_role|sb_secret_/);
