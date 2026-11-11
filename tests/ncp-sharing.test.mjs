@@ -11,7 +11,7 @@ for(const q of ncpQuestions){
  const report=new URL(learningReportUrl("ncp",q,q.exam+" · 원문 "+q.originalNumber+"번"));
  const problem=new URL(report.searchParams.get("url"));
  assert.equal(report.origin,"https://portal.k-bigdata.kr");
- assert.equal(report.pathname,"/request.html");
+ assert.equal(report.pathname,"/help.html");
  assert.equal(report.searchParams.get("source"),"ncp");
  assert.equal(report.searchParams.get("id"),q.id);
  assert.equal(report.searchParams.get("label"),q.exam+" · 원문 "+q.originalNumber+"번");
