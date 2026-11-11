@@ -66,6 +66,31 @@ Deno.serve(async(req:Request)=>{
    return json({ok:true});
   }
 
+  if(action==="mail_settings"){
+    // Read-only controls; browser never receives service credentials.
+    const [settings,profiles]=await Promise.all([
+      admin.from("weekly_report_controls").select("report_type,enabled,updated_at"),
+      admin.from("profiles").select("user_id,email").eq("approval_status","approved").eq("enrollment_status","enrolled").neq("email","hglee67@kopo.ac.kr").limit(2000)
+    ]);
+    if(settings.error||profiles.error)throw Error("MAIL_SETTINGS_QUERY_FAILED");
+    if(!["super_admin","student"].every(type=>settings.data?.some(r=>r.report_type===type)))throw Error("MAIL_SETTINGS_INCOMPLETE");
+    return json({ok:true,settings:settings.data,studentRecipientCount:(profiles.data||[]).filter(r=>r.email).length,
+      professorRecipient:"hglee67@kopo.ac.kr",schedule:"매주 월요일 08:00 (한국시간)"});
+  }
+  if(action==="update_mail_setting"){
+    if(!["super_admin","student"].includes(data.reportType)||typeof data.enabled!=="boolean")
+      return json({error:"INVALID_MAIL_SETTING"},400);
+    const token=req.headers.get("authorization")!.replace(/^Bearer /i,"");
+    const caller=createClient(url,publishable,{auth:{autoRefreshToken:false,persistSession:false}});
+    const {data:identity,error:identityError}=await caller.auth.getUser(token);
+    if(identityError||!identity.user||identity.user.email?.toLowerCase()!=="hglee67@kopo.ac.kr")
+      return json({error:"ADMIN_NOT_AUTHORIZED"},403);
+    const {data:saved,error:saveError}=await admin.from("weekly_report_controls")
+      .update({enabled:data.enabled,updated_at:new Date().toISOString(),updated_by:identity.user.id})
+      .eq("report_type",data.reportType).select("report_type,enabled,updated_at").single();
+    if(saveError||!saved)throw Error("MAIL_SETTING_SAVE_FAILED");
+    return json({ok:true,setting:saved});
+  }
   if(action==="deliveries"){
     // Only the verified super administrator can read delivery records. RLS remains closed to clients.
     const now=new Date();
