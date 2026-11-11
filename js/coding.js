@@ -1,3 +1,4 @@
+import {quizNavigation,quizHeading,quizFeedback,scrollToQuizAnswer} from "./quiz-unified.js";
 import {createQuestionBrowser} from "./question-browser.js";
 import {bindReview,reviewControls,gradeLabels} from "./study-review.js";
 import {learningLocal as localStorage, learningSession as sessionStorage} from "./learning-storage.mjs";
@@ -421,6 +422,19 @@ function renderConsoleText(pre, transcript, isUbuntu) {
   });
 }
 
+// One shared DOM structure for navigation, heading, classification and actions.
+document.getElementById("coding-quiz-nav").innerHTML=quizNavigation({
+  listId:"coding-show-list",counterId:"coding-position",jumpId:"coding-answer-jump",count:"1 / 350"
+});
+document.getElementById("coding-quiz-heading").innerHTML=quizHeading({
+  title:"문제 불러오는 중",titleId:"coding-title",
+  badges:[{id:"coding-id",label:"JAVA-001"},{id:"coding-level",label:"입문"},{id:"coding-topic",label:"출력"}],
+  actions:[
+    {id:"coding-share-button",label:"문제 공유",ariaLabel:"현재 문제 공유"},
+    {id:"coding-link-button",label:"링크 복사",ariaLabel:"현재 문제 링크 복사"},
+    {id:"coding-report-button",label:"오류 신고",href:"help.html",ariaLabel:"현재 문제 오류 신고"}
+  ]
+});
 let codingAttemptId;
 function showQuestion(q) {
   codingAttemptId=getSafe("coding-attempt-"+q.id)||crypto.randomUUID();
@@ -566,7 +580,7 @@ $("#coding-answer-button").addEventListener("click", () => {
   const slot=$("#coding-review-slot"),q=current;
   slot.hidden=$("#coding-answer").hidden;
   if(slot.hidden)return;
-  slot.innerHTML=reviewControls();
+  slot.innerHTML=quizFeedback({label:"정답·해설 공개",details:"작성한 답안과 비교한 후 내 풀이 결과를 선택하세요."})+reviewControls();
   const key="coding-review-"+q.id;
   bindReview(slot,{bank:"coding",questionId:q.id,clientAttemptId:codingAttemptId,
     answerText:$("#coding-editor").value,usedHint:!$("#coding-hint").hidden,metadata:{language:q.language}},
@@ -588,6 +602,7 @@ function openCodingList(){
   browserEntry.show();
 }
 $("#coding-show-list").addEventListener("click",openCodingList);
+$("#coding-answer-jump").addEventListener("click",()=>scrollToQuizAnswer(document.querySelector(".coding-detail")));
 function moveCoding(offset) {
   const items=entrySet||matching(),index=items.findIndex(item=>item.id===current.id);
   const next=items[index+offset];
