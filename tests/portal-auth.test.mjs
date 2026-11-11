@@ -28,5 +28,12 @@ assert.match(source,/textContent=item/,"student-supplied values use safe DOM API
 assert.match(loader,/portal\.k-bigdata\.kr/,"auth gate only applies to production portal");
 assert.match(loader,/import\("\.\/portal-auth\.mjs"\)/);
 assert.match(css,/#portal-auth-layer\[hidden\]/,"closed dialog is hidden");
+assert.doesNotMatch(loader,/data-portal-auth-lock/,"normal portal navigation cannot force login");
+assert.doesNotMatch(source,/data-portal-auth-lock/,"account panel cannot hide public portal pages");
+assert.match(source,/root.hidden=true; \/\/ Public portal/,"account panel starts hidden");
+assert.match(source,/portal-auth-dismiss/,"all account dialogs are dismissible");
+assert.match(source,/btn.textContent=currentUser\?"내 계정":"로그인"/,"guests receive optional login control");
+assert.match(source,/async function activate\(interactive=false\)/,"background auth never forces a dialog");
+
 execFileSync(process.execPath,["--check",new URL("../js/portal-auth.mjs",import.meta.url).pathname]);
 console.log("PASS: auth client syntax and key security/registration/admin contracts.");
