@@ -26,13 +26,6 @@ export const categories = {
 };
 export const services = [
   {
-    id:"my-learning",name:"나의 학습현황",englishName:"MY LEARNING JOURNEY",
-    category:"learning",url:"my-learning.html",icon:"book",accent:"blue",order:9.8,
-    description:"내가 푼 문제, 정답·오답 자기평가, 복습 대기 문제, 과목별 진도와 매주 이메일 학습 리포트를 확인합니다. 포털 로그인이 필요합니다.",
-    shortDescription:"학습 진도·오답 복습·주간 자기평가를 확인하세요.",
-    tags:["학습현황","오답노트","자가평가","학습 리포트","학습기록"],aliases:"나의 학습 주간 리포트 학습결과 학습진도 문제풀이 내 기록",featured:true
-  },
-  {
     id:"ncp", name:"NCP 기출문제", englishName:"NAVER CLOUD PRACTICE",
     category:"learning", url:"ncp.html", icon:"book", accent:"blue", order:9.2,
     description:"2025년 공개 복원기출의 원본 번호와 출처를 확인하며 재서술 문항 75개를 풀고, 원문 복원자료 6건도 볼 수 있습니다.",
