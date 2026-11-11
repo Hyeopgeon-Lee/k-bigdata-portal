@@ -12,7 +12,7 @@ root.hidden=true; // The whole portal requires an authorized account.
 document.body.append(root);
 const css=document.createElement("link");
 css.rel="stylesheet";
-css.href="css/portal-auth.css?v=20261111-member-cards";
+css.href="css/portal-auth.css?v=20261111-account-required-1";
 document.head.append(css);
 
 const locked=document.getElementById("learning-lock");
@@ -244,12 +244,44 @@ function renderAccount(){
     const report=document.createElement("a");report.href="teacher-learning.html";
     report.className="portal-auth-action-link";report.textContent="학급 주간 학습통계";area.append(report);
   }
+  if(activeWrite){const transfer=document.createElement("button");transfer.type="button";transfer.textContent="이 기기의 기존 즐겨찾기·할 일 가져오기";
+    transfer.addEventListener("click",importDevicePersonalData);area.append(transfer);}
   if(isAdmin){const admin=document.createElement("button");admin.type="button";admin.textContent="학생 계정 관리";
     admin.addEventListener("click",renderAdmin);area.append(admin);}
   const close=document.createElement("button");close.type="button";close.textContent="닫기";
   close.addEventListener("click",()=>{if(locked&&!activeUser)location.assign("/");else {root.hidden=true;opener?.focus();}});area.append(close);
   const out=document.createElement("button");out.type="button";out.textContent="로그아웃";
   out.addEventListener("click",logout);area.append(out);
+}
+async function importDevicePersonalData(){
+ if(!currentUser||!activeWrite)return;
+ if(!window.confirm("현재 기기에 남아 있는 즐겨찾기·오늘의 할 일이 본인의 기록인지 확인하세요. 확인을 누르면 이 계정으로 가져옵니다."))return;
+ status("기존 개인 설정을 가져오고 있습니다.");
+ try{
+  const {importLegacyShortcuts}=await import("./portal-personal.js?v=20261111-db-sync-1");
+  const imported=await importLegacyShortcuts();
+  const day=new Date(Date.now()+9*3600000).toISOString().slice(0,10);
+  let legacy=null;try{legacy=JSON.parse(localStorage.getItem("kbigdata:daily-plan:v1")||"null");}catch{}
+  const rows=[];
+  if(legacy?.date===day&&legacy.byGrade){
+   for(const [g,ids] of Object.entries({"1":["docs","project"],"2":["recruit","interview"]})){
+    for(const id of ids)if(legacy.byGrade[g]?.[id]===true)
+     rows.push({user_id:currentUser.id,task_date:day,task_key:g+":"+id});
+   }
+  }
+  if(rows.length){
+   const {error}=await client.from("daily_task_checks").upsert(rows,{onConflict:"user_id,task_date,task_key"});
+   if(error)throw error;
+  }
+  const savedGrade=localStorage.getItem("kbigdata:home-grade:v1");
+  if(["1","2"].includes(savedGrade)){
+   const {error}=await client.from("user_preferences").upsert({user_id:currentUser.id,preferred_grade:savedGrade},{onConflict:"user_id"});
+   if(error)throw error;
+  }
+  status("기존 개인 설정 "+(imported+rows.length)+"건을 가져왔습니다. 학년 설정이 있다면 함께 반영했습니다.");
+  window.dispatchEvent(new Event("portal-personal-updated"));
+  window.dispatchEvent(new Event("portal-learning-ready"));
+ }catch(error){console.error("Device import failed",error);status("기존 기록을 가져오지 못했습니다. 새로고침 후 다시 시도해 주세요.");}
 }
 async function renderAdmin(){
   if(!isAdmin){renderAccount();return;}
