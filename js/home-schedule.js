@@ -83,7 +83,7 @@ const makeEvent = (event,today) => {
   body.append(create("span","home-schedule-title",event.title));
   const meta=create("span","home-schedule-meta");
   meta.append(create("span","home-schedule-category",CATEGORIES[event.category]));
-  if(event.targetGrade!=="all")meta.append(create("span","home-schedule-grade",event.targetGrade+"학년"));
+  meta.append(create("span","home-schedule-grade",event.targetGrade==="all"?"공통":event.targetGrade+"학년"));
   meta.append(create("span","",eventDateLabel(event,today)+(event.startTime?" · "+event.startTime:" · 종일")));
   body.append(meta);
   link.append(date,body,create("span","home-schedule-arrow","→"));
@@ -94,7 +94,7 @@ const makeEvent = (event,today) => {
 };
 const empty = (destination,message) => destination?.replaceChildren(create("p","dashboard-schedule-empty",message));
 let currentPublishedEvents=[];
-const visibleToGrade = (event,grade) => grade==="1" ? event.targetGrade==="1" : event.targetGrade==="2"||event.targetGrade==="all";
+const visibleToGrade = (event,grade) => event.targetGrade===grade || event.targetGrade==="all";
 const sortedUpcoming = (events,today,limit=2) => events.filter(event=>event.endDate>=today)
   .sort((a,b)=>{
     const activeA=a.startDate<=today?0:1,activeB=b.startDate<=today?0:1;
@@ -112,11 +112,10 @@ const render = events => {
   currentPublishedEvents=events;
   const today=todayKst();
   const grade=selectedGrade();
-  if(gradeHeading)gradeHeading.textContent=grade==="1"?"1학년 일정":"2학년 · 공통 일정";
+  if(gradeHeading)gradeHeading.textContent=grade+"학년 · 공통 일정";
   const permitted=events.filter(event=>visibleToGrade(event,grade));
-  renderList(root,sortedUpcoming(permitted,today,2),today,
-    grade==="1"?"현재 공개된 1학년 대상 예정 일정이 없습니다."
-      :"현재 공개된 2학년·공통 예정 일정이 없습니다.");
+  renderList(root,sortedUpcoming(permitted,today,3),today,
+    "현재 공개된 "+grade+"학년·공통 예정 일정이 없습니다.");
 };
 window.addEventListener("kbigdata:home-gradechange",()=>render(currentPublishedEvents));
 const readCache = () => {
