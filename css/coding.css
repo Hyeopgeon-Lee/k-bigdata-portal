@@ -568,3 +568,17 @@
   .coding-ubuntu-mode .coding-ubuntu-reference>.coding-ubuntu-info{padding:12px 14px}
   .coding-ubuntu-mode .coding-ubuntu-reference>.coding-scroll{margin:0 10px 12px}
 }
+
+/* Manual self-review is distinct from the local "completed" checkbox. */
+.coding-self-review{margin-top:24px;padding:19px 20px;background:#f3f8ff;border:1px solid #cddff5;border-radius:12px}
+.coding-self-review h3{margin:0 0 8px;color:#183b71;font-size:17px}
+.coding-self-review>p{margin:5px 0 14px;line-height:1.75;color:#344a66;font-size:14px}
+.coding-self-choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.coding-self-choices>.coding-btn{min-width:0;min-height:48px;white-space:normal;line-height:1.45;padding:10px 12px}
+.coding-self-choices>.coding-btn[aria-pressed=true]{background:#e2eefc;border-color:#3167b3;box-shadow:inset 0 0 0 1px #3167b3;color:#173f79}
+.coding-self-choices>[data-learning-grade=correct]{border-color:#96c9a5;color:#196044;background:#f7fff8}
+.coding-self-choices>[data-learning-grade=incorrect]{border-color:#efb0a6;color:#9b362e;background:#fffafa}
+.coding-self-choices>[data-learning-grade=ungraded]{border-color:#bed0e5;color:#3b5671}
+.coding-self-review #coding-self-status{min-height:20px;color:#244c7c;font-weight:650}
+.coding-review-link{display:inline-flex;font-size:14px;color:#164a86;font-weight:750;text-decoration:underline;text-underline-offset:3px}
+@media(max-width:600px){.coding-self-review{padding:15px}.coding-self-choices{grid-template-columns:1fr}.coding-self-choices>.coding-btn{min-height:46px}}
