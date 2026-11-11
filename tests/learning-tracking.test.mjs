@@ -51,6 +51,8 @@ assert.match(mail,/studentBody/);
 assert.match(mail,/if\(!controls.faculty&&!controls.students\)/);
 assert.match(mail,/email_confirmed_at/);
 assert.match(mail,/studentEmailRecipients:controls.students/);
+assert.match(mail,/enrollment_status,signup_type/,"weekly recipient query includes signup type");
+assert.match(mail,/p\.signup_type!=="alumni"/,"alumni are excluded server-side from weekly reports");
 assert.match(mail,/deliver\(student.user_id/);
 assert.match(admin,/smallCohortHidden/);
 assert.ok(admin.includes('if(action==="mail_settings")'));
