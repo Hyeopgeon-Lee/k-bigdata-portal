@@ -189,6 +189,12 @@ function renderAccount(){
   $("#portal-account-info").textContent=(currentProfile?.full_name||"사용자")+" · "+(currentUser?.email||"")+
     (currentProfile?.enrollment_status==="leave"?" · 휴학(학습 기록 읽기 전용)":"");
   const area=$("#portal-account-actions");
+  const learning=document.createElement("a");learning.href="my-learning.html";learning.className="portal-auth-action-link";
+  learning.textContent="나의 학습현황 · 오답 복습";area.append(learning);
+  if(isAdmin){
+    const report=document.createElement("a");report.href="teacher-learning.html";
+    report.className="portal-auth-action-link";report.textContent="학급 주간 학습통계";area.append(report);
+  }
   if(isAdmin){const admin=document.createElement("button");admin.type="button";admin.textContent="학생 계정 관리";
     admin.addEventListener("click",renderAdmin);area.append(admin);}
   const close=document.createElement("button");close.type="button";close.textContent="닫기";
