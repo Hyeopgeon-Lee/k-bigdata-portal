@@ -1,3 +1,4 @@
+import {approvedStudent} from "./fixtures/approved-student.mjs";
 // Browser acceptance for the compact dashboard and directory, run with a local HTTP server on :8765.
 import assert from 'node:assert/strict';
 import {chromium} from 'playwright';
@@ -7,12 +8,14 @@ const widths=[360,390,768,1280];
 try{
  for(const width of widths){
   const context=await browser.newContext({viewport:{width,height:900}});
-  const page=await context.newPage(),errors=[];
+  await approvedStudent(context);
+    const page=await context.newPage(),errors=[];
   page.on('pageerror',error=>errors.push(error.message));
   await page.goto('http://127.0.0.1:8765/index.html',{waitUntil:'domcontentloaded'});
   await page.locator('.dashboard-action[href="practical.html"]').waitFor({timeout:15000});
   assert.equal(await page.locator('.dashboard-action').count(),4,'four actions '+width);
   assert.equal(await page.locator('.home-category-grid a').count(),4,'four category shortcuts '+width);
+  await page.waitForFunction(()=>document.querySelectorAll('#home-today-list .home-today-task').length===3);
   assert.equal(await page.locator('#home-today-list .home-today-task').count(),3,'daily plan '+width);
   assert.equal(await page.locator('#service-groups').count(),0,'full service catalogue is not on home');
   assert.equal(await page.locator('.dashboard-action[href="practical.html"]').count(),1,'shared exam shortcut '+width);

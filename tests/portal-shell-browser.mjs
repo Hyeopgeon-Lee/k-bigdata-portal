@@ -1,3 +1,4 @@
+import {approvedStudent} from "./fixtures/approved-student.mjs";
 import assert from 'node:assert/strict';
 import {mkdirSync,writeFileSync} from 'node:fs';
 import {chromium,firefox,webkit} from 'playwright';
@@ -15,6 +16,7 @@ const record=(name,error)=>failures.push({name,error:error.stack||String(error)}
 const check=(name,fn)=>{try{fn();}catch(error){record(name,error);}};
 const url=file=>new URL(file,base.endsWith('/')?base:base+'/').href;
 async function prepare(context){
+  await approvedStudent(context);
   // Isolate public read-only UI tests from production analytics and calendar calls.
   await context.route(/https:\/\/(?:www\.)?(?:googletagmanager\.com|google-analytics\.com|analytics\.google\.com)\//,route=>route.fulfill({status:200,contentType:'application/javascript',body:''}));
   await context.route('https://script.google.com/**',route=>{
@@ -141,7 +143,7 @@ try{
   const noScript=await browser.newContext({javaScriptEnabled:false,viewport:{width:390,height:844}});await prepare(noScript);
   for(const id of Object.keys(portalPages)){
     const page=await noScript.newPage();
-    try{await page.goto(url(id+'.html'));assert.equal(await page.locator('#portal-nav a').count(),6);assert.equal(await page.locator('#portal-nav').isVisible(),true,'native details fallback keeps header links usable');const state=await snapshot(page),reference=evidence.find(row=>row.page===id&&row.width===390);assert.deepEqual(state.header,reference.header,'source header has identical geometry and styles before enhancement');assert.deepEqual(state.buttons,reference.buttons,'service menu does not shift when content JavaScript starts');await page.locator('.portal-menu > summary').click();assert.equal(await page.locator('#portal-nav').isVisible(),false,'native summary closes panel without JavaScript');if(id!=='index'){await page.locator('.portal-nav-more > summary').click();assert.equal(await page.locator('.portal-nav-other').isVisible(),true);}}
+    try{await page.goto(url(id+'.html'));if(portalPages[id].group==='learning'){assert.equal(await page.locator('main').isVisible(),false);continue;}assert.equal(await page.locator('#portal-nav a').count(),6);assert.equal(await page.locator('#portal-nav').isVisible(),true,'native details fallback keeps header links usable');const state=await snapshot(page),reference=evidence.find(row=>row.page===id&&row.width===390);assert.deepEqual(state.header,reference.header,'source header has identical geometry and styles before enhancement');assert.deepEqual(state.buttons,reference.buttons,'service menu does not shift when content JavaScript starts');await page.locator('.portal-menu > summary').click();assert.equal(await page.locator('#portal-nav').isVisible(),false,'native summary closes panel without JavaScript');if(id!=='index'){await page.locator('.portal-nav-more > summary').click();assert.equal(await page.locator('.portal-nav-other').isVisible(),true);}}
     catch(error){record(engine+' no-JavaScript '+id,error);}finally{await page.close();}
   }
   await noScript.close();
@@ -149,7 +151,7 @@ try{
   await failedContent.route('**/js/**',route=>route.request().url().includes('/portal-navigation.js')?route.continue():route.fulfill({status:200,contentType:'application/javascript',body:''}));
   for(const id of Object.keys(portalPages)){
     const page=await failedContent.newPage();
-    try{await ready(page,id+'.html');const state=await snapshot(page),reference=evidence.find(row=>row.page===id&&row.width===390);assert.deepEqual(state.header,reference.header,'shell layout survives failed content modules');assert.deepEqual(state.buttons,reference.buttons,'service layout survives failed content modules');await interactions(page,390,id);}
+    try{await ready(page,id+'.html');if(portalPages[id].group==='learning'){assert.equal(await page.locator('main').isVisible(),false);continue;}const state=await snapshot(page),reference=evidence.find(row=>row.page===id&&row.width===390);assert.deepEqual(state.header,reference.header,'shell layout survives failed content modules');assert.deepEqual(state.buttons,reference.buttons,'service layout survives failed content modules');await interactions(page,390,id);}
     catch(error){record(engine+' failed-content-module fallback '+id,error);}finally{await page.close();}
   }
   await failedContent.close();

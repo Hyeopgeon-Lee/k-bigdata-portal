@@ -50,6 +50,7 @@ const html=read('practical.html');assert.match(html,/<meta name="robots" content
 const ui=read('js/practical-ui.js');assert.ok(ui.includes('if(!canSubmit(attempt,answer,now))'));assert.ok(ui.includes('answerDeadlineReached(attempt,now)'));assert.ok(ui.includes('hintAvailable(attempt,now)'));assert.ok(ui.includes('autoRevealAnswer'));assert.ok(ui.includes('attempt.submittedAt&&!attempt.viewedExplanation'));assert.ok(ui.includes('rel="noopener noreferrer"'));
 // Storage adapter: reload continuity, attempts idempotency, blocked storage fallback.
 const fake=()=>{const data=new Map();return {getItem:k=>data.get(k)||null,setItem:(k,v)=>data.set(k,v),removeItem:k=>data.delete(k)};};
+globalThis.portalLearning={read:true,write:true,expires:Date.now()+60000};
 globalThis.localStorage=fake();globalThis.sessionStorage=fake();
 const store=await import('../js/practical-store.js');
 store.saveSession('q',attempt);assert.equal(store.getSession('q').startedAt,startedAt);

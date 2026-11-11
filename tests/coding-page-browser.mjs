@@ -1,3 +1,4 @@
+import {approvedStudent} from "./fixtures/approved-student.mjs";
 import assert from "node:assert/strict";
 import {mkdirSync} from "node:fs";
 import {chromium} from "playwright";
@@ -9,6 +10,7 @@ const widths=[360,390,430,768,1280];
 try{
   for(const width of widths){
     const context=await browser.newContext({viewport:{width,height:820},permissions:["clipboard-read","clipboard-write"]});
+    await approvedStudent(context);
     const page=await context.newPage();
     page.on("pageerror",e=>failures.push(width+": "+e.message));
     await page.goto("http://127.0.0.1:8765/coding.html?id=LINUX-002",{waitUntil:"domcontentloaded"});
@@ -168,6 +170,7 @@ try{
   }
   // Regression: no Linux exercise should expose its command in a visible terminal example.
   const maskContext=await browser.newContext({viewport:{width:390,height:820}});
+  await approvedStudent(maskContext);
   const maskedPage=await maskContext.newPage();
   maskedPage.on("pageerror",e=>failures.push("mask-test: "+e.message));
   for(const id of ["LINUX-003","LINUX-004","LINUX-042"]){

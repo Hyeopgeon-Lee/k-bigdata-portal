@@ -64,6 +64,7 @@ assert.equal(services.length,18,'the complete service registry is retained');
 assert.equal(services.find(s=>s.id==='practical').name,'정보처리 기출문제');
 assert.equal(services.find(s=>s.id==='ncp').name,'NCP 기출문제');
 const store=new Map();
+globalThis.portalLearning={read:true,write:true,expires:Date.now()+60000};
 globalThis.localStorage={
  getItem:key=>store.get(key)||null,
  setItem:(key,value)=>store.set(key,value),

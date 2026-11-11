@@ -1,3 +1,4 @@
+import {approvedStudent} from "./fixtures/approved-student.mjs";
 import assert from 'node:assert/strict';
 import {mkdirSync,writeFileSync} from 'node:fs';
 import {chromium,firefox,webkit} from 'playwright';
@@ -11,6 +12,7 @@ const page=await browser.newPage({viewport:{width:390,height:900},reducedMotion:
 const errors=[],measurements=[];
 page.on('pageerror',error=>errors.push(error.message));
 page.on('console',message=>{if(message.type()==='error')errors.push(message.text());});
+await approvedStudent(page.context());
 await page.route(/https:\/\/(?:www\.)?(?:googletagmanager\.com|google-analytics\.com|analytics\.google\.com)\//,route=>route.fulfill({status:200,contentType:'application/javascript',body:''}));
 const frozen=new Date('2026-10-21T09:00:01Z');
 await page.clock.install({time:new Date(frozen.getTime()-1000)});
