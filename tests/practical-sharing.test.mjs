@@ -31,6 +31,7 @@ const shareTextBlock=ui.slice(ui.indexOf('function problemShareText'),ui.indexOf
 assert.ok(!/answer|hint|attempt|submittedAt|correct/.test(shareTextBlock),'share card must not include answer, hint, attempt, or grading state');
 
 assert.match(css,/\.solve-share-row/);
+assert.ok(!ui.includes('<summary>더보기</summary><div class="solve-share-row"'), 'Share buttons must remain visible');
 assert.match(css,/grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/,'mobile share actions should fit in two equal columns');
 assert.match(css,/\.share-status:empty\{display:none\}/);
 
