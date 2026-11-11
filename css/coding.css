@@ -203,6 +203,8 @@
     align-items:stretch;
   }
   .coding-detail .coding-actions--help{grid-template-columns:repeat(3,minmax(0,1fr))}
+  /* Ubuntu has only Hint and Answer: avoid an empty third desktop column. */
+  .coding-ubuntu-mode .coding-detail .coding-actions--help{grid-template-columns:repeat(2,minmax(0,1fr))}
   .coding-detail .coding-actions--progress{grid-template-columns:repeat(2,minmax(0,1fr))}
   .coding-detail .coding-actions--help>.coding-btn,
   .coding-detail .coding-actions--progress>.coding-btn{
@@ -262,8 +264,14 @@
     flex:1 1 200px;
     min-height:200px;
   }
-  .coding-detail .coding-actions--progress{margin-top:auto}
+  /* Maintain distinct visual rows even when flex uses its free space above. */
+  .coding-detail .coding-actions--progress{
+    margin-top:auto;
+    padding-top:20px;
+  }
 }
+/* Hidden contextual actions must not reserve grid cells or become visible. */
+.coding-detail .coding-actions>.coding-btn[hidden]{display:none}
 @media (max-width:800px){
   .coding-detail .coding-actions--help,
   .coding-detail .coding-actions--progress{display:flex;flex-wrap:wrap}
