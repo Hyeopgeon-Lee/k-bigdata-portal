@@ -14,7 +14,8 @@ export const portalPages = {
   resume: {title:'자기소개서', group:'career'},
   recruit: {title:'채용공고', group:'career'},
   'project-guide': {title:'프로젝트 가이드', group:'project'},
-  schedule: {title:'학과 주요 일정', group:'campus'}
+  schedule: {title:'학과 주요 일정', group:'campus'},
+  help: {title:'학과 요청·문의', group:'campus', locked:true}
 };
 export const groups = Object.values(categories);
 export const navigationItems = portalNavLinks.map(item=>{

@@ -156,9 +156,9 @@ try{
       await page.locator("#coding-title").filter({hasText:"1부터 N까지의 합"}).waitFor({timeout:15000});
       await page.waitForFunction(()=>document.querySelector("#coding-editor")?.value==="print('연습')");
       assert.equal(await page.locator("#coding-editor").inputValue(),"print('연습')","draft survives reload");
-      await page.route("https://help.k-bigdata.kr/request.html**",route=>route.fulfill({status:200,contentType:"text/html",body:"<html><body>신고 양식으로 이동</body></html>"}));
+      await page.route("**/help.html**",route=>route.fulfill({status:200,contentType:"text/html",body:"<html><body>신고 양식으로 이동</body></html>"}));
       await Promise.all([
-        page.waitForURL(/help\.k-bigdata\.kr\/request\.html/, {timeout:12000}),
+        page.waitForURL(/\/help\.html/, {timeout:12000}),
         page.locator("#coding-report-button").click()
       ]);
       const report=new URL(page.url());

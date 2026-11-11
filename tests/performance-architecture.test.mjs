@@ -8,7 +8,7 @@ const staticImports=source=>[...source.matchAll(/^import\s+[^;]+?from\s+["']([^"
 const modulePath=specifier=>specifier.split('?')[0];
 const importsModule=(source,path)=>staticImports(source).some(specifier=>modulePath(specifier)===path);
 const lazyModule=(source,path)=>[...source.matchAll(/import\(["']([^"']+)["']\)/g)].some(match=>modulePath(match[1])===path);
-const entry=(html,path)=>[...html.matchAll(/<script\b[^>]*\bsrc=["']([^"']+)["'][^>]*>/g)].some(match=>modulePath(match[1])===path&&match[1].includes('?v='));
+const entry=(html,path)=>[...html.matchAll(/<script\b[^>]*\b(?:src|data-module)=["']([^"']+)["'][^>]*>/g)].some(match=>modulePath(match[1])===path&&match[1].includes('?v='));
 
 const learning=read('js/learning-ui.js');
 const shell=read('js/portal-shell.js');

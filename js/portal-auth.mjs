@@ -5,6 +5,7 @@ import {createClient} from "https://esm.sh/@supabase/supabase-js@2.119.0?bundle"
 const client=createClient("https://zjsindkakjfzmjgrkaou.supabase.co", "sb_publishable_g8oFA9J2ZFiBc-86wa2Pew_7DzoCZab",{
   auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storageKey:"kbigdata-portal-auth-v1"}
 });
+window.portalSupabaseClient=client;
 const root=document.createElement("div");
 root.id="portal-auth-layer";
 root.hidden=true; // Public portal is always usable without signing in.

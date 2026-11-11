@@ -161,7 +161,7 @@ export const services = [
     "category": "campus",
     "description": "장비·시설 고장 및 학과 운영과 관련한 요청사항을 등록하고 처리상태를 확인하는 서비스",
     "shortDescription": "시설·장비 문제와 요청사항을 빠르게 접수하세요.",
-    "url": "https://help.k-bigdata.kr/",
+    "url": "help.html",
     "icon": "wrench",
     "accent": "teal",
     "tags": [
@@ -326,7 +326,7 @@ export const portalNavLinks = [
   {id:"portfolio",label:"포트폴리오 ↗",group:"project"},
   {id:"schedule",label:"학과일정",group:"campus"},
   {id:"room",label:"프로젝트실 ↗",group:"campus"},
-  {id:"help",label:"학과요청 ↗",group:"campus"}
+  {id:"help",label:"학과요청",group:"campus"}
 ];
 // Backward-compatible alias for older code/tests.
 export const learningLinks = portalNavLinks;

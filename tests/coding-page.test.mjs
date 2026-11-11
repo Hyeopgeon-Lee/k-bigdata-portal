@@ -137,8 +137,8 @@ for(const moduleFile of ['js/coding.js','js/learning-report.js','data/coding-ubu
 globalThis.location={origin:'https://portal.k-bigdata.kr'};
 const url=learningReportUrl('coding',{id:'LINUX-025',title:'줄 수 세기',code:'secret solution'},'Ubuntu · 파일 내용·검색');
 const reported=new URL(url);
-assert.equal(reported.origin,'https://help.k-bigdata.kr');
-assert.equal(reported.pathname,'/request.html');
+assert.equal(reported.origin,'https://portal.k-bigdata.kr');
+assert.equal(reported.pathname,'/help.html');
 assert.equal(reported.searchParams.get('source'),'coding');
 assert.equal(reported.searchParams.get('id'),'LINUX-025');
 assert.equal(reported.searchParams.get('question'),'줄 수 세기');

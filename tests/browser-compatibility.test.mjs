@@ -23,7 +23,7 @@ const app=read('js/app.js');
 const checks=[
  ['01 all pages have viewport meta',pages.every(p=>/<meta name="viewport"/.test(read(p)))],
  ['02 all pages load shared CSS',pages.every(p=>/css\/style\.css\?v=[^"']+/.test(read(p))&&/css\/portal-navigation\.css\?v=[^"']+/.test(read(p)))],
- ['03 runtime uses standards-based ES modules',pages.every(p=>p==='index.html'||/type="module"/.test(read(p)))&&/type="module"/.test(read('index.html'))],
+ ['03 runtime uses ES modules or login-gated deferred ES module imports',pages.every(p=>/type="module"/.test(read(p)) || (read(p).includes('id="learning-lock"') && read(p).includes('type="application/x-learning"') && read(p).includes('js/portal-navigation.js'))) && /type="module"/.test(read('index.html'))],
  ['04 no unsupported Array findLast/toSorted dependency',!/\.findLast\(|\.findLastIndex\(|\.toSorted\(|\.toReversed\(|\.with\(/.test(js)],
  ['05 IntersectionObserver has fallback',app.includes('"IntersectionObserver" in window')&&app.includes('card.classList.add("is-visible")')],
  ['06 ResizeObserver is feature-detected',practicalUi.includes('if("ResizeObserver" in window)')],
