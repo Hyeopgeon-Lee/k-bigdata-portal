@@ -30,7 +30,7 @@
 })();
 
 
-import("./portal-auth.mjs?v=20261111-account-readable-3").catch(() => {
+import("./portal-auth.mjs?v=20261111-header-controls-1").catch(() => {
   const notice=document.getElementById("learning-notice");
   if(notice)notice.prepend("로그인 서비스를 연결할 수 없습니다. 새로고침해 주세요. ");
 });
