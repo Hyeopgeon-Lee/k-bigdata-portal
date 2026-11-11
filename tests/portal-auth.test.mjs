@@ -79,4 +79,16 @@ assert.match(source,/member.signup_type==="alumni"/,"admins see graduate members
 assert.match(css,/portal-auth-secondary-actions/,"login actions use responsive layout");
 assert.match(css,/portal-auth-type-options/,"role choices are card-styled");
 assert.match(css,/max-width:\s*420px/,"narrow screens have dedicated layout");
-console.log("PASS: responsive auth, graduate registration, protected routes and learning access contracts.");
+// Visible member identity must always be based on the approved profile name.
+assert.match(source,/window\.portalMemberName=/,"shared profile name getter is present");
+assert.match(source,/currentProfile\?\.full_name/,"display name comes from the verified profile");
+assert.doesNotMatch(source,/portal-account-email/,"account summary does not expose email as identity");
+for(const [file,id] of [["js/help.js","help-identity"],["js/room.js","room-identity"]]){
+ const script=read(file);
+ assert.match(script,/window\.portalMemberName\?\.\(\)/,file+" reads shared display name");
+ assert.match(script,new RegExp(id),file+" has a login name label");
+ assert.doesNotMatch(script,/로그인:[^\n]*email/,file+" does not show login email");
+}
+for(const page of ["help","room"])
+ assert.match(read(page+".html"),new RegExp("js/"+page+"\\.js\\?v=20261111-name-unified-1"),page+" loads updated member identity code");
+console.log("PASS: responsive auth, protected routes and verified display names across portal.");
