@@ -93,7 +93,7 @@ function studentBody(student:any,all:any[],period:{start:string;end:string;date:
  const link=(key:string)=>{
    const cut=key.indexOf(":");if(cut<0)return escape(key);
    const bank=key.slice(0,cut),question=key.slice(cut+1),path=({coding:"coding.html",ncp:"ncp.html",practical:"practical.html"} as Record<string,string>)[bank];
-   return path&&/^[\\w-]{1,100}$/.test(question)?
+   return path&&/^[A-Za-z0-9_-]{1,100}$/.test(question)?
       '<a href="https://portal.k-bigdata.kr/'+path+'?id='+encodeURIComponent(question)+'">'+escape(question)+'</a>':escape(question);
  };
  const recovered=[...improved].filter(key=>latest.get(key)==="correct").slice(0,8);
@@ -173,7 +173,7 @@ Deno.serve(async(req:Request)=>{
    const verified=await db.auth.admin.getUserById(adminId);
    if(verified.error||verified.data.user?.email?.toLowerCase()!==adminMail||!verified.data.user?.email_confirmed_at)throw Error("Unverified super admin");
   }
-  const students=(profiles.data||[]).filter(p=>p.enrollment_status==="enrolled"&&p.user_id!==adminId);
+  const students=(profiles.data||[]).filter(p=>p.enrollment_status==="enrolled"&&p.email?.toLowerCase()!==adminMail&&p.user_id!==adminId);
   const studentSet=new Set(students.map(s=>s.user_id));
   const cohort=attempts.filter(x=>studentSet.has(x.user_id)&&x.submitted_at>=period.start);
   if(dryRun)return response({ok:true,dry_run:true,oidc:event,weekStart:period.date,controls,
