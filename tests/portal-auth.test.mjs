@@ -27,6 +27,11 @@ assert.match(source,/PASSWORD_RECOVERY/);
 assert.match(source,/textContent=item/,"student-supplied values use safe DOM APIs");
 assert.match(loader,/import\("\.\/portal-auth\.mjs/);
 assert.match(source,/portal_learning_access/);
+assert.match(source,/portalAccess="approved"/,'portal requires verified session to unlock');
+assert.match(source,/renderLogin\(\)/,'unauthenticated visits present login');
+assert.match(css,/html:not\(\[data-portal-access="approved"\]\)/,'default portal UI is hidden');
+assert.doesNotMatch(source,/포털 안내는 누구나 볼 수 있습니다/,'optional login copy removed');
+
 for(const page of ["coding","practical","ncp","docs","interview","certifications"]){
  const html=read(page+".html");
  assert.match(html,/id="learning-lock"/);
