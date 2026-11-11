@@ -20,7 +20,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/style.css?v=20261111-account-sync-1">
 <link rel="stylesheet" href="css/portal-ux.css?v=20261111-account-sync-1">
-<link rel="stylesheet" href="css/learning-dashboard.css?v=20261111-teacher-mail-v2">
+<link rel="stylesheet" href="css/learning-dashboard.css?v=20261111-mail-switch-v1">
 <!-- portal:assets:start (generated; edit scripts/portal-shell-template.mjs) -->
 <link rel="stylesheet" href="css/portal-navigation.css?v=20261111-account-sync-1">
 <script defer src="js/portal-navigation.js?v=20261111-name-unified-1"></script>
@@ -48,7 +48,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <!-- portal:header:end -->
 <main class="learn-main" id="main-content" tabindex="-1">
 <section class="container learn-hero">
-<p class="learn-eyebrow">SUPER ADMIN · WEEKLY LEARNING</p><h1>학급 학습통계</h1><p class="learn-lead">학급 학습 활동과 주간 리포트 이메일 발송 현황을 확인합니다. 학생의 개인 답안·학번은 공개하지 않습니다.</p>
+<p class="learn-eyebrow">SUPER ADMIN · WEEKLY LEARNING</p><h1>학급 학습통계</h1><p class="learn-lead">학급 학습 활동을 확인하고 주간 리포트 이메일 발송 여부를 관리합니다. 학생의 개인 답안·학번은 공개하지 않습니다.</p>
 </section>
 <div class="container learn-container">
 <div class="learn-tools"><p class="learn-note">학습 통계: 월요일 00:00 ~ 다음 월요일 00:00 · 한국시간</p><button id="teacher-refresh" type="button">통계 새로고침</button></div>
@@ -62,23 +62,38 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 
 <section class="learn-section learn-mail-section" aria-labelledby="teacher-mail-heading">
   <div class="learn-section-heading">
-    <div><p class="learn-section-kicker">WEEKLY EMAIL</p><h2 id="teacher-mail-heading">주간 이메일 발송 현황</h2></div>
-    <p class="learn-mail-schedule">발송 예약 · 매주 월요일 08:00 (한국시간)</p>
+    <div><p class="learn-section-kicker">WEEKLY EMAIL</p><h2 id="teacher-mail-heading">주간 리포트 이메일 설정</h2></div>
+    <p class="learn-mail-schedule">매주 월요일 오전 8시 · 한국시간</p>
   </div>
-  <p class="learn-mail-description">교수자 리포트와 학생 리포트의 실제 발송 기록을 각각 확인합니다. '발송 요청 완료'는 이메일 서비스 접수 기준이며 수신함 도착을 의미하지 않습니다.</p>
-  <p id="teacher-mail-status" class="learn-status learn-mail-status" role="status" aria-live="polite">발송 기록을 확인하고 있습니다.</p>
-  <div id="teacher-mail-content" hidden>
-    <p class="learn-mail-period" id="teacher-mail-period"></p>
-    <div id="teacher-mail-cards" class="learn-mail-cards"></div>
-    <div class="learn-mail-meta" id="teacher-mail-meta"></div>
-    <h3 class="learn-mail-subheading">최근 8주 발송 기록</h3>
-    <div id="teacher-mail-history" class="learn-table-wrap"></div>
-    <details class="learn-mail-details" id="teacher-mail-student-details">
-      <summary>학생별 발송 기록 확인 <span id="teacher-mail-student-count"></span></summary>
-      <p>슈퍼 관리자에게만 표시되며, 최신 기록 최대 30건을 제공합니다.</p>
-      <div id="teacher-mail-students" class="learn-table-wrap"></div>
-    </details>
+  <p class="learn-mail-description">주간 학습 리포트 이메일 자동 발송을 개별적으로 켜거나 끌 수 있습니다. 변경 즉시 저장되며, 다음 예약 발송부터 적용됩니다.</p>
+  <p id="teacher-mail-status" class="learn-status learn-mail-status" role="status" aria-live="polite">이메일 발송 설정을 불러오고 있습니다.</p>
+  <div class="learn-mail-switch-list" id="teacher-mail-settings" hidden>
+    <article class="learn-mail-switch-card">
+      <div class="learn-mail-switch-description">
+        <h3>교수자 리포트</h3>
+        <p>학급 전체의 주간 학습 요약을 관리자 이메일로 발송합니다.</p>
+        <small>수신: hglee67@kopo.ac.kr</small>
+      </div>
+      <label class="learn-mail-switch-action" for="teacher-mail-faculty">
+        <span class="learn-mail-switch-word" id="teacher-mail-faculty-label">상태 확인 중</span>
+        <input id="teacher-mail-faculty" type="checkbox" role="switch" aria-labelledby="teacher-mail-faculty-title" disabled>
+        <span class="learn-sr-only" id="teacher-mail-faculty-title">교수자 주간 학습 이메일 자동 발송</span>
+      </label>
+    </article>
+    <article class="learn-mail-switch-card">
+      <div class="learn-mail-switch-description">
+        <h3>학생 리포트</h3>
+        <p>학생별 풀이량 변화, 정답 개선 문제와 다음 주 복습 추천을 메일로 발송합니다.</p>
+        <small id="teacher-mail-student-recipient">수신 대상: 확인 중</small>
+      </div>
+      <label class="learn-mail-switch-action" for="teacher-mail-students">
+        <span class="learn-mail-switch-word" id="teacher-mail-students-label">상태 확인 중</span>
+        <input id="teacher-mail-students" type="checkbox" role="switch" aria-labelledby="teacher-mail-students-title" disabled>
+        <span class="learn-sr-only" id="teacher-mail-students-title">학생 주간 학습 이메일 자동 발송</span>
+      </label>
+    </article>
   </div>
+  <p class="learn-mail-footnote">학생 발송을 켜면 승인된 재학생 중 이메일 인증을 완료한 계정에만 발송합니다. 스위치를 끄면 다음 자동 발송부터 중지됩니다.</p>
 </section>
 </div>
 </div>
@@ -88,6 +103,6 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <div class="container footer-bottom"><p>학생용 학습·프로젝트·취업 통합 포털입니다.</p><p>© <span id="current-year"></span> K-BigData Service Portal</p></div>
 </footer>
 <script type="module" src="js/portal-auth.mjs?v=20261111-name-unified-1"></script>
-<script type="application/x-learning" data-module="js/teacher-learning.js?v=20261111-teacher-mail-v2"></script>
+<script type="application/x-learning" data-module="js/teacher-learning.js?v=20261111-mail-switch-v1"></script>
 <script type="application/x-learning" data-module="js/portal-shell-entry.js?v=20261111-account-sync-1"></script>
 </body></html>
