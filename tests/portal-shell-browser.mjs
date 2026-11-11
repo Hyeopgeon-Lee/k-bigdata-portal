@@ -33,6 +33,13 @@ function monitor(page,label){
 async function ready(page,file){
   await page.goto(url(file),{waitUntil:'domcontentloaded'});
   await page.waitForFunction(()=>document.documentElement.dataset.portalNavigationReady==='true');
+  // Protected pages temporarily hide the header until login validation completes.
+  // Snapshotting before unlock yields false zero-height layout failures.
+  const path=new URL(page.url()).pathname.split('/').pop()?.replace(/\.html$/,'');
+  const model=portalPages[path];
+  if(model?.locked || model?.group==='learning'){
+    await page.waitForFunction(()=>!document.getElementById('learning-lock') && document.querySelector('.site-header')?.getBoundingClientRect().height>0,{timeout:16000});
+  }
   await page.evaluate(async()=>{await document.fonts.ready;await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));});
 }
 async function snapshot(page){
