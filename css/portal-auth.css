@@ -194,3 +194,141 @@ html:not([data-portal-access="approved"]) body > :not(#portal-auth-layer) { visi
   #portal-auth-layer { align-items: flex-start; }
   .portal-auth-card { max-height: calc(100dvh - 20px); margin: auto 0; }
 }
+
+
+/* Account dialog: readable single-column actions and clear hierarchy. */
+.portal-account-card {
+  width: min(100%, 480px);
+  padding: clamp(22px, 4vw, 30px);
+}
+.portal-account-card .portal-auth-eyebrow { margin-bottom: 8px; }
+.portal-account-card h1 { font-size: clamp(24px, 5vw, 28px); }
+.portal-account-profile {
+  margin-top: 18px;
+  padding: 15px 16px;
+  border: 1px solid #dde5f0;
+  border-radius: 12px;
+  background: #f8faff;
+}
+.portal-account-name {
+  margin: 0;
+  color: #162c51;
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.45;
+}
+.portal-account-email {
+  margin: 4px 0 0;
+  color: #52627b;
+  font-size: 14px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.portal-account-role {
+  display: inline-block;
+  margin-top: 9px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: #e7eefc;
+  color: #244d91;
+  font-size: 12px;
+  font-weight: 750;
+}
+#portal-account-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 19px;
+  margin-top: 20px;
+}
+.portal-account-section { min-width: 0; }
+.portal-account-section h2 {
+  margin: 0 0 9px;
+  color: #445674;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.5;
+}
+.portal-account-list { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
+.portal-account-card .portal-account-action,
+.portal-account-card .portal-account-action.portal-auth-action-link {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  min-height: 65px;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 15px;
+  border: 1px solid #c6d6ed;
+  border-radius: 11px;
+  background: #f2f6ff;
+  color: #193d77;
+  text-align: left;
+  text-decoration: none;
+  line-height: 1.4;
+  cursor: pointer;
+}
+.portal-account-card .portal-account-action:hover,
+.portal-account-card .portal-account-action.portal-auth-action-link:hover {
+  background: #e8f0ff;
+  border-color: #8dafdc;
+}
+.portal-account-card .portal-account-action:focus-visible {
+  outline: 3px solid #1d4ed8;
+  outline-offset: 2px;
+}
+.portal-account-copy { display: flex; min-width: 0; flex: 1; flex-direction: column; gap: 3px; }
+.portal-account-action-title {
+  color: #193d77;
+  font-size: 15px;
+  font-weight: 800;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+.portal-account-action-detail {
+  color: #5d6d86;
+  font-size: 12px;
+  font-weight: 500;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+.portal-account-chevron {
+  flex: none;
+  color: #5b7ead;
+  font-size: 21px;
+  line-height: 1;
+}
+.portal-account-card .portal-account-secondary {
+  border-color: #d4ddea;
+  background: #fff;
+}
+.portal-account-card .portal-account-secondary:hover { background: #f5f8fd; }
+.portal-account-footer {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px solid #e1e8f2;
+}
+.portal-account-card .portal-account-footer button {
+  width: 100%;
+  min-height: 46px;
+  font-size: 14px;
+}
+.portal-account-card .portal-account-logout {
+  background: #fff;
+  color: #a33939;
+  border-color: #ebc3c3;
+}
+.portal-account-card .portal-account-logout:hover { background: #fff4f4; }
+.portal-account-card #portal-auth-status:empty { display: none; }
+@media (max-width: 420px) {
+  .portal-account-card { padding: 22px 18px; }
+  .portal-account-profile { padding: 13px 14px; }
+  #portal-account-actions { gap: 16px; margin-top: 17px; }
+  .portal-account-card .portal-account-action,
+  .portal-account-card .portal-account-action.portal-auth-action-link { min-height: 62px; padding: 11px 13px; }
+  .portal-account-action-title { font-size: 15px; }
+}
