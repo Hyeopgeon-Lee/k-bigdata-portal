@@ -1,3 +1,5 @@
+/* Also gate pages that load a cached global stylesheet. */
+html:not([data-portal-access="approved"]) body > :not(#portal-auth-layer) { visibility:hidden !important; pointer-events:none !important; }
 /* Authentication dialog, independent from generated portal shell. */
 #portal-auth-layer {
   position: fixed;
