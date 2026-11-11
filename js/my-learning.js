@@ -19,7 +19,11 @@ function link(row){
  return path+'?id='+encodeURIComponent(row.question_id);
 }
 function dateTime(value){
- return new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}).format(new Date(value));
+ const date=new Date(value);
+ if(Number.isNaN(date.getTime()))return '날짜 미확인';
+ const parts=new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(date);
+ const part=type=>parts.find(item=>item.type===type)?.value||'';
+ return part('month')+'.'+part('day')+'. '+part('hour')+':'+part('minute');
 }
 function thisMonday(){
  const now=new Date(Date.now()+9*3600000);
@@ -104,18 +108,24 @@ async function load(){
  const recent=get('learn-recent');recent.replaceChildren();
  if(!attempts.length)recent.append(element('p','아직 클라우드에 기록된 풀이가 없습니다. 문제를 풀고 정답 여부를 기록해 보세요.','learn-empty'));
  else {
-  const table=element('table',null,'learn-table');const head=element('thead');const tr=element('tr');
-  for(const h of ['일시','과목','문제','평가 방법','결과'])tr.append(element('th',h));
+  const table=element('table',null,'learn-table');table.append(element('caption','최근 학습 기록','learn-sr-only'));const head=element('thead');const tr=element('tr');
+  for(const h of ['일시','과목','문제','평가 방법','결과']){const th=element('th',h);th.scope='col';tr.append(th);}
   head.append(tr);table.append(head);
   const body=element('tbody');
   for(const a of attempts.slice(0,35)){
-   const row=element('tr');
-   for(const v of [dateTime(a.submitted_at),subjectName[subject(a)]||label[a.bank]]){
-    row.append(element('td',v));
-   }
-   const td=element('td');const anchor=element('a',a.question_id);anchor.href=link(a);td.append(anchor);row.append(td);
-   row.append(element('td',a.grading_method==='self'?'자가평가':a.grading_method==='automatic'?'브라우저 비교':'진도 기록'));
-   row.append(element('td',a.result==='ungraded'&&a.grading_method==='self'?'판단 보류':grade[a.result]||'미판정'));body.append(row);
+   const row=element('tr',null,'learn-history-row');
+   const date=element('td',dateTime(a.submitted_at),'learn-history-date');
+   const name=subjectName[subject(a)]||label[a.bank]||'기타';
+   const nameCell=element('td',name,'learn-history-subject');
+   const question=element('td',null,'learn-history-problem');
+   const anchor=element('a',a.question_id);anchor.href=link(a);
+   anchor.setAttribute('aria-label',name+' '+a.question_id+' 문제 다시 보기');
+   question.append(element('span','문제','learn-mobile-label'),anchor);
+   const method=element('td',a.grading_method==='self'?'자가평가':a.grading_method==='automatic'?'브라우저 비교':'진도 기록','learn-history-method');
+   const outcome=element('td',a.result==='ungraded'&&a.grading_method==='self'?'판단 보류':grade[a.result]||'미판정','learn-history-result');
+   outcome.dataset.result=a.result;
+   row.append(date,nameCell,question,method,outcome);
+   body.append(row);
   }
   table.append(body);recent.append(table);
  }
