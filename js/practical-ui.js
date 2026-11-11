@@ -1,7 +1,7 @@
 import {createQuestionBrowser} from "./question-browser.js";
 import {bindReview,reviewControls,gradeLabels} from "./study-review.js";
 import {loadPracticalBank} from "./practical-data.js?v=20261006-audit-2";
-import {examLabels,typeLabels,languages,escapeHTML as esc,questionText,shuffle,recommendFive,matchesExam,localDay,summarizeAttempts,highlightCode,formatCodeForDisplay} from "./practical-core.js?v=20261016-timing-1";
+import {examLabels,typeLabels,languages,escapeHTML as esc,questionText,shuffle,recommendFive,matchesExam,localDay,summarizeAttempts,highlightCode,formatCodeForDisplay} from "./practical-core.js?v=20261112-syntax-1";
 import {getAttempts,saveAttempt,getSession,saveSession,clearLocalLearning,storageAvailable,getPreferences,savePreferences,exportLearning,importLearning} from "./practical-store.js";
 import {matches} from "./search-core.js?v=20261005-perf-1";
 import {beginnerExplanation,examMemory,solutionTrace} from "./practical-explanation.js?v=20261006-audit-2";
@@ -38,6 +38,11 @@ function solveHeading(q){
 }
 function displayCode(q){
  return formatCodeForDisplay(q.code,q.language);
+}
+function displayAnswer(q){
+ const answer=String(q.answer??"");
+ return q.language==="SQL"&&/^\s*(?:SELECT|WITH|UPDATE|INSERT|DELETE|CREATE|ALTER|DROP|MERGE|TRUNCATE)\b/i.test(answer)
+  ?formatCodeForDisplay(answer,"SQL"):answer;
 }
 function formatQuestion(text){
  const value=String(text||"").replace(" 공개 복원자료 간 초기 배열 순서 차이가 있어 아래 코드의 초기값을 기준으로 풀이합니다.","");
@@ -218,7 +223,7 @@ function renderRandom(){
 function renderWrong(){
  const all=getAttempts(),ids=[...new Set(all.filter(a=>a.correct===false||a.reviewGrade==="ungraded").map(a=>a.questionId))];
  const items=ids.map(id=>bank.find(q=>q.id===id)).filter(Boolean);
- root.innerHTML='<h2>오답노트</h2><p>틀렸거나 판단을 보류한 문제를 다시 풀어보세요.</p>'+(items.length?'<div class="bank-card-grid">'+items.map(q=>{const records=all.filter(a=>a.questionId===q.id),last=records.at(-1);return card(q,'<p>최근 풀이: '+esc(new Date(last.submittedAt).toLocaleString("ko-KR"))+'</p><p>틀린 횟수 '+records.filter(a=>a.correct===false).length+'회 · 최근 결과 '+(last.correct===true?'정답':last.correct===false?'오답':last.reviewGrade==='ungraded'?'판단 보류':'직접 비교 대기')+'</p><details><summary>이전 답·정답 확인</summary><p>최근 입력 답</p><div class="bank-answer-preview">'+esc(last.answer)+'</div><p>정답</p><div class="bank-answer-preview">'+esc(q.answer)+'</div></details>');}).join("")+'</div>':'<div class="bank-empty"><p>아직 기록된 오답이 없습니다.</p></div>');
+ root.innerHTML='<h2>오답노트</h2><p>틀렸거나 판단을 보류한 문제를 다시 풀어보세요.</p>'+(items.length?'<div class="bank-card-grid">'+items.map(q=>{const records=all.filter(a=>a.questionId===q.id),last=records.at(-1);return card(q,'<p>최근 풀이: '+esc(new Date(last.submittedAt).toLocaleString("ko-KR"))+'</p><p>틀린 횟수 '+records.filter(a=>a.correct===false).length+'회 · 최근 결과 '+(last.correct===true?'정답':last.correct===false?'오답':last.reviewGrade==='ungraded'?'판단 보류':'직접 비교 대기')+'</p><details><summary>이전 답·정답 확인</summary><p>최근 입력 답</p><div class="bank-answer-preview">'+esc(last.answer)+'</div><p>정답</p><div class="bank-answer-preview">'+esc(displayAnswer(q))+'</div></details>');}).join("")+'</div>':'<div class="bank-empty"><p>아직 기록된 오답이 없습니다.</p></div>');
 }
 function statsHTML(s){return '<p>풀이 '+s.total+' · 정답 '+s.correct+' · 오답 '+s.wrong+' · 판정 대기 '+s.pending+'</p><p>정답률 '+(s.rate===null?'—':s.rate+'%')+' · 평균 풀이시간 '+s.average+'초</p>';}
 function renderProgress(){
@@ -274,7 +279,7 @@ function revealAnswer(){
    +'<section class="beginner-section beginner-why"><p class="beginner-kicker">'+whyNo+' · 왜 이 답인가?</p><p class="beginner-explanation">'+esc(extraExplanation)+'</p></section>'
    +'<section class="beginner-section beginner-memory"><p class="beginner-kicker">'+memoryNo+' · 시험에서 꼭 기억할 것</p><p>'+esc(examMemory(q))+'</p></section>'
    +'</div>';
- $("#answer-result").innerHTML='<section class="bank-result"><h3 tabindex="-1" id="result-heading">정답·해설</h3><div class="answer-pair"><div><h4>내 답</h4><pre>'+esc(attempt.answer||"미입력")+'</pre></div><div><h4>'+(q.grading==="self"?"예시 답안":"정답")+'</h4><pre>'+esc(q.answer)+'</pre></div></div>'+learningGuide+sourceDetails+reviewControls()+button("retry","다시 풀기")+'</section>';
+ $("#answer-result").innerHTML='<section class="bank-result"><h3 tabindex="-1" id="result-heading">정답·해설</h3><div class="answer-pair"><div><h4>내 답</h4><pre>'+esc(attempt.answer||"미입력")+'</pre></div><div><h4>'+(q.grading==="self"?"예시 답안":"정답")+'</h4><pre>'+esc(displayAnswer(q))+'</pre></div></div>'+learningGuide+sourceDetails+reviewControls()+button("retry","다시 풀기")+'</section>';
  const item=attempt;
  bindReview(root.querySelector(".study-review"),{bank:"practical",questionId:q.id,clientAttemptId:item.id,answerText:item.answer,
    elapsedSeconds:Math.round((Date.now()-item.startedAt)/1000),usedHint:item.usedHint},
