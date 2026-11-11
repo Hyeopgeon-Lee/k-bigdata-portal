@@ -23,9 +23,9 @@ for(const q of sql){
  }
 }
 const code=id=>formatCodeForDisplay(bank.find(q=>q.id===id).code,'SQL');
-assert.match(code('R-SQL-0015'),/RIGHT OUTER JOIN B\n {4}ON A\.id=B\.id\nWHERE A\.id IS NULL;/);
+assert.match(code('R-SQL-0015'),/RIGHT OUTER JOIN B\n {4}ON A\.id = B\.id\nWHERE A\.id IS NULL;/);
 assert.match(code('R-SQL-0010'),/\n {4}SELECT name\n {4}FROM project\n {4}WHERE project_id IN \(\n {8}SELECT project_id/);
-assert.match(code('REC-023'),/\nFROM employee\)\nORDER BY name;/);
+assert.match(code('REC-023'),/\n {4}FROM employee\)\nORDER BY name;/);
 assert.match(code('REC-040'),/CASE WHEN score>=80 THEN 'PASS' ELSE 'RETRY' END/);
 assert.match(code('R-IND-SQL-0005'),/^1\) SELECT 이름/m);
 assert.match(formatSqlForDisplay("SELECT 'FROM JOIN WHERE' FROM T;"),/'FROM JOIN WHERE'/);
