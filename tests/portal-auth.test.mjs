@@ -91,4 +91,20 @@ for(const [file,id] of [["js/help.js","help-identity"],["js/room.js","room-ident
 }
 for(const page of ["help","room"])
  assert.match(read(page+".html"),new RegExp("js/"+page+"\\.js\\?v=20261111-name-unified-1"),page+" loads updated member identity code");
+// Permanent deletion must be an explicit, status-gated server action.
+execFileSync(process.execPath,["--check",new URL("../js/portal-auth.mjs",import.meta.url).pathname]);
+const deletionApi=read("supabase/functions/admin-delete-student/index.ts");
+assert.match(source,/renderWithdrawnDeletion/,"delete confirmation screen is present");
+assert.match(source,/member.enrollment_status!=="withdrawn"/,"delete action requires saved withdrawn status");
+assert.match(source,/admin-delete-student/,"delete action calls the protected backend");
+assert.match(source,/confirmWord:\s*word\.value\.trim\(\)/,"explicit confirmation phrase is sent");
+assert.match(deletionApi,/portal_super_admin_allowed/,"backend checks server verified admin authorization");
+assert.match(deletionApi,/student\.enrollment_status!=="withdrawn"/,"backend independently checks withdrawal");
+assert.match(deletionApi,/student\.signup_type==="alumni"/,"backend blocks alumni deletion");
+assert.match(deletionApi,/role\.role==="super_admin"/,"backend blocks admin deletion");
+assert.match(deletionApi,/confirmWord!=="영구삭제"/,"backend demands irreversible action confirmation");
+assert.match(deletionApi,/admin\.auth\.admin\.deleteUser/,"backend removes Supabase Auth account");
+assert.match(deletionApi,/storage\.from\("help-attachments"\)\.remove/,"backend removes student attachments");
+assert.doesNotMatch(source,/SUPABASE_SERVICE_ROLE_KEY/,"browser must never have service role keys");
+
 console.log("PASS: responsive auth, protected routes and verified display names across portal.");
