@@ -808,3 +808,62 @@ html:not([data-portal-access="approved"]) body > :not(#portal-auth-layer) { visi
   .portal-admin-row-actions button { width:100%; }
   .portal-delete-counts { grid-template-columns:1fr; }
 }
+
+
+/* Separate signup approval requests: compact cards on phones and desktops. */
+.portal-auth-card.portal-requests-card { width:min(100%,680px); }
+.portal-requests-card .portal-auth-lead { margin-bottom:14px; }
+.portal-approval-count {
+  margin:0 0 15px;padding:12px 15px;border-radius:12px;
+  background:#edf4ff;color:#214d8b;font-weight:800;font-size:14px;line-height:1.5;
+}
+.portal-approval-list { display:grid;gap:12px; }
+.portal-approval-item {
+  min-width:0;padding:18px 19px;border:1px solid #dce5f2;border-radius:15px;
+  background:#fff;box-shadow:0 4px 14px rgba(22,55,105,.04);
+}
+.portal-approval-item-header { display:flex;align-items:center;flex-wrap:wrap;gap:9px; }
+.portal-approval-item-header h2 { font-size:17px;line-height:1.5;margin:0;color:#1c3459;font-weight:800; }
+.portal-approval-badge {
+  padding:4px 9px;border-radius:20px;background:#edf2fa;color:#466387;
+  font-size:12px;font-weight:750;white-space:nowrap;
+}
+.portal-approval-meta {
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 15px;
+  margin:12px 0 16px;color:#5c6d85;font-size:13px;line-height:1.6;
+}
+.portal-approval-meta span { min-width:0;overflow-wrap:anywhere;word-break:break-word; }
+.portal-approval-meta span:nth-child(2) { grid-column:1 / -1;grid-row:2; }
+.portal-approval-buttons { display:grid;grid-template-columns:minmax(0,2fr) minmax(94px,1fr);gap:9px; }
+.portal-auth-card .portal-approval-accept {
+  min-height:44px;background:#2159b9;border-color:#2159b9;color:#fff;
+}
+.portal-auth-card .portal-approval-accept:hover { background:#174995;border-color:#174995; }
+.portal-auth-card .portal-approval-reject {
+  min-height:44px;background:#fff;border-color:#d3dce9;color:#607088;
+}
+.portal-auth-card .portal-approval-reject:hover { background:#f3f5fa; }
+.portal-approval-empty {
+  padding:27px 15px;border:1px dashed #c9d7eb;border-radius:14px;
+  background:#fafcff;color:#60718e;text-align:center;font-size:14px;line-height:1.75;
+}
+.portal-approval-retry {
+  margin-top:14px;padding:14px;border-radius:12px;background:#fff6e8;
+  border:1px solid #e8cf9d;color:#765524;font-size:13px;line-height:1.65;
+}
+.portal-approval-retry[hidden],.portal-admin-retry-mail[hidden] { display:none!important; }
+.portal-approval-retry p { margin:0 0 10px; }
+.portal-auth-card .portal-admin-retry-mail {
+  background:#fff8e9;border-color:#e3c886;color:#805c14;
+}
+@media (max-width:767px) {
+  .portal-auth-card.portal-requests-card { width:100%;padding:23px 18px; }
+  .portal-approval-item { padding:15px; }
+  .portal-approval-meta { grid-template-columns:1fr;gap:3px; }
+  .portal-approval-meta span:nth-child(2) { grid-column:auto;grid-row:auto; }
+  .portal-approval-buttons { grid-template-columns:minmax(0,1fr) minmax(80px,.5fr); }
+  .portal-approval-buttons button { padding-inline:8px;font-size:13px; }
+}
+@media (max-width:360px) {
+  .portal-approval-buttons { grid-template-columns:1fr; }
+}

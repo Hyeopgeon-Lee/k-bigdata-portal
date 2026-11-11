@@ -107,4 +107,24 @@ assert.match(deletionApi,/admin\.auth\.admin\.deleteUser/,"backend removes Supab
 assert.match(deletionApi,/storage\.from\("help-attachments"\)\.remove/,"backend removes student attachments");
 assert.doesNotMatch(source,/SUPABASE_SERVICE_ROLE_KEY/,"browser must never have service role keys");
 
+
+// Signup approval is a separate, pending-only admin queue.
+const approvalApi=read("supabase/functions/approve-portal-signup/index.ts");
+const approvalMigration=read("supabase/migrations/20261112082000_signup_approval_email_notifications.sql");
+assert.match(source,/onClick:renderApprovalRequests/,"account menu links to separate approval queue");
+assert.match(source,/filter\(member=>member\.approval_status==="pending"\)/,"approval screen shows pending requests only");
+assert.match(source,/filter\(member=>member\.approval_status!=="pending"\)/,"student manager hides pending requests");
+assert.match(source,/approve-portal-signup/,"approval goes through protected server API");
+assert.match(source,/retryApprovalEmail/,"approval email can be retried if delivery failed");
+assert.match(approvalApi,/portal_super_admin_allowed/,"backend authorizes actual super admin");
+assert.match(approvalApi,/email_confirmed_at/,"backend requires verified applicant email");
+assert.match(approvalApi,/admin_update_student/,"backend uses existing authorized approval RPC");
+assert.match(approvalApi,/Idempotency-Key/,"Resend retries use duplicate protection");
+assert.match(approvalApi,/noreply@noreply\.k-bigdata\.kr/,"uses verified sender domain");
+assert.match(approvalApi,/https:\/\/api\.resend\.com\/emails/,"uses Resend transactional API");
+assert.match(approvalApi,/notificationStatus:"failed"/,"mail failures are reported separately from account approval");
+assert.match(approvalMigration,/enable row level security/,"approval email log has RLS");
+assert.match(approvalMigration,/revoke all .* from anon, authenticated/,"browser clients cannot read email delivery records");
+assert.match(css,/portal-approval-item/,"approval queue has dedicated mobile cards");
+
 console.log("PASS: responsive auth, protected routes and verified display names across portal.");
