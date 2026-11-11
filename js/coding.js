@@ -602,7 +602,7 @@ $("#coding-done-button").addEventListener("click", () => {
     $("#coding-feedback").textContent = "스스로 해결한 문제로 표시했습니다. 자동 채점 결과는 아닙니다.";
   }
   setSafe(DONE_KEY, JSON.stringify([...doneIds]));
-  if(done){
+  if(doneIds.has(current.id)){
     void recordLearningAttempt({bank:"coding",questionId:current.id,result:"completed",gradingMethod:"completion"}).catch(()=>{});
   }
   const done = doneIds.has(current.id);
