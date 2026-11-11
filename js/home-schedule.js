@@ -2,7 +2,7 @@
 // Reuses the schedule page's public endpoint and 30-minute local snapshot.
 // No private Google Calendar event or credential is read or cached.
 import {SCHEDULE_API_URL} from "../data/schedule-config.js?v=20261019-google-calendar-live-1";
-import {publishedGrade} from "../data/calendar-grade-bridge.js?v=20261020-synced-1";
+import {publishedGrade,visibleToGrade} from "../data/calendar-grade-bridge.js?v=20261111-common-grades-1";
 
 const root = document.getElementById("home-schedule-list");
 const gradeHeading = document.getElementById("dashboard-schedule-title");
@@ -94,7 +94,6 @@ const makeEvent = (event,today) => {
 };
 const empty = (destination,message) => destination?.replaceChildren(create("p","dashboard-schedule-empty",message));
 let currentPublishedEvents=[];
-const visibleToGrade = (event,grade) => event.targetGrade===grade || event.targetGrade==="all";
 const sortedUpcoming = (events,today,limit=2) => events.filter(event=>event.endDate>=today)
   .sort((a,b)=>{
     const activeA=a.startDate<=today?0:1,activeB=b.startDate<=today?0:1;
