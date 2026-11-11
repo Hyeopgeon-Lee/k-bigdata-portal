@@ -1,4 +1,5 @@
 import {learningLocal as localStorage, learningSession as sessionStorage} from "./learning-storage.mjs";
+import {recordLearningAttempt} from "./learning-activity.mjs";
 import {ncpQuestions} from "../data/ncp-questions.js?v=20261026-quizfocus-2";
 import {initPortalShell} from "./portal-shell.js?v=20261026-card-label-1";
 import {learningReportUrl} from "./learning-report.js?v=20261027-ncp-report-1";
@@ -21,6 +22,11 @@ try{
 const el={exam:byId("ncp-exam"),search:byId("ncp-search"),question:byId("ncp-question"),
  list:byId("ncp-list"),status:byId("ncp-status"),summary:byId("ncp-summary"),
  progress:byId("ncp-progress"),prev:byId("ncp-prev"),next:byId("ncp-next")};
+const cloudStatus=document.createElement("p");
+cloudStatus.id="ncp-cloud-status";cloudStatus.setAttribute("role","status");
+cloudStatus.setAttribute("aria-live","polite");cloudStatus.className="ncp-status";
+cloudStatus.textContent="풀이 결과가 로그인 계정의 학습이력에 저장됩니다.";
+el.summary.insertAdjacentElement("afterend",cloudStatus);
 const recordFor=id=>{
  const record=state.answers[id];
  return record&&letters.includes(record.choice)?record:null;
@@ -173,6 +179,16 @@ el.question.addEventListener("click",event=>{
  if(answer&&!recordFor(q.id)&&letters.includes(answer.dataset.choice)){
   state.answers[q.id]={choice:answer.dataset.choice,at:new Date().toISOString()};
   save();render();
+  cloudStatus.textContent="결과를 저장하는 중입니다...";
+  void recordLearningAttempt({
+    bank:"ncp",questionId:q.id,result:answer.dataset.choice===q.answer?"correct":"incorrect",
+    gradingMethod:"automatic",answerText:answer.dataset.choice,
+    metadata:{exam:q.exam,assessment:"browser_choice_comparison",verified_server_grade:false}
+  }).then(response=>{
+    cloudStatus.textContent=response.state==="saved"?"이번 풀이 결과를 클라우드에 저장했습니다.":
+      response.state==="pending"?"일시적으로 기기에 보관했습니다. 온라인 복구 시 동기화됩니다.":
+      "읽기 전용 계정이어서 기록할 수 없습니다.";
+  }).catch(()=>{cloudStatus.textContent="저장 오류: 다시 로그인한 후 문제를 풀어주세요.";});
   el.question.querySelector(".ncp-answer")?.focus({preventScroll:true});
   return;
  }
@@ -187,8 +203,8 @@ el.next.addEventListener("click",()=>{
  if(state.index<state.list.length-1){state.index++;render();focusQuestion();}
 });
 byId("ncp-reset").addEventListener("click",()=>{
- if(!confirm("저장된 NCP 문제풀이 기록을 모두 지울까요?"))return;
- state.answers={};save();render();
+ if(!confirm("이 기기에 표시된 답안 선택만 초기화할까요? 클라우드 풀이 이력은 삭제되지 않습니다."))return;
+ state.answers={};save();render();cloudStatus.textContent="화면 선택 내역을 초기화했습니다. 이전 학습 결과는 클라우드에 보존됩니다.";
 });
 const initialID=params.get("id");
 const initial=ncpQuestions.find(q=>q.id===initialID);
