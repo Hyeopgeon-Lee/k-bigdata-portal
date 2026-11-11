@@ -23,6 +23,16 @@ assert.match(my,/주간 이메일 발송을 잠시 보류/);
 assert.match(my,/id="learn-review"/);
 assert.match(teacher,/id="teacher-summary"/);
 assert.match(teacher,/id="teacher-wrong"/);
+assert.match(teacher,/id="teacher-mail-cards"/);
+assert.match(teacher,/id="teacher-mail-history"/);
+assert.match(teacher,/id="teacher-mail-students"/);
+const teacherUI=read('js/teacher-learning.js');
+const teacherCSS=read('css/learning-dashboard.css');
+assert.match(teacherUI,/action:'deliveries'/);
+assert.match(teacherUI,/studentSendingPaused/);
+assert.match(teacherUI,/latestFaculty|renderMail/);
+assert.match(teacherCSS,/data-page="teacher-learning"/);
+assert.match(teacherCSS,/@media\\(max-width:700px\\)/);
 assert.match(read('js/portal-auth.mjs'),/my-learning\.html/);
 assert.match(read('js/portal-auth.mjs'),/teacher-learning\.html/);
 for(const html of [my,teacher]){assert.match(html,/id="learning-lock"/);assert.match(html,/data-module="js\/(?:my|teacher)-learning\.js/);}
@@ -39,6 +49,9 @@ assert.match(mail,/report_deliveries/);
 assert.match(mail,/studentEmailRecipients:0/);
 assert.doesNotMatch(mail,/deliver\(p\.user_id/);
 assert.match(admin,/smallCohortHidden/);
+assert.match(admin,/if\\(action==="deliveries"\\)/);
+assert.match(admin,/studentSendingPaused:true/);
+assert.match(admin,/report_deliveries/);
 assert.doesNotMatch(read('js/learning-activity.mjs'),/service_role|sb_secret_/);
 // Test an offline student submission followed by a successful sync.
 const store=new Map(),logged=[];
