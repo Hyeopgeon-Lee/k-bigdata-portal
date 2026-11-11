@@ -12,7 +12,7 @@ root.hidden=true; // The whole portal requires an authorized account.
 document.body.append(root);
 const css=document.createElement("link");
 css.rel="stylesheet";
-css.href="css/portal-auth.css?v=20261111-admin-status-2";
+css.href="css/portal-auth.css?v=20261111-admin-delete-1";
 document.head.append(css);
 
 const locked=document.getElementById("learning-lock");
@@ -336,6 +336,66 @@ async function importDevicePersonalData(){
   window.dispatchEvent(new Event("portal-learning-ready"));
  }catch(error){console.error("Device import failed",error);status("기존 기록을 가져오지 못했습니다. 새로고침 후 다시 시도해 주세요.");}
 }
+async function renderWithdrawnDeletion(member){
+  if(!isAdmin||member.enrollment_status!=="withdrawn"||member.signup_type==="alumni"){renderAdmin();return;}
+  card("자퇴 학생 영구 삭제",
+    '<p class="portal-auth-lead">삭제 대상과 연결된 학습·예약·요청 데이터를 확인합니다. 삭제한 계정은 복구할 수 없습니다.</p>'+
+    '<p id="portal-delete-member" class="portal-delete-member"></p>'+
+    '<p id="portal-delete-loading" class="portal-auth-note">삭제 대상 기록을 확인하고 있습니다.</p>'+
+    '<ul id="portal-delete-counts" class="portal-delete-counts" hidden></ul>'+
+    '<div id="portal-delete-confirm" class="portal-delete-confirm" hidden>'+
+      '<p class="portal-delete-warning">영구 삭제 시 계정, 연결된 학습 기록, 개인 설정, 예약, 요청 및 첨부파일이 제거됩니다. 계정과 연결되지 않은 과거 기록이나 외부 서비스의 별도 데이터는 자동 삭제 대상이 아닙니다.</p>'+
+      '<label>확인할 학생 이름<input id="portal-delete-name" type="text" autocomplete="off" placeholder="학생 이름을 정확히 입력"></label>'+
+      '<label>확인 문구<input id="portal-delete-word" type="text" autocomplete="off" placeholder="영구삭제"></label>'+
+      '<button id="portal-delete-confirm-button" type="button" class="portal-auth-danger" disabled>이 학생의 데이터 영구 삭제</button>'+
+    '</div>'+
+    '<div class="portal-auth-actions"><button id="portal-delete-back" type="button">학생 목록으로 돌아가기</button></div>');
+  $("#portal-delete-member").textContent=member.full_name+" · "+member.email;
+  $("#portal-delete-back").addEventListener("click",renderAdmin);
+  const {data:preview,error:previewError}=await client.functions.invoke("admin-delete-student",{
+    body:{action:"preview",userId:member.user_id}
+  });
+  if(previewError||!preview?.ok){
+    $("#portal-delete-loading").textContent="삭제 대상 확인에 실패했습니다. 학적이 자퇴로 저장되었는지 확인해 주세요.";
+    return;
+  }
+  $("#portal-delete-loading").textContent="아래 항목을 확인하고 두 확인 문구를 입력해야 삭제할 수 있습니다.";
+  $("#portal-delete-counts").hidden=false;
+  const labels=[
+    ["learning","문제 풀이 기록"],["progress","학습 진도"],["drafts","답안 임시 저장"],
+    ["reservations","프로젝트실 예약"],["requests","요청 게시글"],
+    ["messages","작성한 요청 메시지"],["files","첨부파일"],
+    ["mail","메일 발송 이력"],["favorites","즐겨찾기"]
+  ];
+  for(const [key,label] of labels){
+    const li=document.createElement("li");
+    const count=Number(preview.counts?.[key]||0);
+    li.textContent=label+" "+count.toLocaleString("ko-KR")+"건";
+    $("#portal-delete-counts").append(li);
+  }
+  const confirmBox=$("#portal-delete-confirm");confirmBox.hidden=false;
+  const name=$("#portal-delete-name"),word=$("#portal-delete-word"),button=$("#portal-delete-confirm-button");
+  const check=()=>{button.disabled=name.value.trim()!==preview.fullName||word.value.trim()!=="영구삭제";};
+  name.addEventListener("input",check);word.addEventListener("input",check);
+  button.addEventListener("click",async()=>{
+    if(button.disabled)return;
+    if(!window.confirm(preview.fullName+" 학생의 모든 계정 연결 데이터를 영구 삭제합니다. 이 작업은 되돌릴 수 없습니다. 실행하시겠습니까?"))return;
+    button.disabled=true;$("#portal-delete-back").disabled=true;
+    const {data:result,error}=await client.functions.invoke("admin-delete-student",{
+      body:{action:"delete",userId:member.user_id,fullName:name.value.trim(),
+        confirmWord:word.value.trim(),version:preview.version}
+    });
+    if(error||!result?.deleted){
+      $("#portal-delete-loading").textContent="삭제 실패: 서버에서 작업을 완료하지 못했습니다. 일부 데이터가 처리되었을 수 있으므로 관리자 확인이 필요합니다.";
+      $("#portal-delete-back").disabled=false;
+      check();
+      return;
+    }
+    await renderAdmin();
+    status(preview.fullName+" 학생의 계정과 연결 데이터를 영구 삭제했습니다.");
+  });
+}
+
 async function renderAdmin(){
   if(!isAdmin){renderAccount();return;}
   card("학생 계정·학적 관리",
@@ -346,7 +406,7 @@ async function renderAdmin(){
     '</div>'+
     '<p class="portal-admin-summary" id="portal-admin-summary" aria-live="polite"></p>'+
     '<div class="portal-admin-scroll"><table class="portal-admin-table"><thead><tr><th>이름</th><th>가입 유형</th><th>학번 / 졸업년도</th><th>이메일</th><th>가입 승인</th><th>학적</th><th>주간 메일</th><th>변경</th></tr></thead><tbody id="portal-student-list"></tbody></table></div>'+
-    '<p class="portal-auth-note">주간 메일은 승인된 재학생만 발송 후보입니다. 실제 발송은 이메일 인증 여부 및 학급 학습통계의 전체 발송 스위치도 적용됩니다. 자퇴 계정의 데이터는 이 화면에서 자동 삭제되지 않습니다.</p>'+
+    '<p class="portal-auth-note">주간 메일은 승인된 재학생만 발송 후보입니다. 실제 발송은 이메일 인증 여부 및 학급 학습통계의 전체 발송 스위치도 적용됩니다. 자퇴 학생은 학적을 저장한 후 해당 학생의 영구 삭제 버튼을 눌러 별도 확인할 수 있습니다.</p>'+
     '<div class="portal-auth-actions"><button type="button" id="portal-admin-close">닫기</button></div>');
   $("#portal-admin-close").addEventListener("click",renderAccount);
   const {data,error}=await client.rpc("admin_list_students");
@@ -397,12 +457,25 @@ async function renderAdmin(){
       if(error){status("저장 실패: 관리자 권한과 입력값을 확인하세요.");save.disabled=false;return;}
       member.approval_status=approval.value;
       member.enrollment_status=enrollment.value;
+      syncDeleteButton();
       status(member.full_name+" 학생의 학적 상태를 저장했습니다.");
       updateResults();
       save.disabled=false;
     });
-    td.append(save);tr.append(td);body.append(tr);
+    const actions=document.createElement("div");actions.className="portal-admin-row-actions";
+    const deleteButton=document.createElement("button");
+    deleteButton.type="button";deleteButton.className="portal-admin-delete-button";
+    deleteButton.textContent="영구 삭제";
+    deleteButton.setAttribute("aria-label",member.full_name+" 계정과 연결 데이터 영구 삭제");
+    const syncDeleteButton=()=>{
+      deleteButton.hidden=member.enrollment_status!=="withdrawn"||member.signup_type==="alumni";
+      deleteButton.disabled=enrollment.value!==member.enrollment_status;
+    };
+    enrollment.addEventListener("change",syncDeleteButton);
+    deleteButton.addEventListener("click",()=>renderWithdrawnDeletion(member));
+    actions.append(save,deleteButton);td.append(actions);tr.append(td);body.append(tr);
     rows.push({member,tr,searchText:identity.join(" ").toLowerCase()});
+    syncDeleteButton();
   }
   const updateResults=()=>{
     const term=String($("#portal-admin-search").value||"").trim().toLowerCase();
