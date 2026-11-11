@@ -33,7 +33,7 @@ function card(title,inner){
   $("#portal-auth-title")?.focus?.();
 }
 function renderLogin(message=""){
-  card("포털 로그인",'<p class="portal-auth-lead">로그인하지 않아도 포털의 공개 학습 자료를 이용할 수 있습니다. 로그인은 계정 관리 및 개인 학습기록 연동을 위한 선택 기능입니다.</p>'+
+  card("포털 로그인",'<p class="portal-auth-lead">로그인하지 않아도 포털의 공개 학습 자료를 이용할 수 있습니다. 로그인은 선택 기능이며, 개인 학습기록의 기기 간 동기화는 별도 구현 예정입니다.</p>'+
    '<form id="portal-login-form" class="portal-auth-form">'+
    '<label>이메일<input name="email" type="email" autocomplete="username" required></label>'+
    '<label>비밀번호<input name="password" type="password" autocomplete="current-password" required></label>'+
@@ -218,6 +218,7 @@ async function activate(interactive=false){
     return;
   }
   currentUser=user;
+  currentProfile=null;isAdmin=false;
   let profile=null;
   const {data:found,error:readError}=await client.from("profiles").select("*").eq("user_id",user.id).maybeSingle();
   if(readError){
