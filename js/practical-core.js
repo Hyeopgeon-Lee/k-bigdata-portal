@@ -76,12 +76,60 @@ export function matchesExam(q,exam,bank=[]){
 export const localDay = (date=new Date()) => [date.getFullYear(),String(date.getMonth()+1).padStart(2,"0"),String(date.getDate()).padStart(2,"0")].join("-");
 export function summarizeAttempts(attempts){const judged=attempts.filter(a=>typeof a.correct==="boolean");return {total:attempts.length,correct:judged.filter(a=>a.correct).length,wrong:judged.filter(a=>!a.correct).length,pending:attempts.length-judged.length,rate:judged.length?Math.round(judged.filter(a=>a.correct).length/judged.length*100):null,average:attempts.length?Math.round(attempts.reduce((sum,a)=>sum+a.elapsedSeconds,0)/attempts.length):0};}
 // Lightweight lexical coloring only; never execute student code or fetch a CDN.
+export function formatSqlForDisplay(sql){
+ const source=String(sql??"").replace(/\r\n?/g,"\n");
+ if(!source.trim())return "";
+ // Hide strings and comments while inserting only whitespace between SQL clauses.
+ const protectedParts=[];
+ const hidden=source.replace(/'(?:''|[^'])*'|"(?:""|[^"])*"|--[^\n]*|\/\*[\s\S]*?\*\//g,token=>{
+  protectedParts.push(token);
+  return "\uE000"+(protectedParts.length-1)+"\uE001";
+ });
+ const clauses=/\b(?:RIGHT(?:\s+OUTER)?\s+JOIN|LEFT(?:\s+OUTER)?\s+JOIN|FULL(?:\s+OUTER)?\s+JOIN|INNER\s+JOIN|CROSS\s+JOIN|GROUP\s+BY|ORDER\s+BY|UNION(?:\s+ALL)?|JOIN|FROM|WHERE|HAVING|ON|SET|VALUES|LIMIT|OFFSET)\b/gi;
+ const withSubqueries=hidden.replace(/\(\s*(?=(?:SELECT|WITH)\b)/gi,"(\n");
+ const separated=withSubqueries
+  .replace(clauses,(keyword,offset,whole)=>{
+   const previous=whole.slice(0,offset);
+   const beforeLine=previous.slice(previous.lastIndexOf("\n")+1);
+   if(!beforeLine.trim())return keyword;
+   if(/^FROM$/i.test(keyword)&&/\bDELETE\s*$/i.test(beforeLine))return keyword;
+   if(/^ON$/i.test(keyword)&&!/\bJOIN\b/i.test(previous.slice(previous.lastIndexOf(";")+1)))return keyword;
+   return "\n"+keyword;
+  })
+  .replace(/;[ \t]*(?=(?:SELECT|UPDATE|INSERT|DELETE|CREATE|ALTER|DROP|WITH)\b)/gi,";\n");
+ const parts=separated.split("\n"),lines=[];
+ let depth=0;
+ for(let i=0;i<parts.length;i++){
+  const line=parts[i].trim();
+  if(!line){
+   if(lines.length&&lines.at(-1)!=="")lines.push("");
+   continue;
+  }
+  const leadingClose=(line.match(/^\)+/)||[""])[0].length;
+  depth=Math.max(0,depth-leadingClose);
+  const clause=/^(?:SELECT|WITH|FROM|WHERE|GROUP\s+BY|HAVING|ORDER\s+BY|UNION(?:\s+ALL)?|(?:RIGHT|LEFT|FULL)(?:\s+OUTER)?\s+JOIN|(?:INNER|CROSS)\s+JOIN|JOIN|UPDATE|INSERT|DELETE|CREATE|ALTER|DROP|SET|VALUES|LIMIT|OFFSET)\b/i.test(line)||/^\d+[.)]\s*(?:SELECT|INSERT|UPDATE|DELETE|CREATE)\b/i.test(line);
+  const related=/^(?:ON|AND|OR)\b/i.test(line);
+  const comment=/^\uE000(\d+)\uE001/.exec(line);
+  const isComment=comment&&/^(?:--|\/\*)/.test(protectedParts[Number(comment[1])]);
+  const continuation=!clause&&leadingClose===0&&!isComment;
+  lines.push("    ".repeat(Math.max(0,depth+(related||continuation?1:0)))+line);
+  // An unmatched closing parenthesis on a clause line ends a subquery;
+  // parentheses inside COUNT(), AVG(), etc. do not alter the query nesting.
+  let localBalance=0,unmatchedClose=0;
+  for(const ch of line){
+   if(ch==="(")localBalance++;
+   else if(ch===")"){if(localBalance)localBalance--;else unmatchedClose++;}
+  }
+  depth=Math.max(0,depth-Math.max(0,unmatchedClose-leadingClose));
+  const next=parts.slice(i+1).find(x=>x.trim())?.trim()||"";
+  if(/\(\s*$/.test(line)&&/^(?:SELECT|WITH)\b/i.test(next))depth++;
+ }
+ while(lines.at(-1)==="")lines.pop();
+ return lines.join("\n").replace(/\uE000(\d+)\uE001/g,(_,i)=>protectedParts[Number(i)]);
+}
 export function formatCodeForDisplay(code,language){
  const source=String(code??"").replace(/\r\n?/g,"\n");
- if(language==="SQL"){
-  const literals=/('(?:''|[^'])*'|"(?:""|[^"])*"|--[^\n]*|\/\*[\s\S]*?\*\/)/g;
-  return source.split(literals).map((part,index)=>index%2?part:part.replace(/\s+(INNER JOIN|LEFT JOIN|RIGHT JOIN|FULL JOIN|CROSS JOIN|JOIN|ON|FROM|WHERE|GROUP BY|HAVING|ORDER BY|UNION ALL|UNION|SET|VALUES)\s+/gi,"\n$1 ")).join("").trim();
- }
+ if(language==="SQL")return formatSqlForDisplay(source);
  if(language!=="C"&&language!=="Java")return source.split("\n").map(line=>line.replace(/\s+$/,"")).join("\n").trim();
 
  // Multiline C/Java questions already carry intentional teaching indentation in the dataset.
