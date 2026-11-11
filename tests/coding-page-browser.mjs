@@ -89,7 +89,7 @@ try{
       const row=rect(".coding-actions--help");
       const hint=rect("#coding-hint-button");
       const answer=rect("#coding-answer-button");
-      const progress=rect(".coding-actions--progress");
+      const progressButton=rect("#coding-done-button");
       const trace=document.querySelector("#coding-trace-button");
       return {
         rowWidth:row.width,
@@ -97,7 +97,7 @@ try{
         rowLeft:row.left,
         answerRight:answer.right,
         rowRight:row.right,
-        gapBelowHelp:progress.top-row.bottom,
+        gapBelowHelp:progressButton.top-row.bottom,
         traceDisplay:getComputedStyle(trace).display
       };
     });
