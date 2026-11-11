@@ -567,7 +567,7 @@ document.querySelectorAll("[data-learning-grade]").forEach(button=>button.addEve
   for(const item of document.querySelectorAll("[data-learning-grade]"))item.disabled=true;
   status.textContent="자가평가를 기록하는 중입니다...";
   try{
-    const editorText=$("#coding-editor").value || getSafe(DRAFT_PREFIX+id);
+    const editorText=getSafe(DRAFT_PREFIX+id) || $("#coding-editor").value;
     const response=await recordLearningAttempt({
       bank:"coding",questionId:id,result,
       gradingMethod:result==="ungraded"?"none":"self",
