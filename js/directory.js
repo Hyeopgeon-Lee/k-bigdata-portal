@@ -75,5 +75,5 @@ document.getElementById("service-groups")?.addEventListener("click",event=>{
  toggleFavorite(favorite.dataset.favorite);
  render();
 });
-window.addEventListener("storage",event=>{if(event.key==="kbigdata-portal-ui-v1")render();});
+window.addEventListener("portal-personal-updated",render);
 render();
