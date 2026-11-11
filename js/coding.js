@@ -484,7 +484,7 @@ function showQuestion(q) {
   $("#coding-share-status").textContent = "";
   const done = doneIds.has(q.id);
   $("#coding-done-button").setAttribute("aria-pressed",String(done));
-  $("#coding-done-button").textContent = done ? "완료 표시 취소" : "스스로 풀었어요 ✓";
+  $("#coding-done-button").textContent = done ? "완료 표시 취소" : "학습 완료 표시";
   updateSummary();
   listQuestions(true);
 }
@@ -599,7 +599,7 @@ $("#coding-done-button").addEventListener("click", () => {
     $("#coding-feedback").textContent = "완료 표시를 취소했습니다.";
   } else {
     doneIds.add(current.id);
-    $("#coding-feedback").textContent = "스스로 해결한 문제로 표시했습니다. 자동 채점 결과는 아닙니다.";
+    $("#coding-feedback").textContent = "학습 완료로 표시했습니다. 정답 여부는 해설 아래의 자가평가 버튼에서 별도로 선택하세요.";
   }
   setSafe(DONE_KEY, JSON.stringify([...doneIds]));
   if(doneIds.has(current.id)){
@@ -607,7 +607,7 @@ $("#coding-done-button").addEventListener("click", () => {
   }
   const done = doneIds.has(current.id);
   $("#coding-done-button").setAttribute("aria-pressed",String(done));
-  $("#coding-done-button").textContent = done ? "완료 표시 취소" : "스스로 풀었어요 ✓";
+  $("#coding-done-button").textContent = done ? "완료 표시 취소" : "학습 완료 표시";
   updateSummary();
   listQuestions(true);
 });
