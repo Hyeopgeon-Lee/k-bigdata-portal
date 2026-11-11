@@ -175,8 +175,14 @@ async function start(){
  const form=byId('room-booking-form');
  fillTimeSelect(form.elements.start);fillTimeSelect(form.elements.end);
  for(const [value,label] of purposes)form.elements.purpose.add(new Option(label,value));
- form.elements.date.value=selectedDate;form.elements.date.min=selectedDate;
- form.elements.start.value='09:00';form.elements.end.value='10:00';
+ form.elements.date.min=selectedDate;
+ const now=koreaParts();
+ let first=Math.max(540,Math.ceil((now.hour*60+now.minute+1)/30)*30);
+ let bookingDate=selectedDate;
+ if(first>=1320){bookingDate=dateAfter(1);first=540;}
+ const clock=minutes=>String(Math.floor(minutes/60)).padStart(2,'0')+':'+String(minutes%60).padStart(2,'0');
+ form.elements.date.value=bookingDate;
+ form.elements.start.value=clock(first);form.elements.end.value=clock(Math.min(first+60,1320));
  for(const button of document.querySelectorAll('[data-room-option]'))button.addEventListener('click',()=>setRoom(button.dataset.roomOption,false));
  for(const button of document.querySelectorAll('[data-room-tab]'))button.addEventListener('click',()=>setTab(button.dataset.roomTab));
  form.addEventListener('submit',createBooking);
