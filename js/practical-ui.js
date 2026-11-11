@@ -322,6 +322,7 @@ function revealAnswer(reason="resume",now=Date.now()){
  }else if(!attempt.viewedExplanation){
   attempt={...attempt,correct:gradeAnswer(current,attempt.answer),viewedExplanation:true,autoRevealed:false,revealReason:"submitted",revealedAt:now};
  }
+ attempt.selfGraded=current.grading==="self";
  saveSession(current.id,attempt);
  saveAttempt(attempt);
  if(timer){clearInterval(timer);timer=null;}
@@ -343,7 +344,7 @@ function revealAnswer(reason="resume",now=Date.now()){
    +'<section class="beginner-section beginner-why"><p class="beginner-kicker">'+whyNo+' · 왜 이 답인가?</p><p class="beginner-explanation">'+esc(extraExplanation)+'</p></section>'
    +'<section class="beginner-section beginner-memory"><p class="beginner-kicker">'+memoryNo+' · 시험에서 꼭 기억할 것</p><p>'+esc(examMemory(q))+'</p></section>'
    +'</div>';
- $("#answer-result").innerHTML='<section class="bank-result"><h3 tabindex="-1" id="result-heading">'+esc(resultTitle)+'</h3>'+(attempt.autoRevealed?'<p class="timeout-note">권장 풀이 시간이 끝나 자동으로 정답과 풀이를 공개했습니다. 이 시도는 정답률에 포함하지 않습니다.</p>':'')+'<div class="answer-pair"><div><h4>'+esc(learnerLabel)+'</h4><pre>'+esc(learnerAnswer)+'</pre></div><div><h4>'+(q.grading==="self"?'예시 정답':'정답')+'</h4><pre>'+esc(q.answer)+'</pre></div></div>'+selfJudge+learningGuide+'<div class="practice-actions">'+button("retry","다시 풀기")+similar.slice(0,3).map(s=>button("similar","비슷한 문제",'data-id="'+esc(s.id)+'" aria-label="'+esc(s.title)+' 비슷한 문제"')).join("")+'</div>'+sourceDetails+'</section>';
+ $("#answer-result").innerHTML='<section class="bank-result"><h3 tabindex="-1" id="result-heading">'+esc(resultTitle)+'</h3>'+(attempt.autoRevealed?'<p class="timeout-note">권장 풀이 시간이 끝나 자동으로 정답과 풀이를 공개했습니다. 이 시도는 정답률에 포함하지 않습니다.</p>':'')+'<p id="practical-cloud-status" class="hint" role="status" aria-live="polite">클라우드 학습기록 동기화 중...</p>'+'<div class="answer-pair"><div><h4>'+esc(learnerLabel)+'</h4><pre>'+esc(learnerAnswer)+'</pre></div><div><h4>'+(q.grading==="self"?'예시 정답':'정답')+'</h4><pre>'+esc(q.answer)+'</pre></div></div>'+selfJudge+learningGuide+'<div class="practice-actions">'+button("retry","다시 풀기")+similar.slice(0,3).map(s=>button("similar","비슷한 문제",'data-id="'+esc(s.id)+'" aria-label="'+esc(s.title)+' 비슷한 문제"')).join("")+'</div>'+sourceDetails+'</section>';
  updateGate();
  if(attempt.autoRevealed){
   $("#gate-status").textContent=attempt.lateSubmittedAt?"시간 초과 후 작성한 답을 저장했습니다. 정답률에는 포함하지 않습니다.":ANSWER_SECONDS+"초가 지나 정답과 풀이를 자동 공개했습니다. 정답은 계속 입력할 수 있습니다.";
@@ -448,3 +449,5 @@ root.addEventListener("change",async event=>{
  try{if(file.size>5*1024*1024)throw Error("5MB 이하 JSON 파일만 가져올 수 있습니다.");const count=importLearning(JSON.parse(await readFileText(file)));renderProgress();$("#import-status").textContent=count+"건을 확인하고 기존 기록과 병합했습니다.";storageNotice();}
  catch(error){message.textContent=error instanceof SyntaxError?"JSON 파일을 확인하세요.":error.message;}
 });
+
+document.addEventListener("portal-learning-sync",event=>{const node=document.getElementById("practical-cloud-status");if(node)node.textContent=event.detail?.message||"";});
