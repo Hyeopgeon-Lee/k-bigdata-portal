@@ -20,7 +20,7 @@
 .room-panel-heading .room-muted{margin:4px 0 0}
 .room-muted,.room-lead{color:#667990;font-size:13px;line-height:1.65;word-break:keep-all}
 .room-lead{margin:7px 0 15px}
-.room-refresh-btn{flex:0 0 auto;gap:6px;min-height:37px!important;margin:1px 0 0;padding:7px 11px!important;border-color:#e0e7f0!important;border-radius:10px!important;background:#f6f8fc!important;color:#315578!important;font-size:12px!important;font-weight:750!important;white-space:nowrap}
+.room-refresh-btn{flex:0 0 auto;gap:6px;min-height:44px!important;margin:1px 0 0;padding:7px 11px!important;border-color:#e0e7f0!important;border-radius:10px!important;background:#f6f8fc!important;color:#315578!important;font-size:12px!important;font-weight:750!important;white-space:nowrap}
 .room-refresh-btn:hover{background:#eaf1fa!important}
 .room-refresh-btn svg{flex:none}
 .room-datebar{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:19px 0 17px}
