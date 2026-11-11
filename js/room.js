@@ -178,8 +178,7 @@ async function start(){
  const a=await db.rpc('portal_super_admin_allowed');admin=a.data===true;
  allowed=window.portalLearning?.write===true;
  if(!allowed&&!admin){tell('승인된 재학생과 관리자만 예약할 수 있습니다.');return;}
- const {data:profile}=await db.from('profiles').select('full_name,student_no').eq('user_id',user.id).maybeSingle();
- byId('room-identity').textContent='로그인: '+(profile?.full_name||user.email)+(profile?.student_no?' · '+profile.student_no:'');
+ byId('room-identity').textContent='로그인: '+(window.portalMemberName?.()||'이름 미등록');
  byId('room-app').hidden=false;
  byId('room-admin-tab').hidden=!admin;
  selectedRoom=new URLSearchParams(location.search).get('room')==='8319'?'8319':'8318';
