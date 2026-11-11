@@ -148,3 +148,38 @@ body.shared-question-bank :is(.coding-code pre,.code-scroll pre,.coding-scroll t
  .quiz-navigation .quiz-nav-button{font-size:12px;padding-inline:7px}
  .quiz-navigation .quiz-counter{font-size:14px}
 }
+
+/* Visual QA fixes: the nested containers of three legacy pages used different
+   widths and the editor/form carried stronger old declarations. */
+body.shared-question-bank .quiz-answer,
+body.shared-question-bank.practical-page form#answer-form.quiz-answer,
+body.shared-question-bank .coding-page .coding-section.quiz-answer,
+body.shared-question-bank .ncp-panel section.quiz-answer{
+  display:block!important;box-sizing:border-box!important;
+  padding:20px!important;margin:22px 0 14px!important;
+  border:1px solid var(--quiz-border)!important;
+  border-radius:var(--quiz-card-radius)!important;background:var(--quiz-card)!important;
+}
+@media(max-width:960px){
+  body.shared-question-bank.practical-page .learning-content{
+    width:calc(100% - 32px)!important;max-width:960px!important;margin-inline:auto!important;
+  }
+  body.shared-question-bank .coding-page > section.container[aria-labelledby="coding-browse-title"]{
+    width:calc(100% - 32px)!important;max-width:960px!important;
+    padding-inline:0!important;margin-inline:auto!important;
+  }
+}
+@media(max-width:690px){
+  body.shared-question-bank.practical-page .learning-content{
+    width:calc(100% - 24px)!important;
+  }
+  body.shared-question-bank .coding-page > section.container[aria-labelledby="coding-browse-title"]{
+    width:calc(100% - 24px)!important;
+  }
+  body.shared-question-bank .quiz-answer,
+  body.shared-question-bank.practical-page form#answer-form.quiz-answer,
+  body.shared-question-bank .coding-page .coding-section.quiz-answer,
+  body.shared-question-bank .ncp-panel section.quiz-answer{
+    padding:16px!important;margin-top:18px!important;
+  }
+}
