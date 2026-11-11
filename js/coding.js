@@ -1,4 +1,5 @@
 import {learningLocal as localStorage, learningSession as sessionStorage} from "./learning-storage.mjs";
+import {recordLearningAttempt,debounceCloudDraft,fetchCloudDraft} from "./learning-activity.mjs";
 import {codingProblems as sampleProblems} from "../data/coding-samples.js?v=20261111-ubuntu-vim-only-2";
 import {javaProblems} from "../data/coding-java-98.js?v=20261111-java016-korean-units-1";
 import {cFoundationProblems} from "../data/coding-c-foundations.js?v=20261111-essential-ranges-1";
@@ -439,6 +440,16 @@ function showQuestion(q) {
   ubuntuOutputNote.hidden = !ubuntuOutputNote.textContent;
   renderExtraExamples(q);
   $("#coding-editor").value = getSafe(DRAFT_PREFIX + q.id);
+  $("#coding-self-status").textContent = "풀이를 마친 뒤 정답 여부를 직접 기록해 주세요.";
+  for(const button of document.querySelectorAll("[data-learning-grade]"))button.setAttribute("aria-pressed","false");
+  if(!$("#coding-editor").value){
+    const questionId=q.id;
+    void fetchCloudDraft("coding",questionId).then(text=>{
+      if(!text||current.id!==questionId||$("#coding-editor").value)return;
+      $("#coding-editor").value=text;
+      if(codeEditor)codeEditor.setContent(text,current.language,current.language==="linux"?"Ubuntu 명령어 입력":"직접 코딩하기");
+    }).catch(()=>{});
+  }
   $("#coding-hint-text").textContent = q.hint;
   $("#coding-code").textContent = q.code;
   const vimSteps = q.language === "linux" && Array.isArray(q.vimSteps) ? q.vimSteps : [];
@@ -548,7 +559,40 @@ $("#coding-answer-button").addEventListener("click", () => reveal("#coding-answe
 $("#coding-trace-button").addEventListener("click", () => reveal("#coding-trace","#coding-trace-button"));
 $("#coding-editor").addEventListener("input", event => {
   setSafe(DRAFT_PREFIX + current.id, event.target.value);
+  debounceCloudDraft("coding",current.id,event.target.value);
 });
+document.querySelectorAll("[data-learning-grade]").forEach(button=>button.addEventListener("click",async()=>{
+  const id=current.id,result=button.dataset.learningGrade;
+  const status=$("#coding-self-status");
+  for(const item of document.querySelectorAll("[data-learning-grade]"))item.disabled=true;
+  status.textContent="자가평가를 기록하는 중입니다...";
+  try{
+    const editorText=$("#coding-editor").value || getSafe(DRAFT_PREFIX+id);
+    const response=await recordLearningAttempt({
+      bank:"coding",questionId:id,result,
+      gradingMethod:result==="ungraded"?"none":"self",
+      answerText:editorText,
+      usedHint:$("#coding-hint-button").getAttribute("aria-expanded")==="true",
+      metadata:{language:current.language,question_title:current.title.slice(0,100)}
+    });
+    if(current.id!==id)return;
+    for(const item of document.querySelectorAll("[data-learning-grade]"))item.setAttribute("aria-pressed",String(item===button));
+    if(response.state==="saved"||response.state==="pending"){
+      doneIds.add(id);
+      setSafe(DONE_KEY,JSON.stringify([...doneIds]));
+      $("#coding-done-button").setAttribute("aria-pressed","true");
+      $("#coding-done-button").textContent="완료 표시 취소";
+      updateSummary();listQuestions(true);
+    }
+    status.textContent=response.state==="saved"?"자가평가가 클라우드에 저장되었습니다. 재풀이하면 새 기록으로 누적됩니다.":
+      response.state==="pending"?"현재 기기에 보관했습니다. 네트워크 복구 후 다시 동기화합니다.":
+      "이 계정은 학습기록을 작성할 수 없습니다.";
+  }catch(error){
+    if(current.id===id)status.textContent="저장하지 못했습니다. 로그인 상태와 네트워크를 확인해 주세요.";
+  }finally{
+    if(current.id===id)for(const item of document.querySelectorAll("[data-learning-grade]"))item.disabled=false;
+  }
+}));
 $("#coding-done-button").addEventListener("click", () => {
   if (doneIds.has(current.id)) {
     doneIds.delete(current.id);
@@ -558,6 +602,9 @@ $("#coding-done-button").addEventListener("click", () => {
     $("#coding-feedback").textContent = "스스로 해결한 문제로 표시했습니다. 자동 채점 결과는 아닙니다.";
   }
   setSafe(DONE_KEY, JSON.stringify([...doneIds]));
+  if(done){
+    void recordLearningAttempt({bank:"coding",questionId:current.id,result:"completed",gradingMethod:"completion"}).catch(()=>{});
+  }
   const done = doneIds.has(current.id);
   $("#coding-done-button").setAttribute("aria-pressed",String(done));
   $("#coding-done-button").textContent = done ? "완료 표시 취소" : "스스로 풀었어요 ✓";
@@ -668,7 +715,7 @@ void import("./coding-editor.js?v=20261024-autocomplete-1")
       host:$("#coding-editor-host"),
       language:current.language,
       autocompleteEnabled,
-      onChange(value) { setSafe(DRAFT_PREFIX + current.id, value); }
+      onChange(value) { setSafe(DRAFT_PREFIX + current.id, value); debounceCloudDraft("coding",current.id,value); }
     });
     autocompleteToggle.disabled = false;
     refreshAutocompleteStatus();
