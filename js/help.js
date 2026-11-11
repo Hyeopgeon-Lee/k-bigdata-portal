@@ -221,7 +221,7 @@ async function start(){
   return;
  }
  el('help-body').hidden=false;
- el('help-identity').textContent='로그인: '+current.email;
+ el('help-identity').textContent='로그인: '+(window.portalMemberName?.()||'이름 미등록');
  el('help-admin-tab').hidden=!admin;
  el('help-create-tab').hidden=!writer&&!admin;
  initForm();
