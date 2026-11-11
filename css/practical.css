@@ -1047,3 +1047,12 @@
 @media(max-width:480px){
   .practical-page .solve-share-row{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
+
+/* Display SQL solution indentation exactly, scrolling instead of collapsing spaces. */
+.practical-page .answer-pair pre{
+  tab-size:4;
+  white-space:pre;
+  overflow-x:auto;
+  overflow-wrap:normal;
+  font-variant-ligatures:none;
+}
