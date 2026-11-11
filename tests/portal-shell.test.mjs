@@ -10,6 +10,9 @@ const root=fileURLToPath(new URL('../',import.meta.url));
 const read=file=>readFileSync(path.join(root,file),'utf8').replaceAll('\r\n','\n');
 const discover=dir=>readdirSync(dir,{withFileTypes:true}).flatMap(entry=>entry.name.startsWith('.')||['node_modules','ui-screenshots','test-results'].includes(entry.name)?[]:entry.isDirectory()?discover(path.join(dir,entry.name)):entry.name.endsWith('.html')?[path.relative(root,path.join(dir,entry.name)).replaceAll('\\','/')]:[]);
 const files=discover(root).sort();
+const matchNavigationVersion=/const navigationScriptVersion='([^']+)'/.exec(read('scripts/build-portal-shell.mjs'));
+assert.ok(matchNavigationVersion,'the generated shell declares a navigation script version');
+const navigationScriptVersion=matchNavigationVersion[1];
 assert.equal(files.length,Object.keys(portalPages).length,'all discovered HTML pages must have an explicit page identity');
 assert.equal(new Set(navigationItems.map(item=>item.id)).size,navigationItems.length,'unique service IDs');
 assert.equal(groups.length,4,'preserve the four portal areas');
@@ -21,7 +24,7 @@ for(const file of files){
   assert.equal((html.match(/css\/portal-navigation\.css\?v=/g)||[]).length,1,'one shared CSS asset '+file);
   assert.equal((html.match(/js\/portal-navigation\.js\?v=/g)||[]).length,1,'one shared early menu script '+file);
   assert.ok(html.includes('css/portal-navigation.css?v='+shellVersion),'versioned CSS '+file);
-  assert.ok(html.includes('js/portal-navigation.js?v='+shellVersion),'versioned JS '+file);
+  assert.ok(html.includes('js/portal-navigation.js?v='+navigationScriptVersion),'versioned JS '+file);
   assert.ok(html.indexOf('css/portal-navigation.css')>html.lastIndexOf('<style'),'shared styles follow any inline stylesheet '+file);
   assert.ok(/<script defer src="js\/portal-navigation\.js/.test(html),'menu runs independently of content modules '+file);
   if(page.group){
