@@ -22,6 +22,8 @@ export const canSubmit = (attempt,answer,now=Date.now()) => !!attempt && Number.
   (!attempt.submittedAt && !attempt.viewedExplanation && now-attempt.startedAt<ANSWER_SECONDS*1000)
 );
 export const canReveal = (attempt,now=Date.now()) => !!attempt && Number.isFinite(attempt.startedAt) && (!!attempt.submittedAt || now-attempt.startedAt>=ANSWER_SECONDS*1000);
+// A completed or revealed question must start a fresh writable session when reopened.
+export const canResumeUnfinishedAttempt = (previous,now=Date.now()) => !!previous && Number.isFinite(previous.startedAt) && previous.startedAt<=now && !previous.submittedAt && !previous.viewedExplanation;
 export function gradeAnswer(question, answer) {
   const normalize = value => String(value).normalize("NFKC").trim().replace(/\r/g,"").replace(/[\t ]+/g," ").replace(/ *\n */g,"\n");
   if(question.grading==="sql_keywords") return normalize(question.answer).toUpperCase()===normalize(answer).replace(/,/g," ").replace(/ +/g," ").toUpperCase();
