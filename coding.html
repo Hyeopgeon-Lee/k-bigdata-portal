@@ -22,7 +22,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css?v=20261111-account-sync-1">
   <link rel="stylesheet" href="css/portal-ux.css?v=20261111-account-sync-1">
-  <link rel="stylesheet" href="css/coding.css?v=20261111-student-review-1">
+  <link rel="stylesheet" href="css/coding.css?v=20261112-share-visible-1">
   <script defer src="js/analytics.js?v=20261008-ga4-3"></script>
 <!-- portal:assets:start (generated; edit scripts/portal-shell-template.mjs) -->
 <link rel="stylesheet" href="css/portal-navigation.css?v=20261111-account-sync-1">
@@ -106,12 +106,12 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
         <article class="coding-panel coding-detail" aria-label="선택한 문제"><button type="button" id="coding-show-list" class="study-return">‹ 문제 목록</button>
           <div class="coding-tagrow"><span id="coding-id" class="coding-chip">JAVA-001</span><span id="coding-level" class="coding-chip coding-chip--muted">입문</span><span id="coding-topic" class="coding-chip coding-chip--muted">출력</span></div>
           <h2 id="coding-title" tabindex="-1">문제를 불러오고 있습니다.</h2>
-          <details><summary>더보기</summary><div class="coding-share-actions" role="group" aria-label="현재 문제 공유 및 오류 신고">
+          <div class="coding-share-actions" role="group" aria-label="현재 문제 공유 및 오류 신고">
             <button id="coding-share-button" class="button button-secondary" type="button" aria-label="현재 문제 공유">문제 공유</button>
             <button id="coding-link-button" class="button button-secondary" type="button" aria-label="현재 문제 링크 복사">링크 복사</button>
             <a id="coding-report-button" class="button button-secondary" href="help.html" aria-label="현재 문제 오류 신고">오류 신고</a>
           </div>
-          </details><p id="coding-share-status" class="coding-share-status" role="status" aria-live="polite"></p>
+          <p id="coding-share-status" class="coding-share-status" role="status" aria-live="polite"></p>
           <p id="coding-statement" class="coding-desc">JavaScript가 활성화되면 문제 내용이 표시됩니다.</p>
           <div class="coding-io" aria-label="입출력 예제">
             <div><b id="coding-input-label">입력 예제</b><pre id="coding-input">—</pre></div>
