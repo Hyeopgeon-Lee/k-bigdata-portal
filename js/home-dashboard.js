@@ -9,10 +9,8 @@ const link=service=>{const ext=/^https:\/\//.test(service.url);return '<a href="
 
 // Presentation preference only: does not grant access or hide any service.
 const GRADE_KEY="kbigdata:home-grade:v1";
-const readSavedGrade=()=>{
-  try{const value=localStorage.getItem(GRADE_KEY);return value==="1"||value==="2"?value:null;}
-  catch{return null;}
-};
+let accountGrade=null;
+const readSavedGrade=()=>accountGrade;
 let selectedGrade=readSavedGrade()||"1";
 const gradeLayouts=Object.freeze({
  "1":{
@@ -96,7 +94,7 @@ function renderGrade(){
  const status=$("#home-grade-status");
  if(status)status.textContent=readSavedGrade()
    ?"현재 "+selectedGrade+"학년 화면 · 언제든 변경할 수 있습니다."
-   :"처음 이용하신다면 학년을 선택하세요. 이 기기에 저장됩니다.";
+   :"학년을 선택하면 내 계정에 저장됩니다.";
  renderQuickActions();
  renderPersonal();
  renderHighlights();
@@ -105,10 +103,26 @@ function renderGrade(){
 function chooseGrade(grade){
  if(grade!=="1"&&grade!=="2")return;
  selectedGrade=grade;
- try{localStorage.setItem(GRADE_KEY,grade);}catch{}
+ accountGrade=grade;
  renderGrade();
+ void saveAccountGrade(grade);
 }
 
+async function loadAccountGrade(){
+ const client=globalThis.portalSupabaseClient;if(!client||!globalThis.portalLearning?.read)return;
+ const {data:{user},error}=await client.auth.getUser();if(error||!user)return;
+ const result=await client.from("user_preferences").select("preferred_grade").eq("user_id",user.id).maybeSingle();
+ if(result.error)return;
+ if(["1","2"].includes(result.data?.preferred_grade)){
+  accountGrade=result.data.preferred_grade;selectedGrade=accountGrade;renderGrade();
+ }
+}
+async function saveAccountGrade(grade){
+ const client=globalThis.portalSupabaseClient;if(!client||!globalThis.portalLearning?.write)return;
+ const {data:{user},error}=await client.auth.getUser();if(error||!user)return;
+ const result=await client.from("user_preferences").upsert({user_id:user.id,preferred_grade:grade},{onConflict:"user_id"});
+ if(result.error){console.error(result.error);const status=$("#home-grade-status");if(status)status.textContent="학년 설정을 저장하지 못했습니다. 다시 선택해 주세요.";}
+}
 let activeTab = getFavorites().length ? "favorites" : getRecent().length ? "recent" : "favorites";
 const panels = {favorites:"#favorite-services",recent:"#recent-services"};
 const tabIds = {favorites:"#tab-favorites",recent:"#tab-recent"};
@@ -216,9 +230,6 @@ document.querySelector(".dashboard-personal-tabs")?.addEventListener("keydown",e
   const target=(event.key==="Home"||event.key==="ArrowLeft")?"favorites":"recent";
   showPersonalTab(target,true);
 });
-window.addEventListener("storage",event=>{
- if(event.key==="kbigdata-portal-ui-v1"){renderPersonal();renderQuickActions();}
- if(event.key===GRADE_KEY){selectedGrade=readSavedGrade()||"1";renderGrade();}
-});
+window.addEventListener("portal-personal-updated",()=>{renderPersonal();renderQuickActions();renderHighlights();});
 
-window.addEventListener("portal-learning-ready",renderGrade);
+window.addEventListener("portal-learning-ready",()=>{renderGrade();void loadAccountGrade();});
