@@ -12,7 +12,7 @@ root.hidden=true; // Public portal is always usable without signing in.
 document.body.append(root);
 const css=document.createElement("link");
 css.rel="stylesheet";
-css.href="css/portal-auth.css?v=20261111";
+css.href="css/portal-auth.css?v=20261111-member-cards";
 document.head.append(css);
 
 const locked=document.getElementById("learning-lock");
@@ -191,6 +191,9 @@ function renderComplete(user){
   if(isProfessor){
      const typeGroup=form.querySelector(".portal-auth-identity");typeGroup.hidden=true;
      for(const radio of typeGroup.querySelectorAll("input"))radio.disabled=true;
+     form.elements.graduation_year.disabled=true;
+     form.elements.graduation_year.required=false;
+     form.elements.graduation_year.closest("label").hidden=true;
      form.elements.student_no.disabled=true;
      form.elements.student_no.closest("label").hidden=true;
    }
