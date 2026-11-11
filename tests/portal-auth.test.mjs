@@ -37,6 +37,13 @@ for(const page of ["coding","practical","ncp","docs","interview","certifications
  assert.match(html,/data-module=/);
  assert.doesNotMatch(html,/<script type="module" src=/);
 }
+for(const page of ["room","help"]){
+ const html=read(page+".html");
+ assert.match(html,/id="learning-lock"/);
+ assert.match(html,/#learning-notice a\{display:none\}/);
+ assert.match(html,/data-module=/);
+ assert.match(html,/src="js\/portal-auth\.mjs/);
+}
 for(const page of ["index","services","schedule","recruit"])assert.doesNotMatch(read(page+".html"),/id="learning-lock"/);
 const calls=[];
 globalThis.localStorage={getItem(){calls.push("read");return "legacy";},setItem(){calls.push("write");}};
