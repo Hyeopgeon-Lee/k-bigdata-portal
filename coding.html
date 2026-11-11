@@ -22,7 +22,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css?v=20261026-schedule-align-1">
   <link rel="stylesheet" href="css/portal-ux.css?v=20261026-schedule-align-1">
-  <link rel="stylesheet" href="css/coding.css?v=20261111-ubuntu-desktop-actions-1">
+  <link rel="stylesheet" href="css/coding.css?v=20261111-student-review-1">
   <script defer src="js/analytics.js?v=20261008-ga4-3"></script>
 <!-- portal:assets:start (generated; edit scripts/portal-shell-template.mjs) -->
 <link rel="stylesheet" href="css/portal-navigation.css?v=20261026-schedule-align-1">
@@ -179,6 +179,17 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
                 <h3>주의할 점</h3>
                 <p id="coding-ubuntu-mistake" class="coding-ubuntu-info"></p>
               </section>
+              <section id="coding-self-review" class="coding-self-review" aria-label="자가 학습 결과 기록">
+                <h3>내 풀이 결과 기록하기</h3>
+                <p>정답과 해설을 비교한 뒤 직접 선택하세요. 자동 채점이 아닌 자기평가이며, 틀린 문제는 나중에 복습할 수 있습니다.</p>
+                <div class="coding-self-choices" role="group" aria-label="정답 여부 자기평가">
+                  <button type="button" class="coding-btn" data-learning-grade="correct">정답이에요</button>
+                  <button type="button" class="coding-btn" data-learning-grade="incorrect">틀렸어요</button>
+                  <button type="button" class="coding-btn" data-learning-grade="ungraded">아직 판단하지 못했어요</button>
+                </div>
+                <p id="coding-self-status" role="status" aria-live="polite"></p>
+                <a href="my-learning.html" class="coding-review-link">내 학습현황 및 오답 복습 보기</a>
+              </section>
             </div>
             <div id="coding-trace" class="coding-reveal" hidden>
               <h3>실행 단계와 값 변화</h3>
@@ -209,7 +220,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
     }
   }
   </script>
-  <script type="application/x-learning" data-module="js/coding.js?v=20261111-ubuntu-clarity-1"></script>
+  <script type="application/x-learning" data-module="js/coding.js?v=20261111-student-review-1"></script>
   <script type="application/x-learning" data-module="js/portal-shell-entry.js?v=20261026-schedule-align-1"></script>
 </body>
 </html>
