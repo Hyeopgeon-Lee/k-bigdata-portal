@@ -80,3 +80,14 @@
   .portal-auth-card { margin: auto 0; padding: 22px 18px; }
   #portal-account-button { font-size: 12px; min-height: 36px; padding-inline: 8px; }
 }
+/* Optional login: a small, dismissible panel must not obstruct public lessons. */
+.portal-auth-card { position: relative; }
+.portal-auth-dismiss {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  min-height: 36px !important;
+  padding: 6px 10px !important;
+  background: transparent !important;
+}
+.portal-auth-card:has(.portal-auth-dismiss) { padding-top: 50px; }
