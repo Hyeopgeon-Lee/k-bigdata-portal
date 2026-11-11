@@ -121,7 +121,9 @@ assert.ok(services.includes('기초 프로그래밍·명령어 350제'));
 assert.ok(html.includes('전체 문제')&&html.includes('내 완료'));
 for(const redundant of ['FIRST SEMESTER · CODING FOUNDATIONS','현재 공개된 예제','문제 제작 목표','총 302문제'])
   assert.ok(!html.includes(redundant),'remove redundant: '+redundant);
-for(const id of ['coding-share-button','coding-link-button','coding-report-button','coding-share-status','coding-hint-button','coding-answer-button','coding-trace-button','coding-ubuntu-guide','coding-next-button','coding-available','coding-completed'])
+for(const id of ['coding-share-button','coding-link-button','coding-report-button','coding-position','coding-show-list','coding-title'])
+  assert.ok(js.includes('id:"'+id+'"')||js.includes('counterId:"'+id+'"')||js.includes('listId:"'+id+'"')||js.includes('titleId:"'+id+'"'),'missing shared UI control '+id);
+for(const id of ['coding-share-status','coding-hint-button','coding-answer-button','coding-trace-button','coding-ubuntu-guide','coding-next-button','coding-available','coding-completed'])
   assert.ok(html.includes('id="'+id+'"'),'missing interactive control '+id);
 const ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
 assert.equal(new Set(ids).size,ids.length,'HTML ids must be unique');
