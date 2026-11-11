@@ -18,7 +18,7 @@ const practical=read('js/practical-ui.js');
 assert.ok(!/q\.verificationNote|q\.confidence|confidence-policy|bank-stats/.test(practical));
 assert.ok(practical.includes('q.history.map')&&practical.includes('q.sources.map'));
 assert.ok(practical.includes('rel="noopener noreferrer"'));
-assert.ok(practical.includes('canReveal')&&practical.includes('remainingSeconds'));
+assert.ok(practical.includes('정답·해설 보기') && !practical.includes('autoRevealAnswer'));
 assert.ok(practical.includes('복구할 수 없습니다'));
 assert.ok(!read('js/learning-ui.js').includes('시험 전에 반드시 확인할 내용'));
 assert.ok(!read('js/learning-ui.js').includes('공공기관 채용공고 참고 사례'));

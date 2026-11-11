@@ -5,7 +5,7 @@ import {groupSearchResults} from '../js/search.js';
 import {portalPages,navigationItems} from '../js/portal-navigation-model.mjs';
 import {renderHeader,renderServiceNavigation,renderToolbar} from '../scripts/portal-shell-template.mjs';
 const root=new URL('../',import.meta.url);
-const read=path=>readFileSync(new URL(path,root),'utf8');
+const read=path=>readFileSync(new URL(path,root),'utf8').replaceAll('\r\n','\n');
 const pages=Object.keys(portalPages);
 for(const page of pages){
  const html=read(page+'.html');

@@ -50,7 +50,7 @@ async function snapshot(page){
     const rect=node=>{const b=node.getBoundingClientRect();return Object.fromEntries(['x','y','width','height'].map(key=>[key,Math.round(b[key]*100)/100]));};
     const component=selector=>{const node=document.querySelector(selector);return node?{style:style(node),rect:rect(node)}:null;};
     const nav=document.querySelector('.portal-service-nav');
-    const active=nav?.querySelector('.portal-nav-current [aria-current="page"]');
+    const active=nav?.querySelector('.portal-service-nav [data-nav-id][aria-current="page"]');
     const commonHeader=Object.fromEntries(['.site-header','.header-inner','.brand','.brand-mark','.brand-copy','.brand-copy strong','.brand-copy small','.brand-full','.brand-short','.menu-toggle'].map(selector=>[selector,component(selector)]));
     const relativeRect=node=>{const value=rect(node),origin=rect(nav);value.x=Math.round((value.x-origin.x)*100)/100;value.y=Math.round((value.y-origin.y)*100)/100;return value;};
     const buttons=[...(nav?.querySelectorAll('.portal-nav-current .portal-nav-items a')||[])].map(node=>{const value=style(node);delete value.backgroundColor;delete value.color;delete value.borderTopColor;return {id:node.dataset.navId,style:value,rect:relativeRect(node)};});
@@ -125,14 +125,14 @@ try{
   try{
     await ready(page,'coding.html?id=LINUX-002');
     await page.locator('#coding-title').filter({hasText:'파일 접근 권한 설정'}).waitFor();
-    assert.equal(await page.locator('.portal-nav-current [aria-current="page"]').getAttribute('data-nav-id'),'coding');
-    await page.locator('#coding-done-button').click();
+    assert.equal(await page.locator('.portal-service-nav [data-nav-id][aria-current="page"]').getAttribute('data-nav-id'),'coding');
+    await page.locator('#coding-answer-button').click(); await page.locator('[data-grade=correct]').click(); await page.waitForFunction(()=>document.querySelector('.study-review [role=status]')?.textContent.includes('저장됨'));
     const saved=await page.evaluate(()=>localStorage.getItem('kbigdata:coding:done:v1'));
     assert.ok(JSON.parse(saved).includes('LINUX-002'),'existing learning completion persists');
     await page.reload({waitUntil:'domcontentloaded'});
-    assert.equal(await page.locator('#coding-done-button').getAttribute('aria-pressed'),'true');
-    await page.locator('.portal-nav-current a[data-nav-id="docs"]').click();await page.waitForURL('**/docs.html');
-    assert.equal(await page.locator('.portal-nav-current [aria-current="page"]').getAttribute('data-nav-id'),'docs');
+    await page.locator('#coding-answer-button').click(); assert.equal(await page.locator('[data-grade=correct]').getAttribute('aria-pressed'),'true');
+    await page.locator('.portal-nav-more summary').click(); await page.locator('.portal-nav-other a[data-nav-id="docs"]').click();await page.waitForURL('**/docs.html');
+    assert.equal(await page.locator('.portal-service-nav [data-nav-id][aria-current="page"]').getAttribute('data-nav-id'),'docs');
     await page.goBack({waitUntil:'domcontentloaded'});assert.ok(page.url().includes('id=LINUX-002'));
     assert.equal(await page.evaluate(()=>localStorage.getItem('kbigdata:coding:done:v1')),saved,'navigation preserves existing state');
     await page.addScriptTag({url:url('js/portal-navigation.js?v='+shellVersion)});
@@ -145,7 +145,7 @@ try{
     await page.goBack();await page.waitForFunction(()=>document.querySelector('#portal-nav a').getAttribute('aria-current')==='page');assert.equal(await page.locator('#portal-nav a').first().getAttribute('aria-current'),'page');
     // The virtual keyboard cannot be summoned by headless engines. A reduced
     // visual viewport while an input has focus checks the same layout constraint.
-    await ready(page,'coding.html?id=LINUX-002');await page.locator('input').first().focus();await page.setViewportSize({width:390,height:420});
+    await ready(page,'coding.html?id=LINUX-002');await page.locator('#coding-show-list').click();await page.locator('#coding-search').focus();await page.setViewportSize({width:390,height:420});
     assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'focused input in a short viewport does not overflow');
   }catch(error){record(engine+' deep-link/state/back/keyboard regression',error);}finally{await context.close();}
   // Fail closed: without JavaScript there is no authenticated session.
