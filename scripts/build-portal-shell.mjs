@@ -32,7 +32,7 @@ for(const file of htmlPages){
   html=html.replace(/(href="css\/[^"?]+\.css)(?:\?v=[^"]+)?"/g,(match,asset)=>
     ['href="css/question-browser.css','href="css/study-review.css','href="css/coding.css','href="css/home-refresh.css','href="css/learning-dashboard.css'].includes(asset) ? match : `${asset}?v=${shellVersion}"`);
   html=html.replace(/(src="js\/(?:app|home-dashboard|learning-ui|portal-shell-entry|coding)\.js)(?:\?v=[^"]+)?"/g,(match,asset)=>
-    (asset==='src="js/coding.js' || asset==='src="js/learning-ui.js') ? match : `${asset}?v=${shellVersion}"`);
+    (asset==='src="js/coding.js' || asset==='src="js/learning-ui.js' || asset==='src="js/home-dashboard.js') ? match : `${asset}?v=${shellVersion}"`);
   html=html.replace(/<main\b([^>]*)(?<!tabindex="-1")>/,match=>match.includes('tabindex=')?match:match.slice(0,-1)+' tabindex="-1">');
   if(html!==original){outdated.push(file);if(!process.argv.includes('--check'))writeFileSync(path.join(root,file),html);}
 }
