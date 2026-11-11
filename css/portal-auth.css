@@ -627,10 +627,14 @@ html:not([data-portal-access="approved"]) body > :not(#portal-auth-layer) { visi
   }
   .portal-admin-table td:nth-child(7) {
     justify-content: flex-end;
-    padding-top: 17px;
+    padding-top: 8px;
   }
-  .portal-admin-table td:nth-child(7)::before { display: none; }
-  .portal-admin-table td:nth-child(7) button {
+  .portal-admin-table td:nth-child(8) {
+    justify-content: flex-end;
+    padding-top: 8px;
+  }
+  .portal-admin-table td:nth-child(8)::before { display: none; }
+  .portal-admin-table td:nth-child(8) button {
     box-sizing: border-box;
     width: 100%;
     min-width: 0;
@@ -640,4 +644,74 @@ html:not([data-portal-access="approved"]) body > :not(#portal-auth-layer) { visi
   }
   .portal-auth-card:has(.portal-admin-table) .portal-auth-lead { margin-bottom: 15px; }
   .portal-auth-card:has(.portal-admin-table) .portal-auth-actions { margin-top: 12px; }
+}
+
+/* Student administration: search, academic status and mail eligibility. */
+.portal-admin-toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1.8fr) minmax(150px, .85fr);
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.portal-admin-toolbar label {
+  display: grid;
+  gap: 6px;
+  color: #4e607c;
+  font-size: 12px;
+  font-weight: 750;
+}
+.portal-admin-toolbar input,
+.portal-admin-toolbar select {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 9px 12px;
+  border: 1px solid #bdcde3;
+  border-radius: 10px;
+  background: #fff;
+  color: #18345c;
+  font: inherit;
+  font-size: 14px;
+}
+.portal-admin-toolbar input:focus-visible,
+.portal-admin-toolbar select:focus-visible {
+  outline: 3px solid #1d4ed8;
+  outline-offset: 2px;
+}
+.portal-admin-summary {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: 9px;
+  background: #f1f5fc;
+  color: #425b80;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.7;
+}
+.portal-admin-table { min-width: 880px; }
+.portal-admin-table tbody tr[hidden] { display: none !important; }
+.portal-admin-mail-status {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: #edf1f6;
+  color: #56657b;
+  font-size: 12px;
+  font-weight: 750;
+  white-space: nowrap;
+}
+.portal-admin-mail-status[data-eligible="true"] {
+  background: #eaf3ff;
+  color: #24559b;
+}
+@media (max-width: 767px) {
+  .portal-admin-toolbar { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .portal-admin-table { min-width: 0; }
+  .portal-admin-table tbody tr { grid-template-columns: repeat(3, minmax(0,1fr)); }
+  .portal-admin-table td:nth-child(7) { grid-column: 1 / 2; }
+  .portal-admin-table td:nth-child(8) { grid-column: 2 / -1; }
+  .portal-admin-table td:nth-child(8) button { min-height: 42px; font-size: 13px; }
 }
