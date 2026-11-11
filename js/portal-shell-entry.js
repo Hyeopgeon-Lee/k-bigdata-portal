@@ -1,4 +1,4 @@
-import {initPortalShell} from "./portal-shell.js?v=20261026-card-label-1";
+import {initPortalShell} from "./portal-shell.js?v=20261111-account-sync-1";
 
 initPortalShell().catch(error=>{
  console.error("Portal shell initialization failed",error);
