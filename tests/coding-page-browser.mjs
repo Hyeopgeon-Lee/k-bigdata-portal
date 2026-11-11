@@ -70,7 +70,7 @@ try{
     const bounds=await page.evaluate(()=>({content:document.documentElement.scrollWidth,viewport:document.documentElement.clientWidth}));
     assert.ok(bounds.content<=bounds.viewport+2,"no horizontal overflow width "+width+" "+JSON.stringify(bounds));
 
-    assert.equal(await page.locator("#coding-summary").isVisible(),width>800,"study status remains available in content");
+    assert.equal(await page.locator("#coding-summary").isVisible(),false,"solver hides the old landing panel");
     await page.locator("#coding-link-button").click();
     await page.waitForFunction(()=>document.querySelector("#coding-share-status")?.textContent?.includes("문제 링크를 복사"),null,{timeout:7000});
     assert.match(await page.locator("#coding-share-status").innerText(),/문제 링크를 복사/);
@@ -120,9 +120,9 @@ try{
     assert.doesNotMatch(await page.locator("#coding-ubuntu-related-rows").innerText(),/chmod 640/,"the active permission command is not repeated in alternative options");
     assert.equal(await page.locator("#coding-ubuntu-ls-options").getAttribute("open"),null,"long ls references start collapsed");
 
-    if(width<=800){await page.locator("#coding-show-list").click();await page.locator(".qb-settings").click();}
-    await page.locator("#coding-language button[data-lang=java]").click();
-    if(width<=800)await page.locator("#coding-questions a").first().click();
+    await page.locator("#coding-show-list").click();
+    await page.locator(".qb-categories [data-category=java]").click();
+    await page.locator(".qb-list li button").first().click();
     assert.equal(await page.locator("#coding-trace-button").isVisible(),true);
     assert.equal(await page.locator("#coding-ubuntu-guide").isVisible(),false);
     assert.equal(await page.locator("#coding-answer").isHidden(),true);
@@ -162,9 +162,9 @@ try{
       await page.reload({waitUntil:"domcontentloaded"});
       await page.waitForFunction(()=>!document.querySelector("#coding-autocomplete-toggle").disabled,{timeout:20000});
       assert.equal(await autoToggle.isChecked(),true,"ON setting saved after reload");
-      if(width<=800){await page.locator("#coding-show-list").click();await page.locator(".qb-settings").click();}
-    await page.locator("#coding-language button[data-lang=java]").click();
-    if(width<=800)await page.locator("#coding-questions a").first().click();
+      await page.locator("#coding-show-list").click();
+    await page.locator(".qb-categories [data-category=java]").click();
+    await page.locator(".qb-list li button").first().click();
       assert.equal(await autoToggle.isChecked(),true,"setting follows language switch");
       await richEditor.fill("");
       await richEditor.click();

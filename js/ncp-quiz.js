@@ -129,6 +129,7 @@ function render(){
   el.question.innerHTML='<div class="ncp-empty"><h2>검색된 문제가 없습니다.</h2><p>시험을 바꾸거나 검색어를 수정하세요.</p></div>';
   return;
  }
+ if(document.body.dataset.ncpView==="question"){const url=new URL(location.href);url.searchParams.set("id",q.id);history.replaceState(history.state,"",url);}
  el.status.textContent=(state.index+1)+' / '+state.list.length+'번';
  let draft=drafts.get(q.id);
  if(!draft){draft={id:crypto.randomUUID(),choice:"",open:false};drafts.set(q.id,draft);}
@@ -213,15 +214,13 @@ const browserEntry=createQuestionBrowser({
  title:"NCP 기출문제",questions:ncpQuestions,category:q=>q.exam,categoryLabel:key=>key,
  describe:q=>q.question,searchText:q=>[q.id,q.question,q.topic,q.originalNumber].join(" "),initialCategory:requestedExam||"",
  openQuestion(q,items){state.list=items;state.index=items.indexOf(q);document.body.dataset.ncpView="question";render();focusQuestion();el.question.scrollIntoView();},
- settingsContainer:".ncp-tools",
- openSettings(){document.body.dataset.ncpView="list";el.exam.focus();}
 });
 document.body.dataset.ncpView=params.has("id")?"question":"list";
 const initialID=params.get("id");
 const initial=ncpQuestions.find(q=>q.id===initialID);
-if(initial){
+if(initial&&!browserEntry.resume(initialID)){
  state.exam=initial.exam;
  el.exam.value=initial.exam;
  changeSet(initial.id);
-}else {changeSet();browserEntry.show(false);}
+}else if(!initial){changeSet();browserEntry.show(false);}
 initPortalShell().catch(error=>console.error("NCP portal initialization failed",error));

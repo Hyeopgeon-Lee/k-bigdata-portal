@@ -92,7 +92,7 @@ function card(q,extra=""){
  return '<article class="bank-card">'+metadata(q)+(h?'<small>'+esc(historyLabel(h))+'</small>':'')+'<h2>'+esc(cardTitle(q))+'</h2>'+extra+button("open",view==="wrong"?"다시 풀기":"문제 풀기",'data-id="'+esc(q.id)+'"')+'</article>';
 }
 function disconnectSolveObserver(){solveActionsObserver?.disconnect();solveActionsObserver=null;}
-function setUrl(id=null){const url=new URL(location.href);if(id)url.searchParams.set("id",id);else url.searchParams.delete("id");history.replaceState(null,"",url);}
+function setUrl(id=null){const url=new URL(location.href);if(id)url.searchParams.set("id",id);else url.searchParams.delete("id");history.replaceState(history.state,"",url);}
 function problemShareUrl(q=current){
  if(!q)return "";
  const url=new URL(location.pathname,location.origin);
@@ -351,7 +351,7 @@ root.addEventListener("click",event=>{
 });
 document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>selectView(b.dataset.view)));
 for(const key of ["exam","language","source","difficulty","type","sort","completion","year","round"]){$("#"+key+"-filter").addEventListener("change",event=>{filters[key]=event.target.value;pageLimit=24;render();});}
-document.querySelectorAll("[data-filter]").forEach(b=>b.addEventListener("click",()=>{filters[b.dataset.filter]=b.dataset.value;$("#"+b.dataset.filter+"-filter").value=b.dataset.value;pageLimit=24;const url=new URL(location.href);if(filters.exam==="all")url.searchParams.delete("exam");else url.searchParams.set("exam",filters.exam);history.replaceState(null,"",url);render();}));
+document.querySelectorAll("[data-filter]").forEach(b=>b.addEventListener("click",()=>{filters[b.dataset.filter]=b.dataset.value;$("#"+b.dataset.filter+"-filter").value=b.dataset.value;pageLimit=24;const url=new URL(location.href);if(filters.exam==="all")url.searchParams.delete("exam");else url.searchParams.set("exam",filters.exam);history.replaceState(history.state,"",url);render();}));
 let bankSearchTimer=0;$("#bank-query").addEventListener("input",event=>{const value=event.target.value;clearTimeout(bankSearchTimer);bankSearchTimer=window.setTimeout(()=>{filters.query=value;pageLimit=24;render();},80);});
 $("#active-filters").addEventListener("click",event=>{
  const chip=event.target.closest("button[data-key]");
@@ -363,12 +363,12 @@ $("#active-filters").addEventListener("click",event=>{
    filters[key]="all";$("#"+key+"-filter").value="all";
  }
  if(key==="exam"){
-   const url=new URL(location.href);url.searchParams.delete("exam");history.replaceState(null,"",url);
+   const url=new URL(location.href);url.searchParams.delete("exam");history.replaceState(history.state,"",url);
  }
  pageLimit=24;render();
  ($("#active-filters button")||$("#source-filter")).focus({preventScroll:true});
 });
-function resetFilters(){clearTimeout(bankSearchTimer);Object.assign(filters,{exam:"all",language:"all",source:"all",difficulty:"all",type:"all",sort:"latest",query:"",completion:"all",year:"all",round:"all"});for(const key of ["exam","language","source","difficulty","type","sort","completion","year","round"])$("#"+key+"-filter").value=filters[key];$("#bank-query").value="";const url=new URL(location.href);url.searchParams.delete("exam");history.replaceState(null,"",url);selectView("bank");}
+function resetFilters(){clearTimeout(bankSearchTimer);Object.assign(filters,{exam:"all",language:"all",source:"all",difficulty:"all",type:"all",sort:"latest",query:"",completion:"all",year:"all",round:"all"});for(const key of ["exam","language","source","difficulty","type","sort","completion","year","round"])$("#"+key+"-filter").value=filters[key];$("#bank-query").value="";const url=new URL(location.href);url.searchParams.delete("exam");history.replaceState(history.state,"",url);selectView("bank");}
 $("#bank-reset").addEventListener("click",resetFilters);
 loadPracticalBank().then(result=>{
  bank=result.bank;aliases=result.aliases||{};
@@ -378,17 +378,16 @@ loadPracticalBank().then(result=>{
   for(const key of ["exam","language","source","difficulty","type","sort","completion","year","round"]){const select=$("#"+key+"-filter");if([...select.options].some(o=>o.value===saved[key])){filters[key]=saved[key];select.value=saved[key];}}
   if(typeof saved.query==="string"){filters.query=saved.query.slice(0,200);$("#bank-query").value=filters.query;}
  }
- const params=new URLSearchParams(location.search),id=params.get("id"),exam=params.get("exam"),shared=params.get("share")==="1";if(Object.keys(examLabels).includes(exam)){filters.exam=exam;$("#exam-filter").value=exam;}if(shared){const canonical=new URL(location.href);canonical.searchParams.delete("share");history.replaceState(null,"",canonical);}
+ const params=new URLSearchParams(location.search),id=params.get("id"),exam=params.get("exam"),shared=params.get("share")==="1";if(Object.keys(examLabels).includes(exam)){filters.exam=exam;$("#exam-filter").value=exam;}if(shared){const canonical=new URL(location.href);canonical.searchParams.delete("share");history.replaceState(history.state,"",canonical);}
  browserEntry=createQuestionBrowser({
-   title:"정보처리 기출문제",questions:sorted(exam&&Object.hasOwn(examLabels,exam)?bank.filter(q=>matchesExam(q,exam,bank)):bank),category:q=>q.language,categoryLabel:key=>key,
+   title:"정보처리 기출문제",questions:sorted(bank),scope:exam&&exam!=="all"&&Object.hasOwn(examLabels,exam)?{label:examLabels[exam],matches:q=>matchesExam(q,exam,bank)}:null,category:q=>q.language,categoryLabel:key=>key,
    describe:q=>q.title,searchText:q=>[q.id,questionText(q)].join(" "),
    openQuestion(q,items){queue=items;queueIndex=items.indexOf(q);queueKind="bank";openQuestion(q.id,false);},
-   settingsContainer:"#bank-controls",
- openSettings(){selectView("bank");$("#source-filter").focus();}
  });
+ if(browserEntry.resume(id))return;
  const savedQueue=getPreferences().learningQueue;
  if(!shared&&id&&savedQueue&&Array.isArray(savedQueue.ids)&&savedQueue.ids[savedQueue.index]===(aliases[id]||id)&&savedQueue.ids.every(id=>bank.some(q=>q.id===id))){queue=savedQueue.ids.map(id=>bank.find(q=>q.id===id));queueIndex=savedQueue.index;queueKind=savedQueue.kind;}
- if(id&&bank.some(q=>q.id===(aliases[id]||id)))openQuestion(id,shared);else{if(id)view="bank";render();if(!id)browserEntry.show(false);if(id)status.textContent="요청한 문제를 찾을 수 없습니다. 목록에서 선택하세요.";}
+ if(id&&bank.some(q=>q.id===(aliases[id]||id)))openQuestion(id,shared);else{if(id)view="bank";render();browserEntry.show(false);if(id)status.textContent="요청한 문제를 찾을 수 없습니다. 목록에서 선택하세요.";}
 }).catch(()=>{root.innerHTML='<div class="bank-empty"><h2>문제 데이터를 불러오지 못했습니다.</h2><p>네트워크 연결을 확인하고 페이지를 새로고침하세요.</p></div>';status.textContent="데이터 로딩 오류";});
 window.addEventListener("pagehide",disconnectSolveObserver);
 window.addEventListener("resize",()=>{if(current)requestAnimationFrame(()=>{updateHorizontalScrollHints();observeSolveActions();});});

@@ -20,17 +20,11 @@ try{
   await page.locator('#my-answer').waitFor();
   assert.equal(await page.locator('#answer-result .bank-result').count(),0);
   await page.locator('[data-action="back"]').click();
-  await page.locator(".qb-settings").click();
-  await page.locator('[data-filter="language"][data-value="Java"]').click();
-  for(const key of ["language","source","completion"]){
-    await page.locator('#active-filters [data-key="'+key+'"]').click();
-    assert.equal(await page.locator('#'+key+'-filter').inputValue(),"all");
-  }
-  await page.locator("#advanced-filters summary").click();
-  await page.locator("#difficulty-filter").selectOption("기본");
-  await page.locator("#bank-reset").click();
-  assert.equal(await page.locator("#active-filters button").count(),0);
-  await page.locator('[data-action="open"]').first().click();
+  await page.locator('[data-category="Java"]').click();
+  await page.locator('.qb-search input').fill('no-such-question');
+  assert.ok(await page.locator('.qb-random').isDisabled());
+  await page.locator('.qb-search button').click();
+  await page.locator('.qb-random').click();
   assert.equal(await page.locator("#submit-answer").isEnabled(),true);
   await page.locator("#submit-answer").click();
   await page.locator('[data-grade="ungraded"]').click();

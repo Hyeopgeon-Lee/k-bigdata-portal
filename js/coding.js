@@ -431,7 +431,7 @@ function showQuestion(q) {
   language = q.language;
   const url = new URL(location.href);
   url.searchParams.set("id", q.id);
-  history.replaceState(null, "", url);
+  history.replaceState(history.state, "", url);
   $("#coding-report-button").href = learningReportUrl("coding",q,labels[q.language] + " · " + q.title);
   $("#coding-id").textContent = q.id;
   $("#coding-level").textContent = q.level;
@@ -488,6 +488,7 @@ function showQuestion(q) {
   const items=entrySet||matching(), index=items.findIndex(item=>item.id===q.id);
   $("#coding-answer-button").textContent="정답·해설 보기";
   $("#coding-prev-button").disabled=index<=0;
+  $("#coding-position").textContent=(index+1)+" / "+items.length;
   $("#coding-next-button").textContent=index===items.length-1?"목록으로":"다음 문제";
   $("#coding-review-slot").hidden=true;
   updateSummary();
@@ -692,12 +693,10 @@ const browserEntry=createQuestionBrowser({
    $("#coding-search").value="";refreshFilters();
    document.body.dataset.codingView="question";showQuestion(q);$("#coding-title").focus();
  },
- settingsContainer:".coding-filterbar",
- openSettings(){entrySet=null;document.body.dataset.codingView="list";$("#coding-search").focus();}
 });
 document.body.dataset.codingView=new URL(location.href).searchParams.has("id")?"question":"list";
 refreshFilters();
-showQuestion(current);
+if(!browserEntry.resume(requestedId))showQuestion(current);
 if(!requestedId)browserEntry.show(false);
 void import("./coding-editor.js?v=20261024-autocomplete-1")
   .then(({createCodingEditor}) => {
