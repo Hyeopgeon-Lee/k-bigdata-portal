@@ -150,10 +150,10 @@ function render(){
  el.question.innerHTML='<div class="ncp-question-meta"><span>'+esc(q.exam)+'</span><span>'+esc(q.topic)+'</span></div>'+
   '<button type="button" class="study-return" data-list>‹ 문제 목록</button>'+
   '<h2 tabindex="-1">'+esc(q.question)+'</h2>'+
-  '<details><summary>더보기</summary><div class="ncp-share-row" role="group" aria-label="현재 문제 공유 및 오류 신고">'+
+  '<div class="ncp-share-row" role="group" aria-label="현재 문제 공유 및 오류 신고">'+
   '<button type="button" data-action="share-problem" aria-label="현재 NCP 문제 공유">문제 공유</button>'+
   '<button type="button" data-action="copy-problem-link" aria-label="현재 NCP 문제 링크 복사">링크 복사</button>'+
-  '<a href="'+esc(learningReportUrl("ncp",q,q.exam+" · 원문 "+q.originalNumber+"번"))+'" aria-label="현재 NCP 문제 오류 신고">오류 신고</a></div></details>'+
+  '<a href="'+esc(learningReportUrl("ncp",q,q.exam+" · 원문 "+q.originalNumber+"번"))+'" aria-label="현재 NCP 문제 오류 신고">오류 신고</a></div>'+
   '<p id="ncp-share-status" class="ncp-share-status" role="status" aria-live="polite"></p>'+
   '<div class="ncp-options" role="group" aria-label="선택지">' +options+'</div>'+(answered?result+reviewControls():'<button class="study-open" data-open>정답·해설 보기</button>')+
   originalReference;
