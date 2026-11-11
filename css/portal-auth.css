@@ -640,6 +640,10 @@ html:not([data-portal-access="approved"]) body > :not(#portal-auth-layer) { visi
     grid-column:1 / -1; grid-row:6;
     padding-top:2px;
   }
+  /* Graduate rows have no weekly-mail field, so the save button moves up. */
+  .portal-admin-table tbody tr:has(td:nth-child(7)[hidden]) td:nth-child(8) {
+    grid-row:5;
+  }
   .portal-admin-table td:nth-child(8)::before { display:none; }
   .portal-auth-card:has(.portal-admin-table) .portal-auth-lead { margin-bottom:15px; }
   .portal-auth-card:has(.portal-admin-table) .portal-auth-actions { margin-top:12px; }
