@@ -12,7 +12,7 @@ root.hidden=true; // The whole portal requires an authorized account.
 document.body.append(root);
 const css=document.createElement("link");
 css.rel="stylesheet";
-css.href="css/portal-auth.css?v=20261111-account-readable-2";
+css.href="css/portal-auth.css?v=20261111-account-readable-3";
 document.head.append(css);
 
 const locked=document.getElementById("learning-lock");
@@ -235,11 +235,20 @@ function showAccount(){
 function renderAccount(){
   card("내 계정",
     '<div class="portal-account-profile" aria-label="현재 로그인 계정">'+
-      '<p id="portal-account-name" class="portal-account-name"></p>'+
-      '<p id="portal-account-email" class="portal-account-email"></p>'+
-      '<span id="portal-account-role" class="portal-account-role"></span>'+
+      '<span id="portal-account-avatar" class="portal-account-avatar" aria-hidden="true"></span>'+
+      '<div class="portal-account-identity">'+
+        '<p id="portal-account-name" class="portal-account-name"></p>'+
+        '<p id="portal-account-email" class="portal-account-email"></p>'+
+        '<span id="portal-account-role" class="portal-account-role"></span>'+
+      '</div>'+
     '</div><div id="portal-account-actions"></div>');
   $(".portal-auth-card").classList.add("portal-account-card");
+  const dismiss=document.createElement("button");
+  dismiss.type="button";dismiss.className="portal-account-dismiss";
+  dismiss.setAttribute("aria-label","내 계정 창 닫기");dismiss.textContent="×";
+  dismiss.addEventListener("click",()=>{root.hidden=true;opener?.focus();});
+  $(".portal-auth-card").insertBefore(dismiss,$(".portal-account-profile"));
+  $("#portal-account-avatar").textContent=(currentProfile?.full_name||"U").trim().slice(0,1)||"U";
   $("#portal-account-name").textContent=currentProfile?.full_name||"사용자";
   $("#portal-account-email").textContent=currentUser?.email||"";
   $("#portal-account-role").textContent=isAdmin?"관리자":
@@ -281,11 +290,9 @@ function renderAccount(){
   }
 
   const footer=document.createElement("div");footer.className="portal-account-footer";
-  const close=document.createElement("button");close.type="button";close.textContent="닫기";
-  close.addEventListener("click",()=>{root.hidden=true;opener?.focus();});
   const out=document.createElement("button");out.type="button";out.className="portal-account-logout";out.textContent="로그아웃";
   out.addEventListener("click",logout);
-  footer.append(close,out);area.after(footer);
+  footer.append(out);area.after(footer);
 }
 
 async function importDevicePersonalData(){
