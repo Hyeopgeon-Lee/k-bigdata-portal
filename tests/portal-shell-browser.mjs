@@ -145,7 +145,7 @@ try{
     await page.goBack();await page.waitForFunction(()=>document.querySelector('#portal-nav a').getAttribute('aria-current')==='page');assert.equal(await page.locator('#portal-nav a').first().getAttribute('aria-current'),'page');
     // The virtual keyboard cannot be summoned by headless engines. A reduced
     // visual viewport while an input has focus checks the same layout constraint.
-    await ready(page,'coding.html?id=LINUX-002');await page.locator('#coding-show-list').click();await page.locator('#coding-search').focus();await page.setViewportSize({width:390,height:420});
+    await ready(page,'coding.html?id=LINUX-002');await page.locator('#coding-show-list').click();await page.locator('.question-browser input').focus();await page.setViewportSize({width:390,height:420});
     assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'focused input in a short viewport does not overflow');
   }catch(error){record(engine+' deep-link/state/back/keyboard regression',error);}finally{await context.close();}
   // Fail closed: without JavaScript there is no authenticated session.

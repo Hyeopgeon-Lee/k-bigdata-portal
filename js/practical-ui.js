@@ -1,3 +1,4 @@
+import {createQuestionBrowser} from "./question-browser.js";
 import {bindReview,reviewControls,gradeLabels} from "./study-review.js";
 import {loadPracticalBank} from "./practical-data.js?v=20261006-audit-2";
 import {examLabels,typeLabels,languages,escapeHTML as esc,questionText,shuffle,recommendFive,matchesExam,localDay,summarizeAttempts,highlightCode,formatCodeForDisplay} from "./practical-core.js?v=20261016-timing-1";
@@ -8,6 +9,7 @@ import {learningReportUrl} from "./learning-report.js?v=20261009-1";
 
 const $=selector=>document.querySelector(selector),root=$("#bank-content"),status=$("#bank-status");
 let bank=[],view="bank",current=null,attempt=null,queue=[],queueIndex=0,aliases={},pageLimit=24,queueKind="random",solveActionsObserver=null;
+let browserEntry;
 const filters={exam:"all",language:"all",source:"reconstructed",difficulty:"all",type:"all",sort:"latest",query:"",completion:"unseen",year:"all",round:"all"};
 const compactLabels={reconstructed:"복원기출",normalized:"기출유형 연습",transformed:"기출 변형",practice:"추가 연습"};
 const badge=(text,cls="")=>'<span class="badge '+cls+'">'+esc(text)+'</span>';
@@ -309,7 +311,7 @@ root.addEventListener("click",event=>{
  if(action==="next-unseen"){const done=new Set(getAttempts().map(a=>a.questionId)),next=sorted(bank.filter(q=>q.sourceType==="reconstructed"&&!done.has(q.id)))[0];if(next)openQuestion(next.id,false);else status.textContent="등록된 복원문제를 모두 풀었습니다. 전체 문제에서 복습하세요.";}
  if(action==="show-all"){filters.completion="all";$("#completion-filter").value="all";render();}
  if(action==="export-learning"){const url=URL.createObjectURL(new Blob([JSON.stringify(exportLearning(),null,2)],{type:"application/json"})),link=document.createElement("a");link.href=url;link.download="kbigdata-learning-"+localDay()+".json";link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
- if(action==="back")selectView("bank");
+ if(action==="back"){selectView("bank");browserEntry.show();}
  if(action==="answer-jump"){const answer=$("#my-answer");if(answer){answer.focus({preventScroll:true});answer.scrollIntoView({block:"center",behavior:"smooth"});}}
  if(action==="share-problem")void shareCurrentProblem();
  if(action==="copy-problem-link")void copyCurrentProblemLink();
@@ -330,7 +332,7 @@ root.addEventListener("click",event=>{
      if(next)openQuestion(next.id,true);else selectView("home");
    }else{
      queueIndex++;if(queueIndex<queue.length)openQuestion(queue[queueIndex].id,false);
-     else if(queueKind==="bank")selectView("bank");
+     else if(queueKind==="bank"){selectView("bank");browserEntry.show();}
      else{const count=queue.length;savePreferences({learningQueue:null});selectView("home");root.innerHTML='<section class="bank-empty"><h2 tabindex="-1">학습 완료</h2><p>'+count+'문제를 연습했습니다. 어려웠던 개념은 오답노트에서 다시 확인하세요.</p>'+button("home-view","학습 시작으로")+button("quick-random","다시 5문제")+'</section>';root.querySelector("h2").focus();}
    }
  }
@@ -377,9 +379,16 @@ loadPracticalBank().then(result=>{
   if(typeof saved.query==="string"){filters.query=saved.query.slice(0,200);$("#bank-query").value=filters.query;}
  }
  const params=new URLSearchParams(location.search),id=params.get("id"),exam=params.get("exam"),shared=params.get("share")==="1";if(Object.keys(examLabels).includes(exam)){filters.exam=exam;$("#exam-filter").value=exam;}if(shared){const canonical=new URL(location.href);canonical.searchParams.delete("share");history.replaceState(null,"",canonical);}
+ browserEntry=createQuestionBrowser({
+   title:"정보처리 기출문제",questions:sorted(exam&&Object.hasOwn(examLabels,exam)?bank.filter(q=>matchesExam(q,exam,bank)):bank),category:q=>q.language,categoryLabel:key=>key,
+   describe:q=>q.title,searchText:q=>[q.id,questionText(q)].join(" "),
+   openQuestion(q,items){queue=items;queueIndex=items.indexOf(q);queueKind="bank";openQuestion(q.id,false);},
+   settingsContainer:"#bank-controls",
+ openSettings(){selectView("bank");$("#source-filter").focus();}
+ });
  const savedQueue=getPreferences().learningQueue;
  if(!shared&&id&&savedQueue&&Array.isArray(savedQueue.ids)&&savedQueue.ids[savedQueue.index]===(aliases[id]||id)&&savedQueue.ids.every(id=>bank.some(q=>q.id===id))){queue=savedQueue.ids.map(id=>bank.find(q=>q.id===id));queueIndex=savedQueue.index;queueKind=savedQueue.kind;}
- if(id&&bank.some(q=>q.id===(aliases[id]||id)))openQuestion(id,shared);else{if(id)view="bank";render();if(id)status.textContent="요청한 문제를 찾을 수 없습니다. 목록에서 선택하세요.";}
+ if(id&&bank.some(q=>q.id===(aliases[id]||id)))openQuestion(id,shared);else{if(id)view="bank";render();if(!id)browserEntry.show(false);if(id)status.textContent="요청한 문제를 찾을 수 없습니다. 목록에서 선택하세요.";}
 }).catch(()=>{root.innerHTML='<div class="bank-empty"><h2>문제 데이터를 불러오지 못했습니다.</h2><p>네트워크 연결을 확인하고 페이지를 새로고침하세요.</p></div>';status.textContent="데이터 로딩 오류";});
 window.addEventListener("pagehide",disconnectSolveObserver);
 window.addEventListener("resize",()=>{if(current)requestAnimationFrame(()=>{updateHorizontalScrollHints();observeSolveActions();});});

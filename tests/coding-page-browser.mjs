@@ -120,7 +120,7 @@ try{
     assert.doesNotMatch(await page.locator("#coding-ubuntu-related-rows").innerText(),/chmod 640/,"the active permission command is not repeated in alternative options");
     assert.equal(await page.locator("#coding-ubuntu-ls-options").getAttribute("open"),null,"long ls references start collapsed");
 
-    if(width<=800)await page.locator("#coding-show-list").click();
+    if(width<=800){await page.locator("#coding-show-list").click();await page.locator(".qb-settings").click();}
     await page.locator("#coding-language button[data-lang=java]").click();
     if(width<=800)await page.locator("#coding-questions a").first().click();
     assert.equal(await page.locator("#coding-trace-button").isVisible(),true);
@@ -162,7 +162,7 @@ try{
       await page.reload({waitUntil:"domcontentloaded"});
       await page.waitForFunction(()=>!document.querySelector("#coding-autocomplete-toggle").disabled,{timeout:20000});
       assert.equal(await autoToggle.isChecked(),true,"ON setting saved after reload");
-      if(width<=800)await page.locator("#coding-show-list").click();
+      if(width<=800){await page.locator("#coding-show-list").click();await page.locator(".qb-settings").click();}
     await page.locator("#coding-language button[data-lang=java]").click();
     if(width<=800)await page.locator("#coding-questions a").first().click();
       assert.equal(await autoToggle.isChecked(),true,"setting follows language switch");

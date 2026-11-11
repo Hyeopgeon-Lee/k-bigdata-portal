@@ -1,3 +1,4 @@
+import {createQuestionBrowser} from "./question-browser.js";
 import {bindReview,reviewControls,gradeLabels} from "./study-review.js";
 import {learningLocal as localStorage, learningSession as sessionStorage} from "./learning-storage.mjs";
 import {debounceCloudDraft,fetchCloudDraft} from "./learning-activity.mjs";
@@ -426,6 +427,7 @@ function showQuestion(q) {
   setSafe("coding-attempt-"+q.id,codingAttemptId);
   if (!q) return;
   current = q;
+  if(language!==q.language){language=q.language;refreshFilters();}
   language = q.language;
   const url = new URL(location.href);
   url.searchParams.set("id", q.id);
@@ -483,7 +485,7 @@ function showQuestion(q) {
   resetReveal("#coding-trace","#coding-trace-button");
   $("#coding-feedback").textContent = "";
   $("#coding-share-status").textContent = "";
-  const items=matching(), index=items.findIndex(item=>item.id===q.id);
+  const items=entrySet||matching(), index=items.findIndex(item=>item.id===q.id);
   $("#coding-answer-button").textContent="정답·해설 보기";
   $("#coding-prev-button").disabled=index<=0;
   $("#coding-next-button").textContent=index===items.length-1?"목록으로":"다음 문제";
@@ -582,12 +584,11 @@ $("#coding-editor").addEventListener("input", event => {
   debounceCloudDraft("coding",current.id,event.target.value);
 });
 function openCodingList(){
-  document.body.dataset.codingView="list";
-  $("#coding-list-anchor").focus();
+  browserEntry.show();
 }
 $("#coding-show-list").addEventListener("click",openCodingList);
 function moveCoding(offset) {
-  const items=matching(),index=items.findIndex(item=>item.id===current.id);
+  const items=entrySet||matching(),index=items.findIndex(item=>item.id===current.id);
   const next=items[index+offset];
   if (!next) {openCodingList();return;}
   showQuestion(next);
@@ -682,9 +683,22 @@ nativeEditor.addEventListener("keydown", event => {
   notifyNativeEdit();
 });
 
+let entrySet=null;
+const browserEntry=createQuestionBrowser({
+ title:"기초 350제",questions:codingProblems,category:q=>q.language,categoryLabel:key=>labels[key],
+ describe:q=>q.title,searchText:q=>[q.id,q.title,q.statement,q.topic,q.level].join(" "),
+ openQuestion(q,items){
+   entrySet=items;language=q.language;topicFilter=levelFilter="all";query="";
+   $("#coding-search").value="";refreshFilters();
+   document.body.dataset.codingView="question";showQuestion(q);$("#coding-title").focus();
+ },
+ settingsContainer:".coding-filterbar",
+ openSettings(){entrySet=null;document.body.dataset.codingView="list";$("#coding-search").focus();}
+});
 document.body.dataset.codingView=new URL(location.href).searchParams.has("id")?"question":"list";
 refreshFilters();
 showQuestion(current);
+if(!requestedId)browserEntry.show(false);
 void import("./coding-editor.js?v=20261024-autocomplete-1")
   .then(({createCodingEditor}) => {
     codeEditor = createCodingEditor({

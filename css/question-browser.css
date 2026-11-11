@@ -1,0 +1,32 @@
+/* The entry view has the same width, vertical rhythm, controls and list rows
+   regardless of which question bank supplies the data. */
+main.qb-browsing > :not(.portal-service-nav):not(.question-browser){display:none!important}
+main.qb-browsing{display:block;padding-top:0}
+main .question-browser[hidden],.question-browser [hidden]{display:none!important}
+main .question-browser{width:min(960px,calc(100% - 32px));margin:20px auto 48px;color:#162941;font-family:inherit;text-align:left}
+main .question-browser h1{font-family:inherit;font-size:clamp(24px,3vw,32px);font-weight:700;line-height:1.3;letter-spacing:-.035em;margin:0 0 16px}
+.qb-controls,.qb-list{background:#fff;border:1px solid #d8e1eb;border-radius:14px}
+.qb-controls{display:grid;grid-template-columns:minmax(0,2fr) minmax(150px,1fr) auto;gap:12px;align-items:end;padding:16px}
+.qb-controls label{display:grid;gap:6px;color:#425469;font-size:14px;font-weight:650}
+.qb-controls :is(input,select,button),.qb-list nav button{min-height:44px;width:100%;box-sizing:border-box;padding:8px 12px;border:1px solid #b9c6d4;border-radius:8px;background:white;color:#193552;font:inherit}
+.qb-list{margin-top:16px;overflow:hidden}
+.qb-list>header,.qb-list nav{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px}
+.qb-list>header h2{font-size:19px;margin:0}
+.qb-list>header span,.qb-list small{color:#52657a;font-size:13px}
+.qb-list ol{list-style:none;margin:0;padding:0}
+.qb-list li{border-top:1px solid #e4eaf1;margin:0;padding:0}
+.qb-list li button{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 12px;align-items:center;text-align:left;background:white;border:0;width:100%;padding:12px 16px;color:inherit;font:inherit;cursor:pointer}
+.qb-list li button small,.qb-list li button strong{grid-column:1}
+.qb-list li button span{grid-column:2;grid-row:1/3;font-size:24px;color:#65768b}
+.qb-list li button:hover,.qb-list li button:focus-visible{background:#f0f5fb}
+.qb-list nav{border-top:1px solid #e4eaf1}.qb-list nav button{width:auto}.qb-list nav button:disabled{opacity:.45}
+.qb-list .qb-empty{padding:20px}
+@media(max-width:650px){main .question-browser{width:calc(100% - 24px);margin-top:12px}.qb-controls{grid-template-columns:minmax(0,1fr) auto;gap:10px;padding:12px}.qb-controls label:first-child{grid-column:1/-1}}
+main .question-browser .qb-controls label{margin:0;padding:0;line-height:20px;letter-spacing:normal}
+main .question-browser .qb-controls :is(input,select,button){margin:0;height:44px;min-height:44px;font-weight:500;font-family:inherit;font-size:15px;line-height:20px;padding:8px 12px}
+main .question-browser .qb-list>header{height:56px;box-sizing:border-box;margin:0}
+main .question-browser .qb-list h2{font-size:19px;line-height:26px;letter-spacing:-.02em}
+main .question-browser .qb-list li button{margin:0}
+@media(min-width:801px){#coding-show-list,.ncp-panel .study-return{display:inline-flex;align-items:center;min-height:44px;border:0;background:transparent;color:#234c77;font:inherit;cursor:pointer}}
+
+.qb-back{min-height:44px;border:0;background:transparent;color:#234c77;font:inherit;cursor:pointer}

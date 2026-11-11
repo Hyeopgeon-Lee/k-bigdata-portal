@@ -1,3 +1,4 @@
+import {createQuestionBrowser} from "./question-browser.js";
 import {bindReview,reviewControls,gradeLabels} from "./study-review.js";
 import {learningLocal as localStorage, learningSession as sessionStorage} from "./learning-storage.mjs";
 const drafts=new Map();
@@ -207,7 +208,14 @@ byId("ncp-reset").addEventListener("click",()=>{
  if(!confirm("이 기기에 표시된 답안 선택만 초기화할까요? 클라우드 풀이 이력은 삭제되지 않습니다."))return;
  drafts.clear();state.answers={};save();render();cloudStatus.textContent="화면 선택 내역을 초기화했습니다. 이전 학습 결과는 클라우드에 보존됩니다.";
 });
-function openNcpList(){document.body.dataset.ncpView="list";el.list.focus();}
+function openNcpList(){browserEntry.show();}
+const browserEntry=createQuestionBrowser({
+ title:"NCP 기출문제",questions:ncpQuestions,category:q=>q.exam,categoryLabel:key=>key,
+ describe:q=>q.question,searchText:q=>[q.id,q.question,q.topic,q.originalNumber].join(" "),initialCategory:requestedExam||"",
+ openQuestion(q,items){state.list=items;state.index=items.indexOf(q);document.body.dataset.ncpView="question";render();focusQuestion();el.question.scrollIntoView();},
+ settingsContainer:".ncp-tools",
+ openSettings(){document.body.dataset.ncpView="list";el.exam.focus();}
+});
 document.body.dataset.ncpView=params.has("id")?"question":"list";
 const initialID=params.get("id");
 const initial=ncpQuestions.find(q=>q.id===initialID);
@@ -215,5 +223,5 @@ if(initial){
  state.exam=initial.exam;
  el.exam.value=initial.exam;
  changeSet(initial.id);
-}else changeSet();
+}else {changeSet();browserEntry.show(false);}
 initPortalShell().catch(error=>console.error("NCP portal initialization failed",error));

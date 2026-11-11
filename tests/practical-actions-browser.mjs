@@ -20,6 +20,7 @@ try{
   await page.locator('#my-answer').waitFor();
   assert.equal(await page.locator('#answer-result .bank-result').count(),0);
   await page.locator('[data-action="back"]').click();
+  await page.locator(".qb-settings").click();
   await page.locator('[data-filter="language"][data-value="Java"]').click();
   for(const key of ["language","source","completion"]){
     await page.locator('#active-filters [data-key="'+key+'"]').click();
