@@ -10,11 +10,11 @@ const modules=["js/practical-ui.js","js/ncp-quiz.js","js/coding.js"];
 
 for(const path of pages){
   const html=read(path);
-  assert.match(html,/css\/quiz-unified\.css\?v=20261112-quiz-nav-unified-1/,"Shared UI stylesheet on "+path);
+  assert.match(html,/css\/quiz-unified\.css\?v=[\w-]+/,"Shared UI stylesheet on "+path);
 }
 for(const path of modules){
   const js=read(path);
-  assert.ok(js.includes('from "./quiz-unified.js?v=20261112-action-colors-1"'),"Shared UI module imported by "+path);
+  assert.match(js,/from "\.\/quiz-unified\.js\?v=[\w-]+"/,"Shared UI module imported by "+path);
   assert.match(js,/quizNavigation\(/);
   assert.match(js,/quizHeading\(/);
 }
@@ -98,6 +98,12 @@ assert.ok(ncp.indexOf('quizHeading({title:"공개 복원자료 원문"')<ncp.ind
 assert.ok(ncp.indexOf("'class=\"quiz-question ncp-question-text\"")===-1||ncp.includes("quiz-question ncp-question-text"));
 assert.ok(ncp.indexOf("'<p class=\"quiz-question ncp-question-text\"")<ncp.indexOf("sourceDisclosure;"),"NCP problem precedes source in output markup");
 assert.ok(ncp.includes('scrollToQuizAnswer(el.question)'),"NCP answer navigation works");
+assert.ok(ncp.includes('id="ncp-answer-results"'),"NCP solution remains mounted when toggled");
+assert.ok(ncp.includes('answerVisible=!currentDraft.answerVisible'),"NCP supports repeat open/close");
+assert.ok(ncp.includes('aria-expanded'),"NCP answer button reports toggle state");
+assert.ok(practical.includes('result.hidden=!result.hidden'),"Practical answer supports repeated toggling");
+assert.ok(coding.includes('slot.dataset.questionId===q.id'),"Coding review controls survive toggling");
+
 
 const practical=read("js/practical-ui.js");
 assert.ok(practical.includes('class="quiz-answer"'),"Practical answer widget shares frame");
