@@ -35,7 +35,7 @@ async function authorize(){
   }
   const label=document.getElementById("alumni-portal-member");
   if(label)label.textContent=profile.full_name||"이름 미등록";
-  const sourceId=(profile.signup_type==="alumni"||profile.enrollment_status==="graduated")?profile.alumni_source_id:null;
+  const sourceId=(profile.signup_type==="alumni"||["graduated","early_employment"].includes(profile.enrollment_status))?profile.alumni_source_id:null;
   if(sourceId){
    for(const selector of ["#lookup-id","#job-alumni-id","#news-alumni-id"]){
     const field=document.querySelector(selector);
@@ -45,7 +45,8 @@ async function authorize(){
   // Expose only self identity, never stored PINs, contact details or service keys.
   window.alumniPortalMember={name:profile.full_name||"",email:user.email||"",
    graduationYear:profile.graduation_year||null,alumniId:sourceId||null,
-   eligibleForAlumni:(profile.signup_type==="alumni"||profile.signup_type==="student")&&profile.enrollment_status==="graduated"};
+   eligibleForAlumni:(profile.signup_type==="alumni"||profile.signup_type==="student")&&(
+    profile.enrollment_status==="graduated"||(profile.enrollment_status==="early_employment"&&!!sourceId))};
   document.documentElement.dataset.alumniPortalAuth="approved";
   if(ui)ui.hidden=true;
  }catch(error){
