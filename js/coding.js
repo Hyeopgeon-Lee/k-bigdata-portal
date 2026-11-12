@@ -498,6 +498,8 @@ function showQuestion(q) {
   resetReveal("#coding-hint","#coding-hint-button");
   resetReveal("#coding-answer","#coding-answer-button");
   resetReveal("#coding-trace","#coding-trace-button");
+  // A trace button is useful only when this question contains real trace rows.
+  $("#coding-trace-button").hidden = !Array.isArray(q.trace) || !q.trace.some(row=>Array.isArray(row)&&row.some(value=>String(value??"").trim()));
   $("#coding-feedback").textContent = "";
   $("#coding-share-status").textContent = "";
   const items=entrySet||matching(), index=items.findIndex(item=>item.id===q.id);
