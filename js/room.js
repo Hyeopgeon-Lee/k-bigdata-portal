@@ -30,8 +30,9 @@ function setTab(name){
  for(const b of document.querySelectorAll('[data-room-tab]'))b.setAttribute('aria-selected',String(b.dataset.roomTab===name));
  for(const section of document.querySelectorAll('[data-room-panel]'))section.hidden=section.dataset.roomPanel!==name;
  if(name==='status')loadSchedule();
- if(name==='mine')loadMine(false);
- if(name==='admin'&&admin)loadMine(true);
+ if(name==='mine')loadMine();
+
+
 }
 function setRoom(code,openForm=false){
  selectedRoom=rooms.includes(code)?code:'8318';
@@ -91,7 +92,7 @@ async function loadSchedule(){
  if(error){root.replaceChildren(element('p','예약 현황을 확인할 수 없습니다. 로그인 상태를 확인해 주세요.','room-error'));return;}
  drawSchedule(data||[]);
 }
-function detailsRow(r,isAdmin,profileMap){
+function detailsRow(r){
  const card=element('article',null,'room-my-card');
  const heading=element('div',null,'room-row');
  const status=r.status==='ACTIVE'?'예약 중':'취소됨';
@@ -99,12 +100,6 @@ function detailsRow(r,isAdmin,profileMap){
  heading.append(element('span',status,'room-pill '+(r.status==='CANCELLED'?'is-cancelled':'')));
  card.append(heading);
  card.append(element('p',(labels[r.purpose]||r.purpose)+(r.memo?' · '+r.memo:''),'room-muted'));
- if(isAdmin){
-  const profile=profileMap.get(r.owner_id);
-  const who=profile?[profile.full_name,profile.student_no].filter(Boolean).join(' / '):
-    (r.source==='legacy'?[r.legacy_student_name,r.legacy_student_no].filter(Boolean).join(' / ')+' (기존 예약)':'계정 '+String(r.owner_id||'미연결').slice(0,8));
-  card.append(element('p','예약자: '+who,'room-muted'));
- }
  if(r.status==='ACTIVE'){
   const btn=element('button','예약 취소','room-secondary');btn.type='button';
   btn.onclick=async()=>{
@@ -112,29 +107,22 @@ function detailsRow(r,isAdmin,profileMap){
    btn.disabled=true;
    const {data,error}=await db.from('room_reservations').update({status:'CANCELLED'}).eq('id',r.id).eq('status','ACTIVE').select('id');
    if(error||!data?.length){tell('예약을 취소하지 못했습니다. 관리자에게 문의해 주세요.');btn.disabled=false;return;}
-   tell('예약을 취소했습니다.');await loadMine(isAdmin);if(selectedTab==='status')loadSchedule();
+   tell('예약을 취소했습니다.');await loadMine();if(selectedTab==='status')loadSchedule();
   };
   card.append(btn);
  }
  return card;
 }
-async function loadMine(isAdmin){
- const root=byId(isAdmin?'room-admin-list':'room-my-list');
- root.replaceChildren(element('p','예약 내역을 불러오는 중...','room-muted'));
- const select='id,owner_id,source,legacy_reservation_id,legacy_student_name,legacy_student_no,room_code,starts_at,ends_at,purpose,memo,status,created_at';
- let query=db.from('room_reservations').select(select).order('created_at',{ascending:false}).limit(200);
- if(!isAdmin)query=query.eq('owner_id',person.id);
- const {data,error}=await query;
+async function loadMine(){
+ const root=byId('room-my-list');
+ root.replaceChildren(element('p','내 예약을 불러오는 중...','room-muted'));
+ const {data,error}=await db.from('room_reservations')
+  .select('id,owner_id,source,room_code,starts_at,ends_at,purpose,memo,status,created_at')
+  .eq('owner_id',person.id).order('created_at',{ascending:false}).limit(200);
  if(error){root.replaceChildren(element('p','예약 내역을 확인하지 못했습니다.','room-error'));return;}
- const profileMap=new Map();
- if(isAdmin){
-  const result=await db.rpc('admin_list_students');
-  if(!result.error)for(const p of result.data||[])profileMap.set(p.user_id,p);
- }
  root.replaceChildren();
  if(!data?.length){root.append(element('p','예약 내역이 없습니다.','room-muted'));return;}
- if(isAdmin)byId('room-admin-total').textContent='총 '+data.length+'건 · 활성 '+data.filter(x=>x.status==='ACTIVE').length+'건';
- for(const r of data)root.append(detailsRow(r,isAdmin,profileMap));
+ for(const item of data)root.append(detailsRow(item));
 }
 function fillTimeSelect(select){
  for(let hour=9;hour<=22;hour++)for(let minute of [0,30]){
@@ -179,7 +167,8 @@ async function start(){
  allowed=window.portalLearning?.write===true;
  if(!allowed&&!admin){tell('승인된 재학생과 관리자만 예약할 수 있습니다.');return;}
  byId('room-app').hidden=false;
- byId('room-admin-tab').hidden=!admin;
+
+
  selectedRoom=new URLSearchParams(location.search).get('room')==='8319'?'8319':'8318';
  selectedDate=koreaParts().date;
  const form=byId('room-booking-form');
