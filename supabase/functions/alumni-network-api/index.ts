@@ -46,23 +46,86 @@ const PII=new Set(["email","phone","student_id","edit_pin_hash","career_mail_con
  "career_mail_updated_at","alumni_news_mail_consent_at","alumni_news_mail_updated_at"]);
 type Rec={source_kind:string;source_id:string;data:Record<string,unknown>};
 type Actor={id:string;name:string;email:string;role:string;enrollment:string;alumniId:string|null;isAdmin:boolean;graduationYear:number|null;studentNo:string|null;mobilePhone:string|null};
+// Portal-owned normalized storage; the imported Google Sheets rows remain in a restricted historical archive.
+const PORTAL_TABLES:Record<string,string>={alumni:"alumni_profiles",jobs:"alumni_jobs",alumni_news:"alumni_news",contact_requests:"alumni_contact_requests"};
+const PORTAL_FIELDS:Record<string,string[]>={
+ alumni:["graduation_year","employment_status","company","job","company_url","employment_year","job_description","skills","bachelor_status","bachelor_school","bachelor_major","bachelor_year","graduate_status","graduate_school_type","graduate_school","graduate_major","graduate_degree","graduate_entry_year","graduate_graduation_year","research_fields","mentoring_topics","introduction","message_to_juniors","contact_allowed","career_mail_enabled","career_mail_consent_at","career_mail_updated_at","alumni_news_mail_enabled","alumni_news_mail_consent_at","alumni_news_mail_updated_at"],
+ jobs:["company","job_title","recruit_type","employment_type","location","job_url","deadline","always_open","skills","alumni_comment","referral_available","contact_allowed","status","approved_at","approved_by","created_at","updated_at","last_mailed_at"],
+ alumni_news:["news_type","title","content","company","job_title","organization","position_title","school_name","degree_or_program","event_date","location","relationship","external_url","mail_requested","mail_status","status","approved_at","approved_by","created_at","updated_at"],
+ contact_requests:["requester_name","requester_type","requester_student_id_or_year","requester_email","requester_phone","share_email","share_phone","share_competencies","category","subject","message","message_html","status","created_at","sent_at"]
+};
 async function rows(kind:string):Promise<Rec[]>{
+ if(Object.hasOwn(PORTAL_TABLES,kind)){
+  if(kind==="alumni"){
+   const {data,error}=await admin.from("alumni_profiles")
+    .select("*,member:profiles!alumni_profiles_user_id_fkey(full_name,email,student_no,alumni_student_no,graduation_year,mobile_phone,signup_type,enrollment_status,approval_status)")
+    .order("updated_at",{ascending:false}).limit(2000);
+   if(error){console.error("Alumni profile read",error.code);throw Error("DB_READ_ALUMNI");}
+   return (data||[]).filter((d:any)=>d.member?.approval_status==="approved").map((d:any)=>{
+    const p=d.member,{member,user_id,legacy_alumni_id,is_visible,...rest}=d;
+    return {source_kind:kind,source_id:user_id,data:{
+     ...rest,alumni_id:user_id,legacy_alumni_id:legacy_alumni_id||"",
+     name:p.full_name,email:p.email,phone:p.mobile_phone||"",
+     student_id:p.signup_type==="student"?p.student_no||"":p.alumni_student_no||"",
+     graduation_year:p.graduation_year||d.graduation_year||"",
+     status:is_visible?"APPROVED":"HIDDEN"}};
+   });
+  }
+  const {data,error}=await admin.from(PORTAL_TABLES[kind]).select("*").order("id",{ascending:true}).limit(2000);
+  if(error){console.error("Alumni records read",kind,error.code);throw Error("DB_READ_"+kind);}
+  return (data||[]).map((d:any)=>{
+   const row:Record<string,unknown>={...d};
+   if(kind==="jobs"){row.job_id=d.id;row.alumni_id=d.author_user_id;}
+   else if(kind==="alumni_news"){row.news_id=d.id;row.alumni_id=d.subject_user_id;row.submitted_by_alumni_id=d.author_user_id;}
+   else {row.request_id=d.id;row.alumni_id=d.recipient_user_id||d.legacy_recipient_id;row.requester_user_id=d.sender_user_id;}
+   return {source_kind:kind,source_id:d.id,data:row};
+  });
+ }
  const {data,error}=await admin.from("alumni_network_records").select("source_kind,source_id,data")
   .eq("source_kind",kind).order("source_id",{ascending:true}).limit(2000);
  if(error)throw Error("DB_READ_"+kind);
  return (data||[]) as Rec[];
 }
 async function one(kind:string,recordId:string):Promise<Rec|null>{
+ if(Object.hasOwn(PORTAL_TABLES,kind)){
+  const items=await rows(kind);
+  return items.find(r=>r.source_id===recordId||(kind==="alumni"&&r.data.legacy_alumni_id===recordId))||null;
+ }
  const {data,error}=await admin.from("alumni_network_records").select("source_kind,source_id,data")
   .eq("source_kind",kind).eq("source_id",recordId).maybeSingle();
  if(error)throw Error("DB_LOOKUP_"+kind);
  return (data as Rec|null)||null;
 }
 async function put(kind:string,recordId:string,data:Record<string,unknown>){
+ if(Object.hasOwn(PORTAL_TABLES,kind)){
+  const payload:Record<string,unknown>={};
+  for(const field of PORTAL_FIELDS[kind])if(Object.hasOwn(data,field))payload[field]=data[field]??null;
+  let key:string;
+  if(kind==="alumni"){
+   key="user_id";payload.user_id=recordId;
+   if(data.legacy_alumni_id)payload.legacy_alumni_id=data.legacy_alumni_id;
+   payload.is_visible=text(data.status)!=="HIDDEN"&&text(data.status)!=="REJECTED";
+   payload.updated_at=now();
+   if(!data.created_at)payload.created_at=now();
+  }else{
+   key="id";payload.id=recordId;
+   if(kind==="jobs")payload.author_user_id=data.alumni_id;
+   if(kind==="alumni_news"){payload.subject_user_id=data.alumni_id;payload.author_user_id=data.submitted_by_alumni_id||null;}
+   if(kind==="contact_requests"){
+    payload.recipient_user_id=data.alumni_id||null;
+    payload.sender_user_id=data.requester_user_id||null;
+    if(data.legacy_recipient_id)payload.legacy_recipient_id=data.legacy_recipient_id;
+   }
+  }
+  const {error}=await admin.from(PORTAL_TABLES[kind]).upsert(payload,{onConflict:key});
+  if(error){console.error("Alumni record write",kind,error.code);throw Error("DB_WRITE_FAILED:"+kind);}
+  return;
+ }
+ // Historical dispatch and consent logs remain in the restricted archive.
  const {error}=await admin.from("alumni_network_records").upsert({
   source_kind:kind,source_id:recordId,data,updated_at:now()
  },{onConflict:"source_kind,source_id"});
- if(error){console.error("Alumni save",kind,error.code);throw Error("DB_WRITE_FAILED");}
+ if(error){console.error("Alumni log save",kind,error.code);throw Error("DB_WRITE_FAILED");}
 }
 function cleanProfile(a:Record<string,unknown>){
  const o:Record<string,unknown>={};
