@@ -74,6 +74,13 @@ assert.match(source,/portal-auth-identity/,"member type selector is present");
 assert.match(source,/name="signup_type" value="student" checked/,"student is selected by default");
 assert.match(source,/name="signup_type" value="alumni"/,"graduates can register");
 assert.match(source,/graduation_year/,"graduates provide graduation year");
+assert.match(source,/name="academic_year" value="1" required/,"first-year signup choice is required");
+assert.match(source,/name="academic_year" value="2" required/,"second-year signup choice is required");
+assert.match(source,/gradeGroup.hidden=alumni/,"alumni do not see student grade");
+assert.match(source,/data:\{full_name,student_no,signup_type,graduation_year,academic_year\}/,"signup metadata includes grade");
+assert.match(source,/register_portal_member_v3/,"grade is registered using backend validation");
+assert.match(source,/p_academic_year:/,"both signup paths pass grade");
+
 assert.match(source,/identityFields\(\)\+\s*'\<label\>이름/,"member type selector precedes full name");
 assert.match(source,/member.signup_type==="alumni"/,"admins see graduate membership");
 assert.match(source,/mailTd\.hidden=graduated/,"graduate weekly mail controls are hidden");
