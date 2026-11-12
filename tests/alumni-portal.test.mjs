@@ -40,7 +40,9 @@ assert.match(backend,/update\(\{alumni_source_id:recordId\}\)/,"new alumni regis
 assert.match(backend,/await deliverNews\(d\)/,"admin-created news honors mail request");
 assert.match(backend,/alumni_news_mail_logs/,"new news mails preserve delivery history");
 assert.match(backend,/portal_super_admin_allowed/,"admin permissions cannot be set by browser token");
-assert.match(backend,/const isOwner=/,"writes enforce alumni owner matching");
+assert.match(backend,/async function ownRecordForAccount/,"writes require server-side owner record matching");
+assert.match(backend,/text\(linked\.data\.email\)\.toLowerCase\(\)!==a\.email/,"linked alumni record email must match account");
+assert.match(backend,/a\.enrollment==="early_employment"&&!!a\.alumniId/,"approved early-employed candidates require immutable alumni link");
 assert.match(read("docs/ALUMNI_PORTAL_INTEGRATION.md"),/아직 Apps Script 기반으로 운영됩니다/,"legacy dual-write caveat documented");
 
 const migration=read("supabase/migrations/20261113035800_migrate_alumni_network_sheets_to_private_supabase_record_store.sql");
