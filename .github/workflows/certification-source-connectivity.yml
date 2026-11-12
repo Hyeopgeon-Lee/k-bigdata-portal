@@ -1,0 +1,30 @@
+name: Official certification source connectivity
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/certification-source-connectivity.yml'
+permissions: { contents: read }
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Inspect official public schedule page response (no credentials)
+        run: |
+          python3 - <<'PY'
+          import urllib.request,re
+          urls=[
+            'https://www.dataq.or.kr/www/accept/schedule.do',
+            'https://www.data.go.kr/data/15062838/fileData.do',
+            'https://apis.data.go.kr/B490007/qualExamSchd/getQualExamSchdList?numOfRows=1&pageNo=1&dataFormat=json&implYy=2026&qualgbCd=T&jmCd=1320'
+          ]
+          for u in urls:
+            print('URL:',u.split('?')[0],flush=True)
+            try:
+              r=urllib.request.urlopen(urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0'}),timeout=12)
+              data=r.read(160000).decode('utf-8','replace')
+              print('STATUS:',r.status,'SIZE:',len(data),'CONTENT-TYPE:',r.headers.get('content-type'))
+              print('KEYWORDS:',{k:len(re.findall(k,data,re.I)) for k in ['SQL','시험일정','2026','2027','접수시작일','SERVICE_KEY']})
+              print('SAMPLE:',re.sub(r'\s+',' ',data[:1200]).replace('\\n',' ')[:1200])
+            except Exception as e: print('ERROR:',type(e).__name__,str(e)[:250])
+          PY
