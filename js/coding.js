@@ -507,7 +507,8 @@ function showQuestion(q) {
   $("#coding-prev-button").disabled=index<=0;
   $("#coding-position").textContent=(index+1)+" / "+items.length;
   $("#coding-next-button").textContent=index===items.length-1?"목록으로":"다음 문제";
-  $("#coding-review-slot").hidden=true;
+  const reviewSlot=$("#coding-review-slot");
+  reviewSlot.hidden=true;reviewSlot.replaceChildren();delete reviewSlot.dataset.questionId;
   updateSummary();
   listQuestions(true);
 }
@@ -582,7 +583,10 @@ $("#coding-answer-button").addEventListener("click", () => {
   reveal("#coding-answer","#coding-answer-button");
   const slot=$("#coding-review-slot"),q=current;
   slot.hidden=$("#coding-answer").hidden;
-  if(slot.hidden)return;
+  if(slot.hidden||slot.dataset.questionId===q.id)return;
+  // Render assessment controls only once. Toggling the solution must not recreate
+  // the assessment inputs, repeat bindReview(), or overwrite a selected grade.
+  slot.dataset.questionId=q.id;
   slot.innerHTML=quizFeedback({label:"정답·해설 공개",details:"작성한 답안과 비교한 후 내 풀이 결과를 선택하세요."})+reviewControls();
   const key="coding-review-"+q.id;
   bindReview(slot,{bank:"coding",questionId:q.id,clientAttemptId:codingAttemptId,
