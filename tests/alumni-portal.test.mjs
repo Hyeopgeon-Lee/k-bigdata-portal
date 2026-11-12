@@ -55,6 +55,18 @@ assert.doesNotMatch(read("alumni/job-submit.html"),/id="job-pin"/,"job submit no
 assert.doesNotMatch(read("alumni/news-submit.html"),/id="news-pin"/,"news submit no PIN");
 assert.doesNotMatch(read("alumni/js/job-submit.js"),/edit_pin|#job-pin/i,"job submit uses portal login");
 assert.doesNotMatch(read("alumni/js/news-submit.js"),/edit_pin|#news-pin/i,"news submit uses portal login");
+const newsSubmitHtml=read("alumni/news-submit.html"),newsSubmitJs=read("alumni/js/news-submit.js");
+assert.match(newsSubmitHtml,/id="news-account-summary"/,"news submit displays login-derived author information");
+assert.match(newsSubmitHtml,/id="news-author-name"/,"author name shown from verified account");
+assert.match(newsSubmitHtml,/id="news-author-email"/,"verified account email shown");
+assert.doesNotMatch(newsSubmitHtml,/id="(?:news-alumni-id|news-auth-button)"/,"no manual Alumni ID or verification button");
+assert.match(newsSubmitJs,/await window\.alumniPortalReady/,"news submit awaits portal authentication bridge");
+assert.match(newsSubmitJs,/verifyNewsAlumni'[\s\S]*?data: \{\}/,"server resolves account ownership without client identifier");
+assert.match(newsSubmitJs,/alumni_id: auth\.alumni_id/,"posting uses authorized account-linked Alumni ID");
+assert.doesNotMatch(newsSubmitJs,/news-auth-button|news-alumni-id/,"news submit no longer references manual ID controls");
+assert.match(backend,/case "verifyJobAlumni":case "verifyNewsAlumni"/,"server verifies news author by own account");
+assert.match(backend,/const o=await owned\(a,text\(b\.alumni_id\)\)/,"server ownership check cannot be bypassed");
+
 assert.match(read("supabase/migrations/20261113054000_retire_legacy_alumni_pin_hashes.sql"),/data-'edit_pin_hash'/,"retired hashes are purged");
 assert.match(backend,/async function ownRecordForAccount/,"writes require server-side owner record matching");
 assert.match(backend,/text\(linked\.data\.email\)\.toLowerCase\(\)!==a\.email/,"linked alumni record email must match account");
