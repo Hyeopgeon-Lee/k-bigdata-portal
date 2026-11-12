@@ -228,20 +228,20 @@ async function start(){
  document.querySelectorAll('[data-help-tab]').forEach(button=>button.onclick=()=>tab(button.dataset.helpTab));
  const query=new URLSearchParams(location.search);
  const source=query.get('source'),problemId=query.get('id');
- if(['coding','ncp','practical','interview'].includes(source)&&/^[A-Za-z0-9_-]{1,80}$/.test(problemId||'')){
+ const pages={coding:'coding.html',ncp:'ncp.html',practical:'practical.html',interview:'interview.html'};
+ if(Object.hasOwn(pages,source)&&/^[A-Za-z0-9_-]{1,80}$/.test(problemId||'')){
    const titles={coding:'기초학습',ncp:'NCP 기출문제',practical:'정보처리 실기',interview:'기술면접'};
    const f=el('help-create-form');
    f.elements.category.value='학습문제 오류 신고';
    f.elements.location.value='온라인 포털';
-   f.elements.title.value=('['+titles[source]+' 오류] '+problemId+' '+(query.get('question')||'')).slice(0,80);
-   const reportUrl=query.get('url');
-   let verifiedUrl='';
-   try{
-     const parsed=new URL(reportUrl);
-     if(parsed.origin===location.origin&&['/coding.html','/practical.html','/interview.html','/ncp.html'].includes(parsed.pathname))verifiedUrl=parsed.href;
-   }catch{}
-   f.elements.content.value='문제 ID: '+problemId+'\n문제 유형: '+titles[source]+(verifiedUrl?'\n문제 화면: '+verifiedUrl:'')+'\n\n오류 내용:\n';
+   // Older shared links may include a question preview; newer links only need source + id.
+   const preview=(query.get('question')||'').replace(/\s+/g,' ').trim().slice(0,100);
+   f.elements.title.value=('['+titles[source]+' 오류] '+problemId+(preview?' '+preview:'')).slice(0,80);
+   const problemUrl=new URL(pages[source],location.origin+'/');
+   problemUrl.searchParams.set('id',problemId);
+   f.elements.content.value='문제 ID: '+problemId+'\n문제 유형: '+titles[source]+'\n문제 화면: '+problemUrl.href+'\n\n오류 내용:\n';
    tab('new');
+
  }else tab('my');
 }
 start().catch(error=>{console.error('Help initialization failed',error);say('요청 서비스를 연결할 수 없습니다.');});
