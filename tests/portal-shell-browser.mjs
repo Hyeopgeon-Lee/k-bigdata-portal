@@ -41,6 +41,10 @@ async function ready(page,file){
   if(model?.locked || model?.group==='learning'){
     await page.waitForFunction(()=>!document.getElementById('learning-lock') && document.querySelector('.site-header')?.getBoundingClientRect().height>0,{timeout:16000});
   }
+  // The auth stylesheet is injected after the navigation stylesheet. Disable only
+  // shell transitions during pixel/style snapshots so load timing does not make
+  // border colors differ across otherwise identical pages and browser engines.
+  await page.addStyleTag({content:'.site-header, .site-header *, .site-header *::before, .site-header *::after {transition: none !important; animation: none !important;}'});
   await page.evaluate(async()=>{await document.fonts.ready;await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));});
 }
 async function snapshot(page){
