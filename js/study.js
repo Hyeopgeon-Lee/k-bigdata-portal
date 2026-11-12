@@ -73,7 +73,7 @@ function render(){
  $('study-live-label').textContent=active?(active.paused_at?'휴식 중 · 공부시간 일시정지':'공부시간 기록 중'):(todaysPlan?'오늘의 학습 기록':'학습 시작 전');
  const weekly=sessions.filter(s=>kstDate(s.started_at)>=week&&kstDate(s.started_at)<addDays(week,7));
  const studyDays=new Set(weekly.map(s=>kstDate(s.started_at)));
- const pledged=[...selected].map(i=>addDays(week,i-1)).filter(day=>day<=today);
+ const pledged=[...selected].map(i=>addDays(week,i-1)).filter(day=>day<today||(day===today&&studyDays.has(day)));
  const met=pledged.filter(day=>studyDays.has(day)).length;
  $('study-stat-planned').textContent=selected.size+'일';
  $('study-stat-attended').textContent=studyDays.size+'일';
