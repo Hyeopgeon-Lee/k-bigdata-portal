@@ -28,14 +28,14 @@ async function authorize(){
   const {data:access,error:accessError}=await client.rpc("portal_learning_access");
   if(accessError||access?.read!==true){block("포털 계정 이용 권한을 확인하지 못했습니다.");return;}
   const {data:profile,error:profileError}=await client.from("profiles")
-   .select("full_name,signup_type,approval_status,alumni_source_id,graduation_year")
+   .select("full_name,signup_type,enrollment_status,approval_status,alumni_source_id,graduation_year,student_no,alumni_student_no,mobile_phone")
    .eq("user_id",user.id).single();
   if(profileError||profile?.approval_status!=="approved"){
    block("승인된 포털 회원만 졸업생 네트워크를 이용할 수 있습니다.");return;
   }
   const label=document.getElementById("alumni-portal-member");
   if(label)label.textContent=profile.full_name||"이름 미등록";
-  const sourceId=profile.signup_type==="alumni"?profile.alumni_source_id:null;
+  const sourceId=(profile.signup_type==="alumni"||profile.enrollment_status==="graduated")?profile.alumni_source_id:null;
   if(sourceId){
    for(const selector of ["#lookup-id","#job-alumni-id","#news-alumni-id"]){
     const field=document.querySelector(selector);
@@ -44,7 +44,8 @@ async function authorize(){
   }
   // Expose only self identity, never stored PINs, contact details or service keys.
   window.alumniPortalMember={name:profile.full_name||"",email:user.email||"",
-   graduationYear:profile.graduation_year||null,alumniId:sourceId||null};
+   graduationYear:profile.graduation_year||null,alumniId:sourceId||null,
+   eligibleForAlumni:(profile.signup_type==="alumni"||profile.signup_type==="student")&&profile.enrollment_status==="graduated"};
   document.documentElement.dataset.alumniPortalAuth="approved";
   if(ui)ui.hidden=true;
  }catch(error){
