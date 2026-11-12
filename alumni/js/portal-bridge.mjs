@@ -32,6 +32,13 @@ async function authorize(){
   if(profileError||profile?.approval_status!=="approved"){
    block("승인된 포털 회원만 졸업생 네트워크를 이용할 수 있습니다.");return;
   }
+  if(document.documentElement.hasAttribute("data-alumni-requires-admin")){
+   const {data:superAdmin,error:roleError}=await client.rpc("portal_super_admin_allowed");
+   if(roleError||superAdmin!==true){
+    block("관리자 전용 페이지입니다. 슈퍼 관리자 계정으로 접속해 주세요.");
+    return;
+   }
+  }
   const label=document.getElementById("alumni-portal-member");
   if(label)label.textContent=profile.full_name||"이름 미등록";
   const sourceId=(profile.signup_type==="alumni"||["graduated","early_employment"].includes(profile.enrollment_status))?profile.alumni_source_id:null;
