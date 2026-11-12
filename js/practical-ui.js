@@ -1,4 +1,4 @@
-import {quizNavigation,quizHeading,quizDisclosure,quizFeedback} from "./quiz-unified.js";
+import {quizNavigation,quizHeading,quizDisclosure,quizFeedback} from "./quiz-unified.js?v=20261112-action-colors-1";
 import {createQuestionBrowser} from "./question-browser.js";
 import {bindReview,reviewControls,gradeLabels} from "./study-review.js";
 import {loadPracticalBank} from "./practical-data.js?v=20261006-audit-2";
