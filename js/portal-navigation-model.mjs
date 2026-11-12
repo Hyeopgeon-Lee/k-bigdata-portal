@@ -1,6 +1,6 @@
 import {categories, services, portalNavLinks} from './services.js?v=20261026-schedule-align-1';
 
-export const shellVersion = '20261112-page-intro-1';
+export const shellVersion = '20261112-page-intro-2';
 export const portalPages = {
   index: {title:'통합 포털', group:null},
   services: {title:'전체 서비스', group:null, directory:true, eyebrow:'ALL SERVICES', description:'학습·취업·프로젝트·학과 생활 도구를 한곳에서 찾으세요. 필요한 서비스를 즐겨찾기에 추가할 수 있습니다.', headingId:'directory-title'},
