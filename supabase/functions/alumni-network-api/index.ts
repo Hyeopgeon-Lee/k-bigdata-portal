@@ -160,7 +160,8 @@ async function actor(request:Request):Promise<Actor>{
   alumniId:profile.alumni_source_id||null,isAdmin:isAdmin===true,
   graduationYear:profile.graduation_year||null,studentNo:profile.signup_type==="student"?profile.student_no||null:profile.alumni_student_no||null,mobilePhone:profile.mobile_phone||null};
 }
-function isGraduateMember(a:Actor){return (a.role==="student"||a.role==="alumni")&&a.enrollment==="graduated";}
+function isGraduateMember(a:Actor){return (a.role==="student"||a.role==="alumni")&&(
+  a.enrollment==="graduated"||(a.enrollment==="early_employment"&&!!a.alumniId));}
 async function ownRecordForAccount(a:Actor):Promise<Rec|null>{
  if(!isGraduateMember(a))return null;
  if(a.alumniId){
