@@ -5,7 +5,7 @@ import {portalPages,navigationItems,shellVersion} from '../js/portal-navigation-
 import {renderHeader,renderServiceNavigation,renderToolbar,renderPageIntro} from './portal-shell-template.mjs';
 const root=fileURLToPath(new URL('../',import.meta.url));
 // Keep the responsive account/menu loader cache-busted when regenerating page shells.
-const navigationScriptVersion='20261113-copy-cleanup-1';
+const navigationScriptVersion='20261113-admin-isolated-1';
 function discover(dir){return readdirSync(dir,{withFileTypes:true}).flatMap(item=>item.name.startsWith('.')||['node_modules','ui-screenshots','test-results','alumni','admin','supabase'].includes(item.name)?[]:item.isDirectory()?discover(path.join(dir,item.name)):item.name.endsWith('.html')?[path.relative(root,path.join(dir,item.name)).replaceAll('\\','/')]:[]);}
 export const htmlPages=discover(root).sort();
 const region=(name,content)=>`<!-- portal:${name}:start (generated; edit scripts/portal-shell-template.mjs) -->\n${content}\n<!-- portal:${name}:end -->`;
