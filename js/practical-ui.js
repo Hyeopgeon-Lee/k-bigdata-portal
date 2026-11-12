@@ -244,6 +244,7 @@ function openQuestion(id,fresh=false){
 function tablesHTML(q){return (q.tables||[]).map((t,index)=>{const hintId="table-scroll-hint-"+index;return '<div class="table-scroll" tabindex="0" role="region" aria-label="'+esc(t.name)+' 데이터 표 · 좌우 스크롤 가능" data-scroll-hint="'+hintId+'"><table><caption>'+esc(t.name)+'</caption><thead><tr>'+t.columns.map(c=>'<th scope="col">'+esc(c)+'</th>').join("")+'</tr></thead><tbody>'+t.rows.map(row=>'<tr>'+row.map(v=>'<td>'+esc(v===null?'NULL':v)+'</td>').join("")+'</tr>').join("")+'</tbody></table></div><p id="'+hintId+'" class="scroll-hint table-scroll-hint" hidden aria-hidden="true">← 좌우로 밀어 표 보기 →</p>';}).join("");}
 function renderQuestion(){
  const q=current,revealed=!!attempt.viewedExplanation,submitted=!!attempt.submittedAt;
+ const traceItems=solutionTrace(q);
  const multiline=q.questionType==="sql_write"||q.answer.includes("\n"), lateEditable=attempt.autoRevealed&&!attempt.lateSubmittedAt,attributes='id="my-answer" maxlength="10000" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-describedby="answer-hint" '+((revealed||submitted)&&!lateEditable?'disabled':'');
  const input=multiline?'<textarea '+attributes+' rows="'+(q.questionType==="sql_write"?7:4)+'">'+esc(attempt.answer||"")+'</textarea>':'<input '+attributes+' type="text" enterkeyhint="done" value="'+esc(attempt.answer||"")+'">';
  const shownCode=displayCode(q);
@@ -257,7 +258,13 @@ function renderQuestion(){
       {label:"링크 복사",tone:"copy",action:"copy-problem-link",ariaLabel:"현재 문제 링크 복사"},
       {label:"오류 신고",tone:"report",href:learningReportUrl("practical",q,solveHeading(q)),ariaLabel:"현재 실기문제 오류 신고"}
     ]})+
-  '<p id="share-status" class="share-status" role="status" aria-live="polite"></p><p class="solve-question">'+formatQuestion(q.question)+'</p>'+tablesHTML(q)+(q.code?'<div class="code-scroll'+(q.language==="SQL"?' code-scroll--sql':'')+(codeNeedsFocus(q)?' code-scroll--complex':'')+'" tabindex="0" role="region" aria-label="'+esc(q.language)+' 문제 코드'+(q.language==="SQL"?'':' · 좌우 스크롤 가능')+'" data-scroll-hint="code-scroll-hint"><pre><code>'+highlightCode(shownCode)+'</code></pre></div><p id="code-scroll-hint" class="scroll-hint code-scroll-hint" hidden aria-hidden="true">← 좌우로 밀어 코드 보기 →</p>'+codeToolsHTML(q,shownCode):'')+(q.inputData?'<h3>입력 데이터</h3><pre class="input-data">'+esc(q.inputData)+'</pre>':'')+'<form id="answer-form" class="quiz-answer"><label for="my-answer">내가 생각한 정답</label>'+input+'<p class="hint" id="answer-hint">'+(q.grading==="self"?'SQL은 예시답과 직접 비교해 판정합니다.':'출력의 대소문자와 줄바꿈을 확인하세요.')+'</p><button id="submit-answer" class="study-open" type="submit">정답·해설 보기</button></form><details id="solve-hint"><summary>힌트 보기</summary><p>'+esc(q.hint||"실행 흐름을 단계별로 추적해 보세요.")+'</p></details><div id="answer-result"></div><nav class="study-nav">'+button("previous","이전 문제",queueIndex<=0?'disabled':'')+button("next",queue.length&&queueIndex===queue.length-1?(queueKind==="bank"?"목록으로":"세트 결과 보기"):"다음 문제")+'</nav></article>';
+  '<p id="share-status" class="share-status" role="status" aria-live="polite"></p><p class="solve-question">'+formatQuestion(q.question)+'</p>'+tablesHTML(q)+(q.code?'<div class="code-scroll'+(q.language==="SQL"?' code-scroll--sql':'')+(codeNeedsFocus(q)?' code-scroll--complex':'')+'" tabindex="0" role="region" aria-label="'+esc(q.language)+' 문제 코드'+(q.language==="SQL"?'':' · 좌우 스크롤 가능')+'" data-scroll-hint="code-scroll-hint"><pre><code>'+highlightCode(shownCode)+'</code></pre></div><p id="code-scroll-hint" class="scroll-hint code-scroll-hint" hidden aria-hidden="true">← 좌우로 밀어 코드 보기 →</p>'+codeToolsHTML(q,shownCode):'')+(q.inputData?'<h3>입력 데이터</h3><pre class="input-data">'+esc(q.inputData)+'</pre>':'')+'<form id="answer-form" class="quiz-answer"><label for="my-answer">내가 생각한 정답</label>'+input+'<p class="hint" id="answer-hint">'+(q.grading==="self"?'SQL은 예시답과 직접 비교해 판정합니다.':'출력의 대소문자와 줄바꿈을 확인하세요.')+'</p><div class="quiz-solve-actions" role="group" aria-label="문제 풀이 도움말">'+
+   '<button type="button" id="practical-hint-button" class="quiz-solve-action quiz-solve-action--hint" data-action="toggle-hint" aria-controls="solve-hint" aria-expanded="false">힌트 보기</button>'+
+   '<button type="submit" id="submit-answer" class="study-open quiz-solve-action quiz-solve-action--answer">정답·해설 보기</button>'+
+   (traceItems.length?'<button type="button" id="practical-trace-button" class="quiz-solve-action quiz-solve-action--trace" data-action="toggle-trace" aria-controls="solve-trace" aria-expanded="false">값 변화 추적</button>':'')+
+   '</div></form><section id="solve-hint" class="quiz-solve-panel" hidden><h3>힌트</h3><p>'+esc(q.hint||"실행 흐름을 단계별로 추적해 보세요.")+'</p></section>'+
+   (traceItems.length?'<section id="solve-trace" class="quiz-solve-panel" hidden><h3>값 변화 추적</h3><ol>'+traceItems.map(item=>'<li>'+esc(item)+'</li>').join("")+'</ol></section>':'')+
+   '<div id="answer-result"></div><nav class="study-nav">'+button("previous","이전 문제",queueIndex<=0?'disabled':'')+button("next",queue.length&&queueIndex===queue.length-1?(queueKind==="bank"?"목록으로":"세트 결과 보기"):"다음 문제")+'</nav></article>';
  const choices=queue.length?queue:sorted(basicPool());
  const sidebar=document.createElement("aside");
  sidebar.className="study-side-list";
@@ -270,13 +277,15 @@ function renderQuestion(){
    attempt.viewedExplanation=true;saveSession(q.id,attempt);revealAnswer();
    $("#result-heading").focus();
  });
- $("#solve-hint").addEventListener("toggle",event=>{if(event.target.open){attempt.usedHint=true;saveSession(q.id,attempt);}});
+ // Hint and trace use shared buttons; their click handler records hint usage.
  $("#my-answer").addEventListener("input",()=>{attempt.answer=$("#my-answer").value;saveSession(q.id,attempt);});
  if(attempt.viewedExplanation)revealAnswer();
  storageNotice();
 }
 function revealAnswer(){
- $("#submit-answer").hidden=true;
+ const answerButton=$("#submit-answer");
+ answerButton.type="button";answerButton.dataset.action="show-answer";
+ answerButton.setAttribute("aria-controls","answer-result");
  $("#my-answer").disabled=true;
  const q=current;
  const extraExplanation=beginnerExplanation(q);
@@ -309,6 +318,22 @@ function revealAnswer(){
 root.addEventListener("click",event=>{
  const b=event.target.closest("[data-action]");if(!b)return;
  const action=b.dataset.action;
+ if(action==="toggle-hint"||action==="toggle-trace"){
+   const panel=document.getElementById(action==="toggle-hint"?"solve-hint":"solve-trace");
+   if(!panel)return;
+   panel.hidden=!panel.hidden;
+   b.setAttribute("aria-expanded",String(!panel.hidden));
+   if(action==="toggle-hint"&&!panel.hidden){
+     attempt.usedHint=true;saveSession(current.id,attempt);
+   }
+   return;
+ }
+ if(action==="show-answer"){
+   const result=document.getElementById("answer-result");
+   result?.scrollIntoView({block:"start",behavior:"smooth"});
+   result?.querySelector("#result-heading")?.focus({preventScroll:true});
+   return;
+ }
  if(action==="start-today"){
    const done=new Set(getAttempts().filter(a=>a.viewedExplanation&&localDay(new Date(a.submittedAt))===localDay()).map(a=>a.questionId));
    const plan=planToday(),remaining=plan.filter(q=>!done.has(q.id));startQueue(remaining.length?remaining:plan,"today");
