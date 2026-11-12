@@ -36,6 +36,13 @@ assert.match(backend,/alumni_network_records/,"new source of truth is Supabase")
 assert.match(backend,/alumni_network_mail_outbox/,"mail deduplication persisted");
 assert.match(backend,/case "contact"/,"contact relay still supported");
 assert.match(backend,/case "adminRunJobDigest"/,"career digest still supported");
+assert.match(backend,/update\(\{alumni_source_id:recordId\}\)/,"new alumni registrations link their portal identity");
+assert.match(backend,/await deliverNews\(d\)/,"admin-created news honors mail request");
+assert.match(backend,/alumni_news_mail_logs/,"new news mails preserve delivery history");
+assert.match(backend,/portal_super_admin_allowed/,"admin permissions cannot be set by browser token");
+assert.match(backend,/const isOwner=/,"writes enforce alumni owner matching");
+assert.match(read("docs/ALUMNI_PORTAL_INTEGRATION.md"),/아직 Apps Script 기반으로 운영됩니다/,"legacy dual-write caveat documented");
+
 const migration=read("supabase/migrations/20261113035800_migrate_alumni_network_sheets_to_private_supabase_record_store.sql");
 assert.match(migration,/enable row level security/,"private tables are RLS protected");
 assert.match(migration,/revoke all on public\.alumni_network_records from public,anon,authenticated/,"raw PII not client-readable");
