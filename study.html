@@ -25,7 +25,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <link rel="stylesheet" href="css/portal-navigation.css?v=20261112-page-intro-2">
 <script defer src="js/portal-navigation.js?v=20261112-member-mobile-2"></script>
 <!-- portal:assets:end -->
-<link rel="stylesheet" href="css/study.css?v=20261112-study-1">
+<link rel="stylesheet" href="css/study.css?v=20261112-no-plan-reason-1">
 </head><body data-page="study">
 <p id="learning-notice" role="status">로그인 및 재학 상태를 확인 중입니다. <a href="/">포털 메인</a></p>
 <a class="skip-link" href="#main-content">본문으로 바로가기</a>
@@ -74,7 +74,12 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <p class="study-text">매주 월요일에 남아 공부할 날짜를 선택하세요. 당일 오후 4시가 지나면 그날의 계획은 변경할 수 없습니다. 지나간 날짜도 변경할 수 없습니다. 계획하지 않는 주도 0일로 저장할 수 있습니다.</p>
 <div id="study-days" class="study-days" aria-label="월요일부터 금요일까지 학습 요일"></div>
 <p id="study-plan-summary" class="study-text">학습계획 확인 중…</p>
-<p id="study-empty" class="study-text" hidden>이번 주 학습계획 없음으로 저장할 수 있습니다.</p>
+<div id="study-empty" class="study-none-plan-fields" hidden>
+  <label for="study-no-plan-reason"><strong>학습계획 없음 사유 <span class="study-required-mark" aria-hidden="true">필수</span></strong></label>
+  <p class="study-text" id="study-none-plan-help">이번 주 남아서 공부할 날짜를 선택하지 않은 이유를 입력해 주세요. 개인 사정은 자세히 작성하지 않아도 됩니다.</p>
+  <textarea id="study-no-plan-reason" rows="3" minlength="2" maxlength="300" aria-describedby="study-none-plan-help" placeholder="예: 이번 주에는 자격증 시험 준비를 집에서 진행할 예정입니다."></textarea>
+  <p id="study-none-plan-count" class="study-text" aria-live="polite">0 / 300자</p>
+</div>
 <div class="study-actions"><button id="study-save" class="study-primary" type="button">주간 계획 저장</button></div>
 </section>
 <section class="learn-section" aria-labelledby="study-today-heading">
@@ -120,6 +125,6 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <div class="container footer-bottom"><p>학생용 학습·프로젝트·취업 통합 포털입니다.</p><p>© <span id="current-year"></span> K-BigData Service Portal</p></div>
 </footer>
 <script type="module" src="js/portal-auth.mjs?v=20261112-member-mobile-2"></script>
-<script type="application/x-learning" data-module="js/study.js?v=20261112-study-1"></script>
+<script type="application/x-learning" data-module="js/study.js?v=20261112-no-plan-reason-1"></script>
 <script type="application/x-learning" data-module="js/portal-shell-entry.js?v=20261111-account-sync-1"></script>
 </body></html>
