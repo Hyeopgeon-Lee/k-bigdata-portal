@@ -186,6 +186,18 @@ try{
     // visual viewport while an input has focus checks the same layout constraint.
     await ready(page,'coding.html?id=LINUX-002');await page.locator('#coding-show-list').click();await page.locator('.question-browser input').focus();await page.setViewportSize({width:390,height:420});
     assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'focused input in a short viewport does not overflow');
+    await page.setViewportSize({width:390,height:844});
+    for(const [path,eyebrow] of [
+      ['coding.html?id=C-002','CODING PRACTICE'],
+      ['practical.html?id=R-SQL-0015','PRACTICAL EXAM'],
+      ['ncp.html?id=NCP-R001','NCP CERTIFICATION']
+    ]){
+      await ready(page,path);
+      assert.equal(await page.locator('.portal-page-intro').isVisible(),true,'intro remains visible at '+path);
+      assert.equal(await page.locator('.portal-page-eyebrow').textContent(),eyebrow,'English subtitle remains visible at '+path);
+      assert.equal(await page.locator('.portal-page-back').isVisible(),true,'home back link stays accessible at '+path);
+      assert.equal(await page.locator('h1').count(),1,'no duplicated H1 in problem view at '+path);
+    }
   }catch(error){record(engine+' deep-link/state/back/keyboard regression',error);}finally{await context.close();}
   // Fail closed: without JavaScript there is no authenticated session.
   const noScript=await browser.newContext({javaScriptEnabled:false,viewport:{width:390,height:844}});await prepare(noScript);
