@@ -462,9 +462,24 @@ async function activate(interactive=true){
   document.documentElement.dataset.portalAccess="approved";
   root.hidden=true;
   showAccount();
-  for(const entry of document.querySelectorAll("script[data-module]")){
-    await import(new URL(entry.dataset.module,document.baseURI).href);
-    entry.removeAttribute("data-module");
+  if(document.body.hasAttribute("data-requires-super-admin")&&!isAdmin){
+    // Reject direct visits to legacy faculty routes before importing admin modules.
+    const main=document.querySelector("main");
+    if(main){
+      main.replaceChildren();
+      const notice=document.createElement("section");notice.className="container admin-denied-note";
+      notice.setAttribute("role","alert");
+      const title=document.createElement("h1");title.textContent="관리자 전용 페이지";
+      const detail=document.createElement("p");detail.textContent="이 페이지는 학과 슈퍼 관리자만 이용할 수 있습니다.";
+      const back=document.createElement("a");back.href=new URL("../index.html",import.meta.url).href;back.textContent="포털 홈으로 돌아가기";
+      notice.append(title,detail,back);main.append(notice);
+    }
+    document.querySelectorAll('script[data-module]').forEach(entry=>entry.remove());
+  }else{
+    for(const entry of document.querySelectorAll("script[data-module]")){
+      await import(new URL(entry.dataset.module,document.baseURI).href);
+      entry.removeAttribute("data-module");
+    }
   }
   document.getElementById("learning-notice")?.remove();
   locked?.remove();

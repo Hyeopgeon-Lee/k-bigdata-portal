@@ -19,6 +19,8 @@ for(let i=0;i<routes.length;i++){
  execFileSync(process.execPath,["--check",new URL("../admin/js/"+modules[i]+".js",import.meta.url).pathname]);
 }
 const auth=read("js/portal-auth.mjs");
+assert.match(read("teacher-learning.html"),/data-requires-super-admin/,"legacy faculty route protected");
+assert.match(auth,/data-requires-super-admin/,"faculty modules suppressed for students");
 assert.match(auth,/href:"admin\/index.html"/);
 assert.doesNotMatch(auth,/function renderAdmin\(|function renderApprovalRequests\(|function renderWithdrawnDeletion\(/,
  "shared user login must not contain manager actions");
