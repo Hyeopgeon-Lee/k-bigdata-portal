@@ -200,7 +200,8 @@ function render(){
  root.classList.remove("study-split");
  disconnectSolveObserver();$("#bank-controls").hidden=!!current||view!=="bank";
  $("#quick-filters").hidden=!!current||!["home","bank"].includes(view);
- $("#study-intro").hidden=!!current||view!=="home";
+ // The shared page introduction is always visible in list, home and question modes.
+ $("#study-intro").hidden=false;
  $(".bank-nav").hidden=!!current||view==="home";
  $("#usage-guide").hidden=!!current;
  document.body.classList.toggle("is-solving",!!current);
