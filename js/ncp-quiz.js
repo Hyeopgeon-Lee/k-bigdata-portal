@@ -1,5 +1,5 @@
 import {quizNavigation,quizHeading,quizDisclosure,quizFeedback,scrollToQuizAnswer} from "./quiz-unified.js?v=20261112-answer-focus-1";
-import {createQuestionBrowser} from "./question-browser.js";
+import {createQuestionBrowser} from "./question-browser.js?v=20261112-intro-browse-2";
 import {bindReview,reviewControls,gradeLabels} from "./study-review.js";
 import {learningLocal as localStorage, learningSession as sessionStorage} from "./learning-storage.mjs";
 const drafts=new Map();

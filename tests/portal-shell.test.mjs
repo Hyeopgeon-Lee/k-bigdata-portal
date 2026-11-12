@@ -4,7 +4,7 @@ import {fileURLToPath} from 'node:url';
 import path from 'node:path';
 import {spawnSync} from 'node:child_process';
 import {portalPages,groups,navigationItems,shellVersion} from '../js/portal-navigation-model.mjs';
-import {renderHeader,renderServiceNavigation,renderToolbar} from '../scripts/portal-shell-template.mjs';
+import {renderHeader,renderServiceNavigation,renderToolbar,renderPageIntro} from '../scripts/portal-shell-template.mjs';
 
 const root=fileURLToPath(new URL('../',import.meta.url));
 const read=file=>readFileSync(path.join(root,file),'utf8').replaceAll('\r\n','\n');
@@ -27,12 +27,19 @@ for(const file of files){
   assert.ok(html.includes('js/portal-navigation.js?v='+navigationScriptVersion),'versioned JS '+file);
   assert.ok(html.indexOf('css/portal-navigation.css')>html.lastIndexOf('<style'),'shared styles follow any inline stylesheet '+file);
   assert.ok(/<script defer src="js\/portal-navigation\.js/.test(html),'menu runs independently of content modules '+file);
-  if(page.group){
+  if(page.eyebrow){
     assert.ok(html.includes(renderServiceNavigation(page,id)),'generated service links '+file);
+    assert.ok(html.includes(renderPageIntro(page,id)),'generated page introduction '+file);
+    assert.equal((html.match(/<h1\b/g)||[]).length,1,'exactly one accessible page title '+file);
+    assert.equal((html.match(/portal-page-back/g)||[]).length,1,'one portal home back link '+file);
     const generated=renderServiceNavigation(page,id);
     assert.equal((generated.match(/data-nav-id=/g)||[]).length,navigationItems.length,'all services accessible '+file);
-    assert.equal((generated.match(/aria-current="page"/g)||[]).length,1,'one current service '+file);
-  }else assert.ok(!html.includes('data-learning-nav'),'home keeps its own content information architecture');
+    assert.equal((generated.match(/aria-current="page"/g)||[]).length,page.group?1:0,'current service if registered '+file);
+    assert.ok(html.indexOf('portal:services:end')<html.indexOf('portal:intro:start'),'service bar precedes intro '+file);
+  }else{
+    assert.ok(!html.includes('data-learning-nav'),'home keeps its own content information architecture');
+    assert.ok(!html.includes('portal:intro:start'),'home has no redundant introduction');
+  }
   if(page.toolbar)assert.ok(html.includes(renderToolbar(page)),'learning toolbar actions preserved '+file);
   else assert.ok(!/<div class="(?:coding-study-header )?study-header"/.test(html),'no unwanted auxiliary toolbar '+file);
 }

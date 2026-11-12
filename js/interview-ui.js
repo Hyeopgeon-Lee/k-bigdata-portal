@@ -166,7 +166,7 @@ export function initInterview(){
    bottomObserver?.disconnect();bottomObserver=null;
    document.body.dataset.interviewMode=mode;
    $("#interview-home").hidden=mode!=="HOME"&&mode!=="BROWSE";
-   $(".page-hero").hidden=mode.startsWith("PRACTICE")||mode==="COMPLETE";
+   // Keep the shared portal introduction visible in all interview modes.
    controls.hidden=mode!=="BROWSE";status.hidden=mode!=="BROWSE";syncFilters();
    if(mode==="HOME")root.innerHTML="";
    else if(mode==="BROWSE"){

@@ -59,7 +59,7 @@ async function snapshot(page){
     const relativeRect=node=>{const value=rect(node),origin=rect(nav);value.x=Math.round((value.x-origin.x)*100)/100;value.y=Math.round((value.y-origin.y)*100)/100;return value;};
     const buttons=[...(nav?.querySelectorAll('.portal-nav-current .portal-nav-items a')||[])].map(node=>{const value=style(node);delete value.backgroundColor;delete value.color;delete value.borderTopColor;return {id:node.dataset.navId,style:value,rect:relativeRect(node)};});
     const moreNode=nav?.querySelector('.portal-nav-more summary');
-    return {header:commonHeader,serviceBar:component('.portal-service-nav'),pageIntro:component('.portal-page-hero'),headerCount:document.querySelectorAll('.site-header').length,mainCount:document.querySelectorAll('main').length,shell:document.querySelector('.site-header')?.dataset.portalShell,scroll:document.documentElement.scrollWidth,viewport:document.documentElement.clientWidth,headerLinks:[...document.querySelectorAll('#portal-nav a')].map(a=>({href:a.getAttribute('href'),text:a.textContent.trim()})),active:active?{id:active.dataset.navId,style:style(active)}:null,buttons,allServices:[...(nav?.querySelectorAll('[data-nav-id]')||[])].map(a=>a.dataset.navId),toolbar:component('.study-header'),more:moreNode?{style:style(moreNode),rect:relativeRect(moreNode)}:null,brandText:[...document.querySelectorAll('.brand-full,.brand-short')].filter(el=>getComputedStyle(el).display!=='none').map(el=>el.textContent)};
+    return {header:commonHeader,serviceBar:component('.portal-service-nav'),pageIntro:component('.portal-page-intro'),introParts:['.portal-page-back','.portal-page-eyebrow','.portal-page-title','.portal-page-description'].map(component),introTexts:['.portal-page-back','.portal-page-eyebrow','.portal-page-title'].map(selector=>document.querySelector(selector)?.textContent?.trim()||''),headerCount:document.querySelectorAll('.site-header').length,mainCount:document.querySelectorAll('main').length,shell:document.querySelector('.site-header')?.dataset.portalShell,scroll:document.documentElement.scrollWidth,viewport:document.documentElement.clientWidth,headerLinks:[...document.querySelectorAll('#portal-nav a')].map(a=>({href:a.getAttribute('href'),text:a.textContent.trim()})),active:active?{id:active.dataset.navId,style:style(active)}:null,buttons,allServices:[...(nav?.querySelectorAll('[data-nav-id]')||[])].map(a=>a.dataset.navId),toolbar:component('.study-header'),more:moreNode?{style:style(moreNode),rect:relativeRect(moreNode)}:null,brandText:[...document.querySelectorAll('.brand-full,.brand-short')].filter(el=>getComputedStyle(el).display!=='none').map(el=>el.textContent)};
   });
 }
 async function interactions(page,width,id){
@@ -79,7 +79,7 @@ async function interactions(page,width,id){
     await summary.click();await page.locator('main').click({position:{x:2,y:2}});
     assert.equal(await menu.getAttribute('open'),null,'outside click closes menu');
   }else assert.equal(await page.locator('#portal-nav').isVisible(),true,'desktop links visible');
-  if(portalPages[id].group){
+  if(portalPages[id].eyebrow){
     const other=page.locator('.portal-nav-more'),toggle=other.locator(':scope > summary');
     await toggle.click();assert.equal(await other.getAttribute('open'),'','other services expand');
     assert.equal(await other.locator('.portal-nav-other').isVisible(),true);
@@ -107,8 +107,14 @@ try{
           const key=String(width);
           if(!baseline.has(key))baseline.set(key,{header:state.header,links:state.headerLinks});
           else{assert.deepEqual(state.header,baseline.get(key).header,'computed header styles and coordinates match index');assert.deepEqual(state.headerLinks,baseline.get(key).links,'global menu order and destinations');}
-          if(definition.group){
+          if(definition.eyebrow){
             assert.ok(state.serviceBar,'shared service bar exists');
+            assert.ok(state.pageIntro,'shared page intro exists');
+            assert.ok(state.pageIntro.rect.width>0,'page intro has width');
+            assert.equal(state.pageIntro.rect.x,state.serviceBar.rect.x,'page title aligned with area navigation');
+            assert.equal(state.pageIntro.rect.width,state.serviceBar.rect.width,'page title matches navigation width');
+            assert.deepEqual(state.introTexts.slice(0,2),['← 포털 홈',definition.eyebrow],'back link and English label displayed');
+            for(const part of state.introParts)assert.ok(part?.rect.width>0&&part.rect.height>0,'all four intro elements visible');
             assert.ok(Math.abs(state.serviceBar.rect.x-state.header['.header-inner'].rect.x)<1,'service bar aligns with header');
             assert.ok(Math.abs(state.serviceBar.rect.width-state.header['.header-inner'].rect.width)<1,'service bar width matches header');
             assert.equal(state.serviceBar.rect.height,56,'service bar has common 56px height');
@@ -116,11 +122,14 @@ try{
               assert.ok(Math.abs(state.pageIntro.rect.x-state.serviceBar.rect.x)<1,'page introduction aligns with service bar');
               assert.ok(Math.abs(state.pageIntro.rect.width-state.serviceBar.rect.width)<1,'page introduction matches service bar width');
             }
-            assert.equal(state.active?.id,id,'query-independent current service');
+            if(definition.group)assert.equal(state.active?.id,id,'query-independent current service');
+            else assert.equal(state.active,null,'unlisted pages do not activate unrelated service links');
             assert.deepEqual([...state.allServices].sort(),navigationItems.map(item=>item.id).sort(),'all service links preserved');
-            const groupKey=width+':'+definition.group;
-            if(!groupBaseline.has(groupKey))groupBaseline.set(groupKey,{buttons:state.buttons,active:state.active.style,more:state.more});
-            else{const reference=groupBaseline.get(groupKey);assert.deepEqual(state.buttons,reference.buttons,'same service group button geometry and typography');assert.deepEqual(state.active.style,reference.active,'same active style');assert.deepEqual(state.more,reference.more,'same other-services control');}
+            if(definition.group){
+              const groupKey=width+':'+definition.group;
+              if(!groupBaseline.has(groupKey))groupBaseline.set(groupKey,{buttons:state.buttons,active:state.active.style,more:state.more});
+              else{const reference=groupBaseline.get(groupKey);assert.deepEqual(state.buttons,reference.buttons,'same service group button geometry and typography');assert.deepEqual(state.active.style,reference.active,'same active style');assert.deepEqual(state.more,reference.more,'same other-services control');}
+            }
           }
           if(definition.toolbar)assert.equal(state.toolbar.rect.height>0,width<=900,'toolbar visibility follows shared breakpoint');
         });
@@ -130,7 +139,7 @@ try{
               const el=document.querySelector(selector),rect=el?.getBoundingClientRect();
               return rect?{left:Math.round(rect.left),width:Math.round(rect.width)}:null;
             };
-            return {hero:pick('.room-hero'),content:pick('.room-layout'),serviceNav:pick('.portal-service-nav')};
+            return {hero:pick('.portal-page-intro'),content:pick('.room-layout'),serviceNav:pick('.portal-service-nav')};
           });
           check(label+' room shared container',()=>{
             const expected=Math.min(width- (width<=767?32:48),1280);
@@ -177,6 +186,18 @@ try{
     // visual viewport while an input has focus checks the same layout constraint.
     await ready(page,'coding.html?id=LINUX-002');await page.locator('#coding-show-list').click();await page.locator('.question-browser input').focus();await page.setViewportSize({width:390,height:420});
     assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'focused input in a short viewport does not overflow');
+    await page.setViewportSize({width:390,height:844});
+    for(const [path,eyebrow] of [
+      ['coding.html?id=C-002','CODING PRACTICE'],
+      ['practical.html?id=R-SQL-0015','PRACTICAL EXAM'],
+      ['ncp.html?id=NCP-R001','NCP CERTIFICATION']
+    ]){
+      await ready(page,path);
+      assert.equal(await page.locator('.portal-page-intro').isVisible(),true,'intro remains visible at '+path);
+      assert.equal(await page.locator('.portal-page-eyebrow').textContent(),eyebrow,'English subtitle remains visible at '+path);
+      assert.equal(await page.locator('.portal-page-back').isVisible(),true,'home back link stays accessible at '+path);
+      assert.equal(await page.locator('h1').count(),1,'no duplicated H1 in problem view at '+path);
+    }
   }catch(error){record(engine+' deep-link/state/back/keyboard regression',error);}finally{await context.close();}
   // Fail closed: without JavaScript there is no authenticated session.
   const noScript=await browser.newContext({javaScriptEnabled:false,viewport:{width:390,height:844}});await prepare(noScript);

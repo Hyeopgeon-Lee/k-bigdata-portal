@@ -1,10 +1,10 @@
 /* The entry view has the same width, vertical rhythm, controls and list rows
    regardless of which question bank supplies the data. */
-main.qb-browsing > :not(.portal-service-nav):not(.question-browser){display:none!important}
+main.qb-browsing > :not(.portal-service-nav):not(.portal-page-intro):not(.question-browser){display:none!important}
 main.qb-browsing{display:block;padding-top:0}
 main .question-browser[hidden],.question-browser [hidden]{display:none!important}
 main .question-browser{box-sizing:border-box;width:min(var(--quiz-content-max,1240px),calc(100% - 32px));max-width:var(--quiz-content-max,1240px);margin:20px auto 48px;color:#162941;font-family:inherit;text-align:left}
-main .question-browser h1{font-family:inherit;font-size:clamp(24px,3vw,32px);font-weight:700;line-height:1.3;letter-spacing:-.035em;margin:0 0 16px}
+main .question-browser > h2{font-family:inherit;font-size:clamp(24px,3vw,32px);font-weight:700;line-height:1.3;letter-spacing:-.035em;margin:0 0 16px}
 .qb-controls,.qb-list{background:#fff;border:1px solid #d8e1eb;border-radius:14px}
 .qb-controls{display:grid;grid-template-columns:minmax(0,2fr) minmax(150px,1fr) auto;gap:12px;align-items:end;padding:16px}
 .qb-controls label{display:grid;gap:6px;color:#425469;font-size:14px;font-weight:650}
