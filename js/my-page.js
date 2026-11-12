@@ -7,7 +7,7 @@ function selectedCards(form){for(const option of form.querySelectorAll(".my-page
 const mobileDigits=value=>String(value??"").replace(/[ -]/g,"");
 const validMobile=value=>/^[0-9 -]+$/.test(String(value??"").trim())&&/^01[016789][0-9]{7,8}$/.test(mobileDigits(value));
 const displayMobile=value=>String(value??"").replace(/^(01\d)(\d{3,4})(\d{4})$/,"$1-$2-$3");
-function statusLabel(profile){return profile.enrollment_status==="graduated"?"졸업":profile.enrollment_status==="leave"?"휴학":[1,2].includes(Number(profile.academic_year))?profile.academic_year+"학년":"학년 미설정";}
+function statusLabel(profile){return profile.enrollment_status==="early_employment"?"조기취업":profile.enrollment_status==="graduated"?"졸업":profile.enrollment_status==="leave"?"휴학":[1,2].includes(Number(profile.academic_year))?profile.academic_year+"학년":"학년 미설정";}
 async function start(){
  if(!api||!globalThis.portalLearning?.read){notify("my-page-password-message","로그인 상태를 확인할 수 없습니다. 다시 로그인해 주세요.","error");return;}
  const {data:{user},error:authError}=await api.auth.getUser();
@@ -25,10 +25,10 @@ async function start(){
   byId("my-page-mobile-summary").hidden=false;
   byId("my-page-mobile-summary-value").textContent=displayMobile(profile.mobile_phone);
  }
- if(profile.signup_type==="student"&&profile.approval_status==="approved"&&["enrolled","leave","graduated"].includes(profile.enrollment_status)){
+ if(profile.signup_type==="student"&&profile.approval_status==="approved"&&["enrolled","leave","graduated","early_employment"].includes(profile.enrollment_status)){
   byId("my-page-academic-panel").hidden=false;
   const form=byId("my-page-academic-form");
-  const original=profile.enrollment_status==="graduated"?"graduated":profile.enrollment_status==="leave"?"leave":[1,2].includes(Number(profile.academic_year))?String(profile.academic_year):"";
+  const original=profile.enrollment_status==="early_employment"?"early_employment":profile.enrollment_status==="graduated"?"graduated":profile.enrollment_status==="leave"?"leave":[1,2].includes(Number(profile.academic_year))?String(profile.academic_year):"";
   if(original)form.elements.academic_status.value=original;
   const phoneWrap=byId("my-page-graduation-phone");
   const phoneInput=byId("my-page-mobile-phone");
@@ -45,7 +45,7 @@ async function start(){
   form.addEventListener("submit",async event=>{
    event.preventDefault();
    const next=form.elements.academic_status.value;
-   if(!["1","2","leave","graduated"].includes(next)){notify("my-page-academic-message","변경할 상태를 선택해 주세요.","error");return;}
+   if(!["1","2","leave","graduated","early_employment"].includes(next)){notify("my-page-academic-message","변경할 상태를 선택해 주세요.","error");return;}
    const phone=next==="graduated"?phoneInput.value.trim():"";
    if(next==="graduated"&&!validMobile(phone)){
     notify("my-page-academic-message","휴대전화 번호를 정확히 입력해 주세요. 예: 010-1234-5678","error");
@@ -54,6 +54,7 @@ async function start(){
    if(next===original&&(next!=="graduated"||mobileDigits(phone)===originalMobile)){
     notify("my-page-academic-message","현재 설정과 동일합니다.");return;
    }
+   if(next==="early_employment"&&!confirm("조기취업으로 저장하면 기존 학습기록은 유지되고 자율학습 계획·출결 및 해당 안내 메일 대상에서 제외됩니다. 계속할까요?"))return;
    if(next==="leave"&&!confirm("휴학으로 변경하면 기존 학습기록은 보존되지만 새 학습기록을 저장할 수 없습니다. 변경할까요?"))return;
    if(next==="graduated"&&!confirm("입력한 휴대전화 번호와 졸업 상태를 저장할까요? 기존 계정과 문제풀이 기록은 유지되며 재학생 전용 자율학습·안내 메일 대상에서는 제외됩니다."))return;
    busy(form,true);notify("my-page-academic-message","학적 상태를 저장하고 있습니다.");
