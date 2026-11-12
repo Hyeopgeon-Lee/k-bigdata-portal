@@ -1,0 +1,36 @@
+import assert from 'node:assert/strict';
+import {test} from 'node:test';
+import {readFileSync} from 'node:fs';
+const text=path=>readFileSync(new URL('../'+path,import.meta.url),'utf8');
+const schedule=text('js/schedule.js');
+const calendar=text('js/certification-schedule.mjs');
+const html=text('schedule.html');
+const sql=text('supabase/migrations/20261113062000_certification_exam_notifications.sql');
+const edge=text('supabase/functions/certification-registration-reminder/index.ts');
+const workflow=text('.github/workflows/certification-registration-reminder.yml');
+test('Official exam events integrate into existing Google calendar',()=>{
+ assert.match(schedule,/initCertificationSchedule/);
+ assert.match(schedule,/departmentEvents/);
+ assert.match(schedule,/certificationEvents/);
+ assert.match(schedule,/updateMergedEvents/);
+ assert.match(schedule,/normalizeEvents\(\[\.\.\.departmentEvents,\.\.\.certificationEvents\]\)/);
+ assert.match(html,/schedule\.js\?v=20261113-certifications-1/);
+ assert.match(calendar,/certification_exam_schedules/);
+ assert.match(calendar,/portal-learning-ready/);
+ assert.match(calendar,/portal_super_admin_allowed/);
+ assert.match(calendar,/targetGrade:'all'/);
+ assert.match(calendar,/source:'certification'/);
+});
+test('Only official registration dates create reminder opportunities',()=>{
+ assert.match(sql,/create table if not exists public\.certification_exam_schedules/);
+ assert.match(sql,/certification_exam_read/);
+ assert.match(sql,/published boolean not null default false/);
+ assert.match(sql,/revoke all on public\.certification_reminder_deliveries from anon, authenticated/);
+ assert.match(edge,/\.eq\('published',true\)\.eq\('start_date',today\)/);
+ assert.match(edge,/shouldNotify/);
+ assert.match(edge,/recipient_email/);
+ assert.match(edge,/Idempotency-Key/);
+ assert.match(workflow,/kbigdata-certification-registration-reminder/);
+ assert.match(workflow,/cron: "0 0 \* \* \*"/);
+ assert.match(workflow,/node --test/);
+});
