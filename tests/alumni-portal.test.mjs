@@ -14,6 +14,7 @@ const actions={
  "js/news.js":["newsList"],"js/news-submit.js":["verifyNewsAlumni","submitNews"],"js/admin.js":["adminList","adminCreateJob"]
 };
 const bridge=read("alumni/js/portal-bridge.mjs");
+assert.doesNotMatch(read("alumni/css/portal-bridge.css"),/\.alumni-portal-top/,"obsolete dark navigation CSS removed");
 assert.match(bridge,/start_portal_session/,"reuses verified portal session");
 assert.match(bridge,/portal_learning_access/,"server-side portal authorization");
 assert.match(bridge,/\.eq\("user_id",user\.id\)/,"profile lookup is own user");
@@ -86,9 +87,11 @@ assert.match(read("alumni/js/portal-bridge.mjs"),/window\.alumniPortalClient=cli
 for(const name of pages){
  const html=read("alumni/"+name);
  assert.match(html,/id="alumni-portal-gate"/,"secure portal login gate "+name);
- assert.match(html,/alumni-portal-top/,"portal navigation "+name);
- assert.match(html,/href="\.\.\/index\.html"/,"portal home link "+name);
- assert.match(html,/id="alumni-portal-member"/,"member display "+name);
+ assert.doesNotMatch(html,/alumni-portal-top/,"duplicate navy menu removed "+name);
+ assert.match(html,/href="\.\.\/index\.html" data-portal-site>포털 홈<\/a>/,"white header has portal home "+name);
+ assert.match(html,/href="\.\.\/mypage\.html">마이페이지<\/a>/,"white header has my page "+name);
+ assert.match(html,/<nav class="site-nav"/,"white header retains its menu "+name);
+ assert.match(html,/css\/portal-bridge\.css\?v=20261113-remove-dark-nav-1/,"mobile stylesheet cache refreshed "+name);
  assert.match(html,/js\/portal-bridge\.mjs\?v=/,"auth bridge included "+name);
  assert.match(html,/<meta name="robots" content="noindex,nofollow,noarchive">/,"private portal search policy "+name);
  for(const m of html.matchAll(/(?:href|src)="([^"]+)"/g)){
