@@ -24,7 +24,7 @@ for(const file of htmlPages){
   if(page.toolbar)html=replaceRegion(html,'toolbar',renderToolbar(page),oldToolbar);
   else html=removeRegion(html,'toolbar');
   if(page.eyebrow){
-    const navPattern=/<nav\b[^>]*data-learning-nav[^>]*>[\s\\S]*?<\/nav>/;
+    const navPattern=/<nav\b[^>]*data-learning-nav[^>]*>[\s\S]*?<\/nav>/;
     if(!html.includes('portal:services:start'))html=html.replace(/(<main\b[^>]*>)/,'$1\n'+region('services',renderServiceNavigation(page,id)));
     else html=replaceRegion(html,'services',renderServiceNavigation(page,id),navPattern);
     if(!html.includes('portal:intro:start'))html=html.replace('<!-- portal:services:end -->','<!-- portal:services:end -->\n'+region('intro',renderPageIntro(page,id)));
