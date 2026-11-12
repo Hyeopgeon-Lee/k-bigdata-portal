@@ -75,3 +75,7 @@ assert.equal(toggleFavorite('practical'),false,'unauthorized favorite writes are
 recordService('practical');
 assert.deepEqual(getRecent(),[],'unauthorized visits are not recorded');
 console.log('PASS: account-backed dashboard, 19 services, authenticated-only shortcuts and search.');
+
+assert.match(dashboard,/signup_type,academic_year/,"home dashboard reads registered student grade");
+assert.match(dashboard,/preferred_grade/,"manual grade preference remains supported");
+assert.match(dashboard,/gradeSelectionRevision/,"late account loading cannot override a manual choice");
