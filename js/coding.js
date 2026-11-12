@@ -430,9 +430,9 @@ document.getElementById("coding-quiz-heading").innerHTML=quizHeading({
   title:"문제 불러오는 중",titleId:"coding-title",
   badges:[{id:"coding-id",label:"JAVA-001"},{id:"coding-level",label:"입문"},{id:"coding-topic",label:"출력"}],
   actions:[
-    {id:"coding-share-button",label:"문제 공유",ariaLabel:"현재 문제 공유"},
-    {id:"coding-link-button",label:"링크 복사",ariaLabel:"현재 문제 링크 복사"},
-    {id:"coding-report-button",label:"오류 신고",href:"help.html",ariaLabel:"현재 문제 오류 신고"}
+    {id:"coding-share-button",tone:"share",label:"문제 공유",ariaLabel:"현재 문제 공유"},
+    {id:"coding-link-button",tone:"copy",label:"링크 복사",ariaLabel:"현재 문제 링크 복사"},
+    {id:"coding-report-button",tone:"report",label:"오류 신고",href:"help.html",ariaLabel:"현재 문제 오류 신고"}
   ]
 });
 mountQuizDisclosure(document.getElementById("coding-answer"),{title:"해설",open:true});
