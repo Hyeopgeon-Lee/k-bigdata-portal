@@ -4,7 +4,7 @@ const byId=name=>document.getElementById(name);
 function notify(name,message,kind="info"){const node=byId(name);if(!node)return;node.textContent=message;node.dataset.kind=kind;}
 function busy(form,on){const button=form.querySelector('button[type="submit"]');button.disabled=on;button.setAttribute("aria-busy",String(on));}
 function selectedCards(form){for(const option of form.querySelectorAll(".my-page-option"))option.classList.toggle("is-selected",Boolean(option.querySelector("input")?.checked));}
-function statusLabel(profile){return profile.enrollment_status==="leave"?"휴학":[1,2].includes(Number(profile.academic_year))?profile.academic_year+"학년":"학년 미설정";}
+function statusLabel(profile){return profile.enrollment_status==="graduated"?"졸업":profile.enrollment_status==="leave"?"휴학":[1,2].includes(Number(profile.academic_year))?profile.academic_year+"학년":"학년 미설정";}
 async function start(){
  if(!api||!globalThis.portalLearning?.read){notify("my-page-password-message","로그인 상태를 확인할 수 없습니다. 다시 로그인해 주세요.","error");return;}
  const {data:{user},error:authError}=await api.auth.getUser();
@@ -18,23 +18,24 @@ async function start(){
  byId("my-page-student-no").textContent=profile.signup_type==="student"?(profile.student_no||"-"):profile.signup_type==="alumni"?profile.graduation_year+"년 졸업":"관리자";
  byId("my-page-enrollment").textContent=profile.signup_type==="student"?statusLabel(profile):profile.signup_type==="alumni"?"졸업생":"관리자";
  byId("my-page-state").textContent=profile.approval_status==="approved"?"승인 완료":"승인 확인 필요";
- if(profile.signup_type==="student"&&profile.approval_status==="approved"&&["enrolled","leave"].includes(profile.enrollment_status)){
+ if(profile.signup_type==="student"&&profile.approval_status==="approved"&&["enrolled","leave","graduated"].includes(profile.enrollment_status)){
   byId("my-page-academic-panel").hidden=false;
   const form=byId("my-page-academic-form");
-  const original=profile.enrollment_status==="leave"?"leave":[1,2].includes(Number(profile.academic_year))?String(profile.academic_year):"";
+  const original=profile.enrollment_status==="graduated"?"graduated":profile.enrollment_status==="leave"?"leave":[1,2].includes(Number(profile.academic_year))?String(profile.academic_year):"";
   if(original)form.elements.academic_status.value=original;
   selectedCards(form);form.addEventListener("change",()=>selectedCards(form));
   form.addEventListener("submit",async event=>{
    event.preventDefault();
    const next=form.elements.academic_status.value;
-   if(!["1","2","leave"].includes(next)){notify("my-page-academic-message","변경할 상태를 선택해 주세요.","error");return;}
+   if(!["1","2","leave","graduated"].includes(next)){notify("my-page-academic-message","변경할 상태를 선택해 주세요.","error");return;}
    if(next===original){notify("my-page-academic-message","현재 설정과 동일합니다.");return;}
    if(next==="leave"&&!confirm("휴학으로 변경하면 기존 학습기록은 보존되지만 새 학습기록을 저장할 수 없습니다. 변경할까요?"))return;
+   if(next==="graduated"&&!confirm("포털 학적 상태를 졸업으로 변경할까요? 기존 계정과 문제풀이 기록은 유지되며 재학생 전용 자율학습·안내 메일 대상에서는 제외됩니다."))return;
    busy(form,true);notify("my-page-academic-message","학적 상태를 저장하고 있습니다.");
    try{
     const {error}=await api.rpc("update_my_academic_status",{p_status:next});
     if(error)throw error;
-    sessionStorage.setItem("portal:mypage-success","포털 학적 상태를 저장했습니다. 메인화면 기본 학년에도 반영됩니다.");
+    sessionStorage.setItem("portal:mypage-success",next==="graduated"?"포털 학적 상태가 졸업으로 변경되었습니다. 기존 학습기록은 유지됩니다.":"포털 학적 상태를 저장했습니다. 재학생 학년 변경은 메인화면에도 반영됩니다.");
     location.reload();
    }catch(err){
     console.error("Academic status update failed",err?.code||"unknown");

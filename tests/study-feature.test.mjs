@@ -38,6 +38,7 @@ for(const id of ['study-week','study-days','study-save','study-session-primary',
 for(const name of ['study_weekly_plans','study_sessions','study_start_session','study_finish_session','study_pause_session','study_resume_session'])
   assert.ok(student.includes(name),name+' database path');
 assert.match(student,/portalLearning\?\.write/);
+assert.match(student,/member\.enrollment_status==="enrolled"/,"graduated students cannot submit study plans");
 assert.doesNotMatch(study,/id="study-reason-form"/,'absence form separate from plan page');
 assert.doesNotMatch(student,/study_absence_reasons/,'plan page does not save absence reasons');
 assert.ok(faculty.includes('id="teacher-study-panel"'));

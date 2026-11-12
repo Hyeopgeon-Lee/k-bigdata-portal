@@ -68,13 +68,14 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
     </section>
     <section class="my-page-panel" id="my-page-academic-panel" aria-labelledby="my-page-academic-heading" hidden>
       <div class="my-page-panel-head"><div><p class="my-page-kicker">ACADEMIC STATUS</p><h2 id="my-page-academic-heading">학적 상태 변경</h2></div></div>
-      <p class="my-page-description">현재 학년 또는 휴학을 선택하세요. 학년 변경 시 포털 메인화면의 기본 학년도 함께 변경됩니다.</p>
+      <p class="my-page-description">현재 학적 상태를 선택하세요. 학년 변경은 메인화면에 반영되며, 졸업 후에도 기존 학습기록을 이용할 수 있습니다.</p>
       <form id="my-page-academic-form">
         <fieldset class="my-page-status-fieldset">
           <legend class="sr-only">포털 학적 상태</legend>
           <label class="my-page-option"><input type="radio" name="academic_status" value="1" required><span><strong>1학년</strong><small>1학년 학습·일정 기본 표시</small></span></label>
           <label class="my-page-option"><input type="radio" name="academic_status" value="2"><span><strong>2학년</strong><small>2학년 학습·일정 기본 표시</small></span></label>
           <label class="my-page-option"><input type="radio" name="academic_status" value="leave"><span><strong>휴학</strong><small>기존 학습기록 열람 가능 · 신규 저장 제한</small></span></label>
+          <label class="my-page-option"><input type="radio" name="academic_status" value="graduated"><span><strong>졸업</strong><small>기존 문제풀이 기록 유지 · 재학생 전용 자율학습·알림 제외</small></span></label>
         </fieldset>
         <p class="my-page-notice">이 설정은 <strong>학과 포털 내부 정보</strong>이며 대학의 공식 학적 변경 신청을 대신하지 않습니다.</p>
         <button class="my-page-primary" type="submit">학적 상태 저장</button>
@@ -102,6 +103,6 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <div class="container footer-bottom"><p>학생용 학습·프로젝트·취업 통합 포털입니다.</p><p>© <span id="current-year"></span> K-BigData Service Portal</p></div>
 </footer>
 <script type="module" src="js/portal-auth.mjs?v=20261112-login-email-focus-1"></script>
-<script type="application/x-learning" data-module="js/my-page.js?v=20261112-mypage-1"></script>
+<script type="application/x-learning" data-module="js/my-page.js?v=20261112-graduated-1"></script>
 <script type="application/x-learning" data-module="js/portal-shell-entry.js?v=20261112-page-intro-2"></script>
 </body></html>

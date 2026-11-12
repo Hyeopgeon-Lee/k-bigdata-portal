@@ -5,6 +5,7 @@ const read=name=>readFileSync(new URL('../'+name,import.meta.url),'utf8');
 const html=read('mypage.html'),js=read('js/my-page.js'),css=read('css/my-page.css');
 const auth=read('js/portal-auth.mjs'),model=read('js/portal-navigation-model.mjs');
 const sql=read('supabase/migrations/20261112121100_my_page_student_academic_status_self_service.sql');
+const graduatedSql=read('supabase/migrations/20261112224000_add_graduated_status_to_my_page_and_keep_graduate_learning_access.sql');
 assert.match(model,/mypage: \{title:'마이페이지'/,'page registered with portal shell');
 assert.match(auth,/title:"마이페이지".*href:"mypage.html"/,'account drawer links to my page');
 assert.match(html,/id="learning-lock"/,'page gated from first paint');
@@ -13,6 +14,7 @@ assert.match(html,/id="my-page-password-form"/);
 assert.match(html,/name="academic_status" value="1"/);
 assert.match(html,/name="academic_status" value="2"/);
 assert.match(html,/name="academic_status" value="leave"/);
+assert.match(html,/name="academic_status" value="graduated"/,"graduation can be selected");
 assert.match(html,/학과 포털 내부 정보/);
 assert.match(js,/api\.auth\.signInWithPassword\(/,'current password verified');
 assert.match(js,/api\.auth\.updateUser\(\{password:next\}\)/,'Supabase Auth updates password');
@@ -28,6 +30,12 @@ assert.match(sql,/v_old\.signup_type<>'student'/,'staff/alumni blocked');
 assert.match(sql,/role='super_admin'/,'admin protected');
 assert.match(sql,/revoke all on function public\.update_my_academic_status/,'RPC public role restricted');
 assert.match(sql,/private\.portal_academic_status_history/,'status audit trail');
+assert.match(graduatedSql,/p_status not in \('1','2','leave','graduated'\)/,'graduation accepted by RPC');
+assert.match(graduatedSql,/p\.signup_type in \('student','alumni'\) and p\.enrollment_status='graduated'/,'graduate can log in');
+assert.match(graduatedSql,/private\.portal_study_write_allowed/,'study restricted after graduation');
+assert.match(graduatedSql,/private\.portal_academic_status_history/,'graduation recorded in audit log');
+assert.match(js,/next==="graduated"&&!confirm/,'graduation requires confirmation');
+assert.match(js,/profile\.enrollment_status==="graduated"/,'graduate status shown in UI');
 for(const f of ['js/my-page.js','js/portal-auth.mjs','js/portal-navigation-model.mjs']){
  execFileSync('node',['--check',new URL('../'+f,import.meta.url).pathname],{stdio:'pipe'});
 }

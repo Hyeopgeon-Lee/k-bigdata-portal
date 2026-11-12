@@ -36,7 +36,9 @@ async function init(){
   el("study-reason-details").value=prior.details||"";
  }
  form.hidden=false;
- const canWrite=window.portalLearning?.write===true;
+ const {data:member,error:memberError}=await db.from("profiles").select("signup_type,enrollment_status").eq("user_id",user.id).single();
+ if(memberError||!member){status("absence-load-status","학적 상태를 확인하지 못했습니다.","error");return;}
+ const canWrite=window.portalLearning?.write===true&&member.signup_type==="student"&&member.enrollment_status==="enrolled";
  for(const id of ["study-reason-select","study-reason-details","study-reason-submit"])el(id).disabled=!canWrite;
  status("absence-load-status",!canWrite?"현재 계정은 사유 저장이 제한됩니다.":prior?"기존 제출 내용이 있습니다. 필요하면 수정하여 저장하세요.":"해당 날짜에 참여하지 못한 사유를 선택해 주세요.",canWrite?"info":"error");
  const details=el("study-reason-details");

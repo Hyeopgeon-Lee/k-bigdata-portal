@@ -13,7 +13,7 @@ const mins=secs=>Math.floor(Math.max(0,secs||0)/3600)+'시간 '+String(Math.floo
 const safe=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const labels=['월','화','수','목','금'];
 let uid='',week=currentMonday(),selected=new Set(),plan=null,sessions=[],active=null;
-const canWrite=window.portalLearning?.write===true;
+let canWrite=window.portalLearning?.write===true;
 function message(text,error=false){$('study-status').textContent=text;$('study-status').dataset.error=error?'true':'false';}
 function getSeconds(row){
  if(row.status==='needs_review')return 0;
@@ -30,6 +30,9 @@ async function load(){
  ]);
  if(u.error||!u.data.user||p.error||s.error)throw Error('학습 데이터 조회에 실패했습니다.');
  uid=u.data.user.id;sessions=s.data||[];
+ const {data:member,error:memberError}=await db.from("profiles").select("signup_type,enrollment_status").eq("user_id",uid).single();
+ if(memberError||!member)throw Error("학적 상태 조회에 실패했습니다.");
+ canWrite=window.portalLearning?.write===true&&member.signup_type==="student"&&member.enrollment_status==="enrolled";
  active=sessions.find(x=>x.status==='active')||null;
  const found=(p.data||[]).find(x=>x.week_start===week);
  plan=found||null;selected=new Set(found?.weekdays||[]);
@@ -40,7 +43,7 @@ async function load(){
  }
  $('study-week').value=week;
  render();
- message('서버에서 학습기록을 불러왔습니다.');
+ message(canWrite?'서버에서 학습기록을 불러왔습니다.':'재학생만 자율학습 계획과 출석을 새로 등록할 수 있습니다. 기존 기록은 조회 가능합니다.');
 }
 function render(){
  const today=kstDate(Date.now());

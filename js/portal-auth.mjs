@@ -123,7 +123,7 @@ function bindIdentity(form,initial,initialGrade=null){
 }
 function eligible(profile){
   return ["enrolled","leave"].includes(profile.enrollment_status) ||
-    (profile.signup_type==="alumni" && profile.enrollment_status==="graduated");
+    (["student","alumni"].includes(profile.signup_type) && profile.enrollment_status==="graduated");
 }
 function renderSignup(){
   card("회원가입",'<p class="portal-auth-lead">재학생은 학번과 현재 학년을, 졸업생은 졸업년도를 입력해 주세요. 교수·관리자는 기존 계정으로 로그인하세요.</p>'+
@@ -295,6 +295,7 @@ function renderAccount(){
   $("#portal-account-role").textContent=isAdmin?"관리자":
     currentProfile?.signup_type==="alumni"?"졸업생 · "+currentProfile.graduation_year+"년 졸업":
     currentProfile?.enrollment_status==="leave"?"휴학 · 학습 기록 읽기 전용":
+    currentProfile?.enrollment_status==="graduated"?"졸업생 · 학습 기록 유지":
     [1,2].includes(Number(currentProfile?.academic_year))?"재학생 · "+currentProfile.academic_year+"학년":"재학생";
 
   const area=$("#portal-account-actions");
