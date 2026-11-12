@@ -1,0 +1,33 @@
+name: Project room layout QA
+on:
+  push:
+    branches: [main]
+    paths:
+      - "room.html"
+      - "css/room.css"
+      - "css/style.css"
+      - "tests/room-integration.test.mjs"
+      - "tests/room-layout-browser.mjs"
+      - ".github/workflows/room-layout-qa.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-room-width:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate reservation integration and CSS
+        run: node tests/room-integration.test.mjs
+      - name: Install Playwright Chromium
+        run: |
+          npm install --no-save --no-package-lock playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Verify project room alignment at nine viewport widths
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/room-layout.log 2>&1 &
+          node tests/room-layout-browser.mjs
