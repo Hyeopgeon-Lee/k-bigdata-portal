@@ -112,6 +112,23 @@ try{
           }
           if(definition.toolbar)assert.equal(state.toolbar.rect.height>0,width<=900,'toolbar visibility follows shared breakpoint');
         });
+        if(id==='room'){
+          const roomWidths=await page.evaluate(()=>{
+            const pick=selector=>{
+              const el=document.querySelector(selector),rect=el?.getBoundingClientRect();
+              return rect?{left:Math.round(rect.left),width:Math.round(rect.width)}:null;
+            };
+            return {hero:pick('.room-hero'),content:pick('.room-layout'),serviceNav:pick('.portal-service-nav')};
+          });
+          check(label+' room shared container',()=>{
+            const expected=Math.min(width- (width<=389?32:width<=767?36:40),1240);
+            assert.ok(roomWidths.hero&&roomWidths.content&&roomWidths.serviceNav,'room wrappers exist');
+            assert.deepEqual(roomWidths.hero,roomWidths.content,'room hero and reservation content must share width and left alignment');
+            assert.deepEqual(roomWidths.content,roomWidths.serviceNav,'room content must align with common portal service navigation');
+            assert.ok(Math.abs(roomWidths.content.width-expected)<=1,
+              'room content should follow 1240px portal container, actual '+roomWidths.content.width+' expected '+expected);
+          });
+        }
         try{await interactions(page,width,id);}catch(error){record(label+' interactions',error);}
         if(width===390||width===1440)await page.screenshot({path:`${output}/${engine}-${id}-${width}.png`,fullPage:true});
       }catch(error){record(label,error);await page.screenshot({path:`${output}/${engine}-${id}-${width}-failure.png`}).catch(()=>{});}
