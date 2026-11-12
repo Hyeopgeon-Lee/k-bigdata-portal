@@ -1,4 +1,4 @@
-import {services,serviceKind} from "./services.js?v=20261112-study-1";
+import {services,serviceKind} from "./services.js?v=20261112-alumni-integrated-1";
 import {certifications} from "./certifications.js";
 import {jobs} from "./jobs.js";
 import {docs} from "./docs.js";

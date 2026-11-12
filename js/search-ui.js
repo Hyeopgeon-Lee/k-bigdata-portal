@@ -1,4 +1,4 @@
-import {isExternal} from "./services.js?v=20261026-card-label-1";
+import {isExternal} from "./services.js?v=20261112-alumni-integrated-1";
 
 const esc=v=>String(v??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
 
