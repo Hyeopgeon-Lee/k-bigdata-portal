@@ -1,0 +1,22 @@
+name: Alumni Network Portal Integration QA
+on:
+  push:
+    paths:
+      - "alumni/**"
+      - "js/services.js"
+      - "scripts/build-portal-shell.mjs"
+      - "tests/alumni-portal.test.mjs"
+      - ".github/workflows/alumni-portal-qa.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: node tests/alumni-portal.test.mjs
