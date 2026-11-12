@@ -10,7 +10,7 @@ GA4 접속 통계: 9개 페이지에 학생 포털 전용 측정 ID `G-8PMMKFNRY
 ## 2026-10-26 메인 페이지 간소화
 
 - 메인은 검색 → 학년별 빠른 실행 4개 → 오늘의 할 일 → 주요 일정/마감 알림 → 내 바로가기 → 4개 분야 입구 순으로 정리했습니다.
-- 18개 서비스를 나열하던 목록과 학습·취업 흐름 안내는 `services.html`로 옮겼습니다. 분야 선택, 검색, 즐겨찾기만 필터 및 브라우저별 즐겨찾기를 지원합니다.
+- 19개 서비스를 나열하던 목록과 학습·취업 흐름 안내는 `services.html`로 옮겼습니다. 분야 선택, 검색, 즐겨찾기만 필터 및 브라우저별 즐겨찾기를 지원합니다.
 - 카드 중복 영역인 공통 실기 강조 카드와 '이어서 준비하기'는 메인에서 제거했습니다. 기존 학습 문제·기록·즐겨찾기 스토리지·외부 링크는 유지합니다.
 - 학생에게 보이는 시험 서비스명은 '정보처리 자격증 기출문제', 'NCP 기출문제'로 통일했습니다. 문항 출처·복원 여부 및 기출 기반 변형 여부는 개별 문제 안내에서 구분합니다.
 - 공유 헤더의 전체 서비스 및 분야별 링크는 `services.html`로 연결합니다. 새 페이지도 공통 템플릿 생성과 페이지 등록 목록에 포함됩니다.
@@ -243,3 +243,13 @@ DataQ·KAIT·대한상공회의소는 공식 출처를 확인했으나 자동 �
 - 프로젝트: 반복 영문 장식 제목을 제거합니다. 개인정보·라이선스·테스트·데이터 품질 안내는 유지합니다.
 
 내부 품질관리 자료는 삭제 대상이 아닙니다. TCP·동시성·SQL 등 답변의 기술적 한계도 학습 내용으로 유지합니다. 모든 HTML의 noindex, nofollow 정책은 동일합니다. 검증 내용은 [콘텐츠 정리 QA](tests/content-cleanup-qa.md)를 참고하세요.
+
+
+## 자율학습 관리 (2026-11-12)
+
+- 학생 화면 `study.html`: 이번/다음 주 월~금 자율학습 예정 요일 등록, 실시간 서버 기록 학습 시작·휴식·재개·종료, 누적시간, 계획 대비 실천율, 미참여 사유 입력(`?reason=YYYY-MM-DD`).
+- 교수자 화면 `teacher-learning.html`: 자율학습 계획 및 참여 현황, 학년·주차 필터, 사유 확인, 메일 발송 토글.
+- Supabase `study_*` 테이블 및 인증된 DB RPC는 기존 학과 포털 RLS/역할 정책을 사용합니다. `study_email_logs`에는 일반 학생 읽기 권한이 없습니다.
+- `study-absence-reminder` Edge Function과 `.github/workflows/study-absence-reminder.yml`은 한국시간 화~토 오전 9시에 전날 약속 미이행을 점검합니다. 이메일 본문은 Resend로 전송하고 미참여 사유 입력 버튼을 제공합니다.
+- **메일 발송은 기본 OFF**입니다. 교수자 화면의 토글을 명시적으로 켜기 전에는 자동 발송하지 않습니다.
+- 회귀 검증: `node scripts/build-portal-shell.mjs --check` 및 `node --test tests/study-feature.test.mjs tests/portal-ux.test.mjs tests/portal-shell.test.mjs tests/portal-redesign.test.mjs tests/portal-dashboard.test.mjs`.
