@@ -167,7 +167,7 @@ async function owned(a:Actor,idParam:string|undefined,requiredApproval=true):Pro
  const isOwner=(a.alumniId===idText)
    ||(String(row.data.email||"").toLowerCase()===a.email
     &&text(row.data.name)===a.name
-    &&(a.role==="alumni"||a.enrollment==="graduated"));
+    &&(a.role==="alumni"||a.enrollment==="graduated"||(a.enrollment==="early_employment"&&!!a.alumniId)));
  if(!isOwner)throw Error("본인 졸업생 정보만 수정할 수 있습니다.");
  if(requiredApproval&&row.data.status!=="APPROVED")throw Error("동문정보 승인 후 등록할 수 있습니다.");
  return row;
@@ -283,7 +283,7 @@ async function handle(action:string,b:Record<string,unknown>,a:Actor){
  case "requestPinReset":case "resetPin":
   return {success:true,message:"PIN 인증은 종료되었습니다. 포털 로그인과 비밀번호 재설정을 이용해 주세요."};
  case "register":case "update":{
-  if(!["alumni"].includes(a.role)&&a.enrollment!=="graduated")
+  if(!["alumni"].includes(a.role)&&a.enrollment!=="graduated"&&!(a.enrollment==="early_employment"&&a.alumniId))
    throw Error("졸업생으로 승인된 포털 회원만 정보를 등록할 수 있습니다.");
   if(text(b.name)!==a.name||text(b.email).toLowerCase()!==a.email)
    throw Error("로그인 계정의 이름과 인증된 이메일을 사용해 주세요.");
