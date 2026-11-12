@@ -85,6 +85,9 @@ try{
        }else{
          assert.equal(focus.practicalInput,true,"Information Processing answer jump must focus its input");
        }
+       // The focus test clicks the jump button. Clear mouse hover before the
+       // unrelated CSS parity snapshots; keyboard focus must remain unchanged.
+       await page.mouse.move(0,0);
 
        assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth),
          false,target.name+" whole page must not scroll horizontally at "+width);
