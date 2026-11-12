@@ -50,7 +50,7 @@ Deno.serve(async(req:Request)=>{
   if(action==="update"){
    if(!/^[0-9a-f-]{36}$/i.test(String(data.userId||"")))return json({error:"INVALID_USER"},400);
    if(!["pending","approved","rejected","suspended"].includes(data.approvalStatus)
-      ||!["enrolled","leave","withdrawn","graduated"].includes(data.enrollmentStatus))return json({error:"INVALID_STATUS"},400);
+      ||!["enrolled","leave","withdrawn","graduated","early_employment"].includes(data.enrollmentStatus))return json({error:"INVALID_STATUS"},400);
    const {data:target,error:findError}=await admin.from("profiles").select("user_id,email,approval_status,enrollment_status").eq("user_id",data.userId).single();
    if(findError||!target)return json({error:"STUDENT_NOT_FOUND"},404);
    if(target.email?.toLowerCase()==="hglee67@kopo.ac.kr")return json({error:"CANNOT_EDIT_SUPER_ADMIN"},403);
