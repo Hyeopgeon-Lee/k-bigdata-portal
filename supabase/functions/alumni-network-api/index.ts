@@ -227,31 +227,21 @@ function isGraduateMember(a:Actor){return (a.role==="student"||a.role==="alumni"
   a.enrollment==="graduated"||(a.enrollment==="early_employment"&&!!a.alumniId));}
 async function ownRecordForAccount(a:Actor):Promise<Rec|null>{
  if(!isGraduateMember(a))return null;
- if(a.alumniId){
-  const linked=await one("alumni",a.alumniId);
-  if(!linked||text(linked.data.email).toLowerCase()!==a.email||text(linked.data.name)!==a.name)
-   throw Error("계정에 연결된 졸업생 정보가 일치하지 않습니다. 관리자에게 문의해 주세요.");
-  return linked;
- }
- const matching=(await rows("alumni")).filter(r=>text(r.data.email).toLowerCase()===a.email);
- if(!matching.length)return null;
- if(matching.length!==1||text(matching[0].data.name)!==a.name)
-  throw Error("기존 졸업생 정보와 계정이 일치하지 않습니다. 관리자 확인이 필요합니다.");
- const matched=matching[0];
- const {data:linked,error}=await admin.from("profiles")
-  .update({alumni_source_id:matched.source_id})
-  .eq("user_id",a.id).is("alumni_source_id",null).select("user_id").maybeSingle();
- if(error||!linked)throw Error("기존 졸업생 정보를 계정에 연결하지 못했습니다.");
- a.alumniId=matched.source_id;
- return matched;
+ return await one("alumni",a.id);
 }
-async function owned(a:Actor,idParam:string|undefined,requiredApproval=true):Promise<Rec>{
- const row=await ownRecordForAccount(a);
- if(!row)throw Error("등록된 졸업생 정보가 없습니다. 졸업생 정보 등록을 먼저 완료해 주세요.");
- if(idParam&&text(idParam)!==row.source_id)
-  throw Error("본인의 졸업생 정보만 수정할 수 있습니다.");
- if(requiredApproval&&row.data.status!=="APPROVED")
-  throw Error("동문정보 승인 후 등록할 수 있습니다.");
+async function owned(a:Actor,idParam:string|undefined,_approvalRequired=true):Promise<Rec>{
+ if(!isGraduateMember(a))throw Error("졸업생 또는 조기취업 포털 회원만 등록할 수 있습니다.");
+ let row=await ownRecordForAccount(a);
+ if(!row){
+  const ts=now();
+  await put("alumni",a.id,{alumni_id:a.id,name:a.name,email:a.email,
+   graduation_year:String(a.graduationYear||""),status:"APPROVED",
+   contact_allowed:"FALSE",created_at:ts,updated_at:ts});
+  row=await one("alumni",a.id);
+ }
+ if(!row)throw Error("졸업생 정보를 불러오지 못했습니다.");
+ if(idParam&&idParam!==row.source_id&&idParam!==row.data.legacy_alumni_id)
+  throw Error("본인 졸업생 정보만 수정할 수 있습니다.");
  return row;
 }
 async function adminOnly(a:Actor){
@@ -369,7 +359,7 @@ async function handle(action:string,b:Record<string,unknown>,a:Actor){
  }
  case "alumniDetail":{
   const k=text(b.id),[profile,jobs,news]=await Promise.all([getProfile(k),jobList(),newsList()]);
-  return okay({profile:cleanProfile(profile.data),jobs:jobs.filter(j=>j.alumni_id===k),news:news.filter(n=>n.alumni_id===k)});
+  return okay({profile:cleanProfile(profile.data),jobs:jobs.filter(j=>j.alumni_id===profile.source_id),news:news.filter(n=>n.alumni_id===profile.source_id)});
  }
  case "careerPublic":return okay((await approved()).filter(r=>r.data.employment_status==="취업 중"&&r.data.company&&r.data.job).map(r=>({graduation_year:text(r.data.graduation_year),masked_name:maskName(r.data.name),company:text(r.data.company),job:text(r.data.job)})).sort((x,y)=>y.graduation_year.localeCompare(x.graduation_year)||x.company.localeCompare(y.company)));
  case "jobs":return okay(await jobList());
@@ -428,57 +418,35 @@ async function handle(action:string,b:Record<string,unknown>,a:Actor){
  case "requestPinReset":case "resetPin":
   return {success:true,message:"PIN 인증은 종료되었습니다. 포털 로그인과 비밀번호 재설정을 이용해 주세요."};
  case "register":case "update":case "saveMyAlumniProfile":{
-  if(!isGraduateMember(a))
-   throw Error("졸업생으로 승인된 포털 회원만 정보를 등록할 수 있습니다.");
-  if(text(b.name)!==a.name||text(b.email).toLowerCase()!==a.email)
-   throw Error("로그인 계정의 이름과 인증된 이메일을 사용해 주세요.");
-  if(!yes(b.privacy_consent)||!yes(b.identity_consent))
-   throw Error("개인정보 이용 및 본인 확인 동의가 필요합니다.");
-  if(!text(b.graduation_year)||!text(b.employment_status)||!text(b.phone))
-   throw Error("필수 항목을 입력해 주세요.");
-  const year=Number(b.graduation_year),thisYear=new Date(Date.now()+9*3600000).getUTCFullYear();
-  if(!Number.isInteger(year)||year<1900||year>thisYear)
-   throw Error("졸업연도가 올바르지 않습니다.");
-  if(a.graduationYear&&year!==a.graduationYear)
-   throw Error("포털에 등록된 졸업연도와 일치해야 합니다.");
-  if(a.studentNo&&text(b.student_id)&&text(b.student_id)!==a.studentNo)
-   throw Error("포털에 등록된 학번은 변경할 수 없습니다.");
-  if(yes(b.contact_allowed)&&(!yes(b.contact_consent)||!strList(b.mentoring_topics).length))
-   throw Error("연락 요청 허용 시 관련 동의와 상담 분야를 선택해 주세요.");
-  const existing=await ownRecordForAccount(a);
-  if(action==="update"&&!existing)throw Error("등록된 졸업생 정보가 없습니다.");
-  const recordId=existing?.source_id||id("A"),previous=existing?.data||{};
-  const d=updatedPayload(previous,b,PROFILE_EDIT);
-  d.alumni_id=recordId;d.name=a.name;d.email=a.email;
-  d.graduation_year=String(existing?.data.graduation_year||a.graduationYear||year);
-  if(a.studentNo)d.student_id=a.studentNo;
-  d.status="PENDING";d.updated_at=now();d.created_at=previous.created_at||now();
-  // Historical edit PIN hashes are retained only for imported snapshots, never used for authorization.
-  delete d.edit_pin_hash;delete d.auth_pin;delete d.edit_pin;
-  if(!existing){
-   d.career_mail_consent_at=yes(b.career_mail_enabled)?now():"";
-   d.alumni_news_mail_consent_at=yes(b.alumni_news_mail_enabled)?now():"";
-  }
-  await put("alumni",recordId,d);
-  // New registrations must bind their immutable Alumni ID to the authenticated portal account.
-  // Preserve existing linked accounts; never overwrite a previously linked identity.
-  if(!existing&&!a.alumniId){
-   const {data:linked,error:linkError}=await admin.from("profiles")
-    .update({alumni_source_id:recordId})
-    .eq("user_id",a.id).is("alumni_source_id",null)
-    .select("user_id").maybeSingle();
-   if(linkError||!linked){
-    // This source record was just created; rollback if the identity link failed.
-    await admin.from("alumni_network_records").delete()
-     .eq("source_kind","alumni").eq("source_id",recordId);
-    throw Error("동문 프로필을 포털 계정에 연결하지 못했습니다. 다시 시도해 주세요.");
+   if(!isGraduateMember(a))throw Error("졸업생 또는 조기취업 포털 회원만 정보를 등록할 수 있습니다.");
+   if(!a.mobilePhone)throw Error("포털 마이페이지에서 휴대전화번호를 등록해 주세요.");
+   if(!yes(b.privacy_consent)||!yes(b.identity_consent))
+    throw Error("개인정보 이용·본인 확인 동의가 필요합니다.");
+   const maxYear=new Date(Date.now()+9*3600000).getUTCFullYear()+(a.enrollment==="early_employment"?5:0);
+   const year=Number(a.graduationYear||b.graduation_year);
+   if(!Number.isInteger(year)||year<1900||year>maxYear)throw Error("졸업연도가 올바르지 않습니다.");
+   if(yes(b.contact_allowed)&&(!yes(b.contact_consent)||!strList(b.mentoring_topics).length))
+    throw Error("연락 요청 허용 시 수신 동의와 상담 분야를 선택해 주세요.");
+   const existing=await ownRecordForAccount(a),previous=existing?.data||{};
+   const d=updatedPayload(previous,b,PROFILE_EDIT);
+   const prevCareer=yes(previous.career_mail_enabled),nextCareer=yes(b.career_mail_enabled);
+   const prevNews=yes(previous.alumni_news_mail_enabled),nextNews=yes(b.alumni_news_mail_enabled);
+   Object.assign(d,{alumni_id:a.id,name:a.name,email:a.email,phone:a.mobilePhone,
+    student_id:a.studentNo||"",graduation_year:String(year),
+    status:existing?.data.status==="HIDDEN"?"HIDDEN":"APPROVED",
+    created_at:previous.created_at||now(),updated_at:now()});
+   if(!existing||prevCareer!==nextCareer){
+    d.career_mail_updated_at=now();
+    if(nextCareer)d.career_mail_consent_at=now();
    }
+   if(!existing||prevNews!==nextNews){
+    d.alumni_news_mail_updated_at=now();
+    if(nextNews)d.alumni_news_mail_consent_at=now();
+   }
+   await put("alumni",a.id,d);
+   return {success:true,message:"졸업생 정보가 저장되어 즉시 반영되었습니다.",alumni_id:a.id};
   }
-  await sendToAdmin("동문정보 "+(!existing?"신규 등록":"수정")+" 승인 요청",
-   a.name+"님의 동문정보 검토가 필요합니다.", "alumni",recordId).catch(()=>{});
-  return {success:true,message:"동문정보를 저장했습니다. 관리자 승인 후 공개됩니다.",alumni_id:recordId};
- }
- case "submitJob":case "adminCreateJob":{
+  case "submitJob":case "adminCreateJob":{
   if(action==="adminCreateJob")await adminOnly(a);
   const owner=action==="submitJob"?await owned(a,text(b.alumni_id)):await getProfile(text(b.alumni_id));
   for(const required of ["company","job_title","recruit_type","employment_type","job_url"])
