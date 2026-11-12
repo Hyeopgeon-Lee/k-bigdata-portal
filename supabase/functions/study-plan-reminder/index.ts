@@ -277,7 +277,7 @@ Deno.serve(async(req:Request)=>{
     .eq("signup_type","student").eq("approval_status","approved").eq("enrollment_status","enrolled")
   ]);
   for(const x of [plans,students])if(x.error)throw x.error;
-  const eligible=(students.data||[]).filter(s=>Boolean(s.email)) as Student[];
+  const eligible=(students.data||[]) as Student[];
   const registeredPlans=(plans.data||[]) as Plan[];
   const data=aggregate(eligible,registeredPlans);
   if(slot==="wed08"){
@@ -296,8 +296,9 @@ Deno.serve(async(req:Request)=>{
    registered:data.registered.length,unregistered:data.unregistered.length,mailConfigured:!!mailKey});
   if(!mailKey)return reply({error:"RESEND_API_KEY_NOT_CONFIGURED"},503);
   const counts={sent:0,failed:0,duplicate:0,registered:0};
-  for(let start=0;start<data.unregistered.length;start+=5){
-   const batch=await Promise.all(data.unregistered.slice(start,start+5)
+  const mailable=data.unregistered.filter(user=>Boolean(user.email));
+  for(let start=0;start<mailable.length;start+=5){
+   const batch=await Promise.all(mailable.slice(start,start+5)
     .map(user=>deliver(user,week,slot)));
    for(const result of batch)counts[result]++;
   }
