@@ -96,19 +96,25 @@ function classify_(label, title) {
   return "event";
 }
 /**
- * 캘린더 설명의 독립된 한 줄에서만 학년을 추출합니다.
- * 예: 대상학년: 1학년 / 대상학년: 2학년 / 대상학년: 전체
- * 다른 메모 내용은 시트·공개 API·캐시에 보관하지 않습니다.
- * 값이 없거나 잘못된 경우 null을 반환하여 기존 제목 태그를 유지합니다.
+ * Google 캘린더 메모에서 대상 학년을 판별합니다.
+ * '대상학년: 1학년/2학년/전체' 선언을 우선 적용합니다.
+ * 선언 없이 메모에 1학년 또는 2학년만 적어도 인식합니다.
+ * 두 학년 모두 언급되면 전체 학년으로 처리합니다.
+ * 메모 원문은 시트나 공개 API에 저장하지 않습니다.
  */
 function targetGradeFromDescription_(description) {
-  const lines = String(description || "").split(/\r?\n/);
+  const memo = String(description || "");
+  const lines = memo.split(/\r?\n/);
   for (const line of lines) {
     const match = line.match(/^[ \t]*대상[ \t]*학년[ \t]*[:：][ \t]*(1학년|2학년|전체)[ \t]*\r?$/);
     if (!match) continue;
     return match[1] === "1학년" ? "1" : match[1] === "2학년" ? "2" : "all";
   }
-  return null;
+  const matches = [...memo.matchAll(/(^|[^0-9A-Za-z가-힣])([12])[ \t]*학년/gm)]
+    .map(match => match[2]);
+  const grades = [...new Set(matches)];
+  if (grades.length > 1) return "all";
+  return grades.length === 1 ? grades[0] : null;
 }
 
 function eventPublicRow_(event) {
