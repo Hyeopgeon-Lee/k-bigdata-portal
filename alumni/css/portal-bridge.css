@@ -1,0 +1,23 @@
+/* Alumni interface inside the student portal: shared identity and return links. */
+html[data-alumni-portal-auth="checking"] body > :not(#alumni-portal-gate),
+html[data-alumni-portal-auth="blocked"] body > :not(#alumni-portal-gate){visibility:hidden!important;pointer-events:none!important}
+#alumni-portal-gate[hidden]{display:none!important}
+#alumni-portal-gate{position:fixed;inset:0;z-index:9999;background:#f4f7fc;
+  display:grid;place-items:center;padding:24px;color:#132d55;font-family:Pretendard,"Noto Sans KR",system-ui,sans-serif}
+.alumni-portal-gate-card{max-width:440px;width:100%;padding:28px 24px;border-radius:20px;background:#fff;
+  border:1px solid #d7e2f3;box-shadow:0 20px 60px rgba(18,45,87,.1);text-align:center}
+.alumni-portal-gate-card strong{font-size:21px;color:#152f59;display:block}
+.alumni-portal-gate-card p{font-size:15px;color:#546780;line-height:1.8;margin:18px 0}
+.alumni-portal-gate-card a{display:inline-flex;min-height:46px;align-items:center;justify-content:center;
+  background:#173f8e;color:#fff;border-radius:11px;text-decoration:none;font-weight:750;padding:12px 24px}
+.alumni-portal-top{display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:48px;
+  padding:8px max(20px,calc((100% - 1240px)/2));background:#0b1739;color:#fff;
+  font:600 13px/1.5 Pretendard,"Noto Sans KR",system-ui,sans-serif}
+.alumni-portal-top a{display:inline-flex;min-height:30px;align-items:center;color:#e4edff;
+  text-decoration:none;padding:3px 6px;border-radius:6px}
+.alumni-portal-top a:hover,.alumni-portal-top a:focus-visible{background:#273d70;color:#fff}
+.alumni-portal-top nav{display:flex;align-items:center;flex-wrap:wrap;gap:3px 12px}
+.alumni-portal-top .alumni-portal-name{white-space:nowrap;font-weight:700;color:#c6d8fc}
+.alumni-portal-top .alumni-portal-home{font-weight:800}
+@media(max-width:690px){.alumni-portal-top{padding:8px 14px;flex-wrap:wrap;gap:4px}
+ .alumni-portal-top nav{gap:3px}.alumni-portal-top a{padding:4px 5px}.alumni-portal-top .alumni-portal-name{margin-left:auto}}
