@@ -25,6 +25,10 @@ export const categories = {
   }
 };
 export const services = [
+  {id:'study',name:'자율학습 관리',englishName:'AFTER SCHOOL STUDY',category:'learning',url:'study.html',icon:'clipboard',accent:'blue',order:4.2,
+   description:'매주 월요일 자율학습 계획을 등록하고 학습 시작·종료, 누적 공부시간과 실천율을 확인하세요.',
+   shortDescription:'이번 주 공부할 날짜를 계획하고 학습시간을 기록하세요.',
+   tags:['자율학습','방과 후','공부시간','학습계획','미참여 사유'],aliases:'남아서 공부 방과후 귀가 계획 실천율 공부한 시간',featured:false},
   {
     id:"ncp", name:"NCP 기출문제", englishName:"NAVER CLOUD PRACTICE",
     category:"learning", url:"ncp.html", icon:"book", accent:"blue", order:9.2,
