@@ -222,7 +222,7 @@ async function handle(action:string,b:Record<string,unknown>,a:Actor){
   const k=text(b.id),[profile,jobs,news]=await Promise.all([getProfile(k),jobList(),newsList()]);
   return okay({profile:cleanProfile(profile.data),jobs:jobs.filter(j=>j.alumni_id===k),news:news.filter(n=>n.alumni_id===k)});
  }
- case "careerPublic":return okay((await publicList()).filter(p=>p.employment_status==="취업 중"));
+ case "careerPublic":return okay((await approved()).filter(r=>r.data.employment_status==="취업 중"&&r.data.company&&r.data.job).map(r=>({graduation_year:text(r.data.graduation_year),masked_name:maskName(r.data.name),company:text(r.data.company),job:text(r.data.job)})).sort((x,y)=>y.graduation_year.localeCompare(x.graduation_year)||x.company.localeCompare(y.company)));
  case "jobs":return okay(await jobList());
  case "jobDetail":{
   const item=(await jobList()).find(j=>j.job_id===text(b.id));
@@ -320,7 +320,7 @@ async function handle(action:string,b:Record<string,unknown>,a:Actor){
   const jid=id("J"),d=updatedPayload({},b,JOB_EDIT);
   Object.assign(d,{job_id:jid,alumni_id:owner.source_id,status:action==="adminCreateJob"?"APPROVED":"PENDING",
    created_at:now(),updated_at:now(),approved_at:action==="adminCreateJob"?now():"",
-   approved_by:action==="adminCreateJob"?a.email:"",last_mailed_at:""});
+   approved_by:action==="adminCreateJob"?a.email:"",last_mailed_at:action==="adminCreateJob"&&!yes(b.queue_mail)?now():""});
   await put("jobs",jid,d);
   if(action==="submitJob")await sendToAdmin("동문 채용공고 승인 요청",
    a.name+"님의 "+text(b.company)+" 채용공고 검토가 필요합니다.","jobs",jid).catch(()=>{});
@@ -367,6 +367,7 @@ async function handle(action:string,b:Record<string,unknown>,a:Actor){
     &&text(r.data.alumni_id)===recipient.source_id
     &&Date.parse(text(r.data.created_at))>Date.now()-3600000);
   if(prev.length>=3)throw Error("연락 요청이 너무 잦습니다. 잠시 후 다시 이용해 주세요.");
+  if(yes(b.share_phone)&&!/^01[016789][0-9 -]{7,12}$/.test(text(b.requester_phone,25)))throw Error("회신용 휴대전화 형식을 확인해 주세요.");
   const rid=id("R");
   const requestData:Record<string,unknown>={request_id:rid,alumni_id:recipient.source_id,
    requester_name:a.name,requester_type:a.role==="alumni"?"졸업생":"재학생",
