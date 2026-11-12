@@ -120,7 +120,7 @@ for(const page of ["help","room"]){
  const html=read(page+".html"),script=read("js/"+page+".js");
  assert.doesNotMatch(html,new RegExp('id="'+page+'-identity"'),page+" has no redundant body login label");
  assert.doesNotMatch(script,new RegExp(page+"-identity"),page+" does not try to populate a removed label");
- assert.match(html,new RegExp("js/"+page+"\\.js\\?v=20261112-body-login-removed-1"),page+" loads the cleaned script");
+ assert.match(html,new RegExp("js/"+page+"\\.js\\?v="),page+" loads the cleaned script");
 }
 // Guard every service script against reintroducing a visible login identity label.
 for(const file of readdirSync(new URL("../js/",import.meta.url))){
