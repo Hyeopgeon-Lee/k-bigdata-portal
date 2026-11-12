@@ -8,6 +8,7 @@ const link=service=>{const ext=/^https:\/\//.test(service.url);return '<a href="
 
 // Presentation preference only: does not grant access or hide any service.
 let accountGrade=null;
+let gradeSelectionRevision=0;
 const readSavedGrade=()=>accountGrade;
 let selectedGrade=readSavedGrade()||"1";
 const gradeLayouts=Object.freeze({
@@ -102,18 +103,25 @@ function chooseGrade(grade){
  if(grade!=="1"&&grade!=="2")return;
  selectedGrade=grade;
  accountGrade=grade;
+ gradeSelectionRevision++;
  renderGrade();
  void saveAccountGrade(grade);
 }
 
 async function loadAccountGrade(){
  const client=globalThis.portalSupabaseClient;if(!client||!globalThis.portalLearning?.read)return;
+ const revision=gradeSelectionRevision;
  const {data:{user},error}=await client.auth.getUser();if(error||!user)return;
- const result=await client.from("user_preferences").select("preferred_grade").eq("user_id",user.id).maybeSingle();
- if(result.error)return;
- if(["1","2"].includes(result.data?.preferred_grade)){
-  accountGrade=result.data.preferred_grade;selectedGrade=accountGrade;renderGrade();
- }
+ const [profile,preference]=await Promise.all([
+  client.from("profiles").select("signup_type,academic_year").eq("user_id",user.id).maybeSingle(),
+  client.from("user_preferences").select("preferred_grade").eq("user_id",user.id).maybeSingle()
+ ]);
+ if(gradeSelectionRevision!==revision)return;
+ const signupGrade=profile.error||profile.data?.signup_type!=="student"?null:
+   [1,2].includes(Number(profile.data?.academic_year))?String(profile.data.academic_year):null;
+ const savedGrade=preference.error?null:preference.data?.preferred_grade;
+ const grade=["1","2"].includes(savedGrade)?savedGrade:signupGrade;
+ if(grade){accountGrade=grade;selectedGrade=grade;renderGrade();}
 }
 async function saveAccountGrade(grade){
  const client=globalThis.portalSupabaseClient;if(!client||!globalThis.portalLearning?.write)return;
