@@ -71,7 +71,8 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
     <button id="help-create-tab" data-help-tab="new" type="button" role="tab" aria-selected="false">요청 등록</button>
     <button data-help-tab="my" type="button" role="tab" aria-selected="true">내 요청</button>
     <button data-help-tab="notice" type="button" role="tab" aria-selected="false">처리 알림</button>
-    <button id="help-admin-tab" data-help-tab="admin" type="button" role="tab" aria-selected="false" hidden>요청 관리</button>
+
+
   </div>
   <section data-help-panel="new" hidden aria-labelledby="help-new-heading">
    <h2 id="help-new-heading">새 요청 등록</h2>
@@ -95,12 +96,8 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
   <section data-help-panel="notice" hidden aria-labelledby="help-notice-heading">
    <h2 id="help-notice-heading">처리 알림</h2><div id="help-notice-list" class="help-list"></div>
   </section>
-  <section data-help-panel="admin" hidden aria-labelledby="help-admin-heading">
-   <h2 id="help-admin-heading">전체 요청 관리</h2>
-   <p class="help-meta"></p>
-   <p id="help-admin-counts" class="help-counts"></p>
-   <div id="help-admin-list" class="help-list"></div>
-  </section>
+
+
  </div>
  <noscript>학과 요청 서비스 이용에는 JavaScript가 필요합니다.</noscript>
 </section>
@@ -110,7 +107,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <div class="container footer-bottom"><p>© <span id="current-year"></span> K-BigData Service Portal</p></div>
 </footer>
 <script type="module" src="js/portal-auth.mjs?v=20261113-copy-cleanup-1"></script>
-<script type="application/x-learning" data-module="js/help.js?v=20261112-body-login-removed-1"></script>
+<script type="application/x-learning" data-module="js/help.js?v=20261113-admin-split-1"></script>
 <script type="application/x-learning" data-module="js/portal-shell-entry.js?v=20261111-account-sync-1"></script>
 </body>
 </html>

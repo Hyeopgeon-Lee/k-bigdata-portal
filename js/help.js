@@ -28,7 +28,7 @@ function options(values,selected){
  return select;
 }
 function readableDate(raw){const d=new Date(raw);return Number.isNaN(d.getTime())?'':d.toLocaleString('ko-KR');}
-let user=null,admin=false,writer=false,activeTab='my',cached=[];
+let user=null,writer=false,activeTab='my',cached=[];
 function tab(name){
  activeTab=name;
  for(const btn of document.querySelectorAll('[data-help-tab]')){
@@ -36,8 +36,9 @@ function tab(name){
   btn.setAttribute('aria-selected',String(selected));
  }
  for(const panel of document.querySelectorAll('[data-help-panel]'))panel.hidden=panel.dataset.helpPanel!==name;
- if(name==='my')loadRequests(false);
- if(name==='admin')loadRequests(true);
+ if(name==='my')loadRequests();
+
+
  if(name==='notice')loadNotifications();
 }
 function card(request){
@@ -55,40 +56,14 @@ function card(request){
  if(request.legacy_request_id){
   summary.append(node('p','기존 요청번호: '+request.legacy_request_id,'help-meta'));
  }
- if(admin){
-  const identity=[request.legacy_student_name,request.legacy_student_no].filter(Boolean).join(' / ');
-  if(identity)summary.append(node('p','기존 작성자: '+identity+' (포털 계정 미연결)','help-meta'));
- }
  if(request.admin_reply)summary.append(node('div','관리자 답변: '+request.admin_reply,'help-reply'));
  const details=node('div',null,'help-extra');
  const open=node('button','대화·첨부파일 보기','help-secondary');
  open.type='button';
  open.addEventListener('click',()=>openDetail(request,details,open));
  summary.append(open,details);
- if(admin)summary.append(adminEditor(request));
  article.append(heading,meta,summary);
  return article;
-}
-function adminEditor(request){
- const panel=node('div',null,'help-editor');
- const label=node('label','처리 상태','help-field');
- const select=options(Object.keys(statusText),request.status);label.append(select);
- const replyLabel=node('label','관리자 답변','help-field');
- const reply=document.createElement('textarea');reply.maxLength=3000;reply.rows=4;reply.value=request.admin_reply||'';
- replyLabel.append(reply);
- const button=node('button','처리 내용 저장','help-primary');button.type='button';
- const message=node('p','', 'help-inline-status');message.setAttribute('role','status');
- button.onclick=async()=>{
-  button.disabled=true;message.textContent='저장 중...';
-  const {error}=await api.from('help_requests').update({
-   status:select.value,admin_reply:reply.value.trim(),updated_at:new Date().toISOString()
-  }).eq('id',request.id);
-  button.disabled=false;
-  message.textContent=error?'저장 실패: 계정 권한 또는 네트워크를 확인하세요.':'상태와 답변을 저장했습니다.';
-  if(!error){request.status=select.value;request.admin_reply=reply.value.trim();}
- };
- panel.append(label,replyLabel,button,message);
- return panel;
 }
 async function openDetail(request,target,button){
  button.disabled=true;target.replaceChildren(node('p','불러오는 중...','help-meta'));
@@ -117,7 +92,7 @@ async function openDetail(request,target,button){
   };
   target.append(link);
  }
- if(request.owner_id===user.id || admin){
+ if(request.owner_id===user.id){
   const field=node('label','추가 메시지','help-field');
   const area=document.createElement('textarea');area.rows=3;area.maxLength=3000;field.append(area);
   const send=node('button','메시지 등록','help-secondary');send.type='button';
@@ -127,7 +102,7 @@ async function openDetail(request,target,button){
    if(!body){hint.textContent='메시지 내용을 입력하세요.';return;}
    send.disabled=true;
    const {error}=await api.from('help_messages').insert({
-    request_id:request.id,author_id:user.id,sender_role:admin?'admin':'student',body
+    request_id:request.id,author_id:user.id,sender_role:'student',body
    });
    send.disabled=false;
    if(error){hint.textContent='메시지를 등록하지 못했습니다.';return;}
@@ -136,22 +111,15 @@ async function openDetail(request,target,button){
   target.append(field,send,hint);
  }
 }
-async function loadRequests(all){
- const root=el(all?'help-admin-list':'help-my-list');
+async function loadRequests(){
+ const root=el('help-my-list');
  root.replaceChildren(node('p','요청을 불러오는 중...','help-meta'));
- const cols=all?'id,owner_id,legacy_request_id,legacy_student_name,legacy_student_no,category,location,title,content,status,admin_reply,created_at,updated_at':
- 'id,owner_id,legacy_request_id,category,location,title,content,status,admin_reply,created_at,updated_at';
- let query=api.from('help_requests').select(cols).order('created_at',{ascending:false}).limit(200);
- if(!all)query=query.eq('owner_id',user.id);
- const {data,error}=await query;
+ const {data,error}=await api.from('help_requests')
+  .select('id,owner_id,legacy_request_id,category,location,title,content,status,admin_reply,created_at,updated_at')
+  .eq('owner_id',user.id).order('created_at',{ascending:false}).limit(200);
  if(error){root.textContent='요청을 불러오지 못했습니다. 로그인 상태를 확인하세요.';return;}
- cached=data||[];
- root.replaceChildren();
- if(!cached.length){root.append(node('p',all?'요청이 없습니다.':'아직 등록한 요청이 없습니다.','help-meta'));return;}
- if(all){
-  const counts=Object.fromEntries(Object.keys(statusText).map(key=>[key,cached.filter(row=>row.status===key).length]));
-  el('help-admin-counts').textContent='총 '+cached.length+'건 · 접수 '+counts.RECEIVED+' · 확인 '+counts.CHECKING+' · 처리 '+counts.PROCESSING+' · 완료 '+counts.COMPLETED;
- }
+ cached=data||[];root.replaceChildren();
+ if(!cached.length){root.append(node('p','아직 등록한 요청이 없습니다.','help-meta'));return;}
  for(const request of cached)root.append(card(request));
 }
 async function loadNotifications(){
@@ -212,17 +180,14 @@ async function start(){
  const {data:{user:current},error}=await api.auth.getUser();
  if(error||!current){say('로그인이 필요합니다.');return;}
  user=current;
- const access=await api.rpc('portal_super_admin_allowed');
- admin=access.data===true;
  writer=window.portalLearning?.write===true;
- if(!admin&&!writer){
+ if(!writer){
   el('help-body').hidden=true;
   say('학과 요청·문의는 승인된 재학생만 이용할 수 있습니다. 휴학·졸업·자퇴 계정은 이용이 제한됩니다.');
   return;
  }
  el('help-body').hidden=false;
- el('help-admin-tab').hidden=!admin;
- el('help-create-tab').hidden=!writer&&!admin;
+ el('help-create-tab').hidden=!writer;
  initForm();
  document.querySelectorAll('[data-help-tab]').forEach(button=>button.onclick=()=>tab(button.dataset.helpTab));
  const query=new URLSearchParams(location.search);
