@@ -131,10 +131,10 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
             <div id="coding-editor-host" class="coding-editor-host" hidden></div>
             <textarea id="coding-editor" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="여기에 스스로 정답을 작성해 보세요."></textarea>
             <p class="coding-notice">직접 작성한 답을 정답·해설과 비교한 뒤 내 풀이 결과를 선택하세요.</p>
-            <div class="coding-actions coding-actions--help">
-              <button id="coding-hint-button" class="coding-btn" type="button" aria-expanded="false" aria-controls="coding-hint">힌트 보기</button>
-              <button id="coding-answer-button" class="coding-btn coding-btn-primary" type="button" aria-expanded="false" aria-controls="coding-answer">정답과 줄별 주석</button>
-              <button id="coding-trace-button" class="coding-btn" type="button" aria-expanded="false" aria-controls="coding-trace">값 변화 추적</button>
+            <div class="coding-actions coding-actions--help quiz-solve-actions" role="group" aria-label="문제 풀이 도움말">
+              <button id="coding-hint-button" class="coding-btn quiz-solve-action quiz-solve-action--hint" type="button" aria-expanded="false" aria-controls="coding-hint">힌트 보기</button>
+              <button id="coding-answer-button" class="coding-btn coding-btn-primary quiz-solve-action quiz-solve-action--answer" type="button" aria-expanded="false" aria-controls="coding-answer">정답과 줄별 주석</button>
+              <button id="coding-trace-button" class="coding-btn quiz-solve-action quiz-solve-action--trace" type="button" aria-expanded="false" aria-controls="coding-trace">값 변화 추적</button>
             </div>
             <div id="coding-hint" class="coding-reveal" hidden><h3>힌트</h3><p id="coding-hint-text"></p></div>
             <div id="coding-answer" class="coding-reveal quiz-results" hidden>
