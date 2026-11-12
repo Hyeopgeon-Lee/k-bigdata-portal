@@ -34,7 +34,7 @@ export function renderServiceNavigation(page,id){
 function renderIntroExtras(id){
   if(id==='interview')return '<p id="interview-stats" class="interview-stats" aria-live="polite"></p>';
   if(id==='project-guide')return '<div class="guide-actions"><a class="button button-primary" href="#process">주제 선정 시작하기 <span aria-hidden="true">↓</span></a><a class="button button-secondary" href="https://portfolio.k-bigdata.kr/">선배 작품 살펴보기 <span aria-hidden="true">↗</span></a></div>';
-  if(id==='docs')return '<p class="doc-hero-support">빅데이터 · 백엔드 · 클라우드 네이티브 · DevOps · AI · LLM · Open API를 분야별로 탐색하고, 학습 주제와 프로젝트 활용을 연결하세요.</p>';
+  if(id==='docs')return '';
   return '';
 }
 export function renderPageIntro(page,id){
