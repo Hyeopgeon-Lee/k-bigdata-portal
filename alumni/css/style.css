@@ -358,7 +358,7 @@ main.section>.container>a:first-child{
 }
 
 .hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
-.hero-actions .button{min-width:150px}
+.hero-actions .button{min-width:150px;white-space:nowrap}
 @media(max-width:520px){
   .hero-actions{display:grid;grid-template-columns:1fr 1fr}
   .hero-actions .button{min-width:0;width:100%}
