@@ -59,13 +59,14 @@ async function start(){
    // Re-verify credentials with Supabase before changing password.
    const {error:checkError}=await api.auth.signInWithPassword({email:user.email,password:current});
    if(checkError){notify("my-page-password-message","현재 비밀번호가 일치하지 않습니다.","error");return;}
+   // The password check starts a new Auth session. Restore portal access
+   // even if the subsequent password update is rejected by Auth policy.
+   const {error:sessionError}=await api.rpc("start_portal_session");
+   if(sessionError)throw sessionError;
    const {error:changeError}=await api.auth.updateUser({password:next});
    if(changeError)throw changeError;
-   // The re-login rotates the auth session ID, so register its portal session.
-   const {error:sessionError}=await api.rpc("start_portal_session");
    form.reset();
-   notify("my-page-password-message",sessionError?
-     "비밀번호가 변경되었습니다. 다시 로그인해 주세요.":
+   notify("my-page-password-message",
      "비밀번호를 변경했습니다. 다음 로그인부터 새 비밀번호를 사용하세요.","success");
   }catch(err){
    console.error("Password change failed",err?.code||"unknown");
