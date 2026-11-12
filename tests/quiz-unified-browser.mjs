@@ -7,7 +7,7 @@ const base="http://127.0.0.1:8765/";
 const widths=[360,390,430,768,1024,1280,1440];
 const cases=[
   {name:"practical",url:"practical.html?id=R-SQL-0015",ready:"#my-answer"},
-  {name:"ncp",url:"ncp.html?id=NCP-R001",ready:"#ncp-answer-entry"},
+  {name:"ncp",url:"ncp.html?id=NCP-R007",ready:"#ncp-answer-entry"},
   {name:"coding",url:"coding.html?id=C-001",ready:"#coding-editor"}
 ];
 mkdirSync("ui-screenshots/quiz-unified",{recursive:true});
@@ -99,6 +99,29 @@ try{
        await page.locator(".quiz-results").first().waitFor({timeout:10000,state:"visible"});
        assert.ok((await page.locator(".quiz-disclosure").count())>=1,target.name+" explanation accordion");
        assert.ok((await page.locator(".study-review [data-grade]").count())>=3,target.name+" grade feedback controls");
+       const answerButton=page.locator(".quiz-solve-action--answer").first();
+       const answerPanel=page.locator(target.name==="practical"?"#answer-result":
+                                     target.name==="ncp"?"#ncp-answer-results":"#coding-answer");
+       assert.equal(await answerButton.getAttribute("aria-expanded"),"true",
+         target.name+" must expose expanded state on first reveal");
+       await page.locator(".study-review").first().evaluate(el=>el.dataset.toggleTest="preserved");
+       const answeredQuestion=target.name==="practical"?await page.locator("#my-answer").inputValue():
+         target.name==="ncp"?await page.locator(".ncp-choice[aria-pressed=true]").first().getAttribute("data-choice"):
+         await page.locator("#coding-editor").inputValue();
+       await answerButton.click();
+       assert.equal(await answerPanel.isVisible(),false,target.name+" second click collapses solution");
+       assert.equal(await answerButton.getAttribute("aria-expanded"),"false",target.name+" collapsed ARIA state");
+       assert.match(await answerButton.innerText(),/정답.*해설 보기/);
+       await answerButton.click();
+       assert.equal(await answerPanel.isVisible(),true,target.name+" third click reopens solution");
+       assert.equal(await answerButton.getAttribute("aria-expanded"),"true",target.name+" expanded ARIA state");
+       assert.equal(await page.locator(".study-review").first().getAttribute("data-toggle-test"),"preserved",
+         target.name+" must keep review controls mounted");
+       const afterAnswer=target.name==="practical"?await page.locator("#my-answer").inputValue():
+         target.name==="ncp"?await page.locator(".ncp-choice[aria-pressed=true]").first().getAttribute("data-choice"):
+         await page.locator("#coding-editor").inputValue();
+       assert.equal(afterAnswer,answeredQuestion,target.name+" answer must survive toggle");
+
        if([390,1440].includes(width)){
          await page.locator(".quiz-results").first().screenshot({path:"ui-screenshots/quiz-unified/"+target.name+"-"+width+"-answer.png"});
        }
