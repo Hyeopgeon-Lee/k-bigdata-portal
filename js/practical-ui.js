@@ -1,4 +1,4 @@
-import {quizNavigation,quizHeading,quizDisclosure,quizFeedback} from "./quiz-unified.js?v=20261112-action-colors-1";
+import {quizNavigation,quizHeading,quizDisclosure,quizFeedback,scrollToQuizAnswer} from "./quiz-unified.js?v=20261112-answer-focus-1";
 import {createQuestionBrowser} from "./question-browser.js?v=20261112-exam-facets-1";
 import {bindReview,reviewControls,gradeLabels} from "./study-review.js";
 import {loadPracticalBank} from "./practical-data.js?v=20261006-audit-2";
@@ -364,7 +364,7 @@ root.addEventListener("click",event=>{
  if(action==="show-all"){filters.completion="all";$("#completion-filter").value="all";render();}
  if(action==="export-learning"){const url=URL.createObjectURL(new Blob([JSON.stringify(exportLearning(),null,2)],{type:"application/json"})),link=document.createElement("a");link.href=url;link.download="kbigdata-learning-"+localDay()+".json";link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
  if(action==="back"){selectView("bank");browserEntry.show();}
- if(action==="answer-jump"){const answer=$("#my-answer");if(answer){answer.focus({preventScroll:true});answer.scrollIntoView({block:"center",behavior:"smooth"});}}
+ if(action==="answer-jump"){scrollToQuizAnswer(root);return;}
  if(action==="share-problem")void shareCurrentProblem();
  if(action==="copy-problem-link")void copyCurrentProblemLink();
  if(action==="code-focus"){const dialog=$("#code-dialog");if(dialog){if(typeof dialog.showModal==="function")dialog.showModal();else dialog.setAttribute("open","");}}
