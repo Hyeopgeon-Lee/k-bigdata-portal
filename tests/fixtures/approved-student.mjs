@@ -59,6 +59,7 @@ export async function approvedStudent(context, profileOverride={}, registeredAlu
       db[table]=rows;save(db);return Promise.resolve({data:[],error:null});
      },
      maybeSingle(){const result=execute();return Promise.resolve({...result,data:result.data[0]||null});},
+     single(){const result=execute();return Promise.resolve({...result,data:result.data[0]||null});},
      then(resolve,reject){return Promise.resolve(execute()).then(resolve,reject);}
     };
     return builder;
