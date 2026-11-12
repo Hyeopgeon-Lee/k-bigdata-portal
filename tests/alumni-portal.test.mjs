@@ -45,7 +45,7 @@ assert.match(backend,/function isGraduateMember/,"graduates use portal account t
 assert.match(backend,/case "myAlumniProfile"/,"personal profile automatically loaded after login");
 assert.match(backend,/case "saveMyAlumniProfile"/,"personal profile saved without PIN");
 assert.match(backend,/if\(!isGraduateMember\(a\)\)/,"non-graduates cannot register");
-assert.match(backend,/role==="alumni"\|\|a\.role==="student"/,"student account is eligible only after graduation");
+assert.match(backend,/a\.role==="student"\|\|a\.role==="alumni"/,"student account has graduated-member eligibility");
 const profileHtml=read("alumni/alumni.html"),profileJs=read("alumni/js/alumni.js");
 assert.match(profileHtml,/id="alumni-account-banner"/,"graduation status message is visible");
 assert.match(profileHtml,/<form id="alumni-form" hidden>/,"save form hidden until authorization");
