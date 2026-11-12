@@ -18,8 +18,8 @@ for(const q of questions){
  assert.equal(report.pathname,"/help.html");
  assert.equal(report.searchParams.get("source"),"interview");
  assert.equal(report.searchParams.get("id"),q.id);
- assert.equal(report.searchParams.get("code"),q.code);
- assert.equal(new URL(report.searchParams.get("url")).searchParams.get("id"),q.id);
+ assert.deepEqual([...report.searchParams.keys()],["source","id"]);
+ assert.ok(report.href.length<120);
  assert.ok(!report.href.includes(encodeURIComponent(q.shortAnswer)),q.id);
 
 }
@@ -41,6 +41,6 @@ assert.ok(css.includes('.interview-action-compact'),"mobile text fits inside its
 assert.ok(html.includes("js/learning-ui.js?v="));
 const sample=new URL(learningReportUrl("practical",{id:"R-IND-JAVA-0006",question:"배열 출력"},"산업기사"));
 assert.equal(sample.searchParams.get("source"),"practical");
-assert.equal(new URL(sample.searchParams.get("url")).pathname,"/practical.html");
+assert.deepEqual([...sample.searchParams.keys()],["source","id"]);
 assert.equal(learningReportUrl("unknown",{id:"DS-001"}),"");
 console.log("PASS: 150 interview and practical report links preserve IDs without exposing model answers.");
