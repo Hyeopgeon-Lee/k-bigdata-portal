@@ -1,6 +1,7 @@
 /* Portal Auth: Supabase Auth + server-authorized profile and 90-day portal session. */
 /* Public publishable key only; NEVER place a secret/service-role key here. */
 import {createClient} from "https://esm.sh/@supabase/supabase-js@2.119.0?bundle";
+import {isRestrictedSignupEmail} from "./email-policy.mjs?v=20261112-kopo-email-1";
 
 const client=createClient("https://zjsindkakjfzmjgrkaou.supabase.co", "sb_publishable_g8oFA9J2ZFiBc-86wa2Pew_7DzoCZab",{
   auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storageKey:"kbigdata-portal-auth-v1"}
@@ -12,7 +13,7 @@ root.hidden=true; // The whole portal requires an authorized account.
 document.body.append(root);
 const css=document.createElement("link");
 css.rel="stylesheet";
-css.href="css/portal-auth.css?v=20261112-signup-grade-1";
+css.href="css/portal-auth.css?v=20261112-kopo-email-1";
 document.head.append(css);
 
 const locked=document.getElementById("learning-lock");
@@ -35,6 +36,7 @@ window.addEventListener("pageshow",event=>{if(event.persisted)location.reload();
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)checkLearning().catch(resetLearning);});
 setInterval(()=>checkLearning().catch(resetLearning),60000);
 const professorEmail="hglee67@kopo.ac.kr";
+const blockedSignupMessage="학교 이메일(@kopo.ac.kr 및 하위 도메인)은 회원가입할 수 없습니다. 개인 이메일을 사용해 주세요.";
 let currentUser=null;
 let currentProfile=null;
 // Share the verified, server-backed display name across all portal pages.
@@ -43,7 +45,7 @@ window.portalMemberName=()=>String(currentProfile?.full_name||"").trim()||"이�
 let isAdmin=false;
 let inRecovery=false;
 const resetLink=location.origin+"/index.html";
-const statusText=(error)=>error?.message==="Invalid login credentials"?"이메일 또는 비밀번호가 올바르지 않습니다.": "요청을 처리하지 못했습니다. 입력 내용과 네트워크 상태를 확인해 주세요.";
+const statusText=(error)=>String(error?.message||"").includes("KOPO_EMAIL_SIGNUP_NOT_ALLOWED")?blockedSignupMessage:error?.message==="Invalid login credentials"?"이메일 또는 비밀번호가 올바르지 않습니다.":"요청을 처리하지 못했습니다. 입력 내용과 네트워크 상태를 확인해 주세요.";
 const $=(selector)=>root.querySelector(selector);
 const status=(message)=>{const node=$("#portal-auth-status");if(node)node.textContent=message;};
 let opener=null;
@@ -128,16 +130,24 @@ function renderSignup(){
    '<form id="portal-signup-form" class="portal-auth-form">'+
    identityFields()+
    '<label>이름<input name="full_name" maxlength="80" minlength="2" autocomplete="name" required></label>'+
-   '<label>이메일<input name="email" type="email" autocomplete="email" required></label>'+
+   '<label>이메일<input name="email" type="email" autocomplete="email" required><small class="portal-auth-field-help">학교 이메일(@kopo.ac.kr 및 하위 도메인)로는 가입할 수 없습니다.</small></label>'+
    '<label>비밀번호 (8자 이상)<input name="password" type="password" minlength="8" autocomplete="new-password" required></label>'+
    '<button class="portal-auth-primary" type="submit">가입하고 인증메일 받기</button></form>'+
    '<div class="portal-auth-actions portal-auth-return-actions"><button type="button" data-view="login">로그인으로 돌아가기</button></div>');
   const form=$("#portal-signup-form");
   bindIdentity(form);
+  const signupEmailInput=form.elements.email;
+  signupEmailInput.addEventListener("input",()=>{
+    const restricted=isRestrictedSignupEmail(signupEmailInput.value);
+    signupEmailInput.setCustomValidity(restricted?blockedSignupMessage:"");
+    if(restricted)status(blockedSignupMessage);
+    else if($("#portal-auth-status")?.textContent===blockedSignupMessage)status("");
+  });
   form.addEventListener("submit",async e=>{
     e.preventDefault();const fd=new FormData(form);
     const email=String(fd.get("email")).trim().toLowerCase();
     const full_name=String(fd.get("full_name")).trim();
+    if(isRestrictedSignupEmail(email)){status(blockedSignupMessage);form.elements.email.setCustomValidity(blockedSignupMessage);form.elements.email.reportValidity();return;}
     if(email===professorEmail){status("교수·관리자는 기존 계정으로 로그인하세요.");return;}
     const signup_type=fd.get("signup_type"), student_no=fd.get("student_no")?.trim()||null;
     const graduation_year=signup_type==="alumni"?Number(fd.get("graduation_year")):null;
@@ -190,6 +200,12 @@ function renderPending(profile){
   $("#portal-pending-logout").addEventListener("click",logout);
 }
 function renderComplete(user){
+  if(isRestrictedSignupEmail(user.email)&&user.email?.toLowerCase()!==professorEmail){
+    card("회원가입 제한",'<p class="portal-auth-lead">'+blockedSignupMessage+'</p>'+
+      '<button id="portal-restricted-logout" class="portal-auth-primary" type="button">로그아웃</button>');
+    $("#portal-restricted-logout").addEventListener("click",logout);
+    return;
+  }
   card("회원 정보 입력",'<p class="portal-auth-lead">학습 서비스를 이용하려면 가입 유형에 맞는 정보를 등록해 주세요.</p>'+
     '<form id="portal-complete-form" class="portal-auth-form">'+
     identityFields()+
@@ -669,6 +685,9 @@ async function activate(interactive=true){
   }
   if(found)profile=found;
   else{
+    if(isRestrictedSignupEmail(user.email)&&user.email?.toLowerCase()!==professorEmail){
+      renderComplete(user);showAccount();return;
+    }
     const name=String(user.user_metadata?.full_name||"").trim();
     if(!name){
       renderComplete(user);

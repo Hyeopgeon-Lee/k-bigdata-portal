@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import {readFileSync,readdirSync} from "node:fs";
 import {execFileSync} from "node:child_process";
+import {isRestrictedSignupEmail} from "../js/email-policy.mjs";
 
 const read=p=>readFileSync(new URL("../"+p,import.meta.url),"utf8");
 const source=read("js/portal-auth.mjs");
@@ -12,6 +13,17 @@ assert.doesNotMatch(source,/service_role|sb_secret_[A-Za-z0-9_-]+/,"no privilege
 assert.match(source,/persistSession:true/);
 assert.match(source,/autoRefreshToken:true/);
 assert.match(source,/signUp\(/);
+assert.match(source,/isRestrictedSignupEmail\(email\)/,"signup validates forbidden email domains");
+assert.match(source,/signupEmailInput\.setCustomValidity/,"input shows a native validation error");
+assert.match(source,/isRestrictedSignupEmail\(user\.email\)/,"unregistered existing school accounts cannot complete signup");
+for(const email of ["student@kopo.ac.kr","teacher@kangseo.kopo.ac.kr","a@deep.campus.kopo.ac.kr","STUDENT@KOPO.AC.KR"])
+ assert.equal(isRestrictedSignupEmail(email),true,email+" should be blocked");
+for(const email of ["student@gmail.com","person@naver.com","person@notkopo.ac.kr","person@kopo.ac.kr.evil.test","bad-email"])
+ assert.equal(isRestrictedSignupEmail(email),false,email+" should not be incorrectly blocked");
+const migration=read("supabase/migrations/20261112113500_block_kopo_domain_new_signups.sql");
+assert.match(migration,/before insert or update of email on auth\.users/,"direct Auth API registration is protected");
+assert.match(migration,/before insert on public\.profiles/,"older profile registration RPCs are protected");
+
 assert.match(source,/signInWithPassword\(/);
 assert.match(source,/getUser\(/);
 assert.match(source,/start_portal_session/);

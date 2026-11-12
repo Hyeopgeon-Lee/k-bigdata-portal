@@ -33,6 +33,7 @@ html:not([data-portal-access="approved"]) body > :not(#portal-auth-layer) { visi
 .portal-auth-note { font-size: 13px; color: #5a6680; line-height: 1.65; }
 .portal-auth-form { display: grid; gap: 15px; }
 .portal-auth-form label { display: grid; gap: 7px; font-size: 14px; font-weight: 650; }
+.portal-auth-field-help { color: #6b5261; font-size: 12px; font-weight: 500; line-height: 1.55; }
 .portal-auth-form input, .portal-auth-form select {
   width: 100%;
   box-sizing: border-box;
