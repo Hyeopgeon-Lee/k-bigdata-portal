@@ -1,4 +1,5 @@
 import {schedules} from "../data/schedules.js?v=20261019-1";
+import {initCertificationSchedule} from "./certification-schedule.mjs?v=20261113-1";
 import {scheduleShareUrl,copyScheduleLink,downloadScheduleIcs,openBandShare} from "./schedule-sharing.js?v=20261024-1";
 import {SCHEDULE_API_URL} from "../data/schedule-config.js?v=20261019-google-calendar-live-1";
 import {publishedGrade} from "../data/calendar-grade-bridge.js?v=20261112-memo-grades-1";
@@ -110,7 +111,15 @@ function storeCachedCalendar(items,updatedAt){
 }
 const cachedCalendar=readCachedCalendar();
 let showingCachedSnapshot=Boolean(cachedCalendar);
-let events=cachedCalendar?.events||normalizeEvents(schedules);
+let departmentEvents=cachedCalendar?.events||normalizeEvents(schedules);
+let certificationEvents=[];
+let events=departmentEvents;
+// Merge Google Calendar events and official exam events only in presentation.
+function updateMergedEvents(){
+  events=normalizeEvents([...departmentEvents,...certificationEvents]);
+  selectLinkedEvent();
+  render();
+}
 let linkedEventSelected=false;
 function selectLinkedEvent() {
   if (!sharedEventId || linkedEventSelected) return;
@@ -363,10 +372,9 @@ async function loadPublicCalendar({force=false}={}){
         throw new Error("일정 응답 오류");
       const next=normalizeRemoteEvents(response.events);
       // A periodic refresh should not redraw 42 cells when nothing changed.
-      if(JSON.stringify(next)!==JSON.stringify(events)){
-        events=next;
-        selectLinkedEvent();
-        render();
+      if(JSON.stringify(next)!==JSON.stringify(departmentEvents)){
+        departmentEvents=next;
+        updateMergedEvents();
       }
       storeCachedCalendar(next,response.updatedAt);
       showingCachedSnapshot=false;
@@ -379,8 +387,8 @@ async function loadPublicCalendar({force=false}={}){
       // Never keep displaying a cached snapshot when validity is uncertain.
       forgetCachedCalendar();
       showingCachedSnapshot=false;
-      events=[];
-      render();
+      departmentEvents=[];
+      updateMergedEvents();
       console.error("Department schedule load failed",error);
       status.textContent="일정을 가져오지 못했습니다. 잠시 후 새로고침해 주세요.";
     }
@@ -486,8 +494,8 @@ async function deletePortalSchedule(e,button){
     forgetCachedCalendar();
     showingCachedSnapshot=false;
     // Immediately remove the deleted entry; the server remains the authority.
-    events=events.filter(row=>row.id!==e.id);
-    render();
+    departmentEvents=departmentEvents.filter(row=>row.id!==e.id);
+    updateMergedEvents();
     status.textContent="일정이 삭제되었습니다.";
     await loadPublicCalendar({force:true});
   }catch(error){
@@ -522,3 +530,9 @@ registrationForm.addEventListener("submit",async event=>{
     registrationStatus.textContent=error.message;
   }finally{registrationSubmit.disabled=false;}
 });
+
+// Public official certification dates appear in the same department calendar.
+initCertificationSchedule({onEvents:next=>{
+  certificationEvents=normalizeEvents(next);
+  updateMergedEvents();
+}});
