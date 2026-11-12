@@ -22,6 +22,7 @@
 <script defer src="js/portal-navigation.js?v=20261113-copy-cleanup-1"></script>
 <!-- portal:assets:end -->
   <link rel="stylesheet" href="css/home-refresh.css?v=20261112-study-1">
+  <link rel="stylesheet" href="css/home-alumni.css?v=20261113-alumni-home-1">
 </head>
 <body data-portal-home>
   <a class="skip-link" href="#main-content">본문으로 바로가기</a>
@@ -88,6 +89,23 @@
           <a href="docs.html">개발 공식문서</a>
         </div>
         <p class="study-home-shortcut"><a class="button button-secondary" href="study.html">자율학습 계획 · 공부시간 기록 →</a></p>
+      </section>
+      <section id="alumni-dashboard" class="alumni-home" aria-labelledby="alumni-home-title" hidden>
+        <div class="alumni-home-heading"><h2 id="alumni-home-title">주요 서비스</h2><p>기출문제 학습과 동문 연결을 이어가세요.</p></div>
+        <div class="alumni-home-primary">
+          <a href="practical.html" class="alumni-home-feature"><span class="alumni-home-feature-mark" aria-hidden="true">01</span><strong>정보처리 기출문제</strong><span>정보처리기사·산업기사 실기 문제와 오답 복습</span><b>기출문제 풀기 →</b></a>
+          <a href="alumni/index.html" class="alumni-home-feature"><span class="alumni-home-feature-mark" aria-hidden="true">02</span><strong>졸업생 네트워크</strong><span>졸업생 찾기, 채용정보 공유, 동문소식</span><b>네트워크 이용하기 →</b></a>
+        </div>
+        <nav class="alumni-home-quick" aria-label="졸업생 빠른 실행">
+          <a href="my-certifications.html"><strong>내 자격증</strong><span>필기합격·최종합격 관리</span></a>
+          <a href="ncp.html"><strong>NCP 기출문제</strong><span>클라우드 자격증 학습</span></a>
+          <a href="alumni/jobs.html"><strong>동문 채용정보</strong><span>채용공고와 사내추천 확인</span></a>
+        </nav>
+        <div class="alumni-home-updates">
+          <section class="alumni-home-panel" aria-labelledby="alumni-jobs-title"><div class="alumni-home-panel-head"><h3 id="alumni-jobs-title">최근 동문 채용정보</h3><a href="alumni/jobs.html">전체 보기 →</a></div><div id="alumni-home-jobs" aria-live="polite"><p class="alumni-home-empty">채용정보를 확인하고 있습니다.</p></div></section>
+          <section class="alumni-home-panel" aria-labelledby="alumni-news-title"><div class="alumni-home-panel-head"><h3 id="alumni-news-title">최근 동문소식</h3><a href="alumni/news.html">전체 보기 →</a></div><div id="alumni-home-news" aria-live="polite"><p class="alumni-home-empty">동문소식을 확인하고 있습니다.</p></div></section>
+        </div>
+        <div class="alumni-home-exam"><div><strong>자격증 시험 일정</strong><p>기사·산업기사·SQLD 원서접수 및 시험 일정을 확인하세요.</p></div><a href="schedule.html">시험 일정 보기 →</a></div>
       </section>
     </section>
 
@@ -167,7 +185,8 @@
   <script type="module" src="js/app.js?v=20261112-page-intro-2"></script>
   <script type="module" src="js/portal-shell-entry.js?v=20261112-page-intro-2"></script>
   <script src="data/recruitments.js?v=20261016-2"></script>
-  <script type="module" src="js/home-dashboard.js?v=20261113-copy-cleanup-1"></script>
+  <script type="module" src="js/home-dashboard.js?v=20261113-alumni-home-1"></script>
+  <script type="module" src="js/home-alumni.js?v=20261113-alumni-home-1"></script>
   <script type="application/x-learning" data-module="js/home-engagement.js?v=20261111-daily-sync-1"></script>
   <script type="module" src="js/home-schedule.js?v=20261112-calendar-sync-1"></script>
   <script type="module" src="js/home-recruit-alerts.js?v=20261020-grade3-final-1"></script>

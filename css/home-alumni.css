@@ -1,0 +1,56 @@
+/* Alumni-only homepage uses the standard portal shell, account, and favorites. */
+body[data-portal-home] #alumni-dashboard[hidden]{display:none!important}
+body[data-portal-home][data-home-persona="alumni"] .home-grade-control,
+body[data-portal-home][data-home-persona="alumni"] .portal-search,
+body[data-portal-home][data-home-persona="alumni"] .dashboard-start,
+body[data-portal-home][data-home-persona="alumni"] .home-today,
+body[data-portal-home][data-home-persona="alumni"] .home-catalog,
+body[data-portal-home][data-home-persona="alumni"] .home-alerts{display:none!important}
+body[data-portal-home] .alumni-home{width:100%;min-width:0;margin:0;display:block}
+body[data-portal-home] .alumni-home-heading{margin:0 0 12px}
+body[data-portal-home] .alumni-home-heading h2{font-size:20px;line-height:1.4;margin:0;color:#16355e}
+body[data-portal-home] .alumni-home-heading p{font-size:13px;line-height:1.5;color:#63758b;margin:3px 0 0}
+body[data-portal-home] .alumni-home-primary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+body[data-portal-home] .alumni-home-feature{display:flex;flex-direction:column;min-width:0;min-height:182px;padding:20px;border:1px solid #c9d8eb;border-radius:15px;background:#fff;color:#173863;text-decoration:none;box-shadow:0 4px 14px #1837630b;transition:border-color .15s,background .15s}
+body[data-portal-home] .alumni-home-feature:hover{background:#f2f7ff;border-color:#799ac4}
+body[data-portal-home] .alumni-home-feature-mark{font-weight:800;font-size:12px;letter-spacing:.09em;color:#2a629d}
+body[data-portal-home] .alumni-home-feature strong{margin:13px 0 6px;font-size:23px;letter-spacing:-.04em;line-height:1.32;word-break:keep-all}
+body[data-portal-home] .alumni-home-feature>span:not(.alumni-home-feature-mark){font-size:13px;color:#526782;line-height:1.55;word-break:keep-all}
+body[data-portal-home] .alumni-home-feature b{margin-top:auto;padding-top:19px;font-size:14px;color:#194b87}
+body[data-portal-home] .alumni-home-quick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin-top:12px}
+body[data-portal-home] .alumni-home-quick a{display:flex;flex-direction:column;justify-content:center;min-width:0;min-height:78px;gap:5px;padding:12px 16px;border:1px solid #d7e3f1;border-radius:12px;background:#f8faff;color:#183965;text-decoration:none}
+body[data-portal-home] .alumni-home-quick strong{font-size:15px;line-height:1.35}
+body[data-portal-home] .alumni-home-quick span{font-size:12px;line-height:1.45;color:#60748a;word-break:keep-all}
+body[data-portal-home] .alumni-home-quick a:hover{border-color:#7c9bc6;background:#eff5fe}
+body[data-portal-home] .alumni-home-updates{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin-top:20px}
+body[data-portal-home] .alumni-home-panel{min-width:0;padding:17px;border:1px solid #d9e4f0;border-radius:14px;background:#fff}
+body[data-portal-home] .alumni-home-panel-head{display:flex;align-items:start;justify-content:space-between;gap:10px;margin-bottom:12px}
+body[data-portal-home] .alumni-home-panel-head h3{margin:0;font-size:17px;line-height:1.4;color:#19375e}
+body[data-portal-home] .alumni-home-panel-head a{flex:none;font-weight:700;font-size:12px;line-height:1.8;color:#20538d;text-decoration:none}
+body[data-portal-home] .alumni-home-list{list-style:none;margin:0;padding:0}
+body[data-portal-home] .alumni-home-list li+li{border-top:1px solid #e7edf6}
+body[data-portal-home] .alumni-home-list a{display:flex;flex-direction:column;gap:5px;min-height:54px;padding:10px 0;text-decoration:none;color:#203c65}
+body[data-portal-home] .alumni-home-list strong{font-size:14px;font-weight:750;line-height:1.4;overflow-wrap:anywhere}
+body[data-portal-home] .alumni-home-list small{font-size:12px;line-height:1.5;color:#60758c;overflow-wrap:anywhere}
+body[data-portal-home] .alumni-home-list a:hover strong{text-decoration:underline}
+body[data-portal-home] .alumni-home-empty{font-size:13px;line-height:1.65;margin:0;color:#60758c}
+body[data-portal-home] .alumni-home-exam{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:14px;padding:16px 18px;border:1px solid #d7e3f1;border-radius:13px;background:#f3f7fc}
+body[data-portal-home] .alumni-home-exam strong{font-size:16px;color:#183b66}
+body[data-portal-home] .alumni-home-exam p{font-size:12px;line-height:1.5;color:#5d728a;margin:5px 0 0}
+body[data-portal-home] .alumni-home-exam>a{font-size:13px;font-weight:800;white-space:nowrap;color:#194c8a}
+body[data-portal-home] .alumni-home a:focus-visible{outline:3px solid #1d8dbb;outline-offset:3px}
+body[data-portal-home][data-home-persona="alumni"] .dashboard-hero{gap:16px;padding-bottom:0}
+body[data-portal-home][data-home-persona="alumni"] .home-shortcuts{padding-top:16px}
+@media(max-width:760px){
+ body[data-portal-home] .alumni-home-primary,body[data-portal-home] .alumni-home-updates{grid-template-columns:minmax(0,1fr)}
+ body[data-portal-home] .alumni-home-feature{min-height:150px;padding:17px}
+ body[data-portal-home] .alumni-home-feature strong{font-size:21px}
+ body[data-portal-home] .alumni-home-quick{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:480px){
+ body[data-portal-home] .alumni-home-quick{grid-template-columns:minmax(0,1fr);gap:8px}
+ body[data-portal-home] .alumni-home-quick a{min-height:62px;padding:11px 14px}
+ body[data-portal-home] .alumni-home-exam{align-items:start;flex-direction:column;gap:10px}
+ body[data-portal-home] .alumni-home-panel{padding:14px}
+}
+@media(prefers-reduced-motion:reduce){body[data-portal-home] .alumni-home-feature{transition:none}}

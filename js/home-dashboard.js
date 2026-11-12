@@ -11,6 +11,23 @@ let accountGrade=null;
 let gradeSelectionRevision=0;
 const readSavedGrade=()=>accountGrade;
 let selectedGrade=readSavedGrade()||"1";
+const isGraduateProfile=profile=>Boolean(profile)&&(profile.signup_type==="alumni"||profile.enrollment_status==="graduated");
+let graduateMode=false;
+function showGraduateHome(){
+ if(graduateMode)return;
+ graduateMode=true;
+ document.body.dataset.homePersona="alumni";
+ document.body.dataset.homeGrade="graduate";
+ const root=$("#alumni-dashboard");if(root)root.hidden=false;
+ const eyebrow=$(".portal-welcome-copy .eyebrow");if(eyebrow)eyebrow.textContent="ALUMNI PORTAL";
+ const title=$("#hero-title"),lead=$("#hero-description");
+ if(title)title.textContent="졸업생 포털";
+ if(lead)lead.textContent="졸업 후에도 기출문제 학습과 동문 네트워크를 이용하세요.";
+ for(const selector of [".home-grade-control",".portal-search",".dashboard-start",".home-today",".home-catalog",".home-alerts"]){
+  const element=$(selector);if(element)element.hidden=true;
+ }
+ window.dispatchEvent(new CustomEvent("kbigdata:home-persona",{detail:{persona:"alumni"}}));
+}
 const gradeLayouts=Object.freeze({
  "1":{
   title:"1학년, 오늘 무엇을 배울까요?",
@@ -71,6 +88,7 @@ function renderQuickActions(){
  grid.innerHTML=cards.join("");
 }
 function renderGrade(){
+ if(graduateMode)return;
  const layout=gradeLayouts[selectedGrade];
  document.body.dataset.homeGrade=selectedGrade;
  const heading=$("#hero-title"),lead=$("#hero-description"),quick=$("#dashboard-start-title"),highlights=$("#dashboard-highlights-title");
@@ -100,7 +118,7 @@ function renderGrade(){
  window.dispatchEvent(new CustomEvent("kbigdata:home-gradechange",{detail:{grade:selectedGrade}}));
 }
 function chooseGrade(grade){
- if(grade!=="1"&&grade!=="2")return;
+ if(graduateMode||grade!=="1"&&grade!=="2")return;
  selectedGrade=grade;
  accountGrade=grade;
  gradeSelectionRevision++;
@@ -113,10 +131,11 @@ async function loadAccountGrade(){
  const revision=gradeSelectionRevision;
  const {data:{user},error}=await client.auth.getUser();if(error||!user)return;
  const [profile,preference]=await Promise.all([
-  client.from("profiles").select("signup_type,academic_year").eq("user_id",user.id).maybeSingle(),
+  client.from("profiles").select("signup_type,academic_year,enrollment_status").eq("user_id",user.id).maybeSingle(),
   client.from("user_preferences").select("preferred_grade").eq("user_id",user.id).maybeSingle()
  ]);
  if(gradeSelectionRevision!==revision)return;
+ if(!profile.error&&isGraduateProfile(profile.data)){showGraduateHome();return;}
  const signupGrade=profile.error||profile.data?.signup_type!=="student"?null:
    [1,2].includes(Number(profile.data?.academic_year))?String(profile.data.academic_year):null;
  const savedGrade=preference.error?null:preference.data?.preferred_grade;
@@ -239,3 +258,4 @@ document.querySelector(".dashboard-personal-tabs")?.addEventListener("keydown",e
 window.addEventListener("portal-personal-updated",()=>{renderPersonal();renderQuickActions();renderHighlights();});
 
 window.addEventListener("portal-learning-ready",()=>{renderGrade();void loadAccountGrade();});
+if(globalThis.portalLearning?.read)void loadAccountGrade();

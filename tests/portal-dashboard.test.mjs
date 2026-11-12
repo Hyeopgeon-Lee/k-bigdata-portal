@@ -79,3 +79,10 @@ console.log('PASS: account-backed dashboard, 19 services, authenticated-only sho
 assert.match(dashboard,/signup_type,academic_year/,"home dashboard reads registered student grade");
 assert.match(dashboard,/preferred_grade/,"manual grade preference remains supported");
 assert.match(dashboard,/gradeSelectionRevision/,"late account loading cannot override a manual choice");
+const alumniUI=read("js/home-alumni.js"),alumniCSS=read("css/home-alumni.css");
+assert.ok(home.includes('id="alumni-dashboard"')&&home.includes('href="alumni/index.html"'));
+assert.ok(home.includes('href="my-certifications.html"')&&home.includes('href="alumni/jobs.html"'));
+assert.ok(dashboard.includes("isGraduateProfile")&&dashboard.includes("showGraduateHome()"));
+assert.ok(alumniCSS.includes('data-home-persona="alumni"')&&alumniCSS.includes("@media(max-width:480px)"));
+assert.ok(alumniUI.includes('action:"home"')&&alumniUI.includes("auth.getSession()"));
+assert.ok(!alumniUI.includes("innerHTML"),"alumni items must render as safe text");
