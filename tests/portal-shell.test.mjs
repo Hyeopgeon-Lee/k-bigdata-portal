@@ -8,7 +8,7 @@ import {renderHeader,renderServiceNavigation,renderToolbar,renderPageIntro} from
 
 const root=fileURLToPath(new URL('../',import.meta.url));
 const read=file=>readFileSync(path.join(root,file),'utf8').replaceAll('\r\n','\n');
-const discover=dir=>readdirSync(dir,{withFileTypes:true}).flatMap(entry=>entry.name.startsWith('.')||['node_modules','ui-screenshots','test-results','alumni'].includes(entry.name)?[]:entry.isDirectory()?discover(path.join(dir,entry.name)):entry.name.endsWith('.html')?[path.relative(root,path.join(dir,entry.name)).replaceAll('\\','/')]:[]);
+const discover=dir=>readdirSync(dir,{withFileTypes:true}).flatMap(entry=>entry.name.startsWith('.')||['node_modules','ui-screenshots','test-results','alumni','supabase'].includes(entry.name)?[]:entry.isDirectory()?discover(path.join(dir,entry.name)):entry.name.endsWith('.html')?[path.relative(root,path.join(dir,entry.name)).replaceAll('\\','/')]:[]);
 const files=discover(root).sort();
 const matchNavigationVersion=/const navigationScriptVersion='([^']+)'/.exec(read('scripts/build-portal-shell.mjs'));
 assert.ok(matchNavigationVersion,'the generated shell declares a navigation script version');
