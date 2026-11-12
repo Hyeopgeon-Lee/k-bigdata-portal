@@ -133,7 +133,7 @@ function render(){
  if(document.body.dataset.ncpView==="question"){const url=new URL(location.href);url.searchParams.set("id",q.id);history.replaceState(history.state,"",url);}
  el.status.textContent=(state.index+1)+' / '+state.list.length+'번';
  let draft=drafts.get(q.id);
- if(!draft){draft={id:crypto.randomUUID(),choice:"",open:false};drafts.set(q.id,draft);}
+ if(!draft){draft={id:crypto.randomUUID(),choice:"",open:false,hintOpen:false};drafts.set(q.id,draft);}
  const prior=recordFor(q.id);
  const answered=prior || (draft.open?draft:null);
  const options=q.options.map((option,i)=>{
@@ -167,8 +167,13 @@ function render(){
    '<p class="quiz-question ncp-question-text">'+esc(q.question)+'</p>'+
    '<section class="quiz-answer" id="ncp-answer-entry"><h3>정답 입력</h3>'+
    '<div class="ncp-options" role="group" aria-label="선택지">'+options+'</div>'+
-   (answered?"":'<button class="study-open" data-open type="button">정답·해설 보기</button>')+
-   '</section>'+(answered?result+reviewControls():"")+sourceDisclosure;
+   '<div class="quiz-solve-actions" role="group" aria-label="문제 풀이 도움말">'+
+   '<button type="button" class="quiz-solve-action quiz-solve-action--hint" data-toggle-hint aria-controls="ncp-hint" aria-expanded="'+String(!!draft.hintOpen)+'">힌트 보기</button>'+
+   '<button type="button" class="study-open quiz-solve-action quiz-solve-action--answer" '+(answered?'data-show-answer':'data-open')+'>정답·해설 보기</button>'+
+   '</div></section>'+
+   '<section id="ncp-hint" class="quiz-solve-panel"'+(draft.hintOpen?'':' hidden')+'><h3>힌트</h3><p>'+
+   esc(q.hint||("문제의 핵심 주제인 ‘"+q.topic+"’를 기준으로 각 선택지의 역할을 비교하세요. 문제의 조건과 일치하는 기능을 찾아보세요."))+
+   '</p></section>'+(answered?result+reviewControls():"")+sourceDisclosure;
  if(answered)bindReview(el.question.querySelector(".study-review"),{bank:"ncp",questionId:q.id,
    clientAttemptId:draft.id,answerText:answered.choice,metadata:{exam:q.exam,choice_matches:answered.choice?answered.choice===q.answer:null,verified_server_grade:false}},
    prior?.grade,result=>{state.answers[q.id]={choice:answered.choice,grade:result};save();renderNumbers();updateProgress();});
@@ -206,6 +211,18 @@ el.question.addEventListener("click",event=>{
  if(answer&&!recordFor(q.id)){
   drafts.get(q.id).choice=answer.dataset.choice;render();
   el.question.querySelector('[data-choice="'+answer.dataset.choice+'"]').focus();return;
+ }
+ if(event.target.closest("[data-toggle-hint]")){
+   const currentDraft=drafts.get(q.id);currentDraft.hintOpen=!currentDraft.hintOpen;
+   const panel=el.question.querySelector("#ncp-hint");
+   panel.hidden=!currentDraft.hintOpen;
+   event.target.closest("[data-toggle-hint]").setAttribute("aria-expanded",String(currentDraft.hintOpen));
+   return;
+ }
+ if(event.target.closest("[data-show-answer]")){
+   const result=el.question.querySelector(".ncp-answer");
+   result?.scrollIntoView({block:"start",behavior:"smooth"});
+   result?.focus({preventScroll:true});return;
  }
  if(event.target.closest("[data-open]")){drafts.get(q.id).open=true;render();el.question.querySelector(".ncp-answer").focus();return;}
  if(event.target.closest("[data-retry]")){
