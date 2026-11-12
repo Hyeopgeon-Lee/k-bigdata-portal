@@ -16,6 +16,8 @@ on:
       - '.github/workflows/certification-schedule-sync.yml'
       - 'supabase/functions/certification-schedule-sync/**'
       - 'tests/certification-schedule-sync.test.mjs'
+      - 'supabase/migrations/20261113214500_sqld_cumulative_exam_rounds.sql'
+      - 'js/certification-schedule.mjs'
 permissions:
   contents: read
   id-token: write
