@@ -8,8 +8,8 @@ const study=read('study.html'),student=read('js/study.js'),faculty=read('teacher
   facultyJS=read('js/study-teacher.js'),worker=read('supabase/functions/study-absence-reminder/index.ts'),
   job=read('.github/workflows/study-absence-reminder.yml'),css=read('css/study.css');
 
-const studyIds=new Set([...study.matchAll(/\\bid="([^"]+)"/g)].map(match=>match[1]));
-const studyAccessors=[...student.matchAll(/\\$\\('([^']+)'\\)/g)].map(match=>match[1]);
+const studyIds=new Set([...study.matchAll(/\bid="([^"]+)"/g)].map(match=>match[1]));
+const studyAccessors=[...student.matchAll(/\$\('([^']+)'\)/g)].map(match=>match[1]);
 for(const id of new Set(studyAccessors))assert.ok(studyIds.has(id),
   'study.js must not access a missing DOM element: '+id);
 
