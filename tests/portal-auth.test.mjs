@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import {readFileSync} from "node:fs";
+import {readFileSync,readdirSync} from "node:fs";
 import {execFileSync} from "node:child_process";
 
 const read=p=>readFileSync(new URL("../"+p,import.meta.url),"utf8");
@@ -83,18 +83,23 @@ assert.match(css,/grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/,"mobile stu
 assert.match(css,/portal-auth-secondary-actions/,"login actions use responsive layout");
 assert.match(css,/portal-auth-type-options/,"role choices are card-styled");
 assert.match(css,/max-width:\s*420px/,"narrow screens have dedicated layout");
-// Visible member identity must always be based on the approved profile name.
-assert.match(source,/window\.portalMemberName=/,"shared profile name getter is present");
-assert.match(source,/currentProfile\?\.full_name/,"display name comes from the verified profile");
+// The verified profile name is displayed only by the shared account UI.
+assert.match(source,/window\\.portalMemberName=/,"shared profile name getter is present");
+assert.match(source,/currentProfile\\?\\.full_name/,"display name comes from the verified profile");
+assert.match(source,/portal-account-name/,"top account UI still renders the member name");
 assert.doesNotMatch(source,/portal-account-email/,"account summary does not expose email as identity");
-for(const [file,id] of [["js/help.js","help-identity"],["js/room.js","room-identity"]]){
- const script=read(file);
- assert.match(script,/window\.portalMemberName\?\.\(\)/,file+" reads shared display name");
- assert.match(script,new RegExp(id),file+" has a login name label");
- assert.doesNotMatch(script,/로그인:[^\n]*email/,file+" does not show login email");
+// No page body should duplicate the login name rendered by the shared header.
+for(const page of ["help","room"]){
+ const html=read(page+".html"),script=read("js/"+page+".js");
+ assert.doesNotMatch(html,new RegExp('id="'+page+'-identity"'),page+" has no redundant body login label");
+ assert.doesNotMatch(script,new RegExp(page+"-identity"),page+" does not try to populate a removed label");
+ assert.match(html,new RegExp("js/"+page+"\\\\.js\\\\?v=20261112-body-login-removed-1"),page+" loads the cleaned script");
 }
-for(const page of ["help","room"])
- assert.match(read(page+".html"),new RegExp("js/"+page+"\\.js\\?v=20261111-name-unified-1"),page+" loads updated member identity code");
+// Guard every service script against reintroducing a visible '로그인: 이름' label.
+for(const file of readdirSync(new URL("../js/",import.meta.url))){
+ if(!/\\.(?:js|mjs)$/.test(file))continue;
+ assert.doesNotMatch(read("js/"+file),/['"` ]로그인\\s*[:：]\\s*['"`]\\s*\\+/,file+" must not inject login identity into the page body");
+}
 // Permanent deletion must be an explicit, status-gated server action.
 execFileSync(process.execPath,["--check",new URL("../js/portal-auth.mjs",import.meta.url).pathname]);
 const deletionApi=read("supabase/functions/admin-delete-student/index.ts");
