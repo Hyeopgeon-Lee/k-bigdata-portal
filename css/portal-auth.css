@@ -140,8 +140,8 @@ html:not([data-portal-access="approved"]) body > :not(#portal-auth-layer) { visi
 .portal-auth-card .portal-auth-subtle:hover { background: #f4f7fc; }
 .portal-auth-return-actions { grid-template-columns: 1fr; }
 .portal-auth-return-actions > button { width: 100%; min-height: 44px; }
-.portal-auth-identity { min-width: 0; margin: 0; padding: 0; border: 0; }
-.portal-auth-identity legend {
+.portal-auth-identity, .portal-auth-grade { min-width: 0; margin: 0; padding: 0; border: 0; }
+.portal-auth-identity legend, .portal-auth-grade legend {
   margin: 0 0 10px;
   padding: 0;
   color: #263754;
