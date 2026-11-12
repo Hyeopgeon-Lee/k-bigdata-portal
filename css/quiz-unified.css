@@ -244,3 +244,59 @@ body.shared-question-bank .ncp-panel section.quiz-answer{
     padding:16px!important;margin-top:18px!important;
   }
 }
+
+
+/* Unified solving actions: Coding, Information Processing and NCP.
+   Only render/show the trace action when the current question has trace data. */
+body.shared-question-bank .quiz-solve-actions{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  align-items:stretch;gap:10px!important;
+  width:100%;margin:14px 0 0!important;
+}
+body.shared-question-bank .quiz-solve-actions:has(> .quiz-solve-action--trace:not([hidden])){
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+}
+body.shared-question-bank .quiz-solve-actions .quiz-solve-action{
+  display:inline-flex!important;align-items:center;justify-content:center;
+  box-sizing:border-box;min-width:0;width:100%;min-height:48px;
+  margin:0!important;padding:10px 8px!important;
+  border:1px solid #b7cbe8!important;border-radius:10px!important;
+  background:#fff!important;color:#193d76!important;
+  font:750 15px/1.45 inherit;font-family:inherit!important;
+  font-size:15px!important;font-weight:750!important;line-height:1.45!important;
+  text-align:center;cursor:pointer;box-shadow:none!important;
+  white-space:normal;word-break:keep-all;
+}
+body.shared-question-bank .quiz-solve-actions .quiz-solve-action--answer{
+  border-color:#1b3d7e!important;background:#1b3d7e!important;
+  color:#fff!important;font-weight:800!important;
+}
+body.shared-question-bank .quiz-solve-actions .quiz-solve-action:not(.quiz-solve-action--answer):hover{
+  background:#ebf3ff!important;border-color:#7eacdf!important;
+}
+body.shared-question-bank .quiz-solve-actions .quiz-solve-action--answer:hover{
+  background:#143167!important;border-color:#143167!important;
+}
+body.shared-question-bank .quiz-solve-actions .quiz-solve-action:focus-visible{
+  outline:3px solid #68b9ed!important;outline-offset:2px;
+}
+body.shared-question-bank .quiz-solve-actions .quiz-solve-action[hidden]{display:none!important}
+body.shared-question-bank .quiz-solve-panel{
+  margin:12px 0 0;padding:15px 18px;
+  background:#f5f9ff;border:1px solid #cbdaef;border-radius:10px;
+  color:#203b60;font-size:15px;line-height:1.8;overflow-wrap:anywhere;
+}
+body.shared-question-bank .quiz-solve-panel[hidden]{display:none!important}
+body.shared-question-bank .quiz-solve-panel h3{font-size:16px;margin:0 0 7px;color:#163f7a}
+body.shared-question-bank .quiz-solve-panel p{margin:0}
+body.shared-question-bank .quiz-solve-panel ol{margin:6px 0 0;padding-left:22px}
+body.shared-question-bank .quiz-solve-panel li+li{margin-top:6px}
+@media(max-width:530px){
+  body.shared-question-bank .quiz-solve-actions{gap:7px!important}
+  body.shared-question-bank .quiz-solve-actions .quiz-solve-action{
+    min-height:46px;padding:9px 4px!important;
+    font-size:13px!important;
+  }
+  body.shared-question-bank .quiz-solve-panel{padding:12px 13px;font-size:14px}
+}
