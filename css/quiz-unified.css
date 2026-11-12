@@ -8,6 +8,7 @@
   --quiz-card-radius:16px; --quiz-button-radius:10px;
   --quiz-padding-mobile:16px; --quiz-padding-desktop:24px;
   --quiz-gap:16px; --quiz-button-height:44px;
+  --quiz-content-max:1240px;
 }
 body.shared-question-bank :is(.ncp-study-page,.practical-page,.coding-page){color:var(--quiz-text)}
 /* Identical width, border, spacing and padding for all problem cards. */
@@ -15,7 +16,7 @@ body.shared-question-bank .ncp-workspace,
 body.shared-question-bank .coding-workspace,
 body.shared-question-bank.practical-page .learning-content,
 body.shared-question-bank.practical-page #bank-content,
-body.shared-question-bank .coding-page .coding-workspace{width:100%;max-width:960px;margin-inline:auto}
+body.shared-question-bank .coding-page .coding-workspace{width:100%;max-width:var(--quiz-content-max);margin-inline:auto}
 body.shared-question-bank .ncp-workspace,
 body.shared-question-bank .coding-page .coding-workspace,
 body.shared-question-bank.practical-page #bank-content.study-split{display:block}
@@ -23,13 +24,13 @@ body.shared-question-bank :is(.ncp-sidebar,.coding-list-panel,.study-side-list){
 body.shared-question-bank .ncp-panel,
 body.shared-question-bank .coding-page .coding-detail,
 body.shared-question-bank.practical-page .bank-solve{
-  display:block;box-sizing:border-box;width:100%;max-width:960px;margin:0 auto;
+  display:block;box-sizing:border-box;width:100%;max-width:var(--quiz-content-max);margin:0 auto;
   padding:var(--quiz-padding-desktop)!important;
   background:var(--quiz-card)!important;border:1px solid var(--quiz-border)!important;
   border-radius:var(--quiz-card-radius)!important;box-shadow:none!important;min-width:0;
   color:var(--quiz-text)
 }
-body.shared-question-bank .ncp-study-page{width:min(100% - 32px,960px);margin-inline:auto}
+body.shared-question-bank .ncp-study-page{width:min(calc(100% - 32px),var(--quiz-content-max));margin-inline:auto}
 body.shared-question-bank[data-ncp-view="question"] :is(.ncp-page-heading,.ncp-tools,.ncp-progress-info,#ncp-progress){display:none!important}
 body.shared-question-bank[data-ncp-view="question"] .ncp-study-page{padding-top:16px}
 body.shared-question-bank .ncp-panel #ncp-question{min-width:0}
@@ -121,7 +122,7 @@ body.shared-question-bank .study-nav button{border-color:var(--quiz-border);back
 body.shared-question-bank .study-nav button:last-child{background:var(--quiz-primary);color:#fff;border-color:var(--quiz-primary)}
 body.shared-question-bank .ncp-traverse{margin-top:20px}
 body.shared-question-bank .ncp-traverse button{min-height:44px;border-radius:var(--quiz-button-radius)}
-body.shared-question-bank .ncp-disclaimer{max-width:960px;margin:16px auto}
+body.shared-question-bank .ncp-disclaimer{max-width:var(--quiz-content-max);margin:16px auto}
 body.shared-question-bank .coding-page .coding-io{grid-template-columns:1fr 1fr}
 body.shared-question-bank .coding-io>div{background:var(--quiz-page);border:1px solid var(--quiz-border);border-radius:var(--quiz-button-radius)}
 /* Preserve code/table scrolling only inside the content itself. */
@@ -149,6 +150,27 @@ body.shared-question-bank :is(.coding-code pre,.code-scroll pre,.coding-scroll t
  .quiz-navigation .quiz-counter{font-size:14px}
 }
 
+/* Widen desktop layouts together; do not inherit 920px/960px legacy wrappers.
+   The shared question browser uses --quiz-content-max as well. */
+body.shared-question-bank.practical-page .learning-content,
+body.shared-question-bank .coding-page > section.container[aria-labelledby="coding-browse-title"],
+body.shared-question-bank .ncp-study-page{
+  box-sizing:border-box;
+  width:min(var(--quiz-content-max),calc(100% - 32px))!important;
+  max-width:var(--quiz-content-max)!important;
+  margin-inline:auto!important;
+}
+body.shared-question-bank .coding-page > section.container[aria-labelledby="coding-browse-title"]{
+  padding-inline:0!important;
+}
+@media(max-width:690px){
+  body.shared-question-bank.practical-page .learning-content,
+  body.shared-question-bank .coding-page > section.container[aria-labelledby="coding-browse-title"],
+  body.shared-question-bank .ncp-study-page{
+    width:calc(100% - 24px)!important;
+  }
+}
+
 /* Visual QA fixes: the nested containers of three legacy pages used different
    widths and the editor/form carried stronger old declarations. */
 body.shared-question-bank .quiz-answer,
@@ -160,12 +182,12 @@ body.shared-question-bank .ncp-panel section.quiz-answer{
   border:1px solid var(--quiz-border)!important;
   border-radius:var(--quiz-card-radius)!important;background:var(--quiz-card)!important;
 }
-@media(max-width:960px){
+@media(max-width:var(--quiz-content-max)){
   body.shared-question-bank.practical-page .learning-content{
-    width:calc(100% - 32px)!important;max-width:960px!important;margin-inline:auto!important;
+    width:calc(100% - 32px)!important;max-width:var(--quiz-content-max)!important;margin-inline:auto!important;
   }
   body.shared-question-bank .coding-page > section.container[aria-labelledby="coding-browse-title"]{
-    width:calc(100% - 32px)!important;max-width:960px!important;
+    width:calc(100% - 32px)!important;max-width:var(--quiz-content-max)!important;
     padding-inline:0!important;margin-inline:auto!important;
   }
 }
