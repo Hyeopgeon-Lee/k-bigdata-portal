@@ -52,19 +52,11 @@
       link.textContent = '학과 홈페이지 ↗';
       nav.appendChild(link);
     }
-    if (nav && !nav.querySelector('.manual-menu')) {
-      const wrap = document.createElement('div');
-      wrap.className = 'manual-menu';
-      wrap.innerHTML = '<button type="button" class="manual-menu__toggle" aria-expanded="false">사용자 매뉴얼</button><div class="manual-menu__panel"><a href="https://alumni.k-bigdata.kr/manuals/student-manual.pdf" download="BigData_Alumni_Network_재학생_사용자_매뉴얼.pdf">재학생 사용자 매뉴얼</a><a href="https://alumni.k-bigdata.kr/manuals/alumni-manual.pdf" download="BigData_Alumni_Network_졸업생_사용자_매뉴얼.pdf">졸업생 사용자 매뉴얼</a></div>';
-      nav.appendChild(wrap);
-      const button = wrap.querySelector('button');
-      button.addEventListener('click', () => { const open = button.getAttribute('aria-expanded') === 'true'; button.setAttribute('aria-expanded', String(!open)); wrap.classList.toggle('is-open', !open); });
-    }
     if (nav && !qs('.footer')) document.body.insertAdjacentHTML('beforeend','<footer class="footer"><div class="container">BigData Alumni Network</div></footer>');
     const footer = qs('.footer .container');
     if (footer && !footer.querySelector('a[href="../index.html"]')) footer.insertAdjacentHTML('beforeend',' · <a href="../index.html" target="_blank" rel="noopener noreferrer">통합 포털 ↗</a>');
     if (footer && !footer.querySelector('a[href="https://ai.k-bigdata.kr/"]')) footer.insertAdjacentHTML('beforeend',' · <a href="https://ai.k-bigdata.kr/" target="_blank" rel="noopener noreferrer">학과 홈페이지 ↗</a>');
-    if (footer && !footer.querySelector('.footer-manuals')) footer.insertAdjacentHTML('beforeend','<nav class="footer-manuals" aria-label="사용자 매뉴얼"><a href="https://alumni.k-bigdata.kr/manuals/student-manual.pdf" download="BigData_Alumni_Network_재학생_사용자_매뉴얼.pdf">재학생 사용자 매뉴얼</a><a href="https://alumni.k-bigdata.kr/manuals/alumni-manual.pdf" download="BigData_Alumni_Network_졸업생_사용자_매뉴얼.pdf">졸업생 사용자 매뉴얼</a></nav>');
+    
     const consent = qs('.consent-box');
     if (consent && !qs('[name="career_mail_enabled"]')) {
       const note = consent.querySelector('.hint');
