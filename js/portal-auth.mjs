@@ -37,6 +37,8 @@ document.addEventListener("visibilitychange",()=>{if(!document.hidden)checkLearn
 setInterval(()=>checkLearning().catch(resetLearning),60000);
 const professorEmail="hglee67@kopo.ac.kr";
 const blockedSignupMessage="학교 이메일(@kopo.ac.kr 및 하위 도메인)은 회원가입할 수 없습니다. 개인 이메일을 사용해 주세요.";
+const mobileDigits=value=>String(value??"").replace(/[^0-9]/g,"");
+const validMobile=value=>/^[0-9 -]+$/.test(String(value??"").trim())&&/^01[016789][0-9]{7,8}$/.test(mobileDigits(value));
 let currentUser=null;
 let currentProfile=null;
 // Share the verified, server-backed display name across all portal pages.
@@ -131,6 +133,7 @@ function renderSignup(){
    identityFields()+
    '<label>이름<input name="full_name" maxlength="80" minlength="2" autocomplete="name" required></label>'+
    '<label>이메일<input name="email" type="email" autocomplete="email" required><small class="portal-auth-field-help">학교 이메일(@kopo.ac.kr 및 하위 도메인)로는 가입할 수 없습니다.</small></label>'+
+   '<label>휴대전화번호<input name="mobile_phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="16" placeholder="010-1234-5678" required><small class="portal-auth-field-help">학과 안내 및 졸업생 네트워크 연락처로 사용됩니다. 가입 후 마이페이지에서 변경할 수 있습니다.</small></label>'+
    '<label>비밀번호 (8자 이상)<input name="password" type="password" minlength="8" autocomplete="new-password" required></label>'+
    '<button class="portal-auth-primary" type="submit">가입하고 인증메일 받기</button></form>'+
    '<div class="portal-auth-actions portal-auth-return-actions"><button type="button" data-view="login">로그인으로 돌아가기</button></div>');
@@ -147,6 +150,8 @@ function renderSignup(){
     e.preventDefault();const fd=new FormData(form);
     const email=String(fd.get("email")).trim().toLowerCase();
     const full_name=String(fd.get("full_name")).trim();
+    const mobile_phone=String(fd.get("mobile_phone")??"").trim();
+    if(!validMobile(mobile_phone)){status("휴대전화번호를 정확히 입력해 주세요. 예: 010-1234-5678");form.elements.mobile_phone.focus();return;}
     if(isRestrictedSignupEmail(email)){status(blockedSignupMessage);form.elements.email.setCustomValidity(blockedSignupMessage);form.elements.email.reportValidity();return;}
     if(email===professorEmail){status("교수·관리자는 기존 계정으로 로그인하세요.");return;}
     const signup_type=fd.get("signup_type"), student_no=fd.get("student_no")?.trim()||null;
@@ -157,7 +162,7 @@ function renderSignup(){
     try{
       const {error}=await client.auth.signUp({
         email,password:String(fd.get("password")),
-        options:{emailRedirectTo:locked?location.href:resetLink,data:{full_name,student_no,signup_type,graduation_year,academic_year}}
+        options:{emailRedirectTo:locked?location.href:resetLink,data:{full_name,student_no,signup_type,graduation_year,academic_year,mobile_phone:mobileDigits(mobile_phone)}}
       });
       if(error)throw error;
       renderLogin("가입 요청이 접수되었습니다. 이메일의 인증 링크를 클릭한 후 로그인하세요. 학생 계정은 관리자 승인 후 이용할 수 있습니다.");
@@ -210,9 +215,11 @@ function renderComplete(user){
     '<form id="portal-complete-form" class="portal-auth-form">'+
     identityFields()+
     '<label>이름<input name="full_name" maxlength="80" minlength="2" required></label>'+
+    '<label>휴대전화번호<input name="mobile_phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="16" placeholder="010-1234-5678" required></label>'+
     '<button class="portal-auth-primary" type="submit">정보 등록</button></form>');
   const form=$("#portal-complete-form"),isProfessor=user.email?.toLowerCase()===professorEmail;
   form.elements.full_name.value=user.user_metadata?.full_name||"";
+  form.elements.mobile_phone.value=user.user_metadata?.mobile_phone||"";
   form.elements.student_no.value=user.user_metadata?.student_no||"";
   bindIdentity(form,user.user_metadata?.signup_type,user.user_metadata?.academic_year);
   form.elements.graduation_year.value=user.user_metadata?.graduation_year||"";
@@ -226,14 +233,23 @@ function renderComplete(user){
      for(const grade of form.querySelectorAll('input[name="academic_year"]')){grade.disabled=true;grade.required=false;}
      form.elements.student_no.disabled=true;
      form.elements.student_no.closest("label").hidden=true;
+     form.elements.mobile_phone.disabled=true;
+     form.elements.mobile_phone.required=false;
+     form.elements.mobile_phone.closest("label").hidden=true;
    }
   form.addEventListener("submit",async e=>{
     e.preventDefault();
-    const {error}=await client.rpc("register_portal_member_v3",{
+    const mobile_phone=isProfessor?null:form.elements.mobile_phone.value.trim();
+    if(!isProfessor&&!validMobile(mobile_phone)){
+      status("휴대전화번호를 정확히 입력해 주세요. 예: 010-1234-5678");
+      form.elements.mobile_phone.focus();return;
+    }
+    const {error}=await client.rpc("register_portal_member_v4",{
       p_name:form.elements.full_name.value.trim(),
       p_student_no:isProfessor||form.elements.student_no.disabled?null:form.elements.student_no.value.trim(),
       p_signup_type:isProfessor?"student":form.elements.signup_type.value,p_graduation_year:form.elements.graduation_year.disabled?null:Number(form.elements.graduation_year.value),
-      p_academic_year:isProfessor||form.elements.signup_type.value!=="student"?null:Number(form.elements.academic_year.value)
+      p_academic_year:isProfessor||form.elements.signup_type.value!=="student"?null:Number(form.elements.academic_year.value),
+      p_mobile_phone:isProfessor?null:mobileDigits(mobile_phone)
     });
     if(error){status(statusText(error));return;}
     await activate(true);
