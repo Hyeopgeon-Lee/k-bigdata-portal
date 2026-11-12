@@ -1,4 +1,4 @@
-import {categories, services, portalNavLinks} from './services.js?v=20261026-schedule-align-1';
+import {categories, services, portalNavLinks} from './services.js?v=20261112-study-1';
 
 export const shellVersion = '20261112-page-intro-2';
 export const portalPages = {
