@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ko" data-portal-page="mypage">
+<head><style id="learning-lock">
+body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
+#learning-notice{position:fixed;inset:0;margin:0;display:grid;place-items:center;background:#f7f9fc;color:transparent;font-size:0;line-height:0;z-index:1}
+#learning-notice a{display:none}
+#learning-notice::after{content:"";width:32px;height:32px;border:3px solid #dce6f3;border-top-color:#245791;border-radius:50%;animation:portal-loading-spin .8s linear infinite,portal-loading-appear .18s .4s both}
+@keyframes portal-loading-spin{to{transform:rotate(360deg)}}
+@keyframes portal-loading-appear{from{opacity:0}to{opacity:1}}
+@media(prefers-reduced-motion:reduce){#learning-notice::after{animation:none;opacity:1}}
+</style><noscript><style>
+#learning-notice{position:static;display:block;padding:32px 20px;color:#23415f;font-size:16px;line-height:1.6}
+#learning-notice::after{display:none}
+#learning-notice a{display:inline}
+</style></noscript>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#0b1739">
+<meta name="description" content="학과 포털 마이페이지 계정 설정">
+<title>마이페이지 | 빅데이터소프트웨어공학과 통합 포털</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/style.css?v=20261112-page-intro-2">
+<link rel="stylesheet" href="css/portal-ux.css?v=20261112-page-intro-2">
+<link rel="stylesheet" href="css/my-page.css?v=20261112-page-intro-2">
+<!-- portal:assets:start (generated; edit scripts/portal-shell-template.mjs) -->
+<link rel="stylesheet" href="css/portal-navigation.css?v=20261112-page-intro-2">
+<script defer src="js/portal-navigation.js?v=20261112-mypage-1"></script>
+<!-- portal:assets:end -->
+</head><body data-page="mypage">
+<p id="learning-notice" role="status">로그인 및 재학 상태를 확인 중입니다. <a href="/">포털 메인</a></p>
+<a class="skip-link" href="#main-content">본문으로 바로가기</a>
+<!-- portal:header:start (generated; edit scripts/portal-shell-template.mjs) -->
+<header class="site-header" data-portal-shell="20261112-page-intro-2">
+  <div class="container header-inner">
+    <a tabindex="0" class="brand" href="index.html" aria-label="통합 서비스 포털 홈"><span class="brand-mark" aria-hidden="true"><span></span></span><span class="brand-copy"><strong><span class="brand-full">빅데이터소프트웨어공학과</span><span class="brand-short">빅데이터SW학과</span></strong><small>학생 통합 포털</small></span></a>
+    <details class="portal-menu" open>
+      <summary class="menu-toggle" aria-controls="portal-nav">메뉴 <span aria-hidden="true">☰</span></summary>
+      <nav class="main-nav" id="portal-nav" aria-label="주요 메뉴">
+        <a tabindex="0" href="services.html">전체 서비스</a>
+        <a tabindex="0" href="services.html#career" data-portal-group="career">취업 · 진로</a>
+        <a tabindex="0" href="services.html#learning" data-portal-group="learning">학습 · 역량</a>
+        <a tabindex="0" href="services.html#project" data-portal-group="project">프로젝트 · 성장</a>
+        <a tabindex="0" href="services.html#campus" data-portal-group="campus">학과 생활</a>
+        <a tabindex="0" class="nav-external" href="https://www.kopo.ac.kr/kangseo/content.do?menu=1547">학과 홈페이지 ↗</a>
+      </nav>
+    </details>
+  </div>
+</header>
+<!-- portal:header:end -->
+<main id="main-content" class="my-page container" tabindex="-1">
+  <div class="my-page-heading">
+    <a class="my-page-back" href="index.html">← 포털 홈</a>
+    <p class="my-page-eyebrow">MY ACCOUNT</p>
+    <h1>마이페이지</h1>
+    <p>내 가입 정보를 확인하고 비밀번호와 포털 학적 상태를 관리하세요.</p>
+  </div>
+  <div class="my-page-layout">
+    <section class="my-page-panel my-page-summary" aria-labelledby="my-page-profile-heading">
+      <div class="my-page-panel-head">
+        <div><p class="my-page-kicker">PROFILE</p><h2 id="my-page-profile-heading">내 가입 정보</h2></div>
+        <span class="my-page-state" id="my-page-state">확인 중</span>
+      </div>
+      <dl class="my-page-profile-fields">
+        <div><dt>이름</dt><dd id="my-page-name">-</dd></div>
+        <div><dt>이메일</dt><dd id="my-page-email">-</dd></div>
+        <div><dt>학번 / 구분</dt><dd id="my-page-student-no">-</dd></div>
+        <div><dt>포털 학적 상태</dt><dd id="my-page-enrollment">-</dd></div>
+      </dl>
+    </section>
+    <section class="my-page-panel" id="my-page-academic-panel" aria-labelledby="my-page-academic-heading" hidden>
+      <div class="my-page-panel-head"><div><p class="my-page-kicker">ACADEMIC STATUS</p><h2 id="my-page-academic-heading">학적 상태 변경</h2></div></div>
+      <p class="my-page-description">현재 학년 또는 휴학을 선택하세요. 학년 변경 시 포털 메인화면의 기본 학년도 함께 변경됩니다.</p>
+      <form id="my-page-academic-form">
+        <fieldset class="my-page-status-fieldset">
+          <legend class="sr-only">포털 학적 상태</legend>
+          <label class="my-page-option"><input type="radio" name="academic_status" value="1" required><span><strong>1학년</strong><small>1학년 학습·일정 기본 표시</small></span></label>
+          <label class="my-page-option"><input type="radio" name="academic_status" value="2"><span><strong>2학년</strong><small>2학년 학습·일정 기본 표시</small></span></label>
+          <label class="my-page-option"><input type="radio" name="academic_status" value="leave"><span><strong>휴학</strong><small>기존 학습기록 열람 가능 · 신규 저장 제한</small></span></label>
+        </fieldset>
+        <p class="my-page-notice">이 설정은 <strong>학과 포털 내부 정보</strong>이며 대학의 공식 학적 변경 신청을 대신하지 않습니다.</p>
+        <button class="my-page-primary" type="submit">학적 상태 저장</button>
+        <p id="my-page-academic-message" class="my-page-message" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+    <section class="my-page-panel" aria-labelledby="my-page-password-heading">
+      <div class="my-page-panel-head"><div><p class="my-page-kicker">SECURITY</p><h2 id="my-page-password-heading">비밀번호 변경</h2></div></div>
+      <p class="my-page-description">현재 비밀번호를 확인한 뒤 새로운 비밀번호로 변경합니다.</p>
+      <form id="my-page-password-form" class="my-page-password-form">
+        <label for="my-page-old-password">현재 비밀번호</label>
+        <input id="my-page-old-password" name="old_password" type="password" autocomplete="current-password" required>
+        <label for="my-page-new-password">새 비밀번호 <span>(8자 이상)</span></label>
+        <input id="my-page-new-password" name="new_password" type="password" autocomplete="new-password" minlength="8" required>
+        <label for="my-page-confirm-password">새 비밀번호 확인</label>
+        <input id="my-page-confirm-password" name="confirm_password" type="password" autocomplete="new-password" minlength="8" required>
+        <button class="my-page-primary" type="submit">비밀번호 변경</button>
+        <p id="my-page-password-message" class="my-page-message" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+  </div>
+</main>
+<footer class="site-footer">
+<div class="container footer-grid"><div class="footer-brand"><span class="brand-mark" aria-hidden="true"><span></span></span><div><strong>빅데이터소프트웨어공학과</strong><p>한국폴리텍대학 서울강서캠퍼스</p></div></div><nav class="footer-links" aria-label="학과 대표 사이트"><p>학과 대표 사이트</p></nav></div>
+<div class="container footer-bottom"><p>학생용 학습·프로젝트·취업 통합 포털입니다.</p><p>© <span id="current-year"></span> K-BigData Service Portal</p></div>
+</footer>
+<script type="module" src="js/portal-auth.mjs?v=20261112-mypage-1"></script>
+<script type="application/x-learning" data-module="js/my-page.js?v=20261112-mypage-1"></script>
+<script type="application/x-learning" data-module="js/portal-shell-entry.js?v=20261112-page-intro-2"></script>
+</body></html>
