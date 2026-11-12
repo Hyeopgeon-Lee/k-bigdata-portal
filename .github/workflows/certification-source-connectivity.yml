@@ -26,5 +26,10 @@ jobs:
               print('STATUS:',r.status,'SIZE:',len(data),'CONTENT-TYPE:',r.headers.get('content-type'))
               print('KEYWORDS:',{k:len(re.findall(k,data,re.I)) for k in ['SQL','시험일정','2026','2027','접수시작일','SERVICE_KEY']})
               print('SAMPLE:',re.sub(r'\s+',' ',data[:1200]).replace('\\n',' ')[:1200])
+              if 'dataq.or.kr' in u:
+                for term in ['SQLD','SQL 개발자','2026','제60회','fnSearch','schedule','<table']:
+                  print('SEARCH:',term, 'COUNT:',data.lower().count(term.lower()))
+                  for m in list(re.finditer(re.escape(term),data,re.I))[-2:]:
+                    print('CONTEXT:',re.sub(r'\\s+',' ',data[max(0,m.start()-600):m.end()+1300])[:1800])
             except Exception as e: print('ERROR:',type(e).__name__,str(e)[:250])
           PY
