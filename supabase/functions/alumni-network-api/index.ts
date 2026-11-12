@@ -207,6 +207,57 @@ async function sendToAdmin(subject:string,body:string,kind:string,id0:string){
  return notice("approval",kind,id0,"hglee67@kopo.ac.kr",subject,
   '<div style="font-family:sans-serif;line-height:1.8;background:#f5f7fb;padding:25px"><div style="max-width:570px;margin:auto;padding:25px;background:#fff;border:1px solid #dde5f2;border-radius:13px"><h2>'+esc(subject)+'</h2><p>'+esc(body)+'</p><p><a href="https://portal.k-bigdata.kr/alumni/admin.html">관리자 승인 화면에서 확인하기</a></p></div></div>');
 }
+
+async function senderCompetencyEmail(a:Actor):Promise<string>{
+ if(a.role!=="student"||a.enrollment!=="enrolled")return "";
+ const [certResult,progressResult]=await Promise.all([
+  admin.from("student_certifications").select("certificate_name,pass_status,verification_status")
+   .eq("user_id",a.id).neq("verification_status","rejected").limit(100),
+  admin.from("learning_progress").select("bank,question_id")
+   .eq("user_id",a.id).limit(1000)
+ ]);
+ if(certResult.error||progressResult.error)throw Error("역량 정보를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.");
+ const certs=(certResult.data||[]).map(c=>
+  "<li>"+esc(c.certificate_name)+" — "+(c.pass_status==="final"?"최종 합격":"필기 합격")+
+  " ("+(c.verification_status==="verified"?"관리자 확인":"본인 등록 · 미확인")+")</li>").join("");
+ const counts:Record<string,number>={coding:0,ncp:0,practical:0};
+ for(const p of progressResult.data||[])if(Object.hasOwn(counts,p.bank))counts[p.bank]++;
+ const learning=[["coding","코딩 기초"],["ncp","NCP"],["practical","정보처리 실기"]]
+  .filter(([key])=>counts[key]>0)
+  .map(([key,label])=>"<li>"+label+" 연습 문제 "+counts[key]+"종 풀이 기록</li>").join("");
+ if(!certs&&!learning)return '<p>재학생이 전달을 선택했으나 등록된 자격증·학습 기록은 아직 없습니다.</p>';
+ return '<section style="margin-top:22px;padding:18px;background:#f5f8fc;border-radius:12px">'+
+  '<h3 style="margin-top:0">재학생 역량 정보 (본인 동의 제공)</h3>'+
+  (certs?"<p><strong>자격증</strong></p><ul>"+certs+"</ul>":"")+
+  (learning?"<p><strong>포털 학습 활동</strong></p><ul>"+learning+"</ul>":"")+
+  '<p style="font-size:12px;color:#64748b">자격증은 단계별 합격 사실의 본인 등록 또는 관리자 확인 상태입니다. 문제풀이 수는 학습 활동 기록이며 공인 실력 평가가 아닙니다.</p></section>';
+}
+function safeContactMessage(delta:unknown,legacy:unknown):{plain:string;html:string}{
+ if(!delta||typeof delta!=="object"||!Array.isArray((delta as {ops?:unknown[]}).ops)){
+  const plain=String(legacy??"").trim();
+  return {plain,html:'<div style="white-space:pre-wrap">'+esc(plain)+'</div>'};
+ }
+ const ops=(delta as {ops:unknown[]}).ops;
+ if(ops.length>300)throw Error("문의 내용이 너무 복잡합니다.");
+ let plain="",html="";
+ for(const op of ops){
+  if(!op||typeof op!=="object")continue;
+  const o=op as {insert?:unknown;attributes?:Record<string,unknown>};
+  if(typeof o.insert!=="string")continue;
+  if(plain.length+o.insert.length>1501)throw Error("문의 내용은 1,500자 이하로 작성해 주세요.");
+  plain+=o.insert;
+  const att=o.attributes&&typeof o.attributes==="object"?o.attributes:{};
+  let fragment=esc(o.insert).replace(/\r?\n/g,"<br>");
+  if(att.bold===true)fragment="<strong>"+fragment+"</strong>";
+  if(att.italic===true)fragment="<em>"+fragment+"</em>";
+  if(att.underline===true)fragment="<u>"+fragment+"</u>";
+  if(typeof att.link==="string"&&validUrl(att.link))
+   fragment='<a rel="noopener noreferrer" href="'+esc(att.link)+'">'+fragment+"</a>";
+  html+=fragment;
+ }
+ return {plain:plain.trim(),html:'<div style="line-height:1.8">'+html+"</div>"};
+}
+
 async function handle(action:string,b:Record<string,unknown>,a:Actor){
  const allAlumni=async()=>await rows("alumni");
  const approved=async()=> (await allAlumni()).filter(r=>r.data.status==="APPROVED");
@@ -412,43 +463,55 @@ async function handle(action:string,b:Record<string,unknown>,a:Actor){
   return {success:true,message:action==="adminCreateNews"?"동문소식이 게시되었습니다.":"동문소식 등록 신청이 완료됐습니다. 관리자 승인 후 공개됩니다.",news_id:nid};
  }
  case "contact":{
-  if(!text(b.alumni_id)||!text(b.subject)||text(b.message).length<20)
-   throw Error("제목과 20자 이상의 문의 내용을 입력해 주세요.");
-  const recipient=await getProfile(text(b.alumni_id));
-  if(!yes(recipient.data.contact_allowed))throw Error("현재 연락을 받지 않는 졸업생입니다.");
-  if(b.job_id){
-   const j=await one("jobs",text(b.job_id));
-   if(!j||!visibleJob(j.data)||text(j.data.alumni_id)!==recipient.source_id||
-    !yes(j.data.contact_allowed))throw Error("채용정보 문의가 허용되지 않았습니다.");
+   const rich=safeContactMessage(b.message_delta,b.message);
+   const subject=text(b.subject,100);
+   if(!text(b.alumni_id)||!subject||rich.plain.length<20||rich.plain.length>1500)
+    throw Error("제목과 20~1,500자의 문의 내용을 입력해 주세요.");
+   const recipient=await getProfile(text(b.alumni_id));
+   if(!yes(recipient.data.contact_allowed))throw Error("현재 연락을 받지 않는 졸업생입니다.");
+   if(b.job_id){
+    const j=await one("jobs",text(b.job_id));
+    if(!j||!visibleJob(j.data)||text(j.data.alumni_id)!==recipient.source_id||
+     !yes(j.data.contact_allowed))throw Error("채용정보 문의가 허용되지 않았습니다.");
+   }
+   const prev=(await rows("contact_requests")).filter(r=>text(r.data.requester_email).toLowerCase()===a.email
+     &&text(r.data.alumni_id)===recipient.source_id
+     &&Date.parse(text(r.data.created_at))>Date.now()-3600000);
+   if(prev.length>=3)throw Error("연락 요청이 너무 잦습니다. 잠시 후 다시 이용해 주세요.");
+   // Sender identity is always taken from the approved portal account, not form fields.
+   if(yes(b.share_phone)&&!a.mobilePhone)
+    throw Error("포털 마이페이지에 휴대전화번호를 먼저 등록해 주세요.");
+   const competency=yes(b.share_competencies)?await senderCompetencyEmail(a):"";
+   const rid=id("R");
+   const requestData:Record<string,unknown>={
+    request_id:rid,alumni_id:recipient.source_id,
+    requester_user_id:a.id,
+    requester_name:a.name,
+    requester_type:a.role==="alumni"||isGraduateMember(a)?"졸업생":"재학생",
+    requester_student_id_or_year:a.studentNo||String(a.graduationYear||""),
+    requester_email:a.email,requester_phone:a.mobilePhone||"",
+    share_email:String(yes(b.share_email)).toUpperCase(),
+    share_phone:String(yes(b.share_phone)).toUpperCase(),
+    share_competencies:String(!!competency).toUpperCase(),
+    category:text(b.category,40),subject,message:rich.plain,
+    message_html:rich.html,
+    status:"PENDING",created_at:now(),sent_at:""
+   };
+   await put("contact_requests",rid,requestData);
+   const body='<div style="font-family:sans-serif;line-height:1.8;max-width:640px;margin:auto">'+
+    '<h2>학과 동문 연락 요청</h2><p>'+esc(a.name)+'님이 연락을 요청했습니다.</p>'+
+    '<p><strong>문의: </strong>'+esc(subject)+'</p>'+rich.html+
+    competency+
+    (yes(b.share_email)?'<p>답장 이메일: '+esc(a.email)+'</p>':'')+
+    (yes(b.share_phone)?'<p>회신용 휴대전화: '+esc(a.mobilePhone)+'</p>':'')+'</div>';
+   const sent=await notice("contact","contact_requests",rid,text(recipient.data.email),
+    "[빅데이터SW 동문] 새로운 연락 요청",body);
+   requestData.status=sent?"SENT":"FAILED";
+   requestData.sent_at=sent?now():"";
+   await put("contact_requests",rid,requestData);
+   if(!sent)throw Error("요청은 저장됐지만 메일 발송에 실패했습니다. 관리자에게 문의해 주세요.");
+   return {success:true,message:"연락 요청이 정상적으로 전달되었습니다."};
   }
-  // Verified portal email and profile prevent impersonation through form inputs.
-  const prev=(await rows("contact_requests")).filter(r=>text(r.data.requester_email).toLowerCase()===a.email
-    &&text(r.data.alumni_id)===recipient.source_id
-    &&Date.parse(text(r.data.created_at))>Date.now()-3600000);
-  if(prev.length>=3)throw Error("연락 요청이 너무 잦습니다. 잠시 후 다시 이용해 주세요.");
-  if(yes(b.share_phone)&&!/^01[016789][0-9 -]{7,12}$/.test(text(b.requester_phone,25)))throw Error("회신용 휴대전화 형식을 확인해 주세요.");
-  const rid=id("R");
-  const requestData:Record<string,unknown>={request_id:rid,alumni_id:recipient.source_id,
-   requester_name:a.name,requester_type:a.role==="alumni"?"졸업생":"재학생",
-   requester_student_id_or_year:text(b.requester_student_id_or_year,30),
-   requester_email:a.email,requester_phone:text(b.requester_phone,20),
-   share_email:String(yes(b.share_email)).toUpperCase(),
-   share_phone:String(yes(b.share_phone)).toUpperCase(),
-   category:text(b.category,40),subject:text(b.subject,100),message:text(b.message,1500),
-   status:"PENDING",created_at:now(),sent_at:""};
-  await put("contact_requests",rid,requestData);
-  const body='<h2>학과 동문 연락 요청</h2><p>'+esc(a.name)+'님이 연락을 요청했습니다.</p>'+
-   '<p><strong>문의: </strong>'+esc(requestData.subject)+'</p><p style="white-space:pre-wrap">'+esc(requestData.message)+'</p>'+
-   (yes(b.share_email)?'<p>답장 이메일: '+esc(a.email)+'</p>':'')+
-   (yes(b.share_phone)?'<p>연락처: '+esc(b.requester_phone)+'</p>':'');
-  const sent=await notice("contact","contact_requests",rid,text(recipient.data.email),
-   "[빅데이터SW 동문] 새로운 연락 요청",body);
-  requestData.status=sent?"SENT":"FAILED";
-  requestData.sent_at=sent?now():"";
-  await put("contact_requests",rid,requestData);
-  if(!sent)throw Error("요청은 저장됐지만 메일 발송에 실패했습니다. 관리자에게 문의해 주세요.");
-  return {success:true,message:"연락 요청이 정상적으로 전달되었습니다."};
- }
  case "adminLogin":{
   await adminOnly(a);
   return {success:true,admin_token:"PORTAL_SUPER_ADMIN",message:"포털 관리자 인증 완료"};
