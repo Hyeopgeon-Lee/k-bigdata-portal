@@ -206,6 +206,22 @@ async function handle(action:string,b:Record<string,unknown>,a:Actor){
    .sort((x,y)=>text(y.data.event_date||y.data.created_at).localeCompare(text(x.data.event_date||x.data.created_at)))
    .map(r=>cleanNews(r.data,am.get(text(r.data.alumni_id))||{}));
  };
+ const deliverNews=async(item:Record<string,unknown>)=>{
+  const recipients=(await approved()).filter(x=>yes(x.data.alumni_news_mail_enabled));
+  const subject="[동문소식] "+text(item.title,120);
+  const body='<div style="font-family:sans-serif;line-height:1.8"><h2>'+esc(item.title)+'</h2><p style="white-space:pre-wrap">'+esc(item.content)+'</p><p><a href="https://portal.k-bigdata.kr/alumni/news-detail.html?id='+encodeURIComponent(text(item.news_id))+'">포털에서 보기</a></p></div>';
+  let sent=0;
+  for(const receiver of recipients)if(await notice("news_digest","alumni_news",text(item.news_id),
+    text(receiver.data.email),subject,body))sent++;
+  const stamp=now(),status=sent===recipients.length?"SENT":"PARTIAL_FAILED";
+  item.mail_status=status;
+  await put("alumni_news",text(item.news_id),item);
+  await put("alumni_news_mail_logs","NM-"+text(item.news_id),{
+    mail_id:"NM-"+text(item.news_id),news_id:item.news_id,news_type:item.news_type,subject,
+    recipient_count:String(recipients.length),sent_count:String(sent),
+    failed_count:String(recipients.length-sent),sent_at:stamp,status});
+  return {sent,total:recipients.length,status};
+ };
  const getProfile=async(k:string)=>{
   const row=await one("alumni",k);
   if(!row||row.data.status!=="APPROVED")throw Error("졸업생 정보를 찾을 수 없습니다.");
@@ -348,6 +364,10 @@ async function handle(action:string,b:Record<string,unknown>,a:Actor){
    approved_at:action==="adminCreateNews"?now():"",approved_by:action==="adminCreateNews"?a.email:"",
    created_at:now(),updated_at:now()});
   await put("alumni_news",nid,d);
+  if(action==="adminCreateNews"&&yes(b.send_mail)){
+   const mail=await deliverNews(d);
+   return {success:true,message:"동문소식 게시 완료 · 메일 "+mail.sent+"/"+mail.total+"건",news_id:nid};
+  }
   if(action==="submitNews")await sendToAdmin("동문소식 승인 요청",
    a.name+"님의 동문소식 검토가 필요합니다.","alumni_news",nid).catch(()=>{});
   return {success:true,message:action==="adminCreateNews"?"동문소식이 게시되었습니다.":"동문소식 등록 신청이 완료됐습니다. 관리자 승인 후 공개됩니다.",news_id:nid};
@@ -453,17 +473,7 @@ async function handle(action:string,b:Record<string,unknown>,a:Actor){
   if(after==="APPROVED"){record.data.approved_at=now();record.data.approved_by=a.email;}
   if(action==="adminNewsApproveAndMail")record.data.mail_status="WAITING";
   await put(kind,record.source_id,record.data);
-  if(action==="adminNewsApproveAndMail"){
-   const recipients=(await approved()).filter(x=>yes(x.data.alumni_news_mail_enabled));
-   const subj="[동문소식] "+text(record.data.title,120);
-   const body='<h2>'+esc(record.data.title)+'</h2><p>'+esc(record.data.content)+'</p>';
-   let count=0;
-   for(const receiver of recipients){
-    if(await notice("news_digest",kind,record.source_id,text(receiver.data.email),subj,body))count++;
-   }
-   record.data.mail_status=count===recipients.length?"SENT":"PARTIAL_FAILED";
-   await put(kind,record.source_id,record.data);
-  }
+  if(action==="adminNewsApproveAndMail")await deliverNews(record.data);
   return {success:true,message:"상태 변경이 완료되었습니다."};
  }
  case "adminRunJobDigest":{
