@@ -58,6 +58,7 @@ function render(){
    '<td data-label="실천">'+attendedPlanned+'/'+due.length+'일</td>'+
    '<td data-label="공부시간">'+fmt(hoursSec)+'</td>'+
    '<td data-label="상태">'+status+'</td>'+
+   '<td data-label="계획 없음 사유" class="study-admin-reasons">'+(plan&&!selected.length?(plan.no_plan_reason?safe(plan.no_plan_reason):'<span class="study-tag missed">사유 미작성 (기존 기록)</span>'):'—')+'</td>'+
    '<td data-label="사유" class="study-admin-reasons">'+desc+'</td></tr>');
  }
  $('study-admin-summary').replaceChildren();
@@ -73,7 +74,7 @@ function render(){
   const p=document.createElement('p');p.textContent=sub;
   card.append(small,strong,p);$('study-admin-summary').append(card);
  }
- $('study-admin-table-body').innerHTML=rows.join('')||'<tr><td colspan="7">등록된 학생이 없습니다.</td></tr>';
+ $('study-admin-table-body').innerHTML=rows.join('')||'<tr><td colspan="8">등록된 학생이 없습니다.</td></tr>';
 }
 async function saveMail(){
  const input=$('study-admin-mail');input.disabled=true;
