@@ -16,6 +16,13 @@ test('K-DATA official SQLD table parses 4 rounds, 12 events, and cross-month dat
  assert.equal(reg.start_date,'2026-04-27');assert.equal(reg.end_date,'2026-05-01');
  assert.equal(p.events.find(x=>x.exam_round===63&&x.event_type==='result').start_date,'2026-12-04');
 });
+test('K-DATA irregular category header does not hide first SQLD round',()=>{
+ const malformed=officialSample.replace('</div></td></tr>','</div></td><tr>');
+ const p=parseSqldHtml(malformed);
+ assert.equal(p.rounds,4);
+ assert.equal(p.events.length,12);
+ assert.equal(p.events[0].exam_round,60);
+});
 test('K-DATA rejects guesses, altered markup, and invalid chronology',()=>{
  assert.throws(()=>parseSqldHtml(officialSample.replace('2026년 국가공인','2027년 국가공인').replace('2026년도 일정','2027년도 일정').replace('2.2~6','2.50~60')), /INVALID_OFFICIAL_DATE/);
  assert.throws(()=>parseSqldHtml(officialSample.replace('3.7(토)','1.7(토)')),/SQLD_CHRONOLOGY_ERROR/);
