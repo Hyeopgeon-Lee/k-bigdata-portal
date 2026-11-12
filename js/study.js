@@ -57,15 +57,16 @@ function render(){
   button.addEventListener('click',()=>{selected.has(i+1)?selected.delete(i+1):selected.add(i+1);render();});
   $('study-days').append(button);
  }
- $('study-plan-summary').textContent=selected.size?'학습 예정 '+selected.size+'일 · '+[...selected].sort().map(x=>labels[x-1]).join('·'):'이번 주 계획 없음 (0일)';
+ $('study-plan-summary').textContent=selected.size?'학습 예정 '+selected.size+'일 · '+[...selected].sort().map(x=>labels[x-1]).join('·'):'학교에 남기 어려운 사유 제출 (0일)';
  $('study-save').disabled=!canWrite;
+ $('study-save').textContent=selected.size?'주간 계획 저장':'0일 계획 사유 제출';
  $('study-empty').hidden=!!selected.size;
  $('study-no-plan-reason').required=selected.size===0;
  $('study-no-plan-reason').disabled=!canWrite||selected.size>0;
  $('study-none-plan-count').textContent=$('study-no-plan-reason').value.length+' / 300자';
  $('study-none-plan-help').textContent=plan&&!plan.weekdays?.length&&!plan.no_plan_reason
-   ?'기존에 사유 없이 저장된 0일 계획입니다. 다시 저장하려면 사유를 입력해 주세요.'
-   :'이번 주 남아서 공부할 날짜를 선택하지 않은 이유를 입력해 주세요. 개인 사정은 자세히 작성하지 않아도 됩니다.';
+   ?'기존 0일 기록에 사유가 없습니다. 학교에 남아 공부하기 어려운 이유를 작성해 주세요.'
+   :'공부할 과목이 아니라 학교에 남아 공부하기 어려운 이유를 직접 작성해 주세요. 민감한 내용은 자세히 밝히지 않아도 됩니다. 지도교수가 확인합니다.';
  const todaysPlan=(sessions.some(s=>kstDate(s.started_at)===today));
  const todaySelected=week===mondayOf(today)&&selected.has(new Date(today+'T00:00:00Z').getUTCDay()||7);
  $('study-today-note').textContent=todaySelected?'오늘은 학습계획에 등록한 날입니다.':'계획하지 않은 날도 자율학습을 기록할 수 있습니다.';
@@ -121,7 +122,7 @@ async function session(action){
 async function savePlan(){
  const noPlanReason=selected.size===0?$('study-no-plan-reason').value.trim():null;
  if(selected.size===0&&(!noPlanReason||noPlanReason.length<2||noPlanReason.length>300)){
-  message('학습계획이 없다면 사유를 2~300자로 입력해야 합니다.',true);
+  message('학교에 남아 공부하기 어려운 이유를 2~300자로 직접 작성해 주세요.',true);
   $('study-no-plan-reason').focus();
   return;
  }
@@ -136,7 +137,7 @@ async function savePlan(){
   $('study-no-plan-reason').value=data.no_plan_reason||'';
   message(weekdays.length
     ?'주간 학습계획을 저장했습니다. 약속한 날 미참여 시 확인 메일을 보냅니다.'
-    :'학습계획 없음과 사유를 저장했습니다.');
+    :'0일 계획 사유를 제출했습니다. 지도교수가 확인할 수 있습니다.');
  }catch(error){
   console.error(error);
   message('계획 저장에 실패했습니다. 사유와 변경 가능한 날짜를 확인해 주세요.',true);
