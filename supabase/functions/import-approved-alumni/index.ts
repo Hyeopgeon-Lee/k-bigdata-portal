@@ -70,7 +70,7 @@ async function importOne(row:Row):Promise<"created"|"merged"|"review"|"failed">{
  }
  try{
   const {data:matches,error:lookupError}=await admin.from("profiles")
-    .select("user_id,email,full_name,signup_type,enrollment_status,approval_status,graduation_year,student_no,mobile_phone,alumni_source_id")
+    .select("user_id,email,full_name,signup_type,enrollment_status,approval_status,graduation_year,mobile_phone,alumni_student_no,alumni_source_id")
     .eq("email",row.email).limit(2);
   if(lookupError)throw Error("PROFILE_LOOKUP_FAILED");
   if((matches||[]).length>1){
@@ -88,10 +88,10 @@ async function importOne(row:Row):Promise<"created"|"merged"|"review"|"failed">{
     return "review";
    }
    const changes:{
-    alumni_source_id:string;mobile_phone?:string;student_no?:string;graduation_year?:number
+    alumni_source_id:string;mobile_phone?:string;alumni_student_no?:string;graduation_year?:number
    }={alumni_source_id:row.source_id};
    if(!matching.mobile_phone)changes.mobile_phone=row.mobile_phone;
-   if(!matching.student_no&&row.student_no)changes.student_no=row.student_no;
+   if(!matching.alumni_student_no&&row.student_no)changes.alumni_student_no=row.student_no;
    if(matching.graduation_year==null)changes.graduation_year=row.graduation_year;
    const {error:updateError}=await admin.from("profiles").update(changes).eq("user_id",matching.user_id);
    if(updateError)throw Error("PROFILE_MERGE_FAILED");
@@ -117,7 +117,7 @@ async function importOne(row:Row):Promise<"created"|"merged"|"review"|"failed">{
    user_id:uid,full_name:row.full_name,email:row.email,
    signup_type:"alumni",graduation_year:row.graduation_year,
    enrollment_status:"graduated",approval_status:"approved",
-   student_no:row.student_no,mobile_phone:row.mobile_phone,
+   student_no:null,alumni_student_no:row.student_no,mobile_phone:row.mobile_phone,
    alumni_source_id:row.source_id
   });
   if(insertError){
