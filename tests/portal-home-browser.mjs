@@ -33,6 +33,7 @@ try{
   assert.equal(await page.locator('.directory-catalog .service-card').count(),19,'all services remain visible '+width);
   assert.equal(await page.locator('.directory-favorite-button').count(),19,'favorite buttons '+width);
   await page.waitForFunction(()=>document.querySelector('#directory-favorites-list')?.textContent?.includes('정보처리 기출문제'));
+  await page.locator('.directory-favorites summary').click();
   assert.ok((await page.locator('#directory-favorites-list').innerText()).includes('정보처리 기출문제'));
   await page.locator('#directory-query').fill('NCP');
   assert.ok(await page.locator('.directory-service-tile:visible').count()>=1,'NCP search '+width);
