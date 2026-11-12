@@ -1,8 +1,12 @@
-name: Monday noon study plan registration reminder
+name: Study plan reminders and Wednesday admin digest
 on:
-  # Monday 03:00 UTC = Monday 12:00 Korea, mail only to unregistered approved students.
+  # UTC schedules: Mon 03/08 = KST Mon 12/17, Tue 03 = KST Tue 12, Tue 23 = KST Wed 08.
+  # GitHub Actions schedules are best-effort, and may run later than their nominal time.
   schedule:
     - cron: "0 3 * * 1"
+    - cron: "0 8 * * 1"
+    - cron: "0 3 * * 2"
+    - cron: "0 23 * * 2"
   workflow_dispatch:
   push:
     branches: [main]
@@ -12,13 +16,14 @@ permissions:
   contents: read
   id-token: write
 jobs:
-  check-study-absence:
+  study-plan-notifications:
     runs-on: ubuntu-24.04
     timeout-minutes: 8
     steps:
       - name: Use GitHub OIDC to invoke Supabase without reusable secrets
         env:
           EVENT_NAME: ${{ github.event_name }}
+          CRON_SCHEDULE: ${{ github.event.schedule }}
           FUNCTION_URL: https://zjsindkakjfzmjgrkaou.supabase.co/functions/v1/study-plan-reminder
         shell: bash
         run: |
@@ -27,8 +32,18 @@ jobs:
             -H "Authorization: Bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" \
             "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=kbigdata-study-plan-reminder")
           id_token=$(printf '%s' "$response" | python3 -c 'import json,sys; print(json.load(sys.stdin)["value"])')
-          payload='{"dry_run":true}'
-          if [[ "$EVENT_NAME" == "schedule" ]]; then payload='{"dry_run":false}'; fi
+          case "$CRON_SCHEDULE" in
+            "0 3 * * 1") slot="mon12" ;;
+            "0 8 * * 1") slot="mon17" ;;
+            "0 3 * * 2") slot="tue12" ;;
+            "0 23 * * 2") slot="wed08" ;;
+            "") slot="wed08" ;;
+            *) echo "Unexpected GitHub schedule" >&2; exit 1 ;;
+          esac
+          payload='{"dry_run":true,"slot":"'"$slot"'"}'
+          if [[ "$EVENT_NAME" == "schedule" ]]; then
+            payload='{"dry_run":false,"slot":"'"$slot"'"}'
+          fi
           curl --fail-with-body --silent --show-error --retry 2 --max-time 90 \
             -X POST "$FUNCTION_URL" -H "Authorization: Bearer $id_token" \
             -H "Content-Type: application/json" --data "$payload"
