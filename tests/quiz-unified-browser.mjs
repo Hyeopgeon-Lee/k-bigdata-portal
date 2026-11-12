@@ -60,11 +60,23 @@ try{
              rect:{x:Math.round(b.x),width:Math.round(b.width),height:Math.round(b.height)}};
          };
          return {card:get(".ncp-panel,.bank-solve,.coding-detail"),
-           nav:get(".quiz-navigation"),title:get(".quiz-title"),
+           nav:get(".quiz-navigation"),navList:get(".quiz-nav-list"),navJump:get(".quiz-nav-jump"),
+           title:get(".quiz-title"),
            heading:get(".quiz-heading"),badge:get(".quiz-badge"),
            actions:get(".quiz-actions"),action:get(".quiz-action"),answer:get(".quiz-answer")};
        },styleKeys);
        snapshot[target.name].actionColors=actionColors;
+       assert.deepEqual(snapshot[target.name].navList.style,snapshot[target.name].navJump.style,
+         target.name+" list and answer navigation must have identical computed styles at "+width+"px");
+       for(const dimension of ["width","height"]){
+         assert.ok(Math.abs(snapshot[target.name].navList.rect[dimension]-
+                            snapshot[target.name].navJump.rect[dimension])<=1,
+           target.name+" list and answer navigation "+dimension+" differs at "+width+"px");
+       }
+       const expectedNavHeight=width<=690?44:46;
+       assert.ok(Math.abs(snapshot[target.name].navList.rect.height-expectedNavHeight)<=1,
+         target.name+" nav button must be "+expectedNavHeight+"px high at "+width+"px");
+
        const desktopCardTarget=Math.min(1240,width-(width<=690?24:32));
        assert.ok(Math.abs(snapshot[target.name].card.rect.width-desktopCardTarget)<=2,
          target.name+" detail width at "+width+": expected "+desktopCardTarget+"px, got "+snapshot[target.name].card.rect.width+"px");
@@ -110,12 +122,19 @@ try{
        if(name==="practical")continue;
        assert.deepEqual(value.actionColors,baseline.actionColors,
          "Three quiz action colors must match across services at "+width+"px for "+name);
-       for(const component of ["nav","title","badge","actions","action","answer"]){
+       for(const component of ["nav","navList","navJump","title","badge","actions","action","answer"]){
          for(const key of styleKeys){
            if(baseline[component].style[key]!==value[component].style[key]){
              failures.push({width,service:name,component,key,
                expected:baseline[component].style[key],actual:value[component].style[key]});
            }
+         }
+       }
+       for(const component of ["navList","navJump"]){
+         for(const dimension of ["width","height"]){
+           if(Math.abs(value[component].rect[dimension]-baseline[component].rect[dimension])>1)
+             failures.push({width,service:name,component,dimension,
+               expected:baseline[component].rect[dimension],actual:value[component].rect[dimension]});
          }
        }
        if(Math.abs(value.card.rect.width-baseline.card.rect.width)>2){
