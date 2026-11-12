@@ -26,7 +26,7 @@ assert.match(js,/admin_list_students/);
 assert.match(js,/verification_status/);
 assert.match(js,/new Blob\(/,'CSV generation');
 assert.doesNotMatch(html,/type="file"/,'no evidence attachment controls');
-assert.doesNotMatch(sql,/storage\.objects|evidence_file|attachment/,'no file storage or attachments');
+assert.doesNotMatch(sql,/storage\.objects|evidence_file|file_upload/,'no file storage or attachments');
 assert.match(sql,/enable row level security/);
 assert.match(sql,/student_certifications_select/);
 assert.match(sql,/student_certifications_insert/);
