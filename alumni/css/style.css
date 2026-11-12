@@ -255,6 +255,14 @@ button,.button{
 th{background:#f1f4f8;color:var(--navy)}
 .consent-box{background:#f4f7fb}
 
+.alumni-account-banner{margin:18px 0 24px;padding:20px 22px;border:1px solid #c9d9eb;border-radius:15px;background:#f3f8ff;color:#294265;line-height:1.75}
+.alumni-account-banner strong{display:block;font-size:18px;font-weight:800;color:#143b75}
+.alumni-account-banner p{margin:7px 0 0;color:#516987}
+.alumni-account-banner a:not([hidden]){display:inline-flex;margin-top:12px;padding:11px 15px;border-radius:10px;background:#164785;color:#fff;text-decoration:none;font-size:14px;font-weight:800}
+.alumni-page-intro{margin:0 0 18px;color:#526782;line-height:1.8;word-break:keep-all}
+#alumni-form[hidden]{display:none!important}
+#alumni-form input[readonly]{color:#3a4f6c;background:#f2f5fa;cursor:default}
+@media(max-width:520px){.alumni-account-banner{padding:16px}.alumni-page-intro{font-size:14px}}
 /* Footer visually belongs to the portal family. */
 .footer{
   margin-top:36px;
