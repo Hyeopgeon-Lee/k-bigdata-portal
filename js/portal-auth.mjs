@@ -715,10 +715,11 @@ async function activate(interactive=true){
       renderComplete(user);
       showAccount();return;
     }
-    const {data:registered,error:regError}=await client.rpc("register_portal_member_v3",{
+    const {data:registered,error:regError}=await client.rpc("register_portal_member_v4",{
       p_name:name,p_student_no:user.user_metadata?.student_no||null,
       p_signup_type:user.user_metadata?.signup_type||"student",p_graduation_year:user.user_metadata?.graduation_year||null,
-       p_academic_year:["1","2"].includes(String(user.user_metadata?.academic_year))?Number(user.user_metadata.academic_year):null
+      p_academic_year:["1","2"].includes(String(user.user_metadata?.academic_year))?Number(user.user_metadata.academic_year):null,
+      p_mobile_phone:user.email?.toLowerCase()===professorEmail?null:user.user_metadata?.mobile_phone||null
     });
     if(regError){
       renderComplete(user);status("회원 정보를 확인해 다시 입력해 주세요.");
