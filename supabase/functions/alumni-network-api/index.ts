@@ -455,13 +455,11 @@ async function handle(action:string,b:Record<string,unknown>,a:Actor){
   if(!yes(b.always_open)&&(!dateOnly(b.deadline)||dateOnly(b.deadline)<now().slice(0,10)))
    throw Error("유효한 채용 마감일을 입력해 주세요.");
   const jid=id("J"),d=updatedPayload({},b,JOB_EDIT);
-  Object.assign(d,{job_id:jid,alumni_id:owner.source_id,status:action==="adminCreateJob"?"APPROVED":"PENDING",
-   created_at:now(),updated_at:now(),approved_at:action==="adminCreateJob"?now():"",
-   approved_by:action==="adminCreateJob"?a.email:"",last_mailed_at:action==="adminCreateJob"&&!yes(b.queue_mail)?now():""});
+  Object.assign(d,{job_id:jid,alumni_id:owner.source_id,status:"APPROVED",
+   created_at:now(),updated_at:now(),approved_at:now(),
+   approved_by:a.id,last_mailed_at:action==="adminCreateJob"&&!yes(b.queue_mail)?now():""});
   await put("jobs",jid,d);
-  if(action==="submitJob")await sendToAdmin("동문 채용공고 승인 요청",
-   a.name+"님의 "+text(b.company)+" 채용공고 검토가 필요합니다.","jobs",jid).catch(()=>{});
-  return {success:true,message:action==="adminCreateJob"?"채용공고가 게시되었습니다.":"채용정보 등록 신청이 완료됐습니다. 관리자 승인 후 공개됩니다.",job_id:jid};
+  return {success:true,message:"채용공고가 바로 게시되었습니다.",job_id:jid};
  }
  case "submitNews":case "adminCreateNews":{
   if(action==="adminCreateNews")await adminOnly(a);
@@ -473,25 +471,24 @@ async function handle(action:string,b:Record<string,unknown>,a:Actor){
    throw Error("소식 길이가 허용 범위를 초과했습니다.");
   if(b.external_url&&!validUrl(b.external_url))throw Error("유효한 외부 링크를 입력해 주세요.");
   const target=action==="adminCreateNews"?text(b.target_alumni_id):
-   type==="OBITUARY"?text(b.target_alumni_id):text(b.alumni_id);
+   type==="OBITUARY"?text(b.target_alumni_id):a.id;
   if(!target)throw Error("소식 대상 졸업생을 선택해 주세요.");
-  await getProfile(target);
+  if(target!==a.id&&!a.isAdmin&&!yes(b.subject_consent))
+   throw Error("다른 졸업생에 관한 소식을 등록하려면 당사자의 게시 동의를 확인해 주세요.");
+  const profile=await getProfile(target);
   const nid=id("N"),d=updatedPayload({},b,NEWS_EDIT);
-  Object.assign(d,{news_id:nid,alumni_id:target,
-   submitted_by_alumni_id:action==="adminCreateNews"?"ADMIN:"+a.email:text(b.alumni_id),
-   status:action==="adminCreateNews"?"APPROVED":"PENDING",
+  Object.assign(d,{news_id:nid,alumni_id:profile.source_id,
+   submitted_by_alumni_id:a.id,status:"APPROVED",
    mail_requested:String(yes(b.mail_requested||b.send_mail)).toUpperCase(),
    mail_status:yes(b.mail_requested||b.send_mail)?"WAITING":"NOT_REQUESTED",
-   approved_at:action==="adminCreateNews"?now():"",approved_by:action==="adminCreateNews"?a.email:"",
+   approved_at:now(),approved_by:a.id,
    created_at:now(),updated_at:now()});
   await put("alumni_news",nid,d);
   if(action==="adminCreateNews"&&yes(b.send_mail)){
    const mail=await deliverNews(d);
-   return {success:true,message:"동문소식 게시 완료 · 메일 "+mail.sent+"/"+mail.total+"건",news_id:nid};
+   return {success:true,message:"동문소식 게시 · 메일 "+mail.sent+"/"+mail.total+"건",news_id:nid};
   }
-  if(action==="submitNews")await sendToAdmin("동문소식 승인 요청",
-   a.name+"님의 동문소식 검토가 필요합니다.","alumni_news",nid).catch(()=>{});
-  return {success:true,message:action==="adminCreateNews"?"동문소식이 게시되었습니다.":"동문소식 등록 신청이 완료됐습니다. 관리자 승인 후 공개됩니다.",news_id:nid};
+  return {success:true,message:"동문소식이 바로 게시되었습니다. 이메일 공지는 별도로 관리됩니다.",news_id:nid};
  }
  case "contact":{
    const rich=safeContactMessage(b.message_delta,b.message);
