@@ -1,0 +1,34 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {execFileSync} from 'node:child_process';
+const read=name=>readFileSync(new URL('../'+name,import.meta.url),'utf8');
+const html=read('mypage.html'),js=read('js/my-page.js'),css=read('css/my-page.css');
+const auth=read('js/portal-auth.mjs'),model=read('js/portal-navigation-model.mjs');
+const sql=read('supabase/migrations/20261112121100_my_page_student_academic_status_self_service.sql');
+assert.match(model,/mypage: \{title:'마이페이지'/,'page registered with portal shell');
+assert.match(auth,/title:"마이페이지".*href:"mypage.html"/,'account drawer links to my page');
+assert.match(html,/id="learning-lock"/,'page gated from first paint');
+assert.match(html,/data-module="js\/my-page.js\?v=/,'loads only after authentication');
+assert.match(html,/id="my-page-password-form"/);
+assert.match(html,/name="academic_status" value="1"/);
+assert.match(html,/name="academic_status" value="2"/);
+assert.match(html,/name="academic_status" value="leave"/);
+assert.match(html,/학과 포털 내부 정보/);
+assert.match(js,/api\.auth\.signInWithPassword\(/,'current password verified');
+assert.match(js,/api\.auth\.updateUser\(\{password:next\}\)/,'Supabase Auth updates password');
+assert.match(js,/api\.rpc\("start_portal_session"\)/,'new login session authorized');
+assert.match(js,/api\.rpc\("update_my_academic_status",\{p_status:next\}\)/);
+assert.match(js,/profile\.signup_type==="student"/,'self-service status for students only');
+assert.match(js,/sessionStorage\.setItem\("portal:mypage-success"/,'user gets result after reload');
+assert.match(css,/@media\(max-width:740px\)/,'mobile layout present');
+assert.match(sql,/v_id uuid := auth\.uid\(\)/,'uses session user id only');
+assert.match(sql,/private\.portal_read_allowed\(\)/,'server checks session');
+assert.match(sql,/p_status not in \('1','2','leave'\)/,'status allowlist');
+assert.match(sql,/v_old\.signup_type<>'student'/,'staff/alumni blocked');
+assert.match(sql,/role='super_admin'/,'admin protected');
+assert.match(sql,/revoke all on function public\.update_my_academic_status/,'RPC public role restricted');
+assert.match(sql,/private\.portal_academic_status_history/,'status audit trail');
+for(const f of ['js/my-page.js','js/portal-auth.mjs','js/portal-navigation-model.mjs']){
+ execFileSync('node',['--check',new URL('../'+f,import.meta.url).pathname],{stdio:'pipe'});
+}
+console.log('My Page QA: passed');

@@ -40,7 +40,7 @@ assert.match(source,/textContent=item/,"student-supplied values use safe DOM API
 assert.match(loader,/import\("\.\/portal-auth\.mjs/);
 const authVersion=loader.match(/portal-auth\.mjs\?v=([^"]+)/)?.[1];
 assert.ok(authVersion,"shared auth module is versioned");
-for(const page of ["my-learning","teacher-learning","room","help"])
+for(const page of ["my-learning","teacher-learning","room","help","mypage"])
  assert.ok(read(page+".html").includes("portal-auth.mjs?v="+authVersion),"direct auth import matches shared module on "+page);
 
 assert.match(source,/portal_learning_access/);
@@ -59,7 +59,7 @@ for(const page of ["coding","practical","ncp","docs","interview","certifications
  assert.match(html,/data-module=/);
  assert.doesNotMatch(html,/<script type="module" src=/);
 }
-for(const page of ["room","help"]){
+for(const page of ["room","help","mypage"]){
  const html=read(page+".html");
  assert.match(html,/id="learning-lock"/);
  assert.match(html,/#learning-notice a\{display:none\}/);
