@@ -101,9 +101,6 @@ assert.ok(ncp.includes('scrollToQuizAnswer(el.question)'),"NCP answer navigation
 assert.ok(ncp.includes('id="ncp-answer-results"'),"NCP solution remains mounted when toggled");
 assert.ok(ncp.includes('answerVisible=!currentDraft.answerVisible'),"NCP supports repeat open/close");
 assert.ok(ncp.includes('aria-expanded'),"NCP answer button reports toggle state");
-assert.ok(practical.includes('result.hidden=!result.hidden'),"Practical answer supports repeated toggling");
-assert.ok(coding.includes('slot.dataset.questionId===q.id'),"Coding review controls survive toggling");
-
 
 const practical=read("js/practical-ui.js");
 assert.ok(practical.includes('class="quiz-answer"'),"Practical answer widget shares frame");
@@ -111,6 +108,8 @@ assert.ok(practical.includes('quizDisclosure("해설"'),"Practical explanation u
 assert.ok(practical.includes('quizDisclosure("관련 개념"'),"Practical concept uses common disclosure");
 
 const coding=read("js/coding.js"),codingHtml=read("coding.html");
+assert.ok(practical.includes('result.hidden=!result.hidden'),"Practical answer supports repeated toggling");
+assert.ok(coding.includes('slot.dataset.questionId===q.id'),"Coding review controls survive toggling");
 assert.ok(codingHtml.includes('id="coding-quiz-nav"')&&codingHtml.includes('id="coding-quiz-heading"'));
 assert.ok(codingHtml.includes('class="coding-section quiz-answer"'),"Coding editor uses common answer frame");
 assert.ok(coding.includes('scrollToQuizAnswer(document.querySelector(".coding-detail"))'));
