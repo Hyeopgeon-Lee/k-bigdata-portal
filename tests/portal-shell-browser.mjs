@@ -99,6 +99,15 @@ try{
       const label=`${engine} ${width} ${id}`,page=await context.newPage();monitor(page,label);
       try{
         await ready(page,id+'.html');
+        // The former faculty page is a legacy admin-only route. Students must
+        // see a denial, not the management UI; its admin design lives in /admin/.
+        if(id==='teacher-learning'){
+          assert.equal(await page.locator('.admin-denied-note').isVisible(),true,
+            'student cannot access the faculty management page');
+          assert.equal(await page.locator('#teacher-content').count(),0,
+            'management content is unmounted before its modules load');
+          continue;
+        }
         const state=await snapshot(page);evidence.push({engine,width,page:id,...state});
         check(label+' parity',()=>{
           assert.equal(state.headerCount,1);assert.equal(state.mainCount,1);assert.equal(state.shell,shellVersion);
