@@ -58,5 +58,5 @@ for(const p of ["index.html","services.html","recruit.html"]){
  const html=read(p);
  assert.doesNotMatch(html,/href="https:\/\/alumni\.k-bigdata\.kr\/" data-nav-id="alumni"/,"no external Alumni tab in "+p);
 }
-assert.match(read("scripts/build-portal-shell.mjs"),/['"]alumni['"]\.includes|['"]alumni['"]\]/,"generator excludes namespaced alumni HTML pages");
+assert.ok(read("scripts/build-portal-shell.mjs").includes("'alumni'"),"generator excludes namespaced alumni HTML pages");
 console.log("PASS: 11 preserved Alumni Network pages, all assets, API operations, portal login and internal navigation");
