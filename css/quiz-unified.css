@@ -39,11 +39,20 @@ body.shared-question-bank .ncp-panel #ncp-question{min-width:0}
   gap:10px;align-items:center;padding:0 0 14px;margin:0 0 20px;
   border-bottom:1px solid var(--quiz-border);background:transparent;position:static;
   color:var(--quiz-text);font-family:inherit}
-.quiz-navigation .quiz-nav-button{display:inline-flex;align-items:center;justify-content:center;
-  min-width:0;min-height:var(--quiz-button-height);width:max-content;max-width:100%;
-  box-sizing:border-box;padding:8px 12px;border:1px solid var(--quiz-border);
-  border-radius:var(--quiz-button-radius);background:#fff;color:var(--quiz-text);
-  font-family:inherit;font-size:14px;font-weight:750;line-height:1.4;white-space:nowrap;cursor:pointer}
+/* These two controls have one visual contract across all three banks.
+   Explicit priority defeats #coding-show-list and historical per-bank styles. */
+body.shared-question-bank nav.quiz-navigation > button.quiz-nav-button{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  width:120px!important;min-width:0!important;max-width:100%!important;
+  height:46px!important;min-height:46px!important;box-sizing:border-box!important;
+  margin:0!important;padding:8px 10px!important;
+  border:1px solid #bfd0e5!important;border-radius:var(--quiz-button-radius)!important;
+  background:#fff!important;color:#1f4677!important;
+  box-shadow:none!important;transform:none!important;appearance:none!important;
+  font-family:inherit!important;font-size:14px!important;font-weight:750!important;
+  line-height:1.4!important;white-space:nowrap!important;text-decoration:none!important;
+  cursor:pointer!important;
+}
 .quiz-navigation .quiz-nav-jump{justify-self:end}
 .quiz-navigation .quiz-counter{font-size:16px;font-weight:800;white-space:nowrap;line-height:1.4;font-variant-numeric:tabular-nums;letter-spacing:-.02em;text-align:center}
 .quiz-heading{display:flex;flex-direction:column;align-items:stretch;gap:0;margin:0 0 18px;color:var(--quiz-text)}
@@ -83,8 +92,8 @@ body.shared-question-bank .quiz-actions .quiz-action:hover{
   background:var(--quiz-action-hover,var(--quiz-subtle))!important;
   border-color:var(--quiz-action-border,#9fbbdd);
 }
-body.shared-question-bank .quiz-navigation .quiz-nav-button:hover{
-  background:var(--quiz-subtle)!important;border-color:#9fbbdd;
+body.shared-question-bank nav.quiz-navigation > button.quiz-nav-button:hover{
+  background:#edf4ff!important;border-color:#91b2dd!important;
 }
 .quiz-navigation button:focus-visible,.quiz-actions .quiz-action:focus-visible,
 .quiz-disclosure summary:focus-visible{outline:3px solid #81ace0;outline-offset:2px}
@@ -173,7 +182,10 @@ body.shared-question-bank :is(.coding-code pre,.code-scroll pre,.coding-scroll t
  body.shared-question-bank .coding-page .coding-detail,
  body.shared-question-bank.practical-page .bank-solve{padding:var(--quiz-padding-mobile)!important}
  .quiz-navigation{gap:7px;padding-bottom:12px;margin-bottom:18px}
- .quiz-navigation .quiz-nav-button{padding:8px 9px;font-size:13px}
+ body.shared-question-bank nav.quiz-navigation > button.quiz-nav-button{
+   width:104px!important;height:44px!important;min-height:44px!important;
+   padding:8px 7px!important;font-size:13px!important;
+ }
  .quiz-navigation .quiz-counter{font-size:15px}
  body.shared-question-bank .quiz-heading .quiz-title{font-size:22px!important}
  .quiz-badges{gap:6px;margin-bottom:15px}
@@ -185,7 +197,9 @@ body.shared-question-bank :is(.coding-code pre,.code-scroll pre,.coding-scroll t
  body.shared-question-bank .quiz-disclosure .quiz-disclosure-body{padding:13px}
 }
 @media(max-width:360px){
- .quiz-navigation .quiz-nav-button{font-size:12px;padding-inline:7px}
+ body.shared-question-bank nav.quiz-navigation > button.quiz-nav-button{
+   width:98px!important;font-size:12px!important;padding-inline:5px!important;
+ }
  .quiz-navigation .quiz-counter{font-size:14px}
 }
 
