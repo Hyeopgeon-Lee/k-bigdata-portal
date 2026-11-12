@@ -1,0 +1,60 @@
+name: Sync official Q-Net and SQLD certification dates
+on:
+  schedule:
+    # Daily 07:00 and 08:00 Korea time; built-in source/dedup checks prevent repeats.
+    - cron: "0 22 * * *"
+    - cron: "0 23 * * *"
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: "Write verified changes to Supabase instead of dry-run"
+        type: boolean
+        default: false
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/certification-schedule-sync.yml'
+      - 'supabase/functions/certification-schedule-sync/**'
+      - 'tests/certification-schedule-sync.test.mjs'
+permissions:
+  contents: read
+  id-token: write
+concurrency:
+  group: certification-schedule-sync
+  cancel-in-progress: false
+jobs:
+  sync:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate strict official source parsers
+        run: node --test tests/certification-schedule-sync.test.mjs
+      - name: Authenticate with GitHub OIDC and sync verified dates
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PUBLISH: ${{ inputs.publish }}
+          FUNCTION_URL: https://zjsindkakjfzmjgrkaou.supabase.co/functions/v1/certification-schedule-sync
+        run: |
+          set -euo pipefail
+          oidc_response=$(curl --fail --silent --show-error --retry 2 --max-time 12 \
+            -H "Authorization: Bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" \
+            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=kbigdata-certification-schedule-sync")
+          token=$(printf '%s' "$oidc_response" | python3 -c 'import json,sys; print(json.load(sys.stdin)["value"])')
+          payload='{"dry_run":false}'
+          if [[ "$EVENT_NAME" == "workflow_dispatch" && "$PUBLISH" != "true" ]]; then
+            payload='{"dry_run":true}'
+          fi
+          body=$(curl --fail-with-body --silent --show-error --retry 1 --max-time 180 \
+            -X POST "$FUNCTION_URL" -H "Authorization: Bearer $token" \
+            -H "Content-Type: application/json" --data "$payload")
+          printf '%s\n' "$body" | python3 -m json.tool
+          printf '%s\n' "$body" | python3 -c '
+          import json,sys
+          result=json.load(sys.stdin)
+          if not result.get("ok"):
+            print("Official source sync failed: see source results",file=sys.stderr);sys.exit(1)
+          if any(s["status"]=="missing_key" for s in result.get("sources",[])):
+            print("NOTE: DATA_GO_KR_SERVICE_KEY is not configured in Supabase secrets; Q-Net skipped.")
+          '
