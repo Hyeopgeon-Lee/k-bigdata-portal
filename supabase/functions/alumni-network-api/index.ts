@@ -47,15 +47,22 @@ const PII=new Set(["email","phone","student_id","edit_pin_hash","career_mail_con
 type Rec={source_kind:string;source_id:string;data:Record<string,unknown>};
 type Actor={id:string;name:string;email:string;role:string;enrollment:string;alumniId:string|null;isAdmin:boolean;graduationYear:number|null;studentNo:string|null;mobilePhone:string|null};
 // Portal-owned normalized storage; the imported Google Sheets rows remain in a restricted historical archive.
-const PORTAL_TABLES:Record<string,string>={alumni:"alumni_profiles",jobs:"alumni_jobs",alumni_news:"alumni_news",contact_requests:"alumni_contact_requests"};
+const PORTAL_TABLES:Record<string,string>={alumni:"alumni_profiles",jobs:"alumni_jobs",alumni_news:"alumni_news",contact_requests:"alumni_contact_requests",job_mail_logs:"alumni_dispatch_logs",alumni_news_mail_logs:"alumni_dispatch_logs"};
 const PORTAL_FIELDS:Record<string,string[]>={
  alumni:["graduation_year","employment_status","company","job","company_url","employment_year","job_description","skills","bachelor_status","bachelor_school","bachelor_major","bachelor_year","graduate_status","graduate_school_type","graduate_school","graduate_major","graduate_degree","graduate_entry_year","graduate_graduation_year","research_fields","mentoring_topics","introduction","message_to_juniors","contact_allowed","career_mail_enabled","career_mail_consent_at","career_mail_updated_at","alumni_news_mail_enabled","alumni_news_mail_consent_at","alumni_news_mail_updated_at"],
  jobs:["company","job_title","recruit_type","employment_type","location","job_url","deadline","always_open","skills","alumni_comment","referral_available","contact_allowed","status","approved_at","approved_by","created_at","updated_at","last_mailed_at"],
  alumni_news:["news_type","title","content","company","job_title","organization","position_title","school_name","degree_or_program","event_date","location","relationship","external_url","mail_requested","mail_status","status","approved_at","approved_by","created_at","updated_at"],
+ job_mail_logs:["job_ids","recipient_count","sent_count","failed_count","sent_at","status"],
+ alumni_news_mail_logs:["news_id","news_type","subject","recipient_count","sent_count","failed_count","sent_at","status"],
  contact_requests:["requester_name","requester_type","requester_student_id_or_year","requester_email","requester_phone","share_email","share_phone","share_competencies","category","subject","message","message_html","status","created_at","sent_at"]
 };
 async function rows(kind:string):Promise<Rec[]>{
  if(Object.hasOwn(PORTAL_TABLES,kind)){
+  if(kind==="job_mail_logs"||kind==="alumni_news_mail_logs"){
+   const {data,error}=await admin.from("alumni_dispatch_logs").select("*").eq("kind",kind).limit(2000);
+   if(error)throw Error("DB_READ_MAIL_LOG");
+   return (data||[]).map((x:any)=>({source_kind:kind,source_id:x.id,data:{...x,mail_id:x.id}}));
+  }
   if(kind==="alumni"){
    const {data,error}=await admin.from("alumni_profiles")
     .select("*,member:profiles!alumni_profiles_user_id_fkey(full_name,email,student_no,alumni_student_no,graduation_year,mobile_phone,signup_type,enrollment_status,approval_status)")
@@ -101,7 +108,9 @@ async function put(kind:string,recordId:string,data:Record<string,unknown>){
   const payload:Record<string,unknown>={};
   for(const field of PORTAL_FIELDS[kind])if(Object.hasOwn(data,field))payload[field]=data[field]??null;
   let key:string;
-  if(kind==="alumni"){
+  if(kind==="job_mail_logs"||kind==="alumni_news_mail_logs"){
+   payload.kind=kind;payload.id=recordId;key="kind,id";
+  }else if(kind==="alumni"){
    key="user_id";payload.user_id=recordId;
    if(data.legacy_alumni_id)payload.legacy_alumni_id=data.legacy_alumni_id;
    payload.is_visible=text(data.status)!=="HIDDEN"&&text(data.status)!=="REJECTED";
