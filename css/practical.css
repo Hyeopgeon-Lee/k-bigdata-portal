@@ -368,7 +368,7 @@
 @media(min-width:901px){
 
   .practical-page .study-intro{
-    width:min(calc(100% - 40px),var(--container));
+    width:min(calc(100% - var(--portal-shell-gutter,24px) * 2),var(--container));
     margin-inline:auto;
     padding:42px 0 22px;
   }
@@ -538,7 +538,7 @@
   }
 
   .practical-page.is-solving .learning-content{
-    width:min(calc(100% - 40px),var(--container));
+    width:min(calc(100% - var(--portal-shell-gutter,24px) * 2),var(--container));
     max-width:var(--container);
     padding-bottom:72px;
   }
@@ -643,7 +643,7 @@
 /* 2026-10-05 desktop alignment correction: use the same horizontal grid as the shared portal hero. */
 @media(min-width:901px){
   .practical-page .learning-content{
-    width:min(calc(100% - 40px),var(--container));
+    width:min(calc(100% - var(--portal-shell-gutter,24px) * 2),var(--container));
     max-width:var(--container);
   }
   .practical-page .study-home-grid{

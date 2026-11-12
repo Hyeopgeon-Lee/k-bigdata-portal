@@ -1,5 +1,5 @@
 /* Mobile-first interview-only overrides; shared portal components stay intact. */
-body[data-page="interview"] .learning-content{width:min(calc(100% - 40px),var(--container));max-width:var(--container);margin-inline:auto}
+body[data-page="interview"] .learning-content{width:min(calc(100% - var(--portal-shell-gutter,24px) * 2),var(--portal-shell-max,1280px));max-width:var(--portal-shell-max,1280px);margin-inline:auto}
 body[data-page="interview"] .interview-stats{background:none;border:0;padding:0;font-size:14px!important}
 body[data-page="interview"] #interview-home{width:min(100%,820px);margin:0}
 body[data-page="interview"] #interview-home>.button{width:100%;min-height:56px;font-size:17px}

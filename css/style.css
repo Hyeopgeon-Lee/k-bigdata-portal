@@ -9,7 +9,7 @@ html:not([data-portal-access="approved"]) body > :not(#portal-auth-layer) { visi
   --color-border: #dce3ef;
   --color-text: #111c35;
   --color-text-muted: #59647a;
-  --container: 1240px;
+  --container: var(--portal-shell-max, 1280px);
   --shadow-soft: 0 20px 60px rgba(13, 28, 63, .08);
   --shadow-card: 0 22px 55px rgba(16, 35, 78, .12);
 }
@@ -19,7 +19,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 92px; }
 body { margin: 0; min-width: 320px; overflow-x: hidden; color: var(--color-text); background: var(--color-background); font-family: Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", sans-serif; line-height: 1.6; -webkit-font-smoothing: antialiased; }
 a { color: inherit; text-decoration: none; }
 svg { display: block; }
-.container { width: min(calc(100% - 40px), var(--container)); margin-inline: auto; }
+.container { width: min(calc(100% - var(--portal-shell-gutter, 24px) * 2), var(--container)); margin-inline: auto; }
 .skip-link { position: fixed; z-index: 200; top: 12px; left: 12px; padding: 10px 16px; color: #fff; background: var(--color-primary-dark); border-radius: 6px; transform: translateY(-160%); }
 .skip-link:focus { transform: translateY(0); }
 :focus-visible { outline: 3px solid #1ba7d4; outline-offset: 4px; }
@@ -146,7 +146,6 @@ svg { display: block; }
 
 @media (max-width: 767px) {
   html { scroll-padding-top: 72px; }
-  .container { width: min(calc(100% - 36px), var(--container)); }
   .footer-brand .brand-mark { width: 36px; height: 36px; flex-basis: 36px; transform: scale(.9); }
   .hero { padding-top: 58px; }
   .hero-grid { display: flex; min-height: auto; flex-direction: column; gap: 10px; }
@@ -185,7 +184,6 @@ svg { display: block; }
 }
 
 @media (max-width: 389px) {
-  .container { width: min(calc(100% - 32px), var(--container)); }
   .hero-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .button { padding-inline: 10px; font-size: 12px; }
   .hero-visual { height: 360px; transform: scale(.78); }

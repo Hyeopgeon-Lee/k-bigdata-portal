@@ -42,9 +42,14 @@ assert.ok(html.includes("75문항")&&html.includes("id=\"ncp-question\""),"Quest
 assert.ok(!html.includes("ncp-sources")&&!html.includes("ncp-originals"),"Avoid long source catalogs in quiz.");
 assert.ok(quiz.includes("q.originalNumber")&&quiz.includes("q.sourceUrl"),"Each answer must cite its original problem.");
 assert.ok(quiz.includes("originalReference")&&quiz.includes("문제·선택지 원문 확인"),"Every problem must visibly offer the source link as secondary material.");
-const questionPosition=quiz.indexOf('<h2 tabindex="-1">'),choicesPosition=quiz.indexOf('class="ncp-options"'),sourcePosition=quiz.indexOf("  originalReference;");
+// The NCP bank renders the shared quiz heading and a collapsible source
+// disclosure: validate the actual concatenation order, not retired HTML literals.
+const questionPosition=quiz.indexOf('quizHeading({title:"공개 복원자료 원문');
+const choicesPosition=quiz.indexOf('class="ncp-options"');
+const sourcePosition=quiz.lastIndexOf('+sourceDisclosure;');
+const answerPosition=quiz.indexOf('class="study-open quiz-solve-action quiz-solve-action--answer"');
 assert.ok(questionPosition>=0&&choicesPosition>questionPosition&&sourcePosition>choicesPosition,"NCP layout must show question and choices before the reconstruction source.");
-assert.ok(sourcePosition>quiz.indexOf('data-open>정답·해설 보기'),"Show the answer action before the secondary reconstruction source.");
+assert.ok(answerPosition>choicesPosition&&sourcePosition>answerPosition,"Show the answer action before the secondary reconstruction source.");
 assert.ok(html.includes("원문과 동일하지 않습니다"),"Visible disclaimer must distinguish reworded practice from the original source.");
 assert.ok(!html.includes("학습용 자체 제작 문제 90개"),"Unattributed old questions must not be published.");
 assert.ok(services.includes("NCP 기출문제: 공개 복원자료 기반 75문항"),"Home service card describes the source as reconstruction material.");

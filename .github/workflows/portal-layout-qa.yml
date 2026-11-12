@@ -1,0 +1,50 @@
+name: Unified portal layout QA
+on:
+  pull_request:
+    paths:
+      - '**/*.html'
+      - 'css/**'
+      - 'js/portal-navigation-model.mjs'
+      - 'js/portal-navigation.js'
+      - 'scripts/portal-shell-template.mjs'
+      - 'scripts/build-portal-shell.mjs'
+      - 'tests/portal-shell*'
+      - '.github/workflows/portal-layout-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-layout:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        engine: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check generated shared header on every page
+        run: |
+          node scripts/build-portal-shell.mjs --check
+          node tests/portal-shell.test.mjs
+          node --check js/portal-navigation.js
+      - name: Install browser
+        run: |
+          npm install --no-save --no-package-lock playwright@1.56.1
+          npx playwright install --with-deps ${{ matrix.engine }}
+      - name: Validate shared layout at 9 widths, navigation and learning state
+        env:
+          PORTAL_ENGINE: ${{ matrix.engine }}
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/portal-layout-server.log 2>&1 &
+          node tests/portal-shell-browser.mjs
+      - name: Upload screenshots and diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: portal-layout-${{ matrix.engine }}
+          path: ui-screenshots/portal-shell/
+          if-no-files-found: ignore
