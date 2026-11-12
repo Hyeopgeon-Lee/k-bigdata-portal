@@ -1,5 +1,5 @@
 name: Regenerate cleaned portal page shells (one-time)
-# Align current-service expectations for pages using navGroup.
+# Preserve current-service and academic-status test contracts.
 on:
   push:
     branches: [main]

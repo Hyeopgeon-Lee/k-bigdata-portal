@@ -103,7 +103,7 @@ assert.match(source,/p_academic_year:/,"both signup paths pass grade");
 assert.match(source,/identityFields\(\)\+\s*'\<label\>이름/,"member type selector precedes full name");
 assert.match(source,/member.signup_type==="alumni"/,"admins see graduate membership");
 assert.match(source,/mailTd\.hidden=graduated/,"graduate weekly mail controls are hidden");
-assert.match(source,/member\.signup_type==="alumni"\|\|enrollment\.value==="graduated"/,"alumni and graduated students are excluded from the mail UI");
+assert.match(source,/member\.signup_type==="alumni"\|\|\["graduated","early_employment"\]\.includes\(enrollment\.value\)/,"alumni, graduates and early-employed students are excluded from the mail UI");
 assert.match(css,/\.portal-admin-table td\[hidden\]/,"hidden mail cells do not occupy mobile grid tracks");
 assert.match(css,/grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/,"mobile student cards use two columns");
 assert.match(css,/portal-auth-secondary-actions/,"login actions use responsive layout");
