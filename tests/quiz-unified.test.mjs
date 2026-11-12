@@ -112,6 +112,13 @@ assert.ok(practical.includes('result.hidden=!result.hidden'),"Practical answer s
 assert.ok(coding.includes('slot.dataset.questionId===q.id'),"Coding review controls survive toggling");
 assert.ok(codingHtml.includes('id="coding-quiz-nav"')&&codingHtml.includes('id="coding-quiz-heading"'));
 assert.ok(codingHtml.includes('class="coding-section quiz-answer"'),"Coding editor uses common answer frame");
-assert.ok(coding.includes('scrollToQuizAnswer(document.querySelector(".coding-detail"))'));
+assert.ok(coding.includes('scrollToQuizAnswer(document.querySelector(".coding-detail"),{editor:codeEditor})'),
+  "Coding answer navigation must invoke the mounted CodeMirror editor API");
+assert.ok(practical.includes('scrollToQuizAnswer(root)'),"Practical answer jump uses the shared focus logic");
+assert.ok(components.includes('const rich=firstVisible('),"Visible CodeMirror content is prioritized over hidden textarea");
+assert.ok(components.includes('.ncp-choice[aria-pressed="true"]:not([disabled])'),
+  "NCP jump focuses an existing selected choice before a new choice");
+assert.ok(components.includes('element.getClientRects().length'),
+  "Answer navigation ignores hidden native inputs");
 assert.ok(coding.includes("quizFeedback({"),"Coding answer uses common feedback");
 console.log("PASS: common quiz component contracts, visible actions, ordering and design tokens.");
