@@ -271,7 +271,7 @@ console.log("PASS (mock services): setup reuse, one trigger, create/edit/move/de
 // already-published projection; do not log raw notes, URLs, or event IDs.
 // This must not turn hermetic unit tests into a network-dependent failure.
 if (process.env.CI === "true") {
- const endpoint = config.match(/SCHEDULE_API_URL\\s*=\\s*"([^"]+)"/)?.[1] || "";
+ const endpoint = config.match(/SCHEDULE_API_URL\s*=\s*"([^"]+)"/)?.[1] || "";
  if (endpoint.startsWith("https://script.google.com/macros/s/")) {
   try {
    const liveResponse = await fetch(endpoint,{signal:AbortSignal.timeout(15000)});
