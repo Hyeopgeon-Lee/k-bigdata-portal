@@ -62,7 +62,7 @@ function render(){
  $('study-empty').hidden=!!selected.size;
  $('study-no-plan-reason').required=selected.size===0;
  $('study-no-plan-reason').disabled=!canWrite||selected.size>0;
- $('study-no-plan-count').textContent=$('study-no-plan-reason').value.length+' / 300자';
+ $('study-none-plan-count').textContent=$('study-no-plan-reason').value.length+' / 300자';
  $('study-none-plan-help').textContent=plan&&!plan.weekdays?.length&&!plan.no_plan_reason
    ?'기존에 사유 없이 저장된 0일 계획입니다. 다시 저장하려면 사유를 입력해 주세요.'
    :'이번 주 남아서 공부할 날짜를 선택하지 않은 이유를 입력해 주세요. 개인 사정은 자세히 작성하지 않아도 됩니다.';
