@@ -133,7 +133,7 @@ function render(){
  if(document.body.dataset.ncpView==="question"){const url=new URL(location.href);url.searchParams.set("id",q.id);history.replaceState(history.state,"",url);}
  el.status.textContent=(state.index+1)+' / '+state.list.length+'번';
  let draft=drafts.get(q.id);
- if(!draft){draft={id:crypto.randomUUID(),choice:"",open:false,hintOpen:false};drafts.set(q.id,draft);}
+ if(!draft){draft={id:crypto.randomUUID(),choice:"",open:false,hintOpen:false,answerVisible:false};drafts.set(q.id,draft);}
  const prior=recordFor(q.id);
  const answered=prior || (draft.open?draft:null);
  const options=q.options.map((option,i)=>{
@@ -169,11 +169,13 @@ function render(){
    '<div class="ncp-options" role="group" aria-label="선택지">'+options+'</div>'+
    '<div class="quiz-solve-actions" role="group" aria-label="문제 풀이 도움말">'+
    '<button type="button" class="quiz-solve-action quiz-solve-action--hint" data-toggle-hint aria-controls="ncp-hint" aria-expanded="'+String(!!draft.hintOpen)+'">힌트 보기</button>'+
-   '<button type="button" class="study-open quiz-solve-action quiz-solve-action--answer" '+(answered?'data-show-answer':'data-open')+'>정답·해설 보기</button>'+
+   '<button type="button" class="study-open quiz-solve-action quiz-solve-action--answer" '+(answered?'data-show-answer':'data-open')+
+   ' aria-controls="ncp-answer-results" aria-expanded="'+String(!!answered&&!!draft.answerVisible)+'">'+
+   (answered&&draft.answerVisible?'정답·해설 접기':'정답·해설 보기')+'</button>'+
    '</div></section>'+
    '<section id="ncp-hint" class="quiz-solve-panel"'+(draft.hintOpen?'':' hidden')+'><h3>힌트</h3><p>'+
    esc(q.hint||("문제의 핵심 주제인 ‘"+q.topic+"’를 기준으로 각 선택지의 역할을 비교하세요. 문제의 조건과 일치하는 기능을 찾아보세요."))+
-   '</p></section>'+(answered?result+reviewControls():"")+sourceDisclosure;
+   '</p></section>'+(answered?'<div id="ncp-answer-results"'+(draft.answerVisible?'':' hidden')+'>'+result+reviewControls()+'</div>':"")+sourceDisclosure;
  if(answered)bindReview(el.question.querySelector(".study-review"),{bank:"ncp",questionId:q.id,
    clientAttemptId:draft.id,answerText:answered.choice,metadata:{exam:q.exam,choice_matches:answered.choice?answered.choice===q.answer:null,verified_server_grade:false}},
    prior?.grade,result=>{state.answers[q.id]={choice:answered.choice,grade:result};save();renderNumbers();updateProgress();});
@@ -220,11 +222,23 @@ el.question.addEventListener("click",event=>{
    return;
  }
  if(event.target.closest("[data-show-answer]")){
-   const result=el.question.querySelector(".ncp-answer");
-   result?.scrollIntoView({block:"start",behavior:"smooth"});
-   result?.focus({preventScroll:true});return;
+   const currentDraft=drafts.get(q.id);
+   currentDraft.answerVisible=!currentDraft.answerVisible;
+   const result=el.question.querySelector("#ncp-answer-results");
+   const button=event.target.closest("[data-show-answer]");
+   if(result)result.hidden=!currentDraft.answerVisible;
+   button.setAttribute("aria-expanded",String(currentDraft.answerVisible));
+   button.textContent=currentDraft.answerVisible?"정답·해설 접기":"정답·해설 보기";
+   if(currentDraft.answerVisible)result?.querySelector(".ncp-answer")?.focus({preventScroll:true});
+   return;
  }
- if(event.target.closest("[data-open]")){drafts.get(q.id).open=true;render();el.question.querySelector(".ncp-answer").focus();return;}
+ if(event.target.closest("[data-open]")){
+   const currentDraft=drafts.get(q.id);
+   currentDraft.open=true;currentDraft.answerVisible=true;
+   render();
+   el.question.querySelector(".ncp-answer")?.focus({preventScroll:true});
+   return;
+ }
  if(event.target.closest("[data-retry]")){
   drafts.delete(q.id);delete state.answers[q.id];save();render();focusQuestion();
  }
