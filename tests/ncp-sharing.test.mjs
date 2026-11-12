@@ -41,6 +41,6 @@ assert.match(ui,/quizDisclosure\(/);
 assert.ok(!ui.includes("<summary>더보기</summary>"),"Share actions must remain visible without disclosure");
 const sharedCSS=read("css/quiz-unified.css");
 assert.match(sharedCSS,/grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
-assert.match(html,/ncp-quiz\.js\?v=20261112-share-visible-1/);
+assert.match(html,/ncp-quiz\.js\?v=20261112-action-colors-1/);
 assert.match(html,/ncp-quiz\.css\?rev=20261112-share-visible-1/);
 console.log("PASS: NCP problem sharing and reporting link all 75 IDs without leaking answers.");
