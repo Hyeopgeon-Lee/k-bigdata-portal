@@ -1,0 +1,20 @@
+name: Monday study plan reminder QA
+on:
+  push:
+    paths:
+      - "supabase/functions/study-plan-reminder/index.ts"
+      - ".github/workflows/study-plan-reminder.yml"
+      - "tests/study-plan-reminder.test.mjs"
+      - "supabase/migrations/*study_monday_noon_plan_registration_reminder.sql"
+      - ".github/workflows/study-plan-reminder-qa.yml"
+  workflow_dispatch:
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: node tests/study-plan-reminder.test.mjs
