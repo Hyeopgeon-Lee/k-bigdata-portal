@@ -45,7 +45,7 @@ const checks=[
  ['22 logical overscroll has x fallback',practical.includes('overscroll-behavior-x:contain')&&practical.includes('overscroll-behavior-inline:contain')],
  ['23 navigation uses native disclosure without scrollbar dependencies',pages.every(p=>/<details class="portal-menu" open>/.test(read(p)))&&navigation.includes('flex-wrap: wrap')],
  ['24 iOS safe-area is present',/env\(safe-area-inset-bottom\)/.test(practical)&&/viewport-fit=cover/.test(read('practical.html'))],
- ['25 sticky layouts retain normal backgrounds',/position:\s*sticky/.test(navigation)&&/--portal-header-surface:\s*rgba\(255, 255, 255, \.88\)/.test(navigation)&&/background:\s*var\(--portal-header-surface\)/.test(navigation)],
+ ['25 sticky layouts retain normal backgrounds',/position:\s*sticky/.test(navigation)&&/--portal-header-surface:\s*#fff/.test(navigation)&&/background:\s*var\(--portal-header-surface\)/.test(navigation)],
  ['26 no CSS :has dependency',![style,practical,portal,navigation,read('css/learning.css'),read('css/interview.css'),read('css/jobs.css')].some(c=>/:has\(/.test(c))],
  ['27 no service worker dependency',!/serviceWorker\.register|new SharedWorker|new Worker\(/.test(js)],
  ['28 no hardware permission dependency',!/getUserMedia\(|geolocation\.|Bluetooth|serial\.requestPort/.test(js)],
