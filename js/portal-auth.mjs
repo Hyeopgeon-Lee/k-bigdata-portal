@@ -318,6 +318,9 @@ function renderAccount(){
     copy.append(name,description);element.append(copy,chevron);list.append(element);
   };
 
+  const accountSettings=addSection("계정 설정");
+  addAction(accountSettings,{title:"마이페이지",detail:"내 정보 · 비밀번호 · 학적 상태",href:"mypage.html"});
+
   const learning=addSection("학습");
   addAction(learning,{title:"나의 학습현황",detail:"풀이 기록과 오답 복습",href:"my-learning.html"});
   if(currentProfile?.enrollment_status==="enrolled"&&currentProfile?.signup_type!=="alumni")addAction(learning,{title:"자율학습 관리",detail:"주간 학습계획·공부시간 기록",href:"study.html"});

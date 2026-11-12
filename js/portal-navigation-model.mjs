@@ -6,6 +6,7 @@ export const portalPages = {
   services: {title:'전체 서비스', group:null, directory:true, eyebrow:'ALL SERVICES', description:'학습·취업·프로젝트·학과 생활 도구를 한곳에서 찾으세요. 필요한 서비스를 즐겨찾기에 추가할 수 있습니다.', headingId:'directory-title'},
   coding: {title:'기초 코딩 350제', group:'learning', eyebrow:'CODING PRACTICE', description:'Java·C·Python·Ubuntu 문제를 풀며 프로그래밍 기초를 학습하세요.', headingId:'coding-heading', quiz:true},
   study: {title:'자율학습 관리', group:null, navGroup:'learning', eyebrow:'STUDENT LEARNING · AFTER SCHOOL', description:'매주 공부할 날짜를 등록하고, 시작·종료 버튼으로 공부시간을 기록하세요.', locked:true},
+  mypage: {title:'마이페이지', group:null, locked:true},
   'my-learning': {title:'나의 학습현황', group:null, navGroup:'learning', eyebrow:'STUDENT LEARNING · MY PROGRESS', description:'자가평가, 문제풀이 이력, 오답 복습을 한 화면에서 확인하세요. 클라우드에 저장된 학습기록을 표시합니다.', locked:true},
   'teacher-learning': {title:'학급 학습통계', group:null, navGroup:'learning', eyebrow:'SUPER ADMIN · WEEKLY LEARNING', description:'학급 학습 활동을 확인하고 주간 리포트 이메일 발송 여부를 관리합니다.', locked:true},
   practical: {title:'정보처리 기출문제', group:'learning', eyebrow:'PRACTICAL EXAM', description:'정보처리기사·정보처리산업기사의 C·Java·Python·SQL 실기 기출문제를 학습하세요.', headingId:'portal-intro-title-practical', quiz:true},
