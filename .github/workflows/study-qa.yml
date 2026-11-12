@@ -1,0 +1,35 @@
+name: Self-study portal regression checks
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'study.html'
+      - 'index.html'
+      - 'teacher-learning.html'
+      - 'services.html'
+      - 'js/study.js'
+      - 'js/study-teacher.js'
+      - 'js/services.js'
+      - 'js/portal-navigation-model.mjs'
+      - 'tests/study-feature.test.mjs'
+      - '.github/workflows/study-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-study:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check study module syntax
+        run: |
+          node --check js/study.js
+          node --check js/study-teacher.js
+      - name: Verify generated common portal UI
+        run: node scripts/build-portal-shell.mjs --check
+      - name: Run navigation and study regression tests
+        run: node --test tests/study-feature.test.mjs tests/portal-ux.test.mjs tests/portal-shell.test.mjs tests/portal-redesign.test.mjs tests/portal-dashboard.test.mjs
