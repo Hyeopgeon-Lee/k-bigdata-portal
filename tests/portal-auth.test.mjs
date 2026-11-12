@@ -84,8 +84,8 @@ assert.match(css,/portal-auth-secondary-actions/,"login actions use responsive l
 assert.match(css,/portal-auth-type-options/,"role choices are card-styled");
 assert.match(css,/max-width:\s*420px/,"narrow screens have dedicated layout");
 // The verified profile name is displayed only by the shared account UI.
-assert.match(source,/window\\.portalMemberName=/,"shared profile name getter is present");
-assert.match(source,/currentProfile\\?\\.full_name/,"display name comes from the verified profile");
+assert.match(source,/window\.portalMemberName=/,"shared profile name getter is present");
+assert.match(source,/currentProfile\?\.full_name/,"display name comes from the verified profile");
 assert.match(source,/portal-account-name/,"top account UI still renders the member name");
 assert.doesNotMatch(source,/portal-account-email/,"account summary does not expose email as identity");
 // No page body should duplicate the login name rendered by the shared header.
@@ -93,12 +93,12 @@ for(const page of ["help","room"]){
  const html=read(page+".html"),script=read("js/"+page+".js");
  assert.doesNotMatch(html,new RegExp('id="'+page+'-identity"'),page+" has no redundant body login label");
  assert.doesNotMatch(script,new RegExp(page+"-identity"),page+" does not try to populate a removed label");
- assert.match(html,new RegExp("js/"+page+"\\\\.js\\\\?v=20261112-body-login-removed-1"),page+" loads the cleaned script");
+ assert.match(html,new RegExp("js/"+page+"\\.js\\?v=20261112-body-login-removed-1"),page+" loads the cleaned script");
 }
-// Guard every service script against reintroducing a visible '로그인: 이름' label.
+// Guard every service script against reintroducing a visible login identity label.
 for(const file of readdirSync(new URL("../js/",import.meta.url))){
- if(!/\\.(?:js|mjs)$/.test(file))continue;
- assert.doesNotMatch(read("js/"+file),/['"` ]로그인\\s*[:：]\\s*['"`]\\s*\\+/,file+" must not inject login identity into the page body");
+ if(!/\.(?:js|mjs)$/.test(file))continue;
+ assert.doesNotMatch(read("js/"+file),/['"]로그인\s*[:：]\s*['"]\s*\+/,file+" must not inject login identity into the page body");
 }
 // Permanent deletion must be an explicit, status-gated server action.
 execFileSync(process.execPath,["--check",new URL("../js/portal-auth.mjs",import.meta.url).pathname]);
