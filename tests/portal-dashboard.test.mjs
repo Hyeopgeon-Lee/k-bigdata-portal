@@ -60,7 +60,7 @@ assert.ok(directoryJS.includes('getFavorites()'));
 assert.ok(directoryJS.includes('service.url'));
 assert.ok(shell.includes('initRecentTracking()'));
 assert.ok(searchUI.includes('event.preventDefault()'));
-assert.equal(services.length,18,'the complete service registry is retained');
+assert.equal(services.length,19,'the complete service registry is retained');
 assert.equal(services.find(s=>s.id==='practical').name,'정보처리 기출문제');
 assert.equal(services.find(s=>s.id==='ncp').name,'NCP 기출문제');
 // Account-backed shortcuts are inaccessible without an authorized Supabase session.
@@ -74,4 +74,4 @@ assert.deepEqual(getRecent(),[]);
 assert.equal(toggleFavorite('practical'),false,'unauthorized favorite writes are rejected');
 recordService('practical');
 assert.deepEqual(getRecent(),[],'unauthorized visits are not recorded');
-console.log('PASS: account-backed dashboard, 18 services, authenticated-only shortcuts and search.');
+console.log('PASS: account-backed dashboard, 19 services, authenticated-only shortcuts and search.');
