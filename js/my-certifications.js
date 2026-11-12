@@ -26,7 +26,7 @@ let user=null,own=[],all=[],profileById=new Map(),editingId=null,admin=false;
 const findChoice=code=>choices.find(x=>x.code===code);
 const readableDate=value=>value?String(value).replaceAll('-','.'):'-';
 function message(id,text,kind='info'){const n=el(id);if(n){n.textContent=text;n.dataset.kind=kind;}}
-function todayInKorea(){return new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());}
+function todayInKorea(){const parts=Object.fromEntries(new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date()).map(p=>[p.type,p.value]));return parts.year+'-'+parts.month+'-'+parts.day;}
 function pill(text,kind){const n=make('span',text,'cert-badge'+(kind?' is-'+kind:''));return n;}
 function button(text,action,id){const b=make('button',text,'cert-secondary');b.type='button';b.dataset.action=action;b.dataset.id=id;return b;}
 function fillOptions(){
