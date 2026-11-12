@@ -9,15 +9,12 @@ globalThis.location={origin:"https://portal.k-bigdata.kr"};
 
 for(const q of ncpQuestions){
  const report=new URL(learningReportUrl("ncp",q,q.exam+" · 원문 "+q.originalNumber+"번"));
- const problem=new URL(report.searchParams.get("url"));
  assert.equal(report.origin,"https://portal.k-bigdata.kr");
  assert.equal(report.pathname,"/help.html");
  assert.equal(report.searchParams.get("source"),"ncp");
  assert.equal(report.searchParams.get("id"),q.id);
- assert.equal(report.searchParams.get("label"),q.exam+" · 원문 "+q.originalNumber+"번");
- assert.equal(problem.origin,"https://portal.k-bigdata.kr");
- assert.equal(problem.pathname,"/ncp.html");
- assert.equal(problem.searchParams.get("id"),q.id);
+ assert.deepEqual([...report.searchParams.keys()],["source","id"]);
+ assert.ok(report.href.length<120);
  assert.ok(!report.searchParams.has("answer")&&!report.searchParams.has("explanation"));
  assert.ok(!report.href.includes(encodeURIComponent(q.explanation)));
 }
