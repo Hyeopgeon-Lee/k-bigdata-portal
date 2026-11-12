@@ -11,6 +11,10 @@ on:
       - ".github/workflows/certification-registration-reminder.yml"
       - "supabase/functions/certification-registration-reminder/**"
       - "tests/certification-registration-reminder.test.mjs"
+      - "tests/certification-calendar-integration.test.mjs"
+      - "js/certification-schedule.mjs"
+      - "js/schedule.js"
+      - "schedule.html"
 permissions:
   contents: read
   id-token: write
@@ -20,8 +24,11 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
-      - name: Validate recipient filtering rules
-        run: node --test tests/certification-registration-reminder.test.mjs
+      - name: Validate eligibility rules and integrated calendar
+        run: |
+          node --check js/schedule.js
+          node --check js/certification-schedule.mjs
+          node --test tests/certification-registration-reminder.test.mjs tests/certification-calendar-integration.test.mjs
       - name: Invoke Supabase sender with GitHub OIDC
         shell: bash
         env:
