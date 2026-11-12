@@ -125,6 +125,27 @@ body.shared-question-bank .ncp-traverse button{min-height:44px;border-radius:var
 body.shared-question-bank .ncp-disclaimer{max-width:var(--quiz-content-max);margin:16px auto}
 body.shared-question-bank .coding-page .coding-io{grid-template-columns:1fr 1fr}
 body.shared-question-bank .coding-io>div{background:var(--quiz-page);border:1px solid var(--quiz-border);border-radius:var(--quiz-button-radius)}
+
+/* Ubuntu 50 questions: prevent the shared pale card style from washing out
+   light terminal text. Keep strong contrast in both console panes. */
+body.shared-question-bank.coding-ubuntu-terminal-demo .coding-page .coding-io>div{
+  background:#102039;border-color:#36516f;color:#e7eefb;
+}
+body.shared-question-bank.coding-ubuntu-terminal-demo .coding-page .coding-io>div>b{
+  color:#c4dcff;font-size:14px;font-weight:800;line-height:1.5;
+}
+body.shared-question-bank.coding-ubuntu-terminal-demo .coding-page .coding-io>div>pre{
+  color:#e7eefb;font-size:14px;line-height:1.85;
+  max-width:100%;overflow-x:auto;white-space:pre;overflow-wrap:normal;
+  -webkit-overflow-scrolling:touch;
+}
+body.shared-question-bank.coding-ubuntu-terminal-demo .coding-page .coding-io .ubuntu-command-placeholder{
+  color:#ffd58e;font-weight:800;
+}
+body.shared-question-bank.coding-ubuntu-terminal-demo .coding-page .coding-io .coding-ubuntu-output-note{
+  color:#cbd8ea;font-size:13px;line-height:1.75;
+}
+
 /* Preserve code/table scrolling only inside the content itself. */
 body.shared-question-bank :is(.coding-code,.coding-scroll,.code-scroll,.table-scroll){max-width:100%;min-width:0}
 body.shared-question-bank :is(.coding-code pre,.code-scroll pre,.coding-scroll table,.table-scroll table){max-width:100%}
