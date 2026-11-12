@@ -32,6 +32,20 @@ try{
        assert.equal(await page.locator(".quiz-navigation").count(),1,target.name+" shared navigation");
        assert.equal(await page.locator(".quiz-heading").count(),1,target.name+" shared heading");
        assert.equal(await page.locator(".quiz-actions .quiz-action").count(),3,target.name+" three actions");
+       const tones=["share","copy","report"];
+       const actionColors=[];
+       for(const tone of tones){
+         const action=page.locator(".quiz-actions .quiz-action--"+tone);
+         assert.equal(await action.count(),1,target.name+" "+tone+" action present");
+         const result=await action.evaluate(el=>{
+           const css=getComputedStyle(el);
+           return {backgroundColor:css.backgroundColor,color:css.color,borderColor:css.borderTopColor};
+         });
+         actionColors.push(result);
+       }
+       assert.equal(new Set(actionColors.map(item=>item.backgroundColor)).size,3,
+         target.name+" must display three different action colors");
+
        assert.equal(await page.locator(".quiz-answer").count(),1,target.name+" shared answer frame");
        assert.equal(await page.locator(".quiz-actions details").count(),0,target.name+" actions may not be collapsed");
        assert.equal(await page.locator(".quiz-nav-button").count(),2,target.name+" list/answer navigation");
@@ -50,6 +64,7 @@ try{
            heading:get(".quiz-heading"),badge:get(".quiz-badge"),
            actions:get(".quiz-actions"),action:get(".quiz-action"),answer:get(".quiz-answer")};
        },styleKeys);
+       snapshot[target.name].actionColors=actionColors;
        const desktopCardTarget=Math.min(1240,width-(width<=690?24:32));
        assert.ok(Math.abs(snapshot[target.name].card.rect.width-desktopCardTarget)<=2,
          target.name+" detail width at "+width+": expected "+desktopCardTarget+"px, got "+snapshot[target.name].card.rect.width+"px");
@@ -93,6 +108,8 @@ try{
      const baseline=snapshot.practical;
      for(const [name,value] of Object.entries(snapshot)){
        if(name==="practical")continue;
+       assert.deepEqual(value.actionColors,baseline.actionColors,
+         "Three quiz action colors must match across services at "+width+"px for "+name);
        for(const component of ["nav","title","badge","actions","action","answer"]){
          for(const key of styleKeys){
            if(baseline[component].style[key]!==value[component].style[key]){
