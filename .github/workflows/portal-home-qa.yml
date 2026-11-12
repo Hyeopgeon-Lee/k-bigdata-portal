@@ -17,6 +17,10 @@ on:
       - "js/home-alumni.js"
       - "tests/fixtures/approved-student.mjs"
       - "tests/portal-alumni-home-browser.mjs"
+      - "tests/portal-my-page-alumni-lock-browser.mjs"
+      - "mypage.html"
+      - "js/my-page.js"
+      - "tests/portal-my-page.test.mjs"
       - "js/home-schedule.js"
       - "data/calendar-grade-bridge.js"
       - "tests/calendar-grade-bridge.test.mjs"
@@ -43,6 +47,8 @@ jobs:
           node-version: "22"
       - name: Validate home UX contracts and local preference behavior
         run: node tests/portal-dashboard.test.mjs
+      - name: Verify account and registered alumni status restrictions
+        run: node tests/portal-my-page.test.mjs
       - name: Validate calendar memo grade fallback
         run: node tests/calendar-grade-bridge.test.mjs
       - name: Validate student daily engagement goals
@@ -69,6 +75,7 @@ jobs:
           python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/portal-home-server.log 2>&1 &
           node tests/portal-home-browser.mjs
           node tests/portal-alumni-home-browser.mjs
+          node tests/portal-my-page-alumni-lock-browser.mjs
       - name: Upload visual QA screenshots
         if: always()
         uses: actions/upload-artifact@v4

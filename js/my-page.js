@@ -53,8 +53,19 @@ async function start(){
    }finally{busy(contactForm,false);}
   });
  }
+ const lockNotice=byId("my-page-academic-lock-note");
+ if(profile.signup_type==="alumni")lockNotice.hidden=false;
  if(profile.signup_type==="student"&&profile.approval_status==="approved"&&["enrolled","leave","graduated","early_employment"].includes(profile.enrollment_status)){
-  byId("my-page-academic-panel").hidden=false;
+  // The server checks the same condition during every status update.
+  // Fail closed if this registration check cannot be completed.
+  const {data:registeredAlumni,error:registrationError}=await api.rpc("my_alumni_profile_registered");
+  if(registrationError||registeredAlumni!==false){
+   lockNotice.textContent=registrationError
+    ?"학적 상태 변경 가능 여부를 확인하지 못했습니다. 다시 로그인한 후 시도해 주세요."
+    :"졸업생 네트워크에 등록된 계정은 학적 상태를 변경할 수 없습니다. 변경이 필요하면 담당 관리자에게 문의하세요.";
+   lockNotice.hidden=false;
+  }else{
+   byId("my-page-academic-panel").hidden=false;
   const form=byId("my-page-academic-form");
   const original=profile.enrollment_status==="early_employment"?"early_employment":profile.enrollment_status==="graduated"?"graduated":profile.enrollment_status==="leave"?"leave":[1,2].includes(Number(profile.academic_year))?String(profile.academic_year):"";
   if(original)form.elements.academic_status.value=original;
@@ -82,6 +93,7 @@ async function start(){
     busy(form,false);
    }
   });
+  }
  }
  const flash=sessionStorage.getItem("portal:mypage-success");
  if(flash){sessionStorage.removeItem("portal:mypage-success");notify("my-page-academic-message",flash,"success");}

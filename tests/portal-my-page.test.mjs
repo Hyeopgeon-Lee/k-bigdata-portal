@@ -31,6 +31,16 @@ assert.doesNotMatch(js,/phoneInput\.required=graduating/,"graduation does not re
 assert.match(js,/!validMobile\(phone\)/,"phone form validates before saving");
 assert.match(js,/profile\.mobile_phone=mobileDigits\(phone\)/,"saved number immediately updates own profile");
 assert.match(js,/profile\.signup_type==="student"/,'self-service status for students only');
+assert.match(html,/id="my-page-academic-lock-note"/,'registered graduates have read-only account notice');
+assert.match(js,/api\.rpc\("my_alumni_profile_registered"\)/,'check alumni registration in server-side RPC');
+assert.match(js,/registeredAlumni!==false/,'fail closed when registration status is unknown');
+assert.match(js,/lockNotice\.hidden=false/,'show explanation for alumni-registered members');
+const alumniLockSql=read('supabase/migrations/20261114010000_lock_registered_alumni_academic_status.sql');
+assert.match(alumniLockSql,/CREATE OR REPLACE FUNCTION public\.my_alumni_profile_registered\(\)/i);
+assert.match(alumniLockSql,/public\.alumni_profiles a where a\.user_id=v_id/i,'registered alumni bound to authenticated user');
+assert.match(alumniLockSql,/raise exception 'ACADEMIC_STATUS_CHANGE_NOT_ALLOWED'/i,'server refuses academic change');
+assert.match(alumniLockSql,/revoke all on function public\.my_alumni_profile_registered\(\) from public,anon/i,'anonymous access denied');
+assert.match(alumniLockSql,/grant execute on function public\.my_alumni_profile_registered\(\) to authenticated/i,'RPC only for signed-in members');
 assert.match(js,/sessionStorage\.setItem\("portal:mypage-success"/,'user gets result after reload');
 assert.match(css,/@media\(max-width:740px\)/,'mobile layout present');
 assert.match(sql,/v_id uuid := auth\.uid\(\)/,'uses session user id only');

@@ -1,5 +1,5 @@
 // Isolated Supabase fixture for browser QA. Account state persists across local pages.
-export async function approvedStudent(context, profileOverride={}){
+export async function approvedStudent(context, profileOverride={}, registeredAlumni=false){
  await context.route("https://esm.sh/@supabase/supabase-js@*",route=>route.fulfill({
   contentType:"application/javascript",
   headers:{"Access-Control-Allow-Origin":"*"},
@@ -9,6 +9,7 @@ export async function approvedStudent(context, profileOverride={}){
    function save(db){localStorage.setItem(key,JSON.stringify(db));}
    const user={id:"fixture",email:"student@example.test"};
    const profileOverride=${JSON.stringify(profileOverride)};
+   const registeredAlumni=${JSON.stringify(registeredAlumni)};
    function from(table){
     let mode="select",where=[],ordering=null,max=1000,values=null;
     const match=(row)=>where.every(([type,k,v])=>{
@@ -73,7 +74,7 @@ export async function approvedStudent(context, profileOverride={}){
     from,
     functions:{async invoke(){return {data:{ok:false,error:"ADMIN_NOT_AUTHORIZED"},error:null};}},
     async rpc(name){return {data:({start_portal_session:new Date(Date.now()+90*86400000).toISOString(),
-     portal_learning_access:{read:true,write:true},portal_super_admin_allowed:false})[name]};}
+     portal_learning_access:{read:true,write:true},portal_super_admin_allowed:false,my_alumni_profile_registered:registeredAlumni})[name]};}
    };
   };`
  }));
