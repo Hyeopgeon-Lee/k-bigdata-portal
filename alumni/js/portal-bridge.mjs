@@ -1,6 +1,6 @@
 /* Preserve portal authentication on the embedded Alumni Network pages.
- * The alumni network's Google Apps Script backend and its PIN/admin permission
- * checks remain authoritative for profile editing, moderation, and mail actions.
+ * Supabase Edge Functions now enforce member ownership and administrator permissions.
+ * Legacy PINs are retired and no longer control account access.
  */
 import {createClient} from "https://esm.sh/@supabase/supabase-js@2.119.0?bundle";
 
@@ -12,6 +12,7 @@ const client=createClient(
   {auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false,
     storageKey:"kbigdata-portal-auth-v1"}}
 );
+window.alumniPortalClient=client;
 function block(reason){
  document.documentElement.dataset.alumniPortalAuth="blocked";
  if(message)message.textContent=reason;
@@ -27,7 +28,7 @@ async function authorize(){
   const {data:access,error:accessError}=await client.rpc("portal_learning_access");
   if(accessError||access?.read!==true){block("포털 계정 이용 권한을 확인하지 못했습니다.");return;}
   const {data:profile,error:profileError}=await client.from("profiles")
-   .select("full_name,signup_type,approval_status,alumni_source_id")
+   .select("full_name,signup_type,approval_status,alumni_source_id,graduation_year")
    .eq("user_id",user.id).single();
   if(profileError||profile?.approval_status!=="approved"){
    block("승인된 포털 회원만 졸업생 네트워크를 이용할 수 있습니다.");return;
@@ -41,9 +42,9 @@ async function authorize(){
     if(field&&!field.value)field.value=sourceId;
    }
   }
-  // Personal contact fields and PIN are not exposed to public JavaScript here.
-  // Existing Alumni ID/PIN protects all writes to the separate Google Sheets DB.
-  window.alumniPortalMember={name:profile.full_name||"",alumniId:sourceId||null};
+  // Expose only self identity, never stored PINs, contact details or service keys.
+  window.alumniPortalMember={name:profile.full_name||"",email:user.email||"",
+   graduationYear:profile.graduation_year||null,alumniId:sourceId||null};
   document.documentElement.dataset.alumniPortalAuth="approved";
   if(ui)ui.hidden=true;
  }catch(error){
@@ -51,7 +52,8 @@ async function authorize(){
   block("포털 인증 상태를 확인할 수 없습니다. 다시 로그인해 주세요.");
  }
 }
-await authorize();
+window.alumniPortalReady=authorize();
+await window.alumniPortalReady;
 document.addEventListener("visibilitychange",()=>{
  if(!document.hidden&&document.documentElement.dataset.alumniPortalAuth==="approved"){
   client.auth.getUser().then(({data,error})=>{if(error||!data.user)block("포털 로그인 세션이 만료되었습니다. 다시 로그인해 주세요.");})
