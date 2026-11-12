@@ -94,21 +94,21 @@ body[data-guide-page] .guide-cta{margin-top:24px;background:#f5f7fb}
 
 /* Shared internal-page header system: one hierarchy for jobs, certifications, practice, interview, docs and project guide. */
 body[data-page] .portal-page-hero{
-  width:min(calc(100% - 40px),var(--container));
+  width:min(calc(100% - var(--portal-shell-gutter,24px) * 2),var(--portal-shell-max,1280px));
   margin-inline:auto;
-  padding:28px 0 34px;
+  padding:16px 0 24px;
 }
 body[data-page] .portal-page-hero .back-link{
   display:inline-flex;
   align-items:center;
   min-height:36px;
-  margin:0 0 20px;
+  margin:0 0 12px;
   color:var(--color-primary);
   font-size:15px;
   font-weight:650;
 }
 body[data-page] .portal-page-hero .section-kicker{
-  margin:0 0 10px;
+  margin:0 0 8px;
   color:var(--color-primary);
   font-size:12px;
   font-weight:800;
@@ -118,7 +118,7 @@ body[data-page] .portal-page-hero .section-kicker{
 body[data-page] .portal-page-hero h1{
   max-width:900px;
   margin:0 0 12px;
-  font-size:34px;
+  font-size:32px;
   line-height:1.28;
   letter-spacing:-.045em;
   word-break:keep-all;
@@ -156,10 +156,10 @@ body[data-page="project-guide"] .guide-page-hero .guide-actions{
   margin-top:22px;
 }
 body[data-page="practical"] .portal-page-hero{
-  padding:28px 0 28px;
+  padding:16px 0 24px;
 }
 body[data-page="practical"] .portal-page-hero h1{
-  font-size:34px;
+  font-size:32px;
 }
 body[data-page="practical"] .portal-page-hero p{
   font-size:17px;
@@ -167,8 +167,8 @@ body[data-page="practical"] .portal-page-hero p{
 
 @media(max-width:767px){
   body[data-page] .portal-page-hero{
-    width:min(calc(100% - 24px),var(--container));
-    padding:24px 0 20px;
+    width:min(calc(100% - var(--portal-shell-gutter,16px) * 2),var(--portal-shell-max,1280px));
+    padding:16px 0 20px;
   }
   body[data-page] .portal-page-hero .back-link,
   body[data-page] .portal-page-hero .section-kicker{

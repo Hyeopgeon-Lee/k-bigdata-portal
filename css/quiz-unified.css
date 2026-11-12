@@ -8,7 +8,7 @@
   --quiz-card-radius:16px; --quiz-button-radius:10px;
   --quiz-padding-mobile:16px; --quiz-padding-desktop:24px;
   --quiz-gap:16px; --quiz-button-height:44px;
-  --quiz-content-max:1240px;
+  --quiz-content-max:var(--portal-shell-max,1280px);
 }
 body.shared-question-bank :is(.ncp-study-page,.practical-page,.coding-page){color:var(--quiz-text)}
 /* Identical width, border, spacing and padding for all problem cards. */
@@ -30,7 +30,7 @@ body.shared-question-bank.practical-page .bank-solve{
   border-radius:var(--quiz-card-radius)!important;box-shadow:none!important;min-width:0;
   color:var(--quiz-text)
 }
-body.shared-question-bank .ncp-study-page{width:min(calc(100% - 32px),var(--quiz-content-max));margin-inline:auto}
+body.shared-question-bank .ncp-study-page{width:min(calc(100% - var(--portal-shell-gutter,24px) * 2),var(--quiz-content-max));margin-inline:auto}
 body.shared-question-bank[data-ncp-view="question"] :is(.ncp-page-heading,.ncp-tools,.ncp-progress-info,#ncp-progress){display:none!important}
 body.shared-question-bank[data-ncp-view="question"] .ncp-study-page{padding-top:16px}
 body.shared-question-bank .ncp-panel #ncp-question{min-width:0}

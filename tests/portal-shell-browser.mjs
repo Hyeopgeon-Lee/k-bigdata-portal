@@ -55,7 +55,7 @@ async function snapshot(page){
     const relativeRect=node=>{const value=rect(node),origin=rect(nav);value.x=Math.round((value.x-origin.x)*100)/100;value.y=Math.round((value.y-origin.y)*100)/100;return value;};
     const buttons=[...(nav?.querySelectorAll('.portal-nav-current .portal-nav-items a')||[])].map(node=>{const value=style(node);delete value.backgroundColor;delete value.color;delete value.borderTopColor;return {id:node.dataset.navId,style:value,rect:relativeRect(node)};});
     const moreNode=nav?.querySelector('.portal-nav-more summary');
-    return {header:commonHeader,headerCount:document.querySelectorAll('.site-header').length,mainCount:document.querySelectorAll('main').length,shell:document.querySelector('.site-header')?.dataset.portalShell,scroll:document.documentElement.scrollWidth,viewport:document.documentElement.clientWidth,headerLinks:[...document.querySelectorAll('#portal-nav a')].map(a=>({href:a.getAttribute('href'),text:a.textContent.trim()})),active:active?{id:active.dataset.navId,style:style(active)}:null,buttons,allServices:[...(nav?.querySelectorAll('[data-nav-id]')||[])].map(a=>a.dataset.navId),toolbar:component('.study-header'),more:moreNode?{style:style(moreNode),rect:relativeRect(moreNode)}:null,brandText:[...document.querySelectorAll('.brand-full,.brand-short')].filter(el=>getComputedStyle(el).display!=='none').map(el=>el.textContent)};
+    return {header:commonHeader,serviceBar:component('.portal-service-nav'),pageIntro:component('.portal-page-hero'),headerCount:document.querySelectorAll('.site-header').length,mainCount:document.querySelectorAll('main').length,shell:document.querySelector('.site-header')?.dataset.portalShell,scroll:document.documentElement.scrollWidth,viewport:document.documentElement.clientWidth,headerLinks:[...document.querySelectorAll('#portal-nav a')].map(a=>({href:a.getAttribute('href'),text:a.textContent.trim()})),active:active?{id:active.dataset.navId,style:style(active)}:null,buttons,allServices:[...(nav?.querySelectorAll('[data-nav-id]')||[])].map(a=>a.dataset.navId),toolbar:component('.study-header'),more:moreNode?{style:style(moreNode),rect:relativeRect(moreNode)}:null,brandText:[...document.querySelectorAll('.brand-full,.brand-short')].filter(el=>getComputedStyle(el).display!=='none').map(el=>el.textContent)};
   });
 }
 async function interactions(page,width,id){
@@ -98,12 +98,20 @@ try{
         const state=await snapshot(page);evidence.push({engine,width,page:id,...state});
         check(label+' parity',()=>{
           assert.equal(state.headerCount,1);assert.equal(state.mainCount,1);assert.equal(state.shell,shellVersion);
-          assert.equal(state.header['.site-header'].rect.height,width<=900?60:76,'shared header height');
+          assert.equal(state.header['.site-header'].rect.height,width<=900?60:68,'shared header height');
           assert.ok(state.scroll<=state.viewport+1,'no horizontal overflow '+state.scroll+'/'+state.viewport);
           const key=String(width);
           if(!baseline.has(key))baseline.set(key,{header:state.header,links:state.headerLinks});
           else{assert.deepEqual(state.header,baseline.get(key).header,'computed header styles and coordinates match index');assert.deepEqual(state.headerLinks,baseline.get(key).links,'global menu order and destinations');}
           if(definition.group){
+            assert.ok(state.serviceBar,'shared service bar exists');
+            assert.ok(Math.abs(state.serviceBar.rect.x-state.header['.header-inner'].rect.x)<1,'service bar aligns with header');
+            assert.ok(Math.abs(state.serviceBar.rect.width-state.header['.header-inner'].rect.width)<1,'service bar width matches header');
+            assert.equal(state.serviceBar.rect.height,56,'service bar has common 56px height');
+            if(state.pageIntro?.rect.width){
+              assert.ok(Math.abs(state.pageIntro.rect.x-state.serviceBar.rect.x)<1,'page introduction aligns with service bar');
+              assert.ok(Math.abs(state.pageIntro.rect.width-state.serviceBar.rect.width)<1,'page introduction matches service bar width');
+            }
             assert.equal(state.active?.id,id,'query-independent current service');
             assert.deepEqual([...state.allServices].sort(),navigationItems.map(item=>item.id).sort(),'all service links preserved');
             const groupKey=width+':'+definition.group;
@@ -121,12 +129,12 @@ try{
             return {hero:pick('.room-hero'),content:pick('.room-layout'),serviceNav:pick('.portal-service-nav')};
           });
           check(label+' room shared container',()=>{
-            const expected=Math.min(width- (width<=389?32:width<=767?36:40),1240);
+            const expected=Math.min(width- (width<=767?32:48),1280);
             assert.ok(roomWidths.hero&&roomWidths.content&&roomWidths.serviceNav,'room wrappers exist');
             assert.deepEqual(roomWidths.hero,roomWidths.content,'room hero and reservation content must share width and left alignment');
             assert.deepEqual(roomWidths.content,roomWidths.serviceNav,'room content must align with common portal service navigation');
             assert.ok(Math.abs(roomWidths.content.width-expected)<=1,
-              'room content should follow 1240px portal container, actual '+roomWidths.content.width+' expected '+expected);
+              'room content should follow 1280px portal container, actual '+roomWidths.content.width+' expected '+expected);
           });
         }
         try{await interactions(page,width,id);}catch(error){record(label+' interactions',error);}
