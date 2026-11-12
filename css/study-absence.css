@@ -1,0 +1,34 @@
+/* Dedicated absence-reason form, consistent with the portal's responsive layout. */
+.absence-main{width:min(calc(100% - 30px),1000px);margin:auto;padding:28px 0 70px;min-width:0}
+.absence-main *{box-sizing:border-box}
+.absence-container{max-width:680px;margin:0 auto;min-width:0}
+.absence-back{display:inline-flex;padding:9px 0;color:#245398;text-decoration:none;font-weight:750;font-size:14px}
+.absence-back:hover{text-decoration:underline}
+.absence-header{margin:16px 0 24px}
+.absence-eyebrow{font-size:12px;font-weight:800;letter-spacing:.1em;color:#5776a5;margin:0 0 8px}
+.absence-header h1{margin:0 0 12px;color:#142747;font-size:clamp(26px,3.4vw,34px);font-weight:850;line-height:1.4;letter-spacing:-.035em;word-break:keep-all}
+.absence-header>p:last-child{font-size:15px;line-height:1.75;color:#53647d;margin:0;word-break:keep-all}
+.absence-card{border:1px solid #dbe5f1;border-radius:18px;padding:clamp(21px,4vw,32px);background:#fff;box-shadow:0 9px 27px rgba(18,48,93,.06);min-width:0}
+.absence-date-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;border-bottom:1px solid #e6edf5;padding-bottom:17px}
+.absence-caption{font-size:12px;color:#64758b;font-weight:750}
+.absence-date-row h2{font-size:21px;color:#1a3556;line-height:1.4;margin:5px 0 0}
+.absence-date{padding:9px 14px;background:#eaf2ff;border-radius:9px;color:#194b90;font-size:14px;font-variant-numeric:tabular-nums}
+.absence-notice{margin:20px 0 15px;padding:14px 16px;border-radius:11px;color:#52637b;background:#f4f7fc;line-height:1.8;font-size:13.5px;word-break:keep-all}
+.absence-form{display:grid;gap:10px;min-width:0}
+.absence-form[hidden]{display:none!important}
+.absence-form label{font-size:14px;color:#1f3555;font-weight:750;margin-top:8px}
+.absence-form label em{font-style:normal;color:#ab3543;font-size:12px}
+.absence-form label span{font-weight:500;color:#78869a;font-size:12px}
+.absence-form select,.absence-form textarea{font:inherit;font-size:16px;line-height:1.5;color:#182f52;border:1px solid #b9c9df;border-radius:10px;background:#fff;width:100%;min-width:0;padding:12px 14px}
+.absence-form select{min-height:48px}
+.absence-form textarea{min-height:116px;resize:vertical}
+.absence-form select:focus-visible,.absence-form textarea:focus-visible,.absence-submit:focus-visible{outline:3px solid #8eb4ed;outline-offset:2px}
+.absence-count{text-align:right;font-size:12px;color:#728197;margin:0}
+.absence-submit{width:100%;min-height:50px;border:1px solid #193f89;border-radius:10px;background:#193f89;color:#fff;font-size:15px;font-weight:800;cursor:pointer;margin-top:10px;padding:13px}
+.absence-submit:disabled{opacity:.6;cursor:wait}
+.absence-feedback{font-size:13px;color:#475f7d;line-height:1.7;margin:8px 0 0;word-break:keep-all}
+.absence-feedback[data-kind="error"]{color:#a92f40}
+.absence-feedback[data-kind="success"]{color:#176847;font-weight:700}
+.absence-under-note{font-size:13px;line-height:1.8;color:#6b7b90;margin:17px 4px}
+.absence-under-note a{color:#26569e;font-weight:750}
+@media(max-width:640px){.absence-main{width:min(calc(100% - 26px),540px);padding:18px 0 50px}.absence-header{margin:10px 0 19px}.absence-card{border-radius:15px;padding:21px 17px}.absence-date-row h2{font-size:19px}.absence-date{font-size:13px}}
