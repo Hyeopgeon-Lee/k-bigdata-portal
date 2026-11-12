@@ -170,7 +170,8 @@ try{
     assert.equal(await summary.getAttribute('aria-expanded'),'true','duplicate script does not double-toggle');await page.keyboard.press('Escape');
     await page.locator('.site-header .brand').click();await page.waitForURL('**/index.html');
     await page.locator('.portal-menu > summary').click();await page.locator('#portal-nav [data-portal-group="learning"]').click();
-    await page.waitForURL('**/index.html#learning');await page.waitForFunction(()=>document.querySelector('#portal-nav [data-portal-group="learning"]').getAttribute('aria-current')==='location');assert.equal(await page.locator('#portal-nav [data-portal-group="learning"]').getAttribute('aria-current'),'location');
+    await page.waitForURL('**/services.html#learning'); // Navigation groups now link to the service directory.
+    assert.equal(await page.locator('#portal-nav a').first().getAttribute('aria-current'),'page','directory remains current while browsing categories');
     await page.goBack();await page.waitForFunction(()=>document.querySelector('#portal-nav a').getAttribute('aria-current')==='page');assert.equal(await page.locator('#portal-nav a').first().getAttribute('aria-current'),'page');
     // The virtual keyboard cannot be summoned by headless engines. A reduced
     // visual viewport while an input has focus checks the same layout constraint.
