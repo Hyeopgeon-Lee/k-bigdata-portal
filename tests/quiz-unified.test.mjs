@@ -10,7 +10,7 @@ const modules=["js/practical-ui.js","js/ncp-quiz.js","js/coding.js"];
 
 for(const path of pages){
   const html=read(path);
-  assert.match(html,/css\/quiz-unified\.css\?v=20261112-action-colors-1/,"Shared UI stylesheet on "+path);
+  assert.match(html,/css\/quiz-unified\.css\?v=20261112-quiz-nav-unified-1/,"Shared UI stylesheet on "+path);
 }
 for(const path of modules){
   const js=read(path);
@@ -75,6 +75,15 @@ for(const path of modules){
 }
 
 assert.match(css,/\.quiz-navigation\{[^}]*grid-template-columns:/s);
+assert.match(css,/body\.shared-question-bank nav\.quiz-navigation > button\.quiz-nav-button\{/,
+  "All three services use the same strong navigation button selector");
+assert.ok(css.includes('width:120px!important')&&css.includes('height:46px!important'),
+  "Desktop list/jump buttons share fixed dimensions");
+assert.ok(css.includes('width:104px!important')&&css.includes('height:44px!important'),
+  "Mobile list/jump buttons share fixed dimensions");
+assert.ok(!read("css/question-browser.css").includes("#coding-show-list"),
+  "Obsolete Coding button selector must not override common navigation");
+
 assert.match(css,/@media\(max-width:690px\)/);
 assert.match(css,/@media\(max-width:360px\)/);
 assert.match(css,/\.quiz-answer/);
