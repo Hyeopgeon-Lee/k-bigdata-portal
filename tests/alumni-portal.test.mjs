@@ -33,11 +33,11 @@ assert.doesNotMatch(api,/text\/plain;charset=utf-8/,"no legacy Apps Script contr
 const backend=read("supabase/functions/alumni-network-api/index.ts");
 assert.match(backend,/portal_learning_access/,"server enforces portal session");
 assert.match(backend,/portal_super_admin_allowed/,"admin rights checked on server");
-assert.match(backend,/alumni_network_records/,"new source of truth is Supabase");
+assert.match(backend,/PORTAL_TABLES/,"operational records use normalized Supabase tables");
 assert.match(backend,/alumni_network_mail_outbox/,"mail deduplication persisted");
 assert.match(backend,/case "contact"/,"contact relay still supported");
 assert.match(backend,/case "adminRunJobDigest"/,"career digest still supported");
-assert.match(backend,/update\(\{alumni_source_id:recordId\}\)/,"new alumni registrations link their portal identity");
+assert.match(backend,/payload.user_id=recordId/,"alumni profiles use portal UUID directly");
 assert.match(backend,/await deliverNews\(d\)/,"admin-created news honors mail request");
 assert.match(backend,/alumni_news_mail_logs/,"new news mails preserve delivery history");
 assert.match(backend,/portal_super_admin_allowed/,"admin permissions cannot be set by browser token");
@@ -69,10 +69,15 @@ assert.match(backend,/const o=await owned\(a,text\(b\.alumni_id\)\)/,"server own
 
 assert.match(read("supabase/migrations/20261113054000_retire_legacy_alumni_pin_hashes.sql"),/data-'edit_pin_hash'/,"retired hashes are purged");
 assert.match(backend,/async function ownRecordForAccount/,"writes require server-side owner record matching");
-assert.match(backend,/text\(linked\.data\.email\)\.toLowerCase\(\)!==a\.email/,"linked alumni record email must match account");
-assert.match(backend,/a\.enrollment==="early_employment"&&!!a\.alumniId/,"approved early-employed candidates require immutable alumni link");
-assert.match(read("docs/ALUMNI_PORTAL_INTEGRATION.md"),/아직 Apps Script 기반으로 운영됩니다/,"legacy dual-write caveat documented");
+assert.match(backend,/return await one\("alumni",a.id\)/,"self-owned alumni records derive from authenticated UUID");
+assert.match(backend,/a.enrollment==="early_employment"&&!!a.alumniId/,"approved early-employed candidates use existing linked status");
+assert.match(read("docs/ALUMNI_PORTAL_INTEGRATION.md"),/서비스 종료/,"legacy standalone service retired");
 
+assert.match(backend,/case "adminShow"/,"manager may restore public profile without re-approval");
+assert.doesNotMatch(backend,/case "adminApprove"/,"removed duplicate alumni approval");
+assert.match(backend,/status:"APPROVED"/,"new posts publish without duplicate approval");
+assert.ok(read("alumni/js/contact.js").includes("share_competencies"),"contact supports consented competencies");
+assert.ok(read("alumni/contact.html").includes("quill@2.0.3"),"free Quill editor installed");
 const migration=read("supabase/migrations/20261113035800_migrate_alumni_network_sheets_to_private_supabase_record_store.sql");
 assert.match(migration,/enable row level security/,"private tables are RLS protected");
 assert.match(migration,/revoke all on public\.alumni_network_records from public,anon,authenticated/,"raw PII not client-readable");
