@@ -4,7 +4,7 @@ export const REGISTRATION_KINDS = Object.freeze(['written_registration','practic
 export function eligibleProfile(profile) {
   return !!profile && profile.approval_status==='approved' &&
     profile.enrollment_status==='enrolled' && profile.signup_type==='student' &&
-    typeof profile.email==='string' && /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(profile.email.trim());
+    typeof profile.email==='string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(profile.email.trim());
 }
 export function shouldNotify(registrations, certificateCode, eventType) {
   if(!CERTIFICATE_CODES.includes(certificateCode) || !REGISTRATION_KINDS.includes(eventType))return false;
