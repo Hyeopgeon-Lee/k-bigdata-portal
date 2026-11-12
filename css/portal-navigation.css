@@ -199,3 +199,4 @@ body[data-ncp-view="question"] .portal-page-intro{
   body .portal-page-intro>.portal-page-title{font-size:26px;line-height:1.35;margin-bottom:8px}
   body .portal-page-intro>.portal-page-description{font-size:15px;line-height:1.65}
 }
+body .portal-page-intro>.portal-page-title em{color:#142d70;font-style:normal}

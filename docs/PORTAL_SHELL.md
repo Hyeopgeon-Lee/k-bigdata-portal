@@ -37,3 +37,13 @@
 `tests/portal-shell-browser.mjs`는 11개 페이지 × 9개 화면 크기에서 계산된 스타일·좌표·메뉴 순서·현재 메뉴·키보드·뒤로 가기·새로고침·저장 상태·JS 비활성 대체 경로를 검사합니다. `ui-screenshots/portal-shell`에 JSON과 PC·모바일 화면을 저장합니다. 일정·Analytics 요청은 테스트 중 모의 처리하며 운영 데이터에 쓰지 않습니다.
 
 `Shared portal shell QA`는 Chromium·Firefox·WebKit을 각각 검증합니다. QA 성공과 Pages 배포 성공은 별도로 확인합니다. 배포 후 실제 페이지의 `data-portal-shell` 버전과 공통 자산 버전을 확인합니다.
+
+## 공통 페이지 소개 영역 (2026-11-12)
+
+- `js/portal-navigation-model.mjs`: 내부 16개 페이지의 `eyebrow`, `title`, `description`, `headingId` 및 현재 메뉴 영역을 한 곳에서 관리합니다.
+- `scripts/portal-shell-template.mjs`의 `renderPageIntro`: 항상 `← 포털 홈 → 영문명 → 페이지 제목(H1) → 설명` 순서의 동일한 구조를 정적으로 생성합니다. `index.html`은 포털 홈이므로 제외합니다.
+- `scripts/build-portal-shell.mjs`: 17개 페이지의 `portal:services` 다음에 `portal:intro` 영역을 출력합니다. 생성된 마크업은 직접 수정하지 마세요.
+- `css/portal-navigation.css`: 페이지 소개 영역 전용 규칙 및 데스크톱/모바일 영역 제목 가독성(16/15px)을 정의합니다.
+- 코딩·정보처리·NCP는 목록과 `?id=` 상세 문제 모드에서 공통 소개 영역이 항상 표시됩니다. 코딩의 별도 학습요약 영역과 NCP의 문제 본문은 변경하지 않습니다.
+- 학습현황, 학급통계, 전체 서비스도 영역 메뉴를 표시하며, 자체 서비스 링크가 없는 경우 다른 서비스를 잘못 선택하지 않습니다.
+- `node scripts/build-portal-shell.mjs --check`, `node tests/portal-shell.test.mjs`, `node tests/portal-shell-browser.mjs`로 생성물과 반응형 레이아웃을 검증합니다.
