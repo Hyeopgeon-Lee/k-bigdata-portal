@@ -1,4 +1,4 @@
-import {quizNavigation,quizHeading,quizFeedback,scrollToQuizAnswer,mountQuizDisclosure} from "./quiz-unified.js?v=20261112-action-colors-1";
+import {quizNavigation,quizHeading,quizFeedback,scrollToQuizAnswer,mountQuizDisclosure} from "./quiz-unified.js?v=20261112-answer-focus-1";
 import {createQuestionBrowser} from "./question-browser.js";
 import {bindReview,reviewControls,gradeLabels} from "./study-review.js";
 import {learningLocal as localStorage, learningSession as sessionStorage} from "./learning-storage.mjs";
@@ -609,7 +609,7 @@ function openCodingList(){
   browserEntry.show();
 }
 $("#coding-show-list").addEventListener("click",openCodingList);
-$("#coding-answer-jump").addEventListener("click",()=>scrollToQuizAnswer(document.querySelector(".coding-detail")));
+$("#coding-answer-jump").addEventListener("click",()=>scrollToQuizAnswer(document.querySelector(".coding-detail"),{editor:codeEditor}));
 function moveCoding(offset) {
   const items=entrySet||matching(),index=items.findIndex(item=>item.id===current.id);
   const next=items[index+offset];
