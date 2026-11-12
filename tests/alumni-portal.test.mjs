@@ -26,7 +26,7 @@ assert.match(cfg,/https:\/\/zjsindkakjfzmjgrkaou\.supabase\.co\/functions\/v1\/a
 assert.doesNotMatch(cfg,/script\.google\.com/,"new portal no longer calls Apps Script");
 const api=read("alumni/js/api.js");
 assert.match(api,/AlumniAPI=\{request,configured\}/,"preserves API compatibility");
-assert.match(api,/Authorization:"Bearer "\+session\.access_token/,"Supabase Auth bearer token attached");
+assert.ok(api.includes('"Authorization":"Bearer "+session.access_token'),"Supabase Auth bearer token attached");
 assert.match(api,/Content-Type":"application\/json"/,"new API accepts JSON");
 assert.doesNotMatch(api,/text\/plain;charset=utf-8/,"no legacy Apps Script contract");
 const backend=read("supabase/functions/alumni-network-api/index.ts");
