@@ -90,6 +90,8 @@
     student.readOnly=true;
    }
    if(identity.phone)U.qs('[name="phone"]').value=identity.phone;
+    for(const field of ['name','email','student_id','phone']){const el=U.qs('[name="'+field+'"]');if(el){el.readOnly=true;el.required=false;const wrapper=el.closest('.field');if(wrapper)wrapper.hidden=true;}}
+    if(identity.graduationYear){const gy=U.qs('[name="graduation_year"]');gy.readOnly=true;gy.required=false;}
    if(identity.graduationYear)
     U.qs('[name="graduation_year"]').value=String(identity.graduationYear);
    if(info.registered&&info.profile){
@@ -100,12 +102,12 @@
     U.qs('[name="mode"]').value='update';
     U.qs('[name="alumni_id"]').value=info.profile.alumni_id||'';
     heading.textContent='등록된 내 정보 수정';
-    desc.textContent='포털 로그인을 통해 본인 확인이 완료됐습니다. PIN 없이 정보를 수정할 수 있으며 저장된 변경 사항은 관리자 승인 후 공개됩니다.';
+    desc.textContent='포털 로그인을 통해 본인 확인이 완료됐습니다. PIN 없이 정보를 수정할 수 있으며 수정 내용은 저장 즉시 반영됩니다.';
     save.textContent='수정 내용 저장';
    }else{
     heading.textContent='졸업생 정보 신규 등록';
-    desc.textContent='졸업 상태가 확인되었습니다. 졸업연도와 진로 정보를 입력해 주세요. 관리자 승인 후 공개됩니다.';
-    save.textContent='졸업생 정보 등록 신청';
+    desc.textContent='졸업 상태가 확인되었습니다. 졸업연도와 진로 정보를 입력해 주세요. 등록 후 바로 반영됩니다.';
+    save.textContent='졸업생 정보 저장';
    }
   }catch(error){
    heading.textContent='계정 정보를 불러오지 못했습니다';
@@ -129,8 +131,8 @@
     U.qs('[name="mode"]').value='update';
     window.alumniPortalMember={...(window.alumniPortalMember||{}),alumniId:response.alumni_id};
     heading.textContent='등록된 내 정보 수정';
-    desc.textContent='저장했습니다. 변경된 정보는 관리자 검토 후 공개됩니다.';
-    U.status(notice,'졸업생 정보가 저장되었습니다. 관리자 승인 후 공개됩니다.','success');
+    desc.textContent='수정한 정보가 바로 반영됩니다.';
+    U.status(notice,'졸업생 정보가 저장되었습니다.','success');
     save.textContent='수정 내용 저장';
    }catch(error){
     U.status(notice,error?.message||'저장하지 못했습니다. 다시 시도해 주세요.','error');
