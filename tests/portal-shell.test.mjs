@@ -34,7 +34,7 @@ for(const file of files){
     assert.equal((html.match(/portal-page-back/g)||[]).length,1,'one portal home back link '+file);
     const generated=renderServiceNavigation(page,id);
     assert.equal((generated.match(/data-nav-id=/g)||[]).length,navigationItems.length,'all services accessible '+file);
-    assert.equal((generated.match(/aria-current="page"/g)||[]).length,page.group?1:0,'current service if registered '+file);
+    assert.equal((generated.match(/aria-current="page"/g)||[]).length,navigationItems.some(item=>item.id===id)?1:0,'current service if registered '+file);
     assert.ok(html.indexOf('portal:services:end')<html.indexOf('portal:intro:start'),'service bar precedes intro '+file);
   }else{
     assert.ok(!html.includes('data-learning-nav'),'home keeps its own content information architecture');

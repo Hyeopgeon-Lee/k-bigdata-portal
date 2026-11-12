@@ -1,4 +1,5 @@
 name: Regenerate cleaned portal page shells (one-time)
+# Align current-service expectations for pages using navGroup.
 on:
   push:
     branches: [main]
