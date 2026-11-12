@@ -17,6 +17,15 @@
     else if (button.dataset.label) button.textContent = button.dataset.label;
     button.disabled = on;
   }
+
+  // The transient UI selection is not an identity token; server resolves recipient UUID and validates JWT.
+  document.addEventListener("click",event=>{
+    const anchor=event.target.closest?.("a[data-contact-id]");
+    if(!anchor)return;
+    sessionStorage.setItem("alumni-contact-target-v2",anchor.dataset.contactId||"");
+    if(anchor.dataset.jobId)sessionStorage.setItem("alumni-contact-job-v2",anchor.dataset.jobId);
+    else sessionStorage.removeItem("alumni-contact-job-v2");
+  });
   function initNav() {
     const toggle = qs('.nav-toggle'); const nav = qs('.site-nav');
     if (nav && !nav.querySelector('a[href="jobs.html"]')) {
