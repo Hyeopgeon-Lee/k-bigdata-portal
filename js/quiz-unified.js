@@ -18,9 +18,13 @@ export function quizHeading({title="",titleId="",badges=[],actions=[]}={}){
   }).join("");
   const actionHTML=actions.map(action=>{
     const label=escapeHTML(action.label);
-    if(action.href!==undefined)return '<a class="quiz-action" href="'+escapeHTML(action.href)+'"'+attr("id",action.id)+attr("aria-label",action.ariaLabel)+'>'
+    // Consistent semantics for all three learning services:
+    // share = blue, copy link = green, report issue = orange.
+    const tone=["share","copy","report"].includes(action.tone)?action.tone:"";
+    const classes="quiz-action"+(tone?" quiz-action--"+tone:"");
+    if(action.href!==undefined)return '<a class="'+classes+'" href="'+escapeHTML(action.href)+'"'+attr("id",action.id)+attr("aria-label",action.ariaLabel)+'>'
       +label+'</a>';
-    return '<button type="button" class="quiz-action"'+attr("id",action.id)+attr("data-action",action.action)+attr("aria-label",action.ariaLabel)+'>'
+    return '<button type="button" class="'+classes+'"'+attr("id",action.id)+attr("data-action",action.action)+attr("aria-label",action.ariaLabel)+'>'
       +label+'</button>';
   }).join("");
   return '<header class="quiz-heading">'+
