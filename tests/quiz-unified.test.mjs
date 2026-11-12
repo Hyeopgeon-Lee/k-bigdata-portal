@@ -71,6 +71,9 @@ assert.match(css,/\.quiz-answer/);
 assert.match(css,/\.quiz-disclosure/);
 assert.match(css,/\.quiz-feedback/);
 
+assert.match(css,/--quiz-content-max:1240px/,"Shared PC quiz width is 1240px");
+const browserCSS=read("css/question-browser.css");
+assert.match(browserCSS,/var\(--quiz-content-max,1240px\)/,"Question list uses the same width variable");
 const ncp=read("js/ncp-quiz.js");
 assert.ok(ncp.indexOf('quizHeading({title:"공개 복원자료 원문"')<ncp.indexOf("const sourceDisclosure"),"NCP question must have precedence over original reference in rendered markup")===false; // dynamic source constant intentionally prepared before render
 assert.ok(ncp.indexOf("'class=\"quiz-question ncp-question-text\"")===-1||ncp.includes("quiz-question ncp-question-text"));
