@@ -30,7 +30,7 @@ function render(){
  if(!report)return;
  const grade=$('study-admin-grade').value,today=kdate(Date.now()),week=selectedWeek();
  const students=report.students.filter(s=>!grade||String(s.grade||'')===grade);
- let committed=0,met=0,missed=0,hours=0,plannedStudents=0;
+ let committed=0,met=0,missed=0,hours=0,plannedStudents=0,zeroPlanStudents=0;
  const rows=[];
  for(const person of students){
   const plan=report.plans.find(p=>p.user_id===person.id),selected=plan?.weekdays||[];
@@ -42,9 +42,10 @@ function render(){
   const unfulfilled=due.filter(day=>!attended.has(day));
   const hoursSec=ss.reduce((a,s)=>a+sessionDuration(s),0);
   if(plan)plannedStudents++;
+  if(plan&&!selected.length)zeroPlanStudents++;
   committed+=due.length;met+=attendedPlanned;missed+=unfulfilled.length;hours+=hoursSec;
   let status='<span class="study-tag">미등록</span>';
-  if(plan&&!selected.length)status='<span class="study-tag">계획 없음</span>';
+  if(plan&&!selected.length)status='<span class="study-tag missed">0일 계획 · 확인 필요</span>';
   else if(plan&&!due.length)status='<span class="study-tag">계획 대기</span>';
   else if(due.length&&!unfulfilled.length)status='<span class="study-tag done">참여</span>';
   else if(unfulfilled.length)status='<span class="study-tag missed">미참여 '+unfulfilled.length+'일</span>';
@@ -63,7 +64,7 @@ function render(){
  }
  $('study-admin-summary').replaceChildren();
  for(const [label,value,sub] of [
-  ['계획 등록',plannedStudents+'명','조회 중인 학생 '+students.length+'명'],
+  ['계획 등록',plannedStudents+'명','조회 학생 '+students.length+'명 · 0일 계획 '+zeroPlanStudents+'명 (확인 필요)'],
   ['계획 실천율',committed?Math.round(met/committed*100)+'%':'—','지난 학습 예정일 기준 '+met+'/'+committed],
   ['미참여',missed+'건','사유 미입력 여부 확인'],
   ['누적 공부시간',fmt(hours),'휴식시간 제외']
