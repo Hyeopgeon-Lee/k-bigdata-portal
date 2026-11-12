@@ -1,5 +1,5 @@
 // Isolated Supabase fixture for browser QA. Account state persists across local pages.
-export async function approvedStudent(context){
+export async function approvedStudent(context, profileOverride={}){
  await context.route("https://esm.sh/@supabase/supabase-js@*",route=>route.fulfill({
   contentType:"application/javascript",
   headers:{"Access-Control-Allow-Origin":"*"},
@@ -8,6 +8,7 @@ export async function approvedStudent(context){
    function database(){try{return JSON.parse(localStorage.getItem(key)||"{}");}catch{return {};}}
    function save(db){localStorage.setItem(key,JSON.stringify(db));}
    const user={id:"fixture",email:"student@example.test"};
+   const profileOverride=${JSON.stringify(profileOverride)};
    function from(table){
     let mode="select",where=[],ordering=null,max=1000,values=null;
     const match=(row)=>where.every(([type,k,v])=>{
@@ -16,7 +17,7 @@ export async function approvedStudent(context){
      if(type==="lt")return x<v;if(type==="neq")return x!==v;return true;
     });
     function execute(){
-     if(table==="profiles")return {data:[{user_id:user.id,full_name:"Student",approval_status:"approved",enrollment_status:"enrolled",signup_type:"student"}].filter(match),error:null};
+     if(table==="profiles")return {data:[{user_id:user.id,full_name:"Student",approval_status:"approved",enrollment_status:"enrolled",signup_type:"student",...profileOverride}].filter(match),error:null};
      const db=database(),rows=db[table]||[];
      if(mode==="delete"){db[table]=rows.filter(row=>!match(row));save(db);return {data:[],error:null};}
      if(mode==="update"){
@@ -65,6 +66,7 @@ export async function approvedStudent(context){
     auth:{
      onAuthStateChange(){return {data:{subscription:{unsubscribe(){}}}};},
      async getUser(){return {data:{user}};},
+     async getSession(){return {data:{session:{access_token:"fixture-token"}},error:null};},
      async signOut(){return {error:null};},
      async signInWithPassword(){return {error:null};}
     },

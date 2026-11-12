@@ -6,6 +6,7 @@ on:
       - "index.html"
       - "css/home-ui.css"
       - "css/home-alerts.css"
+      - "css/home-alumni.css"
       - "css/home-grade.css"
       - "css/home-engagement.css"
       - "js/home-engagement.js"
@@ -13,6 +14,9 @@ on:
       - "tests/home-engagement.test.mjs"
       - "js/app.js"
       - "js/home-dashboard.js"
+      - "js/home-alumni.js"
+      - "tests/fixtures/approved-student.mjs"
+      - "tests/portal-alumni-home-browser.mjs"
       - "js/home-schedule.js"
       - "data/calendar-grade-bridge.js"
       - "tests/calendar-grade-bridge.test.mjs"
@@ -31,7 +35,7 @@ permissions:
   contents: read
 jobs:
   verify-home:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -47,6 +51,7 @@ jobs:
         run: |
           node --check js/app.js
           node --check js/home-dashboard.js
+          node --check js/home-alumni.js
           node --check js/home-engagement.js
           node --check js/home-engagement-core.mjs
           node --check js/home-schedule.js
@@ -63,6 +68,7 @@ jobs:
         run: |
           python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/portal-home-server.log 2>&1 &
           node tests/portal-home-browser.mjs
+          node tests/portal-alumni-home-browser.mjs
       - name: Upload visual QA screenshots
         if: always()
         uses: actions/upload-artifact@v4
