@@ -289,6 +289,7 @@ function renderAccount(){
 
   const learning=addSection("학습");
   addAction(learning,{title:"나의 학습현황",detail:"풀이 기록과 오답 복습",href:"my-learning.html"});
+  if(currentProfile?.enrollment_status==="enrolled"&&currentProfile?.signup_type!=="alumni")addAction(learning,{title:"자율학습 관리",detail:"주간 학습계획·공부시간 기록",href:"study.html"});
   if(isAdmin)addAction(learning,{title:"학급 주간 학습통계",detail:"학생들의 주간 학습 결과 확인",href:"teacher-learning.html"});
 
   if(activeWrite){
