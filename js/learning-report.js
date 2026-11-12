@@ -1,15 +1,12 @@
-/** Canonical, data-minimal link to the Help Desk learning-question report form. */
-export function learningReportUrl(source, question, label = "") {
-  if (!["practical", "interview", "coding", "ncp"].includes(source) || !question?.id) return "";
-  const page = {practical: "practical.html", interview: "interview.html", coding: "coding.html", ncp: "ncp.html"}[source];
-  const problem = new URL(page, typeof location === 'undefined' ? 'https://portal.k-bigdata.kr' : location.origin);
-  problem.searchParams.set("id", String(question.id));
-  const report = new URL("help.html", typeof location === 'undefined' ? 'https://portal.k-bigdata.kr/' : location.origin + '/');
+/** Minimal, canonical link shared by all learning question error-report buttons. */
+export function learningReportUrl(source, question, _label = "") {
+  if (!["practical", "interview", "coding", "ncp"].includes(source)) return "";
+  const id = String(question?.id ?? "").trim();
+  if (!/^[A-Za-z0-9_-]{1,80}$/.test(id)) return "";
+  const base = typeof location === "undefined" ? "https://portal.k-bigdata.kr/" : location.origin + "/";
+  const report = new URL("help.html", base);
   report.searchParams.set("source", source);
-  report.searchParams.set("id", String(question.id).slice(0, 80));
-  if (source !== "coding" && question.code) report.searchParams.set("code", String(question.code).slice(0, 40));
-  if (label) report.searchParams.set("label", String(label).slice(0, 80));
-  report.searchParams.set("question", String(question.question || question.title || "").replace(/\s+/g, " ").slice(0, 125));
-  report.searchParams.set("url", problem.href);
+  report.searchParams.set("id", id);
   return report.href;
 }
+
