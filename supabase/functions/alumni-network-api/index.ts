@@ -291,6 +291,20 @@ async function handle(action:string,b:Record<string,unknown>,a:Actor){
    d.alumni_news_mail_consent_at=yes(b.alumni_news_mail_enabled)?now():"";
   }
   await put("alumni",recordId,d);
+  // New registrations must bind their immutable Alumni ID to the authenticated portal account.
+  // Preserve existing linked accounts; never overwrite a previously linked identity.
+  if(action==="register"&&!a.alumniId){
+   const {data:linked,error:linkError}=await admin.from("profiles")
+    .update({alumni_source_id:recordId})
+    .eq("user_id",a.id).is("alumni_source_id",null)
+    .select("user_id").maybeSingle();
+   if(linkError||!linked){
+    // This source record was just created; rollback if the identity link failed.
+    await admin.from("alumni_network_records").delete()
+     .eq("source_kind","alumni").eq("source_id",recordId);
+    throw Error("동문 프로필을 포털 계정에 연결하지 못했습니다. 다시 시도해 주세요.");
+   }
+  }
   await sendToAdmin("동문정보 "+(action==="register"?"신규 등록":"수정")+" 승인 요청",
    a.name+"님의 동문정보 검토가 필요합니다.", "alumni",recordId).catch(()=>{});
   return {success:true,message:"동문정보를 저장했습니다. 관리자 승인 후 공개됩니다.",alumni_id:recordId};
