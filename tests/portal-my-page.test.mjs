@@ -6,6 +6,7 @@ const html=read('mypage.html'),js=read('js/my-page.js'),css=read('css/my-page.cs
 const auth=read('js/portal-auth.mjs'),model=read('js/portal-navigation-model.mjs');
 const sql=read('supabase/migrations/20261112121100_my_page_student_academic_status_self_service.sql');
 const graduatedSql=read('supabase/migrations/20261112224000_add_graduated_status_to_my_page_and_keep_graduate_learning_access.sql');
+const phoneSql=read('supabase/migrations/20261112231000_require_mobile_phone_when_graduating_student.sql');
 assert.match(model,/mypage: \{title:'마이페이지'/,'page registered with portal shell');
 assert.match(auth,/title:"마이페이지".*href:"mypage.html"/,'account drawer links to my page');
 assert.match(html,/id="learning-lock"/,'page gated from first paint');
@@ -15,11 +16,19 @@ assert.match(html,/name="academic_status" value="1"/);
 assert.match(html,/name="academic_status" value="2"/);
 assert.match(html,/name="academic_status" value="leave"/);
 assert.match(html,/name="academic_status" value="graduated"/,"graduation can be selected");
+assert.match(html,/id="my-page-graduation-phone"/,"graduation reveals phone input");
+assert.match(html,/id="my-page-mobile-phone".*type="tel"/,"mobile-friendly input");
+assert.match(html,/id="my-page-mobile-summary"/,"phone stored on own profile");
 assert.match(html,/학과 포털 내부 정보/);
 assert.match(js,/api\.auth\.signInWithPassword\(/,'current password verified');
 assert.match(js,/api\.auth\.updateUser\(\{password:next\}\)/,'Supabase Auth updates password');
 assert.match(js,/api\.rpc\("start_portal_session"\)/,'new login session authorized');
-assert.match(js,/api\.rpc\("update_my_academic_status",\{p_status:next\}\)/);
+assert.match(js,/api\.rpc\("update_my_academic_status",\{p_status:next,p_mobile_phone:next==="graduated"\?phone:null\}\)/);
+assert.match(js,/phoneInput\.required=graduating/,"phone is required only if graduating");
+assert.match(js,/phoneInput\.disabled=!graduating/,"phone is excluded from other statuses");
+assert.match(js,/!validMobile\(phone\)/,"validates mobile phone before submit");
+assert.match(js,/phoneInput\.focus\(\)/,"focuses missing mobile phone");
+assert.match(js,/mobileDigits\(phone\)===originalMobile/,"allows phone updates for existing graduates");
 assert.match(js,/profile\.signup_type==="student"/,'self-service status for students only');
 assert.match(js,/sessionStorage\.setItem\("portal:mypage-success"/,'user gets result after reload');
 assert.match(css,/@media\(max-width:740px\)/,'mobile layout present');
@@ -36,6 +45,12 @@ assert.match(graduatedSql,/private\.portal_study_write_allowed/,'study restricte
 assert.match(graduatedSql,/private\.portal_academic_status_history/,'graduation recorded in audit log');
 assert.match(js,/next==="graduated"&&!confirm/,'graduation requires confirmation');
 assert.match(js,/profile\.enrollment_status==="graduated"/,'graduate status shown in UI');
+assert.match(phoneSql,/add column if not exists mobile_phone text/,"phone column exists");
+assert.match(phoneSql,/MOBILE_PHONE_REQUIRED/,"server rejects graduation without phone");
+assert.match(phoneSql,/INVALID_MOBILE_PHONE/,"server validates mobile number");
+assert.match(phoneSql,/set enrollment_status=v_enrollment,[\s\S]*mobile_phone=v_mobile/,"status and phone saved together");
+assert.match(phoneSql,/select public\.update_my_academic_status\(p_status, null::text\)/,"legacy RPC cannot bypass graduation check");
+assert.match(phoneSql,/revoke all on function public\.update_my_academic_status\(text,text\) from public,anon/,"RPC restricted to authenticated users");
 for(const f of ['js/my-page.js','js/portal-auth.mjs','js/portal-navigation-model.mjs']){
  execFileSync('node',['--check',new URL('../'+f,import.meta.url).pathname],{stdio:'pipe'});
 }

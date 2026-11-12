@@ -20,7 +20,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/style.css?v=20261112-page-intro-2">
 <link rel="stylesheet" href="css/portal-ux.css?v=20261112-page-intro-2">
-<link rel="stylesheet" href="css/my-page.css?v=20261112-page-intro-2">
+<link rel="stylesheet" href="css/my-page.css?v=20261112-graduate-phone-1">
 <!-- portal:assets:start (generated; edit scripts/portal-shell-template.mjs) -->
 <link rel="stylesheet" href="css/portal-navigation.css?v=20261112-page-intro-2">
 <script defer src="js/portal-navigation.js?v=20261112-login-email-focus-1"></script>
@@ -64,6 +64,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
         <div><dt>이메일</dt><dd id="my-page-email">-</dd></div>
         <div><dt>학번 / 구분</dt><dd id="my-page-student-no">-</dd></div>
         <div><dt>포털 학적 상태</dt><dd id="my-page-enrollment">-</dd></div>
+        <div id="my-page-mobile-summary" hidden><dt>휴대전화 번호</dt><dd id="my-page-mobile-summary-value">-</dd></div>
       </dl>
     </section>
     <section class="my-page-panel" id="my-page-academic-panel" aria-labelledby="my-page-academic-heading" hidden>
@@ -77,6 +78,11 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
           <label class="my-page-option"><input type="radio" name="academic_status" value="leave"><span><strong>휴학</strong><small>기존 학습기록 열람 가능 · 신규 저장 제한</small></span></label>
           <label class="my-page-option"><input type="radio" name="academic_status" value="graduated"><span><strong>졸업</strong><small>기존 문제풀이 기록 유지 · 재학생 전용 자율학습·알림 제외</small></span></label>
         </fieldset>
+        <div id="my-page-graduation-phone" class="my-page-phone" hidden>
+          <label for="my-page-mobile-phone">휴대전화 번호 <span class="my-page-phone-required">필수</span></label>
+          <p class="my-page-phone-help" id="my-page-mobile-help">졸업 상태로 저장하려면 연락 가능한 본인 휴대전화 번호를 입력해 주세요. 입력한 번호는 포털 계정 정보에 저장됩니다.</p>
+          <input id="my-page-mobile-phone" name="mobile_phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="16" placeholder="010-1234-5678" aria-describedby="my-page-mobile-help" disabled>
+        </div>
         <p class="my-page-notice">이 설정은 <strong>학과 포털 내부 정보</strong>이며 대학의 공식 학적 변경 신청을 대신하지 않습니다.</p>
         <button class="my-page-primary" type="submit">학적 상태 저장</button>
         <p id="my-page-academic-message" class="my-page-message" role="status" aria-live="polite"></p>
@@ -103,6 +109,6 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <div class="container footer-bottom"><p>학생용 학습·프로젝트·취업 통합 포털입니다.</p><p>© <span id="current-year"></span> K-BigData Service Portal</p></div>
 </footer>
 <script type="module" src="js/portal-auth.mjs?v=20261112-login-email-focus-1"></script>
-<script type="application/x-learning" data-module="js/my-page.js?v=20261112-graduated-1"></script>
+<script type="application/x-learning" data-module="js/my-page.js?v=20261112-graduate-phone-1"></script>
 <script type="application/x-learning" data-module="js/portal-shell-entry.js?v=20261112-page-intro-2"></script>
 </body></html>
