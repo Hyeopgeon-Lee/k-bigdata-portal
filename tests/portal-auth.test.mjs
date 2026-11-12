@@ -6,6 +6,7 @@ import {isRestrictedSignupEmail} from "../js/email-policy.mjs";
 const read=p=>readFileSync(new URL("../"+p,import.meta.url),"utf8");
 const source=read("js/portal-auth.mjs");
 const loader=read("js/portal-navigation.js");
+const adminSource=read("admin/js/accounts.js");
 const css=read("css/portal-auth.css");
 
 assert.match(source,/sb_publishable_[A-Za-z0-9_-]+/,"browser uses publishable API key");
@@ -33,14 +34,14 @@ assert.match(source,/getUser\(/);
 assert.match(source,/start_portal_session/);
 assert.match(source,/register_portal_member/);
 assert.match(source,/portal_super_admin_allowed/);
-assert.match(source,/admin_list_students/);
-assert.match(source,/admin_update_student/);
+assert.match(adminSource,/admin_list_students/);
+assert.match(adminSource,/admin_update_student/);
 assert.match(source,/revoke_portal_session/);
 assert.match(source,/signOut\(/);
 assert.match(source,/emailRedirectTo/);
 assert.match(source,/resetPasswordForEmail/);
 assert.match(source,/PASSWORD_RECOVERY/);
-assert.match(source,/textContent=item/,"student-supplied values use safe DOM APIs");
+assert.match(adminSource,/textContent=item/,"student-supplied values use safe DOM APIs");
 assert.match(loader,/import\("\.\/portal-auth\.mjs/);
 const authVersion=loader.match(/portal-auth\.mjs\?v=([^"]+)/)?.[1];
 assert.ok(authVersion,"shared auth module is versioned");
@@ -101,9 +102,9 @@ assert.match(source,/p_mobile_phone:/,"signup phone is passed to registration RP
 assert.match(source,/p_academic_year:/,"both signup paths pass grade");
 
 assert.match(source,/identityFields\(\)\+\s*'\<label\>이름/,"member type selector precedes full name");
-assert.match(source,/member.signup_type==="alumni"/,"admins see graduate membership");
-assert.match(source,/mailTd\.hidden=graduated/,"graduate weekly mail controls are hidden");
-assert.match(source,/member\.signup_type==="alumni"\|\|\["graduated","early_employment"\]\.includes\(enrollment\.value\)/,"alumni, graduates and early-employed students are excluded from the mail UI");
+assert.match(adminSource,/member.signup_type==="alumni"/,"admins see graduate membership");
+assert.match(adminSource,/mailTd\.hidden=graduated/,"graduate weekly mail controls are hidden");
+assert.match(adminSource,/member\.signup_type==="alumni"\|\|\["graduated","early_employment"\]\.includes\(enrollment\.value\)/,"alumni, graduates and early-employed students are excluded from the mail UI");
 assert.match(css,/\.portal-admin-table td\[hidden\]/,"hidden mail cells do not occupy mobile grid tracks");
 assert.match(css,/grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/,"mobile student cards use two columns");
 assert.match(css,/portal-auth-secondary-actions/,"login actions use responsive layout");
@@ -129,10 +130,10 @@ for(const file of readdirSync(new URL("../js/",import.meta.url))){
 // Permanent deletion must be an explicit, status-gated server action.
 execFileSync(process.execPath,["--check",new URL("../js/portal-auth.mjs",import.meta.url).pathname]);
 const deletionApi=read("supabase/functions/admin-delete-student/index.ts");
-assert.match(source,/renderWithdrawnDeletion/,"delete confirmation screen is present");
-assert.match(source,/member.enrollment_status!=="withdrawn"/,"delete action requires saved withdrawn status");
-assert.match(source,/admin-delete-student/,"delete action calls the protected backend");
-assert.match(source,/confirmWord:\s*word\.value\.trim\(\)/,"explicit confirmation phrase is sent");
+assert.match(adminSource,/renderWithdrawnDeletion/,"delete confirmation screen is present");
+assert.match(adminSource,/member.enrollment_status!=="withdrawn"/,"delete action requires saved withdrawn status");
+assert.match(adminSource,/admin-delete-student/,"delete action calls the protected backend");
+assert.match(adminSource,/confirmWord:\s*word\.value\.trim\(\)/,"explicit confirmation phrase is sent");
 assert.match(deletionApi,/portal_super_admin_allowed/,"backend checks server verified admin authorization");
 assert.match(deletionApi,/data\.enrollment_status!=="withdrawn"/,"backend independently checks withdrawal");
 assert.match(deletionApi,/data\.signup_type==="alumni"/,"backend blocks alumni deletion");
@@ -140,17 +141,17 @@ assert.match(deletionApi,/role\.role==="super_admin"/,"backend blocks admin dele
 assert.match(deletionApi,/confirmWord!=="영구삭제"/,"backend demands irreversible action confirmation");
 assert.match(deletionApi,/admin\.auth\.admin\.deleteUser/,"backend removes Supabase Auth account");
 assert.match(deletionApi,/storage\.from\("help-attachments"\)\.remove/,"backend removes student attachments");
-assert.doesNotMatch(source,/SUPABASE_SERVICE_ROLE_KEY/,"browser must never have service role keys");
+assert.doesNotMatch(adminSource,/SUPABASE_SERVICE_ROLE_KEY/,"browser must never have service role keys");
 
 
 // Signup approval is a separate, pending-only admin queue.
 const approvalApi=read("supabase/functions/approve-portal-signup/index.ts");
 const approvalMigration=read("supabase/migrations/20261112082000_signup_approval_email_notifications.sql");
-assert.match(source,/onClick:renderApprovalRequests/,"account menu links to separate approval queue");
-assert.match(source,/filter\(member=>member\.approval_status==="pending"\)/,"approval screen shows pending requests only");
-assert.match(source,/filter\(member=>member\.approval_status!=="pending"\)/,"student manager hides pending requests");
-assert.match(source,/approve-portal-signup/,"approval goes through protected server API");
-assert.match(source,/retryApprovalEmail/,"approval email can be retried if delivery failed");
+assert.match(source,/href:"admin\/index.html"/,"account menu links to the admin-only hub");
+assert.match(adminSource,/filter\(member=>member\.approval_status==="pending"\)/,"approval screen shows pending requests only");
+assert.match(adminSource,/filter\(member=>member\.approval_status!=="pending"\)/,"student manager hides pending requests");
+assert.match(adminSource,/approve-portal-signup/,"approval goes through protected server API");
+assert.match(adminSource,/retryApprovalEmail/,"approval email can be retried if delivery failed");
 assert.match(approvalApi,/portal_super_admin_allowed/,"backend authorizes actual super admin");
 assert.match(approvalApi,/email_confirmed_at/,"backend requires verified applicant email");
 assert.match(approvalApi,/admin_update_student/,"backend uses existing authorized approval RPC");

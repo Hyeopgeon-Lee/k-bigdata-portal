@@ -1,0 +1,48 @@
+name: Admin portal isolation QA
+on:
+  push:
+    branches: [main]
+    paths:
+      - "admin/**"
+      - "js/portal-auth.mjs"
+      - "js/help.js"
+      - "js/room.js"
+      - "js/my-certifications.js"
+      - "room.html"
+      - "help.html"
+      - "my-certifications.html"
+      - "alumni/admin.html"
+      - "alumni/js/portal-bridge.mjs"
+      - "tests/admin-*.mjs"
+      - "tests/portal-auth.test.mjs"
+      - "tests/room-integration.test.mjs"
+      - "tests/portal-student-certifications.test.mjs"
+      - "tests/fixtures/approved-student.mjs"
+      - ".github/workflows/admin-portal-qa.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  admin-isolation:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify server-gated role access and extracted UI
+        run: |
+          node tests/admin-isolation.test.mjs
+          node tests/portal-auth.test.mjs
+          node tests/portal-student-certifications.test.mjs
+          node tests/room-integration.test.mjs
+          node tests/alumni-portal.test.mjs
+      - name: Install isolated Chromium
+        run: |
+          npm install --no-save --no-package-lock playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Verify student denial and administrator access in real browser
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/admin-portal-test.log 2>&1 &
+          node tests/admin-browser.mjs
