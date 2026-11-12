@@ -1,48 +1,140 @@
 (function(){
-  'use strict';
-  document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="css/detail-recovery.css">');
-  const U=AlumniUI,skills=['Java','Spring Boot','Python','AI','빅데이터','클라우드','Docker','Kubernetes','DevOps','데이터베이스','프론트엔드'],topics=['취업 준비','회사 정보','직무 상담','개발 공부','AI','빅데이터','클라우드','대학원 진학','자격증','포트폴리오','면접','기타'];
-  let authPin='',pinResetRequestId='';
-  function checks(name,vals){U.qs(`[data-checks="${name}"]`).innerHTML=vals.map(v=>`<label class="check"><input type="checkbox" name="${name}" value="${v}">${v}</label>`).join('')}
-  function syncStatusOptions(){U.selectOptions(U.qs('[name="employment_status"]'),U.options.employmentStatus,{selected:'취업 중'});U.selectOptions(U.qs('[name="bachelor_status"]'),U.options.bachelorStatus);U.selectOptions(U.qs('[name="graduate_status"]'),U.options.graduateStatus);U.selectOptions(U.qs('[name="graduate_school_type"]'),U.options.graduateSchoolType);U.selectOptions(U.qs('[name="graduate_degree"]'),U.options.graduateDegree)}
-  function conditional(select,box,predicate,requiredNames=[]){const s=U.qs(`[name="${select}"]`),b=U.qs(box);function sync(){const on=predicate(s.value);b.hidden=!on;requiredNames.forEach(n=>{const x=U.qs(`[name="${n}"]`);if(x)x.required=on})}s.addEventListener('change',sync);sync()}
-  function values(form){const o=Object.fromEntries(new FormData(form));['skills','mentoring_topics'].forEach(n=>o[n]=U.qsa(`[name="${n}"]:checked`).map(x=>x.value));if(o.skills_other)o.skills.push(...o.skills_other.split(',').map(x=>x.trim()).filter(Boolean));['privacy_consent','identity_consent','contact_consent','career_mail_enabled','alumni_news_mail_enabled'].forEach(n=>o[n]=Boolean(U.qs(`[name="${n}"]`)?.checked));return o}
-  function fill(a){Object.entries(a).forEach(([k,v])=>{const nodes=U.qsa(`[name="${k}"]`);if(!nodes.length)return;if(nodes[0].type==='checkbox'){if(['career_mail_enabled','alumni_news_mail_enabled'].includes(k))nodes[0].checked=v===true;else{const arr=Array.isArray(v)?v:String(v||'').split('|');nodes.forEach(n=>n.checked=arr.includes(n.value))}}else nodes[0].value=v??''});U.qs('[name="privacy_consent"]').checked=true;U.qs('[name="identity_consent"]').checked=true;['employment_status','bachelor_status','graduate_status','contact_allowed'].forEach(n=>U.qs(`[name="${n}"]`).dispatchEvent(new Event('change')))}
-  document.addEventListener('DOMContentLoaded',()=>{
-    const form=U.qs('#alumni-form'),st=U.qs('#form-status'),btn=U.qs('#alumni-submit'),lookup=U.qs('#lookup-panel'),idPanel=U.qs('#id-recovery-panel'),pinPanel=U.qs('#pin-recovery-panel'),activeEmployment=['취업 중','대학원 연구실(석사과정)','대학원 연구실(박사과정)'];
-    U.yearOptions(U.qs('#form-graduation-year'));U.yearOptions(U.qs('#recovery-year'));checks('skills',skills);checks('mentoring_topics',topics);syncStatusOptions();
-    conditional('employment_status','#employment-fields',v=>activeEmployment.includes(v),['company','job']);conditional('bachelor_status','#bachelor-fields',v=>v==='재학'||v==='취득'||v==='취득 예정');conditional('graduate_status','#graduate-fields',v=>['재학','휴학','수료','졸업'].includes(v),['graduate_school_type','graduate_school','graduate_major']);conditional('contact_allowed','#mentoring-fields',v=>v==='true');
-    function closeRecovery(){idPanel.hidden=true;pinPanel.hidden=true;lookup.hidden=false;pinResetRequestId='';U.qs('#pin-request-step').hidden=false;U.qs('#pin-reset-step').hidden=true}
-    function openRecovery(which){lookup.hidden=true;idPanel.hidden=which!=='id';pinPanel.hidden=which!=='pin';st.hidden=true;(which==='id'?U.qs('#recovery-name'):U.qs('#reset-alumni-id')).focus()}
-    function mode(edit){U.qs('#register-tab').setAttribute('aria-selected',String(!edit));U.qs('#edit-tab').setAttribute('aria-selected',String(edit));closeRecovery();lookup.hidden=!edit;form.hidden=edit;form.reset();U.qs('[name="mode"]').value=edit?'update':'register';U.qs('[name="edit_pin"]').required=false;btn.textContent=edit?'정보 수정하기':'등록 신청하기';st.hidden=true}
-    U.qs('#register-tab').onclick=()=>mode(false);U.qs('#edit-tab').onclick=()=>mode(true);U.qs('#show-id-recovery').onclick=()=>openRecovery('id');U.qs('#show-pin-recovery').onclick=()=>openRecovery('pin');U.qsa('.recovery-close').forEach(b=>b.onclick=closeRecovery);
-    U.qs('#lookup-button').onclick=async()=>{const id=U.qs('#lookup-id').value.trim(),pin=U.qs('#lookup-pin').value;if(!id)return U.status(st,'본인의 Alumni ID를 확인해 주세요.','error');const b=U.qs('#lookup-button');U.busy(b,true,'확인 중…');try{const r=await AlumniAPI.request('getOwn',{method:'POST',data:{alumni_id:id,edit_pin:pin}});authPin=pin;fill(r.data);U.qs('[name="alumni_id"]').value=id;form.hidden=false;lookup.hidden=true;U.status(st,'본인 확인이 완료되었습니다. 정보를 수정해 주세요.','success')}catch(e){U.status(st,e.message,'error')}finally{U.busy(b,false)}};
-    U.qs('#find-id-button').onclick=async()=>{const b=U.qs('#find-id-button'),data={name:U.qs('#recovery-name').value.trim(),graduation_year:U.qs('#recovery-year').value,email:U.qs('#recovery-email').value.trim()};if(!data.name||!data.graduation_year||!data.email)return U.status(st,'이름, 졸업연도, 등록 이메일을 입력해 주세요.','error');U.busy(b,true,'확인 중…');try{const r=await AlumniAPI.request('findAlumniId',{method:'POST',data});U.status(st,r.message,'success')}catch(e){U.status(st,e.message,'error')}finally{U.busy(b,false)}};
-    U.qs('#request-pin-code').onclick=async()=>{const b=U.qs('#request-pin-code'),data={alumni_id:U.qs('#reset-alumni-id').value.trim(),email:U.qs('#reset-email').value.trim()};if(!data.alumni_id||!data.email)return U.status(st,'Alumni ID와 등록 이메일을 입력해 주세요.','error');U.busy(b,true,'발송 중…');try{const r=await AlumniAPI.request('requestPinReset',{method:'POST',data});pinResetRequestId=r.request_id;U.qs('#pin-request-step').hidden=true;U.qs('#pin-reset-step').hidden=false;U.status(st,r.message,'success');U.qs('#reset-code').focus()}catch(e){U.status(st,e.message,'error')}finally{U.busy(b,false)}};
-    U.qs('#reset-pin-button').onclick=async()=>{const b=U.qs('#reset-pin-button'),code=U.qs('#reset-code').value.trim(),pin=U.qs('#reset-new-pin').value,confirm=U.qs('#reset-new-pin-confirm').value;if(!/^[0-9]{6}$/.test(code)||!/^[0-9]{6,12}$/.test(pin))return U.status(st,'인증번호와 숫자 6~12자리 새 PIN을 확인해 주세요.','error');if(pin!==confirm)return U.status(st,'새 PIN 확인이 일치하지 않습니다.','error');U.busy(b,true,'재설정 중…');try{const r=await AlumniAPI.request('resetPin',{method:'POST',data:{request_id:pinResetRequestId,code,new_pin:pin}});U.status(st,r.message,'success');U.qs('#lookup-id').value=U.qs('#reset-alumni-id').value;U.qs('#lookup-pin').value='';closeRecovery()}catch(e){U.status(st,e.message,'error')}finally{U.busy(b,false)}};
-    // Portal identity takes precedence over legacy alumni PINs.
-    const pinField=U.qs('#pin-field');if(pinField)pinField.hidden=true;
-    const pinLookup=U.qs('#lookup-pin');if(pinLookup){pinLookup.required=false;pinLookup.closest('.field').hidden=true;}
-    const pinReset=U.qs('#show-pin-recovery');if(pinReset)pinReset.hidden=true;
-    const legacyHint=U.qs('#lookup-panel > p');if(legacyHint)legacyHint.textContent='포털 로그인 계정으로 본인을 확인합니다. Alumni ID를 확인하고 내 정보를 불러오세요.';
-    function syncIdentity(){
-      const member=window.alumniPortalMember||{};
-      for(const field of ['name','email']){
-        const el=U.qs('[name="'+field+'"]');
-        if(el&&member[field]){el.value=member[field];el.readOnly=true;}
-      }
-      const idInput=U.qs('#lookup-id');
-      if(idInput&&member.alumniId){idInput.value=member.alumniId;idInput.readOnly=true;}
-    }
-    Promise.resolve(window.alumniPortalReady).then(()=>{
-      syncIdentity();
-      if(window.alumniPortalMember?.alumniId){
-        mode(true);syncIdentity();
-        U.qs('#lookup-button').click();
-      }
-    }).catch(()=>{});
-    U.qs('#register-tab').addEventListener('click',()=>queueMicrotask(syncIdentity));
-    U.qs('#edit-tab').addEventListener('click',()=>queueMicrotask(syncIdentity));
-    form.onsubmit=async e=>{e.preventDefault();if(!form.reportValidity())return;const data=values(form),action=data.mode==='update'?'update':'register';if(action==='update')data.auth_pin='';if(data.contact_allowed==='true'&&!data.mentoring_topics.length)return U.status(st,'연락 요청을 허용하려면 상담 가능 분야를 1개 이상 선택해 주세요.','error');if(data.contact_allowed==='true'&&!data.contact_consent)return U.status(st,'연락 요청을 허용하려면 연락 요청 수신 동의가 필요합니다.','error');U.busy(btn,true,action==='update'?'수정 중…':'등록 중…');try{const r=await AlumniAPI.request(action,{method:'POST',data});form.reset();form.hidden=true;U.status(st,action==='register'?`정보 등록이 완료되었습니다. 관리자 확인 후 공개됩니다. Alumni ID: ${r.alumni_id}`:'정보가 수정되었습니다.','success')}catch(err){U.status(st,err.message,'error')}finally{U.busy(btn,false)}};
+ 'use strict';
+ const U=AlumniUI;
+ const skills=['Java','Spring Boot','Python','AI','빅데이터','클라우드','Docker','Kubernetes','DevOps','데이터베이스','프론트엔드'];
+ const topics=['취업 준비','회사 정보','직무 상담','개발 공부','AI','빅데이터','클라우드','대학원 진학','자격증','포트폴리오','면접','기타'];
+ function renderChecks(name,options){
+  U.qs('[data-checks="'+name+'"]').innerHTML=options.map(value=>
+   '<label class="check"><input type="checkbox" name="'+name+'" value="'+value+'">'+value+'</label>'
+  ).join('');
+ }
+ function syncOptions(){
+  U.selectOptions(U.qs('[name="employment_status"]'),U.options.employmentStatus,{selected:'취업 중'});
+  U.selectOptions(U.qs('[name="bachelor_status"]'),U.options.bachelorStatus);
+  U.selectOptions(U.qs('[name="graduate_status"]'),U.options.graduateStatus);
+  U.selectOptions(U.qs('[name="graduate_school_type"]'),U.options.graduateSchoolType);
+  U.selectOptions(U.qs('[name="graduate_degree"]'),U.options.graduateDegree);
+ }
+ function conditional(field,section,show,required=[]){
+  const input=U.qs('[name="'+field+'"]'),box=U.qs(section);
+  const sync=()=>{
+   const visible=show(input.value);
+   box.hidden=!visible;
+   required.forEach(name=>{const el=U.qs('[name="'+name+'"]');if(el)el.required=visible;});
+  };
+  input.addEventListener('change',sync);sync();
+ }
+ function values(form){
+  const data=Object.fromEntries(new FormData(form));
+  for(const name of ['skills','mentoring_topics'])
+   data[name]=U.qsa('[name="'+name+'"]:checked').map(el=>el.value);
+  if(data.skills_other)data.skills.push(...data.skills_other.split(',').map(v=>v.trim()).filter(Boolean));
+  for(const name of ['privacy_consent','identity_consent','contact_consent','career_mail_enabled','alumni_news_mail_enabled'])
+   data[name]=!!U.qs('[name="'+name+'"]')?.checked;
+  return data;
+ }
+ function fill(data){
+  for(const [name,value] of Object.entries(data)){
+   const nodes=U.qsa('[name="'+name+'"]');
+   if(!nodes.length)continue;
+   if(nodes[0].type==='checkbox'){
+    const items=Array.isArray(value)?value:String(value||'').split('|');
+    for(const node of nodes)
+     node.checked=['career_mail_enabled','alumni_news_mail_enabled'].includes(name)?
+      value===true||value==='TRUE':items.includes(node.value);
+   }else nodes[0].value=value==null?'':String(value);
+  }
+  U.qs('[name="privacy_consent"]').checked=true;
+  U.qs('[name="identity_consent"]').checked=true;
+  for(const name of ['employment_status','bachelor_status','graduate_status','contact_allowed'])
+   U.qs('[name="'+name+'"]').dispatchEvent(new Event('change'));
+ }
+ document.addEventListener('DOMContentLoaded',async()=>{
+  const form=U.qs('#alumni-form'),save=U.qs('#alumni-submit'),notice=U.qs('#form-status');
+  const heading=U.qs('#alumni-account-title'),desc=U.qs('#alumni-account-description');
+  const myPage=U.qs('#alumni-account-mypage');
+  U.yearOptions(U.qs('#form-graduation-year'));
+  // Graduation must have occurred, not be a future year.
+  for(const option of [...U.qs('#form-graduation-year').options])
+   if(option.value&&Number(option.value)>new Date().getFullYear())option.remove();
+  renderChecks('skills',skills);
+  renderChecks('mentoring_topics',topics);
+  syncOptions();
+  const activeJobs=['취업 중','대학원 연구실(석사과정)','대학원 연구실(박사과정)'];
+  conditional('employment_status','#employment-fields',v=>activeJobs.includes(v),['company','job']);
+  conditional('bachelor_status','#bachelor-fields',v=>['재학','취득','취득 예정'].includes(v));
+  conditional('graduate_status','#graduate-fields',v=>['재학','휴학','수료','졸업'].includes(v),
+   ['graduate_school_type','graduate_school','graduate_major']);
+  conditional('contact_allowed','#mentoring-fields',v=>v==='true');
+  try{
+   await window.alumniPortalReady;
+   if(document.documentElement.dataset.alumniPortalAuth!=='approved')
+    throw Error('승인된 학과 포털 계정으로 로그인해 주세요.');
+   const response=await AlumniAPI.request('myAlumniProfile',{method:'POST'});
+   const info=response.data;
+   if(!info?.eligible){
+    heading.textContent='졸업 후 등록할 수 있습니다';
+    desc.textContent='등록된 학생 계정은 그대로 유지됩니다. 졸업한 뒤 마이페이지에서 학적 상태를 졸업으로 저장하면 이곳에서 정보를 등록할 수 있습니다.';
+    myPage.hidden=false;
+    return;
+   }
+   const identity=info.identity||{};
+   form.hidden=false;
+   const name=U.qs('[name="name"]'),email=U.qs('[name="email"]');
+   name.value=identity.name||'';
+   email.value=identity.email||'';
+   name.readOnly=true;email.readOnly=true;
+   if(identity.studentNo){
+    const student=U.qs('[name="student_id"]');
+    student.value=identity.studentNo;
+    student.readOnly=true;
+   }
+   if(identity.phone)U.qs('[name="phone"]').value=identity.phone;
+   if(identity.graduationYear)
+    U.qs('[name="graduation_year"]').value=String(identity.graduationYear);
+   if(info.registered&&info.profile){
+    fill(info.profile);
+    name.value=identity.name||'';
+    email.value=identity.email||'';
+    if(identity.studentNo)U.qs('[name="student_id"]').value=identity.studentNo;
+    U.qs('[name="mode"]').value='update';
+    U.qs('[name="alumni_id"]').value=info.profile.alumni_id||'';
+    heading.textContent='등록된 내 정보 수정';
+    desc.textContent='포털 로그인을 통해 본인 확인이 완료됐습니다. PIN 없이 정보를 수정할 수 있으며 저장된 변경 사항은 관리자 승인 후 공개됩니다.';
+    save.textContent='수정 내용 저장';
+   }else{
+    heading.textContent='졸업생 정보 신규 등록';
+    desc.textContent='졸업 상태가 확인되었습니다. 졸업연도와 진로 정보를 입력해 주세요. 관리자 승인 후 공개됩니다.';
+    save.textContent='졸업생 정보 등록 신청';
+   }
+  }catch(error){
+   heading.textContent='계정 정보를 불러오지 못했습니다';
+   desc.textContent='포털 로그인 상태를 확인한 후 다시 이용해 주세요.';
+   U.status(notice,error?.message||'내 정보를 불러올 수 없습니다.','error');
+   form.hidden=true;
+   return;
+  }
+  form.addEventListener('submit',async event=>{
+   event.preventDefault();
+   if(!form.reportValidity())return;
+   const payload=values(form);
+   if(payload.contact_allowed==='true'&&!payload.mentoring_topics.length)
+    return U.status(notice,'연락 요청을 허용하려면 상담 가능 분야를 선택해 주세요.','error');
+   if(payload.contact_allowed==='true'&&!payload.contact_consent)
+    return U.status(notice,'연락 요청을 허용하려면 연락 요청 수신 동의를 선택해 주세요.','error');
+   U.busy(save,true,'저장 중…');
+   try{
+    const response=await AlumniAPI.request('saveMyAlumniProfile',{method:'POST',data:payload});
+    U.qs('[name="alumni_id"]').value=response.alumni_id;
+    U.qs('[name="mode"]').value='update';
+    window.alumniPortalMember={...(window.alumniPortalMember||{}),alumniId:response.alumni_id};
+    heading.textContent='등록된 내 정보 수정';
+    desc.textContent='저장했습니다. 변경된 정보는 관리자 검토 후 공개됩니다.';
+    U.status(notice,'졸업생 정보가 저장되었습니다. 관리자 승인 후 공개됩니다.','success');
+    save.textContent='수정 내용 저장';
+   }catch(error){
+    U.status(notice,error?.message||'저장하지 못했습니다. 다시 시도해 주세요.','error');
+   }finally{U.busy(save,false);}
   });
+ });
 })();
