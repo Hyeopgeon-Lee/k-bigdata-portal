@@ -1,0 +1,26 @@
+name: Portal signup domain QA
+
+on:
+  push:
+    paths:
+      - "js/portal-auth.mjs"
+      - "js/email-policy.mjs"
+      - "tests/portal-auth.test.mjs"
+      - "supabase/migrations/*block_kopo_domain_new_signups.sql"
+      - ".github/workflows/portal-signup-domain-qa.yml"
+  workflow_dispatch:
+
+jobs:
+  validate-signup-domain:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Check signup JavaScript and email policy
+        run: |
+          node --check js/portal-auth.mjs
+          node --check js/email-policy.mjs
+          node tests/portal-auth.test.mjs
