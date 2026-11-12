@@ -1,5 +1,5 @@
 import {quizNavigation,quizHeading,quizDisclosure,quizFeedback} from "./quiz-unified.js?v=20261112-action-colors-1";
-import {createQuestionBrowser} from "./question-browser.js";
+import {createQuestionBrowser} from "./question-browser.js?v=20261112-exam-facets-1";
 import {bindReview,reviewControls,gradeLabels} from "./study-review.js";
 import {loadPracticalBank} from "./practical-data.js?v=20261006-audit-2";
 import {examLabels,typeLabels,languages,escapeHTML as esc,questionText,shuffle,recommendFive,matchesExam,localDay,summarizeAttempts,highlightCode,formatCodeForDisplay,canResumeUnfinishedAttempt} from "./practical-core.js?v=20261112-practical-resume-1";
@@ -426,7 +426,32 @@ loadPracticalBank().then(result=>{
  }
  const params=new URLSearchParams(location.search),id=params.get("id"),exam=params.get("exam"),shared=params.get("share")==="1";if(Object.keys(examLabels).includes(exam)){filters.exam=exam;$("#exam-filter").value=exam;}if(shared){const canonical=new URL(location.href);canonical.searchParams.delete("share");history.replaceState(history.state,"",canonical);}
  browserEntry=createQuestionBrowser({
-   title:"정보처리 기출문제",questions:sorted(bank),scope:exam&&exam!=="all"&&Object.hasOwn(examLabels,exam)?{label:examLabels[exam],matches:q=>matchesExam(q,exam,bank)}:null,category:q=>q.language,categoryLabel:key=>key,
+   title:"정보처리 기출문제",questions:sorted(bank),
+   category:q=>q.language,categoryLabel:key=>key,
+   secondaryFilter:{
+     label:"시험 구분",categoryLabel:"프로그래밍 언어",
+     options:Object.entries(examLabels).map(([value,label])=>({value,label})),
+     initialValue:Object.hasOwn(examLabels,exam)?exam:(Object.hasOwn(examLabels,filters.exam)?filters.exam:""),
+     matches:(q,value)=>matchesExam(q,value,bank),
+     onChange:value=>{
+       filters.exam=value||"all";
+       $("#exam-filter").value=filters.exam;
+       savePreferences({filters:{...filters}});
+       const url=new URL(location.href);
+       if(value)url.searchParams.set("exam",value);
+       else url.searchParams.delete("exam");
+       history.replaceState(history.state,"",url);
+     }
+   },
+   metaText:q=>{
+     const types=q.sourceType==="reconstructed"
+       ? [...new Set(q.history.map(h=>h.examType))]
+       : (Array.isArray(q.examTypes)?q.examTypes:[]);
+     const labels=types.filter(key=>Object.hasOwn(examLabels,key)).map(key=>examLabels[key]);
+     const examName=labels.length===2?"기사·산업기사 공통":labels[0]||"시험 구분 미확인";
+     const provenance=labels.length&&q.sourceType!=="reconstructed"?" · 학습유형":"";
+     return q.language+" · "+q.id+" · "+examName+provenance;
+   },
    describe:q=>q.title,searchText:q=>[q.id,questionText(q)].join(" "),
    openQuestion(q,items){queue=items;queueIndex=items.indexOf(q);queueKind="bank";openQuestion(q.id,false);},
  });
