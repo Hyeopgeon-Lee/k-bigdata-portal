@@ -600,13 +600,19 @@ async function handle(action:string,b:Record<string,unknown>,a:Actor){
   const key=isAlumni?"alumni_id":kind==="jobs"?"job_id":"news_id";
   const record=await one(kind,text(b[key]));
   if(!record)throw Error("대상 등록 정보를 찾을 수 없습니다.");
-  const after=action.includes("Reject")?"REJECTED":action.includes("Hide")?"HIDDEN":"APPROVED";
+  const previousStatus=text(record.data.status);
+  const after=action.includes("Hide")?"HIDDEN":"APPROVED";
   if(after==="APPROVED"&&record.data.status==="REJECTED"&&!action.includes("Publish"))
    throw Error("반려된 등록은 다시 신청해야 합니다.");
   record.data.status=after;record.data.updated_at=now();
   if(after==="APPROVED"){record.data.approved_at=now();record.data.approved_by=a.email;}
   if(action==="adminNewsSendMail")record.data.mail_status="WAITING";
   await put(kind,record.source_id,record.data);
+  const {error:auditError}=await admin.from("alumni_audit_logs").insert({
+   actor_user_id:a.id,action,target_kind:kind,target_id:record.source_id,
+   previous_status:previousStatus,new_status:after
+  });
+  if(auditError)throw Error("ADMIN_AUDIT_WRITE_FAILED");
   if(action==="adminNewsSendMail")await deliverNews(record.data);
   return {success:true,message:"상태 변경이 완료되었습니다."};
  }
