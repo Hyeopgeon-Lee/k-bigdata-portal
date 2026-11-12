@@ -8,7 +8,9 @@ export const legacyGradeOverrides = Object.freeze({
   "2026-10-21|발표회 이력서 제출":"2",
   "2026-10-23|중학생진로체험":"1",
   "2026-10-26|졸업작품설치":"2",
-  "2026-10-28|졸업발표회":"2"
+  "2026-10-28|졸업발표회":"2",
+  "2026-11-17|쪽지시험":"1",
+  "2026-11-23|쪽지시험":"1"
 });
 export function publishedGrade(event,normalizedTitle){
   if(["1","2","all"].includes(event?.targetGrade))return event.targetGrade;
