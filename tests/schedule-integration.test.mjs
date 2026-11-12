@@ -116,9 +116,14 @@ assert.equal(context.targetGradeFromDescription_("대상학년: 2학년"),"2");
 assert.equal(context.targetGradeFromDescription_("대상학년: 전체"),"all");
 assert.equal(context.targetGradeFromDescription_("메모 제목\n  대상 학년： 2학년  \n모임 장소"),"2");
 assert.equal(context.targetGradeFromDescription_("대상학년: 3학년"),null);
-assert.equal(context.targetGradeFromDescription_("대상학년: 1학년 외부 공유"),null);
-assert.equal(context.targetGradeFromDescription_("설명 속에 대상학년: 1학년이 포함"),null);
+assert.equal(context.targetGradeFromDescription_("대상학년: 1학년 외부 공유"),"1");
+assert.equal(context.targetGradeFromDescription_("설명 속에 대상학년: 1학년이 포함"),"1");
 assert.equal(context.targetGradeFromDescription_("대상학년: 1학년\r\n별도 안내"),"1");
+assert.equal(context.targetGradeFromDescription_("1학년"),"1","plain memo must work");
+assert.equal(context.targetGradeFromDescription_("2학년 학생 대상"),"2","freeform memo must work");
+assert.equal(context.targetGradeFromDescription_("1학년과 2학년 공통"),"all","both grades imply all");
+assert.equal(context.targetGradeFromDescription_("11학년"),null,"grade number must be isolated");
+assert.equal(context.targetGradeFromDescription_("연구실 예약"),null,"no grade implies all through fallback");
 // 개인/비공개 일정은 설명을 읽는 것 자체를 금지합니다.
 const forbiddenDescription=event("일반 개인 일정");
 forbiddenDescription.getDescription=()=>{throw new Error("private note was read");};
@@ -133,6 +138,9 @@ const withMemo=event("(학과) [프로젝트] [2학년] 팀프로젝트","DEFAUL
 const memoRow=context.eventPublicRow_(withMemo);
 assert.equal(memoRow[1],"팀프로젝트");
 assert.equal(memoRow[9],"1","memo setting overrides legacy title grade");
+const freeformMemoRow=context.eventPublicRow_(event("(학과) 쪽지시험","DEFAULT",false,
+  "2026-11-17T07:00:00Z","2026-11-17T08:00:00Z","1학년 시험"));
+assert.equal(freeformMemoRow[9],"1","plain freeform memo applies to department event");
 assert.equal(memoRow.length,10);
 assert.ok(!memoRow.join(" ").includes(memoSecret),"memo text must not enter published row");
 const wholeGrade=context.eventPublicRow_(event("(학과) [1학년] 학과행사","DEFAULT",false,
