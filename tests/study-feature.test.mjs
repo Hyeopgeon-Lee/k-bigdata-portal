@@ -12,6 +12,14 @@ assert.equal(portalNavLinks.find(x=>x.id==='study')?.group,'learning');
 assert.equal(portalPages.study?.locked,true);
 assert.ok(study.includes('id="learning-lock"'),'auth must unlock study page');
 assert.ok(study.includes('data-module="js/study.js'),'student JS runs only after portal auth');
+assert.match(study,/id="study-no-plan-reason"/,'mandatory no-plan explanation is shown on zero-day weeks');
+assert.match(study,/minlength="2" maxlength="300"/,'reasonable explanation length');
+assert.match(student,/no_plan_reason:noPlanReason/,'student stores explanation with weekly plan');
+assert.match(student,/selected\.size===0&&\(!noPlanReason/,'empty reason cannot be submitted');
+assert.match(student,/\$\('study-no-plan-reason'\)\.required=selected\.size===0/,'reason required only if no weekdays');
+assert.match(faculty,/계획 없음 사유/,'teacher column is present');
+assert.match(facultyJS,/plan\.no_plan_reason/,'teacher sees saved explanation');
+
 for(const id of ['study-week','study-days','study-save','study-session-primary','study-pause','study-end','study-reason-form','study-stat-rate'])
   assert.ok(study.includes('id="'+id+'"'),id+' mounted');
 for(const name of ['study_weekly_plans','study_sessions','study_absence_reasons','study_start_session','study_finish_session','study_pause_session','study_resume_session'])
