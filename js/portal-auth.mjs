@@ -122,7 +122,7 @@ function bindIdentity(form,initial,initialGrade=null){
   sync();
 }
 function eligible(profile){
-  return ["enrolled","leave"].includes(profile.enrollment_status) ||
+  return ["enrolled","leave","early_employment"].includes(profile.enrollment_status) ||
     (["student","alumni"].includes(profile.signup_type) && profile.enrollment_status==="graduated");
 }
 function renderSignup(){
@@ -192,7 +192,7 @@ function renderNewPassword(){
 }
 function renderPending(profile){
   const approval={pending:"관리자 승인 대기",rejected:"가입 반려",suspended:"이용 정지",approved:"승인 완료"}[profile.approval_status]||"계정 확인 필요";
-  const enrollment={enrolled:"재학",leave:"휴학",withdrawn:"자퇴",graduated:"졸업"}[profile.enrollment_status]||"미확인";
+  const enrollment={enrolled:"재학",leave:"휴학",withdrawn:"자퇴",graduated:"졸업",early_employment:"조기취업"}[profile.enrollment_status]||"미확인";
   card("계정 이용 안내",'<p class="portal-auth-lead" id="portal-member-status"></p>'+
     '<p class="portal-auth-note">계정 상태 변경은 담당 교수 관리자에게 문의하세요.</p>'+
     '<button id="portal-pending-logout" class="portal-auth-primary" type="button">로그아웃</button>');
@@ -294,6 +294,7 @@ function renderAccount(){
   $("#portal-account-name").textContent=memberName;
   $("#portal-account-role").textContent=isAdmin?"관리자":
     currentProfile?.signup_type==="alumni"?"졸업생 · "+currentProfile.graduation_year+"년 졸업":
+    currentProfile?.enrollment_status==="early_employment"?"조기취업 · 학습 기록 유지":
     currentProfile?.enrollment_status==="leave"?"휴학 · 학습 기록 읽기 전용":
     currentProfile?.enrollment_status==="graduated"?"졸업생 · 학습 기록 유지":
     [1,2].includes(Number(currentProfile?.academic_year))?"재학생 · "+currentProfile.academic_year+"학년":"재학생";
@@ -541,7 +542,7 @@ async function renderAdmin(){
     '<p class="portal-auth-lead">승인 대기 신청은 별도의 ‘가입 승인 요청’에서 관리합니다. 이곳에서는 기존 회원의 가입 상태와 학적을 관리합니다. 주간 학습 메일은 승인된 재학생에게만 발송합니다.</p>'+
     '<div class="portal-admin-toolbar">'+
       '<label>학생 검색<input id="portal-admin-search" type="search" placeholder="이름 · 학번 · 이메일" autocomplete="off"></label>'+
-      '<label>학적 상태<select id="portal-admin-filter"><option value="all">전체 학생</option><option value="enrolled">재학</option><option value="leave">휴학</option><option value="withdrawn">자퇴</option><option value="graduated">졸업</option></select></label>'+
+      '<label>학적 상태<select id="portal-admin-filter"><option value="all">전체 학생</option><option value="enrolled">재학</option><option value="leave">휴학</option><option value="withdrawn">자퇴</option><option value="graduated">졸업</option><option value="early_employment">조기취업</option></select></label>'+
     '</div>'+
     '<p class="portal-admin-summary" id="portal-admin-summary" aria-live="polite"></p>'+
     '<div class="portal-admin-scroll"><table class="portal-admin-table"><thead><tr><th>이름</th><th>가입 유형</th><th>학번 / 졸업년도</th><th>이메일</th><th>가입 상태</th><th>학적</th><th>주간 메일</th><th>변경</th></tr></thead><tbody id="portal-student-list"></tbody></table></div>'+
@@ -567,7 +568,7 @@ async function renderAdmin(){
       td.dataset.label=["이름","가입 유형","학번 / 졸업년도","이메일"][index];tr.append(td);
     });
     const approval=options([["approved","승인"],["rejected","반려"],["suspended","정지"]],member.approval_status);
-    const enrollment=options([["enrolled","재학"],["leave","휴학"],["withdrawn","자퇴"],["graduated","졸업"]],member.enrollment_status);
+    const enrollment=options([["enrolled","재학"],["leave","휴학"],["withdrawn","자퇴"],["graduated","졸업"],["early_employment","조기취업"]],member.enrollment_status);
     if(member.signup_type==="alumni"){enrollment.value="graduated";enrollment.disabled=true;enrollment.title="졸업생의 학적은 졸업으로 유지됩니다.";}
     approval.setAttribute("aria-label",member.full_name+" 가입 상태");
     enrollment.setAttribute("aria-label",member.full_name+" 학적");
@@ -577,7 +578,7 @@ async function renderAdmin(){
     const mailTd=document.createElement("td");mailTd.dataset.label="주간 메일";
     const mailStatus=document.createElement("span");mailStatus.className="portal-admin-mail-status";
     const updateMailStatus=()=>{
-      const graduated=member.signup_type==="alumni"||enrollment.value==="graduated";
+      const graduated=member.signup_type==="alumni"||["graduated","early_employment"].includes(enrollment.value);
       // No weekly mail controls for alumni, including graduates who originally signed up as students.
       mailTd.hidden=graduated;
       const eligible=approval.value==="approved"&&enrollment.value==="enrolled"&&member.signup_type!=="alumni";
@@ -654,10 +655,10 @@ async function renderAdmin(){
       const show=(filter==="all"||member.enrollment_status===filter)&&searchText.includes(term);
       tr.hidden=!show;if(show)visible++;
     }
-    const tally={enrolled:0,leave:0,withdrawn:0,graduated:0};
+    const tally={enrolled:0,leave:0,withdrawn:0,graduated:0,early_employment:0};
     for(const {member} of rows)if(member.enrollment_status in tally)tally[member.enrollment_status]++;
     $("#portal-admin-summary").textContent=
-      "재학 "+tally.enrolled+"명 · 휴학 "+tally.leave+"명 · 자퇴 "+tally.withdrawn+"명 · 졸업 "+tally.graduated+"명 · 표시 "+visible+"명";
+      "재학 "+tally.enrolled+"명 · 휴학 "+tally.leave+"명 · 조기취업 "+tally.early_employment+"명 · 자퇴 "+tally.withdrawn+"명 · 졸업 "+tally.graduated+"명 · 표시 "+visible+"명";
   };
   $("#portal-admin-search").addEventListener("input",updateResults);
   $("#portal-admin-filter").addEventListener("change",updateResults);
