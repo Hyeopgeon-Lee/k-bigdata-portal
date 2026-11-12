@@ -25,6 +25,13 @@ assert.match(student,/selected\.size===0&&\(!noPlanReason/,'empty reason cannot 
 assert.match(student,/\$\('study-no-plan-reason'\)\.required=selected\.size===0/,'reason required only if no weekdays');
 assert.match(faculty,/계획 없음 사유/,'teacher column is present');
 assert.match(facultyJS,/plan\.no_plan_reason/,'teacher sees saved explanation');
+assert.doesNotMatch(study,/예:\s*이번 주에는 자격증 시험 준비/,'no copied opt-out excuse should be suggested');
+assert.match(study,/자격증·코딩·프로젝트 준비도 자율학습에 포함/,'study subjects are not reasons to opt out');
+assert.match(study,/공부할 과목이 아니라 학교에 남아 공부하기 어려운 이유/,'students must explain inability to stay');
+assert.match(study,/0일 제출은 자율학습 면제 승인이 아닙니다/,'zero-day submission is not automatic exemption');
+assert.match(facultyJS,/0일 계획 · 확인 필요/,'zero-day plans require faculty attention');
+assert.match(facultyJS,/zeroPlanStudents/,'faculty dashboard highlights zero-day cases');
+
 
 for(const id of ['study-week','study-days','study-save','study-session-primary','study-pause','study-end','study-reason-form','study-stat-rate'])
   assert.ok(study.includes('id="'+id+'"'),id+' mounted');
