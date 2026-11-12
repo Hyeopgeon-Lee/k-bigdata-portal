@@ -1,6 +1,6 @@
 name: Import approved verified alumni into portal
 # Safe rerun: only pending rows are processed; already imported identities are untouched.
-# 2026-11-13: import three explicitly approved 2027 early-employed candidates.
+# 2026-11-13: rerun import after allowing verified future graduate candidates.
 on:
   push:
     branches: [main]
