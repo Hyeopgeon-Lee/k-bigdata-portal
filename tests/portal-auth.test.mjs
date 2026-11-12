@@ -24,6 +24,10 @@ const migration=read("supabase/migrations/20261112113500_block_kopo_domain_new_s
 assert.match(migration,/before insert or update of email on auth\.users/,"direct Auth API registration is protected");
 assert.match(migration,/before insert on public\.profiles/,"older profile registration RPCs are protected");
 
+assert.match(source,/function card\(title,inner,focusTarget="#portal-auth-title"\)/,"dialog supports initial focus selector");
+assert.match(source,/\$\(focusTarget\)\?\.focus\?\.\(\{preventScroll:true\}\)/,"dialog focuses selected field without scrolling");
+assert.match(source,/'#portal-login-form input\[name="email"\]'\)/,"login focuses email before heading");
+assert.match(source,/autocomplete="username"/,"email retains username autofill");
 assert.match(source,/signInWithPassword\(/);
 assert.match(source,/getUser\(/);
 assert.match(source,/start_portal_session/);

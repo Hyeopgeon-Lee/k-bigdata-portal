@@ -56,13 +56,13 @@ root.addEventListener("keydown",event=>{
   const target=event.shiftKey?fields.at(-1):fields[0];
   if(event.shiftKey?(document.activeElement===fields[0]||document.activeElement.id==="portal-auth-title"):document.activeElement===fields.at(-1)){event.preventDefault();target?.focus();}
 });
-function card(title,inner){
+function card(title,inner,focusTarget="#portal-auth-title"){
   if(root.hidden)opener=document.activeElement;
   root.hidden=false;
   root.innerHTML='<section class="portal-auth-card" role="dialog" aria-modal="true" aria-labelledby="portal-auth-title">'+
     '<p class="portal-auth-eyebrow">K-BIGDATA STUDENT PORTAL</p><h1 id="portal-auth-title" tabindex="-1">'+title+'</h1>'+inner+
     '<p id="portal-auth-status" role="status" aria-live="polite"></p></section>';
-  $("#portal-auth-title")?.focus?.();
+  $(focusTarget)?.focus?.({preventScroll:true});
 }
 function renderLogin(message=""){
   card("포털 로그인",'<p class="portal-auth-lead">학과 통합 포털은 로그인 후 이용할 수 있습니다. 재학생과 졸업생은 이메일 인증 및 계정 승인 후 사용할 수 있습니다.</p>'+
@@ -71,7 +71,7 @@ function renderLogin(message=""){
    '<label>비밀번호<input name="password" type="password" autocomplete="current-password" required></label>'+
    '<button class="portal-auth-primary" type="submit">로그인</button></form>'+
    '<div class="portal-auth-actions portal-auth-secondary-actions"><button type="button" data-view="signup">회원가입</button>'+
-   '<button type="button" class="portal-auth-subtle" data-view="forgot">비밀번호 재설정</button></div>');
+   '<button type="button" class="portal-auth-subtle" data-view="forgot">비밀번호 재설정</button></div>','#portal-login-form input[name="email"]');
   if(message)status(message);
   $("#portal-login-form").addEventListener("submit",async e=>{
     e.preventDefault();const fd=new FormData(e.currentTarget); const btn=e.currentTarget.querySelector("button");
