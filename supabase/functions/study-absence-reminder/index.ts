@@ -54,7 +54,7 @@ function previousStudyDay(){
    start:new Date(yesterday-Z).toISOString(),end:new Date(yesterday-Z+DAY).toISOString()};
 }
 function mailTemplate(name:string,date:string){
- const link="https://portal.k-bigdata.kr/study.html?reason="+encodeURIComponent(date);
+ const link="https://portal.k-bigdata.kr/study-absence.html?reason="+encodeURIComponent(date);
  return '<!doctype html><html lang="ko"><body style="margin:0;padding:28px 12px;background:#f5f7fb;color:#1a2c48;font-family:system-ui,sans-serif">'+
  '<main style="max-width:580px;margin:auto;background:#fff;border:1px solid #dce3ef;border-radius:16px;overflow:hidden">'+
  '<header style="padding:24px 26px;background:#0b1739;color:#fff"><strong style="font-size:18px">빅데이터소프트웨어공학과</strong><p style="font-size:12px;margin:5px 0 0">학과 통합 포털 · 자율학습</p></header>'+

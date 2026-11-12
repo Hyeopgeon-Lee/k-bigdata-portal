@@ -12,8 +12,7 @@ const mondayOf=day=>addDays(day,-(new Date(day+'T00:00:00Z').getUTCDay()+6)%7);
 const mins=secs=>Math.floor(Math.max(0,secs||0)/3600)+'시간 '+String(Math.floor((Math.max(0,secs||0)%3600)/60)).padStart(2,'0')+'분';
 const safe=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const labels=['월','화','수','목','금'];
-const reasons={personal:'개인 일정·가정 사정',home_study:'집에서 학습',career:'면접·자격증·외부 활동',condition:'컨디션 문제',forgot:'시작 버튼 기록 누락',other:'기타'};
-let uid='',week=currentMonday(),selected=new Set(),plan=null,sessions=[],absences=[],active=null;
+let uid='',week=currentMonday(),selected=new Set(),plan=null,sessions=[],active=null;
 const canWrite=window.portalLearning?.write===true;
 function message(text,error=false){$('study-status').textContent=text;$('study-status').dataset.error=error?'true':'false';}
 function getSeconds(row){
@@ -24,14 +23,13 @@ function getSeconds(row){
 }
 async function load(){
  message('클라우드 학습기록을 불러오는 중입니다.');
- const [u,p,s,a]=await Promise.all([
+ const [u,p,s]=await Promise.all([
   db.auth.getUser(),
   db.from('study_weekly_plans').select('*').gte('week_start',addDays(currentMonday(),-7)).lte('week_start',addDays(currentMonday(),7)),
-  db.from('study_sessions').select('*').order('started_at',{ascending:false}).limit(300),
-  db.from('study_absence_reasons').select('*').gte('study_date',addDays(currentMonday(),-7)).order('study_date',{ascending:false})
+  db.from('study_sessions').select('*').order('started_at',{ascending:false}).limit(300)
  ]);
- if(u.error||!u.data.user||p.error||s.error||a.error)throw Error('학습 데이터 조회에 실패했습니다.');
- uid=u.data.user.id;sessions=s.data||[];absences=a.data||[];
+ if(u.error||!u.data.user||p.error||s.error)throw Error('학습 데이터 조회에 실패했습니다.');
+ uid=u.data.user.id;sessions=s.data||[];
  active=sessions.find(x=>x.status==='active')||null;
  const found=(p.data||[]).find(x=>x.week_start===week);
  plan=found||null;selected=new Set(found?.weekdays||[]);
@@ -95,7 +93,6 @@ function render(){
   history.append(row);
  }
  if(!weekly.length)history.textContent='이번 주 자율학습 기록이 없습니다.';
- renderReason();
 }
 function tick(){
  if(!uid)return;
@@ -143,37 +140,12 @@ async function savePlan(){
   message('계획 저장에 실패했습니다. 사유와 변경 가능한 날짜를 확인해 주세요.',true);
  }finally{render();}
 }
-function renderReason(){
- const requested=new URL(location.href).searchParams.get('reason');
- const section=$('study-reason-section');
- if(!requested){section.hidden=true;return;}
- section.hidden=false;
- if(!/^\d{4}-\d{2}-\d{2}$/.test(requested)){section.textContent='잘못된 날짜입니다.';return;}
- $('study-reason-date').textContent=requested;
- const old=absences.find(a=>a.study_date===requested);
- $('study-reason-select').value=old?.reason||'personal';
- $('study-reason-details').value=old?.details||'';
- $('study-reason-feedback').textContent=old?'이전에 제출한 사유가 있습니다.':'';
- $('study-reason-form').dataset.date=requested;
-}
-async function submitReason(event){
- event.preventDefault();
- if(!canWrite){$('study-reason-feedback').textContent='현재 계정은 사유 등록이 제한됩니다.';return;}
- const date=$('study-reason-form').dataset.date,reason=$('study-reason-select').value,details=$('study-reason-details').value.trim();
- if(!reasons[reason]||details.length>500)return;
- $('study-reason-submit').disabled=true;
- const {error}=await db.from('study_absence_reasons').upsert({user_id:uid,study_date:date,reason,details},{onConflict:'user_id,study_date'});
- $('study-reason-submit').disabled=false;
- $('study-reason-feedback').textContent=error?'사유 저장에 실패했습니다. 등록한 학습일인지 확인해 주세요.':'미참여 사유가 저장되었습니다.';
- if(!error){absences=[...absences.filter(a=>a.study_date!==date),{study_date:date,reason,details}];}
-}
 $('study-week').addEventListener('change',()=>{week=$('study-week').value;void load().catch(e=>message(e.message,true));});
 $('study-save').addEventListener('click',()=>void savePlan());
 $('study-no-plan-reason').addEventListener('input',()=>{$('study-none-plan-count').textContent=$('study-no-plan-reason').value.length+' / 300자';});
 $('study-session-primary').addEventListener('click',()=>void session(active?'resume':'start'));
 $('study-pause').addEventListener('click',()=>void session('pause'));
 $('study-end').addEventListener('click',()=>{if(confirm('학습을 종료하고 귀가하시겠습니까?'))void session('finish');});
-$('study-reason-form').addEventListener('submit',submitReason);
 $('study-reload').addEventListener('click',()=>void load().catch(e=>message(e.message,true)));
 setInterval(tick,1000);
 if(!canWrite)$('study-write-note').hidden=false;
