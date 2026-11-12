@@ -2,7 +2,7 @@ import {readdirSync,readFileSync,writeFileSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import path from 'node:path';
 import {portalPages,navigationItems,shellVersion} from '../js/portal-navigation-model.mjs';
-import {renderHeader,renderServiceNavigation,renderToolbar} from './portal-shell-template.mjs';
+import {renderHeader,renderServiceNavigation,renderToolbar,renderPageIntro} from './portal-shell-template.mjs';
 const root=fileURLToPath(new URL('../',import.meta.url));
 // Keep the responsive account/menu loader cache-busted when regenerating page shells.
 const navigationScriptVersion='20261112-member-mobile-2';
@@ -23,8 +23,15 @@ for(const file of htmlPages){
   const oldToolbar=/<div class="(?:coding-study-header )?study-header"[^>]*>[\s\S]*?<\/div>/;
   if(page.toolbar)html=replaceRegion(html,'toolbar',renderToolbar(page),oldToolbar);
   else html=removeRegion(html,'toolbar');
-  if(page.group){const pattern=/<nav\b[^>]*data-learning-nav[^>]*>[\s\S]*?<\/nav>/;if(!pattern.test(html)&&!html.includes('portal:services:start'))html=html.replace(/(<main\b[^>]*>)/,'$1\n'+region('services',renderServiceNavigation(page,id)));else html=replaceRegion(html,'services',renderServiceNavigation(page,id),pattern);}
-  else html=removeRegion(html,'services');
+  if(page.eyebrow){
+    const navPattern=/<nav\\b[^>]*data-learning-nav[^>]*>[\\s\\S]*?<\\/nav>/;
+    if(!html.includes('portal:services:start'))html=html.replace(/(<main\\b[^>]*>)/,'$1\n'+region('services',renderServiceNavigation(page,id)));
+    else html=replaceRegion(html,'services',renderServiceNavigation(page,id),navPattern);
+    if(!html.includes('portal:intro:start'))html=html.replace('<!-- portal:services:end -->','<!-- portal:services:end -->\n'+region('intro',renderPageIntro(page,id)));
+    else html=replaceRegion(html,'intro',renderPageIntro(page,id));
+  }else{
+    html=removeRegion(removeRegion(html,'services'),'intro');
+  }
   const assets=`<link rel="stylesheet" href="css/portal-navigation.css?v=${shellVersion}">\n<script defer src="js/portal-navigation.js?v=${navigationScriptVersion}"></script>`;
   if(html.includes('portal:assets:start'))html=replaceRegion(html,'assets',assets);else html=html.replace('</head>',region('assets',assets)+'\n</head>');
   // Coding/learning UI assets have their own content versions and can be updated
