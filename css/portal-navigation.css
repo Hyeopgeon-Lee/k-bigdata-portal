@@ -200,3 +200,14 @@ body[data-ncp-view="question"] .portal-page-intro{
   body .portal-page-intro>.portal-page-description{font-size:15px;line-height:1.65}
 }
 body .portal-page-intro>.portal-page-title em{color:#142d70;font-style:normal}
+
+/* The faculty page report grid is narrower, but shared navigation and intro are not. */
+body[data-page="teacher-learning"] .learn-main > .container.portal-service-nav,
+body[data-page="teacher-learning"] .learn-main > .container.portal-page-intro{
+  width:min(calc(100% - var(--portal-shell-gutter) * 2),var(--portal-shell-max));
+  max-width:var(--portal-shell-max);margin-inline:auto;
+}
+body[data-page="interview"][data-interview-mode^="PRACTICE"] .portal-page-intro,
+body[data-page="interview"][data-interview-mode="COMPLETE"] .portal-page-intro{
+  padding-top:12px;padding-bottom:16px;
+}

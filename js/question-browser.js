@@ -5,7 +5,7 @@ export function createQuestionBrowser({title, questions, category, categoryLabel
   section.className="question-browser";
   section.hidden=true;
   section.innerHTML=`
-    <h1></h1>
+    <h2 class="qb-heading"></h2>
     <div class="qb-controls">
       <div class="qb-secondary-filter" hidden><span class="qb-filter-caption"></span><div class="qb-secondary-chips" role="group"></div></div>
       <span class="qb-primary-caption" hidden></span><div class="qb-categories" role="group" aria-label="문제 분류"></div>
@@ -14,8 +14,8 @@ export function createQuestionBrowser({title, questions, category, categoryLabel
     <div class="qb-list"><header><h2>문제 목록 <span role="status"></span></h2><button type="button" class="qb-random"></button></header>
       <ol></ol><nav aria-label="문제 목록 페이지"><button type="button">이전</button><span></span><button type="button">다음</button></nav>
     </div>`;
-  main.querySelector(".portal-service-nav").after(section);
-  section.querySelector("h1").textContent=title;
+  (main.querySelector(".portal-page-intro")||main.querySelector(".portal-service-nav")).after(section);
+  section.querySelector(".qb-heading").textContent=title;
   const search=section.querySelector("input"), chips=section.querySelector(".qb-categories");
   const secondary=section.querySelector(".qb-secondary-filter"),secondaryChips=section.querySelector(".qb-secondary-chips");
   const random=section.querySelector(".qb-random"),clear=section.querySelector(".qb-search button");
