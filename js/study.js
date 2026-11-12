@@ -51,7 +51,7 @@ function render(){
   button.type='button';button.className='study-day'+(selected.has(i+1)?' is-selected':'');
   button.dataset.index=String(i+1);
   button.setAttribute('aria-pressed',String(selected.has(i+1)));
-  button.disabled=!canWrite||day<today;
+  button.disabled=!canWrite||day<today||(day===today&&new Date(Date.now()+Z).getUTCHours()>=16);
   button.innerHTML='<strong>'+labels[i]+'</strong><small>'+day.slice(5).replace('-','.')+'</small><span aria-hidden="true">'+(selected.has(i+1)?'✓':'＋')+'</span>';
   button.addEventListener('click',()=>{selected.has(i+1)?selected.delete(i+1):selected.add(i+1);render();});
   $('study-days').append(button);
