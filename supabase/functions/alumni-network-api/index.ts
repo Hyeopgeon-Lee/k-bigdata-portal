@@ -549,11 +549,6 @@ async function handle(action:string,b:Record<string,unknown>,a:Actor){
    if(!sent)throw Error("요청은 저장됐지만 메일 발송에 실패했습니다. 관리자에게 문의해 주세요.");
    return {success:true,message:"연락 요청이 정상적으로 전달되었습니다."};
   }
- case "adminLogin":{
-  await adminOnly(a);
-  return {success:true,admin_token:"PORTAL_SUPER_ADMIN",message:"포털 관리자 인증 완료"};
- }
- case "adminLogout":return {success:true,message:"관리자 화면을 종료했습니다."};
  case "adminList":{
   await adminOnly(a);
   const view=text(b.view)||"alumni";
