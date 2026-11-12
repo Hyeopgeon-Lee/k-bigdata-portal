@@ -12,6 +12,12 @@ try{
     try{
       await page.goto("http://127.0.0.1:8765/room.html",{waitUntil:"domcontentloaded"});
       await page.waitForFunction(()=>document.documentElement.dataset.portalAccess==="approved",{timeout:15000});
+      await page.waitForFunction(()=>
+        !document.getElementById("learning-lock") &&
+        (document.querySelector(".room-layout")?.getBoundingClientRect().width||0)>0,
+        {timeout:16000});
+      await page.evaluate(async()=>{await document.fonts.ready;await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));});
+
       const dims=await page.evaluate(()=>{
         const box=selector=>{
           const element=document.querySelector(selector);
