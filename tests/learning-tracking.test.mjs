@@ -34,7 +34,8 @@ assert.match(teacherUI,/saveMailSetting/);
 assert.match(teacherCSS,/data-page="teacher-learning"/);
 assert.ok(teacherCSS.includes("@media(max-width:700px)"));
 assert.match(read('js/portal-auth.mjs'),/my-learning\.html/);
-assert.match(read('js/portal-auth.mjs'),/teacher-learning\.html/);
+assert.match(read('js/portal-auth.mjs'),/href:"admin\/index\.html"/,'faculty controls are linked only through admin hub');
+assert.match(read('admin/index.html'),/href="learning\.html"/,'admin hub links to the faculty reporting page');
 for(const html of [my,teacher]){assert.match(html,/id="learning-lock"/);assert.match(html,/data-module="js\/(?:my|teacher)-learning\.js/);}
 const mail=read('supabase/functions/weekly-learning-report/index.ts');
 const admin=read('supabase/functions/learning-admin/index.ts');
