@@ -10,11 +10,11 @@ const modules=["js/practical-ui.js","js/ncp-quiz.js","js/coding.js"];
 
 for(const path of pages){
   const html=read(path);
-  assert.match(html,/css\/quiz-unified\.css\?v=20261112-quiz-wide-1/,"Shared UI stylesheet on "+path);
+  assert.match(html,/css\/quiz-unified\.css\?v=20261112-action-colors-1/,"Shared UI stylesheet on "+path);
 }
 for(const path of modules){
   const js=read(path);
-  assert.ok(js.includes('from "./quiz-unified.js"'),"Shared UI module imported by "+path);
+  assert.ok(js.includes('from "./quiz-unified.js?v=20261112-action-colors-1"'),"Shared UI module imported by "+path);
   assert.match(js,/quizNavigation\(/);
   assert.match(js,/quizHeading\(/);
 }
@@ -32,14 +32,15 @@ assert.ok(!nav.includes("더보기"));
 
 const header=quizHeading({title:"두 정수의 합",badges:["C-001","입문","입출력·변수"],
  actions:[
-  {label:"문제 공유",action:"share-problem"},
-  {label:"링크 복사",action:"copy-problem-link"},
-  {label:"오류 신고",href:"help.html?source=coding"}
+  {label:"문제 공유",tone:"share",action:"share-problem"},
+  {label:"링크 복사",tone:"copy",action:"copy-problem-link"},
+  {label:"오류 신고",tone:"report",href:"help.html?source=coding"}
  ]});
 assert.match(header,/class="quiz-heading"/);
 assert.ok(header.indexOf("두 정수의 합")<header.indexOf('class="quiz-badges"'),"Question title precedes badges");
 assert.ok(header.indexOf('class="quiz-badges"')<header.indexOf('class="quiz-actions"'),"Actions follow badges");
-assert.equal((header.match(/class="quiz-action"/g)||[]).length,3);
+assert.equal((header.match(/class="quiz-action quiz-action--(?:share|copy|report)"/g)||[]).length,3);
+for(const tone of ["share","copy","report"])assert.match(header,new RegExp("quiz-action--"+tone));
 assert.ok(!header.includes("<details>"),"Three actions remain visible");
 assert.ok(!header.includes("더보기"));
 assert.equal((header.match(/<button/g)||[]).length,2);
@@ -64,6 +65,15 @@ for(const token of ["--quiz-primary:#173b80","--quiz-accent:#2454a6","--quiz-pag
   assert.ok(css.includes(token),"Missing central design token "+token);
 }
 assert.match(css,/\.quiz-actions\{[^}]*grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/s);
+for(const [tone,bg] of [["share","#e8f1ff"],["copy","#e6f6ed"],["report","#fff0e3"]]){
+  assert.ok(css.includes('.quiz-action--'+tone),'Missing shared style for '+tone);
+  assert.ok(css.includes('--quiz-action-bg:'+bg),'Missing '+tone+' action color');
+}
+for(const path of modules){
+ const js=read(path);
+ for(const tone of ["share","copy","report"])assert.ok(js.includes('tone:"'+tone+'"'),path+' missing '+tone);
+}
+
 assert.match(css,/\.quiz-navigation\{[^}]*grid-template-columns:/s);
 assert.match(css,/@media\(max-width:690px\)/);
 assert.match(css,/@media\(max-width:360px\)/);
