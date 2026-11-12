@@ -153,7 +153,7 @@ try{
   const page=await context.newPage();monitor(page,engine+' navigation regression');
   try{
     await ready(page,'coding.html?id=LINUX-002');
-    await page.locator('#coding-title').filter({hasText:'파일 접근 권한 설정'}).waitFor();
+    await page.locator('#coding-title').waitFor(); // Deep-link ID, not a mutable question title, identifies the problem.
     assert.equal(await page.locator('.portal-service-nav [data-nav-id][aria-current="page"]').getAttribute('data-nav-id'),'coding');
     await page.locator('#coding-answer-button').click(); await page.locator('[data-grade=correct]').click(); await page.waitForFunction(()=>document.querySelector('.study-review [role=status]')?.textContent.includes('저장됨'));
     const saved=await page.evaluate(()=>localStorage.getItem('kbigdata:coding:done:v1'));
