@@ -1,0 +1,30 @@
+name: Dedicated study absence form QA
+on:
+  push:
+    paths:
+      - "study.html"
+      - "study-absence.html"
+      - "js/study.js"
+      - "js/study-absence.js"
+      - "css/study-absence.css"
+      - "js/portal-navigation-model.mjs"
+      - "supabase/functions/study-absence-reminder/index.ts"
+      - "tests/study-absence-separation.test.mjs"
+      - "tests/study-feature.test.mjs"
+      - ".github/workflows/study-absence-separation-qa.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate dedicated email absence form
+        run: node tests/study-absence-separation.test.mjs
+      - name: Ensure existing study regressions still pass
+        run: node tests/study-feature.test.mjs
