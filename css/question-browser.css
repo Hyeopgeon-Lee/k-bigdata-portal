@@ -55,9 +55,9 @@ main .question-browser .qb-list>header{height:auto;min-height:64px;flex-wrap:wra
 .qb-primary-caption{margin-bottom:-7px}
 .qb-secondary-chips{display:flex;flex-wrap:wrap;gap:7px;min-width:0}
 main .question-browser .qb-secondary-chips button{
-  width:auto;min-height:44px;max-width:100%;padding:9px 14px;
+  width:auto;height:auto;min-height:44px;max-width:100%;padding:9px 14px;
   border:1px solid #b9c6d4;border-radius:22px;background:#fff;
-  color:#203c5b;font:650 14px/1.4 inherit;font-family:inherit;
+  color:#203c5b;font-family:inherit;
   font-size:14px;font-weight:650;line-height:1.4;cursor:pointer;
   white-space:normal;word-break:keep-all;
 }
