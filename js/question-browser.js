@@ -1,5 +1,5 @@
 /* Shared entry screen for all three question banks. */
-export function createQuestionBrowser({title, questions, category, categoryLabel, describe, searchText, openQuestion, scope, initialCategory=""}) {
+export function createQuestionBrowser({title, questions, category, categoryLabel, describe, searchText, openQuestion, scope, initialCategory="", secondaryFilter=null, metaText=null}) {
   const main=document.querySelector("main");
   const section=document.createElement("section");
   section.className="question-browser";
@@ -7,7 +7,8 @@ export function createQuestionBrowser({title, questions, category, categoryLabel
   section.innerHTML=`
     <h1></h1>
     <div class="qb-controls">
-      <div class="qb-categories" role="group" aria-label="문제 분류"></div>
+      <div class="qb-secondary-filter" hidden><span class="qb-filter-caption"></span><div class="qb-secondary-chips" role="group"></div></div>
+      <span class="qb-primary-caption" hidden></span><div class="qb-categories" role="group" aria-label="문제 분류"></div>
       <div class="qb-search"><input aria-label="문제 검색" type="search" placeholder="문제 번호·제목·키워드 검색"><button type="button" aria-label="검색어 지우기" hidden>×</button></div>
     </div>
     <div class="qb-list"><header><h2>문제 목록 <span role="status"></span></h2><button type="button" class="qb-random"></button></header>
@@ -16,11 +17,13 @@ export function createQuestionBrowser({title, questions, category, categoryLabel
   main.querySelector(".portal-service-nav").after(section);
   section.querySelector("h1").textContent=title;
   const search=section.querySelector("input"), chips=section.querySelector(".qb-categories");
+  const secondary=section.querySelector(".qb-secondary-filter"),secondaryChips=section.querySelector(".qb-secondary-chips");
   const random=section.querySelector(".qb-random"),clear=section.querySelector(".qb-search button");
   const list=section.querySelector("ol"),status=section.querySelector("[role=status]");
   const nav=section.querySelector("nav"),[prev,next]=nav.querySelectorAll("button");
   const saved=history.state?.questionBrowser||{};
   let selected=saved.selected??initialCategory, page=saved.page||0, activeId=saved.activeId||"", scroll=saved.scroll||0;
+  let selectedSecondary=secondaryFilter?(secondaryFilter.initialValue??saved.secondary??""):"";
   let items=[], scopeEnabled=Boolean(scope), ids=saved.ids||[];
   search.value=saved.query||"";
   const categories=[...new Set(questions.map(category))];
@@ -32,13 +35,33 @@ export function createQuestionBrowser({title, questions, category, categoryLabel
     chip.textContent=key?categoryLabel(key):"전체";chips.append(chip);
     chip.onclick=()=>{selected=key;page=0;render();};
   }
+  if(secondaryFilter){
+    const caption=section.querySelector(".qb-secondary-filter .qb-filter-caption");
+    caption.textContent=secondaryFilter.label||"시험 구분";
+    secondary.hidden=false;
+    secondaryChips.setAttribute("aria-label",secondaryFilter.label||"시험 구분");
+    const primaryCaption=section.querySelector(".qb-primary-caption");
+    primaryCaption.textContent=secondaryFilter.categoryLabel||"언어";
+    primaryCaption.hidden=false;
+    chips.setAttribute("aria-label",secondaryFilter.categoryLabel||"언어");
+    for(const option of [{value:"",label:"전체"},...(secondaryFilter.options||[])]){
+      const chip=document.createElement("button");
+      chip.type="button";chip.dataset.secondary=option.value;chip.textContent=option.label;
+      secondaryChips.append(chip);
+      chip.onclick=()=>{
+        selectedSecondary=option.value;page=0;
+        secondaryFilter.onChange?.(selectedSecondary);
+        render();
+      };
+    }
+  }
   if(scope){
     const chip=document.createElement("button");chip.type="button";chip.textContent=scope.label+" ×";
     chip.onclick=()=>{scopeEnabled=false;page=0;chip.remove();const url=new URL(location.href);url.searchParams.delete("exam");history.replaceState(history.state,"",url);render();};
     chips.before(chip);
   }
   function remember(){
-    history.replaceState({...history.state,questionBrowser:{selected,query:search.value,page,activeId,scroll,ids}},"");
+    history.replaceState({...history.state,questionBrowser:{selected,secondary:selectedSecondary,query:search.value,page,activeId,scroll,ids}},"");
   }
   function begin(q,set){
     activeId=q.id;scroll=window.scrollY;ids=set.map(item=>item.id);remember();hide();openQuestion(q,set);
@@ -46,11 +69,12 @@ export function createQuestionBrowser({title, questions, category, categoryLabel
   function render(){
     const terms=search.value.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
     items=questions.filter(q=>{
-      if(scopeEnabled&&!scope.matches(q)||selected&&category(q)!==selected)return false;
+      if(scopeEnabled&&!scope.matches(q)||selected&&category(q)!==selected||selectedSecondary&&secondaryFilter&&!secondaryFilter.matches(q,selectedSecondary))return false;
       const text=searchText(q).toLocaleLowerCase();
       return terms.every(term=>text.includes(term));
     });
     for(const chip of chips.children)chip.setAttribute("aria-pressed",String(chip.dataset.category===selected));
+    for(const chip of secondaryChips.children)chip.setAttribute("aria-pressed",String(chip.dataset.secondary===selectedSecondary));
     clear.hidden=!search.value;
     random.disabled=!items.length;random.textContent="랜덤 "+Math.min(10,items.length)+"문제 풀기";
     if(!items.length)random.textContent="랜덤 문제 풀기";
@@ -61,7 +85,7 @@ export function createQuestionBrowser({title, questions, category, categoryLabel
     for(const q of items.slice(page*10,page*10+10)){
       const li=document.createElement("li"),button=document.createElement("button");
       const meta=document.createElement("small"),name=document.createElement("strong"),arrow=document.createElement("span");
-      meta.textContent=categoryLabel(category(q))+" · "+q.id;
+      meta.textContent=metaText?metaText(q):categoryLabel(category(q))+" · "+q.id;
       name.textContent=describe(q);
       arrow.textContent="›";arrow.setAttribute("aria-hidden","true");
       button.type="button";button.dataset.id=q.id;
