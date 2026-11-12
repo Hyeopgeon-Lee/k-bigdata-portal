@@ -35,6 +35,7 @@ async function load(){
  active=sessions.find(x=>x.status==='active')||null;
  const found=(p.data||[]).find(x=>x.week_start===week);
  plan=found||null;selected=new Set(found?.weekdays||[]);
+ $('study-no-plan-reason').value=found?.no_plan_reason||'';
  $('study-week').replaceChildren();
  for(const [d,label] of [[currentMonday(),'이번 주'],[addDays(currentMonday(),7),'다음 주']]){
   $('study-week').add(new Option(label+' · '+d,d));
@@ -59,6 +60,12 @@ function render(){
  $('study-plan-summary').textContent=selected.size?'학습 예정 '+selected.size+'일 · '+[...selected].sort().map(x=>labels[x-1]).join('·'):'이번 주 계획 없음 (0일)';
  $('study-save').disabled=!canWrite;
  $('study-empty').hidden=!!selected.size;
+ $('study-no-plan-reason').required=selected.size===0;
+ $('study-no-plan-reason').disabled=!canWrite||selected.size>0;
+ $('study-no-plan-count').textContent=$('study-no-plan-reason').value.length+' / 300자';
+ $('study-none-plan-help').textContent=plan&&!plan.weekdays?.length&&!plan.no_plan_reason
+   ?'기존에 사유 없이 저장된 0일 계획입니다. 다시 저장하려면 사유를 입력해 주세요.'
+   :'이번 주 남아서 공부할 날짜를 선택하지 않은 이유를 입력해 주세요. 개인 사정은 자세히 작성하지 않아도 됩니다.';
  const todaysPlan=(sessions.some(s=>kstDate(s.started_at)===today));
  const todaySelected=week===mondayOf(today)&&selected.has(new Date(today+'T00:00:00Z').getUTCDay()||7);
  $('study-today-note').textContent=todaySelected?'오늘은 학습계획에 등록한 날입니다.':'계획하지 않은 날도 자율학습을 기록할 수 있습니다.';
@@ -112,13 +119,28 @@ async function session(action){
  }catch(error){console.error(error);message('저장하지 못했습니다. 연결 상태와 계정 권한을 확인해 주세요.',true);render();}
 }
 async function savePlan(){
+ const noPlanReason=selected.size===0?$('study-no-plan-reason').value.trim():null;
+ if(selected.size===0&&(!noPlanReason||noPlanReason.length<2||noPlanReason.length>300)){
+  message('학습계획이 없다면 사유를 2~300자로 입력해야 합니다.',true);
+  $('study-no-plan-reason').focus();
+  return;
+ }
  $('study-save').disabled=true;message('학습계획 저장 중입니다.');
  try{
-  const {error}=await db.from('study_weekly_plans').upsert({user_id:uid,week_start:week,weekdays:[...selected].sort((a,b)=>a-b)},{onConflict:'user_id,week_start'});
-  if(error)throw error;
-  plan={weekdays:[...selected]};message('주간 학습계획을 저장했습니다. 약속한 날 미참여 시 확인 메일을 보냅니다.');
- }catch(error){console.error(error);message('계획 저장에 실패했습니다. 지난 날짜는 변경할 수 없습니다.',true);}
- finally{render();}
+  const weekdays=[...selected].sort((a,b)=>a-b);
+  const {data,error}=await db.from('study_weekly_plans')
+   .upsert({user_id:uid,week_start:week,weekdays,no_plan_reason:noPlanReason},{onConflict:'user_id,week_start'})
+   .select('weekdays,no_plan_reason').single();
+  if(error||!data)throw error||new Error('SAVE_NOT_CONFIRMED');
+  plan=data;
+  $('study-no-plan-reason').value=data.no_plan_reason||'';
+  message(weekdays.length
+    ?'주간 학습계획을 저장했습니다. 약속한 날 미참여 시 확인 메일을 보냅니다.'
+    :'학습계획 없음과 사유를 저장했습니다.');
+ }catch(error){
+  console.error(error);
+  message('계획 저장에 실패했습니다. 사유와 변경 가능한 날짜를 확인해 주세요.',true);
+ }finally{render();}
 }
 function renderReason(){
  const requested=new URL(location.href).searchParams.get('reason');
@@ -146,6 +168,7 @@ async function submitReason(event){
 }
 $('study-week').addEventListener('change',()=>{week=$('study-week').value;void load().catch(e=>message(e.message,true));});
 $('study-save').addEventListener('click',()=>void savePlan());
+$('study-no-plan-reason').addEventListener('input',()=>{$('study-none-plan-count').textContent=$('study-no-plan-reason').value.length+' / 300자';});
 $('study-session-primary').addEventListener('click',()=>void session(active?'resume':'start'));
 $('study-pause').addEventListener('click',()=>void session('pause'));
 $('study-end').addEventListener('click',()=>{if(confirm('학습을 종료하고 귀가하시겠습니까?'))void session('finish');});
