@@ -93,7 +93,7 @@ function renderGrade(){
  const status=$("#home-grade-status");
  if(status)status.textContent=readSavedGrade()
    ?"현재 "+selectedGrade+"학년 화면 · 언제든 변경할 수 있습니다."
-   :"학년을 선택하면 내 계정에 저장됩니다.";
+   :"학년별 추천 서비스";
  renderQuickActions();
  renderPersonal();
  renderHighlights();

@@ -59,12 +59,10 @@
     
     const consent = qs('.consent-box');
     if (consent && !qs('[name="career_mail_enabled"]')) {
-      const note = consent.querySelector('.hint');
-      note?.insertAdjacentHTML('beforebegin', '<label class="check"><input name="career_mail_enabled" type="checkbox">취업·채용정보 이메일 수신에 동의합니다.</label><p class="hint">취업·채용정보 이메일 수신에 동의한 경우, 승인된 신규 채용정보가 있을 때 이메일로 안내합니다. 채용정보가 없는 날에는 발송하지 않습니다.</p>');
+      consent.insertAdjacentHTML('beforeend', '<label class="check"><input name="career_mail_enabled" type="checkbox">채용정보 이메일 수신 동의</label>');
     }
     if (consent && !qs('[name="alumni_news_mail_enabled"]')) {
-      const note = consent.querySelector('.hint');
-      note?.insertAdjacentHTML('beforebegin', '<label class="check"><input name="alumni_news_mail_enabled" type="checkbox">동문 경조사 및 주요 동문소식 이메일 수신에 동의합니다.</label><p class="hint">동의한 경우 결혼·득남·득녀·부고 등 경조사와 주요 동문소식을 이메일로 받아볼 수 있으며, 내 정보 수정에서 언제든지 변경할 수 있습니다.</p>');
+      consent.insertAdjacentHTML('beforeend', '<label class="check"><input name="alumni_news_mail_enabled" type="checkbox">동문소식 이메일 수신 동의</label>');
     }
     toggle?.addEventListener('click', () => {
       const open = toggle.getAttribute('aria-expanded') === 'true';

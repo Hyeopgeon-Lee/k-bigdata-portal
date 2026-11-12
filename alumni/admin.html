@@ -3,13 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="robots" content="noindex,nofollow">
-  <title>관리자 | BigData Alumni Network</title>
+    <title>관리자 | BigData Alumni Network</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml"><meta name="theme-color" content="#0b1739"><link rel="stylesheet" href="css/style.css?v=20261005-portal-2">
   <link rel="stylesheet" href="css/admin-responsive.css?v=20261022-password-1">
   <link rel="stylesheet" href="css/news.css">
 <script>document.documentElement.dataset.alumniPortalAuth="checking";</script>
-<meta name="robots" content="noindex,nofollow">
 <link rel="stylesheet" href="css/portal-bridge.css?v=20261112-portal-integration-1">
 <script type="module" src="js/portal-bridge.mjs?v=20261112-portal-integration-1"></script></head>
 <body>
@@ -30,7 +28,7 @@
     <div class="tabs admin-tabs"><button data-view="alumni" aria-selected="true">졸업생 현황</button><button data-view="jobs" aria-selected="false">채용정보 관리</button><button data-view="news" aria-selected="false">동문소식 관리</button><button data-view="requests" aria-selected="false">연락 요청</button><button data-view="mail_logs" aria-selected="false">메일 발송 기록</button></div>
     <div class="admin-create-actions" aria-label="관리자 직접 등록"><button id="show-admin-job-form" type="button">채용공고 직접 등록</button><button id="show-admin-news-form" class="button--secondary" type="button">동문소식 직접 등록</button></div>
     <section id="admin-job-create" class="panel admin-create-panel" hidden>
-      <div class="admin-create-heading"><div><h2>채용공고 직접 등록</h2><p>승인된 졸업생과 연결하여 즉시 게시합니다.</p></div><button type="button" class="button--ghost" data-close-create>닫기</button></div>
+      <div class="admin-create-heading"><div><h2>채용공고 직접 등록</h2></div><button type="button" class="button--ghost" data-close-create>닫기</button></div>
       <form id="admin-job-form"><div class="form-grid">
         <div class="field field--full"><label for="admin-job-alumni">등록 졸업생 *</label><select id="admin-job-alumni" name="alumni_id" data-admin-alumni required><option value="">졸업생 선택</option></select></div>
         <div class="field"><label for="admin-job-company">회사명 *</label><input id="admin-job-company" name="company" maxlength="100" required></div><div class="field"><label for="admin-job-title">채용 직무 *</label><input id="admin-job-title" name="job_title" maxlength="100" required></div>
@@ -41,7 +39,7 @@
       </div><div class="admin-check-grid"><label class="check"><input name="always_open" type="checkbox"> 상시채용</label><label class="check"><input name="referral_available" type="checkbox"> 사내추천 가능</label><label class="check"><input name="contact_allowed" type="checkbox"> 공고 문의 가능</label><label class="check"><input name="queue_mail" type="checkbox" checked> 다음 채용메일에 포함</label></div><div class="actions"><button type="submit">채용공고 게시</button><button type="button" class="button--ghost" data-close-create>취소</button></div></form>
     </section>
     <section id="admin-news-create" class="panel admin-create-panel" hidden>
-      <div class="admin-create-heading"><div><h2>동문소식 직접 등록</h2><p>승인된 졸업생의 소식으로 즉시 게시할 수 있습니다.</p></div><button type="button" class="button--ghost" data-close-create>닫기</button></div>
+      <div class="admin-create-heading"><div><h2>동문소식 직접 등록</h2></div><button type="button" class="button--ghost" data-close-create>닫기</button></div>
       <form id="admin-news-form"><div class="form-grid">
         <div class="field field--full"><label for="admin-news-alumni">소식 대상 졸업생 *</label><select id="admin-news-alumni" name="target_alumni_id" data-admin-alumni required><option value="">졸업생 선택</option></select></div>
         <div class="field"><label for="admin-news-type">소식 종류 *</label><select id="admin-news-type" name="news_type" required><option value="EMPLOYMENT">취업</option><option value="JOB_CHANGE">이직</option><option value="PROMOTION">승진·보직</option><option value="STARTUP">창업</option><option value="GRADUATE_SCHOOL">대학원·학위</option><option value="ACHIEVEMENT">수상·성과</option><option value="MARRIAGE">결혼</option><option value="BIRTH_SON">득남</option><option value="BIRTH_DAUGHTER">득녀</option><option value="OBITUARY">부고</option><option value="OTHER">기타</option></select></div><div class="field"><label for="admin-news-date">관련 날짜</label><input id="admin-news-date" name="event_date" type="date"></div>
@@ -55,5 +53,5 @@
     <div id="admin-table" class="table-wrap"></div>
   </div>
 </div></main>
-<!-- 기존 Google 관리자 로그인 대신 포털 관리 권한 사용 --><script src="js/config.js"></script><script src="js/api.js"></script><script src="js/common.js?v=20261005-portal-2"></script><script src="js/admin.js?v=20261022-password-1"></script>
+<!-- 기존 Google 관리자 로그인 대신 포털 관리 권한 사용 --><script src="js/config.js"></script><script src="js/api.js"></script><script src="js/common.js?v=20261113-copy-cleanup-1"></script><script src="js/admin.js?v=20261022-password-1"></script>
 </body></html>

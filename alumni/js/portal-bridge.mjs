@@ -1,6 +1,5 @@
 /* Preserve portal authentication on the embedded Alumni Network pages.
  * Supabase Edge Functions now enforce member ownership and administrator permissions.
- * Legacy PINs are retired and no longer control account access.
  */
 import {createClient} from "https://esm.sh/@supabase/supabase-js@2.119.0?bundle";
 
@@ -42,7 +41,7 @@ async function authorize(){
     if(field&&!field.value)field.value=sourceId;
    }
   }
-  // Expose only self identity, never stored PINs, contact details or service keys.
+  // Expose only the signed-in member's minimum identity fields.
   window.alumniPortalMember={name:profile.full_name||"",email:user.email||"",
    graduationYear:profile.graduation_year||null,alumniId:sourceId||null,
    eligibleForAlumni:(profile.signup_type==="alumni"||profile.signup_type==="student")&&(

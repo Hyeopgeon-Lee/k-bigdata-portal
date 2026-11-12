@@ -60,7 +60,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
   <a tabindex="0" class="portal-page-back" href="index.html">← 포털 홈</a>
   <p class="portal-page-eyebrow">PROJECT ROOM · STUDENT BOOKING</p>
   <h1 id="portal-intro-title-room" class="portal-page-title">프로젝트실 예약</h1>
-  <p class="portal-page-description">8318호와 8319호의 이용 현황을 확인하고 예약하세요.</p>
+  <p class="portal-page-description">8318호·8319호 예약</p>
   
 </section>
 <!-- portal:intro:end -->
@@ -91,7 +91,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 </section>
 <section class="room-panel" data-room-panel="new" hidden aria-label="새 예약">
 <h2>새 예약 등록</h2>
-<p class="room-lead">로그인 계정으로 예약이 등록됩니다. 기존 4자리 PIN은 사용하지 않습니다.</p>
+
 <form id="room-booking-form" class="room-form">
 <div class="room-field">
 <strong>프로젝트실</strong>
@@ -115,7 +115,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 </section>
 <section class="room-panel" data-room-panel="mine" hidden aria-label="내 예약">
 <h2>내 예약 내역</h2>
-<p class="room-muted">현재 로그인한 계정으로 등록한 예약만 표시됩니다. 취소용 PIN은 필요하지 않습니다.</p>
+
 <div id="room-my-list" class="room-list" aria-live="polite"></div>
 </section>
 <section class="room-panel" data-room-panel="admin" hidden aria-label="전체 예약 관리">
@@ -130,9 +130,9 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 </main>
 <footer class="site-footer">
 <div class="container footer-grid"><div class="footer-brand"><span class="brand-mark" aria-hidden="true"><span></span></span><div><strong>빅데이터소프트웨어공학과</strong><p>한국폴리텍대학 서울강서캠퍼스</p></div></div><nav class="footer-links" aria-label="학과 대표 사이트"><p>학과 대표 사이트</p></nav></div>
-<div class="container footer-bottom"><p>학생용 학습·프로젝트·취업 통합 포털입니다.</p><p>© <span id="current-year"></span> K-BigData Service Portal</p></div>
+<div class="container footer-bottom"><p>© <span id="current-year"></span> K-BigData Service Portal</p></div>
 </footer>
-<script type="module" src="js/portal-auth.mjs?v=20261112-login-email-focus-1"></script>
+<script type="module" src="js/portal-auth.mjs?v=20261113-copy-cleanup-1"></script>
 <script type="application/x-learning" data-module="js/room.js?v=20261112-body-login-removed-1"></script>
 <script type="application/x-learning" data-module="js/portal-shell-entry.js?v=20261111-account-sync-1"></script>
 </body>

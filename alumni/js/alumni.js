@@ -74,7 +74,7 @@
    const info=response.data;
    if(!info?.eligible){
     heading.textContent='졸업 후 등록할 수 있습니다';
-    desc.textContent='등록된 학생 계정은 그대로 유지됩니다. 졸업한 뒤 마이페이지에서 학적 상태를 졸업으로 저장하면 이곳에서 정보를 등록할 수 있습니다.';
+    desc.textContent='졸업 또는 조기취업 상태에서 등록할 수 있습니다. 마이페이지에서 학적 상태를 확인하세요.';
     myPage.hidden=false;
     return;
    }
@@ -102,11 +102,11 @@
     U.qs('[name="mode"]').value='update';
     U.qs('[name="alumni_id"]').value=info.profile.alumni_id||'';
     heading.textContent='등록된 내 정보 수정';
-    desc.textContent='포털 로그인을 통해 본인 확인이 완료됐습니다. PIN 없이 정보를 수정할 수 있으며 수정 내용은 저장 즉시 반영됩니다.';
+    desc.textContent='등록된 정보를 수정하세요.';
     save.textContent='수정 내용 저장';
    }else{
     heading.textContent='졸업생 정보 신규 등록';
-    desc.textContent='졸업 상태가 확인되었습니다. 졸업연도와 진로 정보를 입력해 주세요. 등록 후 바로 반영됩니다.';
+    desc.textContent='진로 정보를 입력하세요.';
     save.textContent='졸업생 정보 저장';
    }
   }catch(error){
@@ -131,7 +131,7 @@
     U.qs('[name="mode"]').value='update';
     window.alumniPortalMember={...(window.alumniPortalMember||{}),alumniId:response.alumni_id};
     heading.textContent='등록된 내 정보 수정';
-    desc.textContent='수정한 정보가 바로 반영됩니다.';
+    desc.textContent='등록된 내 정보 수정';
     U.status(notice,'졸업생 정보가 저장되었습니다.','success');
     save.textContent='수정 내용 저장';
    }catch(error){

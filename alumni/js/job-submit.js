@@ -9,10 +9,9 @@
   try{
    await window.alumniPortalReady;
    if(document.documentElement.dataset.alumniPortalAuth!=="approved")throw Error("포털 로그인이 필요합니다.");
-   // JWT is the only member identity. No Alumni ID, PIN or second confirmation.
    await AlumniAPI.request("verifyJobAlumni",{method:"POST",data:{}});
    gate.hidden=true;form.hidden=false;
-   U.status(st,"포털 계정으로 작성자가 확인되었습니다. 채용정보를 등록할 수 있습니다.","success");
+   st.hidden=true;
   }catch(e){form.hidden=true;U.status(st,e?.message||"회원 정보를 확인하지 못했습니다.","error");return;}
   form.addEventListener("submit",async e=>{
    e.preventDefault();

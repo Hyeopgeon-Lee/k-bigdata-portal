@@ -51,7 +51,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
     <a class="my-page-back" href="index.html">← 포털 홈</a>
     <p class="my-page-eyebrow">MY ACCOUNT</p>
     <h1>마이페이지</h1>
-    <p>내 가입 정보와 휴대전화번호, 비밀번호 및 포털 학적 상태를 관리하세요.</p>
+    <p>연락처·학적 상태·비밀번호를 관리하세요.</p>
   </div>
   <div class="my-page-layout">
     <section class="my-page-panel my-page-summary" aria-labelledby="my-page-profile-heading">
@@ -69,7 +69,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
     </section>
     <section class="my-page-panel my-page-contact" id="my-page-contact-panel" aria-labelledby="my-page-contact-heading" hidden>
       <div class="my-page-panel-head"><div><p class="my-page-kicker">CONTACT</p><h2 id="my-page-contact-heading">휴대전화번호 등록 · 수정</h2></div></div>
-      <p class="my-page-description">가입 당시 등록한 번호를 변경하거나, 기존에 번호를 등록하지 않았다면 여기에서 입력하세요. 졸업 상태와 관계없이 수정할 수 있습니다.</p>
+      <p class="my-page-description">휴대전화번호를 등록하거나 변경하세요.</p>
       <form id="my-page-mobile-form" class="my-page-phone-form">
         <label for="my-page-mobile-phone">휴대전화번호</label>
         <input id="my-page-mobile-phone" name="mobile_phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="16" placeholder="010-1234-5678" required>
@@ -79,12 +79,12 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
     </section>
     <section class="my-page-panel my-page-summary my-page-cert-shortcut" aria-labelledby="my-page-cert-heading">
       <div class="my-page-panel-head"><div><p class="my-page-kicker">QUALIFICATIONS</p><h2 id="my-page-cert-heading">나의 자격증</h2></div></div>
-      <p class="my-page-description">정보처리기사·정보처리산업기사·NCP·SQLD 등 필기합격과 최종합격 이력을 관리합니다. 증빙자료 업로드는 필요하지 않습니다.</p>
+      <p class="my-page-description">자격증 합격 이력을 관리하세요.</p>
       <a class="my-page-cert-link" href="my-certifications.html">자격증 등록 · 관리 →</a>
     </section>
     <section class="my-page-panel" id="my-page-academic-panel" aria-labelledby="my-page-academic-heading" hidden>
       <div class="my-page-panel-head"><div><p class="my-page-kicker">ACADEMIC STATUS</p><h2 id="my-page-academic-heading">학적 상태 변경</h2></div></div>
-      <p class="my-page-description">현재 학적 상태를 선택하세요. 학년 변경은 메인화면에 반영되며, 졸업 후에도 기존 학습기록을 이용할 수 있습니다.</p>
+      <p class="my-page-description">학적 상태를 선택하세요.</p>
       <form id="my-page-academic-form">
         <fieldset class="my-page-status-fieldset">
           <legend class="sr-only">포털 학적 상태</legend>
@@ -117,9 +117,9 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 </main>
 <footer class="site-footer">
 <div class="container footer-grid"><div class="footer-brand"><span class="brand-mark" aria-hidden="true"><span></span></span><div><strong>빅데이터소프트웨어공학과</strong><p>한국폴리텍대학 서울강서캠퍼스</p></div></div><nav class="footer-links" aria-label="학과 대표 사이트"><p>학과 대표 사이트</p></nav></div>
-<div class="container footer-bottom"><p>학생용 학습·프로젝트·취업 통합 포털입니다.</p><p>© <span id="current-year"></span> K-BigData Service Portal</p></div>
+<div class="container footer-bottom"><p>© <span id="current-year"></span> K-BigData Service Portal</p></div>
 </footer>
-<script type="module" src="js/portal-auth.mjs?v=20261112-login-email-focus-1"></script>
+<script type="module" src="js/portal-auth.mjs?v=20261113-copy-cleanup-1"></script>
 <script type="application/x-learning" data-module="js/my-page.js?v=20261113-mobile-signup-1"></script>
 <script type="application/x-learning" data-module="js/portal-shell-entry.js?v=20261112-page-intro-2"></script>
 </body></html>

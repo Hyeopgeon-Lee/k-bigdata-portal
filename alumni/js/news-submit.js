@@ -20,7 +20,7 @@
 
   async function initializeAuthor() {
     const status = U.qs('#news-submit-status');
-    U.status(status, '포털 로그인 정보와 등록된 동문 정보를 확인하고 있습니다.');
+    U.status(status, '작성 권한 확인 중…');
     try {
       await window.alumniPortalReady;
       if (document.documentElement.dataset.alumniPortalAuth !== 'approved') {
@@ -34,21 +34,12 @@
       });
       const alumniId = String(verified.data?.alumni_id || '').trim();
       if (!alumniId) throw new Error('포털 계정에 연결된 졸업생 정보를 찾을 수 없습니다.');
-      const member = window.alumniPortalMember || {};
       auth = { alumni_id: alumniId };
-      U.qs('#news-author-name').textContent = member.name || verified.data.name || '이름 미등록';
-      U.qs('#news-author-email').textContent = member.email || '이메일 미등록';
-      U.qs('#news-author-year').textContent =
-        String(verified.data.graduation_year || member.graduationYear || '-') + '년';
-      U.qs('#news-account-summary').hidden = false;
-      U.qs('#news-account-help').hidden = true;
       U.qs('#news-submit-form').hidden = false;
-      U.status(status, '포털 로그인으로 작성자가 확인되었습니다. 동문소식을 작성해 주세요.', 'success');
+      status.hidden = true;
     } catch (error) {
       auth = null;
       U.qs('#news-submit-form').hidden = true;
-      U.qs('#news-account-summary').hidden = true;
-      U.qs('#news-account-help').hidden = false;
       U.status(status, error?.message || '작성자 확인에 실패했습니다.', 'error');
     }
   }

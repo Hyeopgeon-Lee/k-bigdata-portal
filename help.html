@@ -60,7 +60,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
   <a tabindex="0" class="portal-page-back" href="index.html">← 포털 홈</a>
   <p class="portal-page-eyebrow">STUDENT SERVICE · HELP DESK</p>
   <h1 id="portal-intro-title-help" class="portal-page-title">학과 요청 · 문의</h1>
-  <p class="portal-page-description">PC·실습실 장애, 학과 시설, 수업·프로젝트 관련 요청을 등록하고 처리 내용을 확인하세요.</p>
+  <p class="portal-page-description">시설·수업·프로젝트 관련 요청을 등록하세요.</p>
   
 </section>
 <!-- portal:intro:end -->
@@ -75,7 +75,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
   </div>
   <section data-help-panel="new" hidden aria-labelledby="help-new-heading">
    <h2 id="help-new-heading">새 요청 등록</h2>
-   <p class="help-meta">이름·학번은 로그인 계정에서 자동 확인합니다. 별도 PIN을 입력하지 않습니다.</p>
+   
    <form id="help-create-form" class="help-form">
      <div class="help-field-grid">
        <label class="help-field">요청 유형 <select name="category" required></select></label>
@@ -89,7 +89,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
   </section>
   <section data-help-panel="my" aria-labelledby="help-my-heading">
    <h2 id="help-my-heading">내 요청 내역</h2>
-   <p class="help-meta">로그인한 본인이 등록한 요청만 표시됩니다. 이전 사이트의 요청은 작성자 확인 후 연결됩니다.</p>
+   <p class="help-meta">내가 등록한 요청만 표시됩니다.</p>
    <div id="help-my-list" class="help-list"></div>
   </section>
   <section data-help-panel="notice" hidden aria-labelledby="help-notice-heading">
@@ -97,7 +97,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
   </section>
   <section data-help-panel="admin" hidden aria-labelledby="help-admin-heading">
    <h2 id="help-admin-heading">전체 요청 관리</h2>
-   <p class="help-meta">슈퍼 관리자 전용. 이전 요청은 학생 계정에 자동 귀속하지 않고 별도로 보존합니다.</p>
+   <p class="help-meta"></p>
    <p id="help-admin-counts" class="help-counts"></p>
    <div id="help-admin-list" class="help-list"></div>
   </section>
@@ -107,9 +107,9 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 </main>
 <footer class="site-footer">
 <div class="container footer-grid"><div class="footer-brand"><span class="brand-mark" aria-hidden="true"><span></span></span><div><strong>빅데이터소프트웨어공학과</strong><p>한국폴리텍대학 서울강서캠퍼스</p></div></div><nav class="footer-links" aria-label="학과 대표 사이트"><p>학과 대표 사이트</p></nav></div>
-<div class="container footer-bottom"><p>학생용 학습·프로젝트·취업 통합 포털입니다.</p><p>© <span id="current-year"></span> K-BigData Service Portal</p></div>
+<div class="container footer-bottom"><p>© <span id="current-year"></span> K-BigData Service Portal</p></div>
 </footer>
-<script type="module" src="js/portal-auth.mjs?v=20261112-login-email-focus-1"></script>
+<script type="module" src="js/portal-auth.mjs?v=20261113-copy-cleanup-1"></script>
 <script type="application/x-learning" data-module="js/help.js?v=20261112-body-login-removed-1"></script>
 <script type="application/x-learning" data-module="js/portal-shell-entry.js?v=20261111-account-sync-1"></script>
 </body>

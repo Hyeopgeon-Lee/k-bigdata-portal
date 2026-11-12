@@ -67,7 +67,7 @@ function card(title,inner,focusTarget="#portal-auth-title"){
   $(focusTarget)?.focus?.({preventScroll:true});
 }
 function renderLogin(message=""){
-  card("포털 로그인",'<p class="portal-auth-lead">학과 통합 포털은 로그인 후 이용할 수 있습니다. 재학생과 졸업생은 이메일 인증 및 계정 승인 후 사용할 수 있습니다.</p>'+
+  card("포털 로그인",'<p class="portal-auth-lead">학과 포털 계정으로 로그인하세요.</p>'+
    '<form id="portal-login-form" class="portal-auth-form">'+
    '<label>이메일<input name="email" type="email" autocomplete="username" required></label>'+
    '<label>비밀번호<input name="password" type="password" autocomplete="current-password" required></label>'+
@@ -128,7 +128,7 @@ function eligible(profile){
     (["student","alumni"].includes(profile.signup_type) && profile.enrollment_status==="graduated");
 }
 function renderSignup(){
-  card("회원가입",'<p class="portal-auth-lead">재학생은 학번과 현재 학년을, 졸업생은 졸업년도를 입력해 주세요. 교수·관리자는 기존 계정으로 로그인하세요.</p>'+
+  card("회원가입",'<p class="portal-auth-lead">가입 유형과 필수 정보를 입력하세요.</p>'+
    '<form id="portal-signup-form" class="portal-auth-form">'+
    identityFields()+
    '<label>이름<input name="full_name" maxlength="80" minlength="2" autocomplete="name" required></label>'+
@@ -556,14 +556,14 @@ async function renderApprovalRequests(){
 async function renderAdmin(){
   if(!isAdmin){renderAccount();return;}
   card("학생 계정 관리",
-    '<p class="portal-auth-lead">승인 대기 신청은 별도의 ‘가입 승인 요청’에서 관리합니다. 이곳에서는 기존 회원의 가입 상태와 학적을 관리합니다. 주간 학습 메일은 승인된 재학생에게만 발송합니다.</p>'+
+    '<p class="portal-auth-lead">기존 회원의 학적과 이용 상태를 관리합니다.</p>'+
     '<div class="portal-admin-toolbar">'+
       '<label>학생 검색<input id="portal-admin-search" type="search" placeholder="이름 · 학번 · 이메일" autocomplete="off"></label>'+
       '<label>학적 상태<select id="portal-admin-filter"><option value="all">전체 학생</option><option value="enrolled">재학</option><option value="leave">휴학</option><option value="withdrawn">자퇴</option><option value="graduated">졸업</option><option value="early_employment">조기취업</option></select></label>'+
     '</div>'+
     '<p class="portal-admin-summary" id="portal-admin-summary" aria-live="polite"></p>'+
     '<div class="portal-admin-scroll"><table class="portal-admin-table"><thead><tr><th>이름</th><th>가입 유형</th><th>학번 / 졸업년도</th><th>이메일</th><th>가입 상태</th><th>학적</th><th>주간 메일</th><th>변경</th></tr></thead><tbody id="portal-student-list"></tbody></table></div>'+
-    '<p class="portal-auth-note">졸업생·휴학생·자퇴생은 주간 메일 대상이 아닙니다. 실제 발송은 이메일 인증과 전체 발송 스위치에 따릅니다. 자퇴생의 영구 삭제는 학적 저장 후 별도로 진행합니다.</p>'+
+    '<p class="portal-auth-note">주간 학습 메일은 발송 설정에 따라 재학생에게 전송됩니다.</p>'+
     '<div class="portal-auth-actions"><button type="button" id="portal-admin-close">닫기</button></div>');
   $("#portal-admin-close").addEventListener("click",renderAccount);
   const {data,error}=await client.rpc("admin_list_students");
