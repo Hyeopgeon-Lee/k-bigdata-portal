@@ -4,7 +4,7 @@ import {chromium} from "playwright";
 import {approvedStudent} from "./fixtures/approved-student.mjs";
 
 const base="http://127.0.0.1:8765/";
-const widths=[360,390,430,768,1024,1440];
+const widths=[360,390,430,768,1024,1280,1440];
 const cases=[
   {name:"practical",url:"practical.html?id=R-SQL-0015",ready:"#my-answer"},
   {name:"ncp",url:"ncp.html?id=NCP-R001",ready:"#ncp-answer-entry"},
@@ -50,6 +50,9 @@ try{
            heading:get(".quiz-heading"),badge:get(".quiz-badge"),
            actions:get(".quiz-actions"),action:get(".quiz-action"),answer:get(".quiz-answer")};
        },styleKeys);
+       const desktopCardTarget=Math.min(1240,width-(width<=690?24:32));
+       assert.ok(Math.abs(snapshot[target.name].card.rect.width-desktopCardTarget)<=2,
+         target.name+" detail width at "+width+": expected "+desktopCardTarget+"px, got "+snapshot[target.name].card.rect.width+"px");
        if([390,1440].includes(width)){
          await page.screenshot({path:"ui-screenshots/quiz-unified/"+target.name+"-"+width+"-question.png"});
        }
@@ -71,6 +74,17 @@ try{
        assert.ok((await page.locator(".study-review [data-grade]").count())>=3,target.name+" grade feedback controls");
        if([390,1440].includes(width)){
          await page.locator(".quiz-results").first().screenshot({path:"ui-screenshots/quiz-unified/"+target.name+"-"+width+"-answer.png"});
+       }
+       // Switching to the list must use the same responsive max-width as the detail.
+       await page.locator(".quiz-nav-list").click();
+       await page.locator("main .question-browser").waitFor({state:"visible",timeout:10000});
+       const listWidth=await page.locator("main .question-browser").evaluate(node=>Math.round(node.getBoundingClientRect().width));
+       const expectedListWidth=Math.min(1240,width-(width<=650?24:32));
+       assert.ok(Math.abs(listWidth-expectedListWidth)<=2,target.name+" list width at "+width+
+         ": expected "+expectedListWidth+"px, got "+listWidth+"px");
+       snapshot[target.name].listWidth=listWidth;
+       if([390,1440].includes(width)){
+         await page.screenshot({path:"ui-screenshots/quiz-unified/"+target.name+"-"+width+"-list.png"});
        }
      }catch(e){failures.push({width,service:target.name,error:e.stack||String(e)});}
      finally{await context.close();}
