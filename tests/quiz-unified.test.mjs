@@ -10,7 +10,7 @@ const modules=["js/practical-ui.js","js/ncp-quiz.js","js/coding.js"];
 
 for(const path of pages){
   const html=read(path);
-  assert.match(html,/css\/quiz-unified\.css\?v=20261112-quiz-unified-1/,"Shared UI stylesheet on "+path);
+  assert.match(html,/css\/quiz-unified\.css\?v=20261112-quiz-wide-1/,"Shared UI stylesheet on "+path);
 }
 for(const path of modules){
   const js=read(path);
