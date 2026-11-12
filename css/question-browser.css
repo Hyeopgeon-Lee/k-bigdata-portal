@@ -27,7 +27,8 @@ main .question-browser .qb-controls :is(input,select,button){margin:0;height:44p
 main .question-browser .qb-list>header{height:56px;box-sizing:border-box;margin:0}
 main .question-browser .qb-list h2{font-size:19px;line-height:26px;letter-spacing:-.02em}
 main .question-browser .qb-list li button{margin:0}
-@media(min-width:801px){#coding-show-list,.ncp-panel .study-return{display:inline-flex;align-items:center;min-height:44px;border:0;background:transparent;color:#234c77;font:inherit;cursor:pointer}}
+/* Legacy single-bank back-link rules must not override the shared quiz navigation. */
+@media(min-width:801px){.ncp-panel .study-return{display:inline-flex;align-items:center;min-height:44px;border:0;background:transparent;color:#234c77;font:inherit;cursor:pointer}}
 
 .qb-back{min-height:44px;border:0;background:transparent;color:#234c77;font:inherit;cursor:pointer}
 main .question-browser .qb-controls{display:flex;flex-direction:column;align-items:stretch;gap:12px}
