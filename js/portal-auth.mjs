@@ -12,7 +12,7 @@ root.hidden=true; // The whole portal requires an authorized account.
 document.body.append(root);
 const css=document.createElement("link");
 css.rel="stylesheet";
-css.href="css/portal-auth.css?v=20261112-member-mobile-2";
+css.href="css/portal-auth.css?v=20261112-signup-grade-1";
 document.head.append(css);
 
 const locked=document.getElementById("learning-lock");
@@ -89,11 +89,19 @@ function identityFields(){
     '<label class="portal-auth-type-option"><input type="radio" name="signup_type" value="alumni"><span><strong>졸업생</strong><small>졸업년도로 가입</small></span></label>'+
     '</div></fieldset>'+
     '<label data-identity="student">학번<input name="student_no" maxlength="30" pattern="[0-9A-Za-z\\-]{3,30}" autocomplete="off" placeholder="학번 입력" required></label>'+
+    '<fieldset class="portal-auth-grade" data-identity="student"><legend>학년 선택</legend>'+
+    '<div class="portal-auth-type-options">'+
+    '<label class="portal-auth-type-option"><input type="radio" name="academic_year" value="1" required><span><strong>1학년</strong><small>기초 학습 중심</small></span></label>'+
+    '<label class="portal-auth-type-option"><input type="radio" name="academic_year" value="2" required><span><strong>2학년</strong><small>취업 준비 중심</small></span></label>'+
+    '</div></fieldset>'+
     '<label data-identity="alumni" hidden>졸업년도<input name="graduation_year" type="number" inputmode="numeric" min="1900" max="'+new Date().getFullYear()+'" placeholder="예: 2025" disabled></label>';
 }
-function bindIdentity(form,initial){
+function bindIdentity(form,initial,initialGrade=null){
   const {signup_type,student_no,graduation_year}=form.elements;
+  const gradeInputs=[...form.querySelectorAll('input[name="academic_year"]')];
+  const gradeGroup=form.querySelector(".portal-auth-grade");
   signup_type.value=initial==="alumni"?"alumni":"student";
+  if(["1","2"].includes(String(initialGrade)))form.elements.academic_year.value=String(initialGrade);
   function sync(){
     const alumni=signup_type.value==="alumni";
     for(const field of [student_no,graduation_year]){
@@ -102,11 +110,13 @@ function bindIdentity(form,initial){
       field.required=visible;
       field.closest("label").hidden=!visible;
     }
-    for(const label of form.querySelectorAll(".portal-auth-type-option")){
-      label.classList.toggle("is-selected",label.querySelector('input').checked);
-    }
+    gradeGroup.hidden=alumni;
+    for(const field of gradeInputs){field.disabled=alumni;field.required=!alumni;}
+    for(const label of form.querySelectorAll(".portal-auth-type-option"))
+      label.classList.toggle("is-selected",Boolean(label.querySelector("input")?.checked));
   }
-  for(const radio of form.querySelectorAll('input[name="signup_type"]'))radio.addEventListener("change",sync);
+  for(const input of form.querySelectorAll('input[name="signup_type"],input[name="academic_year"]'))
+    input.addEventListener("change",sync);
   sync();
 }
 function eligible(profile){
@@ -114,7 +124,7 @@ function eligible(profile){
     (profile.signup_type==="alumni" && profile.enrollment_status==="graduated");
 }
 function renderSignup(){
-  card("회원가입",'<p class="portal-auth-lead">재학생은 학번을, 졸업생은 졸업년도를 입력해 주세요. 교수·관리자는 기존 계정으로 로그인하세요.</p>'+
+  card("회원가입",'<p class="portal-auth-lead">재학생은 학번과 현재 학년을, 졸업생은 졸업년도를 입력해 주세요. 교수·관리자는 기존 계정으로 로그인하세요.</p>'+
    '<form id="portal-signup-form" class="portal-auth-form">'+
    identityFields()+
    '<label>이름<input name="full_name" maxlength="80" minlength="2" autocomplete="name" required></label>'+
@@ -131,12 +141,13 @@ function renderSignup(){
     if(email===professorEmail){status("교수·관리자는 기존 계정으로 로그인하세요.");return;}
     const signup_type=fd.get("signup_type"), student_no=fd.get("student_no")?.trim()||null;
     const graduation_year=signup_type==="alumni"?Number(fd.get("graduation_year")):null;
+    const academic_year=signup_type==="student"?Number(fd.get("academic_year")):null;
     const btn=form.querySelector('button[type="submit"]');btn.disabled=true;
     status("인증메일을 발송하고 있습니다...");
     try{
       const {error}=await client.auth.signUp({
         email,password:String(fd.get("password")),
-        options:{emailRedirectTo:locked?location.href:resetLink,data:{full_name,student_no,signup_type,graduation_year}}
+        options:{emailRedirectTo:locked?location.href:resetLink,data:{full_name,student_no,signup_type,graduation_year,academic_year}}
       });
       if(error)throw error;
       renderLogin("가입 요청이 접수되었습니다. 이메일의 인증 링크를 클릭한 후 로그인하세요. 학생 계정은 관리자 승인 후 이용할 수 있습니다.");
@@ -187,7 +198,7 @@ function renderComplete(user){
   const form=$("#portal-complete-form"),isProfessor=user.email?.toLowerCase()===professorEmail;
   form.elements.full_name.value=user.user_metadata?.full_name||"";
   form.elements.student_no.value=user.user_metadata?.student_no||"";
-  bindIdentity(form,user.user_metadata?.signup_type);
+  bindIdentity(form,user.user_metadata?.signup_type,user.user_metadata?.academic_year);
   form.elements.graduation_year.value=user.user_metadata?.graduation_year||"";
   if(isProfessor){
      const typeGroup=form.querySelector(".portal-auth-identity");typeGroup.hidden=true;
@@ -195,15 +206,18 @@ function renderComplete(user){
      form.elements.graduation_year.disabled=true;
      form.elements.graduation_year.required=false;
      form.elements.graduation_year.closest("label").hidden=true;
+     form.querySelector(".portal-auth-grade").hidden=true;
+     for(const grade of form.querySelectorAll('input[name="academic_year"]')){grade.disabled=true;grade.required=false;}
      form.elements.student_no.disabled=true;
      form.elements.student_no.closest("label").hidden=true;
    }
   form.addEventListener("submit",async e=>{
     e.preventDefault();
-    const {error}=await client.rpc("register_portal_member_v2",{
+    const {error}=await client.rpc("register_portal_member_v3",{
       p_name:form.elements.full_name.value.trim(),
       p_student_no:isProfessor||form.elements.student_no.disabled?null:form.elements.student_no.value.trim(),
-      p_signup_type:isProfessor?"student":form.elements.signup_type.value,p_graduation_year:form.elements.graduation_year.disabled?null:Number(form.elements.graduation_year.value)
+      p_signup_type:isProfessor?"student":form.elements.signup_type.value,p_graduation_year:form.elements.graduation_year.disabled?null:Number(form.elements.graduation_year.value),
+      p_academic_year:isProfessor||form.elements.signup_type.value!=="student"?null:Number(form.elements.academic_year.value)
     });
     if(error){status(statusText(error));return;}
     await activate(true);
@@ -264,7 +278,8 @@ function renderAccount(){
   $("#portal-account-name").textContent=memberName;
   $("#portal-account-role").textContent=isAdmin?"관리자":
     currentProfile?.signup_type==="alumni"?"졸업생 · "+currentProfile.graduation_year+"년 졸업":
-    currentProfile?.enrollment_status==="leave"?"휴학 · 학습 기록 읽기 전용":"재학생";
+    currentProfile?.enrollment_status==="leave"?"휴학 · 학습 기록 읽기 전용":
+    [1,2].includes(Number(currentProfile?.academic_year))?"재학생 · "+currentProfile.academic_year+"학년":"재학생";
 
   const area=$("#portal-account-actions");
   const addSection=(heading)=>{
@@ -659,9 +674,10 @@ async function activate(interactive=true){
       renderComplete(user);
       showAccount();return;
     }
-    const {data:registered,error:regError}=await client.rpc("register_portal_member_v2",{
+    const {data:registered,error:regError}=await client.rpc("register_portal_member_v3",{
       p_name:name,p_student_no:user.user_metadata?.student_no||null,
-      p_signup_type:user.user_metadata?.signup_type||"student",p_graduation_year:user.user_metadata?.graduation_year||null
+      p_signup_type:user.user_metadata?.signup_type||"student",p_graduation_year:user.user_metadata?.graduation_year||null,
+       p_academic_year:["1","2"].includes(String(user.user_metadata?.academic_year))?Number(user.user_metadata.academic_year):null
     });
     if(regError){
       renderComplete(user);status("회원 정보를 확인해 다시 입력해 주세요.");
