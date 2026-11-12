@@ -5,7 +5,9 @@
 .room-eyebrow{margin:0 0 6px;color:#55739a;font-size:11px;font-weight:800;letter-spacing:.12em}
 .room-hero h1{margin:0 0 9px;color:#142b4c;font-size:clamp(25px,3vw,34px);font-weight:800;line-height:1.3;letter-spacing:-.04em}
 .room-hero p:not(.room-eyebrow){max-width:760px;margin:6px 0;color:#5b6d83;font-size:14px;line-height:1.65;word-break:keep-all}
-.room-layout{max-width:1050px}
+/* Match the same 1240px desktop container as the portal header and service navigation.
+   Retain the global .container responsive gutters on tablets and phones. */
+.room-hero,.room-layout{max-width:var(--container,1240px)}
 #room-feedback{margin:0 0 10px;color:#22598d;font-size:14px;font-weight:650;line-height:1.5}
 #room-feedback:empty{display:none}
 #room-app[hidden],.room-panel[hidden],.room-tabs button[hidden]{display:none!important}
