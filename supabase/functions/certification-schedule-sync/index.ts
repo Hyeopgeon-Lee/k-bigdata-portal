@@ -56,8 +56,10 @@ const summary=(source:Source,year:number|null,status='success',message=''):Summa
 });
 function errorCode(error:unknown):string {
  // Never leak secrets, credentials, URLs containing a serviceKey, raw HTML, or student records.
- if(error instanceof Error)return error.message.replace(/[^\w가-힣 -]/g,'_').slice(0,150);
- return 'UNKNOWN_ERROR';
+ const value=error&&typeof error==='object'?
+  (typeof (error as any).code==='string'?'CODE_'+(error as any).code:String((error as any).message||'UNKNOWN_ERROR')):
+  'UNKNOWN_ERROR';
+ return value.replace(/[^\w가-힣 -]/g,'_').slice(0,150);
 }
 async function logRun(s:Summary,dryRun:boolean){
  const {error}=await db.from('certification_schedule_sync_runs').insert({
