@@ -49,9 +49,14 @@ export function parseSqldHtml(html){
  let inSqld=false;
  const result=[],rounds=new Set();
  for(const row of rows){
-  const cells=[...row.matchAll(/<td\b[^>]*>([\s\S]*?)<\/td>/gi)].map(x=>strip(x[1]));
-  if(cells.some(s=>/^SQL\s*개발자$/.test(s))){inSqld=true;continue;}
-  if(!inSqld)continue;
+  let cells=[...row.matchAll(/<td\b[^>]*>([\s\S]*?)<\/td>/gi)].map(x=>strip(x[1]));
+  if(cells.some(s=>/^SQL\s*개발자$/.test(s))){
+    inSqld=true;
+    // Official page currently nests the first round's <tr> inside the
+    // category header row without closing the header row: keep both.
+    cells=cells.filter(s=>!/^SQL\s*개발자$/.test(s));
+  }
+  if(!inSqld||!cells.length)continue;
   const roundMatch=/^제\s*(\d{1,3})\s*회$/.exec(cells[0]||'');
   if(!roundMatch)throw Error('SQLD_OFFICIAL_ROW_CHANGED');
   const round=Number(roundMatch[1]);
