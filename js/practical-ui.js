@@ -1,5 +1,5 @@
 import {quizNavigation,quizHeading,quizDisclosure,quizFeedback,scrollToQuizAnswer} from "./quiz-unified.js?v=20261112-answer-focus-1";
-import {createQuestionBrowser} from "./question-browser.js?v=20261112-exam-facets-1";
+import {createQuestionBrowser} from "./question-browser.js?v=20261112-intro-browse-2";
 import {bindReview,reviewControls,gradeLabels} from "./study-review.js";
 import {loadPracticalBank} from "./practical-data.js?v=20261006-audit-2";
 import {examLabels,typeLabels,languages,escapeHTML as esc,questionText,shuffle,recommendFive,matchesExam,localDay,summarizeAttempts,highlightCode,formatCodeForDisplay,canResumeUnfinishedAttempt} from "./practical-core.js?v=20261112-practical-resume-1";
