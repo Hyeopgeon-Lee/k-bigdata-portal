@@ -12,7 +12,7 @@ const labels={
  industrial:[['written_registration','필기 원서접수'],['written_exam','필기시험'],['written_result','필기 합격발표'],['practical_registration','실기 원서접수'],['practical_exam','실기시험'],['final_result','최종 합격발표']],
  sqld:[['registration','원서접수'],['exam','시험'],['result','합격발표']]
 };
-const officialHome={engineer:'https://www.q-net.or.kr/',industrial:'https://www.q-net.or.kr/',sqld:'https://www.dataq.or.kr/'};
+const officialHome={engineer:'https://www.q-net.or.kr/',industrial:'https://www.q-net.or.kr/',sqld:'https://www.dataq.or.kr/www/accept/schedule.do'};
 const dom=(tag,text,cls)=>{const el=document.createElement(tag);if(text!==undefined)el.textContent=text;if(cls)el.className=cls;return el;};
 const koreaToday=()=>new Date(Date.now()+9*3600000).toISOString().slice(0,10);
 function asCalendarEvent(row){
@@ -27,7 +27,7 @@ function asCalendarEvent(row){
   published:true,
   important:row.event_type.includes('registration'),
   url:row.official_url,
-  description:'공식 자격증 일정 · 상세 내용 및 변경사항은 공식 사이트에서 확인하세요.',
+  description:(row.source_type==='manual'?'관리자 등록':'공식 자료 자동 동기화')+' · 변경사항은 공식 사이트에서 확인하세요.',
   source:'certification'
  };
 }
@@ -43,7 +43,7 @@ export function initCertificationSchedule({onEvents}){
   if(!api||!window.portalLearning?.read)return;
   loading=(async()=>{
    const {data,error}=await api.from('certification_exam_schedules')
-    .select('id,certificate_code,exam_year,exam_round,event_type,start_date,end_date,official_url,published')
+    .select('id,certificate_code,exam_year,exam_round,event_type,start_date,end_date,official_url,published,source_type,source_synced_at,manual_override')
     .order('start_date',{ascending:true});
    if(error)throw error;
    allRows=data||[];
@@ -66,6 +66,7 @@ export function initCertificationSchedule({onEvents}){
   for(const [value,label] of labels[code]){const option=new Option(label,value);select.append(option);}
   if(labels[code].some(x=>x[0]===previous))select.value=previous;
   field('official_url').value=officialHome[code];
+  field('exam_round').max=code==='sqld'?'200':'10';
  }
  function clearForm(){
   editingId=null;
@@ -85,6 +86,9 @@ export function initCertificationSchedule({onEvents}){
    const item=dom('div',undefined,'schedule-event'),head=dom('div',undefined,'schedule-event-top');
    head.append(dom('strong',names[row.certificate_code]+' · '+row.exam_year+'년 '+row.exam_round+'회 · '+eventNames[row.event_type]));
    head.append(dom('span',row.published?'공개':'비공개','schedule-grade-badge'));
+   const from=row.source_type==='qnet_api'?'자동 · Q-Net':
+    row.source_type==='dataq_official'?'자동 · SQLD':'수동 등록';
+   head.append(dom('span',from+(row.manual_override?' · 관리자 고정':''),'schedule-grade-badge'));
    item.append(head,dom('p',row.start_date+' ~ '+row.end_date,'schedule-event-time'));
    const buttons=dom('div',undefined,'schedule-event-actions');
    const edit=dom('button','수정','schedule-share-button');edit.type='button';
@@ -97,29 +101,56 @@ export function initCertificationSchedule({onEvents}){
     adminRoot.open=true;field('certificate_code').focus();
     setStatus('수정 중인 일정: '+names[row.certificate_code]+' '+row.exam_round+'회 '+eventNames[row.event_type]);
    });
-   const remove=dom('button','삭제','schedule-delete-button');remove.type='button';
+   const automated=row.source_type!=='manual';
+   const remove=dom('button',automated?'달력에서 숨기기':'삭제','schedule-delete-button');remove.type='button';
    remove.addEventListener('click',async()=>{
-    if(!window.confirm('이 자격증 공고 일정을 삭제할까요? 기존 발송 기록도 삭제됩니다.'))return;
+    const question=automated?'자동 연동 일정의 공개를 중단할까요? 다음 동기화에서도 다시 공개하지 않습니다.':
+      '수동 등록 일정을 삭제할까요? 기존 발송 기록도 삭제됩니다.';
+    if(!window.confirm(question))return;
     remove.disabled=true;
-    const {error}=await getApi().from('certification_exam_schedules').delete().eq('id',row.id);
-    if(error){setStatus('삭제 실패: 관리자 권한 또는 연결 상태를 확인해 주세요.');remove.disabled=false;return;}
+    const source=getApi().from('certification_exam_schedules');
+    const {error}=automated
+      ?await source.update({published:false,manual_override:true}).eq('id',row.id)
+      :await source.delete().eq('id',row.id);
+    if(error){setStatus('일정 변경 실패: 관리자 권한 또는 연결 상태를 확인해 주세요.');remove.disabled=false;return;}
     if(editingId===row.id)clearForm();
-    await fetchEvents();setStatus('일정을 삭제했습니다.');
+    await fetchEvents();setStatus(automated?'자동 일정의 공개를 중단했습니다.':'일정을 삭제했습니다.');
    });
    buttons.append(edit,remove);item.append(buttons);root.append(item);
   }
+ }
+ async function loadSyncSummary(){
+  if(!adminRoot)return;
+  const {data,error}=await getApi().from('certification_schedule_sync_runs')
+   .select('source_type,source_year,status,inserted_events,updated_events,created_at')
+   .order('created_at',{ascending:false}).limit(30);
+  const node=adminRoot.querySelector('[data-sync-summary]');
+  if(error){node.textContent='자동 연동 상태를 조회하지 못했습니다.';return;}
+  const rows=data||[];
+  const sqld=rows.find(x=>x.source_type==='dataq_official');
+  const qnet=rows.find(x=>x.source_type==='qnet_api');
+  const description=(record,label)=>{
+    if(!record)return label+': 아직 실행 기록 없음';
+    if(record.status==='missing_key')return label+': 공공데이터포털 API 인증키 설정 필요';
+    if(record.status==='not_published')return label+': '+record.source_year+'년 일정 미발표';
+    if(record.status!=='success')return label+': 공식 일정 연동 오류';
+    const time=new Date(record.created_at).toLocaleString('ko-KR',{timeZone:'Asia/Seoul'});
+    return label+': 정상 ('+record.source_year+'년, 신규 '+record.inserted_events+'건 · 변경 '+record.updated_events+'건, '+time+')';
+  };
+  node.textContent=description(sqld,'SQLD')+' / '+description(qnet,'Q-Net');
  }
  function showAdminForm(){
   if(adminRoot)return;
   adminRoot=dom('details',undefined,'schedule-card schedule-registration');
   adminRoot.id='certification-official-schedules';
   adminRoot.innerHTML=String.raw`<summary>자격증 공식 일정 관리 · SUPER ADMIN</summary>
-   <p>공식 발표 자료를 확인하여 등록하세요. 공개된 접수 시작일에는 대상 학생에게만 자동 알림 메일이 발송됩니다.</p>
+   <p>정보처리기사·산업기사는 Q-Net 공식 API, SQLD는 데이터자격검정 공식 표에서 매일 확인해 자동 등록합니다. 공개된 접수 시작일에는 대상 재학생에게만 자동 메일이 발송됩니다.</p>
+   <p data-sync-summary role="status" aria-live="polite">공식 일정 자동 동기화 상태를 확인 중입니다…</p>
    <form data-cert-form>
     <div class="schedule-register-grid">
      <label>자격증<select name="certificate_code"><option value="engineer">정보처리기사</option><option value="industrial">정보처리산업기사</option><option value="sqld">SQLD</option></select></label>
      <label>연도<input name="exam_year" type="number" min="2025" max="2100" required></label>
-     <label>회차<input name="exam_round" type="number" min="1" max="10" value="1" required></label>
+     <label>회차<input name="exam_round" type="number" min="1" max="200" value="1" required></label>
      <label>일정 유형<select name="event_type" required></select></label>
      <div class="schedule-register-pair"><label>시작일<input name="start_date" type="date" required></label>
      <label>종료일<input name="end_date" type="date" required></label></div>
@@ -145,6 +176,11 @@ export function initCertificationSchedule({onEvents}){
    payload.exam_year=Number(field('exam_year').value);
    payload.exam_round=Number(field('exam_round').value);
    payload.published=field('published').checked;
+   // Explicit administrator edits take precedence over subsequent automatic source updates.
+   if(editingId){
+     const original=allRows.find(x=>x.id===editingId);
+     if(original&&original.source_type!=='manual')payload.manual_override=true;
+   }
    const url=new URL(payload.official_url);
    if(url.protocol!=='https:'){setStatus('공식 링크는 HTTPS만 허용합니다.');return;}
    const button=adminRoot.querySelector('[data-cert-save]');button.disabled=true;
@@ -170,9 +206,9 @@ export function initCertificationSchedule({onEvents}){
   try{
    const {data,error}=await api.rpc('portal_super_admin_allowed');
    admin=!error&&data===true;
-   if(admin)showAdminForm();
+   if(admin){showAdminForm();await loadSyncSummary();}
    await fetchEvents();
-   window.setInterval(()=>{if(!document.hidden)fetchEvents();},10*60*1000);
+   window.setInterval(()=>{if(!document.hidden){fetchEvents();if(admin)loadSyncSummary();}},10*60*1000);
   }catch(error){console.error('Certification schedule bootstrap failed',error?.code||'unknown');}
  }
  window.addEventListener('portal-learning-ready',bootstrap);
