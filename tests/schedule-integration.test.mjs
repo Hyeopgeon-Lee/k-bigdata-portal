@@ -266,4 +266,29 @@ assert.throws(()=>context.syncDepartmentCalendar());
 assert.equal(store.SYNC_OK,"false");
 assert.equal(JSON.parse(context.doGet({parameter:{}}).content).events.length,0);
 console.log("PASS (mock services): setup reuse, one trigger, create/edit/move/delete/unpublish, recurring IDs, failed sync.");
+
+// Best-effort production probe in GitHub Actions. Read only the public,
+// already-published projection; do not log raw notes, URLs, or event IDs.
+// This must not turn hermetic unit tests into a network-dependent failure.
+if (process.env.CI === "true") {
+ const endpoint = config.match(/SCHEDULE_API_URL\\s*=\\s*"([^"]+)"/)?.[1] || "";
+ if (endpoint.startsWith("https://script.google.com/macros/s/")) {
+  try {
+   const liveResponse = await fetch(endpoint,{signal:AbortSignal.timeout(15000)});
+   const live = await liveResponse.json();
+   const rows = Array.isArray(live?.events) ? live.events : [];
+   const novemberQuiz = rows.filter(x=>x?.startDate==="2026-11-17" &&
+     typeof x.title==="string" && x.title.includes("쪽지시험"));
+   const gradeCodes = [...new Set(novemberQuiz.map(x=>x.targetGrade ?? "missing"))].join(",");
+   console.log("LIVE public calendar probe:",JSON.stringify({
+     http:liveResponse.status,ok:live?.ok===true,
+     events:rows.length,updatedAt:live?.updatedAt||null,
+     nov17QuizCount:novemberQuiz.length,nov17GradeCodes:gradeCodes||"none"
+   }));
+  } catch (err) {
+   console.warn("LIVE public calendar probe unavailable:",String(err?.message||err).slice(0,160));
+  }
+ }
+}
+
 console.log("PASS: primary calendar only, exact prefix, private-event filtering, safe publication, timezone, JSONP read-only response.");
