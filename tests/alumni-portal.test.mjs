@@ -9,15 +9,15 @@ const root=fileURLToPath(new URL("../",import.meta.url));
 const read=p=>readFileSync(path.join(root,p),"utf8");
 const pages=["index.html","detail.html","contact.html","alumni.html","admin.html","jobs.html","job-detail.html","job-submit.html","news.html","news-detail.html","news-submit.html"];
 const actions={
- "js/app.js":["list"],"js/detail.js":["detail"],"js/contact.js":["contact"],
- "js/alumni.js":["register"],"js/jobs.js":["listJobs"],"js/job-submit.js":["verifyJobAlumni","submitJob"],
- "js/news.js":["listNews"],"js/news-submit.js":["verifyNewsAlumni","submitNews"],"js/admin.js":["adminList","adminLogin"]
+ "js/app.js":["home"],"js/detail.js":["alumniDetail"],"js/contact.js":["contact"],
+ "js/alumni.js":["getOwn","findAlumniId","requestPinReset","resetPin"],"js/jobs.js":["jobs"],"js/job-submit.js":["verifyJobAlumni","submitJob"],
+ "js/news.js":["newsList"],"js/news-submit.js":["verifyNewsAlumni","submitNews"],"js/admin.js":["adminList","adminLogin"]
 };
 const bridge=read("alumni/js/portal-bridge.mjs");
 assert.match(bridge,/start_portal_session/,"reuses verified portal session");
 assert.match(bridge,/portal_learning_access/,"server-side portal authorization");
 assert.match(bridge,/\.eq\("user_id",user\.id\)/,"profile lookup is own user");
-assert.match(bridge,/profile\.approval_status!=="approved"/,"only approved members");
+assert.match(bridge,/profile\?\.approval_status!=="approved"/,"only approved members");
 assert.match(bridge,/storageKey:"kbigdata-portal-auth-v1"/,"uses same portal authentication storage");
 assert.match(bridge,/\.alumni_source_id/,"prefills legacy account identifier");
 assert.match(bridge,/alumniPortalAuth="approved"/,"releases page after successful auth");
