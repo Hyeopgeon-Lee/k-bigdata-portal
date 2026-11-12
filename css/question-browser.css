@@ -47,3 +47,28 @@ main .question-browser .qb-list>header{height:auto;min-height:64px;flex-wrap:wra
 .shared-question-bank .coding-workspace{display:block}
 .shared-question-bank .coding-detail{width:100%;max-width:var(--quiz-content-max,1240px);margin-inline:auto}
 @media(max-width:480px){.qb-categories{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}main .question-browser .qb-categories button{width:100%;padding-inline:4px}}
+
+
+/* Practical bank: independent examination and programming-language facets. */
+.qb-secondary-filter{display:grid;gap:7px;min-width:0}
+.qb-filter-caption,.qb-primary-caption{display:block;color:#344c68;font-size:13px;font-weight:800;line-height:1.5}
+.qb-primary-caption{margin-bottom:-7px}
+.qb-secondary-chips{display:flex;flex-wrap:wrap;gap:7px;min-width:0}
+main .question-browser .qb-secondary-chips button{
+  width:auto;min-height:44px;max-width:100%;padding:9px 14px;
+  border:1px solid #b9c6d4;border-radius:22px;background:#fff;
+  color:#203c5b;font:650 14px/1.4 inherit;font-family:inherit;
+  font-size:14px;font-weight:650;line-height:1.4;cursor:pointer;
+  white-space:normal;word-break:keep-all;
+}
+main .question-browser .qb-secondary-chips button[aria-pressed=true]{
+  background:#193b63;color:#fff;border-color:#193b63;font-weight:750;
+}
+main .question-browser .qb-secondary-chips button:focus-visible{
+  outline:3px solid #82ace3;outline-offset:2px;
+}
+@media(max-width:480px){
+  .qb-secondary-chips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+  main .question-browser .qb-secondary-chips button{width:100%;padding:9px 6px;font-size:13px}
+  .qb-secondary-chips button:first-child{grid-column:1/-1}
+}
