@@ -3,6 +3,8 @@ on:
   push:
     paths:
       - "alumni/**"
+      - "supabase/functions/alumni-network-api/**"
+      - "supabase/migrations/*migrate_alumni_network*"
       - "js/services.js"
       - "scripts/build-portal-shell.mjs"
       - "tests/alumni-portal.test.mjs"
