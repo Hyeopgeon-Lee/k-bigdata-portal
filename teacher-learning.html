@@ -25,6 +25,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <link rel="stylesheet" href="css/portal-navigation.css?v=20261112-page-intro-2">
 <script defer src="js/portal-navigation.js?v=20261112-member-mobile-2"></script>
 <!-- portal:assets:end -->
+<link rel="stylesheet" href="css/study.css?v=20261112-study-1">
 </head><body data-page="teacher-learning">
 <p id="learning-notice" role="status">로그인 및 재학 상태를 확인 중입니다. <a href="/">포털 메인</a></p>
 <a class="skip-link" href="#main-content">본문으로 바로가기</a>
@@ -79,6 +80,27 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
     </label>
   </div>
 </section>
+<section class="learn-section study-layout" aria-labelledby="teacher-study-title" id="teacher-study-panel">
+  <div class="study-topline"><h2 id="teacher-study-title">자율학습 관리</h2>
+  <div class="study-admin-controls">
+   <label>조회 주간 <select id="study-admin-week" aria-label="자율학습 조회 주간"></select></label>
+   <label>학년 <select id="study-admin-grade"><option value="">전체</option><option value="1">1학년</option><option value="2">2학년</option></select></label>
+   <button id="study-admin-refresh" type="button" class="study-outline">새로고침</button>
+  </div></div>
+  <p class="study-text">학생이 스스로 등록한 학습 날짜와 실제 시작 기록을 비교합니다. 과거 날짜의 미참여만 집계합니다.</p>
+  <p id="study-admin-status" class="learn-status study-status" role="status" aria-live="polite">자율학습 현황 확인 중…</p>
+  <div class="learn-grid" id="study-admin-summary"></div>
+  <div class="study-admin-table-wrap">
+   <table class="study-admin-table"><thead><tr><th>학생</th><th>학년</th><th>계획일</th><th>실천</th><th>공부시간</th><th>상태</th><th>미참여 사유</th></tr></thead><tbody id="study-admin-table-body"></tbody></table>
+  </div>
+  <div class="learn-mail-switch-list" style="margin-top:18px">
+   <label class="learn-mail-switch-row" for="study-admin-mail">
+   <span class="learn-mail-switch-name">자율학습 미참여 메일 발송</span>
+   <input id="study-admin-mail" type="checkbox" role="switch" aria-label="자율학습 미참여 이메일 자동 발송">
+   </label>
+  </div>
+  <p class="study-text">설정을 켜면 등록한 학습일의 시작 기록이 없는 학생에게 다음 날 오전 9시 확인 메일을 보냅니다. 기록된 날짜와 사유를 교수자만 확인할 수 있습니다.</p>
+</section>
 <div id="teacher-content" hidden>
 <div class="learn-grid" id="teacher-summary"></div>
 <section class="learn-section"><h2>과목별 학습 활동</h2><div id="teacher-subjects" class="learn-table-wrap"></div></section>
@@ -96,5 +118,6 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 </footer>
 <script type="module" src="js/portal-auth.mjs?v=20261112-member-mobile-2"></script>
 <script type="application/x-learning" data-module="js/teacher-learning.js?v=20261111-mail-compact-v2"></script>
+<script type="application/x-learning" data-module="js/study-teacher.js?v=20261112-study-1"></script>
 <script type="application/x-learning" data-module="js/portal-shell-entry.js?v=20261111-account-sync-1"></script>
 </body></html>
