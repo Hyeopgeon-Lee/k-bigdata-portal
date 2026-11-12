@@ -1,7 +1,7 @@
 import {schedules} from "../data/schedules.js?v=20261019-1";
 import {scheduleShareUrl,copyScheduleLink,downloadScheduleIcs,openBandShare} from "./schedule-sharing.js?v=20261024-1";
 import {SCHEDULE_API_URL} from "../data/schedule-config.js?v=20261019-google-calendar-live-1";
-import {publishedGrade} from "../data/calendar-grade-bridge.js?v=20261020-synced-1";
+import {publishedGrade} from "../data/calendar-grade-bridge.js?v=20261112-memo-grades-1";
 
 const $ = selector => document.querySelector(selector);
 const SCHEDULE_CACHE_KEY = "kbigdata:published-schedule:v2:" + SCHEDULE_API_URL;
@@ -371,7 +371,7 @@ async function loadPublicCalendar({force=false}={}){
       storeCachedCalendar(next,response.updatedAt);
       showingCachedSnapshot=false;
       status.textContent=response.updatedAt
-        ? "학과 일정 최근 동기화: "+response.updatedAt+" (한국시간)"
+        ? "학과 일정 "+next.length+"건 · 최근 동기화: "+response.updatedAt+" (한국시간)"
         : "공개된 학과 일정 "+events.length+"건을 불러왔습니다.";
     }catch(error){
       if(version!==calendarLoadVersion)return;
