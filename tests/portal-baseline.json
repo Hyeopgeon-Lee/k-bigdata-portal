@@ -218,7 +218,7 @@
   "services": {
     "ready": "https://ready.k-bigdata.kr/",
     "apply": "https://apply.k-bigdata.kr/",
-    "alumni": "https://alumni.k-bigdata.kr/",
+    "alumni": "alumni/index.html",
     "room": "room.html",
     "help": "help.html",
     "portfolio": "https://portfolio.k-bigdata.kr/",

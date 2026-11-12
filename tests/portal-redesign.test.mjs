@@ -24,7 +24,7 @@ for(const step of studentJourney){assert.ok(services.some(s=>s.id===step.id));if
 assert.deepEqual(jobGroups.flatMap(g=>g.ids).sort(),jobs.map(j=>j.id).sort());
 for(const q of questions)for(const tag of q.jobTags){const link=interviewRoleLinks[tag];assert.ok(link);const id=new URL(link,'https://portal.k-bigdata.kr/').searchParams.get('id');if(id)assert.ok(jobs.some(j=>j.id===id));}
 assert.equal(footerLinks.length,5);assert.ok(footerLinks.some(l=>l.url==='https://contest.k-bigdata.kr/'));
-const pages=readdirSync(root,{recursive:true}).filter(p=>p.endsWith('.html')&&!/^(?:\.git|node_modules|ui-screenshots|test-results)[\\/]/.test(p));
+const pages=readdirSync(root,{recursive:true}).filter(p=>p.endsWith('.html')&&!/^(?:\.git|node_modules|ui-screenshots|test-results|alumni)[\\/]/.test(p));
 for(const page of pages){
  const html=readFileSync(new URL(page.replaceAll('\\','/'),root),'utf8');
  const pageId=page.replace(/\.html$/,'');
