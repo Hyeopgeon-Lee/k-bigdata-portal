@@ -8,7 +8,7 @@ const widths=[360,390,430,768,1024,1280,1440];
 const cases=[
   {name:"practical",url:"practical.html?id=R-SQL-0015",ready:"#my-answer"},
   {name:"ncp",url:"ncp.html?id=NCP-R007",ready:"#ncp-answer-entry"},
-  {name:"coding",url:"coding.html?id=C-001",ready:"#coding-editor"}
+  {name:"coding",url:"coding.html?id=C-006",ready:"#coding-work-heading"}
 ];
 mkdirSync("ui-screenshots/quiz-unified",{recursive:true});
 const browser=await chromium.launch({headless:true,args:["--no-sandbox"]});
@@ -50,6 +50,42 @@ try{
        assert.equal(await page.locator(".quiz-actions details").count(),0,target.name+" actions may not be collapsed");
        assert.equal(await page.locator(".quiz-nav-button").count(),2,target.name+" list/answer navigation");
        assert.equal(await page.locator(".quiz-title").isVisible(),true,target.name+" title visible");
+       // Top "답 입력 ↓" must move keyboard focus to the real answer control.
+       // It must not alter the chosen option, typed answer or reveal the solution.
+       const jump=page.locator(".quiz-nav-jump");
+       if(target.name==="ncp")
+         assert.equal(await page.locator('.ncp-choice[aria-pressed="true"]').count(),0,
+           "NCP navigation must not pick a choice before click");
+       await jump.click();
+       const focus=await page.evaluate(()=>{
+         const active=document.activeElement;
+         return {
+           inAnswer:!!document.querySelector(".quiz-answer")?.contains(active),
+           codingRich:active?.classList.contains("cm-content")===true,
+           codingNative:active?.id==="coding-editor",
+           ncpChoice:active?.matches(".ncp-choice")===true,
+           practicalInput:active?.id==="my-answer"
+         };
+       });
+       assert.equal(focus.inAnswer,true,target.name+" answer jump must focus inside the answer card");
+       if(target.name==="coding"){
+         assert.ok(focus.codingRich||focus.codingNative,
+           "C-006 answer jump must put typing caret in CodeMirror or visible textarea");
+         if(focus.codingRich)
+           assert.equal(await page.locator("#coding-editor").isVisible(),false,
+             "Rich editor focus must not use the hidden native textarea");
+       }else if(target.name==="ncp"){
+         assert.equal(focus.ncpChoice,true,"NCP answer jump must focus a choice, not the hint button");
+         assert.equal(await page.locator('.ncp-choice[aria-pressed="true"]').count(),0,
+           "NCP jump must not choose an option");
+         await page.locator(".ncp-choice").nth(1).click();
+         await jump.click();
+         assert.equal(await page.evaluate(()=>document.activeElement?.getAttribute("aria-pressed")),"true",
+           "NCP must return focus to the already-selected option");
+       }else{
+         assert.equal(focus.practicalInput,true,"Information Processing answer jump must focus its input");
+       }
+
        assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth),
          false,target.name+" whole page must not scroll horizontally at "+width);
        snapshot[target.name]=await page.evaluate((keys)=>{
