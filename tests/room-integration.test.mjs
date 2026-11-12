@@ -38,6 +38,12 @@ assert.doesNotMatch(logic,/script\.google\.com/);
 assert.doesNotMatch(logic,/service_role|sb_secret_/);
 assert.doesNotMatch(logic,/innerHTML/,'student-supplied content must be DOM text only');
 assert.match(css,/max-width:700px/,'responsive UI');
+assert.match(css,/\.room-hero,\.room-layout\{max-width:var\(--container,1240px\)\}/,
+  'room hero and reservation panels share the portal 1240px container');
+assert.doesNotMatch(css,/\.room-layout\{max-width:1050px\}/,'legacy narrow room layout removed');
+assert.match(page,/css\/room\.css\?v=20261112-room-wide-1/,
+  'updated room CSS asset referenced');
+
 
 for(const [id,definition] of Object.entries(portalPages)){
  if(!definition.group)continue;
