@@ -7,44 +7,16 @@ function logsTable(rows){return`<table class="admin-table"><thead><tr><th>발송
 function render(){const q=U.qs('#admin-query').value.toLowerCase(),status=U.qs('#admin-status-filter').value,year=U.qs('#admin-year').value,rows=data.filter(x=>(!q||JSON.stringify(x).toLowerCase().includes(q))&&(!status||x.status===status)&&(!year||String(x.graduation_year)===year));const renderers={alumni:alumniTable,jobs:jobsTable,news:newsTable,requests:requestsTable,mail_logs:logsTable};U.qs('#admin-table').innerHTML=rows.length?renderers[view](rows):'<p class="empty">조건에 맞는 데이터가 없습니다.</p>'}async function utility(action,button,question){if(!confirm(question))return;U.busy(button,true,'처리 중…');try{const r=await AlumniAPI.request(action,{method:'POST',data:{admin_token:token}});U.status(st(),r.message,'success');await load()}catch(e){U.status(st(),e.message,'error')}finally{U.busy(button,false)}}
 document.addEventListener('DOMContentLoaded',()=>{
   U.yearOptions(U.qs('#admin-year'),true);
-  const loginForm=U.qs('#admin-password-form');
-  loginForm.addEventListener('submit',async e=>{
-    e.preventDefault();
-    const username=loginForm.elements.adminUsername.value.trim();
-    const field=loginForm.elements.adminPassword;
-    const password=field.value;
-    const btn=U.qs('#admin-password-submit');
-    U.busy(btn,true,'로그인 중…');
-    try{
-      const response=await AlumniAPI.request('adminLogin',{method:'POST',data:{adminUsername:username,adminPassword:password}});
-      token=response.data?.adminSessionToken||'';
-      if(!/^ALM_[0-9a-f]{64}$/.test(token))throw new Error('관리자 인증 결과를 확인할 수 없습니다.');
-      sessionStorage.setItem(SESSION_KEY,token);
-      field.value='';
-      U.qs('#admin-login').hidden=true;
-      await load();
-    }catch(error){
-      token='';
-      sessionStorage.removeItem(SESSION_KEY);
-      U.qs('#admin-login').hidden=false;
-      U.qs('#admin-app').hidden=true;
-      U.status(st(),error.message,'error');
-    }finally{field.value='';U.busy(btn,false);}
+  // The Supabase Edge API checks portal_super_admin_allowed() on every action.
+  token="PORTAL_SUPER_ADMIN";
+  U.qs('#admin-login').hidden=true;
+  U.qs('#admin-logout').addEventListener('click',()=>{
+    window.location.assign("../index.html");
   });
-  U.qs('#admin-logout').addEventListener('click',async()=>{
-    if(token.startsWith('ALM_')){
-      try{await AlumniAPI.request('adminLogout',{method:'POST',data:{admin_token:token}})}catch(_){}
-    }else if(window.google?.accounts?.id){google.accounts.id.disableAutoSelect();}
-    sessionStorage.removeItem(SESSION_KEY);
-    token='';
-    data=[];
-    U.qs('#admin-app').hidden=true;
-    U.qs('#admin-login').hidden=false;
-    U.qs('#admin-password').value='';
-    U.status(st(),'관리자 로그아웃이 완료되었습니다.','success');
+  Promise.resolve(window.alumniPortalReady).then(()=>load()).catch(err=>{
+    U.status(st(),String(err?.message||"포털 관리자 로그인이 필요합니다."),"error");
   });
-  if(token.startsWith('ALM_'))load();
-const client=(window.ALUMNI_CONFIG||{}).GOOGLE_CLIENT_ID;if(client&&!client.startsWith('PASTE_')){const wait=setInterval(()=>{if(!window.google)return;clearInterval(wait);google.accounts.id.initialize({client_id:client,callback:r=>{sessionStorage.removeItem(SESSION_KEY);token=r.credential;load()}});google.accounts.id.renderButton(U.qs('#google-signin'),{theme:'outline',size:'large',text:'signin_with',locale:'ko'})},100)}else U.status(st(),'Google OAuth Client ID가 아직 설정되지 않았습니다.','warning');U.qs('#admin-load').onclick=()=>{token=U.qs('#admin-token').value.trim();sessionStorage.removeItem(SESSION_KEY);if(!token)return U.status(st(),'관리자 토큰을 입력해 주세요.','error');load()};U.qs('#admin-refresh').onclick=load;['#admin-query','#admin-status-filter','#admin-year'].forEach(s=>U.qs(s).addEventListener(s==='#admin-query'?'input':'change',render));U.qsa('[data-view]').forEach(b=>b.onclick=()=>{view=b.dataset.view;U.qsa('[data-view]').forEach(x=>x.setAttribute('aria-selected',String(x===b)));load()});U.qs('#send-consent-invites').onclick=e=>utility('adminSendCareerConsentInvites',e.currentTarget,'채용메일 수신 여부가 미설정인 졸업생에게 안내 메일을 1회 발송할까요?');U.qs('#send-news-consent-invites').onclick=e=>utility('adminSendNewsConsentInvites',e.currentTarget,'동문소식 수신 여부가 미설정인 졸업생에게 안내 메일을 1회 발송할까요?');U.qs('#run-job-digest').onclick=e=>utility('adminRunJobDigest',e.currentTarget,'발송 대기 중인 채용정보 다이제스트를 지금 처리할까요?');U.qs('#admin-table').onclick=async e=>{const b=e.target.closest('button[data-action]');if(!b||!confirm('이 상태로 변경하시겠습니까?'))return;U.busy(b,true);try{const payload={admin_token:token};if(b.dataset.jobId)payload.job_id=b.dataset.jobId;else if(b.dataset.newsId)payload.news_id=b.dataset.newsId;else payload.alumni_id=b.dataset.id;const r=await AlumniAPI.request(b.dataset.action,{method:'POST',data:payload});U.status(st(),r.message||'처리되었습니다.','success');await load()}catch(err){U.status(st(),err.message,'error')}finally{U.busy(b,false)}}})})();
+  U.qs('#admin-refresh').onclick=load;['#admin-query','#admin-status-filter','#admin-year'].forEach(s=>U.qs(s).addEventListener(s==='#admin-query'?'input':'change',render));U.qsa('[data-view]').forEach(b=>b.onclick=()=>{view=b.dataset.view;U.qsa('[data-view]').forEach(x=>x.setAttribute('aria-selected',String(x===b)));load()});U.qs('#send-consent-invites').onclick=e=>utility('adminSendCareerConsentInvites',e.currentTarget,'채용메일 수신 여부가 미설정인 졸업생에게 안내 메일을 1회 발송할까요?');U.qs('#send-news-consent-invites').onclick=e=>utility('adminSendNewsConsentInvites',e.currentTarget,'동문소식 수신 여부가 미설정인 졸업생에게 안내 메일을 1회 발송할까요?');U.qs('#run-job-digest').onclick=e=>utility('adminRunJobDigest',e.currentTarget,'발송 대기 중인 채용정보 다이제스트를 지금 처리할까요?');U.qs('#admin-table').onclick=async e=>{const b=e.target.closest('button[data-action]');if(!b||!confirm('이 상태로 변경하시겠습니까?'))return;U.busy(b,true);try{const payload={admin_token:token};if(b.dataset.jobId)payload.job_id=b.dataset.jobId;else if(b.dataset.newsId)payload.news_id=b.dataset.newsId;else payload.alumni_id=b.dataset.id;const r=await AlumniAPI.request(b.dataset.action,{method:'POST',data:payload});U.status(st(),r.message||'처리되었습니다.','success');await load()}catch(err){U.status(st(),err.message,'error')}finally{U.busy(b,false)}}})})();
 
 (function(){'use strict';const U=AlumniUI,st=()=>U.qs('#admin-status');let alumniLoaded=false;
 function payload(form){const out=Object.fromEntries(new FormData(form).entries());form.querySelectorAll('input[type="checkbox"]').forEach(x=>out[x.name]=x.checked);out.admin_token=window.getAdminAuthToken();return out}
