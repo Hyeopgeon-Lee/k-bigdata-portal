@@ -56,10 +56,26 @@ export function quizFeedback({label="",details="",kind="neutral"}={}){
   return '<div class="quiz-feedback quiz-feedback-'+safeKind+'" role="status"><strong>'+escapeHTML(label)+'</strong>'+
     (details?'<span>'+escapeHTML(details)+'</span>':'')+'</div>';
 }
-export function scrollToQuizAnswer(root=document){
-  const target=root.querySelector(".quiz-answer input:not([disabled]),.quiz-answer textarea:not([disabled]),.quiz-answer .cm-content,.quiz-answer button:not([disabled])")
-    ||root.querySelector(".quiz-answer");
-  if(!target)return;
-  target.scrollIntoView({block:"center",behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});
-  if(typeof target.focus==="function")target.focus({preventScroll:true});
+/* Jump to the actual, visible answer control—not the hidden native textarea
+ * which remains behind CodeMirror 6. This navigation never chooses an answer. */
+export function scrollToQuizAnswer(root=document,{editor=null}={}){
+  const area=root?.querySelector(".quiz-answer");
+  if(!area)return false;
+  const visible=element=>Boolean(element&&element.getClientRects().length&&
+    !element.closest("[hidden]")&&getComputedStyle(element).visibility!=="hidden");
+  const firstVisible=selector=>[...area.querySelectorAll(selector)].find(visible);
+  const rich=firstVisible(".coding-editor-host:not([hidden]) .cm-content[contenteditable=true]");
+  const input=firstVisible('textarea:not([disabled]):not([hidden]),input:not([disabled]):not([hidden]):not([type="hidden"])');
+  const selected=firstVisible('.ncp-choice[aria-pressed="true"]:not([disabled])');
+  const choice=firstVisible('.ncp-choice:not([disabled])');
+  // Once an NCP answer is submitted, choices are intentionally disabled;
+  // the explanation button is the next actionable control.
+  const reveal=firstVisible(".quiz-solve-action--answer:not([disabled]),button:not([disabled])");
+  const target=rich||input||selected||choice||reveal||area;
+  if(target===area&&!area.hasAttribute("tabindex"))area.tabIndex=-1;
+  if(rich&&target===rich&&editor?.focus)editor.focus();
+  else target.focus?.({preventScroll:true});
+  target.scrollIntoView({block:"center",behavior:
+    matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});
+  return true;
 }
