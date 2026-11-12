@@ -133,7 +133,7 @@ function renderSignup(){
    identityFields()+
    '<label>이름<input name="full_name" maxlength="80" minlength="2" autocomplete="name" required></label>'+
    '<label>이메일<input name="email" type="email" autocomplete="email" required><small class="portal-auth-field-help">학교 이메일(@kopo.ac.kr 및 하위 도메인)로는 가입할 수 없습니다.</small></label>'+
-   '<label>휴대전화번호<input name="mobile_phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="16" placeholder="010-1234-5678" required><small class="portal-auth-field-help">학과 안내 및 졸업생 네트워크 연락처로 사용됩니다. 가입 후 마이페이지에서 변경할 수 있습니다.</small></label>'+
+   '<label>휴대전화번호<input name="mobile_phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="16" placeholder="010-1234-5678" required><small class="portal-auth-field-help">휴대전화번호는 포털 계정 정보에 저장되며 가입 후 마이페이지에서 변경할 수 있습니다.</small></label>'+
    '<label>비밀번호 (8자 이상)<input name="password" type="password" minlength="8" autocomplete="new-password" required></label>'+
    '<button class="portal-auth-primary" type="submit">가입하고 인증메일 받기</button></form>'+
    '<div class="portal-auth-actions portal-auth-return-actions"><button type="button" data-view="login">로그인으로 돌아가기</button></div>');
