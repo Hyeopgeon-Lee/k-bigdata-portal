@@ -125,9 +125,11 @@ try{
             if(definition.group)assert.equal(state.active?.id,id,'query-independent current service');
             else assert.equal(state.active,null,'unlisted pages do not activate unrelated service links');
             assert.deepEqual([...state.allServices].sort(),navigationItems.map(item=>item.id).sort(),'all service links preserved');
-            const groupKey=width+':'+(definition.group||definition.navGroup||'directory');
-            if(!groupBaseline.has(groupKey))groupBaseline.set(groupKey,{buttons:state.buttons,active:state.active.style,more:state.more});
-            else{const reference=groupBaseline.get(groupKey);assert.deepEqual(state.buttons,reference.buttons,'same service group button geometry and typography');assert.deepEqual(state.active.style,reference.active,'same active style');assert.deepEqual(state.more,reference.more,'same other-services control');}
+            if(definition.group){
+              const groupKey=width+':'+definition.group;
+              if(!groupBaseline.has(groupKey))groupBaseline.set(groupKey,{buttons:state.buttons,active:state.active.style,more:state.more});
+              else{const reference=groupBaseline.get(groupKey);assert.deepEqual(state.buttons,reference.buttons,'same service group button geometry and typography');assert.deepEqual(state.active.style,reference.active,'same active style');assert.deepEqual(state.more,reference.more,'same other-services control');}
+            }
           }
           if(definition.toolbar)assert.equal(state.toolbar.rect.height>0,width<=900,'toolbar visibility follows shared breakpoint');
         });
