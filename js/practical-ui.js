@@ -260,7 +260,7 @@ function renderQuestion(){
     ]})+
   '<p id="share-status" class="share-status" role="status" aria-live="polite"></p><p class="solve-question">'+formatQuestion(q.question)+'</p>'+tablesHTML(q)+(q.code?'<div class="code-scroll'+(q.language==="SQL"?' code-scroll--sql':'')+(codeNeedsFocus(q)?' code-scroll--complex':'')+'" tabindex="0" role="region" aria-label="'+esc(q.language)+' 문제 코드'+(q.language==="SQL"?'':' · 좌우 스크롤 가능')+'" data-scroll-hint="code-scroll-hint"><pre><code>'+highlightCode(shownCode)+'</code></pre></div><p id="code-scroll-hint" class="scroll-hint code-scroll-hint" hidden aria-hidden="true">← 좌우로 밀어 코드 보기 →</p>'+codeToolsHTML(q,shownCode):'')+(q.inputData?'<h3>입력 데이터</h3><pre class="input-data">'+esc(q.inputData)+'</pre>':'')+'<form id="answer-form" class="quiz-answer"><label for="my-answer">내가 생각한 정답</label>'+input+'<p class="hint" id="answer-hint">'+(q.grading==="self"?'SQL은 예시답과 직접 비교해 판정합니다.':'출력의 대소문자와 줄바꿈을 확인하세요.')+'</p><div class="quiz-solve-actions" role="group" aria-label="문제 풀이 도움말">'+
    '<button type="button" id="practical-hint-button" class="quiz-solve-action quiz-solve-action--hint" data-action="toggle-hint" aria-controls="solve-hint" aria-expanded="false">힌트 보기</button>'+
-   '<button type="submit" id="submit-answer" class="study-open quiz-solve-action quiz-solve-action--answer">정답·해설 보기</button>'+
+   '<button type="submit" id="submit-answer" class="study-open quiz-solve-action quiz-solve-action--answer" aria-controls="answer-result" aria-expanded="false">정답·해설 보기</button>'+
    (traceItems.length?'<button type="button" id="practical-trace-button" class="quiz-solve-action quiz-solve-action--trace" data-action="toggle-trace" aria-controls="solve-trace" aria-expanded="false">값 변화 추적</button>':'')+
    '</div></form><section id="solve-hint" class="quiz-solve-panel" hidden><h3>힌트</h3><p>'+esc(q.hint||"실행 흐름을 단계별로 추적해 보세요.")+'</p></section>'+
    (traceItems.length?'<section id="solve-trace" class="quiz-solve-panel" hidden><h3>값 변화 추적</h3><ol>'+traceItems.map(item=>'<li>'+esc(item)+'</li>').join("")+'</ol></section>':'')+
@@ -279,13 +279,15 @@ function renderQuestion(){
  });
  // Hint and trace use shared buttons; their click handler records hint usage.
  $("#my-answer").addEventListener("input",()=>{attempt.answer=$("#my-answer").value;saveSession(q.id,attempt);});
- if(attempt.viewedExplanation)revealAnswer();
+ if(attempt.viewedExplanation)revealAnswer({expanded:false});
  storageNotice();
 }
-function revealAnswer(){
+function revealAnswer({expanded=true}={}){
  const answerButton=$("#submit-answer");
  answerButton.type="button";answerButton.dataset.action="show-answer";
  answerButton.setAttribute("aria-controls","answer-result");
+ answerButton.setAttribute("aria-expanded",String(expanded));
+ answerButton.textContent=expanded?"정답·해설 접기":"정답·해설 보기";
  $("#my-answer").disabled=true;
  const q=current;
  const extraExplanation=beginnerExplanation(q);
@@ -305,6 +307,7 @@ function revealAnswer(){
    quizDisclosure("해설",learningGuide,{open:true})+
    quizDisclosure("관련 개념",conceptBlock)+sourceDetails+
    reviewControls()+button("retry","다시 풀기")+'</section>';
+ $("#answer-result").hidden=!expanded;
  const item=attempt;
  bindReview(root.querySelector(".study-review"),{bank:"practical",questionId:q.id,clientAttemptId:item.id,answerText:item.answer,
    elapsedSeconds:Math.round((Date.now()-item.startedAt)/1000),usedHint:item.usedHint},
@@ -330,8 +333,11 @@ root.addEventListener("click",event=>{
  }
  if(action==="show-answer"){
    const result=document.getElementById("answer-result");
-   result?.scrollIntoView({block:"start",behavior:"smooth"});
-   result?.querySelector("#result-heading")?.focus({preventScroll:true});
+   if(!result)return;
+   result.hidden=!result.hidden;
+   b.setAttribute("aria-expanded",String(!result.hidden));
+   b.textContent=result.hidden?"정답·해설 보기":"정답·해설 접기";
+   if(!result.hidden)result.querySelector("#result-heading")?.focus({preventScroll:true});
    return;
  }
  if(action==="start-today"){
