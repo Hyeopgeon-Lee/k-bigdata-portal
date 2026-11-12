@@ -22,7 +22,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/style.css?v=20261111-account-sync-1">
 <link rel="stylesheet" href="css/portal-ux.css?v=20261111-account-sync-1">
-<link rel="stylesheet" href="css/help.css?v=20261111-account-sync-1">
+<link rel="stylesheet" href="css/help.css?v=20261112-help-compact-1">
 <!-- portal:assets:start (generated; edit scripts/portal-shell-template.mjs) -->
 <link rel="stylesheet" href="css/portal-navigation.css?v=20261111-account-sync-1">
 <script defer src="js/portal-navigation.js?v=20261112-member-mobile-2"></script>
@@ -79,7 +79,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
        <label class="help-field">관련 장소 <select name="location" required></select></label>
      </div>
      <label class="help-field">제목 <input type="text" name="title" maxlength="80" required placeholder="예: 실습실 PC가 켜지지 않습니다"></label>
-     <label class="help-field">상세 내용 <textarea name="content" maxlength="3000" rows="7" required placeholder="발생 장소, 오류 증상, 확인한 사항을 구체적으로 작성해 주세요."></textarea></label>
+     <label class="help-field">상세 내용 <textarea name="content" maxlength="3000" rows="5" required placeholder="발생 장소, 오류 증상, 확인한 사항을 구체적으로 작성해 주세요."></textarea></label>
      <label class="help-field">사진·PDF 첨부 (선택, 최대 5MB) <input type="file" name="photo" accept="image/jpeg,image/png,image/webp,application/pdf"></label>
      <button id="help-send" type="submit" class="help-primary">요청 등록하기</button>
    </form>
@@ -107,7 +107,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <div class="container footer-bottom"><p>학생용 학습·프로젝트·취업 통합 포털입니다.</p><p>© <span id="current-year"></span> K-BigData Service Portal</p></div>
 </footer>
 <script type="module" src="js/portal-auth.mjs?v=20261112-member-mobile-2"></script>
-<script type="application/x-learning" data-module="js/help.js?v=20261111-name-unified-1"></script>
+<script type="application/x-learning" data-module="js/help.js?v=20261112-help-short-url-1"></script>
 <script type="application/x-learning" data-module="js/portal-shell-entry.js?v=20261111-account-sync-1"></script>
 </body>
 </html>
