@@ -195,7 +195,7 @@ try{
       const report=new URL(page.url());
       assert.equal(report.searchParams.get("source"),"coding");
       assert.equal(report.searchParams.get("id"),"PY-041");
-      assert.ok(report.searchParams.get("url").includes("coding.html?id=PY-041"));
+      assert.deepEqual([...report.searchParams.keys()],["source","id"],"Help Desk report URL stays minimal");
     }
     await context.close();
   }
