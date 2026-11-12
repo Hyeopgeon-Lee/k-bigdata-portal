@@ -155,9 +155,9 @@ function render(){
    '<button type="button" class="ncp-retry" data-retry>이 문제 다시 풀기</button></section>':"";
  const sourceDisclosure=quizDisclosure("복원정보 / 원문 출처",originalReference);
  const actions=[
-   {label:"문제 공유",action:"share-problem",ariaLabel:"현재 NCP 문제 공유"},
-   {label:"링크 복사",action:"copy-problem-link",ariaLabel:"현재 NCP 문제 링크 복사"},
-   {label:"오류 신고",href:learningReportUrl("ncp",q,q.exam+" · 원문 "+q.originalNumber+"번"),ariaLabel:"현재 NCP 문제 오류 신고"}
+   {label:"문제 공유",tone:"share",action:"share-problem",ariaLabel:"현재 NCP 문제 공유"},
+   {label:"링크 복사",tone:"copy",action:"copy-problem-link",ariaLabel:"현재 NCP 문제 링크 복사"},
+   {label:"오류 신고",tone:"report",href:learningReportUrl("ncp",q,q.exam+" · 원문 "+q.originalNumber+"번"),ariaLabel:"현재 NCP 문제 오류 신고"}
  ];
  el.question.innerHTML=
    quizNavigation({count:(state.index+1)+" / "+state.list.length,listAction:"ncp-list",jumpAction:"ncp-answer-jump"})+
