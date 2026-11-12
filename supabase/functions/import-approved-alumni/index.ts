@@ -44,7 +44,8 @@ async function githubIdentity(req:Request):Promise<"schedule"|"workflow_dispatch
 
 type Row={
  source_id:string;full_name:string;email:string;student_no:string|null;
- graduation_year:number;mobile_phone:string;source_status:string;import_status:string
+ graduation_year:number;mobile_phone:string;source_status:string;import_status:string;
+ target_enrollment_status:"graduated"|"early_employment"
 };
 function randomPassword(){
  const bytes=crypto.getRandomValues(new Uint8Array(36));
@@ -59,9 +60,11 @@ async function record(row:Row,status:string,userId:string|null=null,errorCode:st
 }
 async function importOne(row:Row):Promise<"created"|"merged"|"review"|"failed">{
  const kstYear=new Date(Date.now()+9*60*60*1000).getUTCFullYear();
+ const early=row.target_enrollment_status==="early_employment";
  const validEmail=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(row.email);
  const validPhone=/^01[016789][0-9]{7,8}$/.test(row.mobile_phone);
- if(row.source_status!=="APPROVED"||row.graduation_year>kstYear||
+ if(row.source_status!=="APPROVED"||
+    (early?row.graduation_year!==kstYear+1:row.graduation_year>kstYear)||
     row.graduation_year<2000||!validEmail||!validPhone||
     !row.full_name||row.full_name.length>80||
     /(^|\.)kopo\.ac\.kr$/i.test(row.email.split("@")[1]||"")){
@@ -79,8 +82,8 @@ async function importOne(row:Row):Promise<"created"|"merged"|"review"|"failed">{
   }
   const matching=matches?.[0];
   if(matching){
-   if(matching.full_name!==row.full_name||matching.signup_type!=="alumni"||
-      matching.enrollment_status!=="graduated"||matching.approval_status!=="approved"||
+   if(matching.full_name!==row.full_name||matching.signup_type!==(early?"student":"alumni")||
+      matching.enrollment_status!==(early?"early_employment":"graduated")||matching.approval_status!=="approved"||
       (matching.graduation_year!=null&&matching.graduation_year!==row.graduation_year)||
       (matching.mobile_phone&&matching.mobile_phone!==row.mobile_phone)||
       (matching.alumni_source_id&&matching.alumni_source_id!==row.source_id)){
@@ -106,7 +109,8 @@ async function importOne(row:Row):Promise<"created"|"merged"|"review"|"failed">{
    email:row.email,
    password:randomPassword(),
    email_confirm:true,
-   user_metadata:{full_name:row.full_name,signup_type:"alumni",graduation_year:row.graduation_year}
+   user_metadata:{full_name:row.full_name,signup_type:early?"student":"alumni",
+    graduation_year:row.graduation_year,academic_year:early?2:null,student_no:early?row.student_no:null}
   });
   if(createError||!created?.user){
    await record(row,"review",null,"AUTH_CREATE_REQUIRES_REVIEW");
@@ -115,9 +119,10 @@ async function importOne(row:Row):Promise<"created"|"merged"|"review"|"failed">{
   const uid=created.user.id;
   const {error:insertError}=await admin.from("profiles").insert({
    user_id:uid,full_name:row.full_name,email:row.email,
-   signup_type:"alumni",graduation_year:row.graduation_year,
-   enrollment_status:"graduated",approval_status:"approved",
-   student_no:null,alumni_student_no:row.student_no,mobile_phone:row.mobile_phone,
+   signup_type:early?"student":"alumni",graduation_year:row.graduation_year,
+   enrollment_status:early?"early_employment":"graduated",approval_status:"approved",
+   academic_year:early?2:null,student_no:early?row.student_no:null,
+   alumni_student_no:row.student_no,mobile_phone:row.mobile_phone,
    alumni_source_id:row.source_id
   });
   if(insertError){
@@ -144,12 +149,12 @@ Deno.serve(async(request:Request)=>{
  let payload:any={};try{payload=await request.json();}catch{}
  const dryRun=payload.dry_run===true;
  const {data,error}=await admin.from("portal_alumni_import_queue")
-  .select("source_id,full_name,email,student_no,graduation_year,mobile_phone,source_status,import_status")
+  .select("source_id,full_name,email,student_no,graduation_year,mobile_phone,source_status,import_status,target_enrollment_status")
   .eq("import_status","pending").order("source_id",{ascending:true}).limit(100);
  if(error)return reply({error:"IMPORT_QUEUE_LOOKUP_FAILED"},500);
  const roster=(data||[]) as Row[];
  if(dryRun)return reply({ok:true,dry_run:true,pending:roster.length,
-  review_only:roster.filter(r=>r.graduation_year>new Date(Date.now()+9*3600000).getUTCFullYear()).length});
+  review_only:roster.filter(r=>r.graduation_year>new Date(Date.now()+9*3600000).getUTCFullYear()&&r.target_enrollment_status!=="early_employment").length});
  const stats={created:0,merged:0,review:0,failed:0};
  for(const entry of roster){
   const result=await importOne(entry);
