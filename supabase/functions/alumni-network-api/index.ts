@@ -586,10 +586,10 @@ async function handle(action:string,b:Record<string,unknown>,a:Actor){
   }
   throw Error("관리 목록이 올바르지 않습니다.");
  }
- case "adminApprove":case "adminReject":case "adminHide":
- case "adminJobApprove":case "adminJobReject":case "adminJobHide":case "adminJobPublish":
- case "adminNewsApprove":case "adminNewsReject":case "adminNewsHide":
- case "adminNewsPublish":case "adminNewsApproveAndMail":{
+ case "adminHide":case "adminShow":
+ case "adminJobHide":case "adminJobPublish":
+ case "adminNewsHide":
+ case "adminNewsPublish":case "adminNewsSendMail":{
   await adminOnly(a);
   const isAlumni=action.startsWith("admin")&&!action.includes("Job")&&!action.includes("News");
   const kind=isAlumni?"alumni":action.includes("Job")?"jobs":"alumni_news";
@@ -601,9 +601,9 @@ async function handle(action:string,b:Record<string,unknown>,a:Actor){
    throw Error("반려된 등록은 다시 신청해야 합니다.");
   record.data.status=after;record.data.updated_at=now();
   if(after==="APPROVED"){record.data.approved_at=now();record.data.approved_by=a.email;}
-  if(action==="adminNewsApproveAndMail")record.data.mail_status="WAITING";
+  if(action==="adminNewsSendMail")record.data.mail_status="WAITING";
   await put(kind,record.source_id,record.data);
-  if(action==="adminNewsApproveAndMail")await deliverNews(record.data);
+  if(action==="adminNewsSendMail")await deliverNews(record.data);
   return {success:true,message:"상태 변경이 완료되었습니다."};
  }
  case "adminRunJobDigest":{
