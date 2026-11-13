@@ -12,6 +12,16 @@ try{
  const name=document.body.dataset.adminModule;
  if(!/^[a-z-]+\.js$/.test(name||""))throw Error("INVALID_ADMIN_MODULE");
  panel.hidden=false;
+ // Visually identify the current management task in the common navigation.
+ const current=new URL(location.href);
+ for(const link of document.querySelectorAll('.admin-menu[aria-label="관리자 업무 메뉴"] a[href]')){
+   const target=new URL(link.getAttribute("href"),location.href);
+   const samePath=target.pathname===current.pathname;
+   const sameView=!target.pathname.endsWith("/accounts.html")
+     ||target.searchParams.get("view")===(current.searchParams.get("view")||"students");
+   if(samePath&&sameView)link.setAttribute("aria-current","page");
+   else link.removeAttribute("aria-current");
+ }
  // Expose the ready state only after the protected content is no longer hidden.
  document.documentElement.dataset.adminAccess="approved";
  await import(new URL("./"+name,import.meta.url).href);
