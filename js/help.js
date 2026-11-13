@@ -50,18 +50,25 @@ function card(request){
  heading.append(title,badge);
  const summary=document.createElement('details');
  summary.className='help-ticket-details';
- const toggle=node('summary','요청 내용 및 처리 내역 보기');
- summary.append(toggle);
- summary.append(node('p',request.content,'help-content'));
- if(request.legacy_request_id){
-  summary.append(node('p','기존 요청번호: '+request.legacy_request_id,'help-meta'));
- }
- if(request.admin_reply)summary.append(node('div','관리자 답변: '+request.admin_reply,'help-reply'));
- const details=node('div',null,'help-extra');
- const open=node('button','대화·첨부파일 보기','help-secondary');
- open.type='button';
- open.addEventListener('click',()=>openDetail(request,details,open));
- summary.append(open,details);
+ summary.append(node('summary','요청 내용 및 처리 내역 보기'));
+ const body=node('div',null,'help-ticket-body');
+ summary.append(body);
+ let loading=false,loaded=false;
+ summary.addEventListener('toggle',async()=>{
+  if(!summary.open||loading||loaded)return;
+  loading=true;body.replaceChildren(node('p','요청 내용을 불러오는 중...','help-meta'));
+  const {data,error}=await api.from('help_requests')
+   .select('content,admin_reply').eq('id',request.id).eq('owner_id',user.id).maybeSingle();
+  loading=false;
+  if(error||!data){body.replaceChildren(node('p','요청 상세를 불러오지 못했습니다. 다시 펼쳐 주세요.','help-meta'));return;}
+  body.replaceChildren(node('p',data.content,'help-content'));
+  if(request.legacy_request_id)body.append(node('p','기존 요청번호: '+request.legacy_request_id,'help-meta'));
+  if(data.admin_reply)body.append(node('div','관리자 답변: '+data.admin_reply,'help-reply'));
+  const details=node('div',null,'help-extra');
+  const open=node('button','대화·첨부파일 보기','help-secondary');open.type='button';
+  open.addEventListener('click',()=>openDetail(request,details,open));
+  body.append(open,details);loaded=true;
+ });
  article.append(heading,meta,summary);
  return article;
 }
@@ -115,7 +122,7 @@ async function loadRequests(){
  const root=el('help-my-list');
  root.replaceChildren(node('p','요청을 불러오는 중...','help-meta'));
  const {data,error}=await api.from('help_requests')
-  .select('id,owner_id,legacy_request_id,category,location,title,content,status,admin_reply,created_at,updated_at')
+  .select('id,owner_id,legacy_request_id,category,location,title,status,created_at')
   .eq('owner_id',user.id).order('created_at',{ascending:false}).limit(200);
  if(error){root.textContent='요청을 불러오지 못했습니다. 로그인 상태를 확인하세요.';return;}
  cached=data||[];root.replaceChildren();
@@ -124,7 +131,7 @@ async function loadRequests(){
 }
 async function loadNotifications(){
  const root=el('help-notice-list');root.replaceChildren(node('p','알림을 불러오는 중...','help-meta'));
- const {data,error}=await api.from('help_notifications').select('id,type,created_at,is_read').order('created_at',{ascending:false}).limit(50);
+ const {data,error}=await api.from('help_notifications').select('id,type,created_at,is_read').eq('recipient_id',user.id).order('created_at',{ascending:false}).limit(50);
  if(error){root.textContent='알림을 확인할 수 없습니다.';return;}
  root.replaceChildren();
  for(const item of data||[]){
