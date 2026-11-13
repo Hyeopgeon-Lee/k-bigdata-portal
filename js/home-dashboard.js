@@ -9,7 +9,9 @@ const link=service=>{const ext=/^https:\/\//.test(service.url);return '<a href="
 // Only the authenticated profile determines the dashboard's grade.
 let selectedGrade=null;
 const isGraduateProfile=profile=>Boolean(profile)&&(profile.signup_type==="alumni"||profile.enrollment_status==="graduated");
+const isAdminProfile=profile=>profile?.is_admin===true;
 let graduateMode=false;
+let adminMode=false;
 function showGraduateHome(){
  if(graduateMode)return;
  graduateMode=true;
@@ -24,6 +26,23 @@ function showGraduateHome(){
   const element=$(selector);if(element)element.hidden=true;
  }
  window.dispatchEvent(new CustomEvent("kbigdata:home-persona",{detail:{persona:"alumni"}}));
+}
+function showAdminHome(){
+ if(adminMode)return;
+ adminMode=true;
+ document.body.dataset.homePersona="admin";
+ document.body.dataset.homeGrade="admin";
+ const eyebrow=$(".portal-welcome-copy .eyebrow");
+ if(eyebrow)eyebrow.textContent="ADMIN PORTAL";
+ const heading=$("#hero-title"),lead=$("#hero-description");
+ if(heading)heading.textContent="관리자 포털";
+ if(lead)lead.textContent="학과 운영과 학생 계정 관리를 위한 서비스를 이용하세요.";
+ // A verified super administrator is not a first- or second-year student.
+ // Remove both the missing-grade warning and the grade-registration link.
+ for(const selector of [".home-grade-control",".dashboard-start",".home-today",".home-alerts"]){
+  const element=$(selector);if(element)element.hidden=true;
+ }
+ window.dispatchEvent(new CustomEvent("kbigdata:home-persona",{detail:{persona:"admin"}}));
 }
 const gradeLayouts=Object.freeze({
  "1":{
@@ -85,7 +104,7 @@ function renderQuickActions(){
  grid.innerHTML=cards.join("");
 }
 function renderGrade(){
- if(graduateMode)return;
+ if(graduateMode||adminMode)return;
  const layout=selectedGrade?gradeLayouts[selectedGrade]:null;
  document.body.dataset.homeGrade=selectedGrade||"unregistered";
  const heading=$("#hero-title"),lead=$("#hero-description");
@@ -127,6 +146,7 @@ function renderGrade(){
 function loadAccountGrade(){
  if(!globalThis.portalLearning?.read)return;
  const profile=globalThis.portalHomeProfile?.();
+ if(isAdminProfile(profile)){showAdminHome();return;}
  if(isGraduateProfile(profile)){showGraduateHome();return;}
  const registeredGrade=profile?.signup_type==="student"?String(profile.academic_year??""):"";
  selectedGrade=["1","2"].includes(registeredGrade)?registeredGrade:null;
