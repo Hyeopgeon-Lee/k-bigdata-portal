@@ -63,3 +63,13 @@ body[data-page="study"] .learn-main,body[data-page="teacher-learning"] .learn-ma
 #study-none-plan-count{text-align:right;font-variant-numeric:tabular-nums;font-size:12px}
 .study-admin-reasons{white-space:normal;overflow-wrap:anywhere}
 @media(max-width:760px){.study-none-plan-fields{padding:14px}.study-none-plan-fields textarea{font-size:16px}}
+
+/* Keep the study page intro, service navigation, and dashboard on one horizontal axis.
+   The learning dashboard defaults to 1120px, while the portal shell defaults to 1280px. */
+body[data-page="study"] .learn-main > .container.portal-service-nav.portal-nav-compact,
+body[data-page="study"] .learn-main > .container.portal-page-intro,
+body[data-page="study"] .learn-main > .container.study-layout {
+  width: min(calc(100% - var(--portal-shell-gutter, 24px) * 2), 1120px);
+  max-width: 1120px;
+  margin-inline: auto;
+}
