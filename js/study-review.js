@@ -35,8 +35,8 @@ export function bindReview(container, eventData, previous, onSaved) {
         return;
       }
       status.textContent = "이 계정은 읽기 전용입니다.";
-    } catch {
-      status.textContent = "저장하지 못했습니다. 다시 선택해 주세요.";
+    } catch(error) {
+      status.textContent = error.message==="ANSWER_TOO_LONG"?"답안을 10,000자 이내로 줄인 뒤 다시 제출해 주세요.":"저장하지 못했습니다. 다시 선택해 주세요.";
     }
     for(const item of buttons) { item.disabled=false; item.setAttribute("aria-pressed","false"); }
   });

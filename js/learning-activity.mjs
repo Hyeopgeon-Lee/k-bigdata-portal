@@ -66,13 +66,15 @@ async function flushLearningInternal(){
 }
 export async function recordLearningAttempt(data){
  validate(data);
+ const answer=String(data.answerText??'');
+ if([...answer].length>10000)throw new Error('ANSWER_TOO_LONG');
  if(!writable())return {state:'readonly',message:'읽기 전용 계정입니다.'};
  const user=await account();
  const event={
    user_id:user.id,bank:data.bank,question_id:String(data.questionId),
    client_attempt_id:String(data.clientAttemptId||idFor()).slice(0,160),
    result:data.result,grading_method:data.gradingMethod,
-   answer_text:String(data.answerText||'').slice(0,10000),
+   answer_text:answer,
    elapsed_seconds:cleanNumber(data.elapsedSeconds),
    used_hint:!!data.usedHint,
    question_revision:data.questionRevision?String(data.questionRevision).slice(0,120):null,

@@ -590,7 +590,7 @@ $("#coding-answer-button").addEventListener("click", () => {
   slot.innerHTML=quizFeedback({label:"정답·해설 공개",details:"작성한 답안과 비교한 후 내 풀이 결과를 선택하세요."})+reviewControls();
   const key="coding-review-"+q.id;
   bindReview(slot,{bank:"coding",questionId:q.id,clientAttemptId:codingAttemptId,
-    answerText:$("#coding-editor").value,usedHint:!$("#coding-hint").hidden,metadata:{language:q.language}},
+    get answerText(){return $("#coding-editor").value;},usedHint:!$("#coding-hint").hidden,metadata:{language:q.language}},
     getSafe(key),result=>{
       setSafe(key,result);doneIds.add(q.id);setSafe(DONE_KEY,JSON.stringify([...doneIds]));
       if(current.id===q.id){updateSummary();listQuestions(true);}

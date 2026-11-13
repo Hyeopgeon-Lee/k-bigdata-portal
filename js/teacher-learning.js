@@ -11,7 +11,7 @@ function table(headers,rows){
  const el=node('table',null,'learn-table'),head=node('thead'),tr=node('tr');
  for(const h of headers)tr.append(node('th',h));head.append(tr);el.append(head);
  const body=node('tbody');
- for(const record of rows){const row=node('tr');record.forEach((val,index)=>{const cell=node('td',val);cell.dataset.label=headers[index];row.append(cell);});body.append(row);}
+ for(const record of rows){const row=node('tr');record.forEach((val,index)=>{const cell=node('td');cell.append(val instanceof Node?val:String(val));cell.dataset.label=headers[index];row.append(cell);});body.append(row);}
  el.append(body);return el;
 }
 function delta(a,b,suffix=''){
@@ -118,8 +118,40 @@ function updatePeriodControls(data){
    new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',year:'numeric',month:'long'}).format(new Date(data.periodStart));
  }else periodLabel.textContent=periodOffset===0?(periodMode==='week'?'이번 주':'이번 달'):'기간 조회 중';
 }
+const answers=node('section');
+answers.setAttribute('aria-live','polite');
+let answerRequest=0;
+const results={correct:'정답',incorrect:'오답',completed:'완료',ungraded:'미판정',timeout:'시간 초과'};
+function action(label,callback){
+ const button=node('button',label,'learn-period-arrow');
+ button.type='button';button.addEventListener('click',callback);return button;
+}
+async function showAnswers(subject,wrong,periodStart,offset=0){
+ const seq=++answerRequest;
+ const start=new Date(Date.parse(periodStart)+9*3600000).toISOString().slice(0,10);
+ answers.replaceChildren(node('p','제출 답안 조회 중…'));
+ try{
+  const {data,error}=await db.rpc('admin_learning_answers',{
+   p_period:periodMode,p_start:start,p_grade:Number(gradeFilter),p_subject:subject,p_wrong:wrong,p_offset:offset
+  });
+  if(seq!==answerRequest)return;
+  if(error)throw error;
+  answers.replaceChildren(node('h3',names[subject]+' · '+(wrong?'오답':'전체 시도')),
+   action(wrong?'전체 시도 보기':'오답만 보기',()=>showAnswers(subject,!wrong,periodStart)),
+   action('닫기',()=>{answerRequest++;answers.replaceChildren();}));
+  if(!data.length)answers.append(node('p','해당하는 제출 기록이 없습니다.'));
+  else answers.append(table(['학생','제출 시각','문제','결과','제출 답안'],data.slice(0,25).map(row=>{
+   const raw=node('pre',row.answer_text||'저장된 답안 없음');
+   raw.style.whiteSpace='pre-wrap';raw.style.overflowWrap='anywhere';
+   return [row.student||'이름 미확인',new Date(row.submitted_at).toLocaleString('ko-KR',{timeZone:'Asia/Seoul'}),row.question_id,results[row.result]||row.result,raw];
+  })));
+  if(offset)answers.append(action('이전 25건',()=>showAnswers(subject,wrong,periodStart,offset-25)));
+  if(data.length>25)answers.append(action('다음 25건',()=>showAnswers(subject,wrong,periodStart,offset+25)));
+ }catch{if(seq===answerRequest)answers.replaceChildren(node('p','제출 답안을 조회하지 못했습니다. 다시 선택해 주세요.'));}
+}
 async function load(){
  const status=get('teacher-status'),sequence=++requestSequence;
+ answerRequest++;answers.replaceChildren();get('teacher-content').hidden=true;
  renderFilters();updatePeriodControls();
  status.textContent='선택한 학년과 기간의 학습통계를 불러오는 중입니다...';
  const {data,error}=await db.functions.invoke('learning-admin',{body:{
@@ -151,9 +183,9 @@ async function load(){
   card('자가평가 정답률',a.selfAccuracy===null?'집계 없음':a.selfAccuracy+'%',a.selfCorrect+'/'+a.selfTotal+'건')
  );
  get('teacher-subjects').replaceChildren(table(['과목',thisPeriod+' 시도','고유 풀이','오답 횟수',compared+' 시도'],
-  Object.keys(names).map(key=>[names[key],a.subjects?.[key]?.attempts??0,a.subjects?.[key]?.unique??0,
-   a.subjects?.[key]?.wrong??0,b?.subjects?.[key]?.attempts??'—'])
- ));
+  Object.keys(names).map(key=>[names[key],action(String(a.subjects?.[key]?.attempts??0),()=>showAnswers(key,false,data.periodStart)),a.subjects?.[key]?.unique??0,
+   action(String(a.subjects?.[key]?.wrong??0),()=>showAnswers(key,true,data.periodStart)),b?.subjects?.[key]?.attempts??'—'])
+ ),answers);
  const rates=get('teacher-rates');rates.replaceChildren();
  for(const [label,correct,total,rate] of [
   ['자가평가',a.selfCorrect,a.selfTotal,a.selfAccuracy],
