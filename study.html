@@ -76,11 +76,11 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <section class="learn-section study-span" aria-labelledby="study-plan-heading">
 <div class="study-topline"><h2 id="study-plan-heading">주간 자율학습 계획</h2>
 <label class="study-text">계획 주간 <select id="study-week" aria-label="학습계획 주간 선택"></select></label></div>
-<p class="study-text">학습할 날짜를 선택하세요. 당일 오후 4시 이후에는 계획을 변경할 수 없습니다.</p>
+<p id="study-plan-guidance" class="study-text">학습할 날짜를 선택하세요. 다음 주 계획은 금요일 0시부터 등록할 수 있습니다. 당일 오후 4시 이후에는 해당 날짜를 변경할 수 없습니다.</p>
 <div id="study-days" class="study-days" aria-label="월요일부터 금요일까지 학습 요일"></div>
 <p id="study-plan-summary" class="study-text">학습계획 확인 중…</p>
 <div id="study-empty" class="study-none-plan-fields" hidden>
-  <label for="study-no-plan-reason"><strong>이번 주 학교에 남아 공부하기 어려운 사유 <span class="study-required-mark" aria-hidden="true">필수</span></strong></label>
+  <label for="study-no-plan-reason"><strong><span id="study-no-plan-period">이번 주</span> 학교에 남아 공부하기 어려운 사유 <span class="study-required-mark" aria-hidden="true">필수</span></strong></label>
   <p class="study-text" id="study-none-plan-help">공부할 과목이 아니라 학교에 남아 공부하기 어려운 이유를 직접 작성해 주세요. 입력한 사유는 지도교수가 확인합니다. 건강·가정 사정 등 민감한 내용은 자세히 밝히지 않아도 됩니다.</p>
   <textarea id="study-no-plan-reason" rows="3" minlength="2" maxlength="300" aria-describedby="study-none-plan-help" placeholder="학교에 남아서 공부하기 어려운 이유를 직접 작성하세요."></textarea>
   <p id="study-none-plan-count" class="study-text" aria-live="polite">0 / 300자</p>
@@ -121,6 +121,6 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <div class="container footer-bottom"><p>© <span id="current-year"></span> K-BigData Service Portal</p></div>
 </footer>
 <script type="module" src="js/portal-auth.mjs?v=20261113-admin-isolated-1"></script>
-<script type="application/x-learning" data-module="js/study.js?v=20261112-graduated-1"></script>
+<script type="application/x-learning" data-module="js/study.js?v=20261113-next-week-friday-v1"></script>
 <script type="application/x-learning" data-module="js/portal-shell-entry.js?v=20261111-account-sync-1"></script>
 </body></html>
