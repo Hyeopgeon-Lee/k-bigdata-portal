@@ -338,7 +338,7 @@ function renderAccount(){
 
   const accountSettings=addSection("계정 설정");
   addAction(accountSettings,{title:"마이페이지",detail:"내 정보 · 비밀번호 · 학적 상태",href:"mypage.html"});
-  addAction(accountSettings,{title:"나의 자격증",detail:"필기합격 · 최종합격 등록과 확인",href:"my-certifications.html"});
+  if(!isAdmin&&["student","alumni"].includes(currentProfile?.signup_type))addAction(accountSettings,{title:"나의 자격증",detail:"필기합격 · 최종합격 등록과 확인",href:"my-certifications.html"});
 
   const learning=addSection("학습");
   addAction(learning,{title:"나의 학습현황",detail:"풀이 기록과 오답 복습",href:"my-learning.html"});
