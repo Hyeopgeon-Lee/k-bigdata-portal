@@ -166,58 +166,74 @@ Deno.serve(async(req:Request)=>{
       optedInStudents:recipients.filter(x=>opted.has(x.user_id)).length,
       history,recentFaculty,recentStudents});
   }
+
+  if(action==="reaggregate"){
+    const mode=data.period==="week"?"week":data.period==="month"?"month":null;
+    const offset=Number(data.offset);
+    if(!mode||!Number.isInteger(offset)||offset>=0||offset<(mode==="week"?-52:-24))
+      return json({error:"INVALID_PERIOD"},400);
+    const range=learningPeriod(mode,offset);
+    const startDate=new Date(Date.parse(range.start)+9*3600000).toISOString().slice(0,10);
+    const {data:result,error}=await admin.rpc("learning_refresh_closed_period",{
+      p_period_type:mode,p_period_start:startDate,p_trigger:"manual_admin"
+    });
+    if(error||!result?.ok)return json({error:"REAGGREGATION_FAILED",jobId:result?.jobId??null},500);
+    return json({ok:true,result});
+  }
   if(action==="summary"){
-    const activeRows=await admin.from("profiles").select("user_id,academic_year")
-      .eq("approval_status","approved").eq("enrollment_status","enrolled").eq("signup_type","student");
-    if(activeRows.error)throw activeRows.error;
-    // The academic_year profile column represents the current student grade (1/2).
-    // My Page changes this value; no calendar-year or class-based filtering is needed.
-    const grade=data.grade===undefined||data.grade===null||data.grade===""?null:Number(data.grade);
-    if(grade!==null&&![1,2].includes(grade))return json({error:"INVALID_GRADE"},400);
-    const students=(activeRows.data||[]).filter(p=>[1,2].includes(Number(p.academic_year))&&
-      (grade===null||Number(p.academic_year)===grade));
-    const allowed=new Set(students.map(x=>x.user_id));
+    const grade=data.grade===undefined||data.grade===null||data.grade===""?0:Number(data.grade);
+    if(!Number.isInteger(grade)||![0,1,2].includes(grade))
+      return json({error:"INVALID_GRADE"},400);
     const mode=data.period===undefined||data.period==="week"?"week":data.period==="month"?"month":null;
     const offset=data.offset===undefined?0:Number(data.offset);
     if(!mode||!Number.isInteger(offset)||offset>0||offset<(mode==="week"?-52:-24))
       return json({error:"INVALID_PERIOD"},400);
     const range=learningPeriod(mode,offset);
-    const attempts=(await allAttempts(range.previousStart,range.currentEnd)).filter(x=>allowed.has(x.user_id));
-    const current=attempts.filter(x=>x.submitted_at>=range.start&&x.submitted_at<range.currentEnd);
-    const previous=attempts.filter(x=>x.submitted_at>=range.previousStart&&x.submitted_at<range.compareEnd);
-    const subjectKey=(r:any)=>r.bank==="coding"?String(r.question_id).split("-")[0]:r.bank==="ncp"?"NCP":"PRACTICAL";
-    function calculate(items:any[]){
-      const people=new Set(items.map(x=>x.user_id));
-      const judged=(method:string)=>items.filter(x=>x.grading_method===method&&["correct","incorrect"].includes(x.result));
-      const self=judged("self"),automatic=judged("automatic");
-      const accuracy=(xs:any[])=>xs.length?Math.round(xs.filter(x=>x.result==="correct").length/xs.length*100):null;
-      const subjects:Record<string,{attempts:number,unique:number,wrong:number}>={};
-      for(const key of ["JAVA","C","PYTHON","LINUX","NCP","PRACTICAL"]){
-        const rows=items.filter(x=>subjectKey(x)===key);
-        subjects[key]={attempts:rows.length,unique:new Set(rows.map(x=>x.user_id+":"+x.question_id)).size,wrong:rows.filter(x=>x.result==="incorrect").length};
-      }
-      return {
-        attempts:items.length,unique:new Set(items.map(x=>x.user_id+":"+x.bank+":"+x.question_id)).size,
-        activeStudents:people.size,participationRate:allowed.size?Math.round(people.size/allowed.size*100):null,
-        selfCorrect:self.filter(x=>x.result==="correct").length,selfTotal:self.length,selfAccuracy:accuracy(self),
-        autoCorrect:automatic.filter(x=>x.result==="correct").length,autoTotal:automatic.length,autoAccuracy:accuracy(automatic),
-        pending:items.filter(x=>x.result==="ungraded"||x.result==="timeout").length,subjects
-      };
+    const dateKst=(iso:string)=>new Date(Date.parse(iso)+9*3600000).toISOString().slice(0,10);
+    const startDate=dateKst(range.start),previousDate=dateKst(range.previousStart);
+    async function getSaved(date:string){
+      const {data:row,error}=await admin.from("learning_period_stats")
+        .select("period_type,period_start,period_end,grade,cohort_size,metrics,study_metrics,top_wrong,cohort_basis,calculated_at")
+        .eq("period_type",mode).eq("period_start",date).eq("grade",grade).maybeSingle();
+      if(error)throw error;
+      return row;
     }
-    const aggregate=calculate(current),baseline=calculate(previous);
-    const counts:Record<string,number>={};
-    for(const r of current)if(r.result==="incorrect"){
-      const key=r.bank+":"+r.question_id;counts[key]=(counts[key]||0)+1;
+    // A current period is computed from live database rows. Closed periods are never
+    // recomputed by a normal page visit; the only source is the saved snapshot.
+    const [past,previous]=await Promise.all([
+      offset===0?Promise.resolve(null):getSaved(startDate),
+      getSaved(previousDate)
+    ]);
+    if(offset<0&&!past){
+      const {data:jobs,error:jobError}=await admin.from("learning_aggregation_jobs")
+        .select("job_status,finished_at")
+        .eq("period_type",mode).eq("period_start",startDate)
+        .order("started_at",{ascending:false}).limit(1);
+      if(jobError)throw jobError;
+      return json({ok:true,period:mode,offset,periodStart:range.start,periodEnd:range.end,
+        snapshotStatus:jobs?.[0]?.job_status==="failed"?"failed":"missing",
+        previousAvailable:previous!==null,current:null,previous:previous?.metrics??null});
     }
-    // With fewer than five students, suppress question-level breakdowns.
-    const insufficient=allowed.size>0&&allowed.size<5;
-    const topWrong=insufficient?[]:Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,12)
-      .map(([question,count])=>({question,count}));
+    let report:any;
+    if(offset===0){
+      const {data:computed,error}=await admin.rpc("learning_compute_interval",{
+        p_from:range.start,p_to:range.currentEnd,p_grade:grade,
+        p_roster_type:"live",p_roster_period:mode,p_roster_start:startDate
+      });
+      if(error||!computed?.current)throw error||Error("LIVE_AGGREGATION_UNAVAILABLE");
+      report=computed;
+    }else{
+      report={cohortSize:past.cohort_size,current:past.metrics,study:past.study_metrics,
+        topWrong:past.top_wrong,smallCohortHidden:past.cohort_size>0&&past.cohort_size<5};
+    }
     return json({ok:true,period:mode,offset,periodStart:range.start,periodEnd:range.end,
       currentDataEnd:range.currentEnd,previousPeriodStart:range.previousStart,
-      previousDataEnd:range.compareEnd,partial:range.partial,weekStart:range.start,
-      previousWeekStart:range.previousStart,cohortSize:allowed.size,
-      current:aggregate,previous:baseline,topWrong,smallCohortHidden:insufficient});
+      previousDataEnd:offset===0?range.previousEnd:range.previousEnd,
+      partial:offset===0,snapshotStatus:offset===0?"live":"completed",
+      cohortBasis:past?.cohort_basis??null,calculatedAt:past?.calculated_at??null,
+      previousAvailable:previous!==null,cohortSize:report.cohortSize,
+      current:report.current,previous:previous?.metrics??null,study:report.study,
+      topWrong:report.topWrong,smallCohortHidden:report.smallCohortHidden});
   }
   return json({error:"UNKNOWN_ACTION"},400);
  }catch(e){console.error("learning-admin",e);return json({error:"SERVER_ERROR"},500);}
