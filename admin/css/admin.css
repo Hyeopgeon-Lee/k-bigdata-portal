@@ -70,3 +70,22 @@ body{background:var(--admin-bg);color:var(--admin-ink);overflow-x:hidden}
 @media(max-width:980px){.admin-grid--services{grid-template-columns:repeat(2,minmax(0,1fr))}.admin-header-links{gap:2px}.admin-header-links .admin-header-link{padding:8px}}
 @media(max-width:700px){.admin-header-inner.header-inner{width:min(calc(100% - 32px),1280px);gap:10px;min-height:70px;flex-wrap:wrap;padding:10px 0}.admin-header-links{order:3;justify-content:flex-start;width:100%;flex-basis:100%;gap:4px}.admin-main{width:min(calc(100% - 32px),1280px);padding:22px 0 55px}.admin-intro{align-items:flex-start;flex-direction:column;gap:12px;margin-bottom:22px}.admin-intro-link{min-height:38px}.admin-grid--featured,.admin-grid--services{grid-template-columns:1fr}.admin-tile{min-height:104px;padding:17px;gap:13px}.admin-tile--featured{min-height:120px}.admin-tile-symbol{width:40px;height:40px;flex-basis:40px}.admin-tile-copy strong{font-size:16px}.admin-tile--featured .admin-tile-copy strong{font-size:18px}.admin-section{margin-top:25px}.admin-section-head h2{font-size:19px}.admin-menu[aria-label="관리자 업무 메뉴"]{overflow-x:auto;flex-wrap:nowrap;scrollbar-width:thin;padding:8px;gap:4px;margin-bottom:15px}.admin-menu[aria-label="관리자 업무 메뉴"] a{flex:0 0 auto}.admin-inline-card,.admin-panel{padding:16px!important}.admin-brand-copy strong{font-size:14px}.admin-brand-copy small{font-size:11px}.admin-brand .brand-mark{width:38px;height:38px;flex-basis:38px}}
 @media(prefers-reduced-motion:reduce){.admin-tile{transition:none}.admin-tile:hover{transform:none}}
+
+/* New-signup mail delivery control, shared portal-card visual language. */
+.signup-admin-mail-settings{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:16px 0 23px;padding:18px 20px;border:1px solid #d7e3f2;border-radius:13px;background:#f6f9fe}
+.signup-admin-mail-copy{display:flex;flex-direction:column;gap:5px;min-width:0}
+.signup-admin-mail-copy>strong{color:#16376d;font-size:16px;font-weight:800;line-height:1.5}
+.signup-admin-mail-copy>p{margin:0;color:#556b84;font-size:13px;line-height:1.65;word-break:keep-all}
+.signup-admin-mail-copy>small{font-size:12px;line-height:1.5;color:#657992}
+.signup-admin-mail-control{display:inline-flex;flex:0 0 auto;align-items:center;gap:10px;cursor:pointer;font-size:13px;font-weight:800;color:#184275}
+.signup-admin-mail-control input{position:absolute;width:1px;height:1px;opacity:0}
+.signup-admin-mail-track{display:block;position:relative;flex:0 0 49px;width:49px;height:28px;border-radius:20px;background:#9caabc;transition:background .2s}
+.signup-admin-mail-track::after{content:"";position:absolute;width:22px;height:22px;left:3px;top:3px;background:#fff;border-radius:50%;box-shadow:0 1px 4px #16314b50;transition:transform .2s}
+.signup-admin-mail-control input:checked+.signup-admin-mail-track{background:#245ab0}
+.signup-admin-mail-control input:checked+.signup-admin-mail-track::after{transform:translateX(21px)}
+.signup-admin-mail-control input:focus-visible+.signup-admin-mail-track{outline:3px solid #35a4d5;outline-offset:3px}
+.signup-admin-mail-control input:disabled+.signup-admin-mail-track{opacity:.6;cursor:wait}
+.signup-admin-mail-control:has(input:disabled){cursor:wait}
+.portal-approval-item.portal-approval-target{border:2px solid #2e68b7;background:#f5f9ff;box-shadow:0 0 0 3px #d9eaff}
+.portal-approval-link-notice{margin:8px 0 16px;padding:13px 15px;background:#fff9e9;border:1px solid #eed9a1;border-radius:9px;color:#715319;font-size:13px;line-height:1.6}
+@media(max-width:640px){.signup-admin-mail-settings{flex-direction:column;align-items:stretch;padding:15px;gap:13px}.signup-admin-mail-control{align-self:flex-end}}
