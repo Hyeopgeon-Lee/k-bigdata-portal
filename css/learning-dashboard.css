@@ -217,3 +217,32 @@ body[data-page="my-learning"] .learn-sr-only{position:absolute!important;width:1
 [data-page="teacher-learning"] .learn-mail-switch-row input[type="checkbox"]:disabled{opacity:.55;cursor:wait}
 @media(max-width:530px){[data-page="teacher-learning"] .learn-mail-section{padding:16px 17px}[data-page="teacher-learning"] .learn-mail-switch-row{min-height:56px}[data-page="teacher-learning"] .learn-mail-switch-name{font-size:15px}}
 @media(prefers-reduced-motion:reduce){[data-page="teacher-learning"] .learn-mail-switch-row input[type="checkbox"],[data-page="teacher-learning"] .learn-mail-switch-row input[type="checkbox"]::after{transition:none}}
+
+/* Admin grade and period toggles (2026-11-13) */
+.learn-tools .learn-filter{width:100%;min-width:0;display:flex;align-items:center;gap:12px 24px;flex-wrap:wrap}
+.learn-filter .learn-control-row{display:flex;align-items:center;gap:11px;flex-wrap:wrap;min-width:0}
+.learn-filter .learn-control-title{font-size:14px;line-height:1.45;font-weight:800;color:#193960;white-space:nowrap}
+.learn-filter .learn-button-group{display:inline-flex;align-items:center;gap:3px;padding:4px;background:#edf3fb;border:1px solid #d8e4f3;border-radius:12px}
+.learn-tools .learn-filter .learn-choice-button{min-height:39px;padding:8px 15px;border:1px solid transparent;background:transparent;color:#334e71;border-radius:9px;font:750 14px/1.35 inherit;white-space:nowrap;box-shadow:none}
+.learn-tools .learn-filter .learn-choice-button:hover{background:#dae8fa}
+.learn-tools .learn-filter .learn-choice-button[aria-pressed="true"]{background:#173b72;border-color:#173b72;color:#fff}
+.learn-tools .learn-filter .learn-choice-button[aria-pressed="true"]:hover{background:#204b8c}
+.learn-filter .learn-period-navigation{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.learn-tools .learn-filter .learn-period-arrow,.learn-tools .learn-filter .learn-period-today{min-height:39px;padding:8px 12px;border:1px solid #cbd9ea;background:#fff;color:#234a78;font:750 13px/1.4 inherit;border-radius:9px;white-space:nowrap}
+.learn-filter .learn-period-label{display:inline-block;min-width:185px;text-align:center;color:#142e57;font-size:14px;font-weight:850;line-height:1.5;font-variant-numeric:tabular-nums}
+.learn-tools .learn-filter button:disabled{cursor:default;opacity:.48}
+.learn-tools .learn-filter button:focus-visible{outline:3px solid #8cbcf4;outline-offset:2px}
+@media(max-width:750px){
+ .learn-tools .learn-filter{align-items:stretch;gap:12px}
+ .learn-filter .learn-control-row{width:100%;justify-content:space-between}
+ .learn-filter .learn-period-navigation{width:100%;justify-content:center}
+ .learn-filter .learn-period-label{min-width:0;flex:1}
+ .learn-tools .learn-filter .learn-choice-button{padding:9px 13px}
+}
+@media(max-width:440px){
+ .learn-filter .learn-control-row{align-items:flex-start}
+ .learn-filter .learn-control-title{padding-top:9px}
+ .learn-tools .learn-filter .learn-choice-button{padding:9px 10px;font-size:13px}
+ .learn-filter .learn-period-navigation{gap:6px}
+ .learn-filter .learn-period-label{order:-1;width:100%;flex:auto;text-align:center}
+}
