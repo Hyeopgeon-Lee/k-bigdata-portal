@@ -2137,10 +2137,10 @@ export const javaProblems = [
     "topic": "배열",
     "title": "배열의 최솟값",
     "statement": "양의 정수 N과 정수 N개를 입력받으시오. 배열에서 가장 작은 값을 출력하시오.",
-    "input": "4 8 3 9 4",
+    "input": "4\n8 3 9 4",
     "output": "3",
     "hint": "최솟값의 시작값은 0이 아니라 첫 원소입니다.",
-    "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        int n=sc.nextInt(); // 배열에 저장할 숫자 개수를 입력받음\n        int[] arr=new int[n]; // n개 크기의 정수 배열을 생성\n        for(int i=0;i<n;i++){ // i를 0부터 n-1까지 증가\n            arr[i]=sc.nextInt(); // i번째 위치에 다음 정수를 저장\n        } // 전체 배열 입력을 완료\n        int answer=arr[0]; // 첫 원소 8로 최솟값 초기화\n        for(int i=1;i<n;i++){ // 두 번째 원소부터 비교\n            if(arr[i]<answer) answer=arr[i]; // 조건을 만족할 때만 answer 갱신\n        } // 배열 전체 비교 완료\n        System.out.println(answer); // 예제 최솟값 3 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
+    "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        System.out.print(\"배열 크기 : \");\n        System.out.flush();\n        int n=sc.nextInt(); // 배열에 저장할 숫자 개수를 입력받음\n        int[] arr=new int[n]; // n개 크기의 정수 배열을 생성\n        System.out.print(\"정수 : \");\n        System.out.flush();\n        for(int i=0;i<n;i++){ // i를 0부터 n-1까지 증가\n            arr[i]=sc.nextInt(); // i번째 위치에 다음 정수를 저장\n        } // 전체 배열 입력을 완료\n        int answer=arr[0]; // 첫 원소 8로 최솟값 초기화\n        for(int i=1;i<n;i++){ // 두 번째 원소부터 비교\n            if(arr[i]<answer) answer=arr[i]; // 조건을 만족할 때만 answer 갱신\n        } // 배열 전체 비교 완료\n        System.out.println(answer); // 예제 최솟값 3 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
     "explanation": "배열에 저장할 숫자 개수를 입력받음. n개 크기의 정수 배열을 생성. i를 0부터 n-1까지 증가. 예제 실행 결과는 answer → 8, answer → 3입니다. 확인할 조건: 전부 양수.",
     "trace": [
       [
@@ -2158,7 +2158,8 @@ export const javaProblems = [
     ],
     "constraints": "1≤N≤100, 각 값 절댓값≤10000",
     "edgeCases": "전부 양수",
-    "concept": "배열 순회"
+    "concept": "배열 순회",
+    "inputDisplay": "배열 크기 : 4\n정수 : 8 3 9 4"
   },
   {
     "id": "JAVA-060",
@@ -2167,10 +2168,10 @@ export const javaProblems = [
     "topic": "배열",
     "title": "배열의 홀짝 개수",
     "statement": "양의 정수 N과 정수 N개를 입력받으시오. 짝수 원소의 개수와 홀수 원소의 개수를 이 순서대로 공백으로 구분해 출력하시오.",
-    "input": "5 0 2 3 4 7",
+    "input": "5\n0 2 3 4 7",
     "output": "3 2",
     "hint": "0은 짝수입니다.",
-    "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        int n=sc.nextInt(); // 배열에 저장할 숫자 개수를 입력받음\n        int[] arr=new int[n]; // n개 크기의 정수 배열을 생성\n        for(int i=0;i<n;i++){ // i를 0부터 n-1까지 증가\n            arr[i]=sc.nextInt(); // i번째 위치에 다음 정수를 저장\n        } // 전체 배열 입력을 완료\n        int evens=0, odds=0; // 짝수·홀수 개수 초기값 0\n        for(int x:arr){ // 배열 원소를 순서대로 x에 전달\n            if(x%2==0) evens++; // 0,2,4에서 evens:0→1→2→3\n            else odds++; // 3,7에서 odds:0→1→2\n        } // 전체 원소 판별 완료\n        System.out.println(evens + \" \" + odds); // 3 2 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
+    "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        System.out.print(\"배열 크기 : \");\n        System.out.flush();\n        int n=sc.nextInt(); // 배열에 저장할 숫자 개수를 입력받음\n        int[] arr=new int[n]; // n개 크기의 정수 배열을 생성\n        System.out.print(\"정수 : \");\n        System.out.flush();\n        for(int i=0;i<n;i++){ // i를 0부터 n-1까지 증가\n            arr[i]=sc.nextInt(); // i번째 위치에 다음 정수를 저장\n        } // 전체 배열 입력을 완료\n        int evens=0, odds=0; // 짝수·홀수 개수 초기값 0\n        for(int x:arr){ // 배열 원소를 순서대로 x에 전달\n            if(x%2==0) evens++; // 0,2,4에서 evens:0→1→2→3\n            else odds++; // 3,7에서 odds:0→1→2\n        } // 전체 원소 판별 완료\n        System.out.println(evens + \" \" + odds); // 3 2 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
     "explanation": "배열에 저장할 숫자 개수를 입력받음. n개 크기의 정수 배열을 생성. i를 0부터 n-1까지 증가. 예제 실행 결과는 evens → 3, odds → 2입니다. 확인할 조건: 0 포함.",
     "trace": [
       [
@@ -2200,7 +2201,8 @@ export const javaProblems = [
     ],
     "constraints": "1≤N≤100, 각 값 절댓값≤10000",
     "edgeCases": "0 포함",
-    "concept": "배열, 조건"
+    "concept": "배열, 조건",
+    "inputDisplay": "배열 크기 : 5\n정수 : 0 2 3 4 7"
   },
   {
     "id": "JAVA-061",
@@ -2209,10 +2211,10 @@ export const javaProblems = [
     "topic": "배열",
     "title": "배열을 역순으로 출력",
     "statement": "양의 정수 N과 정수 N개를 입력받으시오. 배열의 마지막 원소부터 첫 원소까지 공백으로 구분해 출력하시오.",
-    "input": "4 10 20 30 40",
+    "input": "4\n10 20 30 40",
     "output": "40 30 20 10",
     "hint": "마지막 원소의 인덱스는 n-1입니다.",
-    "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        int n=sc.nextInt(); // 배열에 저장할 숫자 개수를 입력받음\n        int[] arr=new int[n]; // n개 크기의 정수 배열을 생성\n        for(int i=0;i<n;i++){ // i를 0부터 n-1까지 증가\n            arr[i]=sc.nextInt(); // i번째 위치에 다음 정수를 저장\n        } // 전체 배열 입력을 완료\n        StringBuilder out=new StringBuilder(); // 출력 문자열 준비\n        for(int i=n-1;i>=0;i--){ // 마지막 인덱스부터 0까지 감소\n            if(i<n-1) out.append(\" \"); // 첫 값 이후부터 공백 추가\n            out.append(arr[i]); // i=3,2,1,0 위치의 값 추가\n        } // i=-1이면 종료\n        System.out.println(out); // 40 30 20 10 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
+    "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        System.out.print(\"배열 크기 : \");\n        System.out.flush();\n        int n=sc.nextInt(); // 배열에 저장할 숫자 개수를 입력받음\n        int[] arr=new int[n]; // n개 크기의 정수 배열을 생성\n        System.out.print(\"정수 : \");\n        System.out.flush();\n        for(int i=0;i<n;i++){ // i를 0부터 n-1까지 증가\n            arr[i]=sc.nextInt(); // i번째 위치에 다음 정수를 저장\n        } // 전체 배열 입력을 완료\n        StringBuilder out=new StringBuilder(); // 출력 문자열 준비\n        for(int i=n-1;i>=0;i--){ // 마지막 인덱스부터 0까지 감소\n            if(i<n-1) out.append(\" \"); // 첫 값 이후부터 공백 추가\n            out.append(arr[i]); // i=3,2,1,0 위치의 값 추가\n        } // i=-1이면 종료\n        System.out.println(out); // 40 30 20 10 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
     "explanation": "배열에 저장할 숫자 개수를 입력받음. n개 크기의 정수 배열을 생성. i를 0부터 n-1까지 증가. 예제 실행 결과는 out → 40 30, out → 40 30 20 10입니다. 확인할 조건: N=1.",
     "trace": [
       [
@@ -2242,7 +2244,8 @@ export const javaProblems = [
     ],
     "constraints": "1≤N≤100, 정수 N개",
     "edgeCases": "N=1",
-    "concept": "역방향 인덱스"
+    "concept": "역방향 인덱스",
+    "inputDisplay": "배열 크기 : 4\n정수 : 10 20 30 40"
   },
   {
     "id": "JAVA-062",
@@ -2251,10 +2254,10 @@ export const javaProblems = [
     "topic": "배열",
     "title": "배열의 목표값 개수",
     "statement": "양의 정수 N, 정수 N개, 찾을 정수 target을 입력받으시오. 배열에서 target과 같은 원소가 몇 개인지 출력하시오.",
-    "input": "5 3 2 3 1 3 3",
+    "input": "5\n3 2 3 1 3\n3",
     "output": "3",
     "hint": "목표값은 배열 N개를 입력받은 후 읽습니다.",
-    "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        int n=sc.nextInt(); // 배열에 저장할 숫자 개수를 입력받음\n        int[] arr=new int[n]; // n개 크기의 정수 배열을 생성\n        for(int i=0;i<n;i++){ // i를 0부터 n-1까지 증가\n            arr[i]=sc.nextInt(); // i번째 위치에 다음 정수를 저장\n        } // 전체 배열 입력을 완료\n        int target=sc.nextInt(); // 마지막 입력 3 → target=3\n        int count=0; // 일치 개수 초기화\n        for(int value:arr){ // 배열을 순서대로 검사\n            if(value==target) count++; // 3이 세 번 나오므로 count:0→1→2→3\n        } // 모든 원소 비교 완료\n        System.out.println(count); // 3 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
+    "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        System.out.print(\"배열 크기 : \");\n        System.out.flush();\n        int n=sc.nextInt(); // 배열에 저장할 숫자 개수를 입력받음\n        int[] arr=new int[n]; // n개 크기의 정수 배열을 생성\n        System.out.print(\"정수 : \");\n        System.out.flush();\n        for(int i=0;i<n;i++){ // i를 0부터 n-1까지 증가\n            arr[i]=sc.nextInt(); // i번째 위치에 다음 정수를 저장\n        } // 전체 배열 입력을 완료\n        System.out.print(\"목표값 : \");\n        System.out.flush();\n        int target=sc.nextInt(); // 마지막 입력 3 → target=3\n        int count=0; // 일치 개수 초기화\n        for(int value:arr){ // 배열을 순서대로 검사\n            if(value==target) count++; // 3이 세 번 나오므로 count:0→1→2→3\n        } // 모든 원소 비교 완료\n        System.out.println(count); // 3 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
     "explanation": "배열에 저장할 숫자 개수를 입력받음. n개 크기의 정수 배열을 생성. i를 0부터 n-1까지 증가. 예제 실행 결과는 target → 3, count → 3입니다. 확인할 조건: 없는 값.",
     "trace": [
       [
@@ -2272,7 +2275,8 @@ export const javaProblems = [
     ],
     "constraints": "1≤N≤100, 정수 N개와 target",
     "edgeCases": "없는 값",
-    "concept": "선형 탐색"
+    "concept": "선형 탐색",
+    "inputDisplay": "배열 크기 : 5\n정수 : 3 2 3 1 3\n목표값 : 3"
   },
   {
     "id": "JAVA-063",
