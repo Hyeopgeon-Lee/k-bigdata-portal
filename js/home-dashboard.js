@@ -238,7 +238,8 @@ function renderHighlights(){
   }
 }
 installFavoriteButtons();
-renderGrade();
+// Home persona is resolved after the server-authorized profile is available.
+// Avoid showing an unregistered-student heading before admin role verification.
 document.addEventListener("click",event=>{
   const star=event.target.closest?.("button[data-favorite]");
   if(star){
