@@ -48,7 +48,8 @@ window.portalMemberName=()=>String(currentProfile?.full_name||"").trim()||"ì´ë¦
 window.portalHomeProfile=()=>window.portalLearning?.read&&currentProfile?{
  signup_type:currentProfile.signup_type,
  academic_year:currentProfile.academic_year,
- enrollment_status:currentProfile.enrollment_status
+ enrollment_status:currentProfile.enrollment_status,
+ is_admin:isAdmin
 }:null;
 let isAdmin=false;
 let inRecovery=false;
