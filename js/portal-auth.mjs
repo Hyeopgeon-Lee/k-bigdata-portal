@@ -340,13 +340,17 @@ function renderAccount(){
   addAction(accountSettings,{title:"마이페이지",detail:"내 정보 · 비밀번호 · 학적 상태",href:"mypage.html"});
   if(!isAdmin&&["student","alumni"].includes(currentProfile?.signup_type))addAction(accountSettings,{title:"나의 자격증",detail:"필기합격 · 최종합격 등록과 확인",href:"my-certifications.html"});
 
-  const learning=addSection("학습");
-  addAction(learning,{title:"나의 학습현황",detail:"풀이 기록과 오답 복습",href:"my-learning.html"});
-  if(currentProfile?.enrollment_status==="enrolled"&&currentProfile?.signup_type!=="alumni")addAction(learning,{title:"자율학습 관리",detail:"주간 학습계획·공부시간 기록",href:"study.html"});
+  // Personal learning and device-data migration belong to student/alumni accounts only.
+  // The admin account uses dedicated faculty dashboards, not personal study tools.
+  if(!isAdmin){
+    const learning=addSection("학습");
+    addAction(learning,{title:"나의 학습현황",detail:"풀이 기록과 오답 복습",href:"my-learning.html"});
+    if(currentProfile?.enrollment_status==="enrolled"&&currentProfile?.signup_type!=="alumni")addAction(learning,{title:"자율학습 관리",detail:"주간 학습계획·공부시간 기록",href:"study.html"});
 
-  if(activeWrite){
-    const settings=addSection("개인 설정");
-    addAction(settings,{title:"기존 기록 가져오기",detail:"이 기기의 즐겨찾기·할 일을 계정으로 옮기기",onClick:importDevicePersonalData,secondary:true});
+    if(activeWrite){
+      const settings=addSection("개인 설정");
+      addAction(settings,{title:"기존 기록 가져오기",detail:"이 기기의 즐겨찾기·할 일을 계정으로 옮기기",onClick:importDevicePersonalData,secondary:true});
+    }
   }
   if(isAdmin){
     const management=addSection("관리자");
