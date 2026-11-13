@@ -17,7 +17,7 @@ for(const name of ["index","accounts","learning","certifications","rooms","help"
  assert.match(page,/admin-header-inner header-inner/,"consistent header "+name);
  assert.match(page,/ADMIN PORTAL/,"common page eyebrow "+name);
  assert.match(page,/admin-brand-copy brand-copy/,"common portal branding "+name);
- assert.match(page,/admin.css\?v=20261113-portal-home-unified-1/,"updated styles "+name);
+ assert.match(page,/admin.css\?v=20261113-(?:portal-home-unified|signup-notification)-1/,"updated styles "+name);
  if(name!=="index")assert.match(page,/aria-label="관리자 업무 메뉴"/,"common subpage nav "+name);
 }
 
