@@ -49,6 +49,8 @@ try{
       });
       assert.ok(narrow.pageWidth<=narrow.viewport+1,"alumni mobile has no global horizontal overflow");
       assert.ok(narrow.localScroll,"wide alumni tables scroll within their panel");
+      const tabWidth=await page.locator(".alumni-admin .tabs button").first().evaluate(node=>Math.round(node.getBoundingClientRect().width));
+      assert.ok(tabWidth<200,"mobile alumni tabs must not consume the entire viewport width");
       assert.equal(narrow.nowrap,true,"all eight alumni table headings stay on one line");
       await page.screenshot({path:"ui-screenshots/admin/alumni-admin-mobile.png",fullPage:true});
       await page.setViewportSize({width:1280,height:900});
