@@ -9,7 +9,7 @@ const link=service=>{const ext=/^https:\/\//.test(service.url);return '<a href="
 // Only the authenticated profile determines the dashboard's grade.
 let selectedGrade=null;
 const isGraduateProfile=profile=>Boolean(profile)&&(profile.signup_type==="alumni"||profile.enrollment_status==="graduated");
-const isAdminProfile=profile=>profile?.is_admin===true;
+const isAdminProfile=profile=>profile?.is_admin===true||profile?.signup_type==="staff";
 let graduateMode=false;
 let adminMode=false;
 function showGraduateHome(){
