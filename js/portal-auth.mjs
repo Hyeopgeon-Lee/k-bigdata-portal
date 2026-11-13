@@ -44,6 +44,12 @@ let currentProfile=null;
 // Share the verified, server-backed display name across all portal pages.
 // An email address must never be used as a visible member-name fallback.
 window.portalMemberName=()=>String(currentProfile?.full_name||"").trim()||"이름 미등록";
+// Grade on the home page comes solely from the authorized member profile.
+window.portalHomeProfile=()=>window.portalLearning?.read&&currentProfile?{
+ signup_type:currentProfile.signup_type,
+ academic_year:currentProfile.academic_year,
+ enrollment_status:currentProfile.enrollment_status
+}:null;
 let isAdmin=false;
 let inRecovery=false;
 const resetLink=location.origin+"/index.html";
@@ -383,12 +389,8 @@ async function importDevicePersonalData(){
    const {error}=await client.from("daily_task_checks").upsert(rows,{onConflict:"user_id,task_date,task_key"});
    if(error)throw error;
   }
-  const savedGrade=localStorage.getItem("kbigdata:home-grade:v1");
-  if(["1","2"].includes(savedGrade)){
-   const {error}=await client.from("user_preferences").upsert({user_id:currentUser.id,preferred_grade:savedGrade},{onConflict:"user_id"});
-   if(error)throw error;
-  }
-  status("기존 개인 설정 "+(imported+rows.length)+"건을 가져왔습니다. 학년 설정이 있다면 함께 반영했습니다.");
+
+   status("기존 즐겨찾기·할 일 "+(imported+rows.length)+"건을 가져왔습니다. 학년은 포털 회원정보를 따릅니다.");
   window.dispatchEvent(new Event("portal-personal-updated"));
   window.dispatchEvent(new Event("portal-learning-ready"));
  }catch(error){console.error("Device import failed",error);status("기존 기록을 가져오지 못했습니다. 새로고침 후 다시 시도해 주세요.");}
