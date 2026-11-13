@@ -6,11 +6,8 @@ const esc=v=>String(v??"").replace(/[&<>'"]/g,char=>({"&":"&amp;","<":"&lt;",">"
 const serviceById=id=>services.find(service=>service.id===id);
 const link=service=>{const ext=/^https:\/\//.test(service.url);return '<a href="'+esc(service.url)+'"'+(ext?' target="_blank" rel="noopener noreferrer"':'')+'>'+esc(service.name)+' <span aria-hidden="true">'+(ext?'↗':'→')+'</span>'+(ext?'<span class="sr-only">외부 사이트 새 창</span>':'')+'</a>';};
 
-// Presentation preference only: does not grant access or hide any service.
-let accountGrade=null;
-let gradeSelectionRevision=0;
-const readSavedGrade=()=>accountGrade;
-let selectedGrade=readSavedGrade()||"1";
+// Only the authenticated profile determines the dashboard's grade.
+let selectedGrade=null;
 const isGraduateProfile=profile=>Boolean(profile)&&(profile.signup_type==="alumni"||profile.enrollment_status==="graduated");
 let graduateMode=false;
 function showGraduateHome(){
@@ -70,7 +67,7 @@ const quickGlyph=Object.freeze({
 });
 function renderQuickActions(){
  const grid=$(".dashboard-action-grid");
- if(!grid)return;
+ if(!grid||!selectedGrade||graduateMode)return;
  const favorites=new Set(getFavorites());
  const cards=gradeLayouts[selectedGrade].actions.map(id=>{
   const service=serviceById(id);
@@ -89,16 +86,29 @@ function renderQuickActions(){
 }
 function renderGrade(){
  if(graduateMode)return;
- const layout=gradeLayouts[selectedGrade];
- document.body.dataset.homeGrade=selectedGrade;
- const heading=$("#hero-title"),lead=$("#hero-description"),quick=$("#dashboard-start-title"),highlights=$("#dashboard-highlights-title");
- if(heading)heading.textContent=layout.title;
- if(lead)lead.textContent=layout.lead;
- if(quick)quick.textContent=layout.quickTitle;
- if(highlights)highlights.textContent=layout.highlightTitle;
- for(const button of document.querySelectorAll("button[data-home-grade]")){
-  const pressed=button.dataset.homeGrade===selectedGrade;
-  button.setAttribute("aria-pressed",String(pressed));
+ const layout=selectedGrade?gradeLayouts[selectedGrade]:null;
+ document.body.dataset.homeGrade=selectedGrade||"unregistered";
+ const heading=$("#hero-title"),lead=$("#hero-description");
+ const quick=$("#dashboard-start-title"),highlights=$("#dashboard-highlights-title");
+ if(heading)heading.textContent=layout?.title||"학년 정보가 등록되지 않았습니다.";
+ if(lead)lead.textContent=layout?.lead||"마이페이지에서 현재 학년을 등록하면 학년별 메인화면이 자동으로 표시됩니다.";
+ if(quick&&layout)quick.textContent=layout.quickTitle;
+ if(highlights&&layout)highlights.textContent=layout.highlightTitle;
+ const gradeLabel=$("#home-grade-label");
+ if(gradeLabel)gradeLabel.textContent=selectedGrade?selectedGrade+"학년":"학년 미등록";
+ const status=$("#home-grade-status");
+ if(status)status.textContent=selectedGrade
+   ?"포털 회원정보에 등록된 학년이 자동 적용되었습니다."
+   :"마이페이지에서 학적 상태와 학년을 확인해 주세요.";
+ const link=$("#home-grade-action");
+ if(link)link.hidden=Boolean(selectedGrade);
+ // Missing grade must not show the first-year schedule or activities by default.
+ for(const selector of [".dashboard-start",".home-today",".home-alerts"]){
+  const section=$(selector);if(section)section.hidden=!selectedGrade;
+ }
+ if(!layout){
+  $(".dashboard-action-grid")?.replaceChildren();
+  return;
  }
  const notice=$("#home-alerts-subtitle");
  if(notice)notice.textContent=selectedGrade==="1"
@@ -108,45 +118,19 @@ function renderGrade(){
  if(practiceDescription)practiceDescription.textContent=selectedGrade==="1"
   ?"코드 읽기·값 추적·SQL 기초부터 익혀 보세요."
   :"정보처리기사·산업기사 실전 기출과 취약 영역을 반복 학습하세요.";
- const status=$("#home-grade-status");
- if(status)status.textContent=readSavedGrade()
-   ?"현재 "+selectedGrade+"학년 화면 · 언제든 변경할 수 있습니다."
-   :"학년별 추천 서비스";
  renderQuickActions();
  renderPersonal();
  renderHighlights();
  window.dispatchEvent(new CustomEvent("kbigdata:home-gradechange",{detail:{grade:selectedGrade}}));
 }
-function chooseGrade(grade){
- if(graduateMode||grade!=="1"&&grade!=="2")return;
- selectedGrade=grade;
- accountGrade=grade;
- gradeSelectionRevision++;
- renderGrade();
- void saveAccountGrade(grade);
-}
 
-async function loadAccountGrade(){
- const client=globalThis.portalSupabaseClient;if(!client||!globalThis.portalLearning?.read)return;
- const revision=gradeSelectionRevision;
- const {data:{user},error}=await client.auth.getUser();if(error||!user)return;
- const [profile,preference]=await Promise.all([
-  client.from("profiles").select("signup_type,academic_year,enrollment_status").eq("user_id",user.id).maybeSingle(),
-  client.from("user_preferences").select("preferred_grade").eq("user_id",user.id).maybeSingle()
- ]);
- if(gradeSelectionRevision!==revision)return;
- if(!profile.error&&isGraduateProfile(profile.data)){showGraduateHome();return;}
- const signupGrade=profile.error||profile.data?.signup_type!=="student"?null:
-   [1,2].includes(Number(profile.data?.academic_year))?String(profile.data.academic_year):null;
- const savedGrade=preference.error?null:preference.data?.preferred_grade;
- const grade=["1","2"].includes(savedGrade)?savedGrade:signupGrade;
- if(grade){accountGrade=grade;selectedGrade=grade;renderGrade();}
-}
-async function saveAccountGrade(grade){
- const client=globalThis.portalSupabaseClient;if(!client||!globalThis.portalLearning?.write)return;
- const {data:{user},error}=await client.auth.getUser();if(error||!user)return;
- const result=await client.from("user_preferences").upsert({user_id:user.id,preferred_grade:grade},{onConflict:"user_id"});
- if(result.error){console.error(result.error);const status=$("#home-grade-status");if(status)status.textContent="학년 설정을 저장하지 못했습니다. 다시 선택해 주세요.";}
+function loadAccountGrade(){
+ if(!globalThis.portalLearning?.read)return;
+ const profile=globalThis.portalHomeProfile?.();
+ if(isGraduateProfile(profile)){showGraduateHome();return;}
+ const registeredGrade=profile?.signup_type==="student"?String(profile.academic_year??""):"";
+ selectedGrade=["1","2"].includes(registeredGrade)?registeredGrade:null;
+ renderGrade();
 }
 let activeTab = getFavorites().length ? "favorites" : getRecent().length ? "recent" : "favorites";
 const panels = {favorites:"#favorite-services",recent:"#recent-services"};
@@ -221,7 +205,8 @@ function deadlineLink(){
 }
 function renderHighlights(){
   const root=$("#dashboard-highlights");
-  if(!root)return;
+  if(!root||!selectedGrade||graduateMode)return;
+  if(!selectedGrade||graduateMode)return;
   if(selectedGrade==="1"){
     const allowed=["docs","jobs","project-guide","certifications","practical"];
     const ids=[...new Set([...getRecent().filter(id=>allowed.includes(id)),"docs","project-guide"])].slice(0,2);
@@ -235,8 +220,6 @@ function renderHighlights(){
 installFavoriteButtons();
 renderGrade();
 document.addEventListener("click",event=>{
-  const gradeButton=event.target.closest?.("button[data-home-grade]");
-  if(gradeButton){chooseGrade(gradeButton.dataset.homeGrade);return;}
   const star=event.target.closest?.("button[data-favorite]");
   if(star){
     const active=toggleFavorite(star.dataset.favorite);
@@ -257,5 +240,5 @@ document.querySelector(".dashboard-personal-tabs")?.addEventListener("keydown",e
 });
 window.addEventListener("portal-personal-updated",()=>{renderPersonal();renderQuickActions();renderHighlights();});
 
-window.addEventListener("portal-learning-ready",()=>{renderGrade();void loadAccountGrade();});
-if(globalThis.portalLearning?.read)void loadAccountGrade();
+window.addEventListener("portal-learning-ready",loadAccountGrade);
+if(globalThis.portalLearning?.read)loadAccountGrade();
