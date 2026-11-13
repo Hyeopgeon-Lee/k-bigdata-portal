@@ -92,17 +92,64 @@ async function renderApprovalRequests(){
   if(!isAdmin){renderAccount();return;}
   card("가입 승인 요청",
     '<p class="portal-auth-lead">가입 신청 후 이메일 인증을 마친 회원의 승인 요청만 표시합니다. 승인 시 신청자에게 포털 이용 안내 메일이 발송됩니다.</p>'+
+    '<section class="signup-admin-mail-settings" aria-labelledby="signup-admin-mail-title">'+
+      '<div class="signup-admin-mail-copy"><strong id="signup-admin-mail-title">신규 가입 관리자 알림 메일</strong>'+
+      '<p>이메일 인증 완료 후 승인 대기자가 등록되면 관리자에게 메일을 보냅니다.</p>'+
+      '<small>수신: hglee67@kopo.ac.kr</small><small id="signup-admin-mail-status" role="status">발송 설정 확인 중…</small></div>'+
+      '<label class="signup-admin-mail-control" for="signup-admin-mail-toggle">'+
+        '<input type="checkbox" id="signup-admin-mail-toggle" role="switch" disabled aria-label="신규 가입 관리자 알림 메일 발송">'+
+        '<span class="signup-admin-mail-track" aria-hidden="true"></span>'+
+        '<span id="signup-admin-mail-state">확인 중</span>'+
+      '</label></section>'+
     '<p id="portal-approval-count" class="portal-approval-count" role="status">승인 대기 목록 확인 중…</p>'+
     '<div id="portal-approval-list" class="portal-approval-list" aria-label="가입 승인 대기 목록"></div>'+
     '<div id="portal-approval-retry" class="portal-approval-retry" hidden></div>'+
     '<div class="portal-auth-actions"><button id="portal-approval-back" type="button">내 계정으로 돌아가기</button></div>');
   $(".portal-auth-card").classList.add("portal-requests-card");
   $("#portal-approval-back").addEventListener("click",renderAccount);
+  // Read/write this global delivery switch only through the super-admin-gated Edge API.
+  const mailToggle=$("#signup-admin-mail-toggle");
+  const mailStatus=$("#signup-admin-mail-status");
+  const mailState=$("#signup-admin-mail-state");
+  const displayMailSetting=(enabled)=>{
+    mailToggle.checked=enabled;mailState.textContent=enabled?"ON":"OFF";
+    mailStatus.textContent=enabled?"신규 가입 승인 요청 메일을 발송합니다.":"발송 중지 중 · 관리자 승인 및 학생 안내 메일은 정상 작동합니다.";
+  };
+  const {data:mailSettings,error:mailSettingError}=await client.functions.invoke("notify-signup-admin",{
+    body:{action:"settings"}
+  });
+  if(mailSettingError||!mailSettings?.ok){
+    mailStatus.textContent="알림 설정을 읽지 못했습니다. 페이지를 새로고침해 주세요.";
+    mailState.textContent="확인 실패";
+  }else{
+    displayMailSetting(mailSettings.enabled===true);
+    mailToggle.disabled=false;
+  }
+  mailToggle.addEventListener("change",async()=>{
+    const desired=mailToggle.checked;
+    mailToggle.disabled=true;mailState.textContent="저장 중";
+    mailStatus.textContent="알림 설정을 저장하고 있습니다.";
+    try{
+      const {data:result,error:saveError}=await client.functions.invoke("notify-signup-admin",{
+        body:{action:"set_settings",enabled:desired}
+      });
+      if(saveError||!result?.ok)throw saveError||Error("MAIL_SETTING_SAVE_FAILED");
+      displayMailSetting(result.enabled===true);
+    }catch{
+      displayMailSetting(!desired);
+      mailStatus.textContent="설정을 저장하지 못했습니다. 다시 시도해 주세요.";
+    }finally{mailToggle.disabled=false;}
+  });
   const {data,error}=await client.rpc("admin_list_students");
   const list=$("#portal-approval-list");
   if(!list)return;
   if(error){$("#portal-approval-count").textContent="승인 요청을 불러오지 못했습니다.";return;}
   const pending=(data||[]).filter(member=>member.approval_status==="pending");
+  // Links in admin notification emails focus the exact signup request;
+  // the link itself can never approve a member without this page's admin session.
+  const mailTarget=new URLSearchParams(location.search).get("approve");
+  const targetUserId=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(mailTarget||"")?mailTarget:null;
+  let targetItem=null;
   const count=$("#portal-approval-count");
   let remaining=pending.length;
   const redraw=()=>{
@@ -130,7 +177,7 @@ async function renderApprovalRequests(){
     details.append(id,email,date);
     const actions=document.createElement("div");actions.className="portal-approval-buttons";
     const approve=document.createElement("button");approve.type="button";approve.className="portal-approval-accept";
-    approve.textContent="승인 및 이메일 발송";
+    approve.textContent=member.user_id===targetUserId?"이 회원 가입 승인하기":"승인 및 이메일 발송";
     const reject=document.createElement("button");reject.type="button";reject.className="portal-approval-reject";
     reject.textContent="반려";
     const busy=(value)=>{approve.disabled=value;reject.disabled=value;};
@@ -171,8 +218,29 @@ async function renderApprovalRequests(){
       item.remove();remaining--;redraw();status(member.full_name+"님의 가입 요청을 반려했습니다.");
     });
     actions.append(approve,reject);item.append(top,details,actions);list.append(item);
+    if(member.user_id===targetUserId)targetItem=item;
   }
   redraw();
+  if(targetUserId){
+    if(targetItem){
+      targetItem.classList.add("portal-approval-target");
+      targetItem.setAttribute("aria-label","메일에서 선택한 가입 신청");
+      list.prepend(targetItem);
+      const targetButton=targetItem.querySelector(".portal-approval-accept");
+      targetButton?.focus({preventScroll:true});
+      targetItem.scrollIntoView({block:"center",behavior:"smooth"});
+    }else{
+      const already=(data||[]).find(member=>member.user_id===targetUserId);
+      const message=document.createElement("p");
+      message.className="portal-approval-link-notice";
+      message.textContent=already?.approval_status==="approved"
+        ?"메일에서 선택한 회원은 이미 승인되었습니다."
+        :already?.approval_status==="rejected"
+          ?"메일에서 선택한 가입 요청은 반려 처리되었습니다."
+          :"해당 승인 대기 요청을 찾을 수 없습니다.";
+      list.prepend(message);
+    }
+  }
 }
 
 async function renderAdmin(){
