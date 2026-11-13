@@ -218,11 +218,11 @@ async function renderAdmin(){
     const mailStatus=document.createElement("span");mailStatus.className="portal-admin-mail-status";
     const updateMailStatus=()=>{
       const graduated=member.signup_type==="alumni"||["graduated","early_employment"].includes(enrollment.value);
-      // No weekly mail controls for alumni, including graduates who originally signed up as students.
-      mailTd.hidden=graduated;
-      const eligible=approval.value==="approved"&&enrollment.value==="enrolled"&&member.signup_type!=="alumni";
+      // Keep the column in place: hiding the td shifts the account-save button
+      // under the weekly-mail header for graduates and early-employed members.
+      const eligible=!graduated&&approval.value==="approved"&&enrollment.value==="enrolled";
       const unsaved=approval.value!==member.approval_status||enrollment.value!==member.enrollment_status;
-      mailStatus.textContent=(eligible?"발송 후보":"발송 제외")+(unsaved?" · 저장 전":"");
+      mailStatus.textContent=graduated?"대상 아님":(eligible?"발송 후보":"발송 제외")+(unsaved?" · 저장 전":"");
       mailStatus.dataset.eligible=String(eligible);
     };
     approval.addEventListener("change",updateMailStatus);
