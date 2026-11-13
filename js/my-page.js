@@ -21,6 +21,10 @@ async function start(){
  byId("my-page-student-no").textContent=profile.signup_type==="student"?(profile.student_no||"-"):profile.signup_type==="alumni"?profile.graduation_year+"년 졸업":"관리자";
  byId("my-page-enrollment").textContent=profile.signup_type==="student"?statusLabel(profile):profile.signup_type==="alumni"?"졸업생":"관리자";
  byId("my-page-state").textContent=profile.approval_status==="approved"?"승인 완료":"승인 확인 필요";
+ // Personal qualifications are for members, not portal administrators.
+ // Default-hidden shortcut is exposed only after both checks pass.
+ const {data:adminAllowed,error:adminCheckError}=await api.rpc("portal_super_admin_allowed");
+ byId("my-page-cert-shortcut").hidden=Boolean(adminCheckError)||adminAllowed!==false||!["student","alumni"].includes(profile.signup_type);
  if(["student","alumni"].includes(profile.signup_type)){
   byId("my-page-mobile-summary").hidden=false;
   byId("my-page-mobile-summary-value").textContent=profile.mobile_phone?displayMobile(profile.mobile_phone):"미등록";
