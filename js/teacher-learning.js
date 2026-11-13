@@ -74,7 +74,25 @@ function renderFilters(){
  const today=node('button','현재 기간','learn-period-today');
  today.type='button';today.id='teacher-period-current';
  today.addEventListener('click',()=>{if(periodOffset===0)return;periodOffset=0;void load();});
- history.append(previous,label,next,today);panel.append(history);
+ const rebuild=node('button','재집계','learn-period-arrow');
+ rebuild.type='button';rebuild.id='teacher-period-rebuild';
+ rebuild.setAttribute('aria-label','선택한 과거 기간 통계 재집계');
+ rebuild.addEventListener('click',async()=>{
+  if(periodOffset===0||rebuild.disabled)return;
+  if(!confirm('선택한 기간의 학습 통계를 다시 계산할까요? 과거 학년별 집계 대상은 유지됩니다.'))return;
+  rebuild.disabled=true;get('teacher-status').textContent='통계를 재집계하는 중입니다...';
+  try{
+   const {data,error}=await db.functions.invoke('learning-admin',{body:{action:'reaggregate',period:periodMode,offset:periodOffset}});
+   if(error||!data?.ok)throw error||Error('재집계 실패');
+   await load();
+  }catch(error){
+   console.error('Reaggregate learning statistics',error);
+   get('teacher-status').textContent='재집계에 실패했습니다. 관리자 권한 및 배치 오류를 확인해 주세요.';
+  }finally{rebuild.disabled=false;}
+ });
+ const state=node('span','집계 중','learn-period-state');
+ state.id='teacher-period-state';state.dataset.state='live';state.setAttribute('role','status');
+ history.append(previous,label,next,today,rebuild,state);panel.append(history);
  get('teacher-refresh').parentElement.prepend(panel);
  updatePeriodControls();
 }
@@ -84,6 +102,14 @@ function updatePeriodControls(data){
  previous.disabled=periodOffset<=(periodMode==='week'?-52:-24);
  next.disabled=periodOffset>=0;
  current.disabled=periodOffset===0;
+ const rebuild=get('teacher-period-rebuild');
+ if(rebuild)rebuild.hidden=periodOffset>=0;
+ const state=get('teacher-period-state');
+ if(state){
+  const kind=data?.snapshotStatus||(periodOffset===0?'live':'loading');
+  state.dataset.state=kind;
+  state.textContent=({live:'집계 중',completed:'확정',missing:'미생성',failed:'집계 오류',loading:'조회 중'})[kind]||'확인 필요';
+ }
  const periodLabel=get('teacher-period-label');
  if(data?.periodStart&&data?.periodEnd){
   const last=new Date(Date.parse(data.periodEnd)-1).toISOString();
@@ -100,47 +126,75 @@ async function load(){
   action:'summary',period:periodMode,offset:periodOffset,...(gradeFilter?{grade:Number(gradeFilter)}:{})
  }});
  if(sequence!==requestSequence)return;
- if(error||!data?.ok||!data.current){get('teacher-content').hidden=true;status.textContent='학습통계를 조회하지 못했습니다. 관리자 권한과 서버 상태를 확인해 주세요.';return;}
+ if(error||!data?.ok){
+  get('teacher-content').hidden=true;
+  status.textContent='학습통계를 조회하지 못했습니다. 관리자 권한과 서버 상태를 확인해 주세요.';
+  return;
+ }
  updatePeriodControls(data);
+ if(!data.current){
+  get('teacher-content').hidden=true;
+  status.textContent=data.snapshotStatus==='failed'?
+   '선택한 기간의 자동 집계가 실패했습니다. 재집계 버튼을 이용해 주세요.':
+   '선택한 기간의 확정 통계가 아직 없습니다. 자동 복구 또는 재집계를 이용해 주세요.';
+  return;
+ }
  get('teacher-content').hidden=false;
  const a=data.current,b=data.previous;
  const thisPeriod=periodMode==='week'?'해당 주':'해당 월';
  const lastPeriod=periodMode==='week'?'전주':'전월';
- const compared=lastPeriod+(data.partial?' 같은 경과 기간':'');
+ const compared=lastPeriod+(data.partial?' 전체':'');
  get('teacher-summary').replaceChildren(
-  card('집계 대상 재학생',data.cohortSize+'명','승인된 재학 학생만'),
+  card('집계 대상 재학생',data.cohortSize+'명',data.partial?'현재 재학생':'기간 마감 시점 재학생'),
   card(thisPeriod+' 참여율',a.participationRate===null?'대상 없음':a.participationRate+'%',a.activeStudents+'명 참여'),
-  card(thisPeriod+' 풀이',a.unique+'문제',a.attempts+'회 시도 · '+compared+' 대비 '+delta(a.attempts,b.attempts,'회')),
-  card('자가평가 정답률',a.selfAccuracy===null?'집계 없음':a.selfAccuracy+'%',a.selfCorrect+'/'+a.selfTotal+'건 · 자동 판정과 구분')
+  card(thisPeriod+' 풀이',a.unique+'문제',a.attempts+'회 시도 · '+compared+' 대비 '+delta(a.attempts,b?.attempts,'회')),
+  card('자가평가 정답률',a.selfAccuracy===null?'집계 없음':a.selfAccuracy+'%',a.selfCorrect+'/'+a.selfTotal+'건')
  );
- get('teacher-subjects').replaceChildren(table(['과목',thisPeriod+' 시도','고유 풀이','오답 횟수',lastPeriod+' 시도'],
-  Object.keys(names).map(key=>[names[key],a.subjects?.[key]?.attempts??0,a.subjects?.[key]?.unique??0,a.subjects?.[key]?.wrong??0,b.subjects?.[key]?.attempts??0])
+ get('teacher-subjects').replaceChildren(table(['과목',thisPeriod+' 시도','고유 풀이','오답 횟수',compared+' 시도'],
+  Object.keys(names).map(key=>[names[key],a.subjects?.[key]?.attempts??0,a.subjects?.[key]?.unique??0,
+   a.subjects?.[key]?.wrong??0,b?.subjects?.[key]?.attempts??'—'])
  ));
  const rates=get('teacher-rates');rates.replaceChildren();
  for(const [label,correct,total,rate] of [
   ['자가평가',a.selfCorrect,a.selfTotal,a.selfAccuracy],
   ['브라우저 정답 비교',a.autoCorrect,a.autoTotal,a.autoAccuracy]
  ]){
-  const item=node('article',null,'learn-rate');item.append(node('span',label),node('strong',rate===null?'집계 없음':rate+'%'),node('small',correct+' / '+total+'건 · 미판정 제외'));rates.append(item);
+  const item=node('article',null,'learn-rate');
+  item.append(node('span',label),node('strong',rate==null?'집계 없음':rate+'%'),
+    node('small',correct+' / '+total+'건 · 미판정 제외'));
+  rates.append(item);
  }
  const wrong=get('teacher-wrong');wrong.replaceChildren();
- if(data.smallCohortHidden)wrong.append(node('p','5명 미만 학급의 문제별 오답 통계는 개인정보 보호를 위해 표시하지 않습니다.','learn-empty'));
+ if(data.smallCohortHidden)wrong.append(node('p','5명 미만 집계 대상의 문제별 오답 내역은 표시하지 않습니다.','learn-empty'));
  else if(!data.topWrong?.length)wrong.append(node('p','선택한 기간에 기록된 오답이 없습니다.','learn-empty'));
  else for(const rec of data.topWrong){
-  const item=node('div',null,'learn-review-card');item.append(node('strong',rec.question),node('small',rec.count+'회 오답'));wrong.append(item);
+  const item=node('div',null,'learn-review-card');
+  item.append(node('strong',rec.question),node('small',rec.count+'회 오답'));wrong.append(item);
  }
  get('teacher-comparison').replaceChildren(table(['지표',thisPeriod,compared,'변화'],[
-  ['학습 참여 학생',a.activeStudents,b.activeStudents,delta(a.activeStudents,b.activeStudents,'명')],
-  ['전체 풀이 시도',a.attempts,b.attempts,delta(a.attempts,b.attempts,'회')],
-  ['서로 다른 풀이',a.unique,b.unique,delta(a.unique,b.unique,'문제')],
-  ['자가평가 정답률',a.selfAccuracy===null?'—':a.selfAccuracy+'%',b.selfAccuracy===null?'—':b.selfAccuracy+'%',delta(a.selfAccuracy,b.selfAccuracy,'%p')],
-  ['브라우저 답안 일치율',a.autoAccuracy===null?'—':a.autoAccuracy+'%',b.autoAccuracy===null?'—':b.autoAccuracy+'%',delta(a.autoAccuracy,b.autoAccuracy,'%p')]
+  ['학습 참여 학생',a.activeStudents,b?.activeStudents??'—',delta(a.activeStudents,b?.activeStudents,'명')],
+  ['전체 풀이 시도',a.attempts,b?.attempts??'—',delta(a.attempts,b?.attempts,'회')],
+  ['서로 다른 풀이',a.unique,b?.unique??'—',delta(a.unique,b?.unique,'문제')],
+  ['자가평가 정답률',a.selfAccuracy==null?'—':a.selfAccuracy+'%',b?.selfAccuracy==null?'—':b.selfAccuracy+'%',delta(a.selfAccuracy,b?.selfAccuracy,'%p')],
+  ['브라우저 답안 일치율',a.autoAccuracy==null?'—':a.autoAccuracy+'%',b?.autoAccuracy==null?'—':b.autoAccuracy+'%',delta(a.autoAccuracy,b?.autoAccuracy,'%p')]
  ]));
+ const study=get('teacher-study-period-summary');
+ if(study&&data.study){
+  const v=data.study,sec=Number(v.studySeconds||0),hours=Math.floor(sec/3600),minutes=Math.floor((sec%3600)/60);
+  const rate=v.dueDays?Math.round(Number(v.attendedPlannedDays||0)*100/Number(v.dueDays))+'%':'—';
+  study.replaceChildren(
+   card('계획 등록',v.plannedStudents+'명','0일 계획 '+v.zeroPlanStudents+'명'),
+   card('계획 실천율',rate,(v.attendedPlannedDays||0)+' / '+(v.dueDays||0)+'일'),
+   card('누적 공부시간',hours+'시간 '+String(minutes).padStart(2,'0')+'분','검토 대상·휴식시간 제외'),
+   card('참여 일수',v.attendedDays+'일','학생별 참여일 합계')
+  );
+ }
  status.textContent='조회 기간: '+get('teacher-period-label').textContent+
-  ' · '+(data.partial?'진행 중인 기간은 현재 시점까지 집계 · '+compared+' 비교':'종료된 기간 전체 집계')+
-  ' · 참여 '+a.activeStudents+'명 · 기록이 없으면 0으로 표시합니다.';
+  (data.partial?' · 현재 시각까지 실시간 집계 · 지난 기간 전체 확정치와 비교':' · 저장된 확정 통계 조회')+
+  (data.cohortBasis==='late_backfill'?' · 사후 집계(과거 학적은 확인 가능한 범위로 복원)':'')+
+  (!data.previousAvailable?' · 비교 기간 통계 미생성':'')+
+  ' · 참여 '+a.activeStudents+'명';
 }
-
 
 const mailInputs={
  super_admin:get('teacher-mail-faculty'),
