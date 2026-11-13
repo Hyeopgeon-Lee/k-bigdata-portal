@@ -1,10 +1,11 @@
 /* My page-compatible, mobile-first certificate manager. */
-.cert-page{max-width:1080px}
+/* Match the portal navigation/content shell instead of the 1080px my-page cap. */
+.cert-page{width:min(calc(100% - var(--portal-shell-gutter, 24px) * 2), var(--portal-shell-max, 1280px));max-width:var(--portal-shell-max, 1280px)}
 .cert-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:18px}
 .cert-stats article{min-width:0;border:1px solid #dce4f0;background:#f6f9ff;border-radius:13px;padding:17px;display:grid;gap:4px}
 .cert-stats span{font-size:12.5px;color:#5b6c86;font-weight:700}
 .cert-stats strong{font-size:24px;font-weight:850;color:#194388}
-.cert-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.18fr);gap:18px;align-items:start}
+.cert-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.18fr);gap:20px;align-items:start}
 .cert-page .my-page-panel{min-width:0}
 .cert-form{display:grid;gap:9px}
 .cert-form label,.cert-stage-group legend{font-size:13.5px;font-weight:750;color:#273e62}
