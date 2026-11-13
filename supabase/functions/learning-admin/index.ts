@@ -142,13 +142,15 @@ Deno.serve(async(req:Request)=>{
       history,recentFaculty,recentStudents});
   }
   if(action==="summary"){
-    const activeRows=await admin.from("profiles").select("user_id,academic_year,class_name")
-      .eq("approval_status","approved").eq("enrollment_status","enrolled").neq("email","hglee67@kopo.ac.kr");
+    const activeRows=await admin.from("profiles").select("user_id,academic_year")
+      .eq("approval_status","approved").eq("enrollment_status","enrolled").eq("signup_type","student");
     if(activeRows.error)throw activeRows.error;
-    // Group/class selection only matches registered profile fields, never user-supplied SQL.
-    const year=Number.isInteger(Number(data.academicYear))&&Number(data.academicYear)>=2020&&Number(data.academicYear)<=2100?Number(data.academicYear):null;
-    const className=typeof data.className==="string"&&data.className.length<=60?data.className:null;
-    const students=(activeRows.data||[]).filter(p=>(!year||p.academic_year===year)&&(!className||p.class_name===className));
+    // The academic_year profile column represents the current student grade (1/2).
+    // My Page changes this value; no calendar-year or class-based filtering is needed.
+    const grade=data.grade===undefined||data.grade===null||data.grade===""?null:Number(data.grade);
+    if(grade!==null&&![1,2].includes(grade))return json({error:"INVALID_GRADE"},400);
+    const students=(activeRows.data||[]).filter(p=>[1,2].includes(Number(p.academic_year))&&
+      (grade===null||Number(p.academic_year)===grade));
     const allowed=new Set(students.map(x=>x.user_id));
     const thisStart=mondayStartUTC();
     const previousStart=new Date(Date.parse(thisStart)-7*86400000).toISOString();
@@ -184,10 +186,8 @@ Deno.serve(async(req:Request)=>{
     const insufficient=allowed.size>0&&allowed.size<5;
     const topWrong=insufficient?[]:Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,12)
       .map(([question,count])=>({question,count}));
-    const profileFilter={availableYears:[...new Set((activeRows.data||[]).map(p=>p.academic_year).filter(Boolean))].sort().reverse(),
-      availableClasses:[...new Set((activeRows.data||[]).map(p=>p.class_name).filter(Boolean))].sort()};
     return json({ok:true,weekStart:thisStart,previousWeekStart:previousStart,cohortSize:allowed.size,
-      ...profileFilter,current:aggregate,previous:baseline,topWrong,smallCohortHidden:insufficient});
+      current:aggregate,previous:baseline,topWrong,smallCohortHidden:insufficient});
   }
   return json({error:"UNKNOWN_ACTION"},400);
  }catch(e){console.error("learning-admin",e);return json({error:"SERVER_ERROR"},500);}
