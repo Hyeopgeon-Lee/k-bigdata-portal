@@ -1550,42 +1550,48 @@ export const javaProblems = [
     "language": "java",
     "level": "입문",
     "topic": "반복문",
-    "title": "정수 각 자릿수의 합",
-    "statement": "0 이상의 정수 N을 입력받으시오. 십진수 각 자리의 숫자를 모두 더해 출력하시오.",
+    "title": "각 자리의 숫자 더하기",
+    "statement": "0 이상 1,000,000,000 이하의 정수 N을 입력받으세요. N의 각 자리에 있는 숫자를 모두 더한 값을 출력하세요. 예를 들어 507을 입력하면 백의 자리의 5, 십의 자리의 0, 일의 자리의 7을 더해 12를 출력합니다.",
     "input": "507",
     "output": "12",
-    "hint": "10으로 나눈 나머지를 더하고 몫을 다시 사용합니다.",
-    "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        int n=sc.nextInt(); // n=507 입력\n        int sum=0; // 자릿수 합 초기값 0\n        do{ // 입력이 0이어도 한 번 실행\n            sum+=n%10; // sum:0→7→7→12 (나머지 7,0,5)\n            n/=10; // n:507→50→5→0\n        }while(n>0); // n이 0이 될 때 종료\n        System.out.println(sum); // 12 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
-    "explanation": "n=507 입력. 자릿수 합 초기값 0. 입력이 0이어도 한 번 실행. 예제 실행 결과는 n,sum → 5,7, n,sum → 0,12입니다. 확인할 조건: N=0.",
+    "hint": "507을 10으로 나누면 몫은 50이고 나머지는 7입니다. 자바에서 n % 10은 일의 자리 숫자를, 정수 나눗셈 n / 10은 그 자리를 뗀 나머지 부분을 구합니다. 다음에는 50에 같은 방법을 적용해 보세요.",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n\n        do {\n            int digit = n % 10;  // 현재 일의 자리 숫자\n            sum += digit;        // 지금까지 구한 합에 더한다\n            n /= 10;             // 처리한 자리를 떼어 낸다\n        } while (n > 0);\n\n        System.out.println(sum);\n        sc.close();\n    }\n}",
+    "explanation": "sum은 지금까지 더한 숫자의 합입니다. 507의 오른쪽부터 7, 0, 5를 차례로 꺼내면 합은 7 → 7 → 12가 됩니다. 가운데 숫자 0을 더할 때 합은 그대로지만, n은 50에서 5로 줄어 다음 자리로 넘어갑니다. 마지막 5까지 처리하면 n이 0이 되어 반복을 끝내고 12를 출력합니다. 처음부터 0을 입력해도 do-while은 본문을 한 번 실행하므로 0을 출력합니다.",
     "trace": [
       [
         "시작",
-        "n,sum",
-        "507,0",
-        "507,0"
+        "n, sum",
+        "507을 입력받고 합을 0으로 설정",
+        "n = 507, sum = 0"
       ],
       [
         "1회",
-        "n,sum",
-        "50,7",
-        "50,7"
+        "일의 자리 7",
+        "507 % 10 = 7 · 합은 0 + 7 · 다음 수는 507 / 10 = 50",
+        "n = 50, sum = 7"
       ],
       [
         "2회",
-        "n,sum",
-        "5,7",
-        "5,7"
+        "십의 자리 0",
+        "50 % 10 = 0 · 합은 7 + 0 · 다음 수는 50 / 10 = 5",
+        "n = 5, sum = 7"
       ],
       [
         "3회",
-        "n,sum",
-        "0,12",
-        "0,12"
+        "백의 자리 5",
+        "5 % 10 = 5 · 합은 7 + 5 · 다음 수는 5 / 10 = 0",
+        "n = 0, sum = 12"
+      ],
+      [
+        "출력",
+        "sum",
+        "n > 0이 거짓이므로 반복을 끝내고 합을 출력",
+        "12"
       ]
     ],
     "constraints": "0≤N≤1000000000",
-    "edgeCases": "N=0",
-    "concept": "while, %10"
+    "edgeCases": "0을 입력하면 0을 출력합니다.",
+    "concept": "do-while, 나머지 연산(%), 정수 나눗셈(/)"
   },
   {
     "id": "JAVA-047",
