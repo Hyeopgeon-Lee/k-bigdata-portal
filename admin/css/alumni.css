@@ -122,7 +122,7 @@
 }
 @media(max-width:700px){
  .alumni-admin .tabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin}
- .alumni-admin .tabs button{flex:0 0 auto;white-space:nowrap}
+ .alumni-admin .tabs button{width:auto;max-width:none;flex:0 0 auto;white-space:nowrap}
  .alumni-admin .form-grid,.alumni-admin .filter-grid,
  .alumni-admin .admin-check-grid{grid-template-columns:1fr}
  .alumni-admin .panel{padding:16px}
