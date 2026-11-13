@@ -93,4 +93,8 @@ assert.equal(logged[0].result,'incorrect');
 await recordLearningAttempt({bank:'coding',questionId:'JAVA-001',result:'correct',gradingMethod:'self',answerText:'if(a>b)'});
 assert.equal(logged.length,2,'retrying a problem is a new attempt');
 assert.notEqual(logged[0].client_attempt_id,logged[1].client_attempt_id);
+const partialAnswer='  if (x < 3) {\n    print(x);\n  }  ';
+await recordLearningAttempt({bank:'practical',questionId:'P-001',result:'timeout',gradingMethod:'none',answerText:partialAnswer});
+assert.equal(logged.at(-1).answer_text,partialAnswer);
+await assert.rejects(recordLearningAttempt({bank:'coding',questionId:'JAVA-001',result:'incorrect',gradingMethod:'self',answerText:'x'.repeat(10001)}),/ANSWER_TOO_LONG/);
 console.log('PASS: cloud attempt retries, self-grade distinctions, study dashboards, OIDC weekly reports.');
