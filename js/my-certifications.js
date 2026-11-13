@@ -147,6 +147,23 @@ async function start(){
   if(!api||!globalThis.portalLearning?.read){message('cert-page-message','포털 로그인 상태를 확인할 수 없습니다.','error');return;}
   const {data:{user:active},error:authError}=await api.auth.getUser();
   if(authError||!active){message('cert-page-message','로그인 세션을 확인할 수 없습니다.','error');return;}
+  // Disallow direct visits by administrators; this route is member self-service.
+  const {data:profile,error:profileError}=await api.from('profiles')
+    .select('signup_type').eq('user_id',active.id).single();
+  const {data:adminAllowed,error:adminCheckError}=await api.rpc('portal_super_admin_allowed');
+  if(profileError||adminCheckError||adminAllowed!==false||!['student','alumni'].includes(profile?.signup_type)){
+    const main=document.querySelector('main');
+    if(main){
+      const panel=make('section',undefined,'my-page-panel');
+      const heading=make('h1','자격증 등록은 재학생·졸업생 전용입니다.');
+      const description=make('p','관리자는 학생 자격증 관리 화면에서 등록 현황을 확인할 수 있습니다.','my-page-description');
+      const back=make('a','마이페이지로 돌아가기','my-page-cert-link');
+      back.href='mypage.html';
+      panel.append(heading,description,back);
+      main.replaceChildren(panel);
+    }
+    return;
+  }
   user=active;fillOptions();resetForm();
   el('cert-date').max=todayInKorea();
   el('cert-code').addEventListener('change',()=>{syncForm();el('cert-date').value='';});
