@@ -34,6 +34,12 @@ assert.match(source,/getUser\(/);
 assert.match(source,/start_portal_session/);
 assert.match(source,/register_portal_member/);
 assert.match(source,/portal_super_admin_allowed/);
+// Super admins must not see personal study or legacy device-import controls in their account drawer.
+const accountDrawer=source.slice(source.indexOf("function renderAccount(){"),source.indexOf("async function importDevicePersonalData()"));
+assert.match(accountDrawer,/if\(!isAdmin\)\{\s*const learning=addSection\("학습"\)/,"student/alumni learning section must be admin-hidden");
+assert.match(accountDrawer,/if\(activeWrite\)\{\s*const settings=addSection\("개인 설정"\)/,"device import remains nested under non-admin access");
+assert.match(accountDrawer,/if\(isAdmin\)\{\s*const management=addSection\("관리자"\)/,"admin management remains visible");
+assert.match(accountDrawer,/addAction\(accountSettings,\{title:"마이페이지"/,"admin account page remains visible");
 assert.match(adminSource,/admin_list_students/);
 assert.match(adminSource,/admin_update_student/);
 assert.match(source,/revoke_portal_session/);
