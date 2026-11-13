@@ -29,7 +29,7 @@ async function load(){
 function render(){
  if(!report)return;
  const grade=$('study-admin-grade').value,today=kdate(Date.now()),week=selectedWeek();
- const students=report.students.filter(s=>!grade||String(s.grade||'')===grade);
+ const students=report.students.filter(s=>[1,2].includes(Number(s.academic_year))&&(!grade||String(s.academic_year)===grade));
  let committed=0,met=0,missed=0,hours=0,plannedStudents=0,zeroPlanStudents=0;
  const rows=[];
  for(const person of students){
@@ -54,7 +54,7 @@ function render(){
    return day.slice(5)+' '+(r?(reasonLabels[r.reason]||'기타')+(r.details?' · '+safe(r.details):''):'사유 미입력');
   }).join(' / '):'—';
   rows.push('<tr><td data-label="학생"><strong>'+safe(person.name)+'</strong></td>'+
-   '<td data-label="학년">'+safe(person.grade||'미지정')+'</td>'+
+   '<td data-label="학년">'+safe(person.academic_year+'학년')+'</td>'+
    '<td data-label="계획일">'+(selected.length?selected.map(d=>['월','화','수','목','금'][d-1]).join('·'):'—')+'</td>'+
    '<td data-label="실천">'+attendedPlanned+'/'+due.length+'일</td>'+
    '<td data-label="공부시간">'+fmt(hoursSec)+'</td>'+
