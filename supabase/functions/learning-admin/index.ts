@@ -44,20 +44,6 @@ function learningPeriod(mode:"week"|"month",offset:number){
   previousStart:new Date(previousStart).toISOString(),previousEnd:new Date(previousEnd).toISOString(),
   currentEnd:new Date(currentEnd).toISOString(),compareEnd:new Date(compareEnd).toISOString(),partial};
 }
-async function allAttempts(from:string,to:string){
- let out:any[]=[];
- for(let page=0;page<100;page++){
-  const {data,error}=await admin.from("learning_attempts")
-   .select("user_id,bank,question_id,result,grading_method,submitted_at")
-   .gte("submitted_at",from).lt("submitted_at",to).order("submitted_at",{ascending:false})
-   .range(page*1000,(page+1)*1000-1);
-  if(error)throw error;
-  out=out.concat(data||[]);
-  if(!data||data.length<1000)break;
-   if(page===99)throw Error("LEARNING_ATTEMPTS_LIMIT_REACHED");
- }
- return out;
-}
 Deno.serve(async(req:Request)=>{
  if(req.method==="OPTIONS")return new Response(null,{status:204,headers});
  if(req.method!=="POST")return json({error:"METHOD_NOT_ALLOWED"},405);
@@ -223,12 +209,13 @@ Deno.serve(async(req:Request)=>{
       if(error||!computed?.current)throw error||Error("LIVE_AGGREGATION_UNAVAILABLE");
       report=computed;
     }else{
+      if(!past)throw Error("SNAPSHOT_MISSING");
       report={cohortSize:past.cohort_size,current:past.metrics,study:past.study_metrics,
         topWrong:past.top_wrong,smallCohortHidden:past.cohort_size>0&&past.cohort_size<5};
     }
     return json({ok:true,period:mode,offset,periodStart:range.start,periodEnd:range.end,
       currentDataEnd:range.currentEnd,previousPeriodStart:range.previousStart,
-      previousDataEnd:offset===0?range.previousEnd:range.previousEnd,
+      previousDataEnd:range.previousEnd,
       partial:offset===0,snapshotStatus:offset===0?"live":"completed",
       cohortBasis:past?.cohort_basis??null,calculatedAt:past?.calculated_at??null,
       previousAvailable:previous!==null,cohortSize:report.cohortSize,
