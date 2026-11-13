@@ -2106,10 +2106,10 @@ export const javaProblems = [
     "topic": "배열",
     "title": "배열의 최댓값",
     "statement": "양의 정수 N과 정수 N개를 입력받으시오. 배열에서 가장 큰 값을 출력하시오.",
-    "input": "4 -7 -2 -9 -4",
+    "input": "4\n-7 -2 -9 -4",
     "output": "-2",
     "hint": "최댓값의 시작값은 0이 아니라 첫 원소입니다.",
-    "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        int n=sc.nextInt(); // 배열에 저장할 숫자 개수를 입력받음\n        int[] arr=new int[n]; // n개 크기의 정수 배열을 생성\n        for(int i=0;i<n;i++){ // i를 0부터 n-1까지 증가\n            arr[i]=sc.nextInt(); // i번째 위치에 다음 정수를 저장\n        } // 전체 배열 입력을 완료\n        int answer=arr[0]; // 첫 원소 -7로 최댓값 초기화\n        for(int i=1;i<n;i++){ // 두 번째 원소부터 비교\n            if(arr[i]>answer) answer=arr[i]; // 조건을 만족할 때만 answer 갱신\n        } // 배열 전체 비교 완료\n        System.out.println(answer); // 예제 최댓값 -2 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
+    "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        System.out.print(\"배열 크기 : \");\n        System.out.flush();\n        int n=sc.nextInt(); // 배열에 저장할 숫자 개수를 입력받음\n        int[] arr=new int[n]; // n개 크기의 정수 배열을 생성\n        System.out.print(\"정수 : \");\n        System.out.flush();\n        for(int i=0;i<n;i++){ // i를 0부터 n-1까지 증가\n            arr[i]=sc.nextInt(); // i번째 위치에 다음 정수를 저장\n        } // 전체 배열 입력을 완료\n        int answer=arr[0]; // 첫 원소 -7로 최댓값 초기화\n        for(int i=1;i<n;i++){ // 두 번째 원소부터 비교\n            if(arr[i]>answer) answer=arr[i]; // 조건을 만족할 때만 answer 갱신\n        } // 배열 전체 비교 완료\n        System.out.println(answer); // 예제 최댓값 -2 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
     "explanation": "배열에 저장할 숫자 개수를 입력받음. n개 크기의 정수 배열을 생성. i를 0부터 n-1까지 증가. 예제 실행 결과는 answer → -7, answer → -2입니다. 확인할 조건: 전부 음수.",
     "trace": [
       [
@@ -2127,7 +2127,8 @@ export const javaProblems = [
     ],
     "constraints": "1≤N≤100, 각 값 절댓값≤10000",
     "edgeCases": "전부 음수",
-    "concept": "배열 순회"
+    "concept": "배열 순회",
+    "inputDisplay": "배열 크기 : 4\n정수 : -7 -2 -9 -4"
   },
   {
     "id": "JAVA-059",

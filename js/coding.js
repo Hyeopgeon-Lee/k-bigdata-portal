@@ -4,7 +4,7 @@ import {bindReview,reviewControls,gradeLabels} from "./study-review.js";
 import {learningLocal as localStorage, learningSession as sessionStorage} from "./learning-storage.mjs";
 import {debounceCloudDraft,fetchCloudDraft} from "./learning-activity.mjs";
 import {codingProblems as sampleProblems} from "../data/coding-samples.js?v=20261111-ubuntu-vim-only-2";
-import {javaProblems} from "../data/coding-java-98.js?v=20261113-java057-prompts-1";
+import {javaProblems} from "../data/coding-java-98.js?v=20261113-java058-prompts-1";
 import {cFoundationProblems} from "../data/coding-c-foundations.js?v=20261111-essential-ranges-1";
 import {cAdvancedProblems} from "../data/coding-c-advanced.js?v=20261111-essential-ranges-1";
 import {pythonFoundationProblems} from "../data/coding-python-foundations.js?v=20261111-essential-ranges-1";
