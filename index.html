@@ -15,7 +15,7 @@
 <link rel="stylesheet" href="css/portal-ux.css?v=20261112-page-intro-2">
   <link rel="stylesheet" href="css/home-ui.css?v=20261112-page-intro-2">
   <link rel="stylesheet" href="css/home-alerts.css?v=20261112-page-intro-2">
-  <link rel="stylesheet" href="css/home-grade.css?v=20261112-page-intro-2">
+  <link rel="stylesheet" href="css/home-grade.css?v=20261113-profile-grade-1">
   <link rel="stylesheet" href="css/home-engagement.css?v=20261112-page-intro-2">
 <!-- portal:assets:start (generated; edit scripts/portal-shell-template.mjs) -->
 <link rel="stylesheet" href="css/portal-navigation.css?v=20261112-page-intro-2">
@@ -54,15 +54,13 @@
           <h1 id="hero-title">오늘 무엇을 준비할까요?</h1>
           <p id="hero-description" data-grade-intro>필요한 학습과 취업 준비를 바로 시작하세요.</p>
         </div>
-        <div class="home-grade-control" aria-label="학년별 메인화면 설정">
+        <div class="home-grade-control" aria-label="회원 학년 정보">
           <div class="home-grade-control-row">
-            <span class="home-grade-label">내 학년</span>
-            <div class="home-grade-options" role="group" aria-label="학년 선택">
-              <button type="button" class="home-grade-button" data-home-grade="1" aria-pressed="true">1학년</button>
-              <button type="button" class="home-grade-button" data-home-grade="2" aria-pressed="false">2학년</button>
-            </div>
+            <span class="home-grade-label">등록 학년</span>
+            <strong id="home-grade-label" class="home-grade-value">확인 중</strong>
           </div>
-          <p id="home-grade-status" class="home-grade-status" role="status" aria-live="polite">학년별 추천 서비스</p>
+          <p id="home-grade-status" class="home-grade-status" role="status" aria-live="polite">회원정보를 확인하고 있습니다.</p>
+          <a id="home-grade-action" class="home-grade-action" href="mypage.html" hidden>마이페이지에서 학년 등록</a>
         </div>
       </div>
       <section class="portal-search" aria-labelledby="search-heading">
@@ -185,7 +183,7 @@
   <script type="module" src="js/app.js?v=20261112-page-intro-2"></script>
   <script type="module" src="js/portal-shell-entry.js?v=20261112-page-intro-2"></script>
   <script src="data/recruitments.js?v=20261016-2"></script>
-  <script type="module" src="js/home-dashboard.js?v=20261113-alumni-home-1"></script>
+  <script type="module" src="js/home-dashboard.js?v=20261113-profile-grade-1"></script>
   <script type="module" src="js/home-alumni.js?v=20261113-alumni-home-1"></script>
   <script type="application/x-learning" data-module="js/home-engagement.js?v=20261111-daily-sync-1"></script>
   <script type="module" src="js/home-schedule.js?v=20261112-calendar-sync-1"></script>
