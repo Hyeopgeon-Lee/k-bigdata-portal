@@ -10,7 +10,7 @@ const css=read('css/home-refresh.css');
 const shell=read('js/portal-shell.js');
 const searchUI=read('js/search-ui.js');
 
-const requiredHomeIds=['hero-title','hero-description','home-grade-status','portal-query','search-results',
+const requiredHomeIds=['hero-title','hero-description','home-grade-label','home-grade-status','home-grade-action','portal-query','search-results',
   'dashboard-start-title','home-today','home-today-primary','home-today-progress','home-today-list',
   'home-schedule-list','home-recruit-alert-list','favorite-services','recent-services','services'];
 for(const id of requiredHomeIds)assert.ok(home.includes('id="'+id+'"'),'home '+id);
@@ -23,7 +23,9 @@ assert.ok(!home.includes('dashboard-highlights'),'redundant continuation panel i
 assert.ok(home.includes('학과 주요 일정'),'clear academic section title');
 assert.ok(!home.includes('놓치지 마세요'),'ambiguous mid-page notice title removed');
 assert.ok(!home.includes('home-practical-card'),'duplicate practical card is removed');
-assert.ok(home.includes('data-home-grade="1"')&&home.includes('data-home-grade="2"'));
+assert.ok(!home.includes('data-home-grade='),'no manual grade controls on homepage');
+assert.ok(home.includes('id="home-grade-label"'),'registered year displayed read-only');
+assert.ok(home.includes('href="mypage.html" hidden'),'missing-grade guidance links to my page');
 assert.ok(home.includes('class="dashboard-personal-tabs" role="tablist"'));
 assert.ok(home.includes('css/home-refresh.css'));
 assert.ok(!home.includes('놓치지 마세요'),'outdated notice heading must not return');
@@ -42,10 +44,12 @@ for(const group of ['learning','career','project','campus'])
   assert.ok(home.includes('href="services.html#'+group+'"'),group+' category shortcut');
 assert.ok(dashboard.includes('actions:["coding","practical","certifications","docs"]'),'1st-year launcher');
 assert.ok(dashboard.includes('actions:["recruit","apply","interview","ready"]'),'2nd-year launcher');
-assert.ok(dashboard.includes('user_preferences'),'grade is saved in the user preferences table');
+assert.ok(!dashboard.includes('preferred_grade'),'old account preference no longer overrides registered year');
+assert.ok(dashboard.includes('portalHomeProfile'),'home reads current approved profile directly');
+assert.ok(!dashboard.includes('chooseGrade('),'manual selection handler removed');
 assert.ok(dashboard.includes('renderQuickActions()'));
 assert.ok(dashboard.includes('renderPersonal()'));
-assert.ok(dashboard.includes('chooseGrade('));
+
 assert.ok(dashboard.includes('kbigdata:home-gradechange'));
 assert.ok(css.includes('@media(max-width:640px)'),'mobile launcher');
 assert.ok(css.includes('grid-template-columns:repeat(2,minmax(0,1fr))'),'mobile cards');
@@ -76,9 +80,14 @@ recordService('practical');
 assert.deepEqual(getRecent(),[],'unauthorized visits are not recorded');
 console.log('PASS: account-backed dashboard, 19 services, authenticated-only shortcuts and search.');
 
-assert.match(dashboard,/signup_type,academic_year/,"home dashboard reads registered student grade");
-assert.match(dashboard,/preferred_grade/,"manual grade preference remains supported");
-assert.match(dashboard,/gradeSelectionRevision/,"late account loading cannot override a manual choice");
+assert.match(dashboard,/profile\.academic_year/,"home uses current registered academic year");
+assert.match(dashboard,/selectedGrade=\["1","2"\]\.includes\(registeredGrade\)/,"grade validated strictly");
+assert.match(dashboard,/isGraduateProfile/,"graduates take precedence over student grade");
+assert.match(dashboard,/homeGrade=selectedGrade\|\|"unregistered"/,"missing grade never silently becomes first year");
+assert.ok(!dashboard.includes("saveAccountGrade"),"home cannot write or override the student grade");
+const auth=read("js/portal-auth.mjs");
+assert.match(auth,/window\.portalHomeProfile=/,"the authorized portal profile is exposed to homepage");
+assert.ok(!auth.includes('kbigdata:home-grade:v1'),"device grade preferences are not imported");
 const alumniUI=read("js/home-alumni.js"),alumniCSS=read("css/home-alumni.css");
 assert.ok(home.includes('id="alumni-dashboard"')&&home.includes('href="alumni/index.html"'));
 assert.ok(home.includes('href="my-certifications.html"')&&home.includes('href="alumni/jobs.html"'));
