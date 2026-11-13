@@ -223,12 +223,12 @@ body[data-page="my-learning"] .learn-sr-only{position:absolute!important;width:1
 .learn-filter .learn-control-row{display:flex;align-items:center;gap:11px;flex-wrap:wrap;min-width:0}
 .learn-filter .learn-control-title{font-size:14px;line-height:1.45;font-weight:800;color:#193960;white-space:nowrap}
 .learn-filter .learn-button-group{display:inline-flex;align-items:center;gap:3px;padding:4px;background:#edf3fb;border:1px solid #d8e4f3;border-radius:12px}
-.learn-tools .learn-filter .learn-choice-button{min-height:39px;padding:8px 15px;border:1px solid transparent;background:transparent;color:#334e71;border-radius:9px;font:750 14px/1.35 inherit;white-space:nowrap;box-shadow:none}
+.learn-tools .learn-filter .learn-choice-button{min-height:39px;padding:8px 15px;border:1px solid transparent;background:transparent;color:#334e71;border-radius:9px;font-family:inherit;font-weight:750;font-size:14px;line-height:1.35;white-space:nowrap;box-shadow:none}
 .learn-tools .learn-filter .learn-choice-button:hover{background:#dae8fa}
 .learn-tools .learn-filter .learn-choice-button[aria-pressed="true"]{background:#173b72;border-color:#173b72;color:#fff}
 .learn-tools .learn-filter .learn-choice-button[aria-pressed="true"]:hover{background:#204b8c}
 .learn-filter .learn-period-navigation{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
-.learn-tools .learn-filter .learn-period-arrow,.learn-tools .learn-filter .learn-period-today{min-height:39px;padding:8px 12px;border:1px solid #cbd9ea;background:#fff;color:#234a78;font:750 13px/1.4 inherit;border-radius:9px;white-space:nowrap}
+.learn-tools .learn-filter .learn-period-arrow,.learn-tools .learn-filter .learn-period-today{min-height:39px;padding:8px 12px;border:1px solid #cbd9ea;background:#fff;color:#234a78;font-family:inherit;font-weight:750;font-size:13px;line-height:1.4;border-radius:9px;white-space:nowrap}
 .learn-filter .learn-period-label{display:inline-block;min-width:185px;text-align:center;color:#142e57;font-size:14px;font-weight:850;line-height:1.5;font-variant-numeric:tabular-nums}
 .learn-tools .learn-filter button:disabled{cursor:default;opacity:.48}
 .learn-tools .learn-filter button:focus-visible{outline:3px solid #8cbcf4;outline-offset:2px}
