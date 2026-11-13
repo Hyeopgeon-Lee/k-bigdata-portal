@@ -17,3 +17,6 @@ body[data-portal-home] .home-alerts[hidden]{display:none!important}
  body[data-portal-home] .home-grade-control-row{justify-content:flex-start}
  body[data-portal-home] .home-grade-status{text-align:left;max-width:none}
 }
+
+/* Administrator accounts are exempt from student grade registration. */
+body[data-portal-home][data-home-persona="admin"] .home-grade-control{display:none!important}
