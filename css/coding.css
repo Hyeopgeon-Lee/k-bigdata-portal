@@ -582,3 +582,56 @@
 .coding-self-review #coding-self-status{min-height:20px;color:#244c7c;font-weight:650}
 .coding-review-link{display:inline-flex;font-size:14px;color:#164a86;font-weight:750;text-decoration:underline;text-underline-offset:3px}
 @media(max-width:600px){.coding-self-review{padding:15px}.coding-self-choices{grid-template-columns:1fr}.coding-self-choices>.coding-btn{min-height:46px}}
+
+/* IntelliJ Darcula-inspired, read-only answer viewer. The learner's editor is unchanged. */
+#coding-answer > .coding-code.coding-code--ide {
+  overflow:hidden;
+  border:1px solid #45494d;
+  border-radius:12px;
+  background:#2b2b2b;
+}
+#coding-answer > .coding-code.coding-code--ide::before {
+  content:attr(data-filename);
+  display:block;
+  padding:9px 17px;
+  border-bottom:1px solid #45494d;
+  background:#393b40;
+  color:#e0e5ed;
+  font:600 13px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;
+}
+#coding-answer > .coding-code.coding-code--ide pre {
+  margin:0;
+  padding:16px 19px;
+  border:0;
+  border-radius:0;
+  background:#2b2b2b;
+  color:#d1d9e5;
+  font-size:14px;
+  line-height:1.8;
+  tab-size:4;
+  overflow-x:auto;
+  overflow-wrap:normal;
+}
+#coding-answer > .coding-code.coding-code--ide code {white-space:pre}
+#coding-answer .coding-code--ide .tok-keyword,
+#coding-answer .coding-code--ide .tok-controlKeyword,
+#coding-answer .coding-code--ide .tok-definitionKeyword,
+#coding-answer .coding-code--ide .tok-operatorKeyword {color:#f4a261}
+#coding-answer .coding-code--ide .tok-string,
+#coding-answer .coding-code--ide .tok-string2 {color:#a5c98c}
+#coding-answer .coding-code--ide .tok-comment,
+#coding-answer .coding-code--ide .tok-docComment {color:#a5adb9;font-style:italic}
+#coding-answer .coding-code--ide .tok-number,
+#coding-answer .coding-code--ide .tok-bool,
+#coding-answer .coding-code--ide .tok-atom,
+#coding-answer .coding-code--ide .tok-literal {color:#90bfff}
+#coding-answer .coding-code--ide .tok-typeName,
+#coding-answer .coding-code--ide .tok-className {color:#7fd4d1}
+#coding-answer .coding-code--ide .tok-function,
+#coding-answer .coding-code--ide .tok-propertyName {color:#ffd58c}
+#coding-answer .coding-code--ide .tok-meta {color:#c9a6ff}
+#coding-answer .coding-code--ide .tok-invalid {color:#ff9292;text-decoration:underline wavy}
+@media(max-width:530px) {
+  #coding-answer > .coding-code.coding-code--ide pre {padding:12px 14px;font-size:13px}
+  #coding-answer > .coding-code.coding-code--ide::before {padding:8px 13px}
+}
