@@ -49,27 +49,32 @@ function card(request){
  heading.append(title,badge);
  const summary=document.createElement('details');
  summary.className='help-ticket-details';
- const toggle=node('summary','요청 내용 및 처리 내역 보기');
- summary.append(toggle);
- summary.append(node('p',request.content,'help-content'));
- if(request.legacy_request_id){
-  summary.append(node('p','기존 요청번호: '+request.legacy_request_id,'help-meta'));
- }
- if(admin){
-  const identity=[request.legacy_student_name,request.legacy_student_no].filter(Boolean).join(' / ');
-  if(identity)summary.append(node('p','기존 작성자: '+identity+' (포털 계정 미연결)','help-meta'));
- }
- if(request.admin_reply)summary.append(node('div','관리자 답변: '+request.admin_reply,'help-reply'));
- const details=node('div',null,'help-extra');
- const open=node('button','대화·첨부파일 보기','help-secondary');
- open.type='button';
- open.addEventListener('click',()=>openDetail(request,details,open));
- summary.append(open,details);
- if(admin)summary.append(adminEditor(request));
+ summary.append(node('summary','요청 내용 및 처리 내역 보기'));
+ const body=node('div',null,'help-ticket-body');
+ summary.append(body);
+ let loading=false,loaded=false;
+ summary.addEventListener('toggle',async()=>{
+  if(!summary.open||loading||loaded)return;
+  loading=true;body.replaceChildren(node('p','요청 내용을 불러오는 중...','help-meta'));
+  const {data,error}=await api.from('help_requests')
+   .select('content,admin_reply,legacy_student_name,legacy_student_no').eq('id',request.id).maybeSingle();
+  loading=false;
+  if(error||!data){body.replaceChildren(node('p','요청 상세를 불러오지 못했습니다. 다시 펼쳐 주세요.','help-meta'));return;}
+  request.admin_reply=data.admin_reply;
+  body.replaceChildren(node('p',data.content,'help-content'));
+  if(request.legacy_request_id)body.append(node('p','기존 요청번호: '+request.legacy_request_id,'help-meta'));
+  const identity=[data.legacy_student_name,data.legacy_student_no].filter(Boolean).join(' / ');
+  if(identity)body.append(node('p','기존 작성자: '+identity+' (포털 계정 미연결)','help-meta'));
+  if(data.admin_reply)body.append(node('div','관리자 답변: '+data.admin_reply,'help-reply'));
+  const details=node('div',null,'help-extra');
+  const open=node('button','대화·첨부파일 보기','help-secondary');open.type='button';
+  open.addEventListener('click',()=>openDetail(request,details,open));
+  body.append(open,details,adminEditor(request,badge));loaded=true;
+ });
  article.append(heading,meta,summary);
  return article;
 }
-function adminEditor(request){
+function adminEditor(request,badge){
  const panel=node('div',null,'help-editor');
  const label=node('label','처리 상태','help-field');
  const select=options(Object.keys(statusText),request.status);label.append(select);
@@ -85,7 +90,7 @@ function adminEditor(request){
   }).eq('id',request.id);
   button.disabled=false;
   message.textContent=error?'저장 실패: 계정 권한 또는 네트워크를 확인하세요.':'상태와 답변을 저장했습니다.';
-  if(!error){request.status=select.value;request.admin_reply=reply.value.trim();}
+  if(!error){request.status=select.value;request.admin_reply=reply.value.trim();badge.textContent=statusText[request.status]||request.status;}
  };
  panel.append(label,replyLabel,button,message);
  return panel;
@@ -139,8 +144,7 @@ async function openDetail(request,target,button){
 async function loadRequests(all){
  const root=el(all?'help-admin-list':'help-my-list');
  root.replaceChildren(node('p','요청을 불러오는 중...','help-meta'));
- const cols=all?'id,owner_id,legacy_request_id,legacy_student_name,legacy_student_no,category,location,title,content,status,admin_reply,created_at,updated_at':
- 'id,owner_id,legacy_request_id,category,location,title,content,status,admin_reply,created_at,updated_at';
+ const cols='id,owner_id,legacy_request_id,category,location,title,status,created_at';
  let query=api.from('help_requests').select(cols).order('created_at',{ascending:false}).limit(200);
  if(!all)query=query.eq('owner_id',user.id);
  const {data,error}=await query;
