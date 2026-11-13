@@ -57,4 +57,16 @@ assert.match(bridge,/hasAttribute\("data-alumni-requires-admin"\)/);
 assert.match(bridge,/portal_super_admin_allowed/);
 for(const source of ["js/portal-auth.mjs","js/my-certifications.js","js/room.js","js/help.js","admin/js/guard.mjs","admin/js/accounts.js","admin/js/certifications.js","admin/js/rooms.js","admin/js/help.js","admin/js/learning.js"])
  execFileSync(process.execPath,["--check",new URL("../"+source,import.meta.url).pathname]);
-console.log("PASS: 6 role-guarded admin routes, 4 management modules extracted, student routes contain no admin panels.");
+const studentHelp=read("js/help.js"),adminHelp=read("admin/js/help.js");
+const studyJS=read("js/study.js");
+for(const help of [studentHelp,adminHelp]){
+ assert.match(help,/summary\.addEventListener\('toggle'/,"request detail loads on expansion");
+ assert.match(help,/\.select\('content,admin_reply/,"sensitive request bodies load on demand");
+ assert.doesNotMatch(help,/select\('id,owner_id,legacy_request_id,category,location,title,content/,"no body in ticket list");
+}
+assert.match(studentHelp,/\.eq\('recipient_id',user\.id\)/,"notifications restrict recipient");
+assert.match(studyJS,/\.eq\('user_id',uid\)/,"study queries explicitly scope to the signed-in user");
+assert.match(studyJS,/\.gte\('started_at',kstMidnightISO\(weeks\.thisWeek\)\)/,"study history is date-bounded");
+assert.match(studyJS,/\.eq\('status','active'\)\.maybeSingle\(\)/,"active session is fetched separately");
+assert.doesNotMatch(studyJS,/db\.from\('study_sessions'\)\.select\('\*'\)/,"no unbounded full-column session query");
+console.log("PASS: admin isolation plus lazy Help Desk details and date-bounded study queries.");
