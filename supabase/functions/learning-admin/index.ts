@@ -20,16 +20,41 @@ async function authorized(req:Request){
  const {data:allowed,error:permissionError}=await client.rpc("portal_super_admin_allowed");
  return !permissionError&&allowed===true&&who.user.email?.toLowerCase()==="hglee67@kopo.ac.kr";
 }
-async function allAttempts(from:string){
+function learningPeriod(mode:"week"|"month",offset:number){
+ const KST=9*3600000,DAY=86400000,now=Date.now(),today=new Date(now+KST);
+ const y=today.getUTCFullYear(),m=today.getUTCMonth(),d=today.getUTCDate();
+ let start:number,end:number,previousStart:number,previousEnd:number;
+ if(mode==="week"){
+  const monday=d-(today.getUTCDay()+6)%7;
+  start=Date.UTC(y,m,monday+offset*7)-KST;
+  end=start+7*DAY;
+  previousStart=start-7*DAY;
+  previousEnd=start;
+ }else{
+  start=Date.UTC(y,m+offset,1)-KST;
+  end=Date.UTC(y,m+offset+1,1)-KST;
+  previousStart=Date.UTC(y,m+offset-1,1)-KST;
+  previousEnd=start;
+ }
+ // For a live period compare only the same elapsed time in the prior period.
+ const partial=offset===0;
+ const currentEnd=partial?Math.min(now,end):end;
+ const compareEnd=partial?Math.min(previousEnd,previousStart+Math.max(0,currentEnd-start)):previousEnd;
+ return {start:new Date(start).toISOString(),end:new Date(end).toISOString(),
+  previousStart:new Date(previousStart).toISOString(),previousEnd:new Date(previousEnd).toISOString(),
+  currentEnd:new Date(currentEnd).toISOString(),compareEnd:new Date(compareEnd).toISOString(),partial};
+}
+async function allAttempts(from:string,to:string){
  let out:any[]=[];
  for(let page=0;page<100;page++){
   const {data,error}=await admin.from("learning_attempts")
    .select("user_id,bank,question_id,result,grading_method,submitted_at")
-   .gte("submitted_at",from).order("submitted_at",{ascending:false})
+   .gte("submitted_at",from).lt("submitted_at",to).order("submitted_at",{ascending:false})
    .range(page*1000,(page+1)*1000-1);
   if(error)throw error;
   out=out.concat(data||[]);
   if(!data||data.length<1000)break;
+   if(page===99)throw Error("LEARNING_ATTEMPTS_LIMIT_REACHED");
  }
  return out;
 }
@@ -152,12 +177,14 @@ Deno.serve(async(req:Request)=>{
     const students=(activeRows.data||[]).filter(p=>[1,2].includes(Number(p.academic_year))&&
       (grade===null||Number(p.academic_year)===grade));
     const allowed=new Set(students.map(x=>x.user_id));
-    const thisStart=mondayStartUTC();
-    const previousStart=new Date(Date.parse(thisStart)-7*86400000).toISOString();
-    const now=new Date().toISOString();
-    const attempts=(await allAttempts(previousStart)).filter(x=>allowed.has(x.user_id));
-    const current=attempts.filter(x=>x.submitted_at>=thisStart&&x.submitted_at<now);
-    const previous=attempts.filter(x=>x.submitted_at>=previousStart&&x.submitted_at<thisStart);
+    const mode=data.period===undefined||data.period==="week"?"week":data.period==="month"?"month":null;
+    const offset=data.offset===undefined?0:Number(data.offset);
+    if(!mode||!Number.isInteger(offset)||offset>0||offset<(mode==="week"?-52:-24))
+      return json({error:"INVALID_PERIOD"},400);
+    const range=learningPeriod(mode,offset);
+    const attempts=(await allAttempts(range.previousStart,range.currentEnd)).filter(x=>allowed.has(x.user_id));
+    const current=attempts.filter(x=>x.submitted_at>=range.start&&x.submitted_at<range.currentEnd);
+    const previous=attempts.filter(x=>x.submitted_at>=range.previousStart&&x.submitted_at<range.compareEnd);
     const subjectKey=(r:any)=>r.bank==="coding"?String(r.question_id).split("-")[0]:r.bank==="ncp"?"NCP":"PRACTICAL";
     function calculate(items:any[]){
       const people=new Set(items.map(x=>x.user_id));
@@ -186,7 +213,10 @@ Deno.serve(async(req:Request)=>{
     const insufficient=allowed.size>0&&allowed.size<5;
     const topWrong=insufficient?[]:Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,12)
       .map(([question,count])=>({question,count}));
-    return json({ok:true,weekStart:thisStart,previousWeekStart:previousStart,cohortSize:allowed.size,
+    return json({ok:true,period:mode,offset,periodStart:range.start,periodEnd:range.end,
+      currentDataEnd:range.currentEnd,previousPeriodStart:range.previousStart,
+      previousDataEnd:range.compareEnd,partial:range.partial,weekStart:range.start,
+      previousWeekStart:range.previousStart,cohortSize:allowed.size,
       current:aggregate,previous:baseline,topWrong,smallCohortHidden:insufficient});
   }
   return json({error:"UNKNOWN_ACTION"},400);
