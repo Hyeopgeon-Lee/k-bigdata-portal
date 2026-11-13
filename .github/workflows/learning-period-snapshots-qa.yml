@@ -1,0 +1,26 @@
+name: Learning period snapshot regression checks
+on:
+  push:
+    branches: [main]
+    paths:
+      - "js/teacher-learning.js"
+      - "admin/learning.html"
+      - "admin/js/learning.js"
+      - "teacher-learning.html"
+      - "supabase/functions/learning-admin/index.ts"
+      - "supabase/migrations/*learning*"
+      - "tests/learning-period-snapshots.test.mjs"
+      - ".github/workflows/learning-period-snapshots-qa.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  learning-period-contracts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: node tests/learning-period-snapshots.test.mjs
