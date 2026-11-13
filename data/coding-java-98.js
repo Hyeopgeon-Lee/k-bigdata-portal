@@ -2069,11 +2069,11 @@ export const javaProblems = [
     "topic": "배열",
     "title": "배열의 평균",
     "statement": "양의 정수 N과 정수 N개를 입력받으시오. 배열 원소의 평균을 소수 둘째 자리까지 출력하시오.",
-    "input": "3 1 2 2",
+    "input": "3\n1 2 2",
     "output": "1.67",
     "hint": "합계를 n으로 나눌 때 실수형으로 변환하세요.",
-    "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        int n=sc.nextInt(); // 배열에 저장할 숫자 개수를 입력받음\n        int[] arr=new int[n]; // n개 크기의 정수 배열을 생성\n        for(int i=0;i<n;i++){ // i를 0부터 n-1까지 증가\n            arr[i]=sc.nextInt(); // i번째 위치에 다음 정수를 저장\n        } // 전체 배열 입력을 완료\n        long sum=0; // 합계 초기값 0\n        for(int i=0;i<n;i++){ // 모든 원소를 방문\n            sum+=arr[i]; // 예제 sum:0→1→3→5\n        } // 원소 합산 완료\n        double avg=(double)sum/n; // 5/3 → 약 1.6667\n        System.out.printf(Locale.US,\"%.2f%n\",avg); // 1.67 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
-    "explanation": "배열에 저장할 숫자 개수를 입력받음. n개 크기의 정수 배열을 생성. i를 0부터 n-1까지 증가. 예제 실행 결과는 sum → 5, avg → 1.67입니다. 확인할 조건: 음수·N=1.",
+    "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        System.out.print(\"배열 크기 : \");\n        System.out.flush();\n        int n=sc.nextInt(); // 배열에 저장할 숫자 개수를 입력받음\n        int[] arr=new int[n]; // n개 크기의 정수 배열을 생성\n        System.out.print(\"평균 계산할 정수 : \");\n        System.out.flush();\n        for(int i=0;i<n;i++){ // i를 0부터 n-1까지 증가\n            arr[i]=sc.nextInt(); // i번째 위치에 다음 정수를 저장\n        } // 전체 배열 입력을 완료\n        long sum=0; // 합계 초기값 0\n        for(int i=0;i<n;i++){ // 모든 원소를 방문\n            sum+=arr[i]; // 예제 sum:0→1→3→5\n        } // 원소 합산 완료\n        double avg=(double)sum/n; // 5/3 → 약 1.6667\n        System.out.printf(Locale.US,\"%.2f%n\",avg); // 1.67 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
+    "explanation": "배열 크기 안내가 나오면 3을 입력합니다. 다음 안내에 1 2 2를 입력하면 배열에 세 정수가 차례로 저장됩니다. 합계 5를 배열 크기 3으로 나눈 평균은 약 1.6667이므로, 소수 둘째 자리까지 표시하면 1.67입니다.",
     "trace": [
       [
         "입력",
@@ -2096,7 +2096,8 @@ export const javaProblems = [
     ],
     "constraints": "1≤N≤100, 각 정수 절댓값≤1000",
     "edgeCases": "음수·N=1",
-    "concept": "배열, double"
+    "concept": "배열, double",
+    "inputDisplay": "배열 크기 : 3\n평균 계산할 정수 : 1 2 2"
   },
   {
     "id": "JAVA-058",
