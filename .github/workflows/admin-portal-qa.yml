@@ -34,6 +34,7 @@ jobs:
       - name: Verify server-gated role access and extracted UI
         run: |
           node tests/admin-isolation.test.mjs
+          node tests/admin-alumni-integration.test.mjs
           node tests/portal-auth.test.mjs
           node tests/portal-student-certifications.test.mjs
           node tests/room-integration.test.mjs
