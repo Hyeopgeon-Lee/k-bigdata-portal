@@ -51,6 +51,23 @@ for(const [html,script,forbidden] of [
  assert.doesNotMatch(read(html),forbidden,"admin DOM removed from "+html);
  assert.doesNotMatch(read(script),forbidden,"admin code removed from "+script);
 }
+// Verified-signup admin notifications must remain a separate, privileged workflow.
+const signupAdminApi=read("supabase/functions/notify-signup-admin/index.ts");
+const signupAdminMigration=read("supabase/migrations/20261113104500_signup_admin_notifications.sql");
+assert.match(auth,/notify-signup-admin/,"verified signup invokes the notification server");
+assert.match(accounts,/signup-admin-mail-toggle/,"super admin can toggle only the administrator alert");
+assert.match(accounts,/targetUserId/,"mail deep link targets an individual signup request");
+assert.match(accounts,/portal-approval-target/,"linked request is highlighted without automatic approval");
+assert.match(signupAdminApi,/email_confirmed_at/,"unverified mail addresses cannot notify administrators");
+assert.match(signupAdminApi,/portal_super_admin_allowed/,"notification switch uses server role authorization");
+assert.match(signupAdminApi,/member.approval_status!=="pending"/,"only pending applicants can notify");
+assert.match(signupAdminApi,/Idempotency-Key/,"mailer has send-level duplicate protection");
+assert.match(signupAdminApi,/view=approvals&approve=/,"mail button links to the guarded admin approval page");
+assert.match(signupAdminMigration,/signup_admin_notification_settings/);
+assert.match(signupAdminMigration,/signup_admin_notification_deliveries/);
+assert.match(signupAdminMigration,/enable row level security/g,"settings and delivery tables must be RLS-protected");
+assert.match(signupAdminMigration,/revoke all .* from public, anon, authenticated/,"client roles cannot access mail settings");
+
 const alumniAdmin=read("alumni/admin.html"),bridge=read("alumni/js/portal-bridge.mjs");
 assert.match(alumniAdmin,/data-alumni-requires-admin/);
 assert.match(bridge,/hasAttribute\("data-alumni-requires-admin"\)/);
