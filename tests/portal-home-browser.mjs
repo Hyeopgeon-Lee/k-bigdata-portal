@@ -8,7 +8,7 @@ const widths=[360,390,768,1280];
 try{
  for(const width of widths){
   const context=await browser.newContext({viewport:{width,height:900}});
-  await approvedStudent(context);
+  await approvedStudent(context,{academic_year:1});
     const page=await context.newPage(),errors=[];
   page.on('pageerror',error=>errors.push(error.message));
   await page.goto('http://127.0.0.1:8765/index.html',{waitUntil:'domcontentloaded'});
@@ -19,11 +19,9 @@ try{
   assert.equal(await page.locator('#home-today-list .home-today-task').count(),3,'daily plan '+width);
   assert.equal(await page.locator('#service-groups').count(),0,'full service catalogue is not on home');
   assert.equal(await page.locator('.dashboard-action[href="practical.html"]').count(),1,'shared exam shortcut '+width);
-  const second=page.locator('button[data-home-grade="2"]');
-  await second.click();
-  await page.locator('.dashboard-action[href="recruit.html"]').waitFor();
-  assert.equal(await second.getAttribute('aria-pressed'),'true','grade setting '+width);
-  await page.locator('button[data-home-grade="1"]').click();
+  assert.equal(await page.locator('button[data-home-grade]').count(),0,'grade picker removed '+width);
+  assert.equal((await page.locator('#home-grade-label').innerText()).trim(),'1학년','registered grade '+width);
+  assert.equal(await page.locator('.dashboard-action[href="recruit.html"]').count(),0,'no 2nd grade actions '+width);
   await page.locator('.dashboard-action-favorite[data-favorite="practical"]').click();
   assert.equal(await page.locator('#favorite-services a[href="practical.html"]').count(),1,'favorite shortcut '+width);
   const homeWidth=await page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);
@@ -45,5 +43,44 @@ try{
   assert.deepEqual(errors,[], 'no page exceptions at '+width);
   await context.close();
  }
- console.log('PASS: home, directory, grades, Supabase-backed favorites, search, all links and responsive widths');
+ // The member's currently registered grade overrides an old device or preference value.
+ for(const width of [390,1280]){
+  const context=await browser.newContext({viewport:{width,height:900}});
+  await approvedStudent(context,{academic_year:2});
+  await context.addInitScript(()=>{
+   localStorage.setItem("kbigdata:home-grade:v1","1");
+   localStorage.setItem("__qa_supabase_storage_v2",JSON.stringify({
+    user_preferences:[{user_id:"fixture",preferred_grade:"1"}]
+   }));
+  });
+  const page=await context.newPage(),errors=[];
+  page.on("pageerror",error=>errors.push(error.message));
+  await page.goto('http://127.0.0.1:8765/index.html',{waitUntil:'domcontentloaded'});
+  await page.locator('.dashboard-action[href="recruit.html"]').waitFor({timeout:15000});
+  assert.equal((await page.locator('#home-grade-label').innerText()).trim(),'2학년');
+  assert.equal(await page.locator('.dashboard-action[href="coding.html"]').count(),0,'registered second-year actions only');
+  assert.equal((await page.locator('#dashboard-schedule-title').innerText()).includes('2학년'),true);
+  assert.equal(await page.locator('button[data-home-grade]').count(),0);
+  await page.reload({waitUntil:'domcontentloaded'});
+  await page.locator('.dashboard-action[href="recruit.html"]').waitFor({timeout:15000});
+  assert.equal((await page.locator('#home-grade-label').innerText()).trim(),'2학년','reload keeps registered grade');
+  assert.deepEqual(errors,[],'second grade page exceptions '+width);
+  await context.close();
+ }
+ // An unset grade must not be silently treated as first year.
+ {
+  const context=await browser.newContext({viewport:{width:390,height:900}});
+  await approvedStudent(context,{academic_year:null});
+  const page=await context.newPage(),errors=[];
+  page.on("pageerror",error=>errors.push(error.message));
+  await page.goto('http://127.0.0.1:8765/index.html',{waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>document.querySelector('#home-grade-label')?.textContent==='학년 미등록',{timeout:15000});
+  assert.equal(await page.locator('.home-today').isVisible(),false,'no misleading first-year daily tasks');
+  assert.equal(await page.locator('.home-alerts').isVisible(),false,'no misleading grade schedule');
+  assert.equal(await page.locator('#home-grade-action').isVisible(),true,'my page has grade registration');
+  assert.equal(await page.locator('.portal-search').isVisible(),true,'general services remain available');
+  assert.deepEqual(errors,[],'unregistered grade page exceptions');
+  await context.close();
+ }
+ console.log('PASS: profile-based first/second-year home, no grade picker, preference override ignored, alumni and responsive layouts');
 }finally{await browser.close();}
