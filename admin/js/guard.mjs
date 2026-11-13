@@ -9,10 +9,11 @@ try{
  const {data,error}=await client.rpc("portal_super_admin_allowed");
  if(error||data!==true)throw Error("SUPER_ADMIN_REQUIRED");
  window.portalAdminAllowed=true;
- document.documentElement.dataset.adminAccess="approved";
  const name=document.body.dataset.adminModule;
  if(!/^[a-z-]+\.js$/.test(name||""))throw Error("INVALID_ADMIN_MODULE");
  panel.hidden=false;
+ // Expose the ready state only after the protected content is no longer hidden.
+ document.documentElement.dataset.adminAccess="approved";
  await import(new URL("./"+name,import.meta.url).href);
 }catch(error){
  window.portalAdminAllowed=false;
