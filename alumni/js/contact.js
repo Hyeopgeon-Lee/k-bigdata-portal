@@ -2,16 +2,97 @@
  "use strict";
  const U=AlumniUI;
  const TARGET_KEY="alumni-contact-target-v2",JOB_KEY="alumni-contact-job-v2";
+/**
+ * SunEditor produces HTML; the existing API accepts a restricted Quill Delta.
+ * Convert to text + supported attributes in the browser, and keep the
+ * backend's independent HTML escaping, link allowlist and 1,500-char validation.
+ * No browser-authored HTML is sent directly to the mail endpoint.
+ */
+function richTextToDelta(html){
+ const template=document.createElement("template");
+ template.innerHTML=String(html||"");
+ const ops=[],excluded=new Set(["SCRIPT","STYLE","SVG","IFRAME","OBJECT","EMBED","IMG","VIDEO","AUDIO","FORM"]);
+ const blocks=new Set(["P","DIV","LI","H1","H2","H3","H4","H5","H6","BLOCKQUOTE","PRE"]);
+ let total=0,tooComplex=false;
+ function append(value,attrs={}){
+  const chunk=String(value||"").replace(/\r\n?/g,"\n").replace(/\u00a0/g," ");
+  if(!chunk)return;
+  total+=chunk.length;
+  if(total>1800){tooComplex=true;return;}
+  const attributes=Object.keys(attrs).length?{...attrs}:undefined;
+  const last=ops[ops.length-1],sig=JSON.stringify(attributes||{}),same=last&&JSON.stringify(last.attributes||{})===sig;
+  if(same)last.insert+=chunk;
+  else ops.push(attributes?{insert:chunk,attributes}:{insert:chunk});
+  if(ops.length>300)tooComplex=true;
+ }
+ function newline(){
+  if(ops.length&&!ops[ops.length-1].insert.endsWith("\n"))append("\n");
+ }
+ function visit(node,attrs={}){
+  if(tooComplex)return;
+  if(node.nodeType===3){append(node.nodeValue,attrs);return;}
+  if(node.nodeType!==1)return;
+  const tag=node.tagName;
+  if(excluded.has(tag))return;
+  if(tag==="BR"){append("\n");return;}
+  const next={...attrs};
+  if(tag==="STRONG"||tag==="B")next.bold=true;
+  if(tag==="EM"||tag==="I")next.italic=true;
+  if(tag==="U")next.underline=true;
+  if(tag==="A"){
+   const href=(node.getAttribute("href")||"").trim();
+   if(/^https?:\/\/[^\s<>"']+$/i.test(href))next.link=href;
+  }
+  if(blocks.has(tag)&&tag!=="LI")newline();
+  if(tag==="LI"){
+   newline();
+   const parent=node.parentElement,ordered=parent?.tagName==="OL";
+   const index=ordered?Array.from(parent.children).indexOf(node)+1:0;
+   append(ordered?index+". ":"• ");
+  }
+  for(const child of node.childNodes)visit(child,next);
+  if(blocks.has(tag))newline();
+ }
+ for(const child of template.content.childNodes)visit(child);
+ return {plain:ops.map(op=>op.insert).join("").trim(),delta:{ops},tooComplex};
+}
+
  document.addEventListener("DOMContentLoaded",async()=>{
   const st=U.qs("#contact-status"),form=U.qs("#contact-form"),btn=U.qs("#contact-submit");
   const recipientSelect=U.qs("#contact-recipient"),area=U.qs("#message");
   let editor=null,selectedJob=null;
-  if(window.Quill){
-   editor=new window.Quill("#contact-rich-editor",{
-    theme:"snow",
-    modules:{toolbar:[["bold","italic","underline"],[{list:"ordered"},{list:"bullet"}],["link"]]}
-   });
-  }else{U.qs("#contact-rich-editor").hidden=true;area.hidden=false;area.required=true;}
+  const counter=U.qs("#contact-message-count"),editorField=U.qs("#contact-rich-editor");
+  const updateCount=()=>{
+   const content=editor?.$?.html?.get?.()||"";
+   const text=editor?richTextToDelta(content).plain:area.value.trim();
+   counter.textContent=text.length.toLocaleString("ko-KR")+" / 1,500자";
+   counter.dataset.overLimit=String(text.length>1500);
+  };
+  if(window.SUNEDITOR?.create){
+   try{
+    const options={
+     plugins:window.SUNEDITOR.plugins,
+     mode:"classic",
+     toolbar_sticky:-1,
+     minHeight:"205px",
+     width:"100%",
+     placeholder:"선배에게 문의할 내용을 자세히 작성해 주세요.",
+     buttonList:[["undo","redo"],"|",["bold","italic","underline"],"|",["list","link"],"|",["removeFormat"]],
+     events:{onChange:()=>updateCount()}
+    };
+    if(window.SUNEDITOR_LANG?.ko)options.lang=window.SUNEDITOR_LANG.ko;
+    editor=window.SUNEDITOR.create(editorField,options);
+    const editable=U.qs(".contact-editor-wrap .sun-editor-editable");
+    if(editable)editable.setAttribute("aria-label","문의 내용 입력");
+   }catch(error){console.error("SunEditor initialization",error);editor=null;}
+  }
+  if(!editor){
+   editorField.hidden=true;
+   area.hidden=false;
+   area.required=true;
+   area.addEventListener("input",updateCount);
+  }
+  updateCount();
   try{
    await window.alumniPortalReady;
    if(document.documentElement.dataset.alumniPortalAuth!=="approved")
@@ -53,15 +134,16 @@
    if(!recipientSelect.value){U.status(st,"연락할 선배를 선택해 주세요.","error");return;}
    if(!form.reportValidity())return;
    const fd=new FormData(form),share=fd.get("share_contact");
-   const plain=editor?editor.getText().trim():area.value.trim();
-   if(plain.length<20||plain.length>1500){
-    U.status(st,"문의 내용을 20~1,500자로 입력해 주세요.","error");
-    if(editor)editor.focus();else area.focus();return;
+   const content=editor?richTextToDelta(editor.$.html.get()):{plain:area.value.trim(),delta:null};
+   const plain=content.plain;
+   if(plain.length<20||plain.length>1500||content.tooComplex){
+    U.status(st,content.tooComplex?"문의 내용의 서식이 너무 복잡합니다. 서식을 단순하게 작성해 주세요.":"문의 내용을 20~1,500자로 입력해 주세요.","error");
+    if(editor)U.qs(".contact-editor-wrap .sun-editor-editable")?.focus();else area.focus();return;
    }
    const data=Object.fromEntries(fd);
    data.alumni_id=recipientSelect.value;
    data.message=plain;
-   if(editor)data.message_delta=editor.getContents();
+   if(content.delta)data.message_delta=content.delta;
    data.share_email=share==="email"||share==="both";
    data.share_phone=share==="phone"||share==="both";
    data.share_competencies=fd.get("share_competencies")==="on";

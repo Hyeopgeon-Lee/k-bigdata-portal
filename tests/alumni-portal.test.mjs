@@ -78,7 +78,16 @@ assert.match(backend,/case "adminShow"/,"manager may restore public profile with
 assert.doesNotMatch(backend,/case "adminApprove"/,"removed duplicate alumni approval");
 assert.match(backend,/status:"APPROVED"/,"new posts publish without duplicate approval");
 assert.ok(read("alumni/js/contact.js").includes("share_competencies"),"contact supports consented competencies");
-assert.ok(read("alumni/contact.html").includes("quill@2.0.3"),"free Quill editor installed");
+const contactHtml=read("alumni/contact.html"),contactJs=read("alumni/js/contact.js"),contactCss=read("alumni/css/contact-editor.css");
+assert.match(contactHtml,/suneditor@3\.3\.3\/dist\/suneditor\.min\.css/,"MIT licensed editor pinned");
+assert.match(contactHtml,/suneditor@3\.3\.3\/dist\/suneditor\.min\.js/,"no Quill runtime");
+assert.doesNotMatch(contactHtml,/quill@|quill\.js/i,"old editor removed");
+assert.match(contactJs,/SUNEDITOR\.create/,"SunEditor is initialized");
+assert.match(contactJs,/richTextToDelta/,"rich text converted to backend-safe delta");
+assert.match(contactJs,/data\.message_delta=content\.delta/,"formatted content still reaches existing API");
+assert.match(contactJs,/data\.message=plain/,"plain text for validation and fallback");
+assert.match(contactCss,/\.sun-editor button/,"oversized portal button styles are overridden");
+assert.doesNotMatch(contactHtml,/style="min-height:180px"/,"unstyled editor removed");
 const migration=read("supabase/migrations/20261113035800_migrate_alumni_network_sheets_to_private_supabase_record_store.sql");
 assert.match(migration,/enable row level security/,"private tables are RLS protected");
 assert.match(migration,/revoke all on public\.alumni_network_records from public,anon,authenticated/,"raw PII not client-readable");
