@@ -1,7 +1,7 @@
 /* Aggregated, super-admin-only data comes from the guarded Edge Function. */
 const db=window.portalSupabaseClient, get=id=>document.getElementById(id);
 const names={JAVA:'Java',C:'C언어',PYTHON:'Python',LINUX:'Ubuntu',NCP:'NCP',PRACTICAL:'정보처리'};
-let yearFilter='',classFilter='';
+let gradeFilter='';
 const node=(tag,text,className)=>{const el=document.createElement(tag);if(text!==undefined&&text!==null)el.textContent=String(text);if(className)el.className=className;return el;};
 function card(label,value,sub){
  const c=node('article',null,'learn-stat');c.append(node('small',label),node('strong',value),node('p',sub));return c;
@@ -18,29 +18,26 @@ function delta(a,b,suffix=''){
  if(!Number.isFinite(a)||!Number.isFinite(b))return '—';
  const change=a-b;return (change>0?'+':'')+change+suffix;
 }
-function renderFilters(values){
+function renderFilters(){
  if(get('teacher-filters'))return;
  const panel=node('div',null,'learn-filter');panel.id='teacher-filters';
- const yearLabel=node('label','학년도');const years=node('select');years.id='teacher-year';
- years.add(new Option('전체 학년도',''));
- for(const year of values.availableYears||[])years.add(new Option(year+'학년도',String(year)));
- years.value=yearFilter;
- const clsLabel=node('label','반');const classes=node('select');classes.id='teacher-class';
- classes.add(new Option('전체 반',''));
- for(const item of values.availableClasses||[])classes.add(new Option(item,item));
- classes.value=classFilter;
- yearLabel.append(years);clsLabel.append(classes);panel.append(yearLabel,clsLabel);
+ const gradeLabel=node('label','학년');const grades=node('select');grades.id='teacher-grade';
+ grades.setAttribute('aria-label','학습통계 조회 학년');
+ grades.add(new Option('전체 학년',''));
+ grades.add(new Option('1학년','1'));
+ grades.add(new Option('2학년','2'));
+ grades.value=gradeFilter;
+ gradeLabel.append(grades);panel.append(gradeLabel);
  get('teacher-refresh').parentElement.prepend(panel);
- years.addEventListener('change',()=>{yearFilter=years.value;void load();});
- classes.addEventListener('change',()=>{classFilter=classes.value;void load();});
+ grades.addEventListener('change',()=>{gradeFilter=grades.value;void load();});
 }
 async function load(){
  const status=get('teacher-status');status.textContent='관리자 권한과 학급 통계를 확인하는 중입니다...';
  const {data,error}=await db.functions.invoke('learning-admin',{body:{
-  action:'summary',...(yearFilter?{academicYear:Number(yearFilter)}:{}),...(classFilter?{className:classFilter}:{})
+  action:'summary',...(gradeFilter?{grade:Number(gradeFilter)}:{})
  }});
  if(error||!data?.ok||!data.current){get('teacher-content').hidden=true;status.textContent='관리자 통계에 접근할 수 없습니다. 슈퍼 관리자 로그인과 서버 설정을 확인해 주세요.';return;}
- renderFilters(data);
+ renderFilters();
  get('teacher-content').hidden=false;
  const a=data.current,b=data.previous;
  get('teacher-summary').replaceChildren(
