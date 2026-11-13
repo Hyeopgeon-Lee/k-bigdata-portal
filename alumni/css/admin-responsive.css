@@ -46,3 +46,13 @@
   .admin-table th,.admin-table td{padding:.8rem .65rem}
   .admin-table th:last-child,.admin-table td:last-child{min-width:230px}
 }
+
+/* Keep alumni administration column headings on one line.
+   On narrower desktops, scroll the data table rather than wrapping headings. */
+@media (min-width:700px){
+  #admin-table:has(.admin-table--alumni){overflow-x:auto}
+  #admin-table .admin-table--alumni{width:100%;min-width:980px}
+  #admin-table .admin-table--alumni thead th{white-space:nowrap;word-break:keep-all;overflow-wrap:normal}
+  #admin-table .admin-table--alumni th:last-child,
+  #admin-table .admin-table--alumni td:last-child{min-width:100px;width:110px}
+}
