@@ -246,3 +246,11 @@ body[data-page="my-learning"] .learn-sr-only{position:absolute!important;width:1
  .learn-filter .learn-period-navigation{gap:6px}
  .learn-filter .learn-period-label{order:-1;width:100%;flex:auto;text-align:center}
 }
+
+/* Learning period snapshot states */
+.learn-tools .learn-filter #teacher-period-rebuild[hidden]{display:none!important}
+.learn-filter .learn-period-state{display:inline-flex;align-items:center;justify-content:center;min-width:59px;min-height:28px;padding:4px 10px;border-radius:18px;border:1px solid #dce3ef;background:#f3f6fb;color:#38526e;font-size:12px;font-weight:800;white-space:nowrap}
+.learn-filter .learn-period-state[data-state="completed"]{border-color:#b9d8ca;background:#f1f8f4;color:#1d654b}
+.learn-filter .learn-period-state[data-state="live"]{border-color:#ccdbf4;background:#eef4ff;color:#23559c}
+.learn-filter .learn-period-state[data-state="missing"],.learn-filter .learn-period-state[data-state="failed"]{border-color:#efd2c1;background:#fff6ec;color:#874a21}
+#teacher-study-period-summary{margin-top:14px}
