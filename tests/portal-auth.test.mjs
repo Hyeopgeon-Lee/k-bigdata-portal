@@ -103,8 +103,12 @@ assert.match(source,/p_academic_year:/,"both signup paths pass grade");
 
 assert.match(source,/identityFields\(\)\+\s*'\<label\>이름/,"member type selector precedes full name");
 assert.match(adminSource,/member.signup_type==="alumni"/,"admins see graduate membership");
-assert.match(adminSource,/mailTd\.hidden=graduated/,"graduate weekly mail controls are hidden");
-assert.match(adminSource,/member\.signup_type==="alumni"\|\|\["graduated","early_employment"\]\.includes\(enrollment\.value\)/,"alumni, graduates and early-employed students are excluded from the mail UI");
+assert.doesNotMatch(adminSource,/mailTd\.hidden\s*=/,"graduate rows retain the weekly-mail cell so account-save buttons stay in the correct column");
+assert.match(adminSource,/mailStatus\.textContent=graduated\?"대상 아님":/,"graduates and early-employed members have no weekly-mail eligibility");
+assert.match(adminSource,/member\.signup_type==="alumni"\|\|\["graduated","early_employment"\]\.includes\(enrollment\.value\)/,"alumni, graduates and early-employed students are excluded from the mail recipients");
+assert.match(read("supabase/functions/weekly-learning-report/index.ts"),/p\.enrollment_status==="enrolled"&&p\.signup_type!=="alumni"/,"weekly learning mail is limited to enrolled non-alumni accounts");
+assert.match(read("supabase/functions/study-plan-reminder/index.ts"),/\.eq\("signup_type","student"\)\.eq\("approval_status","approved"\)\.eq\("enrollment_status","enrolled"\)/,"study plan reminders exclude graduates");
+assert.match(read("supabase/functions/study-absence-reminder/index.ts"),/\.eq\("enrollment_status","enrolled"\)\.eq\("signup_type","student"\)/,"study absence reminders exclude graduates");
 assert.match(css,/\.portal-admin-table td\[hidden\]/,"hidden mail cells do not occupy mobile grid tracks");
 assert.match(css,/grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/,"mobile student cards use two columns");
 assert.match(css,/portal-auth-secondary-actions/,"login actions use responsive layout");
