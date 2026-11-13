@@ -82,5 +82,22 @@ try{
   assert.deepEqual(errors,[],'unregistered grade page exceptions');
   await context.close();
  }
- console.log('PASS: profile-based first/second-year home, no grade picker, preference override ignored, alumni and responsive layouts');
+ // The super administrator has no student grade and must never see a missing-grade warning.
+ {
+  const context=await browser.newContext({viewport:{width:390,height:900}});
+  await approvedStudent(context,{signup_type:"staff",academic_year:null,enrollment_status:"enrolled"},false,true);
+  const page=await context.newPage(),errors=[];
+  page.on("pageerror",error=>errors.push(error.message));
+  await page.goto("http://127.0.0.1:8765/index.html",{waitUntil:"domcontentloaded"});
+  await page.waitForFunction(()=>document.body.dataset.homePersona==="admin",{timeout:15000});
+  assert.equal((await page.locator("#hero-title").innerText()).trim(),"관리자 포털");
+  assert.equal(await page.locator(".home-grade-control").isVisible(),false,"admin does not require a grade");
+  assert.equal(await page.locator("#home-grade-action").isVisible(),false,"admin sees no grade registration");
+  assert.equal(await page.locator(".home-today").isVisible(),false,"admin has no student daily plan");
+  assert.equal(await page.locator(".portal-search").isVisible(),true,"general services still available");
+  assert.ok(!(await page.locator("body").innerText()).includes("학년 정보가 등록되지 않았습니다."),"no false missing-grade notice for admin");
+  assert.deepEqual(errors,[],"admin page exceptions");
+  await context.close();
+ }
+ console.log('PASS: profile-based first/second-year home, no grade picker, preference override ignored, admin, alumni and responsive layouts');
 }finally{await browser.close();}
