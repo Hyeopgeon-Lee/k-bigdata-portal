@@ -1,18 +1,15 @@
 /* After-school self-directed study. Auth and write permissions are provided by portal-auth.mjs. */
+import {studyPlanningWeeks} from './study-week.mjs';
 const db=window.portalSupabaseClient;
 const $=id=>document.getElementById(id);
 const Z=9*3600000,DAY=86400000;
 const kstDate=t=>new Date(new Date(t).getTime()+Z).toISOString().slice(0,10);
-const currentMonday=()=>{
-  const d=new Date(Date.now()+Z),delta=(d.getUTCDay()+6)%7;
-  return new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate()-delta)).toISOString().slice(0,10);
-};
 const addDays=(day,num)=>new Date(Date.parse(day+'T00:00:00Z')+num*DAY).toISOString().slice(0,10);
 const mondayOf=day=>addDays(day,-(new Date(day+'T00:00:00Z').getUTCDay()+6)%7);
 const mins=secs=>Math.floor(Math.max(0,secs||0)/3600)+'시간 '+String(Math.floor((Math.max(0,secs||0)%3600)/60)).padStart(2,'0')+'분';
 const safe=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const labels=['월','화','수','목','금'];
-let uid='',week=currentMonday(),selected=new Set(),plan=null,sessions=[],active=null;
+let uid='',week=studyPlanningWeeks().defaultWeek,selected=new Set(),plan=null,sessions=[],active=null;
 let canWrite=window.portalLearning?.write===true;
 function message(text,error=false){$('study-status').textContent=text;$('study-status').dataset.error=error?'true':'false';}
 function getSeconds(row){
@@ -22,10 +19,12 @@ function getSeconds(row){
  return Math.max(0,Math.floor((end-Date.parse(row.started_at))/1000)-(row.break_seconds||0));
 }
 async function load(){
+ const weeks=studyPlanningWeeks();
+ if(!weeks.nextWeekOpen&&week===weeks.nextWeek)week=weeks.thisWeek;
  message('클라우드 학습기록을 불러오는 중입니다.');
  const [u,p,s]=await Promise.all([
   db.auth.getUser(),
-  db.from('study_weekly_plans').select('*').gte('week_start',addDays(currentMonday(),-7)).lte('week_start',addDays(currentMonday(),7)),
+  db.from('study_weekly_plans').select('*').gte('week_start',addDays(weeks.thisWeek,-7)).lte('week_start',weeks.nextWeek),
   db.from('study_sessions').select('*').order('started_at',{ascending:false}).limit(300)
  ]);
  if(u.error||!u.data.user||p.error||s.error)throw Error('학습 데이터 조회에 실패했습니다.');
@@ -38,7 +37,9 @@ async function load(){
  plan=found||null;selected=new Set(found?.weekdays||[]);
  $('study-no-plan-reason').value=found?.no_plan_reason||'';
  $('study-week').replaceChildren();
- for(const [d,label] of [[currentMonday(),'이번 주'],[addDays(currentMonday(),7),'다음 주']]){
+ const options=[[weeks.thisWeek,'이번 주']];
+ if(weeks.nextWeekOpen)options.push([weeks.nextWeek,'다음 주']);
+ for(const [d,label] of options){
   $('study-week').add(new Option(label+' · '+d,d));
  }
  $('study-week').value=week;
@@ -47,23 +48,31 @@ async function load(){
 }
 function render(){
  const today=kstDate(Date.now());
+ const weeks=studyPlanningWeeks();
+ const nextWeekLocked=week===weeks.nextWeek&&!weeks.nextWeekOpen;
+ const isNextWeek=week===weeks.nextWeek;
+ $('study-plan-guidance').textContent=weeks.nextWeekOpen
+  ?'학습할 날짜를 선택하세요. 다음 주 계획은 금요일부터 미리 등록할 수 있으며, 당일 오후 4시 이후에는 해당 날짜를 변경할 수 없습니다.'
+  :'학습할 날짜를 선택하세요. 다음 주 계획은 금요일 0시부터 등록할 수 있습니다. 당일 오후 4시 이후에는 해당 날짜를 변경할 수 없습니다.';
+ $('study-no-plan-period').textContent=isNextWeek?'다음 주':'이번 주';
+ $('study-stats-heading').textContent=isNextWeek?'다음 주 실천 현황':'이번 주 실천 현황';
  $('study-days').replaceChildren();
  for(let i=0;i<5;i++){
   const day=addDays(week,i),button=document.createElement('button');
   button.type='button';button.className='study-day'+(selected.has(i+1)?' is-selected':'');
   button.dataset.index=String(i+1);
   button.setAttribute('aria-pressed',String(selected.has(i+1)));
-  button.disabled=!canWrite||day<today||(day===today&&new Date(Date.now()+Z).getUTCHours()>=16);
+  button.disabled=!canWrite||nextWeekLocked||day<today||(day===today&&new Date(Date.now()+Z).getUTCHours()>=16);
   button.innerHTML='<strong>'+labels[i]+'</strong><small>'+day.slice(5).replace('-','.')+'</small><span aria-hidden="true">'+(selected.has(i+1)?'✓':'＋')+'</span>';
   button.addEventListener('click',()=>{selected.has(i+1)?selected.delete(i+1):selected.add(i+1);render();});
   $('study-days').append(button);
  }
  $('study-plan-summary').textContent=selected.size?'학습 예정 '+selected.size+'일 · '+[...selected].sort().map(x=>labels[x-1]).join('·'):'학교에 남기 어려운 사유 제출 (0일)';
- $('study-save').disabled=!canWrite;
+ $('study-save').disabled=!canWrite||nextWeekLocked;
  $('study-save').textContent=selected.size?'주간 계획 저장':'0일 계획 사유 제출';
  $('study-empty').hidden=!!selected.size;
  $('study-no-plan-reason').required=selected.size===0;
- $('study-no-plan-reason').disabled=!canWrite||selected.size>0;
+ $('study-no-plan-reason').disabled=!canWrite||nextWeekLocked||selected.size>0;
  $('study-none-plan-count').textContent=$('study-no-plan-reason').value.length+' / 300자';
  $('study-none-plan-help').textContent=plan&&!plan.weekdays?.length&&!plan.no_plan_reason
    ?'기존 0일 기록에 사유가 없습니다. 학교에 남아 공부하기 어려운 이유를 작성해 주세요.'
@@ -120,6 +129,9 @@ async function session(action){
  }catch(error){console.error(error);message('저장하지 못했습니다. 연결 상태와 계정 권한을 확인해 주세요.',true);render();}
 }
 async function savePlan(){
+ const weeks=studyPlanningWeeks();
+ if(!canWrite){message('승인된 재학생만 자율학습 계획을 등록할 수 있습니다.',true);return;}
+ if(week===weeks.nextWeek&&!weeks.nextWeekOpen){message('다음 주 계획은 금요일 0시부터 등록할 수 있습니다.',true);return;}
  const noPlanReason=selected.size===0?$('study-no-plan-reason').value.trim():null;
  if(selected.size===0&&(!noPlanReason||noPlanReason.length<2||noPlanReason.length>300)){
   message('학교에 남아 공부하기 어려운 이유를 2~300자로 직접 작성해 주세요.',true);
