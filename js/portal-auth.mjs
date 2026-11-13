@@ -433,6 +433,12 @@ async function activate(interactive=true){
     }
     profile=registered;
   }
+  // Verified applicants only: server checks the authenticated user, email
+  // confirmation, pending profile, toggle, and one-mail-per-user record.
+  // This nonessential notification must never block login or member registration.
+  if(profile.approval_status==="pending"&&["student","alumni"].includes(profile.signup_type)){
+    void client.functions.invoke("notify-signup-admin",{body:{action:"notify"}}).catch(()=>{});
+  }
   const {data:expiry,error:sessionError}=await client.rpc("start_portal_session");
   if(sessionError){
     await client.auth.signOut();
