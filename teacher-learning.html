@@ -20,7 +20,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/style.css?v=20261112-page-intro-2">
 <link rel="stylesheet" href="css/portal-ux.css?v=20261112-page-intro-2">
-<link rel="stylesheet" href="css/learning-dashboard.css?v=20261111-mail-compact-v2">
+<link rel="stylesheet" href="css/learning-dashboard.css?v=20261113-grade-period-1">
 <!-- portal:assets:start (generated; edit scripts/portal-shell-template.mjs) -->
 <link rel="stylesheet" href="css/portal-navigation.css?v=20261112-page-intro-2">
 <script defer src="js/portal-navigation.js?v=20261113-admin-isolated-1"></script>
@@ -84,7 +84,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
   <div class="study-topline"><h2 id="teacher-study-title">자율학습 관리</h2>
   <div class="study-admin-controls">
    <label>조회 주간 <select id="study-admin-week" aria-label="자율학습 조회 주간"></select></label>
-   <label>학년 <select id="study-admin-grade"><option value="">전체</option><option value="1">1학년</option><option value="2">2학년</option></select></label>
+   <input type="hidden" id="study-admin-grade" value="">
    <button id="study-admin-refresh" type="button" class="study-outline">새로고침</button>
   </div></div>
   <p class="study-text">학생이 스스로 등록한 학습 날짜와 실제 시작 기록을 비교합니다. 과거 날짜의 미참여만 집계합니다.</p>
@@ -117,7 +117,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <div class="container footer-bottom"><p>© <span id="current-year"></span> K-BigData Service Portal</p></div>
 </footer>
 <script type="module" src="js/portal-auth.mjs?v=20261113-admin-isolated-1"></script>
-<script type="application/x-learning" data-module="js/teacher-learning.js?v=20261113-current-grade-1"></script>
+<script type="application/x-learning" data-module="js/teacher-learning.js?v=20261113-grade-period-1"></script>
 <script type="application/x-learning" data-module="js/study-teacher.js?v=20261113-current-grade-1"></script>
 <script type="application/x-learning" data-module="js/portal-shell-entry.js?v=20261111-account-sync-1"></script>
 </body></html>
