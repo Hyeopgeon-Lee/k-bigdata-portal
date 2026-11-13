@@ -18,24 +18,42 @@ function getSeconds(row){
  const end=row.paused_at?Date.parse(row.paused_at):Date.now();
  return Math.max(0,Math.floor((end-Date.parse(row.started_at))/1000)-(row.break_seconds||0));
 }
+// All date boundaries are Asia/Seoul midnights; PostgreSQL stores timestamptz.
+const kstMidnightISO=day=>new Date(Date.parse(day+'T00:00:00Z')-Z).toISOString();
 async function load(){
  const weeks=studyPlanningWeeks();
  if(!weeks.nextWeekOpen&&week===weeks.nextWeek)week=weeks.thisWeek;
  message('클라우드 학습기록을 불러오는 중입니다.');
- const [u,p,s]=await Promise.all([
-  db.auth.getUser(),
-  db.from('study_weekly_plans').select('*').gte('week_start',addDays(weeks.thisWeek,-7)).lte('week_start',weeks.nextWeek),
-  db.from('study_sessions').select('*').order('started_at',{ascending:false}).limit(300)
+ const {data:identity,error:authError}=await db.auth.getUser();
+ if(authError||!identity.user)throw Error('로그인 정보를 확인하지 못했습니다.');
+ uid=identity.user.id;
+ // A next-week plan still needs this week's sessions for today's live totals.
+ const endWeek=week===weeks.nextWeek?weeks.nextWeek:weeks.thisWeek;
+ const [p,s,a,m]=await Promise.all([
+  db.from('study_weekly_plans')
+   .select('week_start,weekdays,no_plan_reason')
+   .eq('user_id',uid).eq('week_start',week).maybeSingle(),
+  db.from('study_sessions')
+   .select('id,status,started_at,paused_at,break_seconds,duration_seconds')
+   .eq('user_id',uid)
+   .gte('started_at',kstMidnightISO(weeks.thisWeek))
+   .lt('started_at',kstMidnightISO(addDays(endWeek,7)))
+   .order('started_at',{ascending:false}).limit(1000),
+  // An unfinished session can predate this week: never hide the resume/end controls.
+  db.from('study_sessions')
+   .select('id,status,started_at,paused_at,break_seconds,duration_seconds')
+   .eq('user_id',uid).eq('status','active').maybeSingle(),
+  db.from('profiles').select('signup_type,enrollment_status').eq('user_id',uid).single()
  ]);
- if(u.error||!u.data.user||p.error||s.error)throw Error('학습 데이터 조회에 실패했습니다.');
- uid=u.data.user.id;sessions=s.data||[];
- const {data:member,error:memberError}=await db.from("profiles").select("signup_type,enrollment_status").eq("user_id",uid).single();
- if(memberError||!member)throw Error("학적 상태 조회에 실패했습니다.");
+ if(p.error||s.error||a.error||m.error||!m.data)throw Error('학습 데이터 조회에 실패했습니다.');
+ const rows=s.data||[];
+ if(a.data&&!rows.some(item=>item.id===a.data.id))rows.push(a.data);
+ sessions=rows.sort((left,right)=>Date.parse(right.started_at)-Date.parse(left.started_at));
+ active=a.data||sessions.find(item=>item.status==='active')||null;
+ const member=m.data;
  canWrite=window.portalLearning?.write===true&&member.signup_type==="student"&&member.enrollment_status==="enrolled";
- active=sessions.find(x=>x.status==='active')||null;
- const found=(p.data||[]).find(x=>x.week_start===week);
- plan=found||null;selected=new Set(found?.weekdays||[]);
- $('study-no-plan-reason').value=found?.no_plan_reason||'';
+ plan=p.data||null;selected=new Set(plan?.weekdays||[]);
+ $('study-no-plan-reason').value=plan?.no_plan_reason||'';
  $('study-week').replaceChildren();
  const options=[[weeks.thisWeek,'이번 주']];
  if(weeks.nextWeekOpen)options.push([weeks.nextWeek,'다음 주']);
