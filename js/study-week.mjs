@@ -8,6 +8,6 @@ export function studyPlanningWeeks(now=Date.now()){
    local.getUTCDate()-((local.getUTCDay()+6)%7));
  const thisWeek=isoDate(mondayUtc);
  const nextWeek=isoDate(mondayUtc+7*DAY_MS);
- const nextWeekOpen=local.getUTCDay()>=5; // Friday, Saturday and Sunday KST
+ const nextWeekOpen=local.getUTCDay()===0||local.getUTCDay()>=5; // Friday through Sunday KST
  return {thisWeek,nextWeek,nextWeekOpen,defaultWeek:nextWeekOpen?nextWeek:thisWeek};
 }
