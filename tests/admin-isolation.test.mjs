@@ -41,6 +41,8 @@ assert.match(auth,/href:"admin\/index.html"/);
 assert.doesNotMatch(auth,/function renderAdmin\(|function renderApprovalRequests\(|function renderWithdrawnDeletion\(/,
  "shared user login must not contain manager actions");
 const accounts=read("admin/js/accounts.js");
+assert.match(accounts,/<option value=\"enrolled\" selected>재학<\/option>/,"students page defaults to enrolled");
+assert.match(accounts,/member\.signup_type!==\"alumni\"&&member\.enrollment_status===\"enrolled\"/,"default excludes alumni even if stale status says enrolled");
 for(const term of ["renderApprovalRequests","renderAdmin","renderWithdrawnDeletion","approve-portal-signup","admin-delete-student","admin_update_student"])
  assert.ok(accounts.includes(term),"account feature preserved: "+term);
 for(const [html,script,forbidden] of [

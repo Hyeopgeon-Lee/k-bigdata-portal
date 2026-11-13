@@ -35,6 +35,14 @@ try{
    if(admin){
     assert.equal(await page.locator(".admin-intro h1").isVisible(),true);
     assert.equal(await page.locator(".brand-mark").isVisible(),true,"shared H logo "+name);
+    if(name==="accounts"){
+      const filter=page.locator("#portal-admin-filter");
+      await filter.waitFor({state:"visible",timeout:15000});
+      assert.equal(await filter.inputValue(),"enrolled","student accounts must initially show current students");
+      assert.equal(await filter.locator("option:checked").textContent(),"재학");
+      await filter.selectOption("all");
+      assert.equal(await filter.inputValue(),"all","staff can still view all account statuses");
+    }
     if(name==="alumni"){
       await page.locator(".admin-table--alumni tbody tr").first().waitFor({state:"visible",timeout:15000});
       const narrow=await page.evaluate(()=>{

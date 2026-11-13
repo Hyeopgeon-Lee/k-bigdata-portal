@@ -249,7 +249,7 @@ async function renderAdmin(){
     '<p class="portal-auth-lead">기존 회원의 학적과 이용 상태를 관리합니다.</p>'+
     '<div class="portal-admin-toolbar">'+
       '<label>학생 검색<input id="portal-admin-search" type="search" placeholder="이름 · 학번 · 이메일" autocomplete="off"></label>'+
-      '<label>학적 상태<select id="portal-admin-filter"><option value="all">전체 학생</option><option value="enrolled">재학</option><option value="leave">휴학</option><option value="withdrawn">자퇴</option><option value="graduated">졸업</option><option value="early_employment">조기취업</option></select></label>'+
+      '<label>학적 상태<select id="portal-admin-filter"><option value="all">전체 학생</option><option value="enrolled" selected>재학</option><option value="leave">휴학</option><option value="withdrawn">자퇴</option><option value="graduated">졸업</option><option value="early_employment">조기취업</option></select></label>'+
     '</div>'+
     '<p class="portal-admin-summary" id="portal-admin-summary" aria-live="polite"></p>'+
     '<div class="portal-admin-scroll"><table class="portal-admin-table"><thead><tr><th>이름</th><th>가입 유형</th><th>학번 / 졸업년도</th><th>이메일</th><th>가입 상태</th><th>학적</th><th>주간 메일</th><th>변경</th></tr></thead><tbody id="portal-student-list"></tbody></table></div>'+
@@ -359,7 +359,10 @@ async function renderAdmin(){
     const filter=$("#portal-admin-filter").value;
     let visible=0;
     for(const {member,tr,searchText} of rows){
-      const show=(filter==="all"||member.enrollment_status===filter)&&searchText.includes(term);
+      const matchesStatus=filter==="all"||(filter==="enrolled"
+        ?member.signup_type!=="alumni"&&member.enrollment_status==="enrolled"
+        :member.enrollment_status===filter);
+      const show=matchesStatus&&searchText.includes(term);
       tr.hidden=!show;if(show)visible++;
     }
     const tally={enrolled:0,leave:0,withdrawn:0,graduated:0,early_employment:0};
