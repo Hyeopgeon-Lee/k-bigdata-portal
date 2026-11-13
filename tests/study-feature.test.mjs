@@ -56,4 +56,7 @@ assert.match(worker,/study-absence\.html\?reason=/);
 assert.ok(job.includes('cron: "0 0 * * 2-6"'),'09:00 KST on Tue-Sat');
 assert.match(job,/id-token: write/);
 assert.ok(css.includes('max-width:760px'),'mobile layout');
-console.log('PASS: portal study page, faculty administration, secure mail and mobile styling.');
+assert.match(student,/kstMidnightISO/,"study uses Korean midnight bounds");
+assert.match(student,/\.eq\('user_id',uid\)\.eq\('status','active'\)/,"old active sessions remain resumable");
+assert.match(student,/\.select\('week_start,weekdays,no_plan_reason'\)/,"plans do not load every column");
+console.log('PASS: portal study page, faculty administration, secure mail and bounded history.');
