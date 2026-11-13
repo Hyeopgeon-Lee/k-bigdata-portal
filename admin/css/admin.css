@@ -1,27 +1,72 @@
+/* Shared visual language with the portal home: navy brand, white cards,
+   subtle borders and compact mobile tiles. Administrator-only, no global UI changes. */
 [hidden]{display:none!important}
-body{background:#f5f7fc;color:#18365c}
-.admin-header{position:sticky;top:0;z-index:30;background:#fff;border-bottom:1px solid #dce4ef}
-.admin-header-inner{width:min(100% - 32px,1180px);min-height:68px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:14px}
-.admin-brand{font-weight:800;font-size:16px;text-decoration:none;color:#142d70}
-.admin-header-links{display:flex;flex-wrap:wrap;gap:13px}
-.admin-header-links a{font-size:13px;color:#19457a;font-weight:750;text-decoration:none}
-.admin-main{width:min(100% - 32px,1180px);margin:32px auto 68px;min-height:55vh}
-.admin-intro{margin-bottom:22px}.admin-intro small{font-size:12px;font-weight:800;color:#38638f;letter-spacing:.08em}
-.admin-intro h1{font-size:clamp(25px,3.2vw,36px);line-height:1.3;color:#102448;margin:8px 0}
-.admin-intro p{line-height:1.55;color:#586e88;margin:4px 0}
-.admin-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.admin-tile{display:flex;flex-direction:column;gap:8px;min-width:0;padding:22px;border:1px solid #d7e1ef;background:#fff;border-radius:15px;color:#19385f;text-decoration:none;box-shadow:0 5px 20px #1024480a}
-.admin-tile strong{font-size:18px;line-height:1.4}.admin-tile span{font-size:13px;line-height:1.6;color:#526b89}
-.admin-tile:hover{background:#f7faff;border-color:#7a9bc3}
-.admin-menu{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 23px}
-.admin-menu a{display:inline-flex;align-items:center;min-height:42px;padding:8px 13px;border:1px solid #cad8e9;border-radius:10px;background:#fff;color:#1a417c;font-weight:700;text-decoration:none}
-.admin-menu a:hover,.admin-menu a[aria-current="page"]{background:#eaf2ff;border-color:#7194c9}
-.admin-message,.admin-panel{border:1px solid #d7e1ef;background:#fff;border-radius:14px;padding:20px;color:#18365d}
-.admin-panel-heading{font-size:21px;color:#19365f;margin:0 0 16px}
-.admin-count{margin:0 0 14px;color:#526880;font-weight:650}
-.admin-inline-card{position:static!important;width:100%!important;max-width:none!important;max-height:none!important;overflow:visible!important;margin:0!important;padding:22px!important}
-#admin-accounts-workspace .portal-auth-card:has(.portal-admin-table){max-height:none}
+:root{--admin-primary:#153d80;--admin-ink:#102448;--admin-muted:#5c708b;--admin-border:#d9e3f0;--admin-surface:#fff;--admin-bg:#f5f7fb}
+html,body{max-width:100%;min-height:100%;margin:0}
+body{background:var(--admin-bg);color:var(--admin-ink);overflow-x:hidden}
+.admin-header.site-header{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.97);border-bottom:1px solid #e0e7f2;box-shadow:0 2px 16px rgba(19,48,91,.03)}
+.admin-header-inner.header-inner{width:min(calc(100% - 48px),1280px);max-width:1280px;min-height:76px;margin:0 auto;padding:0;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.admin-brand.brand{display:inline-flex;align-items:center;gap:13px;min-width:0;flex:none;color:#0b1739;text-decoration:none}
+.admin-brand .brand-mark{width:42px;height:42px;flex:0 0 42px;border-radius:11px}
+.admin-brand-copy{display:flex;min-width:0;flex-direction:column;gap:3px;white-space:nowrap}
+.admin-brand-copy strong{font-size:15px;line-height:1.3;letter-spacing:-.04em;font-weight:850}
+.admin-brand-copy small{font-size:12px;line-height:1.3;color:#66758d;font-weight:650}
+.admin-header-links{display:flex;align-items:center;justify-content:flex-end;flex:1;flex-wrap:wrap;gap:7px}
+.admin-header-links .admin-header-link{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:8px 13px;border-radius:9px;color:#455771;font-size:13px;font-weight:750;line-height:1.25;text-decoration:none;white-space:nowrap}
+.admin-header-links .admin-header-link:hover,.admin-header-links .admin-header-link--active{background:#eef4fd;color:var(--admin-primary)}
+.admin-header .portal-account-trigger{flex:0 0 auto}
+.admin-main{width:min(calc(100% - 48px),1280px);min-height:calc(100vh - 155px);max-width:1280px;margin:0 auto;padding:31px 0 82px}
+.admin-intro{display:flex;align-items:center;justify-content:space-between;gap:24px;margin:0 0 30px}
+.admin-intro-copy{min-width:0}
+.admin-kicker{margin:0 0 8px;font-size:11px;font-weight:850;line-height:1.5;color:#2e659b;letter-spacing:.1em}
+.admin-intro h1{margin:0 0 5px;font-size:clamp(27px,2.7vw,35px);font-weight:850;line-height:1.32;letter-spacing:-.045em;color:#0e2a58}
+.admin-intro-copy>p:last-child{margin:0;color:#5d7088;font-size:14px;line-height:1.6;word-break:keep-all}
+.admin-intro-link{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:42px;flex:none;padding:8px 13px;border:1px solid #d4e1f0;background:#fff;border-radius:9px;color:#284b77;font-weight:750;font-size:13px;text-decoration:none;white-space:nowrap}
+.admin-intro-link:hover{background:#f1f6fe;border-color:#9db7d5}
+.admin-section{margin-top:26px}
+.admin-section:first-child{margin-top:0}
+.admin-section-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:13px;gap:10px}
+.admin-section-head h2{margin:0;color:#16376d;font-size:20px;letter-spacing:-.025em;line-height:1.45;font-weight:800}
+.admin-section-head p{margin:3px 0 0;color:#63748b;font-size:13px;line-height:1.5}
+.admin-grid{display:grid;min-width:0;gap:13px}
+.admin-grid--featured{grid-template-columns:repeat(2,minmax(0,1fr))}
+.admin-grid--services{grid-template-columns:repeat(3,minmax(0,1fr))}
+.admin-tile{position:relative;display:flex;align-items:flex-start;gap:15px;min-width:0;min-height:123px;padding:20px 22px;background:#fff;border:1px solid var(--admin-border);border-radius:15px;color:#16365f;text-decoration:none;box-shadow:0 4px 16px rgba(12,40,82,.025);transition:border-color .15s,background .15s,transform .15s,box-shadow .15s}
+.admin-tile--featured{min-height:140px;background:linear-gradient(118deg,#fff 0%,#f6f9ff 100%);border-color:#cbdbef}
+.admin-tile:hover{border-color:#86a8d3;background:#f8fbff;box-shadow:0 10px 24px rgba(12,40,82,.075);transform:translateY(-2px)}
+.admin-tile:focus-visible,.admin-menu a:focus-visible,.admin-header a:focus-visible{outline:3px solid #35a4d5;outline-offset:3px}
+.admin-tile-symbol{width:44px;height:44px;flex:0 0 44px;display:grid;place-items:center;border-radius:12px;color:#215898;background:#eaf2fd}
+.admin-tile-symbol svg{width:23px;height:23px;display:block}
+.admin-tile-symbol--badge-check,.admin-tile-symbol--users{background:#e6f0ff;color:#1b4d94}
+.admin-tile-symbol--chart{background:#eaf5ff;color:#256a9d}
+.admin-tile-symbol--award{background:#edf0ff;color:#585cb3}
+.admin-tile-symbol--calendar{background:#edf8f4;color:#21846d}
+.admin-tile-symbol--message{background:#f2efff;color:#6d5da8}
+.admin-tile-symbol--network{background:#eaf5f8;color:#23738a}
+.admin-tile-copy{min-width:0;flex:1;display:flex;flex-direction:column;gap:7px;padding-top:3px}
+.admin-tile-copy strong{font-size:17px;font-weight:800;line-height:1.3;letter-spacing:-.025em;word-break:keep-all;color:#16355e}
+.admin-tile-copy>span{font-size:13px;color:#61728a;line-height:1.5;word-break:keep-all}
+.admin-tile-arrow{align-self:flex-end;font-size:20px;line-height:1;color:#416c9d;font-weight:600;margin-left:auto;padding-left:5px}
+.admin-tile--featured .admin-tile-copy strong{font-size:19px}
+.admin-intro--subpage{margin-bottom:20px}
+.admin-menu[aria-label="관리자 업무 메뉴"]{display:flex;align-items:center;flex-wrap:wrap;gap:7px;margin:0 0 20px;padding:10px;border:1px solid #d8e3f1;border-radius:13px;background:#fff;box-shadow:0 3px 14px rgba(12,40,82,.025)}
+.admin-menu[aria-label="관리자 업무 메뉴"] a{display:inline-flex;align-items:center;min-height:39px;padding:8px 12px;border:0;border-radius:9px;background:transparent;color:#536781;font-size:13px;font-weight:750;line-height:1.35;text-decoration:none;white-space:nowrap}
+.admin-menu[aria-label="관리자 업무 메뉴"] a:hover{background:#f1f6fe;color:#174e88}
+.admin-menu[aria-label="관리자 업무 메뉴"] a[aria-current="page"]{background:#eaf2ff;color:#174a88}
+.admin-menu[aria-label="관리자 업무 메뉴"] .admin-menu-home{background:#f2f5fa;color:#315578}
+.admin-panel,.admin-message{min-width:0;padding:24px;border:1px solid var(--admin-border);border-radius:15px;background:#fff;color:#19385f;box-shadow:0 4px 18px rgba(12,40,82,.025)}
+.admin-panel-heading{font-size:20px;margin:0 0 15px;color:#143765;line-height:1.4}
+.admin-count{margin:0 0 14px;color:#526880;font-size:13px;font-weight:700}
+.admin-panel .admin-menu:not([aria-label]){display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin:8px 0 16px}
+.admin-panel .admin-menu a,.admin-panel .admin-menu button{display:inline-flex;min-height:40px;padding:8px 13px;align-items:center;justify-content:center;border:1px solid #d5e2f0;border-radius:9px;background:#f7faff;color:#24518c;font-size:13px;font-weight:750;line-height:1.4;text-decoration:none}
+.admin-panel .admin-menu button:hover,.admin-panel .admin-menu a:hover{background:#e8f1ff}
+.admin-inline-card{position:static!important;width:100%!important;max-width:none!important;max-height:none!important;min-height:0!important;overflow:visible!important;margin:0!important;padding:24px!important;border:1px solid #d9e3f0;border-radius:15px;background:#fff;box-shadow:0 4px 18px rgba(12,40,82,.025)}
+#admin-accounts-workspace .portal-auth-card:has(.portal-admin-table){width:100%;max-height:none}
 #admin-accounts-workspace .portal-auth-card .portal-auth-actions{margin-top:14px}
-.admin-main :is(a,button,input,select,textarea):focus-visible{outline:3px solid #38a9d0;outline-offset:2px}
-@media(max-width:850px){.admin-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:620px){.admin-main{width:min(100% - 24px,1180px);margin-top:22px}.admin-grid{grid-template-columns:1fr}.admin-header-inner{align-items:flex-start;justify-content:center;flex-direction:column;gap:10px;padding:12px 0}.admin-inline-card,.admin-panel{padding:15px!important}.admin-brand{font-size:15px}.admin-menu a{font-size:13px}}
+#admin-accounts-workspace{min-width:0;width:100%}
+.admin-main .learn-container{max-width:100%;width:100%;min-width:0;padding:0}
+.admin-main .learn-section,.admin-main .my-page-panel{border-color:var(--admin-border);border-radius:15px;box-shadow:0 4px 18px rgba(12,40,82,.025)}
+.admin-main :is(a,button,input,select,textarea):focus-visible{outline:3px solid #35a4d5;outline-offset:2px}
+@media(max-width:980px){.admin-grid--services{grid-template-columns:repeat(2,minmax(0,1fr))}.admin-header-links{gap:2px}.admin-header-links .admin-header-link{padding:8px}}
+@media(max-width:700px){.admin-header-inner.header-inner{width:min(calc(100% - 32px),1280px);gap:10px;min-height:70px;flex-wrap:wrap;padding:10px 0}.admin-header-links{order:3;justify-content:flex-start;width:100%;flex-basis:100%;gap:4px}.admin-main{width:min(calc(100% - 32px),1280px);padding:22px 0 55px}.admin-intro{align-items:flex-start;flex-direction:column;gap:12px;margin-bottom:22px}.admin-intro-link{min-height:38px}.admin-grid--featured,.admin-grid--services{grid-template-columns:1fr}.admin-tile{min-height:104px;padding:17px;gap:13px}.admin-tile--featured{min-height:120px}.admin-tile-symbol{width:40px;height:40px;flex-basis:40px}.admin-tile-copy strong{font-size:16px}.admin-tile--featured .admin-tile-copy strong{font-size:18px}.admin-section{margin-top:25px}.admin-section-head h2{font-size:19px}.admin-menu[aria-label="관리자 업무 메뉴"]{overflow-x:auto;flex-wrap:nowrap;scrollbar-width:thin;padding:8px;gap:4px;margin-bottom:15px}.admin-menu[aria-label="관리자 업무 메뉴"] a{flex:0 0 auto}.admin-inline-card,.admin-panel{padding:16px!important}.admin-brand-copy strong{font-size:14px}.admin-brand-copy small{font-size:11px}.admin-brand .brand-mark{width:38px;height:38px;flex-basis:38px}}
+@media(prefers-reduced-motion:reduce){.admin-tile{transition:none}.admin-tile:hover{transform:none}}

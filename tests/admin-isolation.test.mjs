@@ -5,6 +5,22 @@ const read=p=>readFileSync(new URL("../"+p,import.meta.url),"utf8");
 const routes=["index","accounts","certifications","rooms","help","learning"];
 const modules=["dashboard","accounts","certifications","rooms","help","learning"];
 const guarded=read("admin/js/guard.mjs");
+const adminHome=read("admin/index.html"),adminCSS=read("admin/css/admin.css");
+assert.match(adminHome,/admin-grid--featured/,"home uses two featured management actions");
+assert.match(adminHome,/admin-grid--services/,"home groups supporting department services");
+assert.match(adminHome,/admin-tile-symbol/,"portal-style illustrated management cards");
+assert.match(adminHome,/brand-mark/,"same H-shaped brand mark as student portal");
+assert.match(adminCSS,/\.admin-grid--services/);
+assert.match(adminCSS,/@media\(max-width:700px\)/,"responsive cards and navigation");
+for(const name of ["index","accounts","learning","certifications","rooms","help"]){
+ const page=read("admin/"+name+".html");
+ assert.match(page,/admin-header-inner header-inner/,"consistent header "+name);
+ assert.match(page,/ADMIN PORTAL/,"common page eyebrow "+name);
+ assert.match(page,/admin-brand-copy brand-copy/,"common portal branding "+name);
+ assert.match(page,/admin.css\?v=20261113-portal-home-unified-1/,"updated styles "+name);
+ if(name!=="index")assert.match(page,/aria-label="관리자 업무 메뉴"/,"common subpage nav "+name);
+}
+
 assert.match(guarded,/portal_super_admin_allowed/,"role must be server verified");
 assert.match(guarded,/data!==true/,"unauthorized users denied");
 assert.match(guarded,/panel\.hidden=true/,"on failure admin contents hidden");
