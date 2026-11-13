@@ -1,6 +1,6 @@
 (function () {
   'use strict';
-  if (!document.querySelector('link[href="css/jobs.css"]')) { const link = document.createElement('link'); link.rel = 'stylesheet'; link.href = 'css/jobs.css'; document.head.appendChild(link); }
+  if (!document.querySelector('link[href="css/jobs.css"],link[href="../alumni/css/jobs.css"]')) { const link = document.createElement('link'); link.rel = 'stylesheet'; link.href = 'css/jobs.css'; document.head.appendChild(link); }
   const esc = value => String(value ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
   const qs = (s, root = document) => root.querySelector(s);
   const qsa = (s, root = document) => [...root.querySelectorAll(s)];
