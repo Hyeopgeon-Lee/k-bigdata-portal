@@ -24,7 +24,13 @@ try{
  }
  // Expose the ready state only after the protected content is no longer hidden.
  document.documentElement.dataset.adminAccess="approved";
- await import(new URL("./"+name,import.meta.url).href);
+ const moduleUrl=new URL("./"+name,import.meta.url);
+ const moduleVersion=document.body.dataset.adminModuleVersion;
+ if(moduleVersion){
+  if(!/^[a-zA-Z0-9-]+$/.test(moduleVersion))throw Error("INVALID_MODULE_VERSION");
+  moduleUrl.searchParams.set("v",moduleVersion);
+ }
+ await import(moduleUrl.href);
 }catch(error){
  window.portalAdminAllowed=false;
  document.documentElement.dataset.adminAccess="denied";
