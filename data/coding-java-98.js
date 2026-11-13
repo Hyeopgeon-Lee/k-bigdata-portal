@@ -2285,7 +2285,7 @@ export const javaProblems = [
     "topic": "배열",
     "title": "첫 번째 일치 위치",
     "statement": "양의 정수 N, 정수 N개, 찾을 정수 target을 입력받으시오. 배열에서 target이 처음 나타나는 위치(0부터 시작)를 출력하시오. 없으면 -1을 출력하시오.",
-    "input": "5 7 8 7 9 7 7",
+    "input": "5\n7 8 7 9 7\n7",
     "output": "0",
     "examples": [
       {
@@ -2295,7 +2295,7 @@ export const javaProblems = [
       }
     ],
     "hint": "첫 발견 즉시 break 하면 첫 번째 인덱스를 얻습니다.",
-    "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        int n=sc.nextInt(); // 배열에 저장할 숫자 개수를 입력받음\n        int[] arr=new int[n]; // n개 크기의 정수 배열을 생성\n        for(int i=0;i<n;i++){ // i를 0부터 n-1까지 증가\n            arr[i]=sc.nextInt(); // i번째 위치에 다음 정수를 저장\n        } // 전체 배열 입력을 완료\n        int target=sc.nextInt(); // 찾을 값 7 입력\n        int index=-1; // 찾지 못했을 때의 반환값 -1\n        for(int i=0;i<n;i++){ // 인덱스 0부터 순서대로 검사\n            if(arr[i]==target){ index=i; break; } // i=0에서 발견 → index=0, 종료\n        } // 탐색 완료\n        System.out.println(index); // 첫 일치 위치 0 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
+    "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        System.out.print(\"배열 크기 : \");\n        System.out.flush();\n        int n=sc.nextInt(); // 배열에 저장할 숫자 개수를 입력받음\n        int[] arr=new int[n]; // n개 크기의 정수 배열을 생성\n        System.out.print(\"정수 : \");\n        System.out.flush();\n        for(int i=0;i<n;i++){ // i를 0부터 n-1까지 증가\n            arr[i]=sc.nextInt(); // i번째 위치에 다음 정수를 저장\n        } // 전체 배열 입력을 완료\n        System.out.print(\"목표값 : \");\n        System.out.flush();\n        int target=sc.nextInt(); // 찾을 값 7 입력\n        int index=-1; // 찾지 못했을 때의 반환값 -1\n        for(int i=0;i<n;i++){ // 인덱스 0부터 순서대로 검사\n            if(arr[i]==target){ index=i; break; } // i=0에서 발견 → index=0, 종료\n        } // 탐색 완료\n        System.out.println(index); // 첫 일치 위치 0 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
     "explanation": "배열에 저장할 숫자 개수를 입력받음. n개 크기의 정수 배열을 생성. i를 0부터 n-1까지 증가. 예제 실행 결과는 arr[i] → 참, index → 0입니다. 확인할 조건: 중복값·없음.",
     "trace": [
       [
@@ -2319,7 +2319,8 @@ export const javaProblems = [
     ],
     "constraints": "1≤N≤100, 원소 N개, target",
     "edgeCases": "중복값·없음",
-    "concept": "탐색, break"
+    "concept": "탐색, break",
+    "inputDisplay": "배열 크기 : 5\n정수 : 7 8 7 9 7\n목표값 : 7"
   },
   {
     "id": "JAVA-064",
@@ -2328,10 +2329,10 @@ export const javaProblems = [
     "topic": "배열",
     "title": "배열 원소 위치 교환",
     "statement": "양의 정수 N, 정수 N개, 배열의 위치 i와 j(0≤i,j<N)를 입력받으시오. i번째와 j번째 원소를 교환한 다음 전체 배열을 공백으로 구분해 출력하시오.",
-    "input": "4 10 20 30 40 1 3",
+    "input": "4\n10 20 30 40\n1 3",
     "output": "10 40 30 20",
     "hint": "원소 값을 임시 변수에 보관한 뒤 바꿉니다.",
-    "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        int n=sc.nextInt(); // 배열에 저장할 숫자 개수를 입력받음\n        int[] arr=new int[n]; // n개 크기의 정수 배열을 생성\n        for(int i=0;i<n;i++){ // i를 0부터 n-1까지 증가\n            arr[i]=sc.nextInt(); // i번째 위치에 다음 정수를 저장\n        } // 전체 배열 입력을 완료\n        int i=sc.nextInt(); // 교환할 첫 번째 인덱스 1\n        int j=sc.nextInt(); // 교환할 두 번째 인덱스 3\n        int temp=arr[i]; // temp=20 저장\n        arr[i]=arr[j]; // arr[1]:20→40\n        arr[j]=temp; // arr[3]:40→20\n        StringJoiner out=new StringJoiner(\" \"); // 공백 구분 출력 준비\n        for(int value:arr) out.add(String.valueOf(value)); // 원소를 차례로 연결\n        System.out.println(out); // 10 40 30 20 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
+    "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        System.out.print(\"배열 크기 : \");\n        System.out.flush();\n        int n=sc.nextInt(); // 배열에 저장할 숫자 개수를 입력받음\n        int[] arr=new int[n]; // n개 크기의 정수 배열을 생성\n        System.out.print(\"정수 : \");\n        System.out.flush();\n        for(int i=0;i<n;i++){ // i를 0부터 n-1까지 증가\n            arr[i]=sc.nextInt(); // i번째 위치에 다음 정수를 저장\n        } // 전체 배열 입력을 완료\n        System.out.print(\"교환할 두 인덱스(0부터 시작) : \");\n        System.out.flush();\n        int i=sc.nextInt(); // 교환할 첫 번째 인덱스 1\n        int j=sc.nextInt(); // 교환할 두 번째 인덱스 3\n        int temp=arr[i]; // temp=20 저장\n        arr[i]=arr[j]; // arr[1]:20→40\n        arr[j]=temp; // arr[3]:40→20\n        StringJoiner out=new StringJoiner(\" \"); // 공백 구분 출력 준비\n        for(int value:arr) out.add(String.valueOf(value)); // 원소를 차례로 연결\n        System.out.println(out); // 10 40 30 20 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
     "explanation": "배열에 저장할 숫자 개수를 입력받음. n개 크기의 정수 배열을 생성. i를 0부터 n-1까지 증가. 예제 실행 결과는 arr[1] → 40, arr[3] → 20입니다. 확인할 조건: i=j.",
     "trace": [
       [
@@ -2361,7 +2362,8 @@ export const javaProblems = [
     ],
     "constraints": "1≤N≤100, N개 값, 0≤i,j<N",
     "edgeCases": "i=j",
-    "concept": "temp, 인덱스"
+    "concept": "temp, 인덱스",
+    "inputDisplay": "배열 크기 : 4\n정수 : 10 20 30 40\n교환할 두 인덱스(0부터 시작) : 1 3"
   },
   {
     "id": "JAVA-065",
@@ -2370,7 +2372,7 @@ export const javaProblems = [
     "topic": "배열",
     "title": "오름차순 배열인지 검사",
     "statement": "양의 정수 N과 정수 N개를 입력받으시오. 배열이 앞에서 뒤로 오름차순 또는 같은 값이 이어지는 순서라면 YES, 그렇지 않으면 NO를 출력하시오.",
-    "input": "4 1 2 2 4",
+    "input": "4\n1 2 2 4",
     "output": "YES",
     "examples": [
       {
@@ -2380,7 +2382,7 @@ export const javaProblems = [
       }
     ],
     "hint": "같은 값은 허용하며 arr[i-1] > arr[i]만 위반입니다.",
-    "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        int n=sc.nextInt(); // 배열에 저장할 숫자 개수를 입력받음\n        int[] arr=new int[n]; // n개 크기의 정수 배열을 생성\n        for(int i=0;i<n;i++){ // i를 0부터 n-1까지 증가\n            arr[i]=sc.nextInt(); // i번째 위치에 다음 정수를 저장\n        } // 전체 배열 입력을 완료\n        boolean sorted=true; // 비감소 배열이라고 가정\n        for(int i=1;i<n;i++){ // 앞 원소와 다음 원소를 비교\n            if(arr[i-1]>arr[i]){ sorted=false; break; } // 내림 구간 발견 시 false\n        } // 순서 검사 완료\n        System.out.println(sorted?\"YES\":\"NO\"); // 1,2,2,4 → YES 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
+    "code": "import java.util.*; // Scanner, Arrays, ArrayList 및 Locale 표준 API 사용\npublic class Main { // 자동 채점 실행 클래스\n    public static void main(String[] args) { // 프로그램 실행 시작\n        Scanner sc=new Scanner(System.in); // 표준 입력을 읽을 객체 생성\n        System.out.print(\"배열 크기 : \");\n        System.out.flush();\n        int n=sc.nextInt(); // 배열에 저장할 숫자 개수를 입력받음\n        int[] arr=new int[n]; // n개 크기의 정수 배열을 생성\n        System.out.print(\"정수 : \");\n        System.out.flush();\n        for(int i=0;i<n;i++){ // i를 0부터 n-1까지 증가\n            arr[i]=sc.nextInt(); // i번째 위치에 다음 정수를 저장\n        } // 전체 배열 입력을 완료\n        boolean sorted=true; // 비감소 배열이라고 가정\n        for(int i=1;i<n;i++){ // 앞 원소와 다음 원소를 비교\n            if(arr[i-1]>arr[i]){ sorted=false; break; } // 내림 구간 발견 시 false\n        } // 순서 검사 완료\n        System.out.println(sorted?\"YES\":\"NO\"); // 1,2,2,4 → YES 출력\n        sc.close(); // 사용을 마친 입력 스트림 해제\n    } // main 메서드 종료\n} // Main 클래스 종료",
     "explanation": "배열에 저장할 숫자 개수를 입력받음. n개 크기의 정수 배열을 생성. i를 0부터 n-1까지 증가. 예제 실행 결과는 arr → 4개, sorted → true입니다. 확인할 조건: 같은 값 허용.",
     "trace": [
       [
@@ -2398,7 +2400,8 @@ export const javaProblems = [
     ],
     "constraints": "1≤N≤100, 정수 N개",
     "edgeCases": "같은 값 허용",
-    "concept": "인접 원소 비교"
+    "concept": "인접 원소 비교",
+    "inputDisplay": "배열 크기 : 4\n정수 : 1 2 2 4"
   },
   {
     "id": "JAVA-066",
