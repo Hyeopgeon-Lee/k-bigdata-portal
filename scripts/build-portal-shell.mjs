@@ -37,7 +37,7 @@ for(const file of htmlPages){
   // Coding/learning UI assets have their own content versions and can be updated
   // without unnecessarily invalidating the shared portal shell.
   html=html.replace(/(href="css\/[^"?]+\.css)(?:\?v=[^"]+)?"/g,(match,asset)=>
-    ['href="css/question-browser.css','href="css/study-review.css','href="css/coding.css','href="css/practical.css','href="css/home-refresh.css','href="css/learning-dashboard.css','href="css/room.css'].includes(asset) ? match : `${asset}?v=${shellVersion}"`);
+    ['href="css/question-browser.css','href="css/study-review.css','href="css/coding.css','href="css/practical.css','href="css/home-refresh.css','href="css/learning-dashboard.css','href="css/room.css','href="css/home-grade.css','href="css/my-certifications.css','href="css/my-page.css','href="css/study.css'].includes(asset) ? match : `${asset}?v=${shellVersion}"`);
   html=html.replace(/(src="js\/(?:app|home-dashboard|learning-ui|portal-shell-entry|coding)\.js)(?:\?v=[^"]+)?"/g,(match,asset)=>
     (asset==='src="js/coding.js' || asset==='src="js/learning-ui.js' || asset==='src="js/home-dashboard.js') ? match : `${asset}?v=${shellVersion}"`);
   html=html.replace(/<main\b([^>]*)(?<!tabindex="-1")>/,match=>match.includes('tabindex=')?match:match.slice(0,-1)+' tabindex="-1">');
