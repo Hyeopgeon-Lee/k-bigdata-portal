@@ -20,7 +20,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/style.css?v=20261112-page-intro-2">
 <link rel="stylesheet" href="css/portal-ux.css?v=20261112-page-intro-2">
-<link rel="stylesheet" href="css/my-page.css?v=20261112-page-intro-2">
+<link rel="stylesheet" href="css/my-page.css?v=20261113-mypage-width-1">
 <!-- portal:assets:start (generated; edit scripts/portal-shell-template.mjs) -->
 <link rel="stylesheet" href="css/portal-navigation.css?v=20261112-page-intro-2">
 <script defer src="js/portal-navigation.js?v=20261113-admin-isolated-1"></script>
@@ -100,16 +100,22 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
         <p id="my-page-academic-message" class="my-page-message" role="status" aria-live="polite"></p>
       </form>
     </section>
-    <section class="my-page-panel" aria-labelledby="my-page-password-heading">
+    <section class="my-page-panel my-page-security" aria-labelledby="my-page-password-heading">
       <div class="my-page-panel-head"><div><p class="my-page-kicker">SECURITY</p><h2 id="my-page-password-heading">비밀번호 변경</h2></div></div>
       <p class="my-page-description">현재 비밀번호를 확인한 뒤 새로운 비밀번호로 변경합니다.</p>
       <form id="my-page-password-form" class="my-page-password-form">
-        <label for="my-page-old-password">현재 비밀번호</label>
-        <input id="my-page-old-password" name="old_password" type="password" autocomplete="current-password" required>
-        <label for="my-page-new-password">새 비밀번호 <span>(8자 이상)</span></label>
-        <input id="my-page-new-password" name="new_password" type="password" autocomplete="new-password" minlength="8" required>
-        <label for="my-page-confirm-password">새 비밀번호 확인</label>
-        <input id="my-page-confirm-password" name="confirm_password" type="password" autocomplete="new-password" minlength="8" required>
+        <div class="my-page-password-field">
+          <label for="my-page-old-password">현재 비밀번호</label>
+          <input id="my-page-old-password" name="old_password" type="password" autocomplete="current-password" required>
+        </div>
+        <div class="my-page-password-field">
+          <label for="my-page-new-password">새 비밀번호 <span>(8자 이상)</span></label>
+          <input id="my-page-new-password" name="new_password" type="password" autocomplete="new-password" minlength="8" required>
+        </div>
+        <div class="my-page-password-field">
+          <label for="my-page-confirm-password">새 비밀번호 확인</label>
+          <input id="my-page-confirm-password" name="confirm_password" type="password" autocomplete="new-password" minlength="8" required>
+        </div>
         <button class="my-page-primary" type="submit">비밀번호 변경</button>
         <p id="my-page-password-message" class="my-page-message" role="status" aria-live="polite"></p>
       </form>
