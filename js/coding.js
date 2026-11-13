@@ -4,7 +4,7 @@ import {bindReview,reviewControls,gradeLabels} from "./study-review.js";
 import {learningLocal as localStorage, learningSession as sessionStorage} from "./learning-storage.mjs";
 import {debounceCloudDraft,fetchCloudDraft} from "./learning-activity.mjs";
 import {codingProblems as sampleProblems} from "../data/coding-samples.js?v=20261111-ubuntu-vim-only-2";
-import {javaProblems} from "../data/coding-java-98.js?v=20261113-java065-prompts-1";
+import {javaProblems} from "../data/coding-java-98.js?v=20261113-java062-flush-cleanup-1";
 import {cFoundationProblems} from "../data/coding-c-foundations.js?v=20261111-essential-ranges-1";
 import {cAdvancedProblems} from "../data/coding-c-advanced.js?v=20261111-essential-ranges-1";
 import {pythonFoundationProblems} from "../data/coding-python-foundations.js?v=20261111-essential-ranges-1";
@@ -437,6 +437,7 @@ document.getElementById("coding-quiz-heading").innerHTML=quizHeading({
 });
 mountQuizDisclosure(document.getElementById("coding-answer"),{title:"해설",open:true});
 let codingAttemptId;
+let answerHighlighterPromise;
 function showQuestion(q) {
   codingAttemptId=getSafe("coding-attempt-"+q.id)||crypto.randomUUID();
   setSafe("coding-attempt-"+q.id,codingAttemptId);
@@ -470,6 +471,11 @@ function showQuestion(q) {
   }
   $("#coding-hint-text").textContent = q.hint;
   $("#coding-code").textContent = q.code;
+  const answerFrame = $("#coding-code").closest(".coding-code");
+  const answerFiles = {java:"Main.java",c:"main.c",python:"main.py"};
+  answerFrame.classList.toggle("coding-code--ide", Boolean(answerFiles[q.language]));
+  if (answerFiles[q.language]) answerFrame.dataset.filename = answerFiles[q.language];
+  else delete answerFrame.dataset.filename;
   const vimSteps = q.language === "linux" && Array.isArray(q.vimSteps) ? q.vimSteps : [];
   const vimList = $("#coding-vim-explanation-list");
   vimList.replaceChildren();
@@ -582,6 +588,15 @@ $("#coding-hint-button").addEventListener("click", () => reveal("#coding-hint","
 $("#coding-answer-button").addEventListener("click", () => {
   reveal("#coding-answer","#coding-answer-button");
   const slot=$("#coding-review-slot"),q=current;
+  if (!$("#coding-answer").hidden && q.language !== "linux") {
+    answerHighlighterPromise ||= import("./coding-answer-highlight.js?v=20261113-ide-1")
+      .catch(error => {console.warn("정답 코드 강조 모듈을 불러오지 못했습니다.",error);return null;});
+    void answerHighlighterPromise.then(highlighter => {
+      if (highlighter && current?.id === q.id && !$("#coding-answer").hidden) {
+        highlighter.renderHighlightedAnswer($("#coding-code"),q.code,q.language);
+      }
+    });
+  }
   slot.hidden=$("#coding-answer").hidden;
   if(slot.hidden||slot.dataset.questionId===q.id)return;
   // Render assessment controls only once. Toggling the solution must not recreate
