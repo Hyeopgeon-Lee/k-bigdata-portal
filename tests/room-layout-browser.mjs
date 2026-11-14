@@ -37,6 +37,27 @@ try{
         "Room reservation width at "+width+"px must equal "+expected+", got "+dims.layout.width);
       assert.ok(dims.scroll<=dims.viewport+1,"No horizontal overflow at "+width+"px");
       console.log("PASS "+width+"px: room content "+dims.layout.width+"px");
+      if(width===390){
+        // The validation message must be visible in the booking form on a phone.
+        await page.locator('[data-room-tab="new"]').click();
+        const tomorrow=await page.evaluate(()=>new Date(Date.now()+86400000).toLocaleDateString('sv-SE',{timeZone:'Asia/Seoul'}));
+        await page.locator('#room-date').fill(tomorrow);
+        await page.locator('select[name="start"]').selectOption('10:00');
+        await page.locator('select[name="end"]').selectOption('18:00');
+        assert.match(await page.locator('#room-duration-hint').innerText(),/8시간/);
+        await page.locator('#room-submit').click();
+        assert.equal(await page.locator('#room-booking-feedback').isVisible(),true);
+        assert.match(await page.locator('#room-booking-feedback').innerText(),/최대 3시간/);
+        assert.equal(await page.locator('[data-room-tab="new"]').getAttribute('aria-selected'),'true',
+          'Invalid booking must stay on the form');
+        await page.locator('select[name="end"]').selectOption('13:00');
+        assert.match(await page.locator('#room-duration-hint').innerText(),/3시간/);
+        await page.locator('#room-submit').click();
+        await page.waitForFunction(()=>document.querySelector('[data-room-tab="mine"]')?.getAttribute('aria-selected')==='true');
+        assert.match(await page.locator('#room-my-list').innerText(),/8318호/,
+          'Exactly three-hour booking must be inserted using the browser fixture');
+        console.log('PASS mobile booking: 8-hour reservation rejected with inline message, 3-hour reservation accepted');
+      }
     }finally{await context.close();}
   }
 }finally{await browser.close();}
