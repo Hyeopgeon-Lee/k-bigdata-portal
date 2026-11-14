@@ -40,6 +40,9 @@ try{
       if(width===390){
         // The validation message must be visible in the booking form on a phone.
         await page.locator('[data-room-tab="new"]').click();
+        assert.equal(await page.locator('#room-full-day').isVisible(),false,
+          'Students must not see the full-day reservation button');
+        assert.match(await page.locator('#room-role-rule').innerText(),/최대 3시간/);
         const tomorrow=await page.evaluate(()=>new Date(Date.now()+86400000).toLocaleDateString('sv-SE',{timeZone:'Asia/Seoul'}));
         await page.locator('#room-date').fill(tomorrow);
         await page.locator('select[name="start"]').selectOption('10:00');
@@ -60,4 +63,27 @@ try{
       }
     }finally{await context.close();}
   }
+
+  const adminContext=await browser.newContext({viewport:{width:390,height:850}});
+  await approvedStudent(adminContext,{},false,true);
+  try{
+    const adminPage=await adminContext.newPage();
+    await adminPage.goto('http://127.0.0.1:8765/room.html',{waitUntil:'domcontentloaded'});
+    await adminPage.waitForFunction(()=>document.documentElement.dataset.portalAccess==='approved' &&
+      !document.getElementById('learning-lock') &&
+      document.querySelector('#room-app')?.hidden===false,{timeout:16000});
+    await adminPage.locator('[data-room-tab="new"]').click();
+    assert.equal(await adminPage.locator('#room-full-day').isVisible(),true,
+      'The server-authorized administrator sees full day option');
+    assert.match(await adminPage.locator('#room-role-rule').innerText(),/최대 13시간/);
+    await adminPage.locator('#room-full-day').click();
+    assert.equal(await adminPage.locator('select[name="start"]').inputValue(),'09:00');
+    assert.equal(await adminPage.locator('select[name="end"]').inputValue(),'22:00');
+    assert.match(await adminPage.locator('#room-duration-hint').innerText(),/13시간/);
+    await adminPage.locator('#room-submit').click();
+    await adminPage.waitForFunction(()=>document.querySelector('[data-room-tab="mine"]')?.getAttribute('aria-selected')==='true');
+    assert.match(await adminPage.locator('#room-my-list').innerText(),/8318호/,
+      '13-hour reservation is accepted for the administrator in the browser fixture');
+    console.log('PASS mobile admin booking: full-day action is visible, 09:00-22:00 reservation succeeds');
+  }finally{await adminContext.close();}
 }finally{await browser.close();}
