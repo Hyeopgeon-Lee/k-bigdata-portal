@@ -22,7 +22,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/style.css?v=20261112-page-intro-2">
 <link rel="stylesheet" href="css/portal-ux.css?v=20261112-page-intro-2">
-<link rel="stylesheet" href="css/room.css?v=20261114-booking-feedback-1">
+<link rel="stylesheet" href="css/room.css?v=20261114-room-admin-full-day-1">
 <!-- portal:assets:start (generated; edit scripts/portal-shell-template.mjs) -->
 <link rel="stylesheet" href="css/portal-navigation.css?v=20261112-page-intro-2">
 <script defer src="js/portal-navigation.js?v=20261113-admin-isolated-1"></script>
@@ -107,9 +107,10 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <label class="room-field">시작 시간<select name="start" required></select></label>
 <label class="room-field">종료 시간<select name="end" required></select></label>
 </div>
+<button type="button" id="room-full-day" class="room-secondary room-full-day" hidden>하루 전체 선택 (09:00~22:00)</button>
 <p id="room-duration-hint" class="room-duration-hint" aria-live="polite"></p>
 <label class="room-field">메모 (선택, 200자 이내)<textarea name="memo" rows="3" maxlength="200" placeholder="팀명, 사용 목적 등"></textarea></label>
-<div class="room-notice"><strong>예약 규칙</strong><span>09:00~22:00 운영, 30분 단위로 최대 3시간입니다. 지난 시간 및 다른 예약과 겹치는 시간은 예약할 수 없습니다.</span></div>
+<div class="room-notice"><strong>예약 규칙</strong><span id="room-role-rule">재학생은 09:00~22:00 운영시간 중 30분 단위로 최대 3시간까지 예약할 수 있습니다.</span></div>
 <p id="room-booking-feedback" class="room-booking-feedback" role="alert" hidden></p>
 <button class="room-primary" id="room-submit" type="submit">예약 등록</button>
 </form>
@@ -128,7 +129,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <div class="container footer-bottom"><p>© <span id="current-year"></span> K-BigData Service Portal</p></div>
 </footer>
 <script type="module" src="js/portal-auth.mjs?v=20261113-signup-admin-notification-1"></script>
-<script type="application/x-learning" data-module="js/room.js?v=20261114-booking-feedback-1"></script>
+<script type="application/x-learning" data-module="js/room.js?v=20261114-room-admin-full-day-1"></script>
 <script type="application/x-learning" data-module="js/portal-shell-entry.js?v=20261111-account-sync-1"></script>
 </body>
 </html>
