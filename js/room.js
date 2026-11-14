@@ -39,9 +39,10 @@ function bookingValidation(form){
  if(!Number.isFinite(minutes))return {ok:false,message:'예약 시간을 다시 선택해 주세요.'};
  if(minutes<=0)return {ok:false,message:'종료 시간은 시작 시간보다 늦어야 합니다.'};
  if(from<540||to>1320||from%30||to%30)return {ok:false,message:'예약은 09:00~22:00 사이에 30분 단위로 가능합니다.'};
- if(minutes>180){
-  const latest=String(Math.floor((from+180)/60)).padStart(2,'0')+':'+String((from+180)%60).padStart(2,'0');
-  return {ok:false,message:'예약은 최대 3시간까지 가능합니다. 현재 '+readableDuration(minutes)+' ('+start+'~'+end+')을 선택했습니다. 종료 시간을 '+latest+'까지로 변경해 주세요.'};
+ const maxDuration=admin?780:180;
+ if(minutes>maxDuration){
+  const latest=String(Math.floor(Math.min(from+maxDuration,1320)/60)).padStart(2,'0')+':'+String(Math.min(from+maxDuration,1320)%60).padStart(2,'0');
+  return {ok:false,message:'예약은 최대 '+readableDuration(maxDuration)+'까지 가능합니다. 현재 '+readableDuration(minutes)+' ('+start+'~'+end+')을 선택했습니다. 종료 시간을 '+latest+'까지로 변경해 주세요.'};
  }
  const begins=new Date(date+'T'+start+':00+09:00');
  if(!Number.isFinite(begins.getTime())||begins.getTime()<=Date.now())
@@ -51,9 +52,24 @@ function bookingValidation(form){
 function refreshDurationHint(){
  const check=bookingValidation(byId('room-booking-form'));
  const hint=byId('room-duration-hint');
- hint.textContent=check.ok?'선택한 예약 시간: '+readableDuration(check.minutes)+' (최대 3시간)':check.message;
+ hint.textContent=check.ok?'선택한 예약 시간: '+readableDuration(check.minutes)+' (최대 '+(admin?'13시간':'3시간')+')':check.message;
  hint.classList.toggle('is-invalid',!check.ok);
  bookingNotice('');
+}
+function selectFullDay(){
+ if(!admin)return;
+ const form=byId('room-booking-form');
+ let date=form.elements.date.value;
+ let autoAdvanced=false;
+ if(!date||new Date(date+'T09:00:00+09:00').getTime()<=Date.now()){
+  date=dateAfter(1);
+  form.elements.date.value=date;
+  autoAdvanced=true;
+ }
+ form.elements.start.value='09:00';
+ form.elements.end.value='22:00';
+ refreshDurationHint();
+ if(autoAdvanced)bookingNotice('오늘 09:00가 이미 지났으므로 내일 날짜로 변경했습니다. 예약 날짜를 확인해 주세요.','info');
 }
 function koreaParts(date=new Date()){
  const p=Object.fromEntries(new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(date).map(x=>[x.type,x.value]));
@@ -187,7 +203,8 @@ async function createBooking(event){
   });
   if(error){
    bookingNotice(error.code==='23P01'?'선택한 시간대에 이미 다른 예약이 있습니다. 예약 현황을 확인하고 다른 시간을 선택해 주세요.':
-    error.code==='23514'?'예약 가능 시간과 최대 3시간 제한을 확인해 주세요.':
+    error.code==='23514'?'예약 가능 시간과 운영시간 제한을 확인해 주세요.':
+    error.message?.includes('ROOM_DURATION_LIMIT_3H')?'재학생은 최대 3시간까지 예약할 수 있습니다.':
     error.code==='42501'?'예약 권한이 없습니다. 재학생 승인 상태를 확인해 주세요.':
     '예약을 등록하지 못했습니다. 로그인 상태 또는 예약 조건을 확인하고 다시 시도해 주세요.');
    return;
@@ -212,6 +229,10 @@ async function start(){
  allowed=window.portalLearning?.write===true;
  if(!allowed&&!admin){tell('승인된 재학생과 관리자만 예약할 수 있습니다.');return;}
  byId('room-app').hidden=false;
+ byId('room-full-day').hidden=!admin;
+ byId('room-role-rule').textContent=admin
+  ? '관리자는 09:00~22:00 운영시간 전체(최대 13시간)를 예약할 수 있습니다. 중복 예약과 지난 시간은 예약할 수 없습니다.'
+  : '재학생은 하루 최대 3시간까지 예약할 수 있습니다. 중복 예약과 지난 시간은 예약할 수 없습니다.';
 
 
  selectedRoom=new URLSearchParams(location.search).get('room')==='8319'?'8319':'8318';
@@ -232,6 +253,7 @@ async function start(){
   form.elements[name].addEventListener('input',refreshDurationHint);
  }
  refreshDurationHint();
+ if(admin)byId('room-full-day').addEventListener('click',selectFullDay);
  for(const button of document.querySelectorAll('[data-room-option]'))button.addEventListener('click',()=>setRoom(button.dataset.roomOption,false));
  for(const button of document.querySelectorAll('[data-room-tab]'))button.addEventListener('click',()=>setTab(button.dataset.roomTab));
  form.addEventListener('submit',createBooking);
