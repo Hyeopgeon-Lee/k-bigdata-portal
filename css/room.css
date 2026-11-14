@@ -60,6 +60,11 @@
 .room-field select,.room-field input,.room-field textarea{display:block;width:100%;min-width:0;min-height:46px;padding:11px 12px;border:1px solid #d0dce9;border-radius:10px;background:#fff;color:#1c3048;font:inherit;font-size:15px;line-height:1.5}
 .room-field textarea{min-height:88px;resize:vertical}
 .room-field :is(input,select,textarea):focus{border-color:#477db7;outline:0;box-shadow:0 0 0 3px rgba(48,106,167,.13)}
+.room-duration-hint{margin:-7px 0 0;color:#49647f;font-size:13px;font-weight:650;line-height:1.6;word-break:keep-all}
+.room-duration-hint.is-invalid{color:#a13243}
+.room-booking-feedback{margin:0;padding:12px 14px;border:1px solid #eabfc7;border-radius:11px;background:#fff4f5;color:#9b263a;font-size:14px;font-weight:750;line-height:1.6;word-break:keep-all}
+.room-booking-feedback[data-kind="info"]{border-color:#c7d9ee;background:#edf5ff;color:#244f81}
+.room-booking-feedback[hidden]{display:none!important}
 .room-form>.room-primary{width:100%;margin-top:1px}
 .room-notice{display:flex;align-items:flex-start;gap:10px;margin-top:14px;padding:12px 14px;border-radius:12px;background:#f0f5fb;color:#536d89;font-size:12px;line-height:1.6;word-break:keep-all}
 .room-notice strong{flex:none;color:#264b75;font-weight:800}
