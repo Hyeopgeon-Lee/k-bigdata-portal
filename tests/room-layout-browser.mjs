@@ -26,11 +26,11 @@ try{
           return {x:Math.round(rect.left),width:Math.round(rect.width)};
         };
         function assertElement(element,selector){if(!element)throw Error("Element missing "+selector);}
-        return {hero:box(".room-hero"),layout:box(".room-layout"),nav:box(".portal-service-nav"),
+        return {hero:box(".portal-page-intro"),layout:box(".room-layout"),nav:box(".portal-service-nav"),
           viewport:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth};
       });
-      const gutter=width<=389?32:width<=767?36:40;
-      const expected=Math.min(width-gutter,1240);
+      const gutter=width<=767?32:48;
+      const expected=Math.min(width-gutter,1280);
       assert.deepEqual(dims.hero,dims.layout,"Hero and reservation content must align at "+width+"px");
       assert.deepEqual(dims.nav,dims.layout,"Portal navigation and room content must align at "+width+"px");
       assert.ok(Math.abs(dims.layout.width-expected)<=1,
