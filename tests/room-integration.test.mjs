@@ -22,7 +22,7 @@ assert.match(page,/data-module="js\/room\.js/);
 assert.match(page,/id="room-booking-form"/);
 assert.match(page,/id="room-duration-hint"/,'inline duration guidance displayed beside time fields');
 assert.match(page,/id="room-booking-feedback" class="room-booking-feedback" role="alert"/,'reservation errors announced immediately before submit');
-assert.match(page,/20261114-booking-feedback-1/,'page busts reservation JS and CSS caches');
+assert.match(page,/20261114-room-admin-full-day-1/,'page busts reservation JS and CSS caches');
 assert.match(page,/data-room-tab="mine"/);
 assert.doesNotMatch(page,/id="room-admin-tab"/,'student page has no admin tab');
 assert.match(adminPage,/id="admin-room-list"/,'administrator-only full booking list');
@@ -42,10 +42,14 @@ assert.match(adminLogic,/admin_list_students/,'admin profiles queried only insid
 assert.doesNotMatch(logic,/room-admin-list/,'admin reservation list removed from user JS');
 assert.match(logic,/data-room-option/);
 assert.match(logic,/function bookingValidation\(form\)/);
-assert.match(logic,/minutes>180/,'reservations over 3 hours are rejected before insert');
+assert.match(logic,/admin\?780:180/,'admins allow 13 hours; ordinary students remain limited to 3 hours');
 assert.match(logic,/bookingNotice\(check\.message\)/,'invalid input is explained at submit');
 assert.match(logic,/form\.elements\[name\]\.addEventListener\('change',refreshDurationHint\)/,'live duration feedback on selection changes');
 assert.match(logic,/fillTimeSelect\(form\.elements\.end,true\)/,'22:00 is available as an end time');
+assert.match(page,/id="room-full-day".*hidden/,'admin-only full day action hidden by default');
+assert.match(logic,/byId\('room-full-day'\)\.hidden=!admin/,'full day action only visible to server-authorized admin');
+assert.match(logic,/function selectFullDay\(\)/);
+assert.match(css,/#room-full-day\[hidden\]/);
 assert.match(css,/\.room-booking-feedback\[hidden\]/,'hidden status messages are not displayed');
 assert.doesNotMatch(logic,/script\.google\.com/);
 assert.doesNotMatch(logic,/service_role|sb_secret_/);
@@ -54,7 +58,7 @@ assert.match(css,/max-width:700px/,'responsive UI');
 assert.match(css,/\.room-hero,\.room-layout\{max-width:var\(--container,1240px\)\}/,
   'room hero and reservation panels share the portal 1240px container');
 assert.doesNotMatch(css,/\.room-layout\{max-width:1050px\}/,'legacy narrow room layout removed');
-assert.match(page,/css\/room\.css\?v=20261114-booking-feedback-1/,
+assert.match(page,/css\/room\.css\?v=20261114-room-admin-full-day-1/,
   'updated room CSS asset referenced');
 
 
