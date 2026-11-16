@@ -74,25 +74,89 @@ function card(request){
  article.append(heading,meta,summary);
  return article;
 }
+const mailLabels={
+ sent:'요청자에게 처리 결과 메일이 발송되었습니다.',
+ sending:'요청자에게 처리 결과 메일을 발송 중입니다.',
+ queued:'메일 발송이 대기 중입니다. 발송을 다시 시도할 수 있습니다.',
+ failed:'처리 결과는 저장됐지만 메일 발송에 실패했습니다. 다시 시도할 수 있습니다.',
+ skipped:'현재 요청 상태에서는 메일을 발송하지 않습니다.',
+ not_queued:'기존에 완료된 요청이거나 계정이 연결되지 않아 자동 메일 대상이 아닙니다.'
+};
+async function completionMail(request,mailHint,mailButton,action='send'){
+ if(!request.owner_id){
+  mailHint.textContent='요청자 포털 계정이 연결되지 않아 결과 메일을 발송하지 않습니다.';
+  mailButton.hidden=true;
+  return false;
+ }
+ mailButton.disabled=true;
+ mailHint.textContent=action==='send'?'결과 메일 발송을 확인 중입니다.':'발송 상태를 확인 중입니다.';
+ try{
+  const {data,error}=await api.functions.invoke('help-completion-email',{
+   body:{action,request_id:request.id}
+  });
+  if(error||!data?.ok)throw error||Error('MAIL_RESULT_NOT_AVAILABLE');
+  const state=data.mailStatus;
+  mailHint.textContent=mailLabels[state]||'메일 발송 상태를 확인하지 못했습니다.';
+  mailButton.hidden=state==='not_queued'||state==='skipped';
+  mailButton.textContent=state==='sent'?'발송 완료':'메일 다시 발송';
+  mailButton.disabled=state==='sent'||state==='sending';
+  return state==='sent';
+ }catch(error){
+  console.error('Help completion email:',error);
+  mailHint.textContent='요청 처리 내용은 저장되었지만 메일 상태를 확인할 수 없습니다. 다시 시도해 주세요.';
+  mailButton.disabled=false;
+  return false;
+ }
+}
 function adminEditor(request,badge){
  const panel=node('div',null,'help-editor');
  const label=node('label','처리 상태','help-field');
  const select=options(Object.keys(statusText),request.status);label.append(select);
- const replyLabel=node('label','관리자 답변','help-field');
+ const replyLabel=node('label','관리자 처리 결과 · 완료 시 요청자에게 메일로 안내','help-field');
  const reply=document.createElement('textarea');reply.maxLength=3000;reply.rows=4;reply.value=request.admin_reply||'';
  replyLabel.append(reply);
  const button=node('button','처리 내용 저장','help-primary');button.type='button';
  const message=node('p','', 'help-inline-status');message.setAttribute('role','status');
+ const mailHint=node('p','','help-inline-status');mailHint.setAttribute('role','status');
+ const mailButton=node('button','결과 메일 확인·재시도','help-secondary');mailButton.type='button';
+ mailButton.hidden=request.status!=='COMPLETED'||!request.owner_id;
+ mailButton.onclick=()=>void completionMail(request,mailHint,mailButton,'send');
+ if(request.status==='COMPLETED'){
+  if(request.owner_id)void completionMail(request,mailHint,mailButton,'status');
+  else mailHint.textContent='과거 요청 또는 작성자 계정이 연결되지 않아 메일을 발송할 수 없습니다.';
+ }
  button.onclick=async()=>{
-  button.disabled=true;message.textContent='저장 중...';
-  const {error}=await api.from('help_requests').update({
-   status:select.value,admin_reply:reply.value.trim(),updated_at:new Date().toISOString()
-  }).eq('id',request.id);
-  button.disabled=false;
-  message.textContent=error?'저장 실패: 계정 권한 또는 네트워크를 확인하세요.':'상태와 답변을 저장했습니다.';
-  if(!error){request.status=select.value;request.admin_reply=reply.value.trim();badge.textContent=statusText[request.status]||request.status;}
+  const newStatus=select.value;
+  const newReply=reply.value.trim();
+  if(newStatus==='COMPLETED'&&!newReply){
+   message.textContent='완료 처리하려면 요청자에게 전달할 처리 결과를 입력해 주세요.';
+   reply.focus();return;
+  }
+  const oldStatus=request.status;
+  button.disabled=true;message.textContent='요청 상태와 답변을 저장 중입니다...';
+  try{
+   const {data,error}=await api.from('help_requests').update({
+    status:newStatus,admin_reply:newReply,updated_at:new Date().toISOString()
+   }).eq('id',request.id).select('id').single();
+   if(error||!data)throw error||Error('HELP_UPDATE_FAILED');
+   request.status=newStatus;request.admin_reply=newReply;badge.textContent=statusText[newStatus]||newStatus;
+   message.textContent='상태와 처리 결과를 저장했습니다.';
+   mailButton.hidden=newStatus!=='COMPLETED'||!request.owner_id;
+   if(newStatus==='COMPLETED'&&oldStatus!=='COMPLETED'){
+    if(!request.owner_id)mailHint.textContent='작성자 포털 계정 미연결로 이메일은 발송하지 않습니다.';
+    else await completionMail(request,mailHint,mailButton,'send');
+   }else if(newStatus!=='COMPLETED'){
+    mailHint.textContent='';
+   }else if(oldStatus==='COMPLETED'){
+    mailHint.textContent='기존 완료 건의 수정은 새 결과 메일을 자동 발송하지 않습니다.';
+    if(request.owner_id)await completionMail(request,mailHint,mailButton,'status');
+   }
+  }catch(error){
+   console.error('Help status save failed',error);
+   message.textContent='저장 실패: 로그인 권한 또는 네트워크 상태를 확인해 주세요.';
+  }finally{button.disabled=false;}
  };
- panel.append(label,replyLabel,button,message);
+ panel.append(label,replyLabel,button,message,mailHint,mailButton);
  return panel;
 }
 async function openDetail(request,target,button){
