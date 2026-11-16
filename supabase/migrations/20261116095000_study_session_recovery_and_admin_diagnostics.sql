@@ -183,12 +183,9 @@ BEGIN
  IF NOT public.portal_super_admin_allowed() THEN
   RAISE EXCEPTION 'STUDY_ADMIN_REQUIRED' USING ERRCODE='42501';
  END IF;
- SELECT * INTO v_row FROM public.study_sessions
-  WHERE id=p_session_id AND status='active' FOR UPDATE;
- IF NOT FOUND THEN RAISE EXCEPTION 'STUDY_NOT_ACTIVE'; END IF;
- IF NOT private.study_session_is_stale(v_row.started_at) THEN
-  RAISE EXCEPTION 'STUDY_STILL_RECENT';
- END IF;
+ -- Read the owner before taking locks, then obtain the same advisory lock order as student RPCs.
+ SELECT * INTO v_row FROM public.study_sessions WHERE id=p_session_id;
+ IF NOT FOUND OR v_row.status<>'active' THEN RAISE EXCEPTION 'STUDY_NOT_ACTIVE'; END IF;
  PERFORM pg_catalog.pg_advisory_xact_lock(pg_catalog.hashtextextended(v_row.user_id::text,221));
  -- Recheck under the same per-user lock as student start/restart/finish.
  SELECT * INTO v_row FROM public.study_sessions
