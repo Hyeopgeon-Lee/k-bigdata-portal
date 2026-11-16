@@ -28,7 +28,12 @@ const pages=readdirSync(root,{recursive:true}).filter(p=>p.endsWith('.html')&&!/
 for(const page of pages){
  const html=readFileSync(new URL(page.replaceAll('\\','/'),root),'utf8');
  const pageId=page.replace(/\.html$/,'');
- if(portalPages[pageId])assert.ok(html.includes(renderHeader(portalPages[pageId])),page+' canonical header');
+  if(!portalPages[pageId]){
+   // Admin routes have a separate role-gated shell tested by admin-isolation.
+   assert.match(html,/<meta name="robots" content="noindex,\s*nofollow">/,page);
+   continue;
+  }
+  assert.ok(html.includes(renderHeader(portalPages[pageId])),page+' canonical header');
  assert.match(html,/<meta name="robots" content="noindex,\s*nofollow">/,page);
  assert.ok(!html.includes('content="index, follow"'));
  for(const text of ['skip-link','menu-toggle','aria-controls="portal-nav"',page==='practical.html'?'study-footer':'footer-links'])assert.ok(html.includes(text),page+' '+text);
