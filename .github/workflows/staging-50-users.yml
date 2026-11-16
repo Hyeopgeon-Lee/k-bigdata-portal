@@ -1,0 +1,47 @@
+name: Staging 50-user load validation
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_staging_only:
+        description: "Confirm that staging URLs, DB and 50 disposable accounts are configured"
+        required: true
+        type: boolean
+        default: false
+      concurrent_vus:
+        description: "Concurrent virtual users"
+        required: true
+        type: choice
+        default: "50"
+        options: ["10","25","50","75"]
+permissions:
+  contents: read
+jobs:
+  staging-load:
+    if: inputs.confirm_staging_only == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 24
+    env:
+      STAGING_BASE_URL: ${{ secrets.STAGING_BASE_URL }}
+      STAGING_SUPABASE_URL: ${{ secrets.STAGING_SUPABASE_URL }}
+      STAGING_SUPABASE_ANON_KEY: ${{ secrets.STAGING_SUPABASE_ANON_KEY }}
+      STAGING_USERS_JSON: ${{ secrets.STAGING_TEST_USERS_JSON }}
+      CONCURRENT_VUS: ${{ inputs.concurrent_vus }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reject missing or production staging configuration
+        shell: bash
+        run: |
+          test -n "$STAGING_BASE_URL" || { echo "Missing STAGING_BASE_URL secret"; exit 1; }
+          test -n "$STAGING_SUPABASE_URL" || { echo "Missing STAGING_SUPABASE_URL secret"; exit 1; }
+          test -n "$STAGING_SUPABASE_ANON_KEY" || { echo "Missing STAGING_SUPABASE_ANON_KEY secret"; exit 1; }
+          test -n "$STAGING_USERS_JSON" || { echo "Missing STAGING_TEST_USERS_JSON secret"; exit 1; }
+          case "$STAGING_BASE_URL $STAGING_SUPABASE_URL" in
+            *portal.k-bigdata.kr*|*zjsindkakjfzmjgrkaou*) echo "Production targets blocked"; exit 1 ;;
+          esac
+      - name: Run the 50-user read/write scenario against staging only
+        shell: bash
+        run: |
+          docker run --rm --network host -v "$GITHUB_WORKSPACE:/work" -w /work \
+            -e STAGING_BASE_URL -e STAGING_SUPABASE_URL -e STAGING_SUPABASE_ANON_KEY \
+            -e STAGING_USERS_JSON -e CONCURRENT_VUS \
+            grafana/k6:0.52.0 run tests/load/staging-50-users.js
