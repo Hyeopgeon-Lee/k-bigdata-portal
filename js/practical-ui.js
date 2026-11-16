@@ -1,7 +1,7 @@
 import {quizNavigation,quizHeading,quizDisclosure,quizFeedback,scrollToQuizAnswer} from "./quiz-unified.js?v=20261112-answer-focus-1";
 import {createQuestionBrowser} from "./question-browser.js?v=20261116-progress-v1";
-import {createLearningProgressStore} from "./learning-list-progress.mjs";
-import {bindReview,reviewControls,gradeLabels} from "./study-review.js";
+import {createLearningProgressStore} from "./learning-list-progress.mjs?v=20261116-concurrency-1";
+import {bindReview,reviewControls,gradeLabels} from "./study-review.js?v=20261116-concurrency-1";
 import {loadPracticalBank} from "./practical-data.js?v=20261006-audit-2";
 import {examLabels,typeLabels,languages,escapeHTML as esc,questionText,shuffle,recommendFive,matchesExam,localDay,summarizeAttempts,highlightCode,formatCodeForDisplay,canResumeUnfinishedAttempt} from "./practical-core.js?v=20261112-practical-resume-1";
 import {getAttempts,saveAttempt,getSession,saveSession,clearLocalLearning,storageAvailable,getPreferences,savePreferences,exportLearning,importLearning} from "./practical-store.js";
