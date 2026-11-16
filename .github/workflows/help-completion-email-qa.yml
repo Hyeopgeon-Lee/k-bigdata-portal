@@ -1,0 +1,32 @@
+name: Help completion mail QA
+on:
+  pull_request:
+    paths:
+      - "supabase/migrations/*help_completion_email*"
+      - "supabase/functions/help-completion-email/**"
+      - "admin/js/help.js"
+      - "admin/help.html"
+      - "help.html"
+      - "tests/help-completion-email.test.mjs"
+      - ".github/workflows/help-completion-email-qa.yml"
+  push:
+    branches: [main]
+    paths:
+      - "supabase/migrations/*help_completion_email*"
+      - "supabase/functions/help-completion-email/**"
+      - "admin/js/help.js"
+      - "admin/help.html"
+      - "help.html"
+      - "tests/help-completion-email.test.mjs"
+jobs:
+  help-completion:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify mail privacy, duplication, and admin completion flow
+        run: |
+          node --test tests/help-completion-email.test.mjs
+          node --check admin/js/help.js
