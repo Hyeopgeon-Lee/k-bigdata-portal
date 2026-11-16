@@ -279,6 +279,7 @@ async function logout(){
   showAccount();
   delete document.documentElement.dataset.portalAccess;
   window.portalLearning=null;
+  window.portalVerifiedUserId=null;
   renderLogin();
 }
 function showAccount(){
