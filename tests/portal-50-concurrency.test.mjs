@@ -21,6 +21,14 @@ test('auth checks are throttled without weakening server authorization',()=>{
  for(const p of ['study.html','help.html','admin/index.html'])
   assert.match(read(p),/portal-auth\.mjs\?v=20261116-concurrency-1/);
 });
+test('home, directory and shared shell reuse one personal-state singleton',()=>{
+ const files=['js/portal-shell.js','js/home-dashboard.js','js/directory.js'];
+ const modules=files.map(p=>read(p).match(/\.\/portal-personal\.js\?v=[a-zA-Z0-9-]+/)?.[0]);
+ assert.ok(modules.every(Boolean),'personal module imported everywhere');
+ assert.equal(new Set(modules).size,1,'browser must not instantiate duplicate personal state');
+ assert.match(read('index.html'),/home-dashboard\.js\?v=20261116-concurrency-2/);
+ assert.match(read('services.html'),/directory\.js\?v=20261116-concurrency-2/);
+});
 test('learning writes are batched, idempotent and cross-tab serialized',()=>{
  assert.match(activity,/LEARNING_BATCH_SIZE=25/);
  assert.match(activity,/ignoreDuplicates:true/);
