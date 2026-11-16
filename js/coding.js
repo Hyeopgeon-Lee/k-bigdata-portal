@@ -1,5 +1,5 @@
 import {quizNavigation,quizHeading,quizFeedback,scrollToQuizAnswer,mountQuizDisclosure} from "./quiz-unified.js?v=20261112-answer-focus-1";
-import {createQuestionBrowser} from "./question-browser.js?v=20261116-progress-v1";
+import {createQuestionBrowser} from "./question-browser.js?v=20261117-language-persist-1";
 import {createLearningProgressStore} from "./learning-list-progress.mjs?v=20261116-concurrency-1";
 import {bindReview,reviewControls,gradeLabels} from "./study-review.js?v=20261116-concurrency-1";
 import {learningLocal as localStorage, learningSession as sessionStorage} from "./learning-storage.mjs";
@@ -112,6 +112,17 @@ const targets = {java:100, c:100, python:100, linux:50};
 const DONE_KEY = "kbigdata:coding:done:v1";
 const DRAFT_PREFIX = "kbigdata:coding:draft:v1:";
 const AUTOCOMPLETE_KEY = "kbigdata:coding:autocomplete:v1";
+const LANGUAGE_KEY = "kbigdata:coding:last-language:v1";
+// Language selection is a UI preference, not a learning record: it works without login.
+function getPreferredLanguage() {
+  try {
+    const value = window.localStorage.getItem(LANGUAGE_KEY);
+    return value === "all" || Object.prototype.hasOwnProperty.call(labels, value) ? value : null;
+  } catch { return null; }
+}
+function savePreferredLanguage(value) {
+  try { window.localStorage.setItem(LANGUAGE_KEY, value || "all"); } catch { /* Storage disabled */ }
+}
 const getSafe = (key, fallback = "") => {
   try { return localStorage.getItem(key) ?? fallback; } catch { return fallback; }
 };
@@ -147,7 +158,10 @@ autocompleteToggle.addEventListener("change", () => {
 });
 
 const requestedId = new URLSearchParams(location.search).get("id");
-let current = codingProblems.find(q => q.id === requestedId) || codingProblems[0];
+const preferredLanguage = getPreferredLanguage();
+// Explicit problem links take precedence, without overwriting the last selected filter.
+let current = codingProblems.find(q => q.id === requestedId) ||
+  codingProblems.find(q => q.language === preferredLanguage) || codingProblems[0];
 // A shared question link opens with the selected problem before the long list on phones.
 document.body.classList.toggle("coding-direct-link", Boolean(requestedId && current.id === requestedId));
 let codeEditor = null;
@@ -667,6 +681,7 @@ document.querySelectorAll("#coding-language button").forEach(button => {
     listPage = 0;
     $("#coding-search").value = "";
     refreshFilters();
+    browserEntry?.selectCategory(language);
     const first = codingProblems.find(q => q.language === language);
     if (first) showQuestion(first);
   });
@@ -735,6 +750,8 @@ codingProgress=createLearningProgressStore({
 });
 browserEntry=createQuestionBrowser({
  title:"기초 350제",questions:codingProblems,category:q=>q.language,categoryLabel:key=>labels[key],
+  initialCategory:preferredLanguage && preferredLanguage!=="all"?preferredLanguage:"",
+  preferInitialCategory:preferredLanguage!==null,onCategoryChange:savePreferredLanguage,
  progressFor:q=>codingProgress.get(q.id),
  describe:q=>q.title,searchText:q=>[q.id,q.title,q.statement,q.topic,q.level].join(" "),
  openQuestion(q,items){
