@@ -133,30 +133,19 @@ const writeCache = (events,updatedAt) => {
     if(payload.length<750000)localStorage.setItem(CACHE_KEY,payload);
   }catch{ /* Disabled or full local storage must not block the preview. */ }
 };
-function getPublishedCalendar(){
-  return new Promise((resolve,reject)=>{
-    const url=new URL(SCHEDULE_API_URL);
-    const callback="__kBigdataHomeSchedule_"+Date.now().toString(36)+"_"+
-      Math.random().toString(36).slice(2,10);
-    url.searchParams.set("callback",callback);
-    const script=document.createElement("script");
-    let finished=false;
-    let timer;
-    const finish=(error,data)=>{
-      if(finished)return;
-      finished=true;
-      clearTimeout(timer);
-      script.remove();
-      delete window[callback];
-      if(error)reject(error);else resolve(data);
-    };
-    window[callback]=data=>finish(null,data);
-    script.async=true;
-    script.src=url.href;
-    script.onerror=()=>finish(new Error("일정 요청 실패"));
-    timer=setTimeout(()=>finish(new Error("일정 요청 시간 초과")),15000);
-    document.head.append(script);
-  });
+const CALENDAR_EDGE_URL="https://zjsindkakjfzmjgrkaou.supabase.co/functions/v1/public-calendar-cache";
+async function getPublishedCalendar(){
+ // A public Edge cache coalesces upstream calls; no browser directly calls
+ // Google Apps Script during normal home page visits.
+ const controller=new AbortController();
+ const timer=setTimeout(()=>controller.abort(),12000);
+ try{
+  const response=await fetch(CALENDAR_EDGE_URL,{headers:{"Accept":"application/json"},signal:controller.signal});
+  if(!response.ok)throw Error("CALENDAR_GATEWAY_"+response.status);
+  const data=await response.json();
+  if(data?.ok!==true||!Array.isArray(data.events))throw Error("CALENDAR_RESPONSE_INVALID");
+  return data;
+ }finally{clearTimeout(timer);}
 }
 let activeLoad=null;
 async function refresh(){
