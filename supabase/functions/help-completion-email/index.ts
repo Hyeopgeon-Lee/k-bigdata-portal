@@ -22,7 +22,7 @@ const requestPattern=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{
 type Delivery={
  id:string;request_id:string;recipient_id:string;request_title:string;result_text:string;
  status:"pending"|"sending"|"sent"|"failed"|"skipped";
- attempts:number;attempted_at:string|null;sent_at:string|null;last_error:string|null
+ attempts:number;attempted_at:string|null;created_at:string;sent_at:string|null;last_error:string|null
 };
 const label=(status:string)=>({pending:"queued",sending:"sending",sent:"sent",failed:"failed",skipped:"skipped"}[status]||"unknown");
 function formatMail(name:string,title:string,result:string,completedAt:string){
@@ -75,7 +75,7 @@ Deno.serve(async(req:Request)=>{
  const requestId=body.request_id;
  try{
   const {data:rows,error:rowError}=await service.from("help_completion_email_deliveries")
-   .select("id,request_id,recipient_id,request_title,result_text,status,attempts,attempted_at,sent_at,last_error")
+   .select("id,request_id,recipient_id,request_title,result_text,status,attempts,attempted_at,created_at,sent_at,last_error")
    .eq("request_id",requestId).order("created_at",{ascending:false}).limit(1);
   if(rowError)throw rowError;
   const row=(rows?.[0]||null) as Delivery|null;
@@ -115,7 +115,7 @@ Deno.serve(async(req:Request)=>{
    const resendKey=env("RESEND_API_KEY");
    if(!resendKey)throw Error("RESEND_API_KEY_NOT_CONFIGURED");
    const sender=env("REPORT_FROM_EMAIL")||"noreply@noreply.k-bigdata.kr";
-   const contents=formatMail(profile?.full_name||"학생",row.request_title,row.result_text,ticket.updated_at);
+   const contents=formatMail(profile?.full_name||"학생",row.request_title,row.result_text,row.created_at);
    const subject="[빅데이터SW학과] 학과 요청 처리 완료 - "+row.request_title.replace(/[\r\n]+/g," ").slice(0,65);
    const response=await fetch("https://api.resend.com/emails",{
     method:"POST",
