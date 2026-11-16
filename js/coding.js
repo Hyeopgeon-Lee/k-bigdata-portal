@@ -748,7 +748,7 @@ codingProgress.attach();
 refreshFilters();
 if(!browserEntry.resume(requestedId))showQuestion(current);
 if(!requestedId)browserEntry.show(false);
-void import("./coding-editor.js?v=20261024-autocomplete-1")
+void import("./coding-editor.js?v=20261116-tab4-v1")
   .then(({createCodingEditor}) => {
     codeEditor = createCodingEditor({
       textarea:nativeEditor,
