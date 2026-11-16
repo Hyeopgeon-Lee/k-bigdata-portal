@@ -137,6 +137,13 @@ try{
       await page.waitForFunction(()=>!document.querySelector("#coding-autocomplete-toggle").disabled,{timeout:20000});
       const richEditor=page.locator("#coding-editor-host .cm-content");
       await richEditor.waitFor({state:"visible",timeout:20000});
+      // Tab inserts exactly four literal spaces into the CodeMirror document.
+      await richEditor.fill("");
+      await richEditor.click();
+      await page.keyboard.press("Tab");
+      assert.equal(await page.locator("#coding-editor").inputValue(),"    ","CodeMirror Tab inserts four spaces on C-001");
+      await page.keyboard.press("Shift+Tab");
+      assert.equal(await page.locator("#coding-editor").inputValue(),"","Shift+Tab removes the four-space indentation");
       await richEditor.click();
       await page.keyboard.type("pri",{delay:55});
       await page.waitForTimeout(500);
