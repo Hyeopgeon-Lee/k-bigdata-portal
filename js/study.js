@@ -15,7 +15,7 @@ let canWrite=window.portalLearning?.write===true;
 let sessionBusy=false,wasStale=false;
 function message(text,error=false){$('study-status').textContent=text;$('study-status').dataset.error=error?'true':'false';}
 function getSeconds(row){
- if(row.status==='needs_review')return 0;
+ if(row.status==='needs_review'||isStaleSession(row))return 0;
  if(row.status!=='active')return row.duration_seconds||0;
  const end=row.paused_at?Date.parse(row.paused_at):Date.now();
  return Math.max(0,Math.floor((end-Date.parse(row.started_at))/1000)-(row.break_seconds||0));
@@ -119,7 +119,7 @@ function render(){
  $('study-today-total').textContent=mins(todaySessions.reduce((sum,s)=>sum+getSeconds(s),0));
  $('study-live-label').textContent=active?(active.paused_at?'휴식 중 · 공부시간 일시정지':'공부시간 기록 중'):(todaysPlan?'오늘의 학습 기록':'학습 시작 전');
  const weekly=sessions.filter(s=>kstDate(s.started_at)>=week&&kstDate(s.started_at)<addDays(week,7));
- const studyDays=new Set(weekly.filter(s=>s.status!=='needs_review').map(s=>kstDate(s.started_at)));
+ const studyDays=new Set(weekly.filter(s=>s.status!=='needs_review'&&!isStaleSession(s)).map(s=>kstDate(s.started_at)));
  const pledged=[...selected].map(i=>addDays(week,i-1)).filter(day=>day<today||(day===today&&studyDays.has(day)));
  const met=pledged.filter(day=>studyDays.has(day)).length;
  $('study-stat-planned').textContent=selected.size+'일';
