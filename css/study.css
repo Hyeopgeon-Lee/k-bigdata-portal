@@ -93,3 +93,6 @@ body[data-page="study"] .study-grid > .learn-section {
 .study-diagnostic-row button{min-height:36px;padding:6px 12px;border-radius:8px;cursor:pointer}
 .study-diagnostic-row button:disabled{opacity:.55;cursor:wait}
 @media(max-width:760px){.study-diagnostic-row{align-items:stretch;flex-direction:column}.study-diagnostic-actions{width:100%}.study-diagnostic-actions button{flex:1}}
+/* Live elapsed study time updates each second without wrapping on mobile. */
+.study-live-count{font-size:clamp(25px,5.2vw,40px);font-variant-numeric:tabular-nums;letter-spacing:-.025em;white-space:nowrap}
+@media(max-width:360px){.study-live-count{font-size:24px}}

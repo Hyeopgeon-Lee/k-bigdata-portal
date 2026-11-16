@@ -1,6 +1,6 @@
 /* After-school self-directed study. Auth and write permissions are provided by portal-auth.mjs. */
 import {studyPlanningWeeks} from './study-week.mjs';
-import {isStaleSession,describeStudyError} from './study-session-state.mjs';
+import {isStaleSession,describeStudyError,formatStudyTimer} from './study-session-state.mjs';
 const db=window.portalSupabaseClient;
 const $=id=>document.getElementById(id);
 const Z=9*3600000,DAY=86400000;
@@ -116,8 +116,8 @@ function render(){
   stale?'이전 학습이 종료되지 않았습니다. 새로 시작하면 이전 기록은 삭제하지 않고 교수자 확인 대상으로 보관합니다.':
   active?'진행 중인 학습은 새로 시작하지 않고 기존 기록을 이어갑니다.':'학습 시작을 누르면 서버에 시작 시각이 기록됩니다.';
  const todaySessions=sessions.filter(s=>kstDate(s.started_at)===today);
- $('study-today-total').textContent=mins(todaySessions.reduce((sum,s)=>sum+getSeconds(s),0));
- $('study-live-label').textContent=active?(active.paused_at?'휴식 중 · 공부시간 일시정지':'공부시간 기록 중'):(todaysPlan?'오늘의 학습 기록':'학습 시작 전');
+ $('study-today-total').textContent=formatStudyTimer(todaySessions.reduce((sum,s)=>sum+getSeconds(s),0));
+ $('study-live-label').textContent=stale?'이전 학습기록 확인 필요':active?(active.paused_at?'휴식 중 · 공부시간 일시정지':'공부시간 기록 중'):(todaysPlan?'오늘의 학습 기록':'학습 시작 전');
  const weekly=sessions.filter(s=>kstDate(s.started_at)>=week&&kstDate(s.started_at)<addDays(week,7));
  const studyDays=new Set(weekly.filter(s=>s.status!=='needs_review'&&!isStaleSession(s)).map(s=>kstDate(s.started_at)));
  const pledged=[...selected].map(i=>addDays(week,i-1)).filter(day=>day<today||(day===today&&studyDays.has(day)));
@@ -140,7 +140,7 @@ function tick(){
  if(active){
   const today=kstDate(Date.now());
   const todays=sessions.filter(s=>kstDate(s.started_at)===today);
-  $('study-today-total').textContent=mins(todays.reduce((sum,s)=>sum+getSeconds(s),0));
+  $('study-today-total').textContent=formatStudyTimer(todays.reduce((sum,s)=>sum+getSeconds(s),0));
   if(isStaleSession(active)!==wasStale)render();
  }
 }

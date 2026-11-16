@@ -31,3 +31,12 @@ export function describeStudyError(error){
   return {code:'NETWORK_ERROR',status,message:'인터넷 연결이 불안정합니다. 연결을 확인한 뒤 학습 상태를 새로고침해 주세요.'};
  return {code,status,message:'학습기록을 처리하지 못했습니다. 새로고침 후 다시 시도해 주세요.'};
 }
+
+// Live timer includes seconds. Weekly statistics remain formatted in whole minutes.
+export function formatStudyTimer(seconds){
+ const total=Number.isFinite(Number(seconds))?Math.max(0,Math.floor(Number(seconds))):0;
+ const hours=Math.floor(total/3600);
+ const minutes=String(Math.floor(total%3600/60)).padStart(2,'0');
+ const remainder=String(total%60).padStart(2,'0');
+ return hours+'시간 '+minutes+'분 '+remainder+'초';
+}
