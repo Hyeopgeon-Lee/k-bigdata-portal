@@ -1,0 +1,50 @@
+name: Portal concurrency regression QA
+on:
+  pull_request:
+    paths:
+      - "js/portal-auth.mjs"
+      - "js/learning-activity.mjs"
+      - "js/portal-personal.js"
+      - "js/home-engagement.js"
+      - "js/study.js"
+      - "js/schedule.js"
+      - "js/home-schedule.js"
+      - "supabase/functions/public-calendar-cache/**"
+      - "supabase/functions/alumni-network-api/**"
+      - "supabase/migrations/*portal_50_user*"
+      - "admin/js/dashboard.js"
+      - "admin/index.html"
+      - "tests/portal-50-concurrency.test.mjs"
+      - "tests/learning-batch-concurrency.test.mjs"
+      - "tests/load/staging-50-users.js"
+  push:
+    branches: [main]
+    paths:
+      - "js/portal-auth.mjs"
+      - "js/learning-activity.mjs"
+      - "js/schedule.js"
+      - "js/home-schedule.js"
+      - "admin/js/dashboard.js"
+      - "tests/portal-50-concurrency.test.mjs"
+      - "tests/learning-batch-concurrency.test.mjs"
+jobs:
+  concurrency-qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate shared modules and staging safeguards
+        run: |
+          node --check js/portal-auth.mjs
+          node --check js/learning-activity.mjs
+          node --check js/portal-personal.js
+          node --check js/home-engagement.js
+          node --check js/schedule.js
+          node --check js/home-schedule.js
+          node --check admin/js/dashboard.js
+          node --check tests/load/staging-50-users.js
+          node --test tests/portal-50-concurrency.test.mjs
+          node --test tests/learning-batch-concurrency.test.mjs
+          node tests/learning-tracking.test.mjs
