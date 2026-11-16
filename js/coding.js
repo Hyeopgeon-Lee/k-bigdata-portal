@@ -1,9 +1,9 @@
 import {quizNavigation,quizHeading,quizFeedback,scrollToQuizAnswer,mountQuizDisclosure} from "./quiz-unified.js?v=20261112-answer-focus-1";
 import {createQuestionBrowser} from "./question-browser.js?v=20261116-progress-v1";
-import {createLearningProgressStore} from "./learning-list-progress.mjs";
-import {bindReview,reviewControls,gradeLabels} from "./study-review.js";
+import {createLearningProgressStore} from "./learning-list-progress.mjs?v=20261116-concurrency-1";
+import {bindReview,reviewControls,gradeLabels} from "./study-review.js?v=20261116-concurrency-1";
 import {learningLocal as localStorage, learningSession as sessionStorage} from "./learning-storage.mjs";
-import {debounceCloudDraft,fetchCloudDraft} from "./learning-activity.mjs";
+import {debounceCloudDraft,fetchCloudDraft} from "./learning-activity.mjs?v=20261116-concurrency-1";
 import {codingProblems as sampleProblems} from "../data/coding-samples.js?v=20261111-ubuntu-vim-only-2";
 import {javaProblems} from "../data/coding-java-98.js?v=20261113-java062-flush-cleanup-1";
 import {cFoundationProblems} from "../data/coding-c-foundations.js?v=20261111-essential-ranges-1";
