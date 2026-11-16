@@ -75,9 +75,12 @@ globalThis.portalSupabaseClient={
  auth:{async getUser(){return {data:{user:{id:'11111111-1111-4111-8111-111111111111',email:'student@test.edu'}},error:null};}},
  from(table){
   assert.equal(table,'learning_attempts');
-  return {async insert(payload){
+  return {async upsert(payload,options){
+   assert.equal(options.onConflict,'user_id,client_attempt_id');
+   assert.equal(options.ignoreDuplicates,true);
+   assert.ok(Array.isArray(payload),'learning attempts must be sent in batches');
    if(unavailable)return {error:{code:'PGRST_OFFLINE'}};
-   if(!logged.some(row=>row.client_attempt_id===payload.client_attempt_id))logged.push(payload);
+   for(const row of payload)if(!logged.some(item=>item.client_attempt_id===row.client_attempt_id))logged.push(row);
    return {error:null};
   }};
  }

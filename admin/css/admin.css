@@ -89,3 +89,15 @@ body{background:var(--admin-bg);color:var(--admin-ink);overflow-x:hidden}
 .portal-approval-item.portal-approval-target{border:2px solid #2e68b7;background:#f5f9ff;box-shadow:0 0 0 3px #d9eaff}
 .portal-approval-link-notice{margin:8px 0 16px;padding:13px 15px;background:#fff9e9;border:1px solid #eed9a1;border-radius:9px;color:#715319;font-size:13px;line-height:1.6}
 @media(max-width:640px){.signup-admin-mail-settings{flex-direction:column;align-items:stretch;padding:15px;gap:13px}.signup-admin-mail-control{align-self:flex-end}}
+
+/* Operational health follows the main portal's compact card design. */
+.admin-monitor-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(172px,1fr));gap:12px;margin-top:16px}
+.admin-monitor-tile{display:flex;flex-direction:column;gap:8px;border:1px solid #dce6f1;background:#f8fbff;border-radius:12px;padding:16px;min-height:90px}
+.admin-monitor-tile small{font-size:13px;color:#596f88;font-weight:600}
+.admin-monitor-tile strong{font-size:23px;color:#193b63;font-variant-numeric:tabular-nums}
+.admin-monitor-tile.admin-monitor-warning{border-color:#d39a58;background:#fff8f1}
+.admin-monitor-status{margin:14px 0 8px;line-height:1.6;font-size:13px;color:#425b75}
+.admin-monitor-links{display:flex;flex-wrap:wrap;gap:18px;margin:0;font-size:13px}
+.admin-monitor-links a{color:#245791;text-decoration:underline}
+.admin-monitor-refresh{background:#1b4d82;color:white;border:0;padding:9px 15px;border-radius:8px;cursor:pointer}
+.admin-monitor-refresh:disabled{opacity:.6;cursor:wait}

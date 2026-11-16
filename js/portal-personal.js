@@ -12,9 +12,9 @@ async function load(){
  if(!authorized()||!client())return;
  if(loadPromise)return loadPromise;
  loadPromise=(async()=>{
-  const {data:{user},error:authError}=await client().auth.getUser();
-  if(authError||!user)throw Error("LOGIN_REQUIRED");
-  userId=user.id;
+  const identity=globalThis.portalVerifiedUserId;
+  if(!identity)throw Error("LOGIN_REQUIRED");
+  userId=identity;
   const [favs,recent]=await Promise.all([
    client().from("user_favorites").select("service_id").eq("user_id",userId).order("created_at",{ascending:false}).limit(12),
    client().from("user_recent_services").select("service_id").eq("user_id",userId).order("last_opened_at",{ascending:false}).limit(8)
@@ -63,9 +63,25 @@ export function recordService(id){
  recorded.set(id,Date.now());
  state.recent=[id,...state.recent.filter(v=>v!==id)].slice(0,8);notify();
  writeQueue=writeQueue.then(async()=>{
-  const {error}=await client().from("user_recent_services").upsert({user_id:userId,service_id:id,last_opened_at:new Date().toISOString()},{onConflict:"user_id,service_id"});
-  if(error)throw error;
- }).catch(error=>console.error("Recent service save failed",error));
+  const payload={user_id:userId,service_id:id,last_opened_at:new Date().toISOString()};
+  let previousError=null;
+  for(let attempt=0;attempt<3;attempt++){
+   try{
+    const {error}=await client().from("user_recent_services")
+      .upsert(payload,{onConflict:"user_id,service_id"});
+    if(!error)return;
+    previousError=error;
+    const transient=[429,502,503,504].includes(Number(error.status||0))||
+      /(?:gateway|timeout|fetch failed|network)/i.test(error.message||"");
+    if(!transient)break;
+   }catch(error){previousError=error;}
+   if(attempt<2)await new Promise(resolve=>setTimeout(resolve,350*Math.pow(2,attempt)+Math.random()*400));
+  }
+  throw previousError||Error("RECENT_SERVICE_SAVE_FAILED");
+ }).catch(error=>{
+  console.error("Recent service save failed",error);
+  window.dispatchEvent(new Event("portal-personal-error"));
+ });
 }
 export async function importLegacyShortcuts(){
  if(!canWrite())throw Error("읽기 전용 계정은 가져올 수 없습니다.");

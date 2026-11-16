@@ -1,4 +1,4 @@
-import {fetchLearningAttempts,fetchLearningProgress,flushLearningQueue} from './learning-activity.mjs';
+import {fetchLearningAttempts,fetchLearningProgress,flushLearningQueue} from './learning-activity.mjs?v=20261116-concurrency-1';
 const get=id=>document.getElementById(id);
 const label={coding:'기초 350제',ncp:'NCP 기출',practical:'정보처리 기출'};
 const grade={correct:'정답',incorrect:'오답',ungraded:'미판정',completed:'완료 표시',timeout:'시간 초과'};

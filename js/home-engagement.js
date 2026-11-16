@@ -23,13 +23,13 @@ async function load(){
  if(!root||!db()||!globalThis.portalLearning?.read||state.busy)return;
  state.busy=true;const day=koreaDay(),[start,end]=todayRange(day);
  try{
-  const {data:{user},error:userError}=await db().auth.getUser();
-  if(userError||!user)throw userError||Error("로그인이 필요합니다.");
-  state.userId=user.id;
+  const userId=globalThis.portalVerifiedUserId;
+  if(!userId)throw Error("로그인이 필요합니다.");
+  state.userId=userId;
   const [checks,custom,attempts]=await Promise.all([
-   db().from("daily_task_checks").select("task_key").eq("user_id",user.id).eq("task_date",day),
-   db().from("personal_tasks").select("id,title,due_date,status,completed_at").eq("user_id",user.id).lte("due_date",day).order("created_at",{ascending:false}).limit(100),
-   db().from("learning_attempts").select("question_id,result,submitted_at").eq("user_id",user.id).eq("bank","practical").gte("submitted_at",start).lt("submitted_at",end).limit(200)
+   db().from("daily_task_checks").select("task_key").eq("user_id",userId).eq("task_date",day),
+   db().from("personal_tasks").select("id,title,due_date,status,completed_at").eq("user_id",userId).lte("due_date",day).order("created_at",{ascending:false}).limit(100),
+   db().from("learning_attempts").select("question_id,result,submitted_at").eq("user_id",userId).eq("bank","practical").gte("submitted_at",start).lt("submitted_at",end).limit(200)
   ]);
   if(checks.error||custom.error||attempts.error)throw checks.error||custom.error||attempts.error;
   const daily=freshDailyState(day);

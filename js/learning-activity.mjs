@@ -10,6 +10,7 @@ const writable=()=>globalThis.portalLearning?.write===true && Date.now()<globalT
 const readable=()=>globalThis.portalLearning?.read===true && Date.now()<globalThis.portalLearning.expires;
 async function account(){
  if(!db()||!readable())throw new Error('LOGIN_REQUIRED');
+ if(globalThis.portalVerifiedUserId)return {id:globalThis.portalVerifiedUserId};
  if(!accountPromise)accountPromise=db().auth.getUser().then(({data,error})=>{
    if(error||!data?.user?.id)throw new Error('LOGIN_REQUIRED');
    return data.user;
@@ -19,10 +20,14 @@ async function account(){
 function queueKey(userId){return 'kbigdata:learning:pending:v2:'+userId;}
 function pending(userId){
  try{const rows=JSON.parse(storage.getItem(queueKey(userId))||'[]');
-  return Array.isArray(rows)?rows.filter(v=>v&&typeof v.client_attempt_id==='string').slice(-500):[];
+  return Array.isArray(rows)?rows.filter(v=>v&&typeof v.client_attempt_id==='string'):[];
  }catch{return [];}
 }
-function setPending(userId,items){storage.setItem(queueKey(userId),JSON.stringify(items.slice(-500)));}
+function setPending(userId,items){
+ if(items.length>500)throw new Error('LEARNING_QUEUE_FULL');
+ if(!storage)throw new Error('LEARNING_DEVICE_STORAGE_UNAVAILABLE');
+ storage.setItem(queueKey(userId),JSON.stringify(items));
+}
 function notify(state,message){
  document.dispatchEvent(new CustomEvent('portal-learning-sync',{detail:{state,message}}));
 }
@@ -33,7 +38,29 @@ function validate(data){
  if(!/^[A-Za-z0-9_-]{1,90}$/.test(String(data.questionId||'')))throw new Error('INVALID_QUESTION_ID');
  if(data.gradingMethod==='automatic'&&data.bank==='coding')throw new Error('INVALID_CODING_GRADE');
 }
-let syncing=null;
+// One network request persists up to 25 attempts. Web Locks serialize queue writes
+// across tabs; the local promise fallback covers browsers without Web Locks.
+export const LEARNING_BATCH_SIZE=25;
+export function learningRetryDelay(attempt,random=0){
+ return Math.min(60000,2000*Math.pow(2,Math.min(5,Math.max(0,attempt))))+Math.floor(Math.max(0,Math.min(1,random))*2000);
+}
+let syncing=null,localQueueLock=Promise.resolve(),retryTimer=null,retryAttempt=0;
+function withQueueLock(userId,work){
+ const name='kbigdata:learning:queue:v2:'+userId;
+ if(globalThis.navigator?.locks?.request)return globalThis.navigator.locks.request(name,work);
+ const next=localQueueLock.then(work,work);
+ localQueueLock=next.catch(()=>{});
+ return next;
+}
+function retryLater(){
+ if(retryTimer||!writable()||globalThis.navigator?.onLine===false)return;
+ const delay=learningRetryDelay(retryAttempt++,Math.random());
+ retryTimer=setTimeout(()=>{retryTimer=null;void flushLearningQueue().catch(error=>console.warn('Learning queue retry failed',error));},delay);
+}
+function clearRetry(){
+ if(retryTimer){clearTimeout(retryTimer);retryTimer=null;}
+ retryAttempt=0;
+}
 export function flushLearningQueue(){
  if(syncing)return syncing;
  syncing=flushLearningInternal().finally(()=>{syncing=null;});
@@ -42,27 +69,37 @@ export function flushLearningQueue(){
 async function flushLearningInternal(){
  if(!writable())return {state:'readonly'};
  const user=await account();
- let count=0;
- // Drain queued events in order; concurrent clicks must not discard new events.
- for(let iteration=0;iteration<5;iteration++){
-  const records=pending(user.id);
-  if(!records.length)break;
-  const remain=[];
-  for(const record of records){
+ return withQueueLock(user.id,async()=>{
+  let error=null;
+  for(let iteration=0;iteration<20;iteration++){
+   const batch=pending(user.id).slice(0,LEARNING_BATCH_SIZE);
+   if(!batch.length)break;
    try{
-    const {error}=await db().from('learning_attempts').insert(record);
-    if(error&&error.code!=='23505')remain.push(record);
-   }catch{remain.push(record);}
+    // ON CONFLICT DO NOTHING: client_attempt_id is globally unique per user.
+    // Never update an existing attempt or increment the aggregate twice.
+    const result=await db().from('learning_attempts').upsert(batch,{
+      onConflict:'user_id,client_attempt_id',ignoreDuplicates:true
+    });
+    if(result.error)throw result.error;
+    const done=new Set(batch.map(r=>r.client_attempt_id));
+    // Preserve any new events appended by this or another tab.
+    setPending(user.id,pending(user.id).filter(row=>!done.has(row.client_attempt_id)));
+   }catch(cause){
+    error=cause;
+    console.warn('Learning attempt batch pending',cause?.code||cause?.message||'NETWORK');
+    break;
+   }
   }
-  const processed=new Set(records.map(r=>r.client_attempt_id));
-  const incoming=pending(user.id).filter(r=>!processed.has(r.client_attempt_id));
-  setPending(user.id,[...remain,...incoming]);
-  if(remain.length || !incoming.length)break;
- }
- count=pending(user.id).length;
- const state=count?'pending':'saved';
- notify(state,count?'일부 학습 기록이 기기에 대기 중입니다. 인터넷 연결 후 다시 동기화합니다.':'학습 결과가 클라우드에 저장되었습니다.');
- return {state,count};
+  const count=pending(user.id).length;
+  if(count){
+   notify('pending','학습 기록 '+count+'건이 기기에 대기 중입니다. 인터넷 연결 후 다시 동기화합니다.');
+   if(error?.code!=='42501'&&error?.status!==401&&error?.status!==403)retryLater();
+  }else{
+   clearRetry();
+   notify('saved','학습 결과가 클라우드에 저장되었습니다.');
+  }
+  return {state:count?'pending':'saved',count};
+ });
 }
 export async function recordLearningAttempt(data){
  validate(data);
@@ -80,12 +117,15 @@ export async function recordLearningAttempt(data){
    question_revision:data.questionRevision?String(data.questionRevision).slice(0,120):null,
    metadata:{source:'portal',self_reported:data.gradingMethod==='self',...data.metadata}
  };
- const rows=pending(user.id);
- if(!rows.some(r=>r.client_attempt_id===event.client_attempt_id)){
-   rows.push(event);
-   setPending(user.id,rows);
- }
+ await withQueueLock(user.id,()=>{
+   const rows=pending(user.id);
+   if(!rows.some(r=>r.client_attempt_id===event.client_attempt_id)){
+     rows.push(event);
+     setPending(user.id,rows);
+   }
+ });
  notify('pending','학습 기록을 클라우드에 동기화하는 중입니다.');
+ // Always flush after recording; failures retain the on-device copy.
  return flushLearningQueue();
 }
 export async function fetchLearningAttempts(){
@@ -130,4 +170,8 @@ export async function fetchCloudDraft(bank,questionId){
 if(typeof window!=='undefined'){
  window.addEventListener('online',()=>{flushLearningQueue().catch(()=>{});});
  window.addEventListener('portal-learning-ready',()=>{flushLearningQueue().catch(()=>{});});
+ window.addEventListener('storage',event=>{
+  if(event.key?.startsWith('kbigdata:learning:pending:v2:')&&event.newValue)
+   void flushLearningQueue().catch(()=>{});
+ });
 }

@@ -46,7 +46,7 @@ for(const id of ["home-today","home-today-subtitle","home-today-primary","home-t
   assert.ok(html.includes('id="'+id+'"'),id+" is mounted");
 assert.ok(html.indexOf('id="home-today"')<html.indexOf('id="home-alerts-title"'));
 assert.ok(html.indexOf('class="dashboard-action-grid"')<html.indexOf('id="home-today"'));
-assert.ok(html.includes('js/home-engagement.js?v=20261111-daily-sync-1'));
+assert.match(html,/js\/home-engagement\.js\?v=\d{8}-[\w-]+/);
 assert.match(html,/css\/home-engagement\.css\?v=[^"']+/);
 assert.ok(ui.includes('kbigdata:home-gradechange'),"grade changes refresh the checklist");
 assert.ok(ui.includes('visibilitychange'),"practice progress refreshes on return");

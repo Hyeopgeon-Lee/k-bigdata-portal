@@ -350,6 +350,20 @@ function readPublishedSchedules(urlString) {
     document.head.append(script);
   });
 }
+const CALENDAR_EDGE_URL="https://zjsindkakjfzmjgrkaou.supabase.co/functions/v1/public-calendar-cache";
+async function readCachedPublicSchedules(){
+ const controller=new AbortController();
+ const timer=setTimeout(()=>controller.abort(),12000);
+ try{
+  const response=await fetch(CALENDAR_EDGE_URL,{
+   headers:{"Accept":"application/json"},signal:controller.signal
+  });
+  if(!response.ok)throw Error("CALENDAR_GATEWAY_"+response.status);
+  const body=await response.json();
+  if(body?.ok!==true||!Array.isArray(body.events))throw Error("CALENDAR_GATEWAY_INVALID");
+  return body;
+ }finally{clearTimeout(timer);}
+}
 let activeCalendarLoad=null;
 let calendarLoadVersion=0;
 async function loadPublicCalendar({force=false}={}){
@@ -366,7 +380,8 @@ async function loadPublicCalendar({force=false}={}){
       ? "저장된 공개 일정을 표시 중입니다 · 최신 일정을 확인하고 있습니다…"
       : "공개된 학과 일정을 불러오는 중입니다…";
     try{
-      const response=await readPublishedSchedules(SCHEDULE_API_URL);
+      // Only admin create/delete operations bypass the cache for immediate feedback.
+      const response=force?await readPublishedSchedules(SCHEDULE_API_URL):await readCachedPublicSchedules();
       if(version!==calendarLoadVersion)return;
       if(response?.ok!==true||!Array.isArray(response.events))
         throw new Error("일정 응답 오류");
