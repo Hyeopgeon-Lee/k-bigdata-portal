@@ -72,3 +72,21 @@ main .question-browser .qb-secondary-chips button:focus-visible{
   main .question-browser .qb-secondary-chips button{width:100%;padding:9px 6px;font-size:13px}
   .qb-secondary-chips button:first-child{grid-column:1/-1}
 }
+
+/* Per-question attempt summaries: one compact row on mobile, no badges crowding the title. */
+main .question-browser .qb-progress-filter{display:flex;flex-wrap:wrap;gap:7px}
+main .question-browser .qb-progress-filter button{width:auto;min-height:40px;padding:7px 14px;border-radius:999px;background:#f7f9fc;color:#304960;font:650 14px/1.4 inherit;cursor:pointer}
+main .question-browser .qb-progress-filter button[aria-pressed="true"]{background:#193b63;border-color:#193b63;color:white}
+main .question-browser .qb-progress-filter button:focus-visible{outline:3px solid #8db4e9;outline-offset:2px}
+main .question-browser .qb-progress-hint{font-size:12px;line-height:1.5;color:#52657a;margin:0}
+main .question-browser .qb-list li button .qb-progress-detail{grid-column:1;font-size:12px;line-height:1.6;white-space:normal;overflow-wrap:anywhere;color:#63748b}
+main .question-browser .qb-list li button .qb-progress-done{color:#247245;font-weight:700}
+main .question-browser .qb-list li button .qb-progress-done:before{content:"✓";display:inline-block;margin-right:5px;font-weight:900}
+main .question-browser .qb-list li button .qb-progress-local{color:#78582b}
+main .question-browser .qb-list li button .qb-progress-loading{color:#627386}
+main .question-browser .qb-list li button span{grid-row:1/4}
+@media(max-width:480px){
+ main .question-browser .qb-progress-filter{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+ main .question-browser .qb-progress-filter button{width:100%;padding:8px 4px;font-size:13px}
+ main .question-browser .qb-list li button{padding:12px;gap:3px 8px}
+}
