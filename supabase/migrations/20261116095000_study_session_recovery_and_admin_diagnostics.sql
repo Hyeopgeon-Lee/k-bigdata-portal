@@ -175,6 +175,42 @@ END $fn$;
 REVOKE ALL ON FUNCTION public.study_admin_diagnostics(integer) FROM PUBLIC,anon;
 GRANT EXECUTE ON FUNCTION public.study_admin_diagnostics(integer) TO authenticated;
 
+CREATE OR REPLACE FUNCTION public.study_admin_flag_stale_session(p_session_id uuid)
+RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER SET search_path TO ''
+AS $fn$
+DECLARE v_row public.study_sessions;
+BEGIN
+ IF NOT public.portal_super_admin_allowed() THEN
+  RAISE EXCEPTION 'STUDY_ADMIN_REQUIRED' USING ERRCODE='42501';
+ END IF;
+ SELECT * INTO v_row FROM public.study_sessions
+  WHERE id=p_session_id AND status='active' FOR UPDATE;
+ IF NOT FOUND THEN RAISE EXCEPTION 'STUDY_NOT_ACTIVE'; END IF;
+ IF NOT private.study_session_is_stale(v_row.started_at) THEN
+  RAISE EXCEPTION 'STUDY_STILL_RECENT';
+ END IF;
+ PERFORM pg_catalog.pg_advisory_xact_lock(pg_catalog.hashtextextended(v_row.user_id::text,221));
+ -- Recheck under the same per-user lock as student start/restart/finish.
+ SELECT * INTO v_row FROM public.study_sessions
+  WHERE id=p_session_id AND status='active' FOR UPDATE;
+ IF NOT FOUND THEN RAISE EXCEPTION 'STUDY_NOT_ACTIVE'; END IF;
+ IF NOT private.study_session_is_stale(v_row.started_at) THEN
+  RAISE EXCEPTION 'STUDY_STILL_RECENT';
+ END IF;
+ UPDATE public.study_sessions
+ SET status='needs_review',ended_at=now(),duration_seconds=0,
+  paused_at=NULL,
+  break_seconds=v_row.break_seconds+
+   CASE WHEN v_row.paused_at IS NOT NULL
+    THEN greatest(0,extract(epoch FROM now()-v_row.paused_at)::integer)
+    ELSE 0 END,
+  review_reason='stale_session'
+ WHERE id=p_session_id;
+ RETURN jsonb_build_object('ok',true,'id',p_session_id);
+END $fn$;
+REVOKE ALL ON FUNCTION public.study_admin_flag_stale_session(uuid) FROM PUBLIC,anon;
+GRANT EXECUTE ON FUNCTION public.study_admin_flag_stale_session(uuid) TO authenticated;
+
 CREATE OR REPLACE FUNCTION public.study_admin_review_session(
  p_session_id uuid,p_decision text,p_minutes integer DEFAULT NULL,p_note text DEFAULT NULL)
 RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER SET search_path TO ''
@@ -187,7 +223,7 @@ BEGIN
  IF p_decision NOT IN ('accepted','rejected') THEN
   RAISE EXCEPTION 'STUDY_INVALID_DECISION';
  END IF;
- IF p_decision='accepted' AND (p_minutes IS NULL OR p_minutes<0 OR p_minutes>720) THEN
+ IF p_decision='accepted' AND (p_minutes IS NULL OR p_minutes<1 OR p_minutes>720) THEN
   RAISE EXCEPTION 'STUDY_INVALID_MINUTES';
  END IF;
  IF p_note IS NOT NULL AND char_length(p_note)>300 THEN
