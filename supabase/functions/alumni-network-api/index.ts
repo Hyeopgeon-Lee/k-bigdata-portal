@@ -94,6 +94,24 @@ async function rows(kind:string):Promise<Rec[]>{
  return (data||[]) as Rec[];
 }
 async function one(kind:string,recordId:string):Promise<Rec|null>{
+ // Detail requests must not load every graduate just to locate a single id.
+ if(kind==="alumni"){
+  const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(recordId);
+  const query=admin.from("alumni_profiles")
+   .select("*,member:profiles!alumni_profiles_user_id_fkey(full_name,email,student_no,alumni_student_no,graduation_year,mobile_phone,signup_type,enrollment_status,approval_status)");
+  const {data:d,error}=await query.eq(uuid?"user_id":"legacy_alumni_id",recordId).maybeSingle();
+  if(error)throw Error("DB_LOOKUP_ALUMNI");
+  if(!d||d.member?.approval_status!=="approved")return null;
+  const p=d.member,{member,user_id,legacy_alumni_id,is_visible,...rest}=d;
+  return {source_kind:"alumni",source_id:user_id,data:{
+   ...rest,alumni_id:user_id,legacy_alumni_id:legacy_alumni_id||"",
+   name:p.full_name,email:p.email,phone:p.mobile_phone||"",
+   student_id:p.signup_type==="student"?p.student_no||"":p.alumni_student_no||"",
+   graduation_year:p.graduation_year||d.graduation_year||"",
+   status:is_visible?"APPROVED":"HIDDEN"
+  }};
+ }
+
  if(Object.hasOwn(PORTAL_TABLES,kind)){
   const items=await rows(kind);
   return items.find(r=>r.source_id===recordId||(kind==="alumni"&&r.data.legacy_alumni_id===recordId))||null;
@@ -654,6 +672,23 @@ async function handle(action:string,b:Record<string,unknown>,a:Actor){
  default:throw Error("지원하지 않는 기능입니다: "+text(action,60));
  }
 }
+// Only authorized, user-independent published results may be reused.
+// No admin, profile-edit or private contact response enters this cache.
+const PUBLIC_CACHEABLE=new Set(["list","home","jobs","newsList","careerPublic"]);
+const CACHE_MS=30000;
+const publishedCache=new Map<string,{expires:number,value:unknown}>();
+const publishedInFlight=new Map<string,Promise<unknown>>();
+async function cachedPublic(action:string,load:()=>Promise<unknown>):Promise<unknown>{
+ const hit=publishedCache.get(action);
+ if(hit&&hit.expires>Date.now())return hit.value;
+ if(publishedInFlight.has(action))return publishedInFlight.get(action)!;
+ const pending=load().then(value=>{
+  publishedCache.set(action,{expires:Date.now()+CACHE_MS,value});
+  return value;
+ }).finally(()=>{publishedInFlight.delete(action);});
+ publishedInFlight.set(action,pending);
+ return pending;
+}
 Deno.serve(async(request:Request)=>{
  if(request.method==="OPTIONS")return new Response(null,{status:204,headers});
  if(request.method!=="POST")return err("POST 요청만 허용됩니다.",405);
@@ -665,8 +700,10 @@ Deno.serve(async(request:Request)=>{
  if(!action)return err("요청 기능이 지정되지 않았습니다.");
  try{
   const a=await actor(request);
-  const data=await handle(action,(body.data&&typeof body.data==="object"&&!Array.isArray(body.data)?
+  const run=()=>handle(action,(body.data&&typeof body.data==="object"&&!Array.isArray(body.data)?
    body.data:{} ) as Record<string,unknown>,a);
+  const data=PUBLIC_CACHEABLE.has(action)?await cachedPublic(action,run):await run();
+  if(!PUBLIC_CACHEABLE.has(action))publishedCache.clear();
   return result(data);
  }catch(e){
   const message=text((e as Error)?.message,280)||"요청을 처리하지 못했습니다.";
