@@ -81,3 +81,15 @@ body[data-page="study"] .study-grid > .learn-section {
 .study-action-note{margin:12px 0 0;padding:10px 13px;border-radius:9px;background:#f2f6fc;color:#254361}
 .study-action-note[data-warning="true"]{background:#fff7e7;color:#81530d;border:1px solid #e9cf98}
 .study-action-note[hidden]{display:none!important}
+
+/* Faculty timer review queue and diagnostic metadata. */
+.study-diagnostic-list{display:grid;gap:9px;margin:12px 0 22px}
+.study-diagnostic-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px;border:1px solid #dce6f1;border-radius:11px;background:#f8fbff;flex-wrap:wrap}
+.study-diagnostic-row strong{color:#233854}
+.study-diagnostic-row p{font-size:13px;color:#536780;margin:4px 0 0}
+.study-diagnostic-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.study-diagnostic-actions label{font-size:13px;color:#455d7b;display:flex;align-items:center;gap:6px}
+.study-diagnostic-actions input{width:84px;min-height:36px;padding:7px;border:1px solid #b8c9e0;border-radius:7px;font:inherit;background:white;color:#223a5a}
+.study-diagnostic-row button{min-height:36px;padding:6px 12px;border-radius:8px;cursor:pointer}
+.study-diagnostic-row button:disabled{opacity:.55;cursor:wait}
+@media(max-width:760px){.study-diagnostic-row{align-items:stretch;flex-direction:column}.study-diagnostic-actions{width:100%}.study-diagnostic-actions button{flex:1}}
