@@ -19,6 +19,12 @@ async function prepare(context){
   await approvedStudent(context);
   // Isolate public read-only UI tests from production analytics and calendar calls.
   await context.route(/https:\/\/(?:www\.)?(?:googletagmanager\.com|google-analytics\.com|analytics\.google\.com)\//,route=>route.fulfill({status:200,contentType:'application/javascript',body:''}));
+  await context.route('https://*/functions/v1/public-calendar-cache',route=>{
+    assert.equal(route.request().method(),'GET','public calendar tests must remain read-only');
+    return route.fulfill({status:200,contentType:'application/json',
+      headers:{'Access-Control-Allow-Origin':'*'},
+      body:JSON.stringify({ok:true,events:[],updatedAt:'browser audit fixture'})});
+  });
   await context.route('https://script.google.com/**',route=>{
     assert.equal(route.request().method(),'GET','browser audit must never write to production calendar');
     const callback=new URL(route.request().url()).searchParams.get('callback');
@@ -76,7 +82,10 @@ async function interactions(page,width,id){
     await summary.focus();await page.keyboard.press('Enter');await page.waitForFunction(()=>document.querySelector('.portal-menu > summary').getAttribute('aria-expanded')==='true');await page.keyboard.press('Tab');
     assert.equal(await page.evaluate(()=>document.activeElement.closest('#portal-nav')!==null),true,'Tab enters links');
     await page.keyboard.press('Escape');
-    await summary.click();await page.locator('main').click({position:{x:2,y:2}});
+    await summary.click();
+    // The expanded mobile menu visually overlays the top of <main>.
+    // Send the outside-click event to main rather than attempting a covered pointer.
+    await page.locator('main').evaluate(node=>node.dispatchEvent(new MouseEvent('click',{bubbles:true})));
     assert.equal(await menu.getAttribute('open'),null,'outside click closes menu');
   }else assert.equal(await page.locator('#portal-nav').isVisible(),true,'desktop links visible');
   if(portalPages[id].eyebrow){
@@ -131,7 +140,8 @@ try{
               assert.ok(Math.abs(state.pageIntro.rect.x-state.serviceBar.rect.x)<1,'page introduction aligns with service bar');
               assert.ok(Math.abs(state.pageIntro.rect.width-state.serviceBar.rect.width)<1,'page introduction matches service bar width');
             }
-            if(definition.group)assert.equal(state.active?.id,id,'query-independent current service');
+            if(navigationItems.some(item=>item.id===id))
+              assert.equal(state.active?.id,id,'listed service should be active');
             else assert.equal(state.active,null,'unlisted pages do not activate unrelated service links');
             assert.deepEqual([...state.allServices].sort(),navigationItems.map(item=>item.id).sort(),'all service links preserved');
             if(definition.group){
