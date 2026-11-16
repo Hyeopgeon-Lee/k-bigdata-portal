@@ -1,0 +1,45 @@
+name: Study timer recovery QA
+on:
+  pull_request:
+    paths:
+      - "js/study.js"
+      - "js/study-session-state.mjs"
+      - "js/study-diagnostics.js"
+      - "js/study-teacher.js"
+      - "js/portal-auth.mjs"
+      - "study.html"
+      - "css/study.css"
+      - "admin/learning.html"
+      - "admin/js/learning.js"
+      - "supabase/migrations/*study_session_recovery*"
+      - "tests/study-session-recovery.test.mjs"
+  push:
+    branches: [main]
+    paths:
+      - "js/study.js"
+      - "js/study-session-state.mjs"
+      - "js/study-diagnostics.js"
+      - "js/study-teacher.js"
+      - "js/portal-auth.mjs"
+      - "study.html"
+      - "css/study.css"
+      - "admin/learning.html"
+      - "admin/js/learning.js"
+      - "supabase/migrations/*study_session_recovery*"
+jobs:
+  study-regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate study recovery and existing study feature contracts
+        run: |
+          node --test tests/study-session-recovery.test.mjs
+          node tests/study-feature.test.mjs
+          node --check js/study-session-state.mjs
+          node --check js/study.js
+          node --check js/study-teacher.js
+          node --check js/study-diagnostics.js
+          node --check js/portal-auth.mjs

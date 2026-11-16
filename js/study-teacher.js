@@ -1,4 +1,5 @@
 /* Super-admin study attendance dashboard; RPC enforces professor authorization. */
+import {isStaleSession} from './study-session-state.mjs';
 const db=window.portalSupabaseClient,$=id=>document.getElementById(id);
 const DAY=86400000,Z=9*3600000;
 const kdate=value=>new Date(new Date(value).getTime()+Z).toISOString().slice(0,10);
@@ -13,7 +14,7 @@ function selectedWeek(){
  return /^\d{4}-\d\d-\d\d$/.test(week)?week:monday();
 }
 function sessionDuration(s){
- if(s.status==='needs_review')return 0;
+ if(s.status==='needs_review'||isStaleSession(s))return 0;
  if(s.status!=='active')return s.duration_seconds||0;
  return Math.max(0,Math.floor((Date.parse(s.paused_at||new Date().toISOString())-Date.parse(s.started_at))/1000)-(s.break_seconds||0));
 }
@@ -35,7 +36,7 @@ function render(){
  for(const person of students){
   const plan=report.plans.find(p=>p.user_id===person.id),selected=plan?.weekdays||[];
   const ss=report.sessions.filter(s=>s.user_id===person.id);
-  const attended=new Set(ss.map(s=>kdate(s.started_at)));
+  const attended=new Set(ss.filter(s=>s.status!=='needs_review'&&!isStaleSession(s)).map(s=>kdate(s.started_at)));
   const due=selected.map(d=>dateAt(week,d-1)).filter(date=>date<today);
   const attendedPlanned=due.filter(day=>attended.has(day)).length;
   const reasons=report.reasons.filter(r=>r.user_id===person.id);

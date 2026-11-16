@@ -53,5 +53,5 @@ assert.ok(js.includes('e.source==="portal"'),"portal-only deletion must remain")
 assert.ok(js.includes("e.published===true"),"public-only projection must remain");
 assert.ok(js.includes("selectLinkedEvent"),"shared link resolves specific event");
 assert.ok(css.includes(".schedule-share-button"));
-assert.ok(html.includes("20261024-share-1"),"asset cache busting required");
+assert.match(html,/js\/schedule\.js\?v=\d{8}-[\w-]+/,"asset cache busting required");
 console.log("PASS: Band post URLs, per-event deep links, iCalendar KST, inclusive days, no invented end time, accessible actions.");
