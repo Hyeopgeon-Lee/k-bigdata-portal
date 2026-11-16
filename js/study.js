@@ -26,9 +26,9 @@ async function load(){
  const weeks=studyPlanningWeeks();
  if(!weeks.nextWeekOpen&&week===weeks.nextWeek)week=weeks.thisWeek;
  message('클라우드 학습기록을 불러오는 중입니다.');
- const {data:identity,error:authError}=await db.auth.getUser();
- if(authError||!identity.user)throw Error('로그인 정보를 확인하지 못했습니다.');
- uid=identity.user.id;
+ const verified=globalThis.portalVerifiedUserId;
+ if(!verified)throw Error('로그인 정보를 확인하지 못했습니다.');
+ uid=verified;
  // A next-week plan still needs this week's sessions for today's live totals.
  const endWeek=week===weeks.nextWeek?weeks.nextWeek:weeks.thisWeek;
  const [p,s,a,m]=await Promise.all([
