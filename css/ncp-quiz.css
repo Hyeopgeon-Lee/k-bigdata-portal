@@ -106,3 +106,8 @@
 }
 
 .ncp-share-row a{display:inline-flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;cursor:pointer}
+
+/* Compact repetition indicator for the secondary numeric NCP navigation. */
+.ncp-list button:has(.ncp-mini-count){height:auto;min-height:40px;padding:4px 3px;line-height:1.25}
+.ncp-list button .ncp-mini-count{display:block;font-size:10px;line-height:1.4;white-space:nowrap;opacity:.85}
+.ncp-list button[data-progress-kind="done"]:not(.current){border-color:#9abfa7}
