@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import test from 'node:test';
-import {isStaleSession,studyActionButton,describeStudyError} from '../js/study-session-state.mjs';
+import {isStaleSession,studyActionButton,describeStudyError,formatStudyTimer} from '../js/study-session-state.mjs';
 
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const session=(started_at)=>({status:'active',started_at});
@@ -47,4 +47,18 @@ test('faculty dashboard has review controls and server-side protected diagnostic
  assert.match(migration,/public\.portal_super_admin_allowed\(\)/);
  assert.match(migration,/ENABLE ROW LEVEL SECURITY/);
  assert.match(migration,/REVOKE ALL ON FUNCTION public\.study_admin_review_session/);
+});
+
+test('live student timer updates in seconds without changing weekly minute totals',()=>{
+ assert.equal(formatStudyTimer(0),'0시간 00분 00초');
+ assert.equal(formatStudyTimer(1),'0시간 00분 01초');
+ assert.equal(formatStudyTimer(59),'0시간 00분 59초');
+ assert.equal(formatStudyTimer(60),'0시간 01분 00초');
+ assert.equal(formatStudyTimer(3661),'1시간 01분 01초');
+ assert.equal(formatStudyTimer(-10),'0시간 00분 00초');
+ const study=read('js/study.js'),html=read('study.html');
+ assert.equal(study.split('textContent=formatStudyTimer(').length-1,2,'render and one-second tick both update live time');
+ assert.ok(study.includes('setInterval(tick,1000)'));
+ assert.ok(html.includes('study-count study-live-count'));
+ assert.ok(html.includes('role="timer"'));
 });
