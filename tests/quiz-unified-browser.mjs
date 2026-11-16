@@ -168,7 +168,7 @@ try{
        await page.locator(".quiz-nav-list").click();
        await page.locator("main .question-browser").waitFor({state:"visible",timeout:10000});
        const listWidth=await page.locator("main .question-browser").evaluate(node=>Math.round(node.getBoundingClientRect().width));
-       const expectedListWidth=Math.min(1240,width-(width<=650?24:32));
+       const expectedListWidth=Math.min(1280,width-(width<=650?24:32));
        assert.ok(Math.abs(listWidth-expectedListWidth)<=2,target.name+" list width at "+width+
          ": expected "+expectedListWidth+"px, got "+listWidth+"px");
        snapshot[target.name].listWidth=listWidth;
