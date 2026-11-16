@@ -3,6 +3,7 @@
  * and disposable staging accounts are mandatory. */
 import http from "k6/http";
 import {check,sleep} from "k6";
+import {URL} from "k6/url";
 const BASE=String(__ENV.STAGING_BASE_URL||"").replace(/\/$/,"");
 const DB=String(__ENV.STAGING_SUPABASE_URL||"").replace(/\/$/,"");
 const KEY=String(__ENV.STAGING_SUPABASE_ANON_KEY||"");
