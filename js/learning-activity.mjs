@@ -10,6 +10,7 @@ const writable=()=>globalThis.portalLearning?.write===true && Date.now()<globalT
 const readable=()=>globalThis.portalLearning?.read===true && Date.now()<globalThis.portalLearning.expires;
 async function account(){
  if(!db()||!readable())throw new Error('LOGIN_REQUIRED');
+ if(globalThis.portalVerifiedUserId)return {id:globalThis.portalVerifiedUserId};
  if(!accountPromise)accountPromise=db().auth.getUser().then(({data,error})=>{
    if(error||!data?.user?.id)throw new Error('LOGIN_REQUIRED');
    return data.user;
