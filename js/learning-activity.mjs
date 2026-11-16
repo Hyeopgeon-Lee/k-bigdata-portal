@@ -20,7 +20,7 @@ async function account(){
 function queueKey(userId){return 'kbigdata:learning:pending:v2:'+userId;}
 function pending(userId){
  try{const rows=JSON.parse(storage.getItem(queueKey(userId))||'[]');
-  return Array.isArray(rows)?rows.filter(v=>v&&typeof v.client_attempt_id==='string').slice(0,500):[];
+  return Array.isArray(rows)?rows.filter(v=>v&&typeof v.client_attempt_id==='string'):[];
  }catch{return [];}
 }
 function setPending(userId,items){
@@ -35,7 +35,10 @@ function cleanNumber(value){return Number.isFinite(value)?Math.max(0,Math.min(86
 function idFor(){return globalThis.crypto?.randomUUID?.()||'attempt-'+Date.now()+'-'+Math.random().toString(36).slice(2);}
 function validate(data){
  if(!VALID_BANKS.has(data.bank)||!VALID_RESULTS.has(data.result)||!VALID_METHODS.has(data.gradingMethod))throw new Error('INVALID_LEARNING_EVENT');
- if(!/^[A-Za-z0-9_-]{1,90}$/.test(String(data.questionId||'')))throw new Error('INV// One network request persists up to 25 attempts. Web Locks serialize queue writes
+ if(!/^[A-Za-z0-9_-]{1,90}$/.test(String(data.questionId||'')))throw new Error('INVALID_QUESTION_ID');
+ if(data.gradingMethod==='automatic'&&data.bank==='coding')throw new Error('INVALID_CODING_GRADE');
+}
+// One network request persists up to 25 attempts. Web Locks serialize queue writes
 // across tabs; the local promise fallback covers browsers without Web Locks.
 export const LEARNING_BATCH_SIZE=25;
 export function learningRetryDelay(attempt,random=0){
@@ -123,12 +126,6 @@ export async function recordLearningAttempt(data){
  });
  notify('pending','학습 기록을 클라우드에 동기화하는 중입니다.');
  // Always flush after recording; failures retain the on-device copy.
- return flushLearningQueue();
-}
-sh(event);
-   setPending(user.id,rows);
- }
- notify('pending','학습 기록을 클라우드에 동기화하는 중입니다.');
  return flushLearningQueue();
 }
 export async function fetchLearningAttempts(){
