@@ -1,5 +1,6 @@
 /* After-school self-directed study. Auth and write permissions are provided by portal-auth.mjs. */
 import {studyPlanningWeeks} from './study-week.mjs';
+import {isStaleSession,describeStudyError} from './study-session-state.mjs';
 const db=window.portalSupabaseClient;
 const $=id=>document.getElementById(id);
 const Z=9*3600000,DAY=86400000;
@@ -11,6 +12,7 @@ const safe=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'
 const labels=['월','화','수','목','금'];
 let uid='',week=studyPlanningWeeks().defaultWeek,selected=new Set(),plan=null,sessions=[],active=null;
 let canWrite=window.portalLearning?.write===true;
+let sessionBusy=false,wasStale=false;
 function message(text,error=false){$('study-status').textContent=text;$('study-status').dataset.error=error?'true':'false';}
 function getSeconds(row){
  if(row.status==='needs_review')return 0;
@@ -45,7 +47,7 @@ async function load(){
    .eq('user_id',uid).eq('status','active').maybeSingle(),
   db.from('profiles').select('signup_type,enrollment_status').eq('user_id',uid).single()
  ]);
- if(p.error||s.error||a.error||m.error||!m.data)throw Error('학습 데이터 조회에 실패했습니다.');
+ if(p.error||s.error||a.error||m.error||!m.data)throw p.error||s.error||a.error||m.error||Error('PROFILE_NOT_FOUND');
  const rows=s.data||[];
  if(a.data&&!rows.some(item=>item.id===a.data.id))rows.push(a.data);
  sessions=rows.sort((left,right)=>Date.parse(right.started_at)-Date.parse(left.started_at));
@@ -98,17 +100,26 @@ function render(){
  const todaysPlan=(sessions.some(s=>kstDate(s.started_at)===today));
  const todaySelected=week===mondayOf(today)&&selected.has(new Date(today+'T00:00:00Z').getUTCDay()||7);
  $('study-today-note').textContent=todaySelected?'오늘은 학습계획에 등록한 날입니다.':'계획하지 않은 날도 자율학습을 기록할 수 있습니다.';
- $('study-session-primary').textContent=active?(active.paused_at?'학습 재개':'학습 진행 중'):'학습 시작';
- $('study-session-primary').disabled=!canWrite||!!(active&&!active.paused_at);
- $('study-pause').hidden=!active||!!active.paused_at;
- $('study-end').hidden=!active;
- $('study-pause').disabled=!canWrite;
- $('study-end').disabled=!canWrite;
+ const stale=isStaleSession(active);
+ wasStale=stale;
+ $('study-session-primary').textContent=stale?'새로운 학습 시작':active?(active.paused_at?'학습 재개':'학습 진행 중'):'학습 시작';
+ $('study-session-primary').disabled=!canWrite||sessionBusy||!!(active&&!active.paused_at&&!stale);
+ $('study-pause').hidden=!active||!!active.paused_at||stale;
+ $('study-end').hidden=!active||stale;
+ $('study-pause').disabled=!canWrite||sessionBusy;
+ $('study-end').disabled=!canWrite||sessionBusy;
+ const hint=$('study-action-note');
+ hint.hidden=false;
+ hint.dataset.warning=stale?'true':'false';
+ hint.textContent=sessionBusy?'학습 상태를 서버에 기록 중입니다. 중복으로 누르지 마세요.':
+  !canWrite?'승인된 재학생만 학습시간을 기록할 수 있습니다. 학적 상태를 확인해 주세요.':
+  stale?'이전 학습이 종료되지 않았습니다. 새로 시작하면 이전 기록은 삭제하지 않고 교수자 확인 대상으로 보관합니다.':
+  active?'진행 중인 학습은 새로 시작하지 않고 기존 기록을 이어갑니다.':'학습 시작을 누르면 서버에 시작 시각이 기록됩니다.';
  const todaySessions=sessions.filter(s=>kstDate(s.started_at)===today);
  $('study-today-total').textContent=mins(todaySessions.reduce((sum,s)=>sum+getSeconds(s),0));
  $('study-live-label').textContent=active?(active.paused_at?'휴식 중 · 공부시간 일시정지':'공부시간 기록 중'):(todaysPlan?'오늘의 학습 기록':'학습 시작 전');
  const weekly=sessions.filter(s=>kstDate(s.started_at)>=week&&kstDate(s.started_at)<addDays(week,7));
- const studyDays=new Set(weekly.map(s=>kstDate(s.started_at)));
+ const studyDays=new Set(weekly.filter(s=>s.status!=='needs_review').map(s=>kstDate(s.started_at)));
  const pledged=[...selected].map(i=>addDays(week,i-1)).filter(day=>day<today||(day===today&&studyDays.has(day)));
  const met=pledged.filter(day=>studyDays.has(day)).length;
  $('study-stat-planned').textContent=selected.size+'일';
@@ -130,21 +141,39 @@ function tick(){
   const today=kstDate(Date.now());
   const todays=sessions.filter(s=>kstDate(s.started_at)===today);
   $('study-today-total').textContent=mins(todays.reduce((sum,s)=>sum+getSeconds(s),0));
+  if(isStaleSession(active)!==wasStale)render();
  }
 }
+async function reportError(action,error){
+ const info=describeStudyError(error);
+ try{await db.rpc('study_report_client_error',{p_action:action,p_code:info.code,p_http_status:info.status});}
+ catch{/* Ignore diagnostic failure. */}
+}
 async function session(action){
- const button=action==='start'?'study-session-primary':action==='pause'?'study-pause':'study-end';
- $(button).disabled=true;message('학습시간을 서버에 기록하는 중입니다.');
+ if(sessionBusy||!canWrite)return;
+ sessionBusy=true;render();
+ message('학습기록을 서버에 저장 중입니다.');
+ let timer;
  try{
-  const rpc={start:'study_start_session',pause:'study_pause_session',resume:'study_resume_session',finish:'study_finish_session'}[action];
-  const {data,error}=await db.rpc(rpc);
+  const rpc={start:'study_start_session',restart:'study_restart_stale_session',pause:'study_pause_session',resume:'study_resume_session',finish:'study_finish_session'}[action];
+  if(!rpc)throw Error('STUDY_UNKNOWN_ACTION');
+  const timeout=new Promise((_,reject)=>{timer=setTimeout(()=>reject(Object.assign(Error('STUDY_TIMEOUT'),{code:'STUDY_TIMEOUT'})),12000);});
+  const {data,error}=await Promise.race([db.rpc(rpc),timeout]);
   if(error)throw error;
-  if(action==='finish'&&data?.status==='needs_review')message('12시간을 초과한 기록은 교수자 확인이 필요합니다.',true);
-  else message(action==='start'?'학습을 시작했습니다.':action==='finish'?'오늘도 수고하셨습니다. 학습시간을 저장했습니다.':'학습 상태를 변경했습니다.');
-  const found=sessions.findIndex(s=>s.id===data.id);
-  if(found>=0)sessions[found]=data;else sessions.unshift(data);
-  active=sessions.find(s=>s.status==='active')||null;render();
- }catch(error){console.error(error);message('저장하지 못했습니다. 연결 상태와 계정 권한을 확인해 주세요.',true);render();}
+  if(!data?.id)throw Error('STUDY_EMPTY_RESPONSE');
+  await load();
+  message(action==='finish'&&data.status==='needs_review'
+   ?'12시간을 초과한 기록은 교수자 확인 대상으로 보관했습니다.':
+   action==='start'||action==='restart'?'학습을 시작했습니다.':
+   action==='finish'?'오늘도 수고하셨습니다. 학습시간을 저장했습니다.':'학습 상태를 변경했습니다.',
+   action==='finish'&&data.status==='needs_review');
+ }catch(error){
+  console.error('Study session RPC failed',action,error?.code||error);
+  void reportError(action,error);
+  const info=describeStudyError(error);
+  try{await load();}catch(loadError){console.error('Study reconciliation failed',loadError);}
+  message(info.message,true);
+ }finally{clearTimeout(timer);sessionBusy=false;render();}
 }
 async function savePlan(){
  const weeks=studyPlanningWeeks();
@@ -176,10 +205,26 @@ async function savePlan(){
 $('study-week').addEventListener('change',()=>{week=$('study-week').value;void load().catch(e=>message(e.message,true));});
 $('study-save').addEventListener('click',()=>void savePlan());
 $('study-no-plan-reason').addEventListener('input',()=>{$('study-none-plan-count').textContent=$('study-no-plan-reason').value.length+' / 300자';});
-$('study-session-primary').addEventListener('click',()=>void session(active?'resume':'start'));
+$('study-session-primary').addEventListener('click',()=>{
+ const action=!active?'start':isStaleSession(active)?'restart':'resume';
+ if(action==='restart'&&!confirm('이전 학습기록을 교수자 확인 대상으로 보관하고 새로운 학습을 시작하시겠습니까?'))return;
+ void session(action);
+});
 $('study-pause').addEventListener('click',()=>void session('pause'));
 $('study-end').addEventListener('click',()=>{if(confirm('학습을 종료하고 귀가하시겠습니까?'))void session('finish');});
 $('study-reload').addEventListener('click',()=>void load().catch(e=>message(e.message,true)));
 setInterval(tick,1000);
 if(!canWrite)$('study-write-note').hidden=false;
-load().catch(error=>{console.error(error);message('자율학습 기록을 불러오지 못했습니다. 다시 시도해 주세요.',true);});
+$('study-session-primary').disabled=true;
+document.addEventListener('visibilitychange',()=>{
+ if(!document.hidden&&!sessionBusy)void load().catch(error=>{
+  void reportError('load',error);
+  message('학습 상태를 다시 불러오지 못했습니다. 새로고침을 눌러 주세요.',true);
+ });
+});
+load().catch(error=>{
+ console.error('Study load failed',error);
+ void reportError('load',error);
+ message(describeStudyError(error).message,true);
+ $('study-session-primary').disabled=true;
+});
