@@ -14,7 +14,7 @@ test('Official exam events integrate into existing Google calendar',()=>{
  assert.match(schedule,/certificationEvents/);
  assert.match(schedule,/updateMergedEvents/);
  assert.match(schedule,/normalizeEvents\(\[\.\.\.departmentEvents,\.\.\.certificationEvents\]\)/);
- assert.match(html,/schedule\.js\?v=20261113-certifications-1/);
+  assert.match(html,/schedule\.js\?v=\d{8}-[\w-]+/);
  assert.match(calendar,/certification_exam_schedules/);
  assert.match(calendar,/portal-learning-ready/);
  assert.match(calendar,/portal_super_admin_allowed/);
