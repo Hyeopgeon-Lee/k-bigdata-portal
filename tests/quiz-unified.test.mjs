@@ -90,7 +90,7 @@ assert.match(css,/\.quiz-answer/);
 assert.match(css,/\.quiz-disclosure/);
 assert.match(css,/\.quiz-feedback/);
 
-assert.match(css,/--quiz-content-max:1240px/,"Shared PC quiz width is 1240px");
+assert.match(css,/--quiz-content-max:var\(--portal-shell-max,1280px\)/,"Shared quiz width follows the 1280px portal shell");
 const browserCSS=read("css/question-browser.css");
 assert.match(browserCSS,/var\(--quiz-content-max,1240px\)/,"Question list uses the same width variable");
 const ncp=read("js/ncp-quiz.js");
