@@ -12,9 +12,9 @@ async function load(){
  if(!authorized()||!client())return;
  if(loadPromise)return loadPromise;
  loadPromise=(async()=>{
-  const {data:{user},error:authError}=await client().auth.getUser();
-  if(authError||!user)throw Error("LOGIN_REQUIRED");
-  userId=user.id;
+  const identity=globalThis.portalVerifiedUserId;
+  if(!identity)throw Error("LOGIN_REQUIRED");
+  userId=identity;
   const [favs,recent]=await Promise.all([
    client().from("user_favorites").select("service_id").eq("user_id",userId).order("created_at",{ascending:false}).limit(12),
    client().from("user_recent_services").select("service_id").eq("user_id",userId).order("last_opened_at",{ascending:false}).limit(8)
