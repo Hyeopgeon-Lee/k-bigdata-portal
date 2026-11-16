@@ -35,7 +35,7 @@ function render(){
  for(const person of students){
   const plan=report.plans.find(p=>p.user_id===person.id),selected=plan?.weekdays||[];
   const ss=report.sessions.filter(s=>s.user_id===person.id);
-  const attended=new Set(ss.map(s=>kdate(s.started_at)));
+  const attended=new Set(ss.filter(s=>s.status!=='needs_review').map(s=>kdate(s.started_at)));
   const due=selected.map(d=>dateAt(week,d-1)).filter(date=>date<today);
   const attendedPlanned=due.filter(day=>attended.has(day)).length;
   const reasons=report.reasons.filter(r=>r.user_id===person.id);
