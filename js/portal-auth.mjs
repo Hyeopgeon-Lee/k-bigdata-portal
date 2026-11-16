@@ -27,14 +27,20 @@ function resetLearning(){
   document.documentElement.style.visibility="hidden";
   location.reload();
 }
+let accessCheckInFlight=false;
 async function checkLearning(){
-  if(!activeUser)return;
-  const {data,error}=await client.rpc("portal_learning_access");
-  if(error || !data?.read || data.write!==activeWrite || Date.now()>=expires)resetLearning();
+  if(!activeUser||document.hidden||accessCheckInFlight)return;
+  if(Date.now()>=expires){resetLearning();return;}
+  accessCheckInFlight=true;
+  try{
+    const {data,error}=await client.rpc("portal_learning_access");
+    if(error){console.warn("Portal access recheck deferred",error.code||"NETWORK");return;}
+    if(!data?.read || data.write!==activeWrite)resetLearning();
+  }finally{accessCheckInFlight=false;}
 }
 window.addEventListener("pageshow",event=>{if(event.persisted)location.reload();});
-document.addEventListener("visibilitychange",()=>{if(!document.hidden)checkLearning().catch(resetLearning);});
-setInterval(()=>checkLearning().catch(resetLearning),60000);
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)void checkLearning().catch(()=>{});});
+setInterval(()=>{if(!document.hidden)void checkLearning().catch(()=>{});},120000);
 const professorEmail="hglee67@kopo.ac.kr";
 const blockedSignupMessage="학교 이메일(@kopo.ac.kr 및 하위 도메인)은 회원가입할 수 없습니다. 개인 이메일을 사용해 주세요.";
 const mobileDigits=value=>String(value??"").replace(/[^0-9]/g,"");
