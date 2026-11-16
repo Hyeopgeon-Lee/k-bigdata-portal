@@ -3,3 +3,5 @@
 if(window.portalAdminAllowed!==true)throw Error("ADMIN_SESSION_REQUIRED");
 await import("../../js/teacher-learning.js?v=20261113-snapshot-1");
 await import("../../js/study-teacher.js?v=20261113-current-grade-1");
+
+await import("../../js/study-diagnostics.js?v=20261116-study-diagnostics-1");
