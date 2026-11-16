@@ -1,5 +1,5 @@
 /* Shared entry screen for all three question banks. */
-export function createQuestionBrowser({title, questions, category, categoryLabel, describe, searchText, openQuestion, scope, initialCategory="", secondaryFilter=null, metaText=null,progressFor=null}) {
+export function createQuestionBrowser({title, questions, category, categoryLabel, describe, searchText, openQuestion, scope, initialCategory="", preferInitialCategory=false, onCategoryChange=null, secondaryFilter=null, metaText=null,progressFor=null}) {
   const main=document.querySelector("main");
   const section=document.createElement("section");
   section.className="question-browser";
@@ -30,7 +30,7 @@ export function createQuestionBrowser({title, questions, category, categoryLabel
   const list=section.querySelector("ol"),status=section.querySelector("[role=status]");
   const nav=section.querySelector("nav"),[prev,next]=nav.querySelectorAll("button");
   const saved=history.state?.questionBrowser||{};
-  let selected=saved.selected??initialCategory, page=saved.page||0, activeId=saved.activeId||"", scroll=saved.scroll||0;
+  let selected=preferInitialCategory?initialCategory:(saved.selected??initialCategory), page=saved.page||0, activeId=saved.activeId||"", scroll=saved.scroll||0;
   let selectedSecondary=secondaryFilter?(secondaryFilter.initialValue??saved.secondary??""):"";
   let progressFilter=["all","unseen","done"].includes(saved.progressFilter)?saved.progressFilter:"all";
   let items=[], scopeEnabled=Boolean(scope), ids=saved.ids||[];
@@ -42,7 +42,7 @@ export function createQuestionBrowser({title, questions, category, categoryLabel
   for(const key of ["",...categories]){
     const chip=document.createElement("button");chip.type="button";chip.dataset.category=key;
     chip.textContent=key?categoryLabel(key):"전체";chips.append(chip);
-    chip.onclick=()=>{selected=key;page=0;render();};
+    chip.onclick=()=>selectCategory(key);
   }
   if(secondaryFilter){
     const caption=section.querySelector(".qb-secondary-filter .qb-filter-caption");
@@ -74,6 +74,10 @@ export function createQuestionBrowser({title, questions, category, categoryLabel
   }
   function remember(){
     history.replaceState({...history.state,questionBrowser:{selected,secondary:selectedSecondary,progressFilter,query:search.value,page,activeId,scroll,ids}},"");
+  }
+  function selectCategory(key){
+    if(key!==""&&!categories.includes(key))return;
+    selected=key;page=0;render();remember();onCategoryChange?.(key);
   }
   function begin(q,set){
     activeId=q.id;scroll=window.scrollY;ids=set.map(item=>item.id);remember();hide();openQuestion(q,set);
@@ -152,5 +156,5 @@ export function createQuestionBrowser({title, questions, category, categoryLabel
     hide();openQuestion(lookup.get(id),set);return true;
   }
   document.body.classList.add("shared-question-bank");
-  return {show,resume,refresh:render};
+  return {show,resume,refresh:render,selectCategory};
 }
