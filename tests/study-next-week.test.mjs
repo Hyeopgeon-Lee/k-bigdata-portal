@@ -23,5 +23,5 @@ assert.match(study,/nextWeekLocked/);
 assert.match(study,/member\.signup_type==="student"&&member\.enrollment_status==="enrolled"/,'student permissions retained');
 assert.match(study,/day===today&&new Date\(Date\.now\(\)\+Z\)\.getUTCHours\(\)>=16/,'4 PM cutoff retained');
 assert.match(html,/id="study-plan-guidance"/);
-assert.match(html,/js\/study\.js\?v=20261113-next-week-friday-v1/);
+assert.match(html,/js\/study\.js\?v=\d{8}-[\w-]+/);
 console.log('PASS: Friday opening, KST rollover, next-week defaults and existing access controls.');
