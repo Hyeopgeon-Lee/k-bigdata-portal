@@ -149,14 +149,22 @@ async function showAnswers(subject,wrong,periodStart,offset=0){
   if(data.length>25)answers.append(action('다음 25건',()=>showAnswers(subject,wrong,periodStart,offset+25)));
  }catch{if(seq===answerRequest)answers.replaceChildren(node('p','제출 답안을 조회하지 못했습니다. 다시 선택해 주세요.'));}
 }
+const summaryRequests=new Map();
+function fetchSummary(){
+ const key=JSON.stringify([periodMode,periodOffset,gradeFilter]);
+ if(summaryRequests.has(key))return summaryRequests.get(key);
+ const pending=db.functions.invoke('learning-admin',{body:{
+  action:'summary',period:periodMode,offset:periodOffset,...(gradeFilter?{grade:Number(gradeFilter)}:{})
+ }}).finally(()=>{summaryRequests.delete(key);});
+ summaryRequests.set(key,pending);
+ return pending;
+}
 async function load(){
  const status=get('teacher-status'),sequence=++requestSequence;
  answerRequest++;answers.replaceChildren();get('teacher-content').hidden=true;
  renderFilters();updatePeriodControls();
  status.textContent='선택한 학년과 기간의 학습통계를 불러오는 중입니다...';
- const {data,error}=await db.functions.invoke('learning-admin',{body:{
-  action:'summary',period:periodMode,offset:periodOffset,...(gradeFilter?{grade:Number(gradeFilter)}:{})
- }});
+ const {data,error}=await fetchSummary();
  if(sequence!==requestSequence)return;
  if(error||!data?.ok){
   get('teacher-content').hidden=true;
