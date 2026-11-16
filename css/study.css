@@ -77,3 +77,7 @@ body[data-page="study"] .study-grid,
 body[data-page="study"] .study-grid > .learn-section {
   min-width: 0;
 }
+
+.study-action-note{margin:12px 0 0;padding:10px 13px;border-radius:9px;background:#f2f6fc;color:#254361}
+.study-action-note[data-warning="true"]{background:#fff7e7;color:#81530d;border:1px solid #e9cf98}
+.study-action-note[hidden]{display:none!important}
