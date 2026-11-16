@@ -1,5 +1,6 @@
 import {quizNavigation,quizHeading,quizDisclosure,quizFeedback,scrollToQuizAnswer} from "./quiz-unified.js?v=20261112-answer-focus-1";
-import {createQuestionBrowser} from "./question-browser.js?v=20261112-intro-browse-2";
+import {createQuestionBrowser} from "./question-browser.js?v=20261116-progress-v1";
+import {createLearningProgressStore} from "./learning-list-progress.mjs";
 import {bindReview,reviewControls,gradeLabels} from "./study-review.js";
 import {learningLocal as localStorage, learningSession as sessionStorage} from "./learning-storage.mjs";
 const drafts=new Map();
@@ -34,6 +35,12 @@ const recordFor=id=>{
  const record=state.answers[id];
  return record&&(record.grade||letters.includes(record.choice))?record:null;
 };
+let browserEntry;
+const ncpProgress=createLearningProgressStore({
+ bank:"ncp",
+ localRecord:id=>recordFor(id)?{exists:true}:null,
+ onChange:()=>{browserEntry?.refresh();renderNumbers();}
+});
 function save(){try{localStorage.setItem(KEY,JSON.stringify(state.answers));}catch{}}
 function shuffle(array){
  for(let i=array.length-1;i>0;i--){
@@ -114,8 +121,13 @@ function renderNumbers(){
   const record=recordFor(q.id);
   const status=record?.grade?(record.grade==="correct"?"matched":record.grade==="incorrect"?"unmatched":""):(record?(record.choice===q.answer?"matched":"unmatched"):"");
   const desc=gradeLabels[record?.grade] || (record?(record.choice===q.answer?"학습용 정답 일치":"학습용 정답 불일치"):"미평가");
+  const progress=ncpProgress.get(q.id);
+  const repeat=progress.kind==="done"?' <small class="ncp-mini-count">'+progress.count+'회</small>':
+   progress.kind==="local"?' <small class="ncp-mini-count">기기</small>':'';
   return '<button type="button" data-index="'+i+'" class="'+(i===state.index?"current ":"")+status+
-   '" aria-label="'+(i+1)+'번 · 공개 복원 원문 '+q.originalNumber+'번 · '+desc+'"'+(i===state.index?' aria-current="true"':'')+'>'+String(i+1)+(record?.grade?' · '+gradeLabels[record.grade]:'')+'</button>';
+   '" data-progress-kind="'+esc(progress.kind)+'" title="'+esc(progress.text)+
+   '" aria-label="'+(i+1)+'번 · 공개 복원 원문 '+q.originalNumber+'번 · '+desc+' · '+esc(progress.text)+
+   '"'+(i===state.index?' aria-current="true"':'')+'>'+String(i+1)+(record?.grade?' · '+gradeLabels[record.grade]:'')+repeat+'</button>';
  }).join("");
 }
 function render(){
@@ -254,12 +266,14 @@ byId("ncp-reset").addEventListener("click",()=>{
  drafts.clear();state.answers={};save();render();cloudStatus.textContent="화면 선택 내역을 초기화했습니다. 이전 학습 결과는 클라우드에 보존됩니다.";
 });
 function openNcpList(){browserEntry.show();}
-const browserEntry=createQuestionBrowser({
+browserEntry=createQuestionBrowser({
  title:"NCP 기출문제",questions:ncpQuestions,category:q=>q.exam,categoryLabel:key=>key,
+ progressFor:q=>ncpProgress.get(q.id),
  describe:q=>q.question,searchText:q=>[q.id,q.question,q.topic,q.originalNumber].join(" "),initialCategory:requestedExam||"",
  openQuestion(q,items){state.list=items;state.index=items.indexOf(q);document.body.dataset.ncpView="question";render();focusQuestion();el.question.scrollIntoView();},
 });
 document.body.dataset.ncpView=params.has("id")?"question":"list";
+ncpProgress.attach();
 const initialID=params.get("id");
 const initial=ncpQuestions.find(q=>q.id===initialID);
 if(initial&&!browserEntry.resume(initialID)){

@@ -96,10 +96,15 @@ export async function fetchLearningAttempts(){
  }
  return all;
 }
-export async function fetchLearningProgress(){
+export async function fetchLearningProgress(bank=null){
+ if(bank!==null&&!VALID_BANKS.has(bank))throw new Error('INVALID_PROGRESS_BANK');
  const user=await account();const all=[];
  for(let from=0;from<10000;from+=500){
-  const {data,error}=await db().from('learning_progress').select('bank,question_id,last_result,last_attempt_at,attempts_count,correct_count,incorrect_count').eq('user_id',user.id).order('last_attempt_at',{ascending:false}).range(from,from+499);
+  const query=db().from('learning_progress')
+   .select('bank,question_id,last_result,last_attempt_at,attempts_count,correct_count,incorrect_count')
+   .eq('user_id',user.id);
+  if(bank!==null)query.eq('bank',bank);
+  const {data,error}=await query.order('last_attempt_at',{ascending:false}).range(from,from+499);
   if(error)throw error;all.push(...(data||[]));if((data||[]).length<500)break;
  }
  return all;

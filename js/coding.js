@@ -1,5 +1,6 @@
 import {quizNavigation,quizHeading,quizFeedback,scrollToQuizAnswer,mountQuizDisclosure} from "./quiz-unified.js?v=20261112-answer-focus-1";
-import {createQuestionBrowser} from "./question-browser.js?v=20261112-intro-browse-2";
+import {createQuestionBrowser} from "./question-browser.js?v=20261116-progress-v1";
+import {createLearningProgressStore} from "./learning-list-progress.mjs";
 import {bindReview,reviewControls,gradeLabels} from "./study-review.js";
 import {learningLocal as localStorage, learningSession as sessionStorage} from "./learning-storage.mjs";
 import {debounceCloudDraft,fetchCloudDraft} from "./learning-activity.mjs";
@@ -119,6 +120,7 @@ const setSafe = (key, value) => {
 };
 const knownIds = new Set(codingProblems.map(p => p.id));
 let doneIds = new Set();
+let codingProgress;
 try {
   const saved = JSON.parse(getSafe(DONE_KEY, "[]"));
   if (Array.isArray(saved)) doneIds = new Set(saved.filter(id => knownIds.has(id)));
@@ -176,7 +178,9 @@ function matching() {
 }
 function updateSummary() {
   $("#coding-available").textContent = codingProblems.length + "문제";
-  $("#coding-completed").textContent = doneIds.size + "문제";
+  $("#coding-completed").textContent = (codingProgress
+   ? codingProblems.filter(q=>["done","local"].includes(codingProgress.get(q.id).kind)).length
+   : doneIds.size) + "문제";
   document.querySelectorAll("#coding-language button").forEach(button => {
     const lang = button.dataset.lang;
     const number = codingProblems.filter(q => q.language === lang).length;
@@ -215,8 +219,9 @@ function listQuestions(syncPage=false) {
     const title=document.createElement("strong");
     title.textContent=q.title;
     const subtitle=document.createElement("small");
-    subtitle.textContent=q.id+" · "+q.level+(gradeLabels[getSafe("coding-review-"+q.id)]?" · "+gradeLabels[getSafe("coding-review-"+q.id)]:(doneIds.has(q.id)?" · 완료 기록":""));
-    if(doneIds.has(q.id))subtitle.className="coding-done";
+    const recorded=codingProgress?.get(q.id);
+    subtitle.textContent=q.id+" · "+q.level+(recorded?" · "+recorded.text:(doneIds.has(q.id)?" · 이 기기 완료 기록":""));
+    if(recorded?.kind==="done"||doneIds.has(q.id))subtitle.className="coding-done";
     link.append(title,subtitle);
     link.addEventListener("click",event=>{
       if(event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
@@ -608,7 +613,7 @@ $("#coding-answer-button").addEventListener("click", () => {
     get answerText(){return $("#coding-editor").value;},usedHint:!$("#coding-hint").hidden,metadata:{language:q.language}},
     getSafe(key),result=>{
       setSafe(key,result);doneIds.add(q.id);setSafe(DONE_KEY,JSON.stringify([...doneIds]));
-      if(current.id===q.id){updateSummary();listQuestions(true);}
+      if(current.id===q.id){updateSummary();listQuestions(true);browserEntry?.refresh();}
     });
   if(getSafe(key)){
     const retry=document.createElement("button");retry.textContent="다시 풀기";
@@ -722,8 +727,15 @@ nativeEditor.addEventListener("keydown", event => {
 });
 
 let entrySet=null;
-const browserEntry=createQuestionBrowser({
+let browserEntry;
+codingProgress=createLearningProgressStore({
+ bank:"coding",
+ localRecord:id=>doneIds.has(id)?{exists:true}:null,
+ onChange:()=>{browserEntry?.refresh();updateSummary();listQuestions();}
+});
+browserEntry=createQuestionBrowser({
  title:"기초 350제",questions:codingProblems,category:q=>q.language,categoryLabel:key=>labels[key],
+ progressFor:q=>codingProgress.get(q.id),
  describe:q=>q.title,searchText:q=>[q.id,q.title,q.statement,q.topic,q.level].join(" "),
  openQuestion(q,items){
    entrySet=items;language=q.language;topicFilter=levelFilter="all";query="";
@@ -732,6 +744,7 @@ const browserEntry=createQuestionBrowser({
  },
 });
 document.body.dataset.codingView=new URL(location.href).searchParams.has("id")?"question":"list";
+codingProgress.attach();
 refreshFilters();
 if(!browserEntry.resume(requestedId))showQuestion(current);
 if(!requestedId)browserEntry.show(false);

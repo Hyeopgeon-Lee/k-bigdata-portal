@@ -1,0 +1,43 @@
+name: Quiz list progress QA
+on:
+  pull_request:
+    paths:
+      - "js/learning-list-progress.mjs"
+      - "js/learning-activity.mjs"
+      - "js/question-browser.js"
+      - "js/coding.js"
+      - "js/practical-ui.js"
+      - "js/ncp-quiz.js"
+      - "css/question-browser.css"
+      - "coding.html"
+      - "practical.html"
+      - "ncp.html"
+      - "tests/quiz-list-progress.test.mjs"
+      - ".github/workflows/quiz-list-progress-qa.yml"
+  push:
+    branches: [main]
+    paths:
+      - "js/learning-list-progress.mjs"
+      - "js/learning-activity.mjs"
+      - "js/question-browser.js"
+      - "js/coding.js"
+      - "js/practical-ui.js"
+      - "js/ncp-quiz.js"
+jobs:
+  quiz-list-progress:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate modules, counts and KST dates
+        run: |
+          node --check js/learning-list-progress.mjs
+          node --check js/learning-activity.mjs
+          node --check js/question-browser.js
+          node --check js/coding.js
+          node --check js/ncp-quiz.js
+          node --check js/practical-ui.js
+          node --test tests/quiz-list-progress.test.mjs
+          node tests/learning-tracking.test.mjs

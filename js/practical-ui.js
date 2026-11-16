@@ -1,5 +1,6 @@
 import {quizNavigation,quizHeading,quizDisclosure,quizFeedback,scrollToQuizAnswer} from "./quiz-unified.js?v=20261112-answer-focus-1";
-import {createQuestionBrowser} from "./question-browser.js?v=20261112-intro-browse-2";
+import {createQuestionBrowser} from "./question-browser.js?v=20261116-progress-v1";
+import {createLearningProgressStore} from "./learning-list-progress.mjs";
 import {bindReview,reviewControls,gradeLabels} from "./study-review.js";
 import {loadPracticalBank} from "./practical-data.js?v=20261006-audit-2";
 import {examLabels,typeLabels,languages,escapeHTML as esc,questionText,shuffle,recommendFive,matchesExam,localDay,summarizeAttempts,highlightCode,formatCodeForDisplay,canResumeUnfinishedAttempt} from "./practical-core.js?v=20261112-practical-resume-1";
@@ -11,6 +12,24 @@ import {learningReportUrl} from "./learning-report.js?v=20261009-1";
 const $=selector=>document.querySelector(selector),root=$("#bank-content"),status=$("#bank-status");
 let bank=[],view="bank",current=null,attempt=null,queue=[],queueIndex=0,aliases={},pageLimit=24,queueKind="random",solveActionsObserver=null;
 let browserEntry;
+let localProgress=new Map();
+function refreshDeviceProgress(){
+ const next=new Map();
+ for(const attempt of getAttempts()){
+  if(!attempt?.questionId||!Number.isFinite(attempt.submittedAt))continue;
+  const previous=next.get(attempt.questionId)||{count:0,lastAttemptAt:0};
+  next.set(attempt.questionId,{
+   count:previous.count+1,
+   lastAttemptAt:Math.max(previous.lastAttemptAt,attempt.submittedAt)
+  });
+ }
+ localProgress=next;
+}
+refreshDeviceProgress();
+const practicalProgress=createLearningProgressStore({
+ bank:"practical",localRecord:id=>localProgress.get(id),
+ onChange:()=>browserEntry?.refresh()
+});
 const filters={exam:"all",language:"all",source:"reconstructed",difficulty:"all",type:"all",sort:"latest",query:"",completion:"unseen",year:"all",round:"all"};
 const compactLabels={reconstructed:"복원기출",normalized:"기출유형 연습",transformed:"기출 변형",practice:"추가 연습"};
 const badge=(text,cls="")=>'<span class="badge '+cls+'">'+esc(text)+'</span>';
@@ -316,6 +335,7 @@ function revealAnswer({expanded=true}={}){
      item.reviewGrade=result;item.correct=result==="correct"?true:result==="incorrect"?false:null;
      item.submittedAt=Date.now();item.elapsedSeconds=Math.round((item.submittedAt-item.startedAt)/1000);
      item.selfGraded=true;saveAttempt(item);
+     refreshDeviceProgress();browserEntry?.refresh();
      if(getSession(q.id)?.id===item.id)saveSession(q.id,item);
    });
 }
@@ -400,7 +420,7 @@ root.addEventListener("click",event=>{
  }
  if(action==="confirm-clear")$("#clear-confirm").innerHTML='<p>학습기록을 삭제하시겠습니까?</p>'+button("delete-learning","삭제 확인")+button("cancel-delete","취소");
  if(action==="cancel-delete")$("#clear-confirm").innerHTML="";
- if(action==="delete-learning"){clearLocalLearning();render();}
+ if(action==="delete-learning"){clearLocalLearning();refreshDeviceProgress();browserEntry?.refresh();render();}
 });
 document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>selectView(b.dataset.view)));
 for(const key of ["exam","language","source","difficulty","type","sort","completion","year","round"]){$("#"+key+"-filter").addEventListener("change",event=>{filters[key]=event.target.value;pageLimit=24;render();});}
@@ -434,6 +454,7 @@ loadPracticalBank().then(result=>{
  const params=new URLSearchParams(location.search),id=params.get("id"),exam=params.get("exam"),shared=params.get("share")==="1";if(Object.keys(examLabels).includes(exam)){filters.exam=exam;$("#exam-filter").value=exam;}if(shared){const canonical=new URL(location.href);canonical.searchParams.delete("share");history.replaceState(history.state,"",canonical);}
  browserEntry=createQuestionBrowser({
    title:"정보처리 기출문제",questions:sorted(bank),
+   progressFor:q=>practicalProgress.get(q.id),
    category:q=>q.language,categoryLabel:key=>key,
    secondaryFilter:{
      label:"시험 구분",categoryLabel:"프로그래밍 언어",
@@ -462,6 +483,7 @@ loadPracticalBank().then(result=>{
    describe:q=>q.title,searchText:q=>[q.id,questionText(q)].join(" "),
    openQuestion(q,items){queue=items;queueIndex=items.indexOf(q);queueKind="bank";openQuestion(q.id,false);},
  });
+ practicalProgress.attach();
  if(browserEntry.resume(id))return;
  const savedQueue=getPreferences().learningQueue;
  if(!shared&&id&&savedQueue&&Array.isArray(savedQueue.ids)&&savedQueue.ids[savedQueue.index]===(aliases[id]||id)&&savedQueue.ids.every(id=>bank.some(q=>q.id===id))){queue=savedQueue.ids.map(id=>bank.find(q=>q.id===id));queueIndex=savedQueue.index;queueKind=savedQueue.kind;}
@@ -480,7 +502,7 @@ root.addEventListener("focusin",adjustKeyboard);root.addEventListener("focusout"
 root.addEventListener("change",async event=>{
  if(event.target.id!=="import-learning")return;
  const message=$("#import-status"),file=event.target.files[0];if(!file)return;
- try{if(file.size>5*1024*1024)throw Error("5MB 이하 JSON 파일만 가져올 수 있습니다.");const count=importLearning(JSON.parse(await readFileText(file)));renderProgress();$("#import-status").textContent=count+"건을 확인하고 기존 기록과 병합했습니다.";storageNotice();}
+ try{if(file.size>5*1024*1024)throw Error("5MB 이하 JSON 파일만 가져올 수 있습니다.");const count=importLearning(JSON.parse(await readFileText(file)));refreshDeviceProgress();browserEntry?.refresh();renderProgress();$("#import-status").textContent=count+"건을 확인하고 기존 기록과 병합했습니다.";storageNotice();}
  catch(error){message.textContent=error instanceof SyntaxError?"JSON 파일을 확인하세요.":error.message;}
 });
 
