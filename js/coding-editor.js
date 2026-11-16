@@ -17,7 +17,7 @@ import {java} from "@codemirror/lang-java";
 import {cpp} from "@codemirror/lang-cpp";
 import {python} from "@codemirror/lang-python";
 import {
-  StreamLanguage, foldGutter, indentOnInput, syntaxHighlighting,
+  StreamLanguage, foldGutter, indentOnInput, indentUnit, syntaxHighlighting,
   defaultHighlightStyle, bracketMatching, foldKeymap
 } from "@codemirror/language";
 import {shell} from "@codemirror/legacy-modes/mode/shell";
@@ -105,6 +105,9 @@ export function createCodingEditor({textarea, host, language, onChange, autocomp
             return true;
           }}
         ])),
+        // tabSize only sets the visible width of a literal tab character.
+        // indentUnit governs the whitespace inserted by Tab / indentMore.
+        indentUnit.of("    "),
         EditorState.tabSize.of(4),
         EditorView.lineWrapping,
         EditorView.contentAttributes.of({
