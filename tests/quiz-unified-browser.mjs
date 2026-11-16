@@ -116,7 +116,7 @@ try{
        assert.ok(Math.abs(snapshot[target.name].navList.rect.height-expectedNavHeight)<=1,
          target.name+" nav button must be "+expectedNavHeight+"px high at "+width+"px");
 
-       const desktopCardTarget=Math.min(1240,width-(width<=690?24:32));
+       const desktopCardTarget=Math.min(1280,width-(width<=690?24:32));
        assert.ok(Math.abs(snapshot[target.name].card.rect.width-desktopCardTarget)<=2,
          target.name+" detail width at "+width+": expected "+desktopCardTarget+"px, got "+snapshot[target.name].card.rect.width+"px");
        if([390,1440].includes(width)){
