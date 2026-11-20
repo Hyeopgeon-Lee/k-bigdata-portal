@@ -1,5 +1,6 @@
 /* After-school self-directed study. Auth and write permissions are provided by portal-auth.mjs. */
 import {studyPlanningWeeks} from './study-week.mjs';
+import {studyWeeklyTotals} from './study-weekly-hours.mjs';
 import {isStaleSession,describeStudyError,formatStudyTimer} from './study-session-state.mjs';
 const db=window.portalSupabaseClient;
 const $=id=>document.getElementById(id);
@@ -10,7 +11,7 @@ const mondayOf=day=>addDays(day,-(new Date(day+'T00:00:00Z').getUTCDay()+6)%7);
 const mins=secs=>Math.floor(Math.max(0,secs||0)/3600)+'시간 '+String(Math.floor((Math.max(0,secs||0)%3600)/60)).padStart(2,'0')+'분';
 const safe=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const labels=['월','화','수','목','금'];
-let uid='',week=studyPlanningWeeks().defaultWeek,selected=new Set(),plan=null,sessions=[],active=null;
+let uid='',week=studyPlanningWeeks().defaultWeek,selected=new Set(),plan=null,currentPlan=null,sessions=[],active=null;
 let canWrite=window.portalLearning?.write===true;
 let sessionBusy=false,wasStale=false;
 function message(text,error=false){$('study-status').textContent=text;$('study-status').dataset.error=error?'true':'false';}
@@ -19,6 +20,14 @@ function getSeconds(row){
  if(row.status!=='active')return row.duration_seconds||0;
  const end=row.paused_at?Date.parse(row.paused_at):Date.now();
  return Math.max(0,Math.floor((end-Date.parse(row.started_at))/1000)-(row.break_seconds||0));
+}
+function updateWeeklyHours(weekStart){
+ const totals=studyWeeklyTotals(sessions,weekStart,getSeconds);
+ for(let i=0;i<5;i++){
+  $('study-weekday-date-'+i).textContent=totals.days[i].slice(5).replace('-','.');
+  $('study-weekday-total-'+i).textContent=mins(totals.seconds[i]);
+ }
+ $('study-stat-hours').textContent=mins(totals.totalSeconds);
 }
 // All date boundaries are Asia/Seoul midnights; PostgreSQL stores timestamptz.
 const kstMidnightISO=day=>new Date(Date.parse(day+'T00:00:00Z')-Z).toISOString();
@@ -29,17 +38,16 @@ async function load(){
  const verified=globalThis.portalVerifiedUserId;
  if(!verified)throw Error('로그인 정보를 확인하지 못했습니다.');
  uid=verified;
- // A next-week plan still needs this week's sessions for today's live totals.
- const endWeek=week===weeks.nextWeek?weeks.nextWeek:weeks.thisWeek;
+ // Weekly attendance and study duration always use the current KST week, regardless of plan selection.
  const [p,s,a,m]=await Promise.all([
   db.from('study_weekly_plans')
    .select('week_start,weekdays,no_plan_reason')
-   .eq('user_id',uid).eq('week_start',week).maybeSingle(),
+   .eq('user_id',uid).in('week_start',[weeks.thisWeek,week]),
   db.from('study_sessions')
    .select('id,status,started_at,paused_at,break_seconds,duration_seconds')
    .eq('user_id',uid)
    .gte('started_at',kstMidnightISO(weeks.thisWeek))
-   .lt('started_at',kstMidnightISO(addDays(endWeek,7)))
+   .lt('started_at',kstMidnightISO(addDays(weeks.thisWeek,7)))
    .order('started_at',{ascending:false}).limit(1000),
   // An unfinished session can predate this week: never hide the resume/end controls.
   db.from('study_sessions')
@@ -54,7 +62,10 @@ async function load(){
  active=a.data||sessions.find(item=>item.status==='active')||null;
  const member=m.data;
  canWrite=window.portalLearning?.write===true&&member.signup_type==="student"&&member.enrollment_status==="enrolled";
- plan=p.data||null;selected=new Set(plan?.weekdays||[]);
+ const plans=p.data||[];
+ plan=plans.find(row=>row.week_start===week)||null;
+ currentPlan=plans.find(row=>row.week_start===weeks.thisWeek)||null;
+ selected=new Set(plan?.weekdays||[]);
  $('study-no-plan-reason').value=plan?.no_plan_reason||'';
  $('study-week').replaceChildren();
  const options=[[weeks.thisWeek,'이번 주']];
@@ -75,7 +86,7 @@ function render(){
   ?'학습할 날짜를 선택하세요. 다음 주 계획은 금요일부터 미리 등록할 수 있으며, 당일 오후 4시 이후에는 해당 날짜를 변경할 수 없습니다.'
   :'학습할 날짜를 선택하세요. 다음 주 계획은 금요일 0시부터 등록할 수 있습니다. 당일 오후 4시 이후에는 해당 날짜를 변경할 수 없습니다.';
  $('study-no-plan-period').textContent=isNextWeek?'다음 주':'이번 주';
- $('study-stats-heading').textContent=isNextWeek?'다음 주 실천 현황':'이번 주 실천 현황';
+ $('study-week-range').textContent=weeks.thisWeek+' ~ '+addDays(weeks.thisWeek,4);
  $('study-days').replaceChildren();
  for(let i=0;i<5;i++){
   const day=addDays(week,i),button=document.createElement('button');
@@ -98,7 +109,7 @@ function render(){
    ?'기존 0일 기록에 사유가 없습니다. 학교에 남아 공부하기 어려운 이유를 작성해 주세요.'
    :'공부할 과목이 아니라 학교에 남아 공부하기 어려운 이유를 직접 작성해 주세요. 민감한 내용은 자세히 밝히지 않아도 됩니다. 지도교수가 확인합니다.';
  const todaysPlan=(sessions.some(s=>kstDate(s.started_at)===today));
- const todaySelected=week===mondayOf(today)&&selected.has(new Date(today+'T00:00:00Z').getUTCDay()||7);
+ const todaySelected=mondayOf(today)===weeks.thisWeek&&(currentPlan?.weekdays||[]).includes(new Date(today+'T00:00:00Z').getUTCDay()||7);
  $('study-today-note').textContent=todaySelected?'오늘은 학습계획에 등록한 날입니다.':'계획하지 않은 날도 자율학습을 기록할 수 있습니다.';
  const stale=isStaleSession(active);
  wasStale=stale;
@@ -118,13 +129,14 @@ function render(){
  const todaySessions=sessions.filter(s=>kstDate(s.started_at)===today);
  $('study-today-total').textContent=formatStudyTimer(todaySessions.reduce((sum,s)=>sum+getSeconds(s),0));
  $('study-live-label').textContent=stale?'이전 학습기록 확인 필요':active?(active.paused_at?'휴식 중 · 공부시간 일시정지':'공부시간 기록 중'):(todaysPlan?'오늘의 학습 기록':'학습 시작 전');
- const weekly=sessions.filter(s=>kstDate(s.started_at)>=week&&kstDate(s.started_at)<addDays(week,7));
+ const weekly=sessions.filter(s=>kstDate(s.started_at)>=weeks.thisWeek&&kstDate(s.started_at)<addDays(weeks.thisWeek,5));
  const studyDays=new Set(weekly.filter(s=>s.status!=='needs_review'&&!isStaleSession(s)).map(s=>kstDate(s.started_at)));
- const pledged=[...selected].map(i=>addDays(week,i-1)).filter(day=>day<today||(day===today&&studyDays.has(day)));
+ const savedDays=currentPlan?.weekdays||[];
+ const pledged=savedDays.map(i=>addDays(weeks.thisWeek,i-1)).filter(day=>day<today||(day===today&&studyDays.has(day)));
  const met=pledged.filter(day=>studyDays.has(day)).length;
- $('study-stat-planned').textContent=selected.size+'일';
+ $('study-stat-planned').textContent=savedDays.length+'일';
  $('study-stat-attended').textContent=studyDays.size+'일';
- $('study-stat-hours').textContent=mins(weekly.reduce((sum,s)=>sum+getSeconds(s),0));
+ updateWeeklyHours(weeks.thisWeek);
  $('study-stat-rate').textContent=pledged.length?Math.round(met/pledged.length*100)+'%':'—';
  const history=$('study-history');history.replaceChildren();
  for(const s of weekly.slice(0,15)){
@@ -141,6 +153,7 @@ function tick(){
   const today=kstDate(Date.now());
   const todays=sessions.filter(s=>kstDate(s.started_at)===today);
   $('study-today-total').textContent=formatStudyTimer(todays.reduce((sum,s)=>sum+getSeconds(s),0));
+  updateWeeklyHours(studyPlanningWeeks().thisWeek);
   if(isStaleSession(active)!==wasStale)render();
  }
 }
@@ -192,7 +205,8 @@ async function savePlan(){
    .upsert({user_id:uid,week_start:week,weekdays,no_plan_reason:noPlanReason},{onConflict:'user_id,week_start'})
    .select('weekdays,no_plan_reason').single();
   if(error||!data)throw error||new Error('SAVE_NOT_CONFIRMED');
-  plan=data;
+  plan={...data,week_start:week};
+  if(week===weeks.thisWeek)currentPlan=plan;
   $('study-no-plan-reason').value=data.no_plan_reason||'';
   message(weekdays.length
     ?'주간 학습계획을 저장했습니다. 약속한 날 미참여 시 확인 메일을 보냅니다.'
