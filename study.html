@@ -30,7 +30,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <link rel="stylesheet" href="css/portal-navigation.css?v=20261112-page-intro-2">
 <script defer src="js/portal-navigation.js?v=20261116-concurrency-1"></script>
 <!-- portal:assets:end -->
-<link rel="stylesheet" href="css/study.css?v=20261116-live-seconds-1">
+<link rel="stylesheet" href="css/study.css?v=20261120-weekly-hours-1">
 </head><body data-page="study">
 <p id="learning-notice" role="status">로그인 및 재학 상태를 확인 중입니다. <a href="/">포털 메인</a></p>
 <a class="skip-link" href="#main-content">본문으로 바로가기</a>
@@ -105,7 +105,14 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <div id="study-history" class="study-history"><p class="study-text">기록 불러오는 중…</p></div>
 </section>
 <section class="learn-section study-span" aria-labelledby="study-stats-heading">
-<h2 id="study-stats-heading">이번 주 실천 현황</h2>
+<div class="study-weekly-header"><h2 id="study-stats-heading">이번 주 실천 현황</h2><p id="study-week-range" class="study-text">이번 주 학습시간 확인 중…</p></div>
+<div class="study-weekly-days" id="study-weekly-days" aria-label="월요일부터 금요일까지 실제 공부시간">
+<div class="study-weekly-day"><span>월요일</span><small id="study-weekday-date-0">—</small><strong id="study-weekday-total-0">0시간 00분</strong></div>
+<div class="study-weekly-day"><span>화요일</span><small id="study-weekday-date-1">—</small><strong id="study-weekday-total-1">0시간 00분</strong></div>
+<div class="study-weekly-day"><span>수요일</span><small id="study-weekday-date-2">—</small><strong id="study-weekday-total-2">0시간 00분</strong></div>
+<div class="study-weekly-day"><span>목요일</span><small id="study-weekday-date-3">—</small><strong id="study-weekday-total-3">0시간 00분</strong></div>
+<div class="study-weekly-day"><span>금요일</span><small id="study-weekday-date-4">—</small><strong id="study-weekday-total-4">0시간 00분</strong></div>
+</div>
 <div class="study-stat-grid" aria-label="자율학습 통계">
 <div class="study-stat"><small>계획한 날짜</small><strong id="study-stat-planned">—</strong></div>
 <div class="study-stat"><small>참여한 날짜</small><strong id="study-stat-attended">—</strong></div>
@@ -122,6 +129,6 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <div class="container footer-bottom"><p>© <span id="current-year"></span> K-BigData Service Portal</p></div>
 </footer>
 <script type="module" src="js/portal-auth.mjs?v=20261116-concurrency-1"></script>
-<script type="application/x-learning" data-module="js/study.js?v=20261116-concurrency-1"></script>
+<script type="application/x-learning" data-module="js/study.js?v=20261120-weekly-hours-1"></script>
 <script type="application/x-learning" data-module="js/portal-shell-entry.js?v=20261116-concurrency-1"></script>
 </body></html>
