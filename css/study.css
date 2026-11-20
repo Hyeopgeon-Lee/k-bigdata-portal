@@ -96,3 +96,19 @@ body[data-page="study"] .study-grid > .learn-section {
 /* Live elapsed study time updates each second without wrapping on mobile. */
 .study-live-count{font-size:clamp(25px,5.2vw,40px);font-variant-numeric:tabular-nums;letter-spacing:-.025em;white-space:nowrap}
 @media(max-width:360px){.study-live-count{font-size:24px}}
+
+/* The current week's five weekday totals stay visible while planning next week. */
+.study-weekly-header{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:8px 14px;margin-bottom:13px}
+.study-weekly-header h2{margin:0}
+.study-weekly-header .study-text{margin:0;font-variant-numeric:tabular-nums}
+.study-weekly-days{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-bottom:16px}
+.study-weekly-day{display:flex;flex-direction:column;gap:5px;min-width:0;background:#f1f6fd;border:1px solid #d8e4f3;border-radius:12px;padding:15px}
+.study-weekly-day span{font-size:15px;font-weight:750;color:#21456f}
+.study-weekly-day small{font-size:12px;color:#62748d;font-variant-numeric:tabular-nums}
+.study-weekly-day strong{font-size:clamp(16px,1.65vw,20px);font-weight:800;color:#173f7b;font-variant-numeric:tabular-nums;white-space:nowrap}
+@media(max-width:760px){
+ .study-weekly-days{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .study-weekly-day{padding:12px}
+ .study-weekly-day:last-child{grid-column:1/-1}
+ .study-weekly-day strong{font-size:17px}
+}
