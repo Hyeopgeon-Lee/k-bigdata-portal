@@ -39,7 +39,7 @@ export async function mountWrittenSources(browserSection,url){
    for(const source of entry.materials){
     const li=el("li","written-source-item");
     const title=el("strong",null,String(source.label||"외부 자료"));
-    const meta=el("p",null,[source.source,source.format,source.verified].filter(Boolean).join(" · "));
+    const meta=el("p",null,[source.source,source.format,Number.isInteger(source.sourceQuestionCount)?source.sourceQuestionCount+"문항":null,source.answerKeyListed?"답안표 수록":null,source.verified].filter(Boolean).join(" · "));
     const license=el("p","written-source-license","재게시: "+String(source.rights||"미확인"));
     li.append(title,meta,license);
     const target=httpsUrl(source.url);
