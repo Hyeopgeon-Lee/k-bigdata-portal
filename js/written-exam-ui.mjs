@@ -22,7 +22,13 @@ export function validateWrittenQuestion(q,examType){
  if(!String(q.question||"").trim()||!Array.isArray(q.options)||q.options.length!==4||!q.options.every(v=>typeof v==="string"&&v.trim()))return false;
  if(!Number.isInteger(q.answer)||q.answer<1||q.answer>4)return false;
  if(!["official","reconstructed"].includes(q.sourceType)||!/^https:\/\//.test(q.sourceUrl||""))return false;
- return q.sourceVerified===true&&q.answerVerified===true&&q.republicationAllowed===true;
+ const evidence=q.evidence;
+ const validEvidence=value=>typeof value==="string"&&/^https:\/\//.test(value);
+ const verifiedDate=typeof evidence?.reviewedAt==="string"&&/^20\d{2}-\d{2}-\d{2}$/.test(evidence.reviewedAt);
+ return q.sourceVerified===true&&q.answerVerified===true&&q.republicationAllowed===true&&
+   !!evidence&&validEvidence(evidence.sourceUrl)&&validEvidence(evidence.answerUrl)&&
+   validEvidence(evidence.rightsUrl)&&typeof evidence.reviewer==="string"&&
+   evidence.reviewer.trim().length>=2&&verifiedDate;
 }
 
 export function mountWrittenExam({examType,label,dataUrl,storageKey,sourceIndexUrl=null}){
