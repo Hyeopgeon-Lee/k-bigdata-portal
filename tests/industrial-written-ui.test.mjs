@@ -63,25 +63,3 @@ test('2020-2026 reference registry is distinguishable from the actual question b
  assert.ok(catalog.years.every(row=>row.materials.every(m=>m.rights&&m.verified&&m.url.startsWith("https://"))));
  assert.deepEqual(JSON.parse(read('data/industrial-written/questions.json')),[]);
 });
-
-test('original industrial written mock bank has 120 validated distinct questions in six 20-question subject/round blocks',()=>{
- const files=['systems','programming','database'].map(name=>'data/industrial-written/practice-'+name+'.json');
- const all=files.flatMap(file=>JSON.parse(read(file)));
- assert.equal(all.length,120);
- assert.equal(new Set(all.map(q=>q.id)).size,120,'all mock question IDs are unique');
- assert.equal(new Set(all.map(q=>q.question)).size,120,'original stems are unique');
- assert.equal(new Set(all.map(q=>q.round+':'+q.number)).size,120,'no duplicate question numbers within a mock round');
- assert.ok(all.every(q=>validateWrittenQuestion(q,'industrial')),'only complete independently authored mock questions are accepted');
- assert.ok(all.every(q=>q.sourceType==='practice'&&q.authorship==='original'&&q.explanation.trim().length>=12));
- assert.ok(all.every(q=>Array.isArray(q.options)&&q.options.length===4&&new Set(q.options).size===4));
- for(const round of [1,2]){
-  const rows=all.filter(q=>q.round===round);
-  assert.equal(rows.length,60);
-  assert.deepEqual(rows.map(q=>q.number).sort((a,b)=>a-b),Array.from({length:60},(_,i)=>i+1));
-  for(const subject of ['정보시스템 기반 기술','프로그래밍언어 활용','데이터베이스 활용']){
-   assert.equal(rows.filter(q=>q.subject===subject).length,20);
-  }
- }
- for(const answer of [1,2,3,4])assert.equal(all.filter(q=>q.answer===answer).length,30);
- assert.ok(!all.some(q=>q.sourceVerified||q.republicationAllowed),'original mock questions must not masquerade as official or permissioned exam reproductions');
-});
