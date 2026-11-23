@@ -366,6 +366,14 @@ export function mountWrittenExam({examType,label,dataUrl,storageKey,sourceIndexU
   menu.className="bank-nav written-browser-nav";menu.setAttribute("aria-label","필기 학습 메뉴");
   menu.innerHTML='<button type="button" class="button button-secondary" data-view="home">학습 시작</button><button type="button" class="button button-primary" data-view="bank">전체 문제</button><button type="button" class="button button-secondary" data-view="random">랜덤 설정</button><button type="button" class="button button-secondary" data-view="wrong">오답노트</button><button type="button" class="button button-secondary" data-view="progress">학습현황</button>';
   section.querySelector(".qb-heading").after(menu);
+  const practiceCount=bank.filter(q=>q.sourceType==="practice").length;
+  if(practiceCount){
+   const notice=document.createElement("p");
+   notice.className="written-practice-notice";
+   const officialCount=bank.length-practiceCount;
+   notice.textContent="학습용 자체 제작 모의문제 "+practiceCount+"문항 등록 · 실제 기출문제 원문 "+officialCount+"문항 등록. 창작 모의 1·2회는 실제 출제된 회차가 아니며, 기출 원문 자료는 아래 외부 링크에서 확인할 수 있습니다.";
+   menu.after(notice);
+  }
   if(sourceIndexUrl)void mountWrittenSources(section,sourceIndexUrl,examType);
   section.querySelector(".qb-progress-hint").textContent="풀이 횟수와 최근 날짜는 이 브라우저의 필기 기록 기준입니다.";
   if(!bank.length){
