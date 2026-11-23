@@ -81,7 +81,7 @@ export function mountWrittenExam({examType,label,dataUrl,storageKey,sourceIndexU
    b.classList.toggle("button-primary",active);
    b.classList.toggle("button-secondary",!active);
   });
-  $("#quick-filters").hidden=!!current||view==="bank";
+  $("#quick-filters").hidden=true; // Browser and in-page tabs are the single navigation source.
   $(".bank-nav").hidden=!!current||view==="bank";
   $("#bank-controls").hidden=!!current||view!=="bank";
   $("#usage-guide").hidden=!!current;
