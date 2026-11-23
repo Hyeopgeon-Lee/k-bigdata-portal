@@ -15,3 +15,20 @@
 .written-bank-page .study-nav button:disabled{opacity:.45;cursor:default}
 @media(max-width:800px){.written-bank-page .written-browser-nav{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:480px){.written-bank-page .written-browser-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.written-bank-page .written-choice{grid-template-columns:28px minmax(0,1fr);gap:9px;padding:12px;font-size:15px}.written-bank-page .written-choice .written-choice-num{width:26px;height:26px}}
+
+/* Copyright-aware external question references; shown within the shared problem browser. */
+.written-source-directory{margin:24px 0 40px;padding:24px;background:#fff;border:1px solid #d8e1eb;border-radius:14px;color:#17263e}
+.written-source-directory h2{font-size:clamp(19px,2.4vw,25px);line-height:1.4;margin:0 0 10px}
+.written-source-explainer,.written-source-summary{font-size:15px;line-height:1.7;color:#53677f;margin:6px 0 15px}
+.written-source-years{display:grid;gap:10px}
+.written-source-year{border:1px solid #d9e1eb;border-radius:11px;padding:0 16px;background:#fff}
+.written-source-year>summary{cursor:pointer;padding:15px 0;font-size:16px;font-weight:750;line-height:1.6;overflow-wrap:anywhere}
+.written-source-rule{font-size:14px;color:#586c80;margin:0 0 12px}
+.written-source-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0 0 18px;padding:0;list-style:none}
+.written-source-item{min-width:0;padding:15px;border-radius:10px;background:#f5f8fc;border:1px solid #e0e7f0;display:flex;flex-direction:column;align-items:flex-start;gap:9px}
+.written-source-item strong{font-size:16px;line-height:1.5;word-break:keep-all}
+.written-source-item p{font-size:13px;line-height:1.5;margin:0;color:#506379}
+.written-source-item .written-source-license{font-size:13px;color:#795d36}
+.written-source-item .button{max-width:100%;min-height:44px;margin-top:auto}
+.written-source-official-note{margin:14px 0 0;font-size:14px}
+@media(max-width:700px){.written-source-directory{padding:16px}.written-source-links{grid-template-columns:1fr}.written-source-year{padding:0 12px}}
