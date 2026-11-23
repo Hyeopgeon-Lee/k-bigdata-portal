@@ -1,0 +1,17 @@
+/* Written-only widgets. All shared page layout, buttons and quiz cards come from practical.css and quiz-unified.css. */
+.written-bank-page .written-options{display:grid;gap:9px}
+.written-bank-page .written-choice{display:grid!important;grid-template-columns:34px minmax(0,1fr);align-items:center;gap:12px;text-align:left!important;width:100%;height:auto;min-height:56px;white-space:normal;overflow-wrap:anywhere;font-size:16px;line-height:1.65;cursor:pointer}
+.written-bank-page .written-choice .written-choice-num{display:inline-grid;place-items:center;font-weight:800;line-height:1;width:28px;height:28px;border-radius:50%;border:1px solid #a7bad3;background:#fff;color:#25466d}
+.written-bank-page .written-choice[aria-pressed="true"] .written-choice-num{background:#193b63;color:#fff;border-color:#193b63}
+.written-bank-page .written-choice:disabled{cursor:default;opacity:1}
+.written-bank-page .written-choice.is-answer .written-choice-num{background:#138357;color:white;border-color:#138357}
+.written-bank-page .written-choice.is-mismatch .written-choice-num{background:#bc3535;color:white;border-color:#bc3535}
+.written-bank-page .written-browser-nav{grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:0 0 16px}
+.written-bank-page .written-browser-nav button{min-height:44px;box-sizing:border-box;white-space:normal;font-size:14px;line-height:1.4}
+.written-bank-page .written-empty-notice{margin:14px 0 16px;padding:16px;background:#f4f7fc;color:#43556d;border:1px solid #d9e3ef;border-radius:12px;line-height:1.6}
+.written-bank-page .bank-card .bank-badges{flex-wrap:wrap}
+.written-bank-page .bank-solve .solve-question{white-space:normal;overflow-wrap:anywhere}
+.written-bank-page .bank-solve .code-scroll{margin:14px 0}
+.written-bank-page .study-nav button:disabled{opacity:.45;cursor:default}
+@media(max-width:800px){.written-bank-page .written-browser-nav{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:480px){.written-bank-page .written-browser-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.written-bank-page .written-choice{grid-template-columns:28px minmax(0,1fr);gap:9px;padding:12px;font-size:15px}.written-bank-page .written-choice .written-choice-num{width:26px;height:26px}}
