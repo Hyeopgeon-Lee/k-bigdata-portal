@@ -107,7 +107,7 @@ export function mountWrittenExam({examType,label,dataUrl,storageKey}){
   const recommended=pool.slice(0,5);
   const last=bank.find(q=>q.id===lastQuestionId);
   root.innerHTML='<div class="study-home-grid"><section class="study-start"><p class="study-kicker">TODAY PRACTICE</p><h2>오늘 조금씩, 꾸준히</h2><p>오늘 풀이 '+todays.length+'문제 · 추천 '+recommended.length+'문제</p><progress value="'+Math.min(todays.length,Math.max(1,recommended.length))+'" max="'+Math.max(1,recommended.length)+'" aria-label="오늘 학습 진행"></progress>'+
-   action("start-today","오늘 5문제 시작",'class="button button-primary study-primary"')+'</section><aside class="study-side"><section class="study-resume"><h2>'+(last?"이어서 풀기":"학습 시작")+'</h2><p>'+(last?esc(labelFor(last)):"기출문제를 선택하고 바로 학습을 시작하세요.")+'</p>'+(last?action("resume","마지막 문제 이어서 풀기",'data-id="'+esc(last.id)+'"'):"")+'</section><div class="study-quick-menu">'+action("quick-random","랜덤 5문제")+action("wrong-view","오답노트")+action("bank-view","전체 문제")+action("progress-view","학습현황")+'</div></aside></div>'+
+   action("start-today","오늘 5문제 시작")+'</section><aside class="study-side"><section class="study-resume"><h2>'+(last?"이어서 풀기":"학습 시작")+'</h2><p>'+(last?esc(labelFor(last)):"기출문제를 선택하고 바로 학습을 시작하세요.")+'</p>'+(last?action("resume","마지막 문제 이어서 풀기",'data-id="'+esc(last.id)+'"'):"")+'</section><div class="study-quick-menu">'+action("quick-random","랜덤 5문제")+action("wrong-view","오답노트")+action("bank-view","전체 문제")+action("progress-view","학습현황")+'</div></aside></div>'+
    (!bank.length?'<div class="bank-empty"><h2>문제 데이터 등록 전</h2><p>검증된 공개 기출문제를 등록하면 오늘의 학습 문제를 추천합니다.</p></div>':"");
  }
  function renderRandom(){
