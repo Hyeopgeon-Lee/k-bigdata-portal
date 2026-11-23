@@ -50,7 +50,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
   <a tabindex="0" class="portal-page-back" href="index.html">← 포털 홈</a>
   <p class="portal-page-eyebrow">WRITTEN EXAM</p>
   <h1 id="industrial-written-title" class="portal-page-title">정보처리산업기사 필기 기출문제</h1>
-  <p class="portal-page-description">자체 제작 모의 120문항(60문항×2회)을 학습하고 별도로 공개된 기출자료 출처를 확인하세요. 모의문제는 실제 기출 원문이 아닙니다.</p>
+  <p class="portal-page-description">연도·회차별 필기 기출자료 출처를 확인하고, 검증된 문제를 학습하세요.</p>
   
 </section>
 <!-- portal:intro:end -->
@@ -59,7 +59,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <nav class="bank-nav" aria-label="학습 화면" hidden><button type="button" class="button" data-view="home">학습 시작</button><button type="button" class="button" data-view="bank">전체 문제</button><button type="button" class="button" data-view="random">랜덤 설정</button><button type="button" class="button" data-view="wrong">오답노트</button><button type="button" class="button" data-view="progress">학습현황</button></nav>
 <p id="storage-status" role="status"></p>
 <div id="bank-controls" class="bank-controls" hidden>
-<label for="source-filter">문제 종류</label><select id="source-filter"><option value="all">전체 종류</option><option value="official">공식 공개</option><option value="reconstructed">복원기출</option><option value="practice">창작 모의문제</option></select>
+<label for="source-filter">문제 종류</label><select id="source-filter"><option value="all">전체 종류</option><option value="official">공식 공개</option><option value="reconstructed">복원기출</option></select>
 <details id="advanced-filters"><summary>상세 필터 · 검색</summary><div class="bank-filter-grid">
 <label for="year-filter">출제년도<select id="year-filter"><option value="all">전체</option></select></label>
 <label for="round-filter">회차<select id="round-filter"><option value="all">전체</option></select></label>
@@ -79,4 +79,4 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
     </div>
     <div class="container footer-bottom"><p>© <span id="current-year"></span> K-BigData Service Portal</p></div>
   </footer>
-<script type="application/x-learning" data-module="js/portal-shell-entry.js?v=20261116-concurrency-1"></script><script type="application/x-learning" data-module="js/industrial-written-ui.js?v=20261124-original-120"></script></body></html>
+<script type="application/x-learning" data-module="js/portal-shell-entry.js?v=20261116-concurrency-1"></script><script type="application/x-learning" data-module="js/industrial-written-ui.js?v=20261124-remove-mock"></script></body></html>
