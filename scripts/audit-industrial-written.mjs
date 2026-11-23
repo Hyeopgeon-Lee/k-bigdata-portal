@@ -30,6 +30,7 @@ const ids=new Set(),slots=new Set();
 const byYear=Object.fromEntries(Array.from({length:7},(_,i)=>[2020+i,0]));
 for(const [index,q] of (Array.isArray(questions)?questions:[]).entries()){
  const prefix='#'+(index+1)+' ';
+ if(!q||typeof q!=="object"){errors.push(prefix+"문항 객체가 아닙니다.");continue;}
  if(!validateWrittenQuestion(q,'industrial'))errors.push(prefix+'문항·정답·출처·허가 증빙 불완전: '+(q?.id||'ID 없음'));
  if(ids.has(q.id))errors.push(prefix+'중복 ID: '+q.id);
  ids.add(q.id);
