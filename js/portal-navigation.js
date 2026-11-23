@@ -5,6 +5,20 @@
   document.documentElement.dataset.portalNavigationReady='true';
   const menu=document.querySelector('.portal-menu');
   if(!menu)return;
+  // Expose the new written-exam service on existing generated page shells.
+  // Future shell regeneration adds the same link statically; avoid duplicates.
+  const learningGroup=[...document.querySelectorAll(".portal-nav-other-group")].find(section=>
+    section.querySelector("strong")?.textContent?.trim()==="학습 · 역량");
+  const practicalLink=learningGroup?.querySelector('a[data-nav-id="practical"]');
+  if(practicalLink&&!learningGroup.querySelector('a[data-nav-id="industrial-written"]')){
+    const link=document.createElement("a");
+    link.href="industrial-written.html";
+    link.dataset.navId="industrial-written";
+    link.dataset.navGroup="learning";
+    link.textContent="산업기사 필기";
+    if(document.documentElement.dataset.portalPage==="industrial-written")link.setAttribute("aria-current","page");
+    practicalLink.after(link);
+  }
   const toggle=menu.querySelector('summary');
   const compact=matchMedia('(max-width:1240px)');
   const disclosures=[menu,...document.querySelectorAll('.portal-nav-more')];
