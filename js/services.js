@@ -28,8 +28,8 @@ export const services = [
   {
     id:"industrial-written", name:"정보처리산업기사 필기 기출문제", englishName:"INDUSTRIAL ENGINEER WRITTEN EXAM",
     category:"learning", url:"industrial-written.html", icon:"book", accent:"blue", order:9.45,
-    description:"정보처리산업기사 필기 기출문제를 연도·회차별로 풀고 정답과 오답을 복습하세요. 검증된 문항부터 순차 등록합니다.",
-    shortDescription:"정보처리산업기사 필기 회차별 문제풀이와 오답 복습.",
+    description:"정보처리산업기사 필기 자체 제작 모의 120문항(2회×60문항)을 연습하고 실제 기출자료 출처 목록을 확인하세요. 모의문제는 출제 원문이 아닙니다.",
+    shortDescription:"창작 모의 120문항(60문항×2회)과 기출자료 링크, 오답 복습.",
     tags:["정보처리산업기사","필기","기출문제","CBT","문제은행"], aliases:"산업기사 필기 정보처리 필기 연도별 회차별 기출",featured:false
   },
   {id:'study',name:'자율학습 관리',englishName:'AFTER SCHOOL STUDY',category:'learning',url:'study.html',icon:'clipboard',accent:'blue',order:4.2,
