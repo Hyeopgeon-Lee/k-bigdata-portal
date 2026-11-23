@@ -7,7 +7,12 @@ const $=selector=>document.querySelector(selector);
 const today=()=>new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Seoul",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
 const labelFor=q=>q.year+"년 "+q.round+"회 · "+q.number+"번";
 const formatDate=millis=>new Date(millis).toLocaleDateString("ko-KR",{timeZone:"Asia/Seoul"});
-const action=(name,label,extra="")=>'<button type="button" class="button button-secondary" data-action="'+name+'" '+extra+'>'+esc(label)+'</button>';
+const action=(name,label,extra="")=>{
+ const found=/\bclass="([^"]+)"/.exec(extra);
+ const classes=found?found[1]:"button button-secondary";
+ const attrs=found?extra.replace(found[0],""):extra;
+ return '<button type="button" class="'+esc(classes)+'" data-action="'+esc(name)+'" '+attrs+'>'+esc(label)+'</button>';
+};
 
 export function validateWrittenQuestion(q,examType){
  if(!q||typeof q!=="object"||!q.id||!/^[A-Za-z0-9_-]{1,80}$/.test(q.id))return false;
@@ -107,7 +112,7 @@ export function mountWrittenExam({examType,label,dataUrl,storageKey}){
   const recommended=pool.slice(0,5);
   const last=bank.find(q=>q.id===lastQuestionId);
   root.innerHTML='<div class="study-home-grid"><section class="study-start"><p class="study-kicker">TODAY PRACTICE</p><h2>오늘 조금씩, 꾸준히</h2><p>오늘 풀이 '+todays.length+'문제 · 추천 '+recommended.length+'문제</p><progress value="'+Math.min(todays.length,Math.max(1,recommended.length))+'" max="'+Math.max(1,recommended.length)+'" aria-label="오늘 학습 진행"></progress>'+
-   action("start-today","오늘 5문제 시작")+'</section><aside class="study-side"><section class="study-resume"><h2>'+(last?"이어서 풀기":"학습 시작")+'</h2><p>'+(last?esc(labelFor(last)):"기출문제를 선택하고 바로 학습을 시작하세요.")+'</p>'+(last?action("resume","마지막 문제 이어서 풀기",'data-id="'+esc(last.id)+'"'):"")+'</section><div class="study-quick-menu">'+action("quick-random","랜덤 5문제")+action("wrong-view","오답노트")+action("bank-view","전체 문제")+action("progress-view","학습현황")+'</div></aside></div>'+
+   action("start-today","오늘 5문제 시작",'class="button button-primary study-primary"')+'</section><aside class="study-side"><section class="study-resume"><h2>'+(last?"이어서 풀기":"학습 시작")+'</h2><p>'+(last?esc(labelFor(last)):"기출문제를 선택하고 바로 학습을 시작하세요.")+'</p>'+(last?action("resume","마지막 문제 이어서 풀기",'data-id="'+esc(last.id)+'"'):"")+'</section><div class="study-quick-menu">'+action("quick-random","랜덤 5문제")+action("wrong-view","오답노트")+action("bank-view","전체 문제")+action("progress-view","학습현황")+'</div></aside></div>'+
    (!bank.length?'<div class="bank-empty"><h2>문제 데이터 등록 전</h2><p>검증된 공개 기출문제를 등록하면 오늘의 학습 문제를 추천합니다.</p></div>':"");
  }
  function renderRandom(){
