@@ -60,6 +60,6 @@ test('2020-2026 reference registry is distinguishable from the actual question b
  const years=catalog.years.map(item=>item.year).sort();
  assert.deepEqual(years,[2020,2021,2022,2023,2024,2025,2026]);
  assert.ok(catalog.years.flatMap(y=>y.materials).length>=14);
- assert.ok(catalog.years.every(row=>row.materials.every(m=>m.rights&&m.verified&&/^https:\\/\\//.test(m.url))));
+ assert.ok(catalog.years.every(row=>row.materials.every(m=>m.rights&&m.verified&&m.url.startsWith("https://"))));
  assert.deepEqual(JSON.parse(read('data/industrial-written/questions.json')),[]);
 });
