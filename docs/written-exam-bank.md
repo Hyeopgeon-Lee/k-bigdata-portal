@@ -75,6 +75,18 @@
 
 등록 자료의 데이터 정합성과 출처 목록은 `node scripts/audit-industrial-written.mjs`로 점검합니다. 실제 100% 검증을 위해서는 **매 회차 공식 출제 문항 수와 정답 원본, 재게시 허가 문서**의 확보가 별도로 필요합니다.
 
+
+## 권리·정답 증빙이 완료된 자료의 일괄 등록
+
+```sh
+node scripts/import-industrial-written.mjs /path/to/approved-questions.json
+node scripts/import-industrial-written.mjs /path/to/approved-questions.json --write
+node scripts/audit-industrial-written.mjs
+node --test tests/industrial-written-ui.test.mjs
+```
+
+첫 번째 명령은 검증 전용이며 파일을 변경하지 않습니다. 두 번째 명령은 모든 문항이 검증을 통과할 때만 `data/industrial-written/questions.json`에 추가합니다. 기존 데이터는 보존하고 문항 ID 및 회차·번호 중복을 거부합니다. **단, 시스템의 형식 검증은 원저작권자 이용 허락과 정답의 실제 진위를 대신하지 않습니다.** 사전에 허가 문서와 답안 근거를 사람이 검토해야 합니다.
+
 ## 학습기록과 미래 확장
 
 현재 필기 정답·오답 기록은 **해당 브라우저에 별도로 저장**됩니다. 실기 기록 및 Supabase 서버 통계와 혼합되지 않습니다. 필기 데이터베이스·교수자 통계 연동은 별도 인증·RLS 및 `learning-activity.mjs` 은행 유형 추가가 필요합니다.
