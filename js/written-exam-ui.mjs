@@ -6,7 +6,8 @@ import {mountWrittenSources} from "./written-exam-sources.mjs?v=20261123-index-1
 const esc=value=>String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",'"':"&quot;","'":"&#39;"}[c]));
 const $=selector=>document.querySelector(selector);
 const today=()=>new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Seoul",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
-const labelFor=q=>q.year+"년 "+q.round+"회 · "+q.number+"번";
+const labelFor=q=>q.sourceType==="practice"?q.year+"년 창작 모의 "+q.round+"회 · "+q.number+"번":q.year+"년 "+q.round+"회 · "+q.number+"번";
+const sourceLabel=q=>q.sourceType==="practice"?"창작 모의문제":q.sourceType==="official"?"공식 공개 기출":"복원기출";
 const formatDate=millis=>new Date(millis).toLocaleDateString("ko-KR",{timeZone:"Asia/Seoul"});
 const action=(name,label,extra="")=>{
  const found=/\bclass="([^"]+)"/.exec(extra);
@@ -21,6 +22,7 @@ export function validateWrittenQuestion(q,examType){
  if(!Number.isInteger(q.year)||q.year<2020||q.year>new Date().getFullYear()||!Number.isInteger(q.round)||q.round<1||q.round>4||!Number.isInteger(q.number)||q.number<1)return false;
  if(!String(q.question||"").trim()||!Array.isArray(q.options)||q.options.length!==4||!q.options.every(v=>typeof v==="string"&&v.trim()))return false;
  if(!Number.isInteger(q.answer)||q.answer<1||q.answer>4)return false;
+ if(q.sourceType==="practice")return q.authorship==="original"&&typeof q.practiceSet==="string"&&q.practiceSet.includes("모의")&&typeof q.explanation==="string"&&q.explanation.trim().length>=12;
  if(!["official","reconstructed"].includes(q.sourceType)||!/^https:\/\//.test(q.sourceUrl||""))return false;
  const evidence=q.evidence;
  const validEvidence=value=>typeof value==="string"&&/^https:\/\//.test(value);
@@ -31,7 +33,7 @@ export function validateWrittenQuestion(q,examType){
    evidence.reviewer.trim().length>=2&&verifiedDate;
 }
 
-export function mountWrittenExam({examType,label,dataUrl,storageKey,sourceIndexUrl=null}){
+export function mountWrittenExam({examType,label,dataUrl,storageKey,sourceIndexUrl=null,practiceDataUrls=[]}){
  const root=$("#bank-content"),status=$("#bank-status"),storageStatus=$("#storage-status");
  if(!root||!status)throw Error("필기 문제풀이 화면을 찾을 수 없습니다.");
  let bank=[],browser=null,view="bank",current=null,queue=[],queueIndex=0,queueKind="bank";
@@ -177,14 +179,14 @@ export function mountWrittenExam({examType,label,dataUrl,storageKey,sourceIndexU
   updateNav();renderQuestion();root.querySelector("#solve-title")?.focus({preventScroll:true});window.scrollTo({top:0,behavior:"auto"});
  }
  function renderQuestion(){
-  const q=current,source=q.sourceType==="official"?"공식 공개":"복원기출";
+  const q=current,source=sourceLabel(q);
   const answerMarkup=q.options.map((option,i)=>{
     const num=i+1,picked=selectedAnswer===num;
     return '<button type="button" class="ncp-choice written-choice'+(picked?' is-selected':'')+'" data-answer-index="'+num+'" aria-pressed="'+String(picked)+'" '+(attempt.revealed?'disabled':'')+'><span class="written-choice-num">'+num+'</span><span>'+esc(option).replace(/\n/g,"<br>")+'</span></button>';
   }).join("");
   root.classList.add("study-split");root.innerHTML='<article class="bank-solve">'+
    quizNavigation({count:queue.length?(queueIndex+1)+" / "+queue.length:"1 / 1",listAction:"back",jumpAction:"answer-jump"})+
-   quizHeading({title:label+" "+labelFor(q),titleId:"solve-title",badges:[source,q.subject||"필기",q.year+"년 "+q.round+"회"],
+   quizHeading({title:label+" "+labelFor(q),titleId:"solve-title",badges:[source,q.subject||"필기",q.sourceType==="practice"?"학습용 모의 "+q.round+"회":q.year+"년 "+q.round+"회"],
      actions:[{label:"문제 공유",tone:"share",action:"share-problem",ariaLabel:"현재 문제 공유"},
        {label:"링크 복사",tone:"copy",action:"copy-problem-link",ariaLabel:"현재 문제 링크 복사"},
        {label:"오류 신고",tone:"report",href:reportUrl(q),ariaLabel:"현재 필기문제 오류 신고"}]})+
@@ -335,8 +337,14 @@ export function mountWrittenExam({examType,label,dataUrl,storageKey,sourceIndexU
  async function initialize(){
   const response=await fetch(dataUrl,{cache:"no-store"});if(!response.ok)throw Error("HTTP "+response.status);
   const result=await response.json();if(!Array.isArray(result))throw Error("문제 데이터 형식 오류");
+  const practiceBanks=await Promise.all(practiceDataUrls.map(async url=>{
+   const rsp=await fetch(url,{cache:"no-store"});
+   if(!rsp.ok)throw Error("모의문제 데이터 응답 오류: "+rsp.status);
+   const rows=await rsp.json();if(!Array.isArray(rows))throw Error("모의문제 데이터 형식 오류");
+   return rows;
+  }));
   const seen=new Set();
-  bank=result.filter(q=>{
+  bank=[...result,...practiceBanks.flat()].filter(q=>{
    if(!validateWrittenQuestion(q,examType)||seen.has(q.id))return false;
    seen.add(q.id);return true;
   });
@@ -348,7 +356,7 @@ export function mountWrittenExam({examType,label,dataUrl,storageKey,sourceIndexU
    secondaryFilter:{label:"회차 선택",categoryLabel:"출제년도",options:uniqueRounds().map(r=>({value:String(r),label:r+"회"})),matches:(q,r)=>String(q.round)===r},
    describe:q=>q.number+"번 · "+q.question.slice(0,85),
    searchText:q=>[q.id,q.year+"년",q.round+"회",q.subject||"",q.question,...q.options].join(" "),
-   metaText:q=>labelFor(q)+" · "+(q.subject||"필기")+" · "+(q.sourceType==="official"?"공식 공개":"복원기출"),
+   metaText:q=>labelFor(q)+" · "+(q.subject||"필기")+" · "+sourceLabel(q),
    progressFor:getProgress,
    openQuestion(q,items){queue=items;queueIndex=items.indexOf(q);queueKind="bank";openQuestion(q.id);}
   });
