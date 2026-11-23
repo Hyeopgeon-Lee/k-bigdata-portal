@@ -25,6 +25,13 @@ export const categories = {
   }
 };
 export const services = [
+  {
+    id:"industrial-written", name:"정보처리산업기사 필기 기출문제", englishName:"INDUSTRIAL ENGINEER WRITTEN EXAM",
+    category:"learning", url:"industrial-written.html", icon:"book", accent:"blue", order:9.45,
+    description:"정보처리산업기사 필기 기출문제를 연도·회차별로 풀고 정답과 오답을 복습하세요. 검증된 문항부터 순차 등록합니다.",
+    shortDescription:"정보처리산업기사 필기 회차별 문제풀이와 오답 복습.",
+    tags:["정보처리산업기사","필기","기출문제","CBT","문제은행"], aliases:"산업기사 필기 정보처리 필기 연도별 회차별 기출",featured:false
+  },
   {id:'study',name:'자율학습 관리',englishName:'AFTER SCHOOL STUDY',category:'learning',url:'study.html',icon:'clipboard',accent:'blue',order:4.2,
    description:'매주 월요일 자율학습 계획을 등록하고 학습 시작·종료, 누적 공부시간과 실천율을 확인하세요.',
    shortDescription:'이번 주 공부할 날짜를 계획하고 학습시간을 기록하세요.',
@@ -324,6 +331,7 @@ export const portalNavLinks = [
   {id:"coding",label:"기초학습",group:"learning"},
   {id:"study",label:"자율학습",group:"learning"},
   {id:"practical",label:"정보처리 기출문제",group:"learning"},
+  {id:"industrial-written",label:"산업기사 필기",group:"learning"},
   {id:"interview",label:"기술면접",group:"learning"},
   {id:"docs",label:"공식문서",group:"learning"},
   {id:"tech-blog",label:"기술블로그 ↗",group:"learning"},
