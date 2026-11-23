@@ -43,6 +43,38 @@
 
 원문 미확인 문항을 유사문제로 대체하거나 실기 문제와 결합하지 않습니다.
 
+
+## 2026-11-23 원문·재게시 검증 결과
+
+- 한국산업인력공단은 국가기술자격 문제의 무단 복제·배포·전자출판을 금지한다고 공지했습니다. 출처: https://hrdc.hrdkorea.or.kr/hrdc/166829
+- Q-net은 CBT 방식 필기문제와 가답안·확정답안을 공개하지 않는다고 안내합니다. 출처: https://www.q-net.or.kr/anc002.do?gId=99&gSite=Q&id=anc00203
+- 정보처리산업기사 필기는 2020년 4회부터 CBT였으며 2022년 출제기준이 변경되었습니다. 출처: https://eduon.com/info/support/noticeView/1442/
+- 시나공이 게시한 2026년 2회 자료 첫 페이지는 개인 용도로만 사용 가능하며 다른 매체에 무단 복제·전재할 수 없다고 명시합니다. 해당 PDF: https://www.sinagong.co.kr/pds/001002001/past-exams/421/download/450
+- `data/industrial-written/sources.json`에는 2020~2026년 **7개 연도, 외부 자료 참조 14건**을 기록했습니다. 외부 자료를 확인했다는 뜻이며 문항의 정확성이나 포털 재게시 가능 여부가 확인됐다는 뜻이 아닙니다.
+- 따라서 2020~2026년 **모든 실제 출제 문항을 100% 수집해 포털에 재게시**하는 것은 현재 공개정보 및 권리 범위만으로 달성할 수 없습니다.
+
+### 문항별 독립 증빙
+
+문항 공개 전에 `sourceVerified`, `answerVerified`, `republicationAllowed`가 모두 true여야 합니다. 이제 별도 `evidence` 객체도 필수입니다.
+
+```json
+{
+  "evidence": {
+    "sourceUrl": "https://example.org/source-proof",
+    "answerUrl": "https://example.org/answer-proof",
+    "rightsUrl": "https://example.org/rightsholder-license",
+    "reviewer": "교육 콘텐츠 검토자",
+    "reviewedAt": "2026-11-23"
+  }
+}
+```
+
+위 URL은 **형식 예시일 뿐** 실제 사용 허가를 뜻하지 않습니다. `rightsUrl`은 원저작권자나 권한을 위임받은 주체의 재게시 허가 문서여야 합니다. 자동 검사에서 URL 형식이 유효하다는 사실만으로 허가의 진위와 원문 동일성이 증명되는 것은 아닙니다.
+
+2026년 11월 23일 기준, 위 조건을 만족하는 문항은 **0개**입니다. 출처 자료를 임의로 복제하거나 재구성한 문항을 실제 기출로 표시하지 않습니다.
+
+등록 자료의 데이터 정합성과 출처 목록은 `node scripts/audit-industrial-written.mjs`로 점검합니다. 실제 100% 검증을 위해서는 **매 회차 공식 출제 문항 수와 정답 원본, 재게시 허가 문서**의 확보가 별도로 필요합니다.
+
 ## 학습기록과 미래 확장
 
 현재 필기 정답·오답 기록은 **해당 브라우저에 별도로 저장**됩니다. 실기 기록 및 Supabase 서버 통계와 혼합되지 않습니다. 필기 데이터베이스·교수자 통계 연동은 별도 인증·RLS 및 `learning-activity.mjs` 은행 유형 추가가 필요합니다.
