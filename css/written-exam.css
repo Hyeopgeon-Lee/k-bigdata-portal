@@ -33,5 +33,3 @@
 .written-source-official-note{margin:14px 0 0;font-size:14px}
 @media(max-width:700px){.written-source-directory{padding:16px}.written-source-links{grid-template-columns:1fr}.written-source-year{padding:0 12px}}
 
-.written-practice-notice{margin:10px 0 18px;padding:15px 18px;border-radius:12px;border:1px solid #b7cae7;background:#f0f5fd;color:#173a63;font-size:15px;line-height:1.7;font-weight:650;word-break:keep-all}
-@media(max-width:480px){.written-practice-notice{padding:13px;font-size:14px}}
