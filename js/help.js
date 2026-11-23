@@ -199,9 +199,9 @@ async function start(){
  document.querySelectorAll('[data-help-tab]').forEach(button=>button.onclick=()=>tab(button.dataset.helpTab));
  const query=new URLSearchParams(location.search);
  const source=query.get('source'),problemId=query.get('id');
- const pages={coding:'coding.html',ncp:'ncp.html',practical:'practical.html',interview:'interview.html'};
+ const pages={coding:'coding.html',ncp:'ncp.html',practical:'practical.html',interview:'interview.html','industrial-written':'industrial-written.html','engineer-written':'engineer-written.html'};
  if(Object.hasOwn(pages,source)&&/^[A-Za-z0-9_-]{1,80}$/.test(problemId||'')){
-   const titles={coding:'기초학습',ncp:'NCP 기출문제',practical:'정보처리 실기',interview:'기술면접'};
+   const titles={coding:'기초학습',ncp:'NCP 기출문제',practical:'정보처리 실기',interview:'기술면접','industrial-written':'정보처리산업기사 필기','engineer-written':'정보처리기사 필기'};
    const f=el('help-create-form');
    f.elements.category.value='학습문제 오류 신고';
    f.elements.location.value='온라인 포털';
