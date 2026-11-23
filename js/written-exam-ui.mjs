@@ -12,7 +12,7 @@ const action=(name,label,extra="")=>'<button type="button" class="button button-
 export function validateWrittenQuestion(q,examType){
  if(!q||typeof q!=="object"||!q.id||!/^[A-Za-z0-9_-]{1,80}$/.test(q.id))return false;
  if(q.examType!==undefined&&q.examType!==examType)return false;
- if(!Number.isInteger(q.year)||q.year<2020||q.year>2026||!Number.isInteger(q.round)||q.round<1||q.round>4||!Number.isInteger(q.number)||q.number<1)return false;
+ if(!Number.isInteger(q.year)||q.year<2020||q.year>new Date().getFullYear()||!Number.isInteger(q.round)||q.round<1||q.round>4||!Number.isInteger(q.number)||q.number<1)return false;
  if(!String(q.question||"").trim()||!Array.isArray(q.options)||q.options.length!==4||!q.options.every(v=>typeof v==="string"&&v.trim()))return false;
  if(!Number.isInteger(q.answer)||q.answer<1||q.answer>4)return false;
  if(!["official","reconstructed"].includes(q.sourceType)||!/^https:\/\//.test(q.sourceUrl||""))return false;
