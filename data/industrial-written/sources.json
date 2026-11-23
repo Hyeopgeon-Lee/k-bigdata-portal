@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "examType": "industrial",
-  "checkedAt": "2026-11-23",
-  "note": "외부 자료 목록은 참고 링크이며 공식 원문·정답의 정확성이나 포털 재게시 권한을 뜻하지 않습니다. 2020년 4회부터 정보처리산업기사 필기는 CBT로 시행되어 공식 문항 전체가 공개되지 않습니다.",
-  "rightsNoticeUrl": "https://hrdc.hrdkorea.or.kr/hrdc/166829",
+  "checkedAt": "2026-11-24",
+  "note": "외부 기출자료 출처 목록입니다. 국가기술자격 시험문제 저작권은 한국산업인력공단에 있으며 원문 재게시 허락이 확인되지 않았습니다. 2020~2022 자료 목록은 문제 원문 등록이 아닙니다.",
+  "rightsNoticeUrl": "https://hrdc.hrdkorea.or.kr/hrdc/166813",
   "officialNoticeUrl": "https://www.q-net.or.kr/anc002.do?gId=99&gSite=Q&id=anc00203",
   "years": [
     {
@@ -172,20 +172,21 @@
           "round": "1·2회 통합",
           "kind": "third-party",
           "source": "전자문제집 CBT",
-          "url": "https://www.comcbt.com/xe/webhaesul/10056873",
+          "url": "https://www.comcbt.com/cbt/exam/13002/",
           "format": "웹",
           "rights": "재게시 권한 미확인",
-          "verified": "출처 페이지 확인"
+          "verified": "2020년 6월 6일 1·2회 통합 기출 페이지 제목과 100문항 수록 확인",
+          "sourceQuestionCount": 100
         },
         {
           "label": "2020년 3회 · 외부 문제은행",
           "round": "3회",
           "kind": "third-party",
           "source": "전자문제집 CBT",
-          "url": "https://www.comcbt.com/xe/webhaesul/10056873",
+          "url": "https://www.comcbt.com/xe/webhaesul/9915686",
           "format": "웹",
           "rights": "재게시 권한 미확인",
-          "verified": "출처 페이지 확인"
+          "verified": "2020년 8월 22일 3회 기출 페이지 및 답안표 제공 확인"
         },
         {
           "label": "2020년 기출문제 모음",
