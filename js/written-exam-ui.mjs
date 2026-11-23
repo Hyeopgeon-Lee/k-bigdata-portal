@@ -1,6 +1,7 @@
 import {quizNavigation,quizHeading,quizDisclosure,quizFeedback,scrollToQuizAnswer} from "./quiz-unified.js?v=20261112-answer-focus-1";
 import {createQuestionBrowser} from "./question-browser.js?v=20261116-progress-v1";
 import {reviewControls} from "./study-review.js?v=20261116-concurrency-1";
+import {mountWrittenSources} from "./written-exam-sources.mjs?v=20261123-index-1";
 
 const esc=value=>String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",'"':"&quot;","'":"&#39;"}[c]));
 const $=selector=>document.querySelector(selector);
@@ -24,7 +25,7 @@ export function validateWrittenQuestion(q,examType){
  return q.sourceVerified===true&&q.answerVerified===true&&q.republicationAllowed===true;
 }
 
-export function mountWrittenExam({examType,label,dataUrl,storageKey}){
+export function mountWrittenExam({examType,label,dataUrl,storageKey,sourceIndexUrl=null}){
  const root=$("#bank-content"),status=$("#bank-status"),storageStatus=$("#storage-status");
  if(!root||!status)throw Error("필기 문제풀이 화면을 찾을 수 없습니다.");
  let bank=[],browser=null,view="bank",current=null,queue=[],queueIndex=0,queueKind="bank";
@@ -349,6 +350,7 @@ export function mountWrittenExam({examType,label,dataUrl,storageKey}){
   menu.className="bank-nav written-browser-nav";menu.setAttribute("aria-label","필기 학습 메뉴");
   menu.innerHTML='<button type="button" class="button button-secondary" data-view="home">학습 시작</button><button type="button" class="button button-primary" data-view="bank">전체 문제</button><button type="button" class="button button-secondary" data-view="random">랜덤 설정</button><button type="button" class="button button-secondary" data-view="wrong">오답노트</button><button type="button" class="button button-secondary" data-view="progress">학습현황</button>';
   section.querySelector(".qb-heading").after(menu);
+  if(sourceIndexUrl)void mountWrittenSources(section,sourceIndexUrl);
   section.querySelector(".qb-progress-hint").textContent="풀이 횟수와 최근 날짜는 이 브라우저의 필기 기록 기준입니다.";
   if(!bank.length){
    const notice=document.createElement("p");
