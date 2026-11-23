@@ -356,7 +356,7 @@ export function mountWrittenExam({examType,label,dataUrl,storageKey,sourceIndexU
   menu.className="bank-nav written-browser-nav";menu.setAttribute("aria-label","필기 학습 메뉴");
   menu.innerHTML='<button type="button" class="button button-secondary" data-view="home">학습 시작</button><button type="button" class="button button-primary" data-view="bank">전체 문제</button><button type="button" class="button button-secondary" data-view="random">랜덤 설정</button><button type="button" class="button button-secondary" data-view="wrong">오답노트</button><button type="button" class="button button-secondary" data-view="progress">학습현황</button>';
   section.querySelector(".qb-heading").after(menu);
-  if(sourceIndexUrl)void mountWrittenSources(section,sourceIndexUrl);
+  if(sourceIndexUrl)void mountWrittenSources(section,sourceIndexUrl,examType);
   section.querySelector(".qb-progress-hint").textContent="풀이 횟수와 최근 날짜는 이 브라우저의 필기 기록 기준입니다.";
   if(!bank.length){
    const notice=document.createElement("p");
