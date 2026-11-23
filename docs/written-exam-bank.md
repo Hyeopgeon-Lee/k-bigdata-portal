@@ -100,3 +100,12 @@ node --test tests/industrial-written-ui.test.mjs
 ## 자체 제작 모의문제 삭제 (2026-11-24)
 
 이전에 생성한 자체 제작 모의 120문항은 요청에 따라 GitHub 저장소와 Supabase `public.written_question_bank`에서 삭제했습니다. 실제 기출문제 원문 DB는 0문항이며, 연도별 출처 목록과 기존 실기 기능은 유지합니다.
+
+
+## 2020~2022년 출처 링크 DB 등록 (2026-11-24)
+
+- Supabase `public.written_exam_source_references` 테이블에 2020년 3건, 2021년 2건, 2022년 2건, **총 7개 외부 기출자료 참조 링크**를 등록했습니다.
+- 문항·보기·정답 원문을 저장한 `public.written_question_bank`는 **0문항**입니다. 링크 기록은 시험 원문 재게시 허가나 문항의 독립 검증을 뜻하지 않습니다.
+- 전용 출처 테이블은 RLS가 켜져 있으며 방문자는 조회만 가능합니다. 원문 등록을 위해서는 해당 자료의 재게시 권한 확인이 필요합니다.
+- 실제 기출자료 저작권 안내: https://hrdc.hrdkorea.or.kr/hrdc/166813
+
