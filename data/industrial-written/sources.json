@@ -18,8 +18,10 @@
           "source": "시나공",
           "url": "https://www.sinagong.co.kr/pds/001002001/past-exams/413/download/441",
           "format": "PDF",
-          "rights": "허락 없는 재게시 불가",
-          "verified": "목록 및 링크 확인"
+          "rights": "개인 사용 한정 · 다른 매체 무단 전재 금지",
+          "verified": "문서 첫·마지막 페이지 대조: 1~60번 및 답안표 확인 (정답의 독립 검증은 미완료)",
+          "sourceQuestionCount": 60,
+          "answerKeyListed": true
         },
         {
           "label": "2026년 2회 · 출판사 자료",
@@ -28,8 +30,10 @@
           "source": "시나공",
           "url": "https://www.sinagong.co.kr/pds/001002001/past-exams/421/download/450",
           "format": "PDF",
-          "rights": "개인 용도만 허용",
-          "verified": "문서 표지 이용 조건 확인"
+          "rights": "개인 사용 한정 · 다른 매체 무단 전재 금지",
+          "verified": "문서 첫·마지막 페이지 대조: 1~60번 및 답안표 확인 (정답의 독립 검증은 미완료)",
+          "sourceQuestionCount": 60,
+          "answerKeyListed": true
         }
       ]
     },
