@@ -8,7 +8,8 @@ const valid={
  id:'2026-2-001',examType:'industrial',year:2026,round:2,number:1,
  question:'다음 중 옳은 것은?',options:['A','B','C','D'],answer:2,
  sourceType:'official',sourceUrl:'https://example.org/exam',
- sourceVerified:true,answerVerified:true,republicationAllowed:true
+ sourceVerified:true,answerVerified:true,republicationAllowed:true,
+ evidence:{sourceUrl:"https://example.org/exam",answerUrl:"https://example.org/answer",rightsUrl:"https://example.org/licence",reviewer:"Quality reviewer",reviewedAt:"2026-11-23"}
 };
 
 test('written exam rejects unverified or unauthorized source data',()=>{
@@ -17,6 +18,7 @@ test('written exam rejects unverified or unauthorized source data',()=>{
  assert.equal(validateWrittenQuestion({...valid,answerVerified:false},'industrial'),false);
  assert.equal(validateWrittenQuestion({...valid,republicationAllowed:false},'industrial'),false);
  assert.equal(validateWrittenQuestion({...valid,sourceType:'unknown'},'industrial'),false);
+ assert.equal(validateWrittenQuestion({...valid,evidence:{...valid.evidence,rightsUrl:""}},'industrial'),false);
  assert.equal(validateWrittenQuestion({...valid,sourceUrl:'http://example.org'},'industrial'),false);
  assert.equal(validateWrittenQuestion({...valid,options:['A','B']},'industrial'),false);
  assert.equal(validateWrittenQuestion({...valid,answer:5},'industrial'),false);
@@ -51,4 +53,13 @@ test('data begins empty, never contains generated questions',()=>{
  const data=JSON.parse(read('data/industrial-written/questions.json'));
  assert.ok(Array.isArray(data));
  for(const row of data)assert.ok(validateWrittenQuestion(row,'industrial'));
+});
+
+test('2020-2026 reference registry is distinguishable from the actual question bank',()=>{
+ const catalog=JSON.parse(read('data/industrial-written/sources.json'));
+ const years=catalog.years.map(item=>item.year).sort();
+ assert.deepEqual(years,[2020,2021,2022,2023,2024,2025,2026]);
+ assert.ok(catalog.years.flatMap(y=>y.materials).length>=14);
+ assert.ok(catalog.years.every(row=>row.materials.every(m=>m.rights&&m.verified&&/^https:\\/\\//.test(m.url))));
+ assert.deepEqual(JSON.parse(read('data/industrial-written/questions.json')),[]);
 });
