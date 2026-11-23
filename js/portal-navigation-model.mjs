@@ -11,7 +11,7 @@ export const portalPages = {
   'my-certifications': {title:'나의 자격증', group:null, navGroup:'learning', locked:true},
   'my-learning': {title:'나의 학습현황', group:null, navGroup:'learning', eyebrow:'STUDENT LEARNING · MY PROGRESS', description:'문제풀이와 오답 복습 현황을 확인하세요.', locked:true},
   'teacher-learning': {title:'학급 학습통계', group:null, navGroup:'learning', eyebrow:'SUPER ADMIN · WEEKLY LEARNING', description:'학생 학습 현황과 주간 메일 발송을 관리하세요.', locked:true},
-  'industrial-written': {title:'정보처리산업기사 필기 기출문제', group:'learning', eyebrow:'WRITTEN EXAM', description:'정보처리산업기사 필기 기출문제를 연도·회차별로 학습하세요.',headingId:'industrial-written-title',quiz:true},
+  'industrial-written': {title:'정보처리산업기사 필기 기출문제', group:'learning', eyebrow:'WRITTEN EXAM', description:'자체 제작 모의 120문항(60문항×2회)을 학습하고 별도로 공개된 기출자료 출처를 확인하세요. 모의문제는 실제 기출 원문이 아닙니다.',headingId:'industrial-written-title',quiz:true},
   practical: {title:'정보처리 기출문제', group:'learning', eyebrow:'PRACTICAL EXAM', description:'정보처리기사·정보처리산업기사의 C·Java·Python·SQL 실기 기출문제를 학습하세요.', headingId:'portal-intro-title-practical', quiz:true},
   interview: {title:'기술면접 문제은행', group:'learning', eyebrow:'TECHNICAL INTERVIEW', description:'IT 직무 기술면접 문제풀이'},
   certifications: {title:'IT 자격증', group:'learning', eyebrow:'CERTIFICATIONS', description:'자격증별 시험 정보와 취득 시기를 확인하세요.'},
