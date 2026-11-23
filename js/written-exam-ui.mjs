@@ -224,7 +224,9 @@ export function mountWrittenExam({examType,label,dataUrl,storageKey,sourceIndexU
     button.classList.toggle("is-mismatch",n===selected&&!correct);
   });
   const btn=$("#submit-answer");btn.type="button";btn.dataset.action="show-answer";btn.textContent="정답·해설 접기";btn.setAttribute("aria-expanded","true");
-  const report='<details class="bank-sources quiz-disclosure"><summary>복원정보 / 원문 출처</summary><div class="quiz-disclosure-body"><p>'+esc(labelFor(q))+' · '+(q.sourceType==="official"?"공식 공개 문제":"비공식 복원 문제")+'</p><a target="_blank" rel="noopener noreferrer" href="'+esc(q.sourceUrl)+'">출처 확인 ↗</a></div></details>';
+  const report=q.sourceType==="practice"
+   ?'<details class="bank-sources quiz-disclosure"><summary>문항 출처 · 제작 정보</summary><div class="quiz-disclosure-body"><p>포털 학습용 자체 제작 모의문제입니다. 2026년 실제 출제 원문이 아닙니다.</p><p>'+esc(q.practiceSet)+'</p></div></details>'
+   :'<details class="bank-sources quiz-disclosure"><summary>복원정보 / 원문 출처</summary><div class="quiz-disclosure-body"><p>'+esc(labelFor(q))+' · '+sourceLabel(q)+'</p><a target="_blank" rel="noopener noreferrer" href="'+esc(q.sourceUrl)+'">출처 확인 ↗</a></div></details>';
   $("#answer-result").innerHTML='<section class="bank-result quiz-results"><h3 tabindex="-1" id="result-heading">정답·해설</h3>'+
    quizFeedback({label:correct?"정답입니다":"오답입니다",kind:correct?"correct":"incorrect",details:"선택한 답과 정답을 비교해 보세요."})+
    '<div class="answer-pair"><div><h4>내 답</h4><pre>'+selected+'번</pre></div><div><h4>정답</h4><pre>'+q.answer+'번 · '+esc(q.options[q.answer-1])+'</pre></div></div>'+
