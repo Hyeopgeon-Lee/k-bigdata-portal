@@ -41,7 +41,7 @@ export function renderPageIntro(page,id){
   if(!page.eyebrow)return '';
   const headingId=page.headingId||'portal-intro-title-'+id;
   const title=id==='project-guide'?'기술보다 <em>문제에서 시작하세요</em>':esc(page.title);
-  const introId=id==='practical'?' id="study-intro"':'';
+  const introId=['practical','industrial-written'].includes(id)?' id="study-intro"':'';
   return focusable(`<section${introId} class="container portal-page-intro${page.quiz?' portal-page-intro--quiz':''}" aria-labelledby="${esc(headingId)}">
   <a class="portal-page-back" href="index.html">← 포털 홈</a>
   <p class="portal-page-eyebrow">${esc(page.eyebrow)}</p>
