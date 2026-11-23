@@ -97,24 +97,6 @@ node --test tests/industrial-written-ui.test.mjs
 
 본 작업은 UI 통합 작업입니다. `data/industrial-written/questions.json`은 빈 배열로 시작합니다. 문제 0건인 상태를 완성된 기출문제 수집으로 표시하지 않습니다.
 
+## 자체 제작 모의문제 삭제 (2026-11-24)
 
-## 2026년 창작 모의문제 120문항 등록
-
-2026-11-24 기준, 출판사에서 무단 전재를 금지한 실제 시험 PDF의 내용을 복제하지 않고 **별도로 작성한 창작 필기 모의문제**를 등록했습니다.
-
-- 모의 1회: 정보시스템 기반 기술 20문항, 프로그래밍언어 활용 20문항, 데이터베이스 활용 20문항 = 60문항
-- 모의 2회: 동일하게 3과목 × 20문항 = 60문항
-- 전체 120문항 · 4지선다 · 정답 및 간단한 설명 포함
-- 저장 경로: `data/industrial-written/practice-systems.json`, `data/industrial-written/practice-programming.json`, `data/industrial-written/practice-database.json`
-- `sourceType: "practice"`, `authorship: "original"`로 분리. **실제 출제 회차를 복원한 원문이 아닙니다.**
-- 실제 출제 원문을 등록하는 `data/industrial-written/questions.json`은 여전히 빈 배열(0문항)입니다.
-
-### 창작 모의문제 구조 검증
-
-```sh
-node scripts/audit-industrial-practice.mjs
-node --test tests/industrial-written-ui.test.mjs
-```
-
-위 검사는 문항 수·회차별 번호·과목 구성·중복·정답 범위·해설 유무와 정답 선택지 분포를 확인합니다. **120개 문항의 교과적 정확성·표현의 모호성에 대한 전문가 독립 감수는 별도**입니다. 출판사 기출의 100% 수집·검증과 혼동하지 마세요.
-
+이전에 생성한 자체 제작 모의 120문항은 요청에 따라 GitHub 저장소와 Supabase `public.written_question_bank`에서 삭제했습니다. 실제 기출문제 원문 DB는 0문항이며, 연도별 출처 목록과 기존 실기 기능은 유지합니다.
