@@ -1,7 +1,8 @@
 import {quizNavigation,quizHeading,quizDisclosure,quizFeedback,scrollToQuizAnswer} from "./quiz-unified.js?v=20261112-answer-focus-1";
 import {createQuestionBrowser} from "./question-browser.js?v=20261124-subject-filter-v2";
 import {reviewControls} from "./study-review.js?v=20261116-concurrency-1";
-import {loadWrittenExamQuestions} from "./written-exam-data.mjs?v=20261124-db-private-2";
+import {loadWrittenExamQuestions,loadWrittenExamSession} from "./written-exam-data.mjs?v=20261124-2025-restore-1";
+import {createHistoricalWrittenViewer} from "./written-exam-historical.mjs?v=20261124-2025-restore-1";
 import {adjacentWrittenQuestion} from "./written-exam-navigation.mjs?v=20261124-next-fix-1";
 
 const esc=value=>String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -45,7 +46,7 @@ export function validateWrittenQuestion(q,examType){
    evidence.reviewer.trim().length>=2&&verifiedDate;
 }
 
-export function mountWrittenExam({examType,label,storageKey}){
+export function mountWrittenExam({examType,label,storageKey,historicalSessions=[]}){
  const root=$("#bank-content"),status=$("#bank-status"),storageStatus=$("#storage-status");
  if(!root||!status)throw Error("필기 문제풀이 화면을 찾을 수 없습니다.");
  let bank=[],browser=null,view="bank",current=null,queue=[],queueIndex=0,queueKind="bank";
@@ -371,10 +372,16 @@ export function mountWrittenExam({examType,label,storageKey}){
   bank.sort((a,b)=>b.year-a.year||b.round-a.round||a.number-b.number);
   fillFilters();
 
-  const sessionChoices=[...new Map(bank.map(q=>{
-   const key=q.year+"-"+q.round;
-   return [key,{key,year:q.year,round:q.round,roundLabel:q.roundLabel||q.round+"회"}];
-  })).values()].sort((a,b)=>b.year-a.year||a.round-b.round);
+  const archiveSessions=(Array.isArray(historicalSessions)?historicalSessions:[])
+   .filter(s=>s&&s.year===2025&&[1,2,3].includes(s.round))
+   .map(s=>({key:"2025-"+s.round,year:2025,round:s.round,roundLabel:s.round+"회",kind:"scanned"}));
+  const sessionChoices=[...new Map([...bank.map(q=>{
+    const key=q.year+"-"+q.round;
+    return {key,year:q.year,round:q.round,roundLabel:q.roundLabel||q.round+"회",kind:"playable"};
+   }),...archiveSessions].map(s=>[s.key,s])).values()]
+   .sort((a,b)=>b.year-a.year||a.round-b.round);
+  const historicalSubjects=["정보시스템 기반 기술","프로그래밍언어 활용","데이터베이스 활용"];
+  let historicalViewer=null;
   let chosenYear=history.state?.questionBrowser?.selected||"";
   let chosenSession=history.state?.questionBrowser?.secondary||"";
   const validYear=!chosenYear||sessionChoices.some(s=>String(s.year)===chosenYear);
@@ -391,7 +398,7 @@ export function mountWrittenExam({examType,label,storageKey}){
   const refreshFilters=()=>{
    const subjectSelect=$(".question-browser #qb-additional-select");
    if(subjectSelect){
-    const allowed=chosenYear?new Set(bank.filter(q=>String(q.year)===chosenYear).map(q=>q.subject||"기타")):null;
+    const allowed=chosenYear==="2025"?new Set(historicalSubjects):chosenYear?new Set(bank.filter(q=>String(q.year)===chosenYear).map(q=>q.subject||"기타")):null;
     for(const option of subjectSelect.options){
      const invalid=!!allowed&&!!option.value&&!allowed.has(option.value);
      option.hidden=invalid;option.disabled=invalid;
@@ -405,10 +412,13 @@ export function mountWrittenExam({examType,label,storageKey}){
     const key=chip.dataset.secondary;
     chip.hidden=!!chosenYear&&!!key&&!key.startsWith(chosenYear+"-");
    }
+   const currentRound=chosenSession.startsWith("2025-")?Number(chosenSession.split("-")[1]):null;
+   historicalViewer?.update({year:chosenYear,round:currentRound,subject:subjectSelect?.value||""});
   };
   browser=createQuestionBrowser({
    title:label+" 필기 기출문제",questions:bank,
    category:q=>String(q.year),categoryLabel:y=>y+"년",
+   extraCategories:archiveSessions.length?["2025"]:[],
    onCategoryChange:year=>{
     chosenYear=year;
     if(chosenYear&&chosenSession&&!chosenSession.startsWith(chosenYear+"-")){
@@ -427,7 +437,7 @@ export function mountWrittenExam({examType,label,storageKey}){
     }
    },
    additionalFilter:{label:"과목별 필터",
-    options:[...new Set(bank.map(q=>q.subject||"기타"))].sort().map(s=>({value:s,label:s})),
+    options:[...new Set([...bank.map(q=>q.subject||"기타"),...historicalSubjects])].sort().map(s=>({value:s,label:s})),
     matches:(q,s)=>(q.subject||"기타")===s
    },
    describe:q=>q.number+"번 · "+q.question.slice(0,85),
@@ -440,6 +450,10 @@ export function mountWrittenExam({examType,label,storageKey}){
   menu.className="bank-nav written-browser-nav";menu.setAttribute("aria-label","필기 학습 메뉴");
   menu.innerHTML='<button type="button" class="button button-secondary" data-view="home">학습 시작</button><button type="button" class="button button-primary" data-view="bank">전체 문제</button><button type="button" class="button button-secondary" data-view="random">랜덤 설정</button><button type="button" class="button button-secondary" data-view="wrong">오답노트</button><button type="button" class="button button-secondary" data-view="progress">학습현황</button>';
   section.querySelector(".qb-heading").after(menu);
+  if(archiveSessions.length){
+   historicalViewer=createHistoricalWrittenViewer(section,(year,round)=>loadWrittenExamSession(examType,year,round));
+   section.querySelector("#qb-additional-select")?.addEventListener("change",()=>refreshFilters());
+  }
   
   refreshFilters();
   section.querySelector(".qb-progress-hint").textContent="풀이 횟수와 최근 날짜는 이 브라우저의 필기 기록 기준입니다.";
