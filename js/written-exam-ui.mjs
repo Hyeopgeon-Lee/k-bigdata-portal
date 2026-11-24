@@ -395,6 +395,22 @@ export function mountWrittenExam({examType,label,dataUrl,additionalDataUrls=[],s
       (!chosenSession||source.key===chosenSession);
     viewer.show(visible);
    }
+   const subjectControl=$(".question-browser #qb-additional-select");
+   if(subjectControl){
+    const allowed=chosenYear==="2020"
+      ?new Set(bank.filter(q=>q.year===2020).map(q=>q.subject||"기타"))
+      :(chosenYear==="2025"||chosenYear==="2026")
+       ?new Set(scanSubjectNames)
+       :null;
+    for(const option of subjectControl.options){
+     const hidden=!!allowed&&!!option.value&&!allowed.has(option.value);
+     option.hidden=hidden;option.disabled=hidden;
+    }
+    if(subjectControl.selectedOptions[0]?.disabled){
+     subjectControl.value="";
+     subjectControl.dispatchEvent(new Event("change",{bubbles:true}));
+    }
+   }
    for(const chip of document.querySelectorAll(".question-browser .qb-secondary-chips [data-secondary]")){
     const key=chip.dataset.secondary;
     chip.hidden=!!chosenYear&&!!key&&!key.startsWith(chosenYear+"-");
