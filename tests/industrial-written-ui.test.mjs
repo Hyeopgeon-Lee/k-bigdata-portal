@@ -32,7 +32,9 @@ test('written exam loads only 2020 playable questions from Supabase',()=>{
  const bootstrap=read('js/industrial-written-ui.js');
  assert.match(loader,/portalSupabaseClient/);
  assert.match(loader,/from\("written_question_bank"\)/);
- assert.doesNotMatch(loader,/written_exam_scanned_sources/);
+ assert.match(loader,/written_exam_scanned_sources/);
+ assert.match(loader,/eq\("exam_year",year\)/);
+ assert.match(loader,/eq\("exam_round",round\)/);
  assert.match(engine,/loadWrittenExamQuestions\(examType\)/);
  assert.doesNotMatch(engine,/mountWrittenExamScans|scanSessions|written-scan-shortcuts/);
  assert.doesNotMatch(bootstrap,/scanSessions|scanSubjectNames|manifestUrl|data\/industrial-written/);
@@ -74,13 +76,34 @@ test('2020 round and subject filters remain active, image menus removed',()=>{
  assert.match(engine,/additionalFilter:\{label:"과목별 필터"/);
  assert.match(engine,/secondaryFilter:\{/);
  assert.match(browser,/additionalFilter\.matches\(q,selectedAdditional\)/);
- assert.doesNotMatch(page,/2025년|2026년|이미지 문제지|원본 이미지/);
- assert.doesNotMatch(bootstrap,/year:2025|year:2026/);
  assert.match(page,/2020년/);
+ assert.match(page,/2025년/);
+ assert.doesNotMatch(page,/2026년|이미지 문제지 등록 회차/);
+ for(const r of [1,2,3])assert.match(bootstrap,new RegExp('year:2025,round:'+r));
+ assert.doesNotMatch(bootstrap,/year:2026/);
 });
 
 test('practical question-bank implementation is separate',()=>{
  const engine=read('js/written-exam-ui.mjs');
  assert.match(engine,/quizNavigation|quizHeading|quizDisclosure/);
  assert.doesNotMatch(read('js/practical-ui.js'),/written-exam-data.mjs/);
+});
+
+
+test('2025 exam sessions restore three rounds without public original files or shortcut gallery',()=>{
+ const app=read('js/industrial-written-ui.js');
+ const ui=read('js/written-exam-ui.mjs');
+ const viewer=read('js/written-exam-historical.mjs');
+ const loader=read('js/written-exam-data.mjs');
+ assert.match(ui,/extraCategories:archiveSessions.length\?\["2025"\]:\[\]/);
+ assert.match(ui,/historicalViewer=createHistoricalWrittenViewer/);
+ assert.match(ui,/extraCategories/);
+ assert.match(ui,/historicalSubjects/);
+ assert.match(viewer,/data\.answerKey\.length!==60/);
+ assert.match(viewer,/answerKey\[i-1\]/);
+ assert.match(viewer,/year===2025/);
+ assert.match(viewer,/정답 보기/);
+ assert.match(loader,/eq\("exam_round",round\)/);
+ assert.doesNotMatch(app,/data\/industrial-written|\.json|scanManifestUrl|year:2026/);
+ assert.doesNotMatch(ui,/written-scan-shortcuts|이미지 문제지 등록 회차/);
 });
