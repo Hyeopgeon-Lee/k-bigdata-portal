@@ -118,6 +118,9 @@ test('subject filter and multiple exam files are connected only to industrial wr
  assert.ok(browser.includes('additionalFilter.matches(q,selectedAdditional)'));
  assert.ok(browser.includes('...extraCategories'));
  assert.ok(bootstrap.includes('scanYear:2026'));
+ assert.ok(bootstrap.includes('scanRound:2'),'the 2026 second round is selectable in round chips');
+ assert.ok(engine.includes('syncScannedViewer'),'year and round filters control 2026 scanned pages');
+ assert.ok(engine.includes('...uniqueRounds(),...(scanRound?[scanRound]:[])'),'round 2 scan is selectable even with no individually extracted question text');
  assert.ok(bootstrap.includes('scanSubjectNames:'));
  assert.ok(engine.includes('scanJump?.addEventListener'));
  assert.ok(engine.includes('scanManifestUrl'));
