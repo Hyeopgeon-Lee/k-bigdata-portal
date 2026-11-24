@@ -55,3 +55,26 @@
 .written-scanned-figure{margin:0;padding:10px;background:white;overflow-x:auto}
 .written-scanned-figure img{display:block;width:100%;height:auto;max-width:1320px;image-rendering:auto}
 @media(max-width:700px){.written-source-scans{padding:12px}.written-scanned-page summary{padding:12px}.written-scanned-figure{padding:4px}.written-scanned-figure img{width:900px;max-width:none}}
+
+/* Written-exam-specific controls: year -> round -> subject -> search. */
+.written-bank-page .qb-controls>.qb-primary-caption{order:0}
+.written-bank-page .qb-controls>.qb-categories{order:1}
+.written-bank-page .qb-controls>.qb-secondary-filter{order:2}
+.written-bank-page .qb-controls>.qb-additional-filter{order:3}
+.written-bank-page .qb-controls>.qb-search{order:4}
+.written-bank-page .qb-controls>.qb-progress-filter{order:5}
+.written-bank-page .qb-controls>.qb-progress-hint{order:6}
+.written-bank-page .qb-secondary-chips>[hidden]{display:none!important}
+.written-source-scans[hidden],.written-scan-shortcuts[hidden],.question-browser .qb-list[hidden]{display:none!important}
+.written-scan-shortcuts{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:14px 0 18px}
+.written-scan-shortcuts h3{font-size:16px;line-height:1.5;flex-basis:100%;margin:0 0 4px}
+.written-scan-shortcuts button{min-height:44px;padding:8px 13px;font-size:15px;white-space:normal;text-align:center}
+.written-scan-notice,.written-scan-origin,.written-scan-unavailable,.written-scan-reference{margin:12px 0;font-size:14px;line-height:1.7}
+.written-scan-notice{padding:13px;border:1px solid #dbe3ef;border-radius:10px;background:#f8faff;color:#394f67}
+.written-scanned-exams{margin:20px 0}
+.written-answer-key{margin-top:20px;padding:12px;border:1px solid #d3deed;border-radius:10px}
+.written-answer-key summary{cursor:pointer;font-weight:750;font-size:16px}
+.written-answer-key-note{font-size:13px;line-height:1.6;color:#52657b}
+.written-answer-grid{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:6px}
+.written-answer-grid span{font-size:13px;text-align:center;padding:8px 2px;border-radius:5px;background:#f1f5fa}
+@media(max-width:700px){.written-answer-grid{grid-template-columns:repeat(5,minmax(0,1fr))}.written-scan-shortcuts button{flex:1 1 40%;font-size:14px}}
