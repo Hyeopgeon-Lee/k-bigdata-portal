@@ -28,8 +28,8 @@ export const services = [
   {
     id:"industrial-written", name:"정보처리산업기사 필기 기출문제", englishName:"INDUSTRIAL ENGINEER WRITTEN EXAM",
     category:"learning", url:"industrial-written.html", icon:"book", accent:"blue", order:9.45,
-    description:"정보처리산업기사 필기 기출자료의 연도·회차별 출처를 확인하고 검증된 문항을 학습하세요.",
-    shortDescription:"정보처리산업기사 필기 기출자료 링크와 문제풀이·오답 복습.",
+    description:"2020년 6월 6일 산업기사 필기 1·2회 통합 기출 100문항을 원본 그림과 함께 학습하세요.",
+    shortDescription:"2020년 1·2회 통합 기출 100문항·오답 복습.",
     tags:["정보처리산업기사","필기","기출문제","CBT","문제은행"], aliases:"산업기사 필기 정보처리 필기 연도별 회차별 기출",featured:false
   },
   {id:'study',name:'자율학습 관리',englishName:'AFTER SCHOOL STUDY',category:'learning',url:'study.html',icon:'clipboard',accent:'blue',order:4.2,
