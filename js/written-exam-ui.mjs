@@ -25,10 +25,10 @@ export function validateWrittenQuestion(q,examType){
  if(!String(q.question||"").trim()||!Array.isArray(q.options)||q.options.length!==4||!q.options.every(v=>typeof v==="string"&&v.trim()))return false;
  if(!Number.isInteger(q.answer)||q.answer<1||q.answer>4)return false;
  if(q.sourceType==="provided"){
-  const permittedSession=typeof q.examDate==="string"&&
-   /^\d{4}-\d{2}-\d{2}$/.test(q.examDate)&&
-   Number(q.examDate.slice(0,4))===q.year&&
-   typeof q.roundLabel==="string"&&q.roundLabel.trim().length>0;
+  const validExamDate=q.examDate==null
+   ?q.year>=2022
+   :typeof q.examDate==="string"&&/^\d{4}-\d{2}-\d{2}$/.test(q.examDate)&&Number(q.examDate.slice(0,4))===q.year;
+  const permittedSession=validExamDate&&typeof q.roundLabel==="string"&&q.roundLabel.trim().length>0;
   const validPicture=v=>v&&typeof v==="object"&&
    /^data:image\/(?:gif|png|jpeg);base64,[A-Za-z0-9+/]+=*$/.test(v.dataUri||"")&&
    /^[0-9a-f]{64}$/.test(v.sha256||"");
