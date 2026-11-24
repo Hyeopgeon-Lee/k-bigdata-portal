@@ -15,7 +15,8 @@ export function mountWrittenExamScans(browserSection,manifestUrl,session){
  let parent=browserSection.querySelector("#industrial-written-scanned-exams");
  if(!parent){
   parent=make("div","written-scanned-exams");parent.id="industrial-written-scanned-exams";
-  browserSection.append(parent);
+  const anchor=browserSection.querySelector(".qb-list");
+  if(anchor)anchor.after(parent);else browserSection.append(parent);
  }
  const section=make("section","written-source-scans");
  section.id="industrial-scanned-round-"+key;
