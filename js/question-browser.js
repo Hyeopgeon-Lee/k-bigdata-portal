@@ -1,5 +1,5 @@
 /* Shared entry screen for all three question banks. */
-export function createQuestionBrowser({title, questions, category, categoryLabel, describe, searchText, openQuestion, scope, initialCategory="", preferInitialCategory=false, onCategoryChange=null, secondaryFilter=null, metaText=null,progressFor=null}) {
+export function createQuestionBrowser({title, questions, category, categoryLabel, describe, searchText, openQuestion, scope, initialCategory="", preferInitialCategory=false, onCategoryChange=null, secondaryFilter=null, additionalFilter=null, metaText=null,progressFor=null}) {
   const main=document.querySelector("main");
   const section=document.createElement("section");
   section.className="question-browser";
@@ -10,6 +10,7 @@ export function createQuestionBrowser({title, questions, category, categoryLabel
       <div class="qb-secondary-filter" hidden><span class="qb-filter-caption"></span><div class="qb-secondary-chips" role="group"></div></div>
       <span class="qb-primary-caption" hidden></span><div class="qb-categories" role="group" aria-label="문제 분류"></div>
       <div class="qb-search"><input aria-label="문제 검색" type="search" placeholder="문제 번호·제목·키워드 검색"><button type="button" aria-label="검색어 지우기" hidden>×</button></div>
+      <div class="qb-additional-filter" hidden><label for="qb-additional-select">과목 선택</label><select id="qb-additional-select"></select></div>
       <div class="qb-progress-filter" role="group" aria-label="풀이 상태 필터">
         <button type="button" data-progress="all" aria-pressed="true">전체</button>
         <button type="button" data-progress="unseen" aria-pressed="false">미풀이</button>
@@ -33,6 +34,7 @@ export function createQuestionBrowser({title, questions, category, categoryLabel
   let selected=preferInitialCategory?initialCategory:(saved.selected??initialCategory), page=saved.page||0, activeId=saved.activeId||"", scroll=saved.scroll||0;
   let selectedSecondary=secondaryFilter?(secondaryFilter.initialValue??saved.secondary??""):"";
   let progressFilter=["all","unseen","done"].includes(saved.progressFilter)?saved.progressFilter:"all";
+  let selectedAdditional=additionalFilter?(saved.additional||""):"";
   let items=[], scopeEnabled=Boolean(scope), ids=saved.ids||[];
   search.value=saved.query||"";
   const categories=[...new Set(questions.map(category))];
@@ -64,6 +66,18 @@ export function createQuestionBrowser({title, questions, category, categoryLabel
       };
     }
   }
+  if(additionalFilter){
+    const control=section.querySelector(".qb-additional-filter");
+    const dropdown=control.querySelector("select");
+    control.hidden=false;
+    control.querySelector("label").textContent=additionalFilter.label||"과목 선택";
+    for(const option of [{value:"",label:"전체 과목"},...(additionalFilter.options||[])]){
+      const node=document.createElement("option");node.value=option.value;node.textContent=option.label;dropdown.append(node);
+    }
+    if(![...dropdown.options].some(o=>o.value===selectedAdditional))selectedAdditional="";
+    dropdown.value=selectedAdditional;
+    dropdown.onchange=()=>{selectedAdditional=dropdown.value;page=0;render();remember();};
+  }
   if(scope){
     const chip=document.createElement("button");chip.type="button";chip.textContent=scope.label+" ×";
     chip.onclick=()=>{scopeEnabled=false;page=0;chip.remove();const url=new URL(location.href);url.searchParams.delete("exam");history.replaceState(history.state,"",url);render();};
@@ -73,7 +87,7 @@ export function createQuestionBrowser({title, questions, category, categoryLabel
     button.onclick=()=>{progressFilter=button.dataset.progress;page=0;render();remember();};
   }
   function remember(){
-    history.replaceState({...history.state,questionBrowser:{selected,secondary:selectedSecondary,progressFilter,query:search.value,page,activeId,scroll,ids}},"");
+    history.replaceState({...history.state,questionBrowser:{selected,secondary:selectedSecondary,additional:selectedAdditional,progressFilter,query:search.value,page,activeId,scroll,ids}},"");
   }
   function selectCategory(key){
     if(key!==""&&!categories.includes(key))return;
@@ -85,7 +99,7 @@ export function createQuestionBrowser({title, questions, category, categoryLabel
   function render(){
     const terms=search.value.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
     items=questions.filter(q=>{
-      if(scopeEnabled&&!scope.matches(q)||selected&&category(q)!==selected||selectedSecondary&&secondaryFilter&&!secondaryFilter.matches(q,selectedSecondary))return false;
+      if(scopeEnabled&&!scope.matches(q)||selected&&category(q)!==selected||selectedSecondary&&secondaryFilter&&!secondaryFilter.matches(q,selectedSecondary)||selectedAdditional&&additionalFilter&&!additionalFilter.matches(q,selectedAdditional))return false;
       const text=searchText(q).toLocaleLowerCase();
       if(progressFor&&progressFilter!=="all"){
         const kind=progressFor(q)?.kind;
