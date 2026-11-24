@@ -26,7 +26,7 @@ test('question/image originals are not committed to the public repository',()=>{
  assert.match(read('.gitignore'),/\/data\/industrial-written\//);
 });
 
-test('written exam loads only 2020 playable questions from Supabase',()=>{
+test('written exam uses Supabase for retained 2025 sessions',()=>{
  const loader=read('js/written-exam-data.mjs');
  const engine=read('js/written-exam-ui.mjs');
  const bootstrap=read('js/industrial-written-ui.js');
@@ -68,7 +68,7 @@ test('next and previous buttons are wired to adjacency navigation',()=>{
  assert.match(engine,/openQuestion\(target.question.id\)/);
 });
 
-test('2020 round and subject filters remain active, image menus removed',()=>{
+test('2020 controls are removed while 2025 round and subject filters remain active',()=>{
  const engine=read('js/written-exam-ui.mjs');
  const browser=read('js/question-browser.js');
  const page=read('industrial-written.html');
@@ -76,8 +76,12 @@ test('2020 round and subject filters remain active, image menus removed',()=>{
  assert.match(engine,/additionalFilter:\{label:"과목별 필터"/);
  assert.match(engine,/secondaryFilter:\{/);
  assert.match(browser,/additionalFilter\.matches\(q,selectedAdditional\)/);
- assert.match(page,/2020년/);
+ assert.doesNotMatch(page,/2020년|2020-06-06|2020-08-22/);
  assert.match(page,/2025년/);
+ assert.match(engine,/const archivedOnly=bank.length===0&&archiveSessions.length>0/);
+ assert.match(engine,/initialCategory:archivedOnly\?"2025"/);
+ assert.match(engine,/initialValue:archivedOnly\?chosenSession:undefined/);
+ assert.match(engine,/if\(!bank.length&&!archiveSessions.length\)/);
  assert.doesNotMatch(page,/2026년|이미지 문제지 등록 회차/);
  for(const r of [1,2,3])assert.match(bootstrap,new RegExp('year:2025,round:'+r));
  assert.doesNotMatch(bootstrap,/year:2026/);
@@ -106,4 +110,14 @@ test('2025 exam sessions restore three rounds without public original files or s
  assert.match(loader,/eq\("exam_round",round\)/);
  assert.doesNotMatch(app,/data\/industrial-written|\.json|scanManifestUrl|year:2026/);
  assert.doesNotMatch(ui,/written-scan-shortcuts|이미지 문제지 등록 회차/);
+});
+
+test('2025-only archive suppresses nonfunctional practice tabs when 2020 is absent',()=>{
+ const engine=read('js/written-exam-ui.mjs');
+ const page=read('industrial-written.html');
+ assert.match(engine,/if\(archivedOnly\)\{/);
+ assert.match(engine,/chosenYear="2025"/);
+ assert.match(engine,/chosenSession="2025-1"/);
+ assert.match(engine,/button\.hidden=true/);
+ assert.doesNotMatch(page,/2020년/);
 });
