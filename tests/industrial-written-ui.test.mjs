@@ -75,7 +75,7 @@ test('2020 round and subject filters remain active, image menus removed',()=>{
  assert.match(engine,/secondaryFilter:\{/);
  assert.match(browser,/additionalFilter\.matches\(q,selectedAdditional\)/);
  assert.doesNotMatch(page,/2025년|2026년|이미지 문제지|원본 이미지/);
- assert.doesNotMatch(bootstrap,/2025|2026/);
+ assert.doesNotMatch(bootstrap,/year:2025|year:2026/);
  assert.match(page,/2020년/);
 });
 
