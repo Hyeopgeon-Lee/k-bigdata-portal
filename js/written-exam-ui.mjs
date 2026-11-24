@@ -220,11 +220,15 @@ export function mountWrittenExam({examType,label,storageKey,scanSubjectNames=[],
   $("#answer-form").addEventListener("submit",event=>{
    event.preventDefault();
    if(attempt.revealed){toggleAnswer();return;}
-   if(!selectedAnswer){$("#answer-hint").textContent="정답을 먼저 선택하세요.";return;}
-   attempt.answer=selectedAnswer;attempt.correct=selectedAnswer===q.answer;attempt.revealed=true;attempt.recorded=true;
-   const at=Date.now(),elapsedSeconds=Math.max(0,Math.round((at-attempt.startedAt)/1000));
-   records.push({id:q.id,year:q.year,round:q.round,answer:selectedAnswer,correct:attempt.correct,at,elapsedSeconds,usedHint:attempt.usedHint});
-   records=records.slice(-5000);persist();browser?.refresh();
+   attempt.answer=selectedAnswer;
+   attempt.correct=selectedAnswer?selectedAnswer===q.answer:null;
+   attempt.revealed=true;
+   attempt.recorded=Boolean(selectedAnswer);
+   if(selectedAnswer){
+    const at=Date.now(),elapsedSeconds=Math.max(0,Math.round((at-attempt.startedAt)/1000));
+    records.push({id:q.id,year:q.year,round:q.round,answer:selectedAnswer,correct:attempt.correct,at,elapsedSeconds,usedHint:attempt.usedHint});
+    records=records.slice(-5000);persist();browser?.refresh();
+   }
    revealAnswer();
    $("#result-heading")?.focus({preventScroll:true});
   });
@@ -238,16 +242,16 @@ export function mountWrittenExam({examType,label,storageKey,scanSubjectNames=[],
     button.classList.toggle("is-mismatch",n===selected&&!correct);
   });
   const btn=$("#submit-answer");btn.type="button";btn.dataset.action="show-answer";btn.textContent="정답·해설 접기";btn.setAttribute("aria-expanded","true");
-  const report=q.sourceType==="provided"?
-    '<details class="bank-sources quiz-disclosure"><summary>원문 · 정답 출처</summary><div class="quiz-disclosure-body"><p>'+esc(q.sourceFileName)+'</p><p>'+esc(q.answerEvidence||"교사용 원본 정답표와 대조했습니다.")+'</p><p>사용자 제공 문서의 문항이며, 출제기관의 재이용 허가 여부를 뜻하지 않습니다.</p></div></details>':
-    '<details class="bank-sources quiz-disclosure"><summary>복원정보 / 원문 출처</summary><div class="quiz-disclosure-body"><p>'+esc(labelFor(q))+' · '+sourceLabel(q)+'</p><a target="_blank" rel="noopener noreferrer" href="'+esc(q.sourceUrl)+'">출처 확인 ↗</a></div></details>';
-  $("#answer-result").innerHTML='<section class="bank-result quiz-results"><h3 tabindex="-1" id="result-heading">정답·해설</h3>'+
-   quizFeedback({label:correct?"정답입니다":"오답입니다",kind:correct?"correct":"incorrect",details:"선택한 답과 정답을 비교해 보세요."})+
-   '<div class="answer-pair"><div><h4>내 답</h4><pre>'+selected+'번</pre></div><div><h4>정답</h4><pre>'+q.answer+'번 · '+esc(q.options[q.answer-1])+'</pre></div></div>'+
-   quizDisclosure("해설",'<section class="beginner-section beginner-why"><p class="beginner-kicker">왜 이 답인가?</p><p class="beginner-explanation">'+esc(q.explanation||"등록된 해설이 없습니다. 출처 자료를 참고하세요.").replace(/\n/g,"<br>")+'</p></section>',{open:true})+
-   (q.concept?quizDisclosure("관련 개념",'<section class="beginner-section beginner-memory"><p>'+esc(q.concept)+'</p></section>'):"")+
-   report+reviewControls()+action("retry","다시 풀기")+'</section>';
-  const review=root.querySelector(".study-review");
+  const summary=selected?
+    quizFeedback({label:correct?"정답입니다":"오답입니다",kind:correct?"correct":"incorrect",details:"선택한 답과 정답을 비교해 보세요."}):
+    '<p class="written-answer-only" role="status">정답을 확인했습니다. 선택하지 않은 문제는 풀이 기록에 포함되지 않습니다.</p>';
+   $("#answer-result").innerHTML='<section class="bank-result quiz-results"><h3 tabindex="-1" id="result-heading">정답·해설</h3>'+
+    summary+
+    '<div class="answer-pair"><div><h4>내 답</h4><pre>'+(selected?selected+"번":"미선택")+'</pre></div><div><h4>정답</h4><pre>'+q.answer+'번 · '+esc(q.options[q.answer-1])+'</pre></div></div>'+
+    quizDisclosure("해설",'<section class="beginner-section beginner-why"><p class="beginner-kicker">왜 이 답인가?</p><p class="beginner-explanation">'+esc(q.explanation||"등록된 해설이 없습니다.").replace(/\n/g,"<br>")+'</p></section>',{open:true})+
+    (q.concept?quizDisclosure("관련 개념",'<section class="beginner-section beginner-memory"><p>'+esc(q.concept)+'</p></section>'):"")+
+    (selected?reviewControls():"")+action("retry","다시 풀기")+'</section>';
+   const review=root.querySelector(".study-review");
   if(review){review.querySelectorAll("[data-grade]").forEach(button=>{button.disabled=true;button.setAttribute("aria-pressed",String(button.dataset.grade===(correct?"correct":"incorrect")));});review.querySelector('[role="status"]').textContent="객관식 자동 채점 · "+(correct?"정답":"오답");}
   $("#answer-result").hidden=false;
  }
