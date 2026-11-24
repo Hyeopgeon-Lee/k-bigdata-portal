@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {existsSync,readFileSync} from 'node:fs';
+import {existsSync,readFileSync,readdirSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 
 const base=new URL('../',import.meta.url);
@@ -17,6 +17,12 @@ const forbidden=[
 
 test('original question documents and scanned image payloads are not committed in GitHub',()=>{
  for(const p of forbidden)assert.equal(existsSync(fileURLToPath(new URL(p,base))),false,p+' must not be public');
+ const materials=new URL('data/industrial-written/',base);
+ if(existsSync(fileURLToPath(materials))){
+  const leaked=readdirSync(materials).filter(name=>/\.(?:json|pdf|docx|hwpx|png|jpe?g|webp|gif)$/i.test(name));
+  assert.deepEqual(leaked,[],'all industrial written source materials must stay out of public GitHub');
+ }
+ assert.match(read('.gitignore'),/\/data\/industrial-written\//);
 });
 
 test('written exam loads its data from Supabase, not public JSON files',()=>{
