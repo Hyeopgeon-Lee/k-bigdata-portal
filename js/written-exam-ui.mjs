@@ -1,5 +1,5 @@
 import {quizNavigation,quizHeading,quizDisclosure,quizFeedback,scrollToQuizAnswer} from "./quiz-unified.js?v=20261112-answer-focus-1";
-import {createQuestionBrowser} from "./question-browser.js?v=20261124-subject-filter";
+import {createQuestionBrowser} from "./question-browser.js?v=20261124-subject-filter-v2";
 import {reviewControls} from "./study-review.js?v=20261116-concurrency-1";
 import {mountWrittenSources} from "./written-exam-sources.mjs?v=20261123-index-1";
 import {mountWrittenExamScans} from "./written-exam-scans.mjs?v=20261124-scanned-2026";
