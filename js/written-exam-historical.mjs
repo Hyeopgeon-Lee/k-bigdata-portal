@@ -18,36 +18,36 @@ export function createHistoricalWrittenViewer(browserSection,loadSession){
   if(txt!==undefined)item.textContent=String(txt);
   return item;
  };
- const label=(round)=>"2025년 "+round+"회";
+ const label=(year,round)=>year+"년 "+round+"회";
  function update({year,round,subject}){
-  const isHistorical=String(year)==="2025";
+  const isHistorical=String(year)==="2025"||String(year)==="2026";
   section.hidden=!isHistorical;
   list.hidden=isHistorical;
   if(!isHistorical){sequence++;return;}
   const version=++sequence;
   section.replaceChildren();
-  const heading=el("h2","written-historical-heading",round?label(round)+" 기출문제":"2025년 정보처리산업기사 필기");
+  const heading=el("h2","written-historical-heading",round?label(year,round)+" 기출문제":year+"년 정보처리산업기사 필기");
   section.append(heading);
-  if(![1,2,3].includes(Number(round))){
-   section.append(el("p","written-historical-help","상단의 시험 회차에서 2025년 1회·2회·3회 중 하나를 선택하세요."));
+  if(!((Number(year)===2025&&[1,2,3].includes(Number(round)))||(Number(year)===2026&&Number(round)===2))){
+   section.append(el("p","written-historical-help","상단 시험 회차에서 해당 연도의 시험을 선택하세요."));
    return;
   }
-  const key="2025-"+round;
+  const key=year+"-"+round;
   section.append(el("p","written-historical-loading","문제지를 불러오고 있습니다."));
-  if(!cache.has(key))cache.set(key,Promise.resolve().then(()=>loadSession(2025,Number(round))).catch(error=>{cache.delete(key);throw error;}));
+  if(!cache.has(key))cache.set(key,Promise.resolve().then(()=>loadSession(Number(year),Number(round))).catch(error=>{cache.delete(key);throw error;}));
   cache.get(key).then(data=>{
    if(version!==sequence||section.hidden)return;
    section.replaceChildren(heading);
-   if(data.examType!=="industrial"||data.year!==2025||Number(data.round)!==Number(round)||
+   if(data.examType!=="industrial"||Number(data.year)!==Number(year)||Number(data.round)!==Number(round)||
       !Array.isArray(data.answerKey)||data.answerKey.length!==60||!Array.isArray(data.pages))
-     throw Error("2025년 기출자료의 구성과 정답표가 올바르지 않습니다.");
+     throw Error("선택한 회차의 문제지·정답표 구성이 올바르지 않습니다.");
    const subjects=Array.isArray(data.subjects)?data.subjects:[];
    const selected=subjects.find(s=>s.name===subject);
    const min=selected?.from||1,max=selected?.to||60;
    const subtitle=el("p","written-historical-help",selected
     ?selected.name+" · "+min+"~"+max+"번"
     :"전체 60문항 · 3과목, 과목당 20문항");
-   const sourceNote=el("p","written-historical-note","기존 2025년 기출문제를 다시 열람할 수 있습니다. 현재는 원본 문제지 열람과 정답표 확인 방식이며 객관식 자동채점에는 포함되지 않습니다.");
+   const sourceNote=el("p","written-historical-note","해당 회차의 기출문제지와 정답표를 볼 수 있습니다. 이미지형 문제는 아직 개별 객관식 자동채점에 포함되지 않습니다.");
    section.append(subtitle,sourceNote);
    const actions=el("div","written-historical-actions");
    const toggle=el("button","button button-primary written-historical-toggle","정답 보기");
@@ -63,7 +63,7 @@ export function createHistoricalWrittenViewer(browserSection,loadSession){
     toggle.setAttribute("aria-expanded",String(!answers.hidden));
    });
    actions.append(toggle);section.append(actions);
-   const keyTitle=el("h3",null,selected?selected.name+" 정답표":"2025년 "+round+"회 정답표");
+   const keyTitle=el("h3",null,selected?selected.name+" 정답표":year+"년 "+round+"회 정답표");
    answers.append(keyTitle);
    answers.append(el("p","written-historical-keynote","정답은 제공된 교사용 자료에서 판독한 값이며 별도 독립 검증은 완료되지 않았습니다."));
    const grid=el("div","written-historical-keygrid");
@@ -80,7 +80,7 @@ export function createHistoricalWrittenViewer(browserSection,loadSession){
     if(!["image/webp","image/png","image/jpeg"].includes(page.mediaType)||!Array.isArray(page.base64Chunks)||!page.base64Chunks.length)continue;
     const figure=el("figure","written-historical-figure");
     const img=el("img");
-    img.alt=label(round)+" "+from+"~"+to+"번 문제지";
+    img.alt=label(year,round)+" "+from+"~"+to+"번 문제지";
     img.loading="lazy";img.decoding="async";
     img.src="data:"+page.mediaType+";base64,"+page.base64Chunks.join("");
     figure.append(img,el("figcaption",null,from+"~"+to+"번 문제"));
@@ -91,7 +91,7 @@ export function createHistoricalWrittenViewer(browserSection,loadSession){
   }).catch(error=>{
    if(version!==sequence)return;
    section.replaceChildren(heading,el("p","written-historical-error","문제지 또는 정답표를 불러오지 못했습니다. 새로고침 후 다시 선택하세요."));
-   console.error("2025 written session load failed",error);
+   console.error("Historical written exam session load failed",error);
   });
  }
  return {update};
