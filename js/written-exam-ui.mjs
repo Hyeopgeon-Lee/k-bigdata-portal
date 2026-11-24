@@ -1,14 +1,14 @@
 import {quizNavigation,quizHeading,quizDisclosure,quizFeedback,scrollToQuizAnswer} from "./quiz-unified.js?v=20261112-answer-focus-1";
 import {createQuestionBrowser} from "./question-browser.js?v=20261124-subject-filter-v2";
 import {reviewControls} from "./study-review.js?v=20261116-concurrency-1";
-import {mountWrittenSources} from "./written-exam-sources.mjs?v=20261123-index-1";
+import {loadWrittenExamQuestions,loadWrittenExamScan} from "./written-exam-data.mjs?v=20261124-db-private-1";
 import {mountWrittenExamScans} from "./written-exam-scans.mjs?v=20261124-scan-sessions-v3";
 
 const esc=value=>String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",'"':"&quot;","'":"&#39;"}[c]));
 const $=selector=>document.querySelector(selector);
 const today=()=>new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Seoul",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
 const labelFor=q=>q.year+"년 "+(q.roundLabel||q.round+"회")+(q.examDate?" ("+q.examDate+")":"")+" · "+q.number+"번";
-const sourceLabel=q=>q.sourceType==="provided"?"사용자 제공 기출":q.sourceType==="official"?"공식 공개 기출":"복원기출";
+const sourceLabel=q=>"기출문제";
 const formatDate=millis=>new Date(millis).toLocaleDateString("ko-KR",{timeZone:"Asia/Seoul"});
 const action=(name,label,extra="")=>{
  const found=/\bclass="([^"]+)"/.exec(extra);
@@ -27,15 +27,11 @@ export function validateWrittenQuestion(q,examType){
   const permittedSession=typeof q.examDate==="string"&&
    /^\d{4}-\d{2}-\d{2}$/.test(q.examDate)&&
    Number(q.examDate.slice(0,4))===q.year&&
-   typeof q.sourceFileName==="string"&&
-   q.sourceFileName.includes(q.examDate.replaceAll("-",""))&&
    typeof q.roundLabel==="string"&&q.roundLabel.trim().length>0;
   const validPicture=v=>v&&typeof v==="object"&&
    /^data:image\/(?:gif|png|jpeg);base64,[A-Za-z0-9+/]+=*$/.test(v.dataUri||"")&&
    /^[0-9a-f]{64}$/.test(v.sha256||"");
   return examType==="industrial"&&permittedSession&&q.sourceVerified===true&&q.answerVerified===true&&
-   typeof q.sourceFileName==="string"&&q.sourceFileName.endsWith(".hwpx")&&
-   /^[0-9a-f]{64}$/.test(q.sourceDocHash||"")&&
    Array.isArray(q.visuals)&&q.visuals.length<=8&&q.visuals.every(validPicture)&&
    (!q.optionVisuals||(q.optionVisuals.length===4&&q.optionVisuals.every(validPicture)));
  }
@@ -49,7 +45,7 @@ export function validateWrittenQuestion(q,examType){
    evidence.reviewer.trim().length>=2&&verifiedDate;
 }
 
-export function mountWrittenExam({examType,label,dataUrl,additionalDataUrls=[],storageKey,sourceIndexUrl=null,scanManifestUrl=null,scanYear=null,scanRound=null,scanSubjectNames=[],scanSessions=[]}){
+export function mountWrittenExam({examType,label,storageKey,scanSubjectNames=[],scanSessions=[]}){
  const root=$("#bank-content"),status=$("#bank-status"),storageStatus=$("#storage-status");
  if(!root||!status)throw Error("필기 문제풀이 화면을 찾을 수 없습니다.");
  let bank=[],browser=null,view="bank",current=null,queue=[],queueIndex=0,queueKind="bank";
@@ -355,24 +351,16 @@ export function mountWrittenExam({examType,label,dataUrl,additionalDataUrls=[],s
  }
  $("#bank-reset")?.addEventListener("click",resetFilters);
  async function initialize(){
-  const response=await fetch(dataUrl,{cache:"no-store"});if(!response.ok)throw Error("HTTP "+response.status);
-  const result=await response.json();if(!Array.isArray(result))throw Error("문제 데이터 형식 오류");
-  const external=await Promise.all(additionalDataUrls.map(async url=>{
-   const loaded=await fetch(url,{cache:"no-store"});if(!loaded.ok)throw Error("추가 회차 "+loaded.status);
-   const rows=await loaded.json();if(!Array.isArray(rows))throw Error("추가 회차 데이터 형식 오류");
-   return rows;
-  }));
+  const result=await loadWrittenExamQuestions(examType);
   const seen=new Set();
-  bank=[...result,...external.flat()].filter(q=>{
+  bank=result.filter(q=>{
    if(!validateWrittenQuestion(q,examType)||seen.has(q.id))return false;
    seen.add(q.id);return true;
   });
   bank.sort((a,b)=>b.year-a.year||b.round-a.round||a.number-b.number);
   fillFilters();
 
-  const configuredScans=(Array.isArray(scanSessions)&&scanSessions.length)?scanSessions:
-   (scanManifestUrl&&scanYear&&scanRound?[{year:scanYear,round:scanRound,roundLabel:scanRound+"회",manifestUrl:scanManifestUrl}]:[]);
-  const scanMeta=configuredScans.filter(s=>Number.isInteger(s.year)&&Number.isInteger(s.round)&&typeof s.manifestUrl==="string")
+  const scanMeta=(Array.isArray(scanSessions)?scanSessions:[]).filter(s=>Number.isInteger(s.year)&&Number.isInteger(s.round))
    .map(s=>({...s,key:s.year+"-"+s.round}));
   const registeredRounds=[...new Map(bank.map(q=>[q.year+"-"+q.round,{
    key:q.year+"-"+q.round,year:q.year,round:q.round,roundLabel:q.roundLabel||q.round+"회",kind:"playable"
@@ -428,7 +416,7 @@ export function mountWrittenExam({examType,label,dataUrl,additionalDataUrls=[],s
    },
    secondaryFilter:{
     label:"시험 회차",categoryLabel:"출제연도",
-    options:sessionChoices.map(s=>({value:s.key,label:s.year+"년 "+s.roundLabel+(s.kind==="scanned"?" · 원본 자료":"")})),
+    options:sessionChoices.map(s=>({value:s.key,label:s.year+"년 "+s.roundLabel+(s.kind==="scanned"?" · 이미지 문제지":"")})),
     matches:(q,key)=>(q.year+"-"+q.round)===key,
     onChange:key=>{
      chosenSession=key;
@@ -451,18 +439,18 @@ export function mountWrittenExam({examType,label,dataUrl,additionalDataUrls=[],s
   menu.className="bank-nav written-browser-nav";menu.setAttribute("aria-label","필기 학습 메뉴");
   menu.innerHTML='<button type="button" class="button button-secondary" data-view="home">학습 시작</button><button type="button" class="button button-primary" data-view="bank">전체 문제</button><button type="button" class="button button-secondary" data-view="random">랜덤 설정</button><button type="button" class="button button-secondary" data-view="wrong">오답노트</button><button type="button" class="button button-secondary" data-view="progress">학습현황</button>';
   section.querySelector(".qb-heading").after(menu);
-  if(sourceIndexUrl)void mountWrittenSources(section,sourceIndexUrl,examType);
+  
   const shortcuts=document.createElement("nav");
   shortcuts.className="written-scan-shortcuts";
-  shortcuts.setAttribute("aria-label","원본 스캔 등록 회차");
-  const heading=document.createElement("h3");heading.textContent="원본 자료 등록 회차";
+  shortcuts.setAttribute("aria-label","이미지 문제지 등록 회차");
+  const heading=document.createElement("h3");heading.textContent="이미지 문제지 등록 회차";
   shortcuts.append(heading);
   for(const source of scanMeta){
    const button=document.createElement("button");
    button.type="button";button.className="button button-secondary";
-   button.textContent=source.year+"년 "+source.roundLabel+" · 원본 확인";
+   button.textContent=source.year+"년 "+source.roundLabel+" · 문제지 보기";
    button.dataset.scanOpen=source.key;shortcuts.append(button);
-   const viewer=mountWrittenExamScans(section,source.manifestUrl,source);
+   const viewer=mountWrittenExamScans(section,()=>loadWrittenExamScan(examType,source.year,source.round),source);
    if(viewer)scanViewers.push({source,viewer});
    button.addEventListener("click",()=>{
     browser.selectCategory(String(source.year));
