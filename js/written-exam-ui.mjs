@@ -1,8 +1,8 @@
 import {quizNavigation,quizHeading,quizDisclosure,quizFeedback,scrollToQuizAnswer} from "./quiz-unified.js?v=20261112-answer-focus-1";
 import {createQuestionBrowser} from "./question-browser.js?v=20261124-subject-filter-v2";
 import {reviewControls} from "./study-review.js?v=20261116-concurrency-1";
-import {loadWrittenExamQuestions,loadWrittenExamScan} from "./written-exam-data.mjs?v=20261124-db-private-1";
-import {mountWrittenExamScans} from "./written-exam-scans.mjs?v=20261124-private-answers-v1";
+import {loadWrittenExamQuestions} from "./written-exam-data.mjs?v=20261124-db-private-2";
+import {adjacentWrittenQuestion} from "./written-exam-navigation.mjs?v=20261124-next-fix-1";
 
 const esc=value=>String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",'"':"&quot;","'":"&#39;"}[c]));
 const $=selector=>document.querySelector(selector);
@@ -45,7 +45,7 @@ export function validateWrittenQuestion(q,examType){
    evidence.reviewer.trim().length>=2&&verifiedDate;
 }
 
-export function mountWrittenExam({examType,label,storageKey,scanSubjectNames=[],scanSessions=[]}){
+export function mountWrittenExam({examType,label,storageKey}){
  const root=$("#bank-content"),status=$("#bank-status"),storageStatus=$("#storage-status");
  if(!root||!status)throw Error("필기 문제풀이 화면을 찾을 수 없습니다.");
  let bank=[],browser=null,view="bank",current=null,queue=[],queueIndex=0,queueKind="bank";
@@ -212,7 +212,7 @@ export function mountWrittenExam({examType,label,storageKey,scanSubjectNames=[],
    '<button type="button" class="quiz-solve-action quiz-solve-action--hint" data-action="toggle-hint" aria-controls="solve-hint" aria-expanded="false">힌트 보기</button>'+
    '<button type="submit" class="study-open quiz-solve-action quiz-solve-action--answer" id="submit-answer" aria-controls="answer-result" aria-expanded="false">정답·해설 보기</button></div></form>'+
    '<section id="solve-hint" class="quiz-solve-panel" hidden><h3>힌트</h3><p>'+esc(q.hint||"문제의 핵심 개념과 선택지의 차이를 비교하세요.")+'</p></section>'+
-   '<div id="answer-result"></div><nav class="study-nav">'+action("previous","이전 문제",queueIndex<=0?'disabled':'')+action("next",queueIndex>=queue.length-1?'':'')+'</nav></article>';
+   '<div id="answer-result"></div><nav class="study-nav">'+action("previous","이전 문제",adjacentWrittenQuestion(bank,queue,q.id,-1,queueKind==="bank")?"":"disabled")+action("next","다음 문제",adjacentWrittenQuestion(bank,queue,q.id,1,queueKind==="bank")?"":"disabled")+'</nav></article>';
   const sidebar=document.createElement("aside");sidebar.className="study-side-list";
   sidebar.innerHTML='<h2>문제 목록</h2><div role="list">'+queue.map(item=>'<button type="button" data-action="pick-question" data-id="'+esc(item.id)+'"'+(item.id===q.id?' aria-current="true"':'')+'>'+esc(labelFor(item))+'</button>').join("")+'</div>';
   root.prepend(sidebar);
@@ -306,11 +306,19 @@ export function mountWrittenExam({examType,label,storageKey,scanSubjectNames=[],
   if(name==="random-again"){selectView("random");return;}
   if(name==="open"){queue=filtered();queueIndex=Math.max(0,queue.findIndex(q=>q.id===b.dataset.id));queueKind="bank";openQuestion(b.dataset.id,null,true);return;}
   if(name==="pick-question"){queueIndex=Math.max(0,queue.findIndex(q=>q.id===b.dataset.id));openQuestion(b.dataset.id);return;}
-  if(name==="previous"&&queueIndex>0){openQuestion(queue[--queueIndex].id);return;}
-  if(name==="next"){
-   if(queueIndex<queue.length-1)openQuestion(queue[++queueIndex].id);
-   else if(queueKind==="bank")selectView("bank");
-   else{const count=queue.length;selectView("home");root.innerHTML='<section class="bank-empty"><h2 tabindex="-1">학습 완료</h2><p>'+count+'문제를 연습했습니다.</p>'+action("home-view","학습 시작으로")+action("wrong-view","오답노트")+'</section>';root.querySelector("h2")?.focus();}
+  if(name==="previous"||name==="next"){
+   const direction=name==="next"?1:-1;
+   const target=current&&adjacentWrittenQuestion(bank,queue,current.id,direction,queueKind==="bank");
+   if(target){
+    queue=target.queue;
+    queueIndex=target.index;
+    openQuestion(target.question.id);
+   }else if(direction===1&&queueKind==="bank")selectView("bank");
+   else if(direction===1){
+    const count=queue.length;selectView("home");
+    root.innerHTML='<section class="bank-empty"><h2 tabindex="-1">학습 완료</h2><p>'+count+'문제를 연습했습니다.</p>'+action("home-view","학습 시작으로")+action("wrong-view","오답노트")+'</section>';
+    root.querySelector("h2")?.focus();
+   }
    return;
   }
   if(name==="start-today"){startQueue(bank.filter(q=>!solved(q.id)).slice(0,5),"today");return;}
@@ -363,43 +371,23 @@ export function mountWrittenExam({examType,label,storageKey,scanSubjectNames=[],
   bank.sort((a,b)=>b.year-a.year||b.round-a.round||a.number-b.number);
   fillFilters();
 
-  const scanMeta=(Array.isArray(scanSessions)?scanSessions:[]).filter(s=>Number.isInteger(s.year)&&Number.isInteger(s.round))
-   .map(s=>({...s,key:s.year+"-"+s.round}));
-  const registeredRounds=[...new Map(bank.map(q=>[q.year+"-"+q.round,{
-   key:q.year+"-"+q.round,year:q.year,round:q.round,roundLabel:q.roundLabel||q.round+"회",kind:"playable"
-  }])).values()];
-  const sessionChoices=[...new Map([...registeredRounds,...scanMeta.map(s=>({...s,kind:"scanned"}))]
-   .map(s=>[s.key,s])).values()].sort((a,b)=>b.year-a.year||a.round-b.round);
+  const sessionChoices=[...new Map(bank.map(q=>{
+   const key=q.year+"-"+q.round;
+   return [key,{key,year:q.year,round:q.round,roundLabel:q.roundLabel||q.round+"회"}];
+  })).values()].sort((a,b)=>b.year-a.year||a.round-b.round);
   let chosenYear=history.state?.questionBrowser?.selected||"";
   let chosenSession=history.state?.questionBrowser?.secondary||"";
-  const scanViewers=[];
-  const refreshSourceVisibility=()=>{
-   const hasSelection=Boolean(chosenYear||chosenSession);
-   const scanYearSelected=chosenYear&&scanMeta.some(s=>String(s.year)===chosenYear);
-   const scanOnlyYear=scanYearSelected&&!bank.some(q=>String(q.year)===chosenYear);
-   const scanOnlyRound=chosenSession&&scanMeta.some(s=>s.key===chosenSession)&&
-    !registeredRounds.some(s=>s.key===chosenSession);
-   const list=$(".question-browser .qb-list");
-   if(list)list.hidden=Boolean(scanOnlyYear||scanOnlyRound);
-   for(const {source,viewer} of scanViewers){
-    const visible=hasSelection&&(!chosenYear||String(source.year)===chosenYear)&&
-      (!chosenSession||source.key===chosenSession);
-    viewer.show(visible);
-   }
-   const subjectControl=$(".question-browser #qb-additional-select");
-   if(subjectControl){
-    const allowed=chosenYear==="2020"
-      ?new Set(bank.filter(q=>q.year===2020).map(q=>q.subject||"기타"))
-      :(chosenYear==="2025"||chosenYear==="2026")
-       ?new Set(scanSubjectNames)
-       :null;
-    for(const option of subjectControl.options){
-     const hidden=!!allowed&&!!option.value&&!allowed.has(option.value);
-     option.hidden=hidden;option.disabled=hidden;
+  const refreshFilters=()=>{
+   const subjectSelect=$(".question-browser #qb-additional-select");
+   if(subjectSelect){
+    const allowed=chosenYear?new Set(bank.filter(q=>String(q.year)===chosenYear).map(q=>q.subject||"기타")):null;
+    for(const option of subjectSelect.options){
+     const invalid=!!allowed&&!!option.value&&!allowed.has(option.value);
+     option.hidden=invalid;option.disabled=invalid;
     }
-    if(subjectControl.selectedOptions[0]?.disabled){
-     subjectControl.value="";
-     subjectControl.dispatchEvent(new Event("change",{bubbles:true}));
+    if(subjectSelect.selectedOptions[0]?.disabled){
+     subjectSelect.value="";
+     subjectSelect.dispatchEvent(new Event("change",{bubbles:true}));
     }
    }
    for(const chip of document.querySelectorAll(".question-browser .qb-secondary-chips [data-secondary]")){
@@ -410,26 +398,25 @@ export function mountWrittenExam({examType,label,storageKey,scanSubjectNames=[],
   browser=createQuestionBrowser({
    title:label+" 필기 기출문제",questions:bank,
    category:q=>String(q.year),categoryLabel:y=>y+"년",
-   extraCategories:[...new Set(scanMeta.map(s=>String(s.year)))],
    onCategoryChange:year=>{
     chosenYear=year;
     if(chosenYear&&chosenSession&&!chosenSession.startsWith(chosenYear+"-")){
      $(".question-browser .qb-secondary-chips [data-secondary='']")?.click();
-    }else refreshSourceVisibility();
+    }else refreshFilters();
    },
    secondaryFilter:{
     label:"시험 회차",categoryLabel:"출제연도",
-    options:sessionChoices.map(s=>({value:s.key,label:s.year+"년 "+s.roundLabel+(s.kind==="scanned"?" · 이미지 문제지":"")})),
+    options:sessionChoices.map(s=>({value:s.key,label:s.year+"년 "+s.roundLabel})),
     matches:(q,key)=>(q.year+"-"+q.round)===key,
     onChange:key=>{
      chosenSession=key;
      if(key&&chosenYear!==key.split("-")[0]){
       chosenYear=key.split("-")[0];browser.selectCategory(chosenYear);
-     }else refreshSourceVisibility();
+     }else refreshFilters();
     }
    },
    additionalFilter:{label:"과목별 필터",
-    options:[...new Set([...bank.map(q=>q.subject||"기타"),...scanSubjectNames])].sort().map(s=>({value:s,label:s})),
+    options:[...new Set(bank.map(q=>q.subject||"기타"))].sort().map(s=>({value:s,label:s})),
     matches:(q,s)=>(q.subject||"기타")===s
    },
    describe:q=>q.number+"번 · "+q.question.slice(0,85),
@@ -443,27 +430,7 @@ export function mountWrittenExam({examType,label,storageKey,scanSubjectNames=[],
   menu.innerHTML='<button type="button" class="button button-secondary" data-view="home">학습 시작</button><button type="button" class="button button-primary" data-view="bank">전체 문제</button><button type="button" class="button button-secondary" data-view="random">랜덤 설정</button><button type="button" class="button button-secondary" data-view="wrong">오답노트</button><button type="button" class="button button-secondary" data-view="progress">학습현황</button>';
   section.querySelector(".qb-heading").after(menu);
   
-  const shortcuts=document.createElement("nav");
-  shortcuts.className="written-scan-shortcuts";
-  shortcuts.setAttribute("aria-label","이미지 문제지 등록 회차");
-  const heading=document.createElement("h3");heading.textContent="이미지 문제지 등록 회차";
-  shortcuts.append(heading);
-  for(const source of scanMeta){
-   const button=document.createElement("button");
-   button.type="button";button.className="button button-secondary";
-   button.textContent=source.year+"년 "+source.roundLabel+" · 문제지 보기";
-   button.dataset.scanOpen=source.key;shortcuts.append(button);
-   const viewer=mountWrittenExamScans(section,()=>loadWrittenExamScan(examType,source.year,source.round),source);
-   if(viewer)scanViewers.push({source,viewer});
-   button.addEventListener("click",()=>{
-    browser.selectCategory(String(source.year));
-    section.querySelector('.qb-secondary-chips [data-secondary="'+source.key+'"]')?.click();
-    const selected=document.getElementById("industrial-scanned-round-"+source.key);
-    selected?.scrollIntoView({behavior:"smooth",block:"start"});
-   });
-  }
-  if(scanMeta.length)menu.after(shortcuts);
-  refreshSourceVisibility();
+  refreshFilters();
   section.querySelector(".qb-progress-hint").textContent="풀이 횟수와 최근 날짜는 이 브라우저의 필기 기록 기준입니다.";
   if(!bank.length){
    const notice=document.createElement("p");
