@@ -13,12 +13,3 @@ export async function loadWrittenExamQuestions(examType){
  if(!Array.isArray(data))throw Error("필기 데이터 형식 오류");
  return data.map(item=>item.payload);
 }
-export async function loadWrittenExamScan(examType,year,round){
- if(!Number.isInteger(year)||!Number.isInteger(round))throw Error("회차 형식 오류");
- const {data,error}=await getDb().from("written_exam_scanned_sources")
-  .select("manifest").eq("exam_type",examType).eq("exam_year",year).eq("exam_round",round)
-  .maybeSingle();
- if(error)throw new Error("필기 회차 자료 요청 실패: "+error.message);
- if(!data?.manifest)throw Error("요청한 회차 자료가 없습니다.");
- return data.manifest;
-}
