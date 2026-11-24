@@ -24,9 +24,12 @@ export function validateWrittenQuestion(q,examType){
  if(!String(q.question||"").trim()||!Array.isArray(q.options)||q.options.length!==4||!q.options.every(v=>typeof v==="string"&&v.trim()))return false;
  if(!Number.isInteger(q.answer)||q.answer<1||q.answer>4)return false;
  if(q.sourceType==="provided"){
-  const permittedSession=q.year===2020&&
-   ((q.examDate==="2020-06-06"&&q.round===1&&q.roundLabel==="1·2회 통합")||
-    (q.examDate==="2020-08-22"&&q.round===3&&q.roundLabel==="3회"));
+  const permittedSession=typeof q.examDate==="string"&&
+   /^\d{4}-\d{2}-\d{2}$/.test(q.examDate)&&
+   Number(q.examDate.slice(0,4))===q.year&&
+   typeof q.sourceFileName==="string"&&
+   q.sourceFileName.includes(q.examDate.replaceAll("-",""))&&
+   typeof q.roundLabel==="string"&&q.roundLabel.trim().length>0;
   const validPicture=v=>v&&typeof v==="object"&&
    /^data:image\/(?:gif|png|jpeg);base64,[A-Za-z0-9+/]+=*$/.test(v.dataUri||"")&&
    /^[0-9a-f]{64}$/.test(v.sha256||"");
