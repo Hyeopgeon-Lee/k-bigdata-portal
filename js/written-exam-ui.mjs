@@ -423,7 +423,7 @@ export function mountWrittenExam({examType,label,storageKey,historicalSessions=[
     chip.hidden=!!chosenYear&&!!key&&!key.startsWith(chosenYear+"-");
    }
    const currentRound=chosenSession.startsWith("2025-")?Number(chosenSession.split("-")[1]):null;
-   historicalViewer?.update({year:archivedOnly?"2025":chosenYear,round:archivedOnly?(currentRound||1):currentRound,subject:subjectSelect?.value||""});
+   historicalViewer?.update({year:archivedOnly?"2025":chosenYear,round:currentRound,subject:subjectSelect?.value||""});
   };
   browser=createQuestionBrowser({
    title:label+" 필기 기출문제",questions:bank,
