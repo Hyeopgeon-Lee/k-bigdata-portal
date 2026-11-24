@@ -1,5 +1,5 @@
 /* Shared entry screen for all three question banks. */
-export function createQuestionBrowser({title, questions, category, categoryLabel, describe, searchText, openQuestion, scope, initialCategory="", preferInitialCategory=false, onCategoryChange=null, secondaryFilter=null, additionalFilter=null, metaText=null,progressFor=null}) {
+export function createQuestionBrowser({title, questions, category, categoryLabel, describe, searchText, openQuestion, scope, initialCategory="", preferInitialCategory=false, onCategoryChange=null, secondaryFilter=null, additionalFilter=null, extraCategories=[], metaText=null,progressFor=null}) {
   const main=document.querySelector("main");
   const section=document.createElement("section");
   section.className="question-browser";
@@ -37,7 +37,7 @@ export function createQuestionBrowser({title, questions, category, categoryLabel
   let selectedAdditional=additionalFilter?(saved.additional||""):"";
   let items=[], scopeEnabled=Boolean(scope), ids=saved.ids||[];
   search.value=saved.query||"";
-  const categories=[...new Set(questions.map(category))];
+  const categories=[...new Set([...questions.map(category),...extraCategories])];
   const order=["C","c","Java","java","Python","python","SQL","linux"];
   const rank=key=>order.includes(key)?order.indexOf(key):order.length;
   categories.sort((a,b)=>rank(a)-rank(b)||a.localeCompare(b));
