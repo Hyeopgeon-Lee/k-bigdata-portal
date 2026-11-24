@@ -1,162 +1,76 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync} from 'node:fs';
-import {validateWrittenQuestion} from '../js/written-exam-ui.mjs';
-const read=path=>readFileSync(new URL('../'+path,import.meta.url),'utf8');
+import {existsSync,readFileSync} from 'node:fs';
+import {fileURLToPath} from 'node:url';
 
-const valid={
- id:'2026-2-001',examType:'industrial',year:2026,round:2,number:1,
- question:'다음 중 옳은 것은?',options:['A','B','C','D'],answer:2,
- sourceType:'official',sourceUrl:'https://example.org/exam',
- sourceVerified:true,answerVerified:true,republicationAllowed:true,
- evidence:{sourceUrl:"https://example.org/exam",answerUrl:"https://example.org/answer",rightsUrl:"https://example.org/licence",reviewer:"Quality reviewer",reviewedAt:"2026-11-23"}
-};
+const base=new URL('../',import.meta.url);
+const read=p=>readFileSync(new URL(p,base),'utf8');
+const forbidden=[
+ 'data/industrial-written/questions.json',
+ 'data/industrial-written/questions-20200822.json',
+ 'data/industrial-written/scans-2025-1.json',
+ 'data/industrial-written/scans-2025-2.json',
+ 'data/industrial-written/scans-2025-3.json',
+ 'data/industrial-written/scans-2026-2.json',
+ 'data/industrial-written/sources.json'
+];
 
-test('written exam rejects unverified or unauthorized source data',()=>{
- assert.equal(validateWrittenQuestion(valid,'industrial'),true);
- assert.equal(validateWrittenQuestion({...valid,sourceVerified:false},'industrial'),false);
- assert.equal(validateWrittenQuestion({...valid,answerVerified:false},'industrial'),false);
- assert.equal(validateWrittenQuestion({...valid,republicationAllowed:false},'industrial'),false);
- assert.equal(validateWrittenQuestion({...valid,sourceType:'unknown'},'industrial'),false);
- assert.equal(validateWrittenQuestion({...valid,evidence:{...valid.evidence,rightsUrl:""}},'industrial'),false);
- assert.equal(validateWrittenQuestion({...valid,sourceUrl:'http://example.org'},'industrial'),false);
- assert.equal(validateWrittenQuestion({...valid,options:['A','B']},'industrial'),false);
- assert.equal(validateWrittenQuestion({...valid,answer:5},'industrial'),false);
- assert.equal(validateWrittenQuestion(valid,'engineer'),false);
+test('original question documents and scanned image payloads are not committed in GitHub',()=>{
+ for(const p of forbidden)assert.equal(existsSync(fileURLToPath(new URL(p,base))),false,p+' must not be public');
 });
 
-test('written page uses the practical shared visual components without modifying practical',()=>{
- const practical=read('practical.html'),written=read('industrial-written.html');
- for(const path of ['css/practical.css','css/quiz-unified.css','css/question-browser.css']){
-  assert.ok(practical.includes(path),'existing practical source '+path);
-  assert.ok(written.includes(path),'written uses practical source '+path);
- }
- for(const id of ['id="bank-content"','id="bank-status"','id="study-intro"','class="bank-nav"']){
-  assert.ok(written.includes(id),'written page includes '+id);
- }
- assert.ok(written.includes('js/industrial-written-ui.js'));
- assert.ok(!practical.includes('js/written-exam-ui.mjs'));
+test('written exam loads its data from Supabase, not public JSON files',()=>{
+ const loader=read('js/written-exam-data.mjs'),engine=read('js/written-exam-ui.mjs');
+ const bootstrap=read('js/industrial-written-ui.js');
+ assert.match(loader,/portalSupabaseClient/);
+ assert.match(loader,/from\("written_question_bank"\)/);
+ assert.match(loader,/from\("written_exam_scanned_sources"\)/);
+ assert.match(engine,/loadWrittenExamQuestions\(examType\)/);
+ assert.match(engine,/loadWrittenExamScan\(examType,source.year,source.round\)/);
+ for(const p of forbidden)assert.equal(bootstrap.includes(p),false);
+ assert.equal(engine.includes('mountWrittenSources'),false);
+ assert.equal(bootstrap.includes('sourceIndexUrl'),false);
 });
 
-test('written quiz uses exact same list and solving primitives as practical',()=>{
- const practical=read('js/practical-ui.js'),written=read('js/written-exam-ui.mjs');
- for(const name of ['createQuestionBrowser','quizNavigation','quizHeading','quizDisclosure','quizFeedback','scrollToQuizAnswer','reviewControls']){
-  assert.ok(practical.includes(name),'practical calls '+name);
-  assert.ok(written.includes(name),'written calls '+name);
- }
- for(const name of ['bank-solve','quiz-answer','quiz-solve-actions','answer-pair','bank-result','study-nav']){
-  assert.ok(written.includes(name),'shared class '+name);
- }
+test('answer is revealed even with no option selected, and only chosen answers are saved',()=>{
+ const engine=read('js/written-exam-ui.mjs');
+ assert.match(engine,/attempt.recorded=Boolean\(selectedAnswer\)/);
+ assert.match(engine,/if\(selectedAnswer\)\{/);
+ assert.match(engine,/attempt\.answer=selectedAnswer/);
+ assert.match(engine,/q\.answer\+'번/);
+ assert.equal(engine.includes('정답을 먼저 선택하세요.'),false);
+ assert.equal(engine.includes('q.sourceFileName'),false);
 });
 
-test('2020-06-06 combined exam includes 100 genuine user-provided questions, all original figures and verified answer keys',()=>{
- const data=JSON.parse(read('data/industrial-written/questions.json'));
- assert.ok(Array.isArray(data));
- const exam=data.filter(q=>q.year===2020&&q.examDate==='2020-06-06');
- assert.equal(exam.length,100);
- assert.equal(new Set(exam.map(q=>q.id)).size,100);
- assert.deepEqual(exam.map(q=>q.number),Array.from({length:100},(_,i)=>i+1));
- assert.ok(exam.every(q=>q.sourceType==='provided'&&q.answerVerified===true&&q.sourceVerified===true));
- assert.ok(exam.every(q=>validateWrittenQuestion(q,'industrial')));
- assert.ok(exam.every(q=>q.options.length===4&&q.options.every(Boolean)&&q.answer>=1&&q.answer<=4));
- assert.ok(exam.every(q=>q.roundLabel==='1·2회 통합'));
- const subjects=['데이터 베이스','전자 계산기 구조','시스템분석설계','운영체제','정보통신개론'];
- for(const subject of subjects)assert.equal(exam.filter(q=>q.subject===subject).length,20);
- assert.equal(exam.reduce((n,q)=>n+q.visuals.length,0),17);
- for(const q of exam)for(const fig of q.visuals){
-  assert.match(fig.dataUri,/^data:image\/gif;base64,[A-Za-z0-9+/]+=*$/);
-  assert.match(fig.sha256,/^[0-9a-f]{64}$/);
- }
+test('scanned papers have an explicit answer button and per-subject answer key',()=>{
+ const scan=read('js/written-exam-scans.mjs');
+ assert.match(scan,/정답 보기/);
+ assert.match(scan,/answerToggle\.addEventListener\("click"/);
+ assert.match(scan,/answerPanel\.hidden=!answerPanel\.hidden/);
+ assert.match(scan,/data\.subjects\?\.find/);
+ assert.equal(scan.includes('sourceFileName'),false);
+ assert.equal(scan.includes('referenceUrl'),false);
 });
 
-test('2020-2026 reference registry is distinguishable from the actual question bank',()=>{
- const catalog=JSON.parse(read('data/industrial-written/sources.json'));
- const years=catalog.years.map(item=>item.year).sort();
- assert.deepEqual(years,[2020,2021,2022,2023,2024,2025,2026]);
- assert.ok(catalog.years.flatMap(y=>y.materials).length>=14);
- assert.ok(catalog.years.every(row=>row.materials.every(m=>m.rights&&m.verified&&m.url.startsWith("https://"))));
- assert.equal(JSON.parse(read('data/industrial-written/questions.json')).length,100);
-});
-
-test('2020-08-22 industrial engineer third round contains 100 source-verified questions',()=>{
- const questions=JSON.parse(read('data/industrial-written/questions-20200822.json'));
- assert.equal(questions.length,100);
- assert.deepEqual(questions.map(q=>q.number),Array.from({length:100},(_,i)=>i+1));
- assert.equal(new Set(questions.map(q=>q.id)).size,100);
- assert.ok(questions.every(q=>q.examType==='industrial'&&q.year===2020&&q.round===3&&
-    q.examDate==='2020-08-22'&&q.roundLabel==='3회'&&q.answerVerified&&q.sourceVerified));
- assert.ok(questions.every(q=>validateWrittenQuestion(q,'industrial')));
- assert.equal(questions.reduce((sum,q)=>sum+(q.visuals?.length||0)+(q.optionVisuals?.length||0),0),19);
- const special=questions.find(q=>q.number===8);
- assert.equal(special.optionVisuals.length,4,'graph figure answers are preserved individually');
- for(const subject of ['데이터 베이스','전자 계산기 구조','시스템분석설계','운영체제','정보통신개론']){
-   assert.equal(questions.filter(q=>q.subject===subject).length,20);
- }
- const original=JSON.parse(read('data/industrial-written/questions.json'));
- assert.equal(new Set([...original,...questions].map(q=>q.id)).size,200);
-});
-test('2026 second round source scan retains five pages and 60 answer-key positions without claiming individual quiz conversion',()=>{
- const data=JSON.parse(read('data/industrial-written/scans-2026-2.json'));
- assert.equal(data.examType,'industrial');
- assert.equal(data.year,2026);
- assert.equal(data.round,2);
- assert.equal(data.examDate,null);
- assert.equal(data.importStatus,'source_scan_only');
- assert.equal(data.questionCountClaimed,60);
- assert.equal(data.answerKey.length,60);
- assert.ok(data.answerKey.every(n=>Number.isInteger(n)&&n>=1&&n<=4));
- assert.equal(data.pages.length,5);
- assert.deepEqual(data.pages.slice(0,4).map(page=>[page.questionFrom,page.questionTo]),[[1,13],[14,31],[32,46],[47,60]]);
- assert.equal(data.pages.at(-1).questionFrom,null);
- assert.ok(data.pages.every(page=>page.base64Chunks.join('').length>500));
- assert.deepEqual(data.subjects.map(s=>[s.from,s.to]),[[1,20],[21,40],[41,60]]);
-});
-test('year, session and subject filters distinguish 2020 combined/third from 2025 three rounds',()=>{
- const browser=read('js/question-browser.js');
+test('2020 year and 2025-2026 rounds keep their filters',()=>{
  const engine=read('js/written-exam-ui.mjs');
  const bootstrap=read('js/industrial-written-ui.js');
- const viewer=read('js/written-exam-scans.mjs');
- assert.ok(browser.includes('additionalFilter.matches(q,selectedAdditional)'));
- assert.ok(browser.includes('...extraCategories'));
- assert.ok(engine.includes('const sessionChoices='));
- assert.ok(engine.includes('matches:(q,key)=>(q.year+"-"+q.round)===key'));
- assert.ok(engine.includes('extraCategories:[...new Set(scanMeta.map(s=>String(s.year)))]'));
- assert.ok(engine.includes('additionalFilter:{label:"과목별 필터"'));
- assert.ok(engine.includes('scanViewers.push({source,viewer})'));
- assert.ok(viewer.includes('filterSubject()'));
- assert.ok(viewer.includes('page.subjects'));
- assert.ok(bootstrap.includes('questions-20200822.json'));
- assert.ok(bootstrap.includes('scans-2026-2.json'));
- for(const round of [1,2,3])assert.ok(bootstrap.includes('scans-2025-'+round+'.json'));
- assert.ok(!read('js/practical-ui.js').includes('scans-2025-'));
+ const browser=read('js/question-browser.js');
+ const page=read('industrial-written.html');
+ assert.match(engine,/additionalFilter:\{label:"과목별 필터"/);
+ assert.match(engine,/secondaryFilter:\{/);
+ assert.match(browser,/additionalFilter\.matches\(q,selectedAdditional\)/);
+ for(const round of ['{year:2025,round:1','{year:2025,round:2','{year:2025,round:3','{year:2026,round:2'])
+  assert.ok(bootstrap.includes(round),round);
+ assert.equal(page.includes('source-filter'),false);
+ assert.equal(page.includes('data/industrial-written/'),false);
 });
-test('2025 original document registrations are exact three sessions and do not pretend to be graded quiz questions',()=>{
- const expectedPages={1:6,2:5,3:5};
- const expectedFiles={
- 1:'2025년1회_정보처리산업기사필기 기출문제.docx',
- 2:'2025년2회_정보처리산업기사필기 기출문제.docx',
- 3:'2025년3회_정보처리산업기사 필기_기출문제.docx'
- };
- for(const round of [1,2,3]){
-  const d=JSON.parse(read('data/industrial-written/scans-2025-'+round+'.json'));
-  assert.equal(d.examType,'industrial');assert.equal(d.year,2025);assert.equal(d.round,round);
-  assert.equal(d.roundLabel,round+'회');assert.equal(d.examDate,null);
-  assert.equal(d.sourceFileName,expectedFiles[round]);
-  assert.match(d.sourceDocHash,/^[0-9a-f]{64}$/);
-  assert.equal(d.questionCountClaimed,60);
-  assert.equal(d.answerKey.length,60);
-  assert.ok(d.answerKey.every(answer=>Number.isInteger(answer)&&answer>=1&&answer<=4));
-  assert.equal(d.pages.length,expectedPages[round]);
-  assert.equal(d.importStatus,'source_scan_only');
-  assert.ok(d.pages.every(p=>p.imageStatus==='not_uploaded'||(Array.isArray(p.base64Chunks)&&p.base64Chunks.length>0)),'scan page must declare whether its image is actually registered');
-  const imagePages=d.pages.filter(p=>Array.isArray(p.base64Chunks)&&p.base64Chunks.length>0);
-  assert.equal(imagePages.length,expectedPages[round],'all 2025 rounds must include each original rendered page');
-  for(const page of imagePages){
-   assert.match(page.mediaType,/^image\/(?:png|webp|jpeg)$/);
-   assert.match(page.sha256,/^[0-9a-f]{64}$/);
-   assert.ok(page.base64Chunks.join('').length>1000);
-  }
-  assert.deepEqual(d.subjects.map(s=>[s.from,s.to]),[[1,20],[21,40],[41,60]]);
-  assert.ok(d.pages.some(p=>p.questionFrom===null),'answer key page must be indexed');
- }
+
+test('existing practical question UI remains separate',()=>{
+ const engine=read('js/written-exam-ui.mjs');
+ assert.match(engine,/quizNavigation/);
+ assert.match(engine,/quizHeading/);
+ assert.match(engine,/quizDisclosure/);
+ assert.match(engine,/createQuestionBrowser/);
+ assert.equal(read('js/practical-ui.js').includes('written-exam-data.mjs'),false);
 });
