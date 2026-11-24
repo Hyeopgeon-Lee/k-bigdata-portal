@@ -54,4 +54,4 @@
 .written-scanned-page summary{padding:14px 17px;font-size:16px;font-weight:700;cursor:pointer;line-height:1.5}
 .written-scanned-figure{margin:0;padding:10px;background:white;overflow-x:auto}
 .written-scanned-figure img{display:block;width:100%;height:auto;max-width:1320px;image-rendering:auto}
-@media(max-width:700px){.written-source-scans{padding:12px}.written-scanned-page summary{padding:12px}.written-scanned-figure{padding:4px}}
+@media(max-width:700px){.written-source-scans{padding:12px}.written-scanned-page summary{padding:12px}.written-scanned-figure{padding:4px}.written-scanned-figure img{width:900px;max-width:none}}
