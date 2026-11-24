@@ -28,7 +28,7 @@ export const services = [
   {
     id:"industrial-written", name:"정보처리산업기사 필기 기출문제", englishName:"INDUSTRIAL ENGINEER WRITTEN EXAM",
     category:"learning", url:"industrial-written.html", icon:"book", accent:"blue", order:9.45,
-    description:"2020년 1·2회 통합·3회 200문항을 풀고, 2025년 1·2·3회 및 2026년 2회 자료를 연도·회차·과목별로 확인하세요. 2025년 스캔 이미지 연결은 미완료입니다.",
+    description:"2020년 1·2회 통합·3회 200문항을 풀고, 2025년 1·2·3회 및 2026년 2회 자료를 연도·회차·과목별로 확인하세요. 각 회차의 문제지와 정답표를 확인할 수 있습니다.",
     shortDescription:"2020년 문제 200문항·2025년 1~3회 등록정보·2026년 2회 스캔.",
     tags:["정보처리산업기사","필기","기출문제","CBT","문제은행"], aliases:"산업기사 필기 정보처리 필기 연도별 회차별 기출",featured:false
   },
