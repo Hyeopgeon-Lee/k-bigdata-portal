@@ -1,8 +1,8 @@
 import {quizNavigation,quizHeading,quizDisclosure,quizFeedback,scrollToQuizAnswer} from "./quiz-unified.js?v=20261112-answer-focus-1";
 import {createQuestionBrowser} from "./question-browser.js?v=20261124-subject-filter-v2";
 import {reviewControls} from "./study-review.js?v=20261116-concurrency-1";
-import {loadWrittenExamQuestions,loadWrittenExamSession} from "./written-exam-data.mjs?v=20261124-2025-restore-1";
-import {createHistoricalWrittenViewer} from "./written-exam-historical.mjs?v=20261124-2025-restore-1";
+import {loadWrittenExamQuestions,loadWrittenExamSession} from "./written-exam-data.mjs?v=20261124-2026-restore-v1";
+import {createHistoricalWrittenViewer} from "./written-exam-historical.mjs?v=20261124-2026-restore-v1";
 import {adjacentWrittenQuestion} from "./written-exam-navigation.mjs?v=20261124-next-fix-1";
 
 const esc=value=>String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -373,8 +373,8 @@ export function mountWrittenExam({examType,label,storageKey,historicalSessions=[
   fillFilters();
 
   const archiveSessions=(Array.isArray(historicalSessions)?historicalSessions:[])
-   .filter(s=>s&&s.year===2025&&[1,2,3].includes(s.round))
-   .map(s=>({key:"2025-"+s.round,year:2025,round:s.round,roundLabel:s.round+"회",kind:"scanned"}));
+   .filter(s=>s&&((s.year===2025&&[1,2,3].includes(s.round))||(s.year===2026&&s.round===2)))
+   .map(s=>({key:s.year+"-"+s.round,year:s.year,round:s.round,roundLabel:s.round+"회",kind:"scanned"}));
   const sessionChoices=[...new Map([...bank.map(q=>{
     const key=q.year+"-"+q.round;
     return {key,year:q.year,round:q.round,roundLabel:q.roundLabel||q.round+"회",kind:"playable"};
@@ -386,8 +386,11 @@ export function mountWrittenExam({examType,label,storageKey,historicalSessions=[
   let chosenYear=history.state?.questionBrowser?.selected||"";
   let chosenSession=history.state?.questionBrowser?.secondary||"";
   if(archivedOnly){
-   chosenYear="2025";
-   if(!archiveSessions.some(s=>s.key===chosenSession))chosenSession="2025-1";
+   if(!archiveSessions.some(s=>s.key===chosenSession)){
+    const latest=[...archiveSessions].sort((a,b)=>b.year-a.year||b.round-a.round)[0];
+    chosenSession=latest?.key||"";
+   }
+   chosenYear=chosenSession.split("-")[0]||"2025";
    const oldState=history.state||{};
    history.replaceState({...oldState,questionBrowser:{
     ...(oldState.questionBrowser||{}),selected:chosenYear,secondary:chosenSession,
@@ -408,7 +411,7 @@ export function mountWrittenExam({examType,label,storageKey,historicalSessions=[
   const refreshFilters=()=>{
    const subjectSelect=$(".question-browser #qb-additional-select");
    if(subjectSelect){
-    const allowed=chosenYear==="2025"?new Set(historicalSubjects):chosenYear?new Set(bank.filter(q=>String(q.year)===chosenYear).map(q=>q.subject||"기타")):null;
+    const allowed=(chosenYear==="2025"||chosenYear==="2026")?new Set(historicalSubjects):chosenYear?new Set(bank.filter(q=>String(q.year)===chosenYear).map(q=>q.subject||"기타")):null;
     for(const option of subjectSelect.options){
      const invalid=!!allowed&&!!option.value&&!allowed.has(option.value);
      option.hidden=invalid;option.disabled=invalid;
@@ -422,14 +425,14 @@ export function mountWrittenExam({examType,label,storageKey,historicalSessions=[
     const key=chip.dataset.secondary;
     chip.hidden=!!chosenYear&&!!key&&!key.startsWith(chosenYear+"-");
    }
-   const currentRound=chosenSession.startsWith("2025-")?Number(chosenSession.split("-")[1]):null;
-   historicalViewer?.update({year:archivedOnly?"2025":chosenYear,round:currentRound,subject:subjectSelect?.value||""});
+   const currentRound=chosenSession&&chosenSession.startsWith(chosenYear+"-")?Number(chosenSession.split("-")[1]):null;
+   historicalViewer?.update({year:chosenYear,round:currentRound,subject:subjectSelect?.value||""});
   };
   browser=createQuestionBrowser({
    title:label+" 필기 기출문제",questions:bank,
    category:q=>String(q.year),categoryLabel:y=>y+"년",
-   initialCategory:archivedOnly?"2025":"",preferInitialCategory:archivedOnly,
-   extraCategories:archiveSessions.length?["2025"]:[],
+   initialCategory:archivedOnly?chosenYear:"",preferInitialCategory:archivedOnly,
+   extraCategories:[...new Set(archiveSessions.map(s=>String(s.year)))],
    onCategoryChange:year=>{
     chosenYear=year;
     if(chosenYear&&chosenSession&&!chosenSession.startsWith(chosenYear+"-")){
