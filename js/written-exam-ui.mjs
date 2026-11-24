@@ -106,7 +106,7 @@ export function mountWrittenExam({examType,label,dataUrl,additionalDataUrls=[],s
    b.classList.toggle("button-secondary",!active);
   });
   $("#quick-filters").hidden=true; // Browser and in-page tabs are the single navigation source.
-  $(".bank-nav").hidden=!!current||view==="bank";
+  $(".bank-nav").hidden=!!current;
   $("#bank-controls").hidden=!!current||view!=="bank";
   $("#usage-guide").hidden=!!current;
   document.body.classList.toggle("is-solving",!!current);
@@ -382,7 +382,7 @@ export function mountWrittenExam({examType,label,dataUrl,additionalDataUrls=[],s
   });
   const section=$(".question-browser"),menu=document.createElement("nav");
   menu.className="bank-nav written-browser-nav";menu.setAttribute("aria-label","필기 학습 메뉴");
-  menu.innerHTML='<button type="button" class="button button-secondary" data-view="home">학습 시작</button><button type="button" class="button button-primary" data-view="bank">전체 문제</button><button type="button" class="button button-secondary" data-view="random">랜덤 설정</button><button type="button" class="button button-secondary" data-view="wrong">오답노트</button><button type="button" class="button button-secondary" data-view="progress">학습현황</button>';
+  menu.innerHTML='<button type="button" class="button button-secondary" data-view="home">학습 시작</button><button type="button" class="button button-primary" data-view="bank">전체 문제</button><button type="button" class="button button-secondary" data-view="random">랜덤 설정</button><button type="button" class="button button-secondary" data-view="wrong">오답노트</button><button type="button" class="button button-secondary" data-view="progress">학습현황</button><a class="button button-secondary written-scan-jump" href="#industrial-scanned-round-2026">2026년 2회 원본 보기</a>';
   section.querySelector(".qb-heading").after(menu);
   if(sourceIndexUrl)void mountWrittenSources(section,sourceIndexUrl,examType);
   if(scanManifestUrl)void mountWrittenExamScans(section,scanManifestUrl);
