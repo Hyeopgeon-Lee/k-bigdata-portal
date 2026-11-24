@@ -26,7 +26,7 @@ test('question/image originals are not committed to the public repository',()=>{
  assert.match(read('.gitignore'),/\/data\/industrial-written\//);
 });
 
-test('written exam uses Supabase for retained 2025 sessions',()=>{
+test('written exam uses Supabase for retained 2025 and 2026 sessions',()=>{
  const loader=read('js/written-exam-data.mjs');
  const engine=read('js/written-exam-ui.mjs');
  const bootstrap=read('js/industrial-written-ui.js');
@@ -68,7 +68,7 @@ test('next and previous buttons are wired to adjacency navigation',()=>{
  assert.match(engine,/openQuestion\(target.question.id\)/);
 });
 
-test('2020 controls are removed while 2025 round and subject filters remain active',()=>{
+test('2020 controls stay removed while 2025 and 2026 subject filters work',()=>{
  const engine=read('js/written-exam-ui.mjs');
  const browser=read('js/question-browser.js');
  const page=read('industrial-written.html');
@@ -79,12 +79,13 @@ test('2020 controls are removed while 2025 round and subject filters remain acti
  assert.doesNotMatch(page,/2020년|2020-06-06|2020-08-22/);
  assert.match(page,/2025년/);
  assert.match(engine,/const archivedOnly=bank.length===0&&archiveSessions.length>0/);
- assert.match(engine,/initialCategory:archivedOnly\?"2025"/);
+ assert.match(engine,/initialCategory:archivedOnly\?chosenYear/);
  assert.match(engine,/initialValue:archivedOnly\?chosenSession:undefined/);
  assert.match(engine,/if\(!bank.length&&!archiveSessions.length\)/);
- assert.doesNotMatch(page,/2026년|이미지 문제지 등록 회차/);
+ assert.match(page,/2026년/);
+ assert.doesNotMatch(page,/이미지 문제지 등록 회차/);
  for(const r of [1,2,3])assert.match(bootstrap,new RegExp('year:2025,round:'+r));
- assert.doesNotMatch(bootstrap,/year:2026/);
+ assert.match(bootstrap,/year:2026,round:2/);
 });
 
 test('practical question-bank implementation is separate',()=>{
@@ -94,30 +95,45 @@ test('practical question-bank implementation is separate',()=>{
 });
 
 
-test('2025 exam sessions restore three rounds without public original files or shortcut gallery',()=>{
+test('2025 three rounds and 2026 second round restore without public originals or shortcut gallery',()=>{
  const app=read('js/industrial-written-ui.js');
  const ui=read('js/written-exam-ui.mjs');
  const viewer=read('js/written-exam-historical.mjs');
  const loader=read('js/written-exam-data.mjs');
- assert.match(ui,/extraCategories:archiveSessions.length\?\["2025"\]:\[\]/);
+ assert.match(ui,/extraCategories:\[\.\.\.new Set\(archiveSessions\.map/);
  assert.match(ui,/historicalViewer=createHistoricalWrittenViewer/);
  assert.match(ui,/extraCategories/);
  assert.match(ui,/historicalSubjects/);
  assert.match(viewer,/data\.answerKey\.length!==60/);
  assert.match(viewer,/answerKey\[i-1\]/);
- assert.match(viewer,/year===2025/);
+ assert.match(viewer,/String\(year\)==="2025"\|\|String\(year\)==="2026"/);
  assert.match(viewer,/정답 보기/);
  assert.match(loader,/eq\("exam_round",round\)/);
- assert.doesNotMatch(app,/data\/industrial-written|\.json|scanManifestUrl|year:2026/);
+ assert.doesNotMatch(app,/data\/industrial-written|\.json|scanManifestUrl/);
+ assert.match(app,/year:2026,round:2/);
  assert.doesNotMatch(ui,/written-scan-shortcuts|이미지 문제지 등록 회차/);
 });
 
-test('2025-only archive suppresses nonfunctional practice tabs when 2020 is absent',()=>{
+test('2025-2026 archive suppresses nonfunctional practice tabs when 2020 is absent',()=>{
  const engine=read('js/written-exam-ui.mjs');
  const page=read('industrial-written.html');
  assert.match(engine,/if\(archivedOnly\)\{/);
- assert.match(engine,/chosenYear="2025"/);
- assert.match(engine,/chosenSession="2025-1"/);
+ assert.match(engine,/chosenYear=chosenSession\.split\("-"\)\[0\]/);
+ assert.match(engine,/latest=\[\.\.\.archiveSessions\]\.sort/);
  assert.match(engine,/button\.hidden=true/);
  assert.doesNotMatch(page,/2020년/);
+});
+
+test('2026 year includes only second round without restoring 2020 or publishing source file',()=>{
+ const engine=read('js/written-exam-ui.mjs');
+ const viewer=read('js/written-exam-historical.mjs');
+ const loader=read('js/written-exam-data.mjs');
+ const bootstrap=read('js/industrial-written-ui.js');
+ assert.match(engine,/s.year===2026&&s.round===2/);
+ assert.match(engine,/chosenSession.startsWith\(chosenYear\+"-"\)/);
+ assert.match(viewer,/Number\(year\)===2026&&Number\(round\)===2/);
+ assert.match(loader,/year===2026&&round===2/);
+ assert.match(bootstrap,/year:2026,round:2/);
+ assert.doesNotMatch(bootstrap,/year:2020/);
+ assert.doesNotMatch(read('industrial-written.html'),/2020년/);
 });
