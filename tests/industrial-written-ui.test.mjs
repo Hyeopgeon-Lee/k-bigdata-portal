@@ -49,10 +49,24 @@ test('written quiz uses exact same list and solving primitives as practical',()=
  }
 });
 
-test('data begins empty, never contains generated questions',()=>{
+test('2020-06-06 combined exam includes 100 genuine user-provided questions, all original figures and verified answer keys',()=>{
  const data=JSON.parse(read('data/industrial-written/questions.json'));
  assert.ok(Array.isArray(data));
- for(const row of data)assert.ok(validateWrittenQuestion(row,'industrial'));
+ const exam=data.filter(q=>q.year===2020&&q.examDate==='2020-06-06');
+ assert.equal(exam.length,100);
+ assert.equal(new Set(exam.map(q=>q.id)).size,100);
+ assert.deepEqual(exam.map(q=>q.number),Array.from({length:100},(_,i)=>i+1));
+ assert.ok(exam.every(q=>q.sourceType==='provided'&&q.answerVerified===true&&q.sourceVerified===true));
+ assert.ok(exam.every(q=>validateWrittenQuestion(q,'industrial')));
+ assert.ok(exam.every(q=>q.options.length===4&&q.options.every(Boolean)&&q.answer>=1&&q.answer<=4));
+ assert.ok(exam.every(q=>q.roundLabel==='1·2회 통합'));
+ const subjects=['데이터 베이스','전자 계산기 구조','시스템분석설계','운영체제','정보통신개론'];
+ for(const subject of subjects)assert.equal(exam.filter(q=>q.subject===subject).length,20);
+ assert.equal(exam.reduce((n,q)=>n+q.visuals.length,0),17);
+ for(const q of exam)for(const fig of q.visuals){
+  assert.match(fig.dataUri,/^data:image\/gif;base64,[A-Za-z0-9+/]+=*$/);
+  assert.match(fig.sha256,/^[0-9a-f]{64}$/);
+ }
 });
 
 test('2020-2026 reference registry is distinguishable from the actual question bank',()=>{
@@ -61,5 +75,5 @@ test('2020-2026 reference registry is distinguishable from the actual question b
  assert.deepEqual(years,[2020,2021,2022,2023,2024,2025,2026]);
  assert.ok(catalog.years.flatMap(y=>y.materials).length>=14);
  assert.ok(catalog.years.every(row=>row.materials.every(m=>m.rights&&m.verified&&m.url.startsWith("https://"))));
- assert.deepEqual(JSON.parse(read('data/industrial-written/questions.json')),[]);
+ assert.equal(JSON.parse(read('data/industrial-written/questions.json')).length,100);
 });
