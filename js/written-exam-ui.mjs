@@ -2,7 +2,7 @@ import {quizNavigation,quizHeading,quizDisclosure,quizFeedback,scrollToQuizAnswe
 import {createQuestionBrowser} from "./question-browser.js?v=20261124-subject-filter-v2";
 import {reviewControls} from "./study-review.js?v=20261116-concurrency-1";
 import {mountWrittenSources} from "./written-exam-sources.mjs?v=20261123-index-1";
-import {mountWrittenExamScans} from "./written-exam-scans.mjs?v=20261124-scan-sessions-v2";
+import {mountWrittenExamScans} from "./written-exam-scans.mjs?v=20261124-scan-sessions-v3";
 
 const esc=value=>String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",'"':"&quot;","'":"&#39;"}[c]));
 const $=selector=>document.querySelector(selector);
