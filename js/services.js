@@ -28,8 +28,8 @@ export const services = [
   {
     id:"industrial-written", name:"정보처리산업기사 필기 기출문제", englishName:"INDUSTRIAL ENGINEER WRITTEN EXAM",
     category:"learning", url:"industrial-written.html", icon:"book", accent:"blue", order:9.45,
-    description:"2025년 1·2·3회 및 2026년 2회 정보처리산업기사 필기 문제지와 정답표를 연도·회차·과목별로 확인하세요.",
-    shortDescription:"2025년 1·2·3회 및 2026년 2회 기출문제지·정답표 확인.",
+    description:"2025년 1·2·3회와 2026년 2회 중 검증 완료된 개별 객관식 문제를 학습하세요.",
+    shortDescription:"검증 완료된 산업기사 필기 개별문제·선택지·정답 확인.",
     tags:["정보처리산업기사","필기","기출문제","CBT","문제은행"], aliases:"산업기사 필기 정보처리 필기 연도별 회차별 기출",featured:false
   },
   {id:'study',name:'자율학습 관리',englishName:'AFTER SCHOOL STUDY',category:'learning',url:'study.html',icon:'clipboard',accent:'blue',order:4.2,
