@@ -6,7 +6,7 @@ import {mountWrittenSources} from "./written-exam-sources.mjs?v=20261123-index-1
 const esc=value=>String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",'"':"&quot;","'":"&#39;"}[c]));
 const $=selector=>document.querySelector(selector);
 const today=()=>new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Seoul",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
-const labelFor=q=>q.year+"년 "+(q.roundLabel||q.round+"회")+" · "+q.number+"번";
+const labelFor=q=>q.year+"년 "+(q.roundLabel||q.round+"회")+(q.examDate?" ("+q.examDate+")":"")+" · "+q.number+"번";
 const sourceLabel=q=>q.sourceType==="provided"?"사용자 제공 기출":q.sourceType==="official"?"공식 공개 기출":"복원기출";
 const formatDate=millis=>new Date(millis).toLocaleDateString("ko-KR",{timeZone:"Asia/Seoul"});
 const action=(name,label,extra="")=>{
@@ -23,13 +23,17 @@ export function validateWrittenQuestion(q,examType){
  if(!String(q.question||"").trim()||!Array.isArray(q.options)||q.options.length!==4||!q.options.every(v=>typeof v==="string"&&v.trim()))return false;
  if(!Number.isInteger(q.answer)||q.answer<1||q.answer>4)return false;
  if(q.sourceType==="provided"){
-  return examType==="industrial"&&q.year===2020&&q.examDate==="2020-06-06"&&
-   q.roundLabel==="1·2회 통합"&&q.sourceVerified===true&&q.answerVerified===true&&
+  const permittedSession=q.year===2020&&
+   ((q.examDate==="2020-06-06"&&q.round===1&&q.roundLabel==="1·2회 통합")||
+    (q.examDate==="2020-08-22"&&q.round===3&&q.roundLabel==="3회"));
+  const validPicture=v=>v&&typeof v==="object"&&
+   /^data:image\/(?:gif|png|jpeg);base64,[A-Za-z0-9+/]+=*$/.test(v.dataUri||"")&&
+   /^[0-9a-f]{64}$/.test(v.sha256||"");
+  return examType==="industrial"&&permittedSession&&q.sourceVerified===true&&q.answerVerified===true&&
    typeof q.sourceFileName==="string"&&q.sourceFileName.endsWith(".hwpx")&&
    /^[0-9a-f]{64}$/.test(q.sourceDocHash||"")&&
-   Array.isArray(q.visuals)&&q.visuals.length<=2&&q.visuals.every(v=>
-    typeof v==="object"&&/^data:image\/gif;base64,[A-Za-z0-9+/]+=*$/.test(v.dataUri||"")&&
-    /^[0-9a-f]{64}$/.test(v.sha256||""));
+   Array.isArray(q.visuals)&&q.visuals.length<=8&&q.visuals.every(validPicture)&&
+   (!q.optionVisuals||(q.optionVisuals.length===4&&q.optionVisuals.every(validPicture)));
  }
  if(!["official","reconstructed"].includes(q.sourceType)||!/^https:\/\//.test(q.sourceUrl||""))return false;
  const evidence=q.evidence;
@@ -41,7 +45,7 @@ export function validateWrittenQuestion(q,examType){
    evidence.reviewer.trim().length>=2&&verifiedDate;
 }
 
-export function mountWrittenExam({examType,label,dataUrl,storageKey,sourceIndexUrl=null}){
+export function mountWrittenExam({examType,label,dataUrl,additionalDataUrls=[],storageKey,sourceIndexUrl=null,scanManifestUrl=null}){
  const root=$("#bank-content"),status=$("#bank-status"),storageStatus=$("#storage-status");
  if(!root||!status)throw Error("필기 문제풀이 화면을 찾을 수 없습니다.");
  let bank=[],browser=null,view="bank",current=null,queue=[],queueIndex=0,queueKind="bank";
@@ -348,8 +352,13 @@ export function mountWrittenExam({examType,label,dataUrl,storageKey,sourceIndexU
  async function initialize(){
   const response=await fetch(dataUrl,{cache:"no-store"});if(!response.ok)throw Error("HTTP "+response.status);
   const result=await response.json();if(!Array.isArray(result))throw Error("문제 데이터 형식 오류");
+  const external=await Promise.all(additionalDataUrls.map(async url=>{
+   const loaded=await fetch(url,{cache:"no-store"});if(!loaded.ok)throw Error("추가 회차 "+loaded.status);
+   const rows=await loaded.json();if(!Array.isArray(rows))throw Error("추가 회차 데이터 형식 오류");
+   return rows;
+  }));
   const seen=new Set();
-  bank=result.filter(q=>{
+  bank=[...result,...external.flat()].filter(q=>{
    if(!validateWrittenQuestion(q,examType)||seen.has(q.id))return false;
    seen.add(q.id);return true;
   });
@@ -358,7 +367,8 @@ export function mountWrittenExam({examType,label,dataUrl,storageKey,sourceIndexU
   browser=createQuestionBrowser({
    title:label+" 필기 기출문제",questions:bank,
    category:q=>String(q.year),categoryLabel:y=>y+"년",
-   secondaryFilter:{label:"회차 선택",categoryLabel:"출제년도",options:uniqueRounds().map(r=>({value:String(r),label:bank.some(q=>q.round===r&&q.roundLabel)?r+"회 / 통합회차":r+"회"})),matches:(q,r)=>String(q.round)===r},
+   secondaryFilter:{label:"회차 선택",categoryLabel:"출제년도",options:uniqueRounds().map(r=>({value:String(r),label:r+"회"+(r===1?" / 통합회차 포함":"")})),matches:(q,r)=>String(q.round)===r},
+   additionalFilter:{label:"과목별 필터",options:[...new Set(bank.map(q=>q.subject||"기타"))].sort().map(s=>({value:s,label:s})),matches:(q,s)=>(q.subject||"기타")===s},
    describe:q=>q.number+"번 · "+q.question.slice(0,85),
    searchText:q=>[q.id,q.year+"년",q.round+"회",q.subject||"",q.question,...q.options].join(" "),
    metaText:q=>labelFor(q)+" · "+(q.subject||"필기")+" · "+sourceLabel(q),
