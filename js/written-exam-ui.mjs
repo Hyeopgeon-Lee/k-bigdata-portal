@@ -382,8 +382,18 @@ export function mountWrittenExam({examType,label,storageKey,historicalSessions=[
    .sort((a,b)=>b.year-a.year||a.round-b.round);
   const historicalSubjects=["정보시스템 기반 기술","프로그래밍언어 활용","데이터베이스 활용"];
   let historicalViewer=null;
+  const archivedOnly=bank.length===0&&archiveSessions.length>0;
   let chosenYear=history.state?.questionBrowser?.selected||"";
   let chosenSession=history.state?.questionBrowser?.secondary||"";
+  if(archivedOnly){
+   chosenYear="2025";
+   if(!archiveSessions.some(s=>s.key===chosenSession))chosenSession="2025-1";
+   const oldState=history.state||{};
+   history.replaceState({...oldState,questionBrowser:{
+    ...(oldState.questionBrowser||{}),selected:chosenYear,secondary:chosenSession,
+    additional:"",query:"",page:0,ids:[],activeId:""
+   }},"");
+  }
   const validYear=!chosenYear||sessionChoices.some(s=>String(s.year)===chosenYear);
   const validSession=!chosenSession||sessionChoices.some(s=>s.key===chosenSession);
   if(!validYear||!validSession){
@@ -413,11 +423,12 @@ export function mountWrittenExam({examType,label,storageKey,historicalSessions=[
     chip.hidden=!!chosenYear&&!!key&&!key.startsWith(chosenYear+"-");
    }
    const currentRound=chosenSession.startsWith("2025-")?Number(chosenSession.split("-")[1]):null;
-   historicalViewer?.update({year:chosenYear,round:currentRound,subject:subjectSelect?.value||""});
+   historicalViewer?.update({year:archivedOnly?"2025":chosenYear,round:archivedOnly?(currentRound||1):currentRound,subject:subjectSelect?.value||""});
   };
   browser=createQuestionBrowser({
    title:label+" 필기 기출문제",questions:bank,
    category:q=>String(q.year),categoryLabel:y=>y+"년",
+   initialCategory:archivedOnly?"2025":"",preferInitialCategory:archivedOnly,
    extraCategories:archiveSessions.length?["2025"]:[],
    onCategoryChange:year=>{
     chosenYear=year;
@@ -427,6 +438,7 @@ export function mountWrittenExam({examType,label,storageKey,historicalSessions=[
    },
    secondaryFilter:{
     label:"시험 회차",categoryLabel:"출제연도",
+    initialValue:archivedOnly?chosenSession:undefined,
     options:sessionChoices.map(s=>({value:s.key,label:s.year+"년 "+s.roundLabel})),
     matches:(q,key)=>(q.year+"-"+q.round)===key,
     onChange:key=>{
@@ -450,6 +462,10 @@ export function mountWrittenExam({examType,label,storageKey,historicalSessions=[
   menu.className="bank-nav written-browser-nav";menu.setAttribute("aria-label","필기 학습 메뉴");
   menu.innerHTML='<button type="button" class="button button-secondary" data-view="home">학습 시작</button><button type="button" class="button button-primary" data-view="bank">전체 문제</button><button type="button" class="button button-secondary" data-view="random">랜덤 설정</button><button type="button" class="button button-secondary" data-view="wrong">오답노트</button><button type="button" class="button button-secondary" data-view="progress">학습현황</button>';
   section.querySelector(".qb-heading").after(menu);
+  if(archivedOnly){
+   document.querySelectorAll('[data-view="home"],[data-view="random"],[data-view="wrong"],[data-view="progress"]')
+    .forEach(button=>{button.hidden=true;});
+  }
   if(archiveSessions.length){
    historicalViewer=createHistoricalWrittenViewer(section,(year,round)=>loadWrittenExamSession(examType,year,round));
    section.querySelector("#qb-additional-select")?.addEventListener("change",()=>refreshFilters());
@@ -457,7 +473,7 @@ export function mountWrittenExam({examType,label,storageKey,historicalSessions=[
   
   refreshFilters();
   section.querySelector(".qb-progress-hint").textContent="풀이 횟수와 최근 날짜는 이 브라우저의 필기 기록 기준입니다.";
-  if(!bank.length){
+  if(!bank.length&&!archiveSessions.length){
    const notice=document.createElement("p");
    notice.className="written-empty-notice";notice.textContent="현재 검증·등록된 문제는 0개입니다. 실제 기출문항은 원문·정답·재게시 권한 확인 후 추가됩니다.";
    section.querySelector(".qb-list").before(notice);
