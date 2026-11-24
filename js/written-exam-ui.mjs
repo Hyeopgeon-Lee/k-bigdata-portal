@@ -1,8 +1,7 @@
 import {quizNavigation,quizHeading,quizDisclosure,quizFeedback,scrollToQuizAnswer} from "./quiz-unified.js?v=20261112-answer-focus-1";
 import {createQuestionBrowser} from "./question-browser.js?v=20261124-subject-filter-v2";
 import {reviewControls} from "./study-review.js?v=20261116-concurrency-1";
-import {loadWrittenExamQuestions,loadWrittenExamSession} from "./written-exam-data.mjs?v=20261124-2026-restore-v1";
-import {createHistoricalWrittenViewer} from "./written-exam-historical.mjs?v=20261124-2026-restore-v1";
+import {loadWrittenExamQuestions} from "./written-exam-data.mjs?v=20261124-questions-text-v1";
 import {adjacentWrittenQuestion} from "./written-exam-navigation.mjs?v=20261124-next-fix-1";
 
 const esc=value=>String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -46,7 +45,7 @@ export function validateWrittenQuestion(q,examType){
    evidence.reviewer.trim().length>=2&&verifiedDate;
 }
 
-export function mountWrittenExam({examType,label,storageKey,historicalSessions=[]}){
+export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}){
  const root=$("#bank-content"),status=$("#bank-status"),storageStatus=$("#storage-status");
  if(!root||!status)throw Error("필기 문제풀이 화면을 찾을 수 없습니다.");
  let bank=[],browser=null,view="bank",current=null,queue=[],queueIndex=0,queueKind="bank";
@@ -372,31 +371,22 @@ export function mountWrittenExam({examType,label,storageKey,historicalSessions=[
   bank.sort((a,b)=>b.year-a.year||b.round-a.round||a.number-b.number);
   fillFilters();
 
-  const archiveSessions=(Array.isArray(historicalSessions)?historicalSessions:[])
-   .filter(s=>s&&((s.year===2025&&[1,2,3].includes(s.round))||(s.year===2026&&s.round===2)))
-   .map(s=>({key:s.year+"-"+s.round,year:s.year,round:s.round,roundLabel:s.round+"회",kind:"scanned"}));
-  const sessionChoices=[...new Map([...bank.map(q=>{
-    const key=q.year+"-"+q.round;
-    return {key,year:q.year,round:q.round,roundLabel:q.roundLabel||q.round+"회",kind:"playable"};
-   }),...archiveSessions].map(s=>[s.key,s])).values()]
+  const archiveSessions=(Array.isArray(expectedSessions)?expectedSessions:[])
+   .filter(x=>x&&((x.year===2025&&[1,2,3].includes(x.round))||(x.year===2026&&x.round===2)))
+   .map(x=>({key:x.year+"-"+x.round,year:x.year,round:x.round,roundLabel:x.round+"회"}));
+  const sessionChoices=[...new Map([...bank.map(q=>({
+    key:q.year+"-"+q.round,year:q.year,round:q.round,roundLabel:q.roundLabel||q.round+"회"
+   })),...archiveSessions].map(x=>[x.key,x])).values()]
    .sort((a,b)=>b.year-a.year||a.round-b.round);
   const historicalSubjects=["정보시스템 기반 기술","프로그래밍언어 활용","데이터베이스 활용"];
-  let historicalViewer=null;
   const archivedOnly=bank.length===0&&archiveSessions.length>0;
   let chosenYear=history.state?.questionBrowser?.selected||"";
   let chosenSession=history.state?.questionBrowser?.secondary||"";
-  if(archivedOnly){
-   if(!archiveSessions.some(s=>s.key===chosenSession)){
-    const latest=[...archiveSessions].sort((a,b)=>b.year-a.year||b.round-a.round)[0];
-    chosenSession=latest?.key||"";
-   }
-   chosenYear=chosenSession.split("-")[0]||"2025";
-   const oldState=history.state||{};
-   history.replaceState({...oldState,questionBrowser:{
-    ...(oldState.questionBrowser||{}),selected:chosenYear,secondary:chosenSession,
-    additional:"",query:"",page:0,ids:[],activeId:""
-   }},"");
+  if(!chosenYear&&!chosenSession){chosenYear="2025";chosenSession="2025-1";}
+  if(!sessionChoices.some(x=>x.key===chosenSession)){
+   chosenSession=sessionChoices.find(x=>x.key==="2025-1")?.key||sessionChoices[0]?.key||"";
   }
+  if(chosenSession)chosenYear=chosenSession.split("-")[0];
   const validYear=!chosenYear||sessionChoices.some(s=>String(s.year)===chosenYear);
   const validSession=!chosenSession||sessionChoices.some(s=>s.key===chosenSession);
   if(!validYear||!validSession){
@@ -425,13 +415,15 @@ export function mountWrittenExam({examType,label,storageKey,historicalSessions=[
     const key=chip.dataset.secondary;
     chip.hidden=!!chosenYear&&!!key&&!key.startsWith(chosenYear+"-");
    }
-   const currentRound=chosenSession&&chosenSession.startsWith(chosenYear+"-")?Number(chosenSession.split("-")[1]):null;
-   historicalViewer?.update({year:chosenYear,round:currentRound,subject:subjectSelect?.value||""});
+   const listCount=bank.filter(q=>String(q.year)===chosenYear&&(!chosenSession||(q.year+"-"+q.round)===chosenSession)&&
+    (!subjectSelect?.value||q.subject===subjectSelect.value)).length;
+   const progressHint=section?.querySelector(".written-transcription-status");
+   if(progressHint)progressHint.textContent="개별 문항 "+listCount+"개 확인 가능 · 미변환 문항은 표시하지 않습니다.";
   };
   browser=createQuestionBrowser({
    title:label+" 필기 기출문제",questions:bank,
    category:q=>String(q.year),categoryLabel:y=>y+"년",
-   initialCategory:archivedOnly?chosenYear:"",preferInitialCategory:archivedOnly,
+   initialCategory:chosenYear,preferInitialCategory:true,
    extraCategories:[...new Set(archiveSessions.map(s=>String(s.year)))],
    onCategoryChange:year=>{
     chosenYear=year;
@@ -441,7 +433,7 @@ export function mountWrittenExam({examType,label,storageKey,historicalSessions=[
    },
    secondaryFilter:{
     label:"시험 회차",categoryLabel:"출제연도",
-    initialValue:archivedOnly?chosenSession:undefined,
+    initialValue:chosenSession,
     options:sessionChoices.map(s=>({value:s.key,label:s.year+"년 "+s.roundLabel})),
     matches:(q,key)=>(q.year+"-"+q.round)===key,
     onChange:key=>{
@@ -469,10 +461,11 @@ export function mountWrittenExam({examType,label,storageKey,historicalSessions=[
    document.querySelectorAll('[data-view="home"],[data-view="random"],[data-view="wrong"],[data-view="progress"]')
     .forEach(button=>{button.hidden=true;});
   }
-  if(archiveSessions.length){
-   historicalViewer=createHistoricalWrittenViewer(section,(year,round)=>loadWrittenExamSession(examType,year,round));
-   section.querySelector("#qb-additional-select")?.addEventListener("change",()=>refreshFilters());
-  }
+  const verified=document.createElement("p");
+  verified.className="written-transcription-status";
+  verified.setAttribute("role","status");
+  section.querySelector(".qb-heading").after(verified);
+  section.querySelector("#qb-additional-select")?.addEventListener("change",()=>refreshFilters());
   
   refreshFilters();
   section.querySelector(".qb-progress-hint").textContent="풀이 횟수와 최근 날짜는 이 브라우저의 필기 기록 기준입니다.";
