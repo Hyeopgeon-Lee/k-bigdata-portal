@@ -389,6 +389,7 @@ export function mountWrittenExam({examType,label,dataUrl,additionalDataUrls=[],s
   if(sourceIndexUrl)void mountWrittenSources(section,sourceIndexUrl,examType);
   if(scanManifestUrl)void mountWrittenExamScans(section,scanManifestUrl);
   const scanJump=menu.querySelector(".written-scan-jump");
+  if(scanJump)scanJump.hidden=!scanManifestUrl;
   scanJump?.addEventListener("click",event=>{
    event.preventDefault();
    if(scanYear)browser.selectCategory(String(scanYear));
