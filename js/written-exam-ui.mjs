@@ -1,7 +1,8 @@
 import {quizNavigation,quizHeading,quizDisclosure,quizFeedback,scrollToQuizAnswer} from "./quiz-unified.js?v=20261112-answer-focus-1";
-import {createQuestionBrowser} from "./question-browser.js?v=20261116-progress-v1";
+import {createQuestionBrowser} from "./question-browser.js?v=20261124-subject-filter";
 import {reviewControls} from "./study-review.js?v=20261116-concurrency-1";
 import {mountWrittenSources} from "./written-exam-sources.mjs?v=20261123-index-1";
+import {mountWrittenExamScans} from "./written-exam-scans.mjs?v=20261124-scanned-2026";
 
 const esc=value=>String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",'"':"&quot;","'":"&#39;"}[c]));
 const $=selector=>document.querySelector(selector);
@@ -381,6 +382,7 @@ export function mountWrittenExam({examType,label,dataUrl,additionalDataUrls=[],s
   menu.innerHTML='<button type="button" class="button button-secondary" data-view="home">학습 시작</button><button type="button" class="button button-primary" data-view="bank">전체 문제</button><button type="button" class="button button-secondary" data-view="random">랜덤 설정</button><button type="button" class="button button-secondary" data-view="wrong">오답노트</button><button type="button" class="button button-secondary" data-view="progress">학습현황</button>';
   section.querySelector(".qb-heading").after(menu);
   if(sourceIndexUrl)void mountWrittenSources(section,sourceIndexUrl,examType);
+  if(scanManifestUrl)void mountWrittenExamScans(section,scanManifestUrl);
   section.querySelector(".qb-progress-hint").textContent="풀이 횟수와 최근 날짜는 이 브라우저의 필기 기록 기준입니다.";
   if(!bank.length){
    const notice=document.createElement("p");
