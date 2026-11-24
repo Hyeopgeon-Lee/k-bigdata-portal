@@ -77,3 +77,48 @@ test('2020-2026 reference registry is distinguishable from the actual question b
  assert.ok(catalog.years.every(row=>row.materials.every(m=>m.rights&&m.verified&&m.url.startsWith("https://"))));
  assert.equal(JSON.parse(read('data/industrial-written/questions.json')).length,100);
 });
+
+test('2020-08-22 industrial engineer third round contains 100 source-verified questions',()=>{
+ const questions=JSON.parse(read('data/industrial-written/questions-20200822.json'));
+ assert.equal(questions.length,100);
+ assert.deepEqual(questions.map(q=>q.number),Array.from({length:100},(_,i)=>i+1));
+ assert.equal(new Set(questions.map(q=>q.id)).size,100);
+ assert.ok(questions.every(q=>q.examType==='industrial'&&q.year===2020&&q.round===3&&
+    q.examDate==='2020-08-22'&&q.roundLabel==='3회'&&q.answerVerified&&q.sourceVerified));
+ assert.ok(questions.every(q=>validateWrittenQuestion(q,'industrial')));
+ assert.equal(questions.reduce((sum,q)=>sum+(q.visuals?.length||0)+(q.optionVisuals?.length||0),0),19);
+ const special=questions.find(q=>q.number===8);
+ assert.equal(special.optionVisuals.length,4,'graph figure answers are preserved individually');
+ for(const subject of ['데이터 베이스','전자 계산기 구조','시스템분석설계','운영체제','정보통신개론']){
+   assert.equal(questions.filter(q=>q.subject===subject).length,20);
+ }
+ const original=JSON.parse(read('data/industrial-written/questions.json'));
+ assert.equal(new Set([...original,...questions].map(q=>q.id)).size,200);
+});
+test('2026 second round source scan retains five pages and 60 answer-key positions without claiming individual quiz conversion',()=>{
+ const data=JSON.parse(read('data/industrial-written/scans-2026-2.json'));
+ assert.equal(data.examType,'industrial');
+ assert.equal(data.year,2026);
+ assert.equal(data.round,2);
+ assert.equal(data.examDate,null);
+ assert.equal(data.importStatus,'source_scan_only');
+ assert.equal(data.questionCountClaimed,60);
+ assert.equal(data.answerKey.length,60);
+ assert.ok(data.answerKey.every(n=>Number.isInteger(n)&&n>=1&&n<=4));
+ assert.equal(data.pages.length,5);
+ assert.deepEqual(data.pages.slice(0,4).map(page=>[page.questionFrom,page.questionTo]),[[1,13],[14,31],[32,46],[47,60]]);
+ assert.equal(data.pages.at(-1).questionFrom,null);
+ assert.ok(data.pages.every(page=>page.base64Chunks.join('').length>500));
+ assert.deepEqual(data.subjects.map(s=>[s.from,s.to]),[[1,20],[21,40],[41,60]]);
+});
+test('subject filter and multiple exam files are connected only to industrial written page',()=>{
+ const browser=read('js/question-browser.js');
+ const engine=read('js/written-exam-ui.mjs');
+ const bootstrap=read('js/industrial-written-ui.js');
+ assert.ok(browser.includes('additionalFilter.matches(q,selectedAdditional)'));
+ assert.ok(engine.includes('additionalFilter:{label:"과목별 필터"'));
+ assert.ok(engine.includes('id="random-subject"'));
+ assert.ok(bootstrap.includes('questions-20200822.json'));
+ assert.ok(bootstrap.includes('scans-2026-2.json'));
+ assert.ok(!read('js/practical-ui.js').includes('scans-2026-2'));
+});
