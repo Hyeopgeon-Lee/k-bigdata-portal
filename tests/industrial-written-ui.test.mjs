@@ -111,23 +111,46 @@ test('2026 second round source scan retains five pages and 60 answer-key positio
  assert.ok(data.pages.every(page=>page.base64Chunks.join('').length>500));
  assert.deepEqual(data.subjects.map(s=>[s.from,s.to]),[[1,20],[21,40],[41,60]]);
 });
-test('subject filter and multiple exam files are connected only to industrial written page',()=>{
+test('year, session and subject filters distinguish 2020 combined/third from 2025 three rounds',()=>{
  const browser=read('js/question-browser.js');
  const engine=read('js/written-exam-ui.mjs');
  const bootstrap=read('js/industrial-written-ui.js');
+ const viewer=read('js/written-exam-scans.mjs');
  assert.ok(browser.includes('additionalFilter.matches(q,selectedAdditional)'));
  assert.ok(browser.includes('...extraCategories'));
- assert.ok(bootstrap.includes('scanYear:2026'));
- assert.ok(bootstrap.includes('scanRound:2'),'the 2026 second round is selectable in round chips');
- assert.ok(engine.includes('syncScannedViewer'),'year and round filters control 2026 scanned pages');
- assert.ok(engine.includes('...uniqueRounds(),...(scanRound?[scanRound]:[])'),'round 2 scan is selectable even with no individually extracted question text');
- assert.ok(bootstrap.includes('scanSubjectNames:'));
- assert.ok(engine.includes('scanJump?.addEventListener'));
- assert.ok(engine.includes('scanManifestUrl'));
-
+ assert.ok(engine.includes('const sessionChoices='));
+ assert.ok(engine.includes('matches:(q,key)=>(q.year+"-"+q.round)===key'));
+ assert.ok(engine.includes('extraCategories:[...new Set(scanMeta.map(s=>String(s.year)))]'));
  assert.ok(engine.includes('additionalFilter:{label:"과목별 필터"'));
- assert.ok(engine.includes('id="random-subject"'));
+ assert.ok(engine.includes('scanViewers.push({source,viewer})'));
+ assert.ok(viewer.includes('filterSubject()'));
+ assert.ok(viewer.includes('page.subjects'));
  assert.ok(bootstrap.includes('questions-20200822.json'));
  assert.ok(bootstrap.includes('scans-2026-2.json'));
- assert.ok(!read('js/practical-ui.js').includes('scans-2026-2'));
+ for(const round of [1,2,3])assert.ok(bootstrap.includes('scans-2025-'+round+'.json'));
+ assert.ok(!read('js/practical-ui.js').includes('scans-2025-'));
+});
+test('2025 original document registrations are exact three sessions and do not pretend to be graded quiz questions',()=>{
+ const expectedPages={1:6,2:5,3:5};
+ const expectedFiles={
+ 1:'2025년1회_정보처리산업기사필기 기출문제.docx',
+ 2:'2025년2회_정보처리산업기사필기 기출문제.docx',
+ 3:'2025년3회_정보처리산업기사 필기_기출문제.docx'
+ };
+ for(const round of [1,2,3]){
+  const d=JSON.parse(read('data/industrial-written/scans-2025-'+round+'.json'));
+  assert.equal(d.examType,'industrial');assert.equal(d.year,2025);assert.equal(d.round,round);
+  assert.equal(d.roundLabel,round+'회');assert.equal(d.examDate,null);
+  assert.equal(d.sourceFileName,expectedFiles[round]);
+  assert.match(d.sourceDocHash,/^[0-9a-f]{64}$/);
+  assert.equal(d.questionCountClaimed,60);
+  assert.equal(d.answerKey.length,60);
+  assert.ok(d.answerKey.every(answer=>Number.isInteger(answer)&&answer>=1&&answer<=4));
+  assert.equal(d.pages.length,expectedPages[round]);
+  assert.equal(d.importStatus,'source_scan_only');
+  assert.equal(d.scanAvailability,'metadata_only');
+  assert.ok(d.pages.every(p=>p.imageStatus==='not_uploaded'));
+  assert.deepEqual(d.subjects.map(s=>[s.from,s.to]),[[1,20],[21,40],[41,60]]);
+  assert.ok(d.pages.some(p=>p.questionFrom===null),'answer key page must be indexed');
+ }
 });
