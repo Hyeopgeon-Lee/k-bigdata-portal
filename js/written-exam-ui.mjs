@@ -6,8 +6,8 @@ import {mountWrittenSources} from "./written-exam-sources.mjs?v=20261123-index-1
 const esc=value=>String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",'"':"&quot;","'":"&#39;"}[c]));
 const $=selector=>document.querySelector(selector);
 const today=()=>new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Seoul",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
-const labelFor=q=>q.year+"년 "+q.round+"회 · "+q.number+"번";
-const sourceLabel=q=>q.sourceType==="official"?"공식 공개 기출":"복원기출";
+const labelFor=q=>q.year+"년 "+(q.roundLabel||q.round+"회")+" · "+q.number+"번";
+const sourceLabel=q=>q.sourceType==="provided"?"사용자 제공 기출":q.sourceType==="official"?"공식 공개 기출":"복원기출";
 const formatDate=millis=>new Date(millis).toLocaleDateString("ko-KR",{timeZone:"Asia/Seoul"});
 const action=(name,label,extra="")=>{
  const found=/\bclass="([^"]+)"/.exec(extra);
@@ -22,6 +22,15 @@ export function validateWrittenQuestion(q,examType){
  if(!Number.isInteger(q.year)||q.year<2020||q.year>new Date().getFullYear()||!Number.isInteger(q.round)||q.round<1||q.round>4||!Number.isInteger(q.number)||q.number<1)return false;
  if(!String(q.question||"").trim()||!Array.isArray(q.options)||q.options.length!==4||!q.options.every(v=>typeof v==="string"&&v.trim()))return false;
  if(!Number.isInteger(q.answer)||q.answer<1||q.answer>4)return false;
+ if(q.sourceType==="provided"){
+  return examType==="industrial"&&q.year===2020&&q.examDate==="2020-06-06"&&
+   q.roundLabel==="1·2회 통합"&&q.sourceVerified===true&&q.answerVerified===true&&
+   typeof q.sourceFileName==="string"&&q.sourceFileName.endsWith(".hwpx")&&
+   /^[0-9a-f]{64}$/.test(q.sourceDocHash||"")&&
+   Array.isArray(q.visuals)&&q.visuals.length<=2&&q.visuals.every(v=>
+    typeof v==="object"&&/^data:image\/gif;base64,[A-Za-z0-9+/]+=*$/.test(v.dataUri||"")&&
+    /^[0-9a-f]{64}$/.test(v.sha256||""));
+ }
  if(!["official","reconstructed"].includes(q.sourceType)||!/^https:\/\//.test(q.sourceUrl||""))return false;
  const evidence=q.evidence;
  const validEvidence=value=>typeof value==="string"&&/^https:\/\//.test(value);
@@ -185,12 +194,13 @@ export function mountWrittenExam({examType,label,dataUrl,storageKey,sourceIndexU
   }).join("");
   root.classList.add("study-split");root.innerHTML='<article class="bank-solve">'+
    quizNavigation({count:queue.length?(queueIndex+1)+" / "+queue.length:"1 / 1",listAction:"back",jumpAction:"answer-jump"})+
-   quizHeading({title:label+" "+labelFor(q),titleId:"solve-title",badges:[source,q.subject||"필기",q.year+"년 "+q.round+"회"],
+   quizHeading({title:label+" "+labelFor(q),titleId:"solve-title",badges:[source,q.subject||"필기",q.year+"년 "+(q.roundLabel||q.round+"회")],
      actions:[{label:"문제 공유",tone:"share",action:"share-problem",ariaLabel:"현재 문제 공유"},
        {label:"링크 복사",tone:"copy",action:"copy-problem-link",ariaLabel:"현재 문제 링크 복사"},
        {label:"오류 신고",tone:"report",href:reportUrl(q),ariaLabel:"현재 필기문제 오류 신고"}]})+
    '<p id="share-status" class="share-status" role="status" aria-live="polite"></p>'+
-   '<p class="solve-question">'+esc(q.question).replace(/\n/g,"<br>")+'</p>'+
+   '<p class="solve-question">'+esc(q.question).replace(/\n/g,"<br>")+'</p>'+ 
+   (Array.isArray(q.visuals)?q.visuals.map((visual,i)=>'<figure class="written-source-figure"><img loading="lazy" src="'+esc(visual.dataUri)+'" alt="'+esc(q.number+'번 문제의 원본 그림 '+(i+1))+'"></figure>').join(''):'')+
    (q.code?'<div class="code-scroll" tabindex="0" role="region" aria-label="문제 코드"><pre><code>'+esc(q.code)+'</code></pre></div>':"")+
    '<form id="answer-form" class="quiz-answer"><label>내가 생각한 정답</label><div class="ncp-options written-options" role="group" aria-label="정답 선택">'+answerMarkup+'</div>'+
    '<p class="hint" id="answer-hint">정답이라고 생각하는 보기 하나를 선택하세요.</p>'+
@@ -223,7 +233,9 @@ export function mountWrittenExam({examType,label,dataUrl,storageKey,sourceIndexU
     button.classList.toggle("is-mismatch",n===selected&&!correct);
   });
   const btn=$("#submit-answer");btn.type="button";btn.dataset.action="show-answer";btn.textContent="정답·해설 접기";btn.setAttribute("aria-expanded","true");
-  const report='<details class="bank-sources quiz-disclosure"><summary>복원정보 / 원문 출처</summary><div class="quiz-disclosure-body"><p>'+esc(labelFor(q))+' · '+sourceLabel(q)+'</p><a target="_blank" rel="noopener noreferrer" href="'+esc(q.sourceUrl)+'">출처 확인 ↗</a></div></details>';
+  const report=q.sourceType==="provided"?
+    '<details class="bank-sources quiz-disclosure"><summary>원문 · 정답 출처</summary><div class="quiz-disclosure-body"><p>'+esc(q.sourceFileName)+'</p><p>'+esc(q.answerEvidence||"교사용 원본 정답표와 대조했습니다.")+'</p><p>사용자 제공 문서의 문항이며, 출제기관의 재이용 허가 여부를 뜻하지 않습니다.</p></div></details>':
+    '<details class="bank-sources quiz-disclosure"><summary>복원정보 / 원문 출처</summary><div class="quiz-disclosure-body"><p>'+esc(labelFor(q))+' · '+sourceLabel(q)+'</p><a target="_blank" rel="noopener noreferrer" href="'+esc(q.sourceUrl)+'">출처 확인 ↗</a></div></details>';
   $("#answer-result").innerHTML='<section class="bank-result quiz-results"><h3 tabindex="-1" id="result-heading">정답·해설</h3>'+
    quizFeedback({label:correct?"정답입니다":"오답입니다",kind:correct?"correct":"incorrect",details:"선택한 답과 정답을 비교해 보세요."})+
    '<div class="answer-pair"><div><h4>내 답</h4><pre>'+selected+'번</pre></div><div><h4>정답</h4><pre>'+q.answer+'번 · '+esc(q.options[q.answer-1])+'</pre></div></div>'+
@@ -346,7 +358,7 @@ export function mountWrittenExam({examType,label,dataUrl,storageKey,sourceIndexU
   browser=createQuestionBrowser({
    title:label+" 필기 기출문제",questions:bank,
    category:q=>String(q.year),categoryLabel:y=>y+"년",
-   secondaryFilter:{label:"회차 선택",categoryLabel:"출제년도",options:uniqueRounds().map(r=>({value:String(r),label:r+"회"})),matches:(q,r)=>String(q.round)===r},
+   secondaryFilter:{label:"회차 선택",categoryLabel:"출제년도",options:uniqueRounds().map(r=>({value:String(r),label:bank.some(q=>q.round===r&&q.roundLabel)?r+"회 / 통합회차":r+"회"})),matches:(q,r)=>String(q.round)===r},
    describe:q=>q.number+"번 · "+q.question.slice(0,85),
    searchText:q=>[q.id,q.year+"년",q.round+"회",q.subject||"",q.question,...q.options].join(" "),
    metaText:q=>labelFor(q)+" · "+(q.subject||"필기")+" · "+sourceLabel(q),
