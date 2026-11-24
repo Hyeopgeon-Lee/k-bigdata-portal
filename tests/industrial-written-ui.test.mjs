@@ -150,7 +150,7 @@ test('2025 original document registrations are exact three sessions and do not p
   assert.equal(d.importStatus,'source_scan_only');
   assert.ok(d.pages.every(p=>p.imageStatus==='not_uploaded'||(Array.isArray(p.base64Chunks)&&p.base64Chunks.length>0)),'scan page must declare whether its image is actually registered');
   const imagePages=d.pages.filter(p=>Array.isArray(p.base64Chunks)&&p.base64Chunks.length>0);
-  if(round===1)assert.equal(imagePages.length,6,'2025 round 1 six scanned page images must be available');
+  assert.equal(imagePages.length,expectedPages[round],'all 2025 rounds must include each original rendered page');
   for(const page of imagePages){
    assert.match(page.mediaType,/^image\/(?:png|webp|jpeg)$/);
    assert.match(page.sha256,/^[0-9a-f]{64}$/);
