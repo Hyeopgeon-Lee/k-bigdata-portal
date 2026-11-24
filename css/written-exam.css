@@ -38,3 +38,20 @@
 .written-source-figure{margin:14px 0 24px;max-width:100%;overflow-x:auto;background:#fff;border:1px solid #d9e4f0;border-radius:10px;padding:14px}
 .written-source-figure img{display:block;width:auto;height:auto;max-width:100%;object-fit:contain;image-rendering:auto}
 @media(max-width:600px){.written-source-figure{padding:8px;margin:12px 0 18px}}
+
+/* Subject-level filter for historical written exams; opt-in to this question bank. */
+.written-bank-page .qb-additional-filter{display:grid;gap:8px;max-width:460px;padding:12px 0}
+.written-bank-page .qb-additional-filter[hidden]{display:none}
+.written-bank-page .qb-additional-filter label{font-size:15px;font-weight:700;color:#172e48}
+.written-bank-page .qb-additional-filter select{width:100%;min-height:48px;border:1px solid #bdcadc;border-radius:10px;background:white;color:#173251;font:inherit;font-size:16px;padding:10px 13px}
+.written-bank-page .written-option-figure{display:block;max-width:100%;max-height:180px;object-fit:contain;margin:8px 0;border:1px solid #e5e9f1;background:#fff;border-radius:6px}
+.written-source-scans{background:#fff;border:1px solid #d8e1eb;border-radius:14px;padding:20px;margin:22px 0 36px}
+.written-source-scans h2{font-size:clamp(19px,2.4vw,25px);margin:0 0 9px}
+.written-scan-note,.written-scans-status{font-size:15px;color:#52657b;line-height:1.75}
+.written-scans-list{display:grid;gap:12px}
+.written-scanned-page{border:1px solid #d7e0ed;border-radius:10px;overflow:hidden}
+.written-scanned-page[hidden]{display:none}
+.written-scanned-page summary{padding:14px 17px;font-size:16px;font-weight:700;cursor:pointer;line-height:1.5}
+.written-scanned-figure{margin:0;padding:10px;background:white;overflow-x:auto}
+.written-scanned-figure img{display:block;width:100%;height:auto;max-width:1320px;image-rendering:auto}
+@media(max-width:700px){.written-source-scans{padding:12px}.written-scanned-page summary{padding:12px}.written-scanned-figure{padding:4px}}
