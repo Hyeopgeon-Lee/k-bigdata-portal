@@ -16,25 +16,7 @@
 @media(max-width:800px){.written-bank-page .written-browser-nav{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:480px){.written-bank-page .written-browser-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.written-bank-page .written-choice{grid-template-columns:28px minmax(0,1fr);gap:9px;padding:12px;font-size:15px}.written-bank-page .written-choice .written-choice-num{width:26px;height:26px}}
 
-/* Copyright-aware external question references; shown within the shared problem browser. */
-.written-source-directory{margin:24px 0 40px;padding:24px;background:#fff;border:1px solid #d8e1eb;border-radius:14px;color:#17263e}
-.written-source-directory h2{font-size:clamp(19px,2.4vw,25px);line-height:1.4;margin:0 0 10px}
-.written-source-explainer,.written-source-summary{font-size:15px;line-height:1.7;color:#53677f;margin:6px 0 15px}
-.written-source-years{display:grid;gap:10px}
-.written-source-year{border:1px solid #d9e1eb;border-radius:11px;padding:0 16px;background:#fff}
-.written-source-year>summary{cursor:pointer;padding:15px 0;font-size:16px;font-weight:750;line-height:1.6;overflow-wrap:anywhere}
-.written-source-rule{font-size:14px;color:#586c80;margin:0 0 12px}
-.written-source-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0 0 18px;padding:0;list-style:none}
-.written-source-item{min-width:0;padding:15px;border-radius:10px;background:#f5f8fc;border:1px solid #e0e7f0;display:flex;flex-direction:column;align-items:flex-start;gap:9px}
-.written-source-item strong{font-size:16px;line-height:1.5;word-break:keep-all}
-.written-source-item p{font-size:13px;line-height:1.5;margin:0;color:#506379}
-.written-source-item .written-source-license{font-size:13px;color:#795d36}
-.written-source-item .button{max-width:100%;min-height:44px;margin-top:auto}
-.written-source-official-note{margin:14px 0 0;font-size:14px}
-@media(max-width:700px){.written-source-directory{padding:16px}.written-source-links{grid-template-columns:1fr}.written-source-year{padding:0 12px}}
-
-
-/* Source HWPX diagrams are displayed as the original GIF assets. */
+/* Diagrams embedded within the retained 2020 objective questions. */
 .written-source-figure{margin:14px 0 24px;max-width:100%;overflow-x:auto;background:#fff;border:1px solid #d9e4f0;border-radius:10px;padding:14px}
 .written-source-figure img{display:block;width:auto;height:auto;max-width:100%;object-fit:contain;image-rendering:auto}
 @media(max-width:600px){.written-source-figure{padding:8px;margin:12px 0 18px}}
@@ -45,18 +27,8 @@
 .written-bank-page .qb-additional-filter label{font-size:15px;font-weight:700;color:#172e48}
 .written-bank-page .qb-additional-filter select{width:100%;min-height:48px;border:1px solid #bdcadc;border-radius:10px;background:white;color:#173251;font:inherit;font-size:16px;padding:10px 13px}
 .written-bank-page .written-option-figure{display:block;max-width:100%;max-height:180px;object-fit:contain;margin:8px 0;border:1px solid #e5e9f1;background:#fff;border-radius:6px}
-.written-source-scans{background:#fff;border:1px solid #d8e1eb;border-radius:14px;padding:20px;margin:22px 0 36px}
-.written-source-scans h2{font-size:clamp(19px,2.4vw,25px);margin:0 0 9px}
-.written-scan-note,.written-scans-status{font-size:15px;color:#52657b;line-height:1.75}
-.written-scans-list{display:grid;gap:12px}
-.written-scanned-page{border:1px solid #d7e0ed;border-radius:10px;overflow:hidden}
-.written-scanned-page[hidden]{display:none}
-.written-scanned-page summary{padding:14px 17px;font-size:16px;font-weight:700;cursor:pointer;line-height:1.5}
-.written-scanned-figure{margin:0;padding:10px;background:white;overflow-x:auto}
-.written-scanned-figure img{display:block;width:100%;height:auto;max-width:1320px;image-rendering:auto}
-@media(max-width:700px){.written-source-scans{padding:12px}.written-scanned-page summary{padding:12px}.written-scanned-figure{padding:4px}.written-scanned-figure img{width:900px;max-width:none}}
 
-/* Written-exam-specific controls: year -> round -> subject -> search. */
+/* Written exam filters: year, round, subject, search and progress. */
 .written-bank-page .qb-controls>.qb-primary-caption{order:0}
 .written-bank-page .qb-controls>.qb-categories{order:1}
 .written-bank-page .qb-controls>.qb-secondary-filter{order:2}
@@ -65,23 +37,5 @@
 .written-bank-page .qb-controls>.qb-progress-filter{order:5}
 .written-bank-page .qb-controls>.qb-progress-hint{order:6}
 .written-bank-page .qb-secondary-chips>[hidden]{display:none!important}
-.written-source-scans[hidden],.written-scan-shortcuts[hidden],.question-browser .qb-list[hidden]{display:none!important}
-.written-scan-shortcuts{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:14px 0 18px}
-.written-scan-shortcuts h3{font-size:16px;line-height:1.5;flex-basis:100%;margin:0 0 4px}
-.written-scan-shortcuts button{min-height:44px;padding:8px 13px;font-size:15px;white-space:normal;text-align:center}
-.written-scan-notice,.written-scan-origin,.written-scan-unavailable,.written-scan-reference{margin:12px 0;font-size:14px;line-height:1.7}
-.written-scan-notice{padding:13px;border:1px solid #dbe3ef;border-radius:10px;background:#f8faff;color:#394f67}
-.written-scanned-exams{margin:20px 0}
-.written-answer-key{margin-top:20px;padding:12px;border:1px solid #d3deed;border-radius:10px}
-.written-answer-key summary{cursor:pointer;font-weight:750;font-size:16px}
-.written-answer-key-note{font-size:13px;line-height:1.6;color:#52657b}
-.written-answer-grid{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:6px}
-.written-answer-grid span{font-size:13px;text-align:center;padding:8px 2px;border-radius:5px;background:#f1f5fa}
-@media(max-width:700px){.written-answer-grid{grid-template-columns:repeat(5,minmax(0,1fr))}.written-scan-shortcuts button{flex:1 1 40%;font-size:14px}}
-
-.written-inline-answer-panel{border:1px solid #b9cce5;border-radius:12px;margin:10px 0 16px;padding:16px;background:#f7fbff}
-.written-inline-answer-panel[hidden],.written-answer-toggle[hidden],.written-answer-grid span[hidden]{display:none!important}
-.written-inline-answer-panel h3{font-size:18px;margin:0 0 10px;color:#173251}
-.written-answer-toggle{margin:8px 0;min-height:48px;font-weight:750}
+.question-browser .qb-list[hidden]{display:none!important}
 .written-answer-only{padding:14px;margin:12px 0;background:#eef5fd;color:#153c6c;border-radius:8px;font-weight:650}
-@media(max-width:600px){.written-inline-answer-panel{padding:12px}.written-answer-toggle{width:100%}}
