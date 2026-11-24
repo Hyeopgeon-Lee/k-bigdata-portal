@@ -137,7 +137,7 @@ export function mountWrittenExam({examType,label,dataUrl,additionalDataUrls=[],s
    (!bank.length?'<div class="bank-empty"><h2>문제 데이터 등록 전</h2><p>검증된 공개 기출문제를 등록하면 오늘의 학습 문제를 추천합니다.</p></div>':"");
  }
  function renderRandom(){
-  root.innerHTML='<section class="bank-empty"><h2>랜덤 필기 풀이</h2><div class="bank-filter-grid"><label>출제년도<select id="random-year"><option value="all">전체</option>'+uniqueYears().map(v=>'<option value="'+v+'">'+v+'년</option>').join("")+'</select></label><label>회차<select id="random-round"><option value="all">전체</option>'+uniqueRounds().map(v=>'<option value="'+v+'">'+v+'회</option>').join("")+'</select></label><label>문제 수<select id="random-count"><option>5</option><option>10</option><option>20</option></select></label></div>'+action("start-random","랜덤 연습 시작")+'<p id="random-status" role="status"></p></section>';
+  root.innerHTML='<section class="bank-empty"><h2>랜덤 필기 풀이</h2><div class="bank-filter-grid"><label>출제년도<select id="random-year"><option value="all">전체</option>'+uniqueYears().map(v=>'<option value="'+v+'">'+v+'년</option>').join("")+'</select></label><label>회차<select id="random-round"><option value="all">전체</option>'+uniqueRounds().map(v=>'<option value="'+v+'">'+v+'회</option>').join("")+'</select></label><label>과목<select id="random-subject"><option value="all">전체 과목</option>'+[...new Set(bank.map(q=>q.subject||"기타"))].sort().map(v=>'<option value="'+esc(v)+'">'+esc(v)+'</option>').join("")+'</select></label><label>문제 수<select id="random-count"><option>5</option><option>10</option><option>20</option></select></label></div>'+action("start-random","랜덤 연습 시작")+'<p id="random-status" role="status"></p></section>';
  }
  function renderWrong(){
   const ids=[...new Set(records.filter(r=>!r.correct).map(r=>r.id))];
@@ -194,7 +194,8 @@ export function mountWrittenExam({examType,label,dataUrl,additionalDataUrls=[],s
   const q=current,source=sourceLabel(q);
   const answerMarkup=q.options.map((option,i)=>{
     const num=i+1,picked=selectedAnswer===num;
-    return '<button type="button" class="ncp-choice written-choice'+(picked?' is-selected':'')+'" data-answer-index="'+num+'" aria-pressed="'+String(picked)+'" '+(attempt.revealed?'disabled':'')+'><span class="written-choice-num">'+num+'</span><span>'+esc(option).replace(/\n/g,"<br>")+'</span></button>';
+    const optionFigure=q.optionVisuals?.[i];
+   return '<button type="button" class="ncp-choice written-choice'+(picked?' is-selected':'')+'" data-answer-index="'+num+'" aria-pressed="'+String(picked)+'" '+(attempt.revealed?'disabled':'')+'><span class="written-choice-num">'+num+'</span><span>'+esc(option).replace(/\n/g,"<br>")+'</span>'+(optionFigure?'<img class="written-option-figure" loading="lazy" src="'+esc(optionFigure.dataUri)+'" alt="'+num+'번 원본 그림 선택지">':'')+'</button>';
   }).join("");
   root.classList.add("study-split");root.innerHTML='<article class="bank-solve">'+
    quizNavigation({count:queue.length?(queueIndex+1)+" / "+queue.length:"1 / 1",listAction:"back",jumpAction:"answer-jump"})+
@@ -312,8 +313,8 @@ export function mountWrittenExam({examType,label,dataUrl,additionalDataUrls=[],s
   if(name==="start-today"){startQueue(bank.filter(q=>!solved(q.id)).slice(0,5),"today");return;}
   if(name==="quick-random"){startQueue(shuffle(bank).slice(0,5),"random");return;}
   if(name==="start-random"){
-   const y=$("#random-year").value,r=$("#random-round").value,count=Number($("#random-count").value);
-   startQueue(shuffle(bank.filter(q=>(y==="all"||String(q.year)===y)&&(r==="all"||String(q.round)===r))).slice(0,count),"random");return;
+   const y=$("#random-year").value,r=$("#random-round").value,s=$("#random-subject").value,count=Number($("#random-count").value);
+   startQueue(shuffle(bank.filter(q=>(y==="all"||String(q.year)===y)&&(r==="all"||String(q.round)===r)&&(s==="all"||(q.subject||"기타")===s))).slice(0,count),"random");return;
   }
   if(name==="resume"){queue=[bank.find(q=>q.id===b.dataset.id)].filter(Boolean);queueIndex=0;queueKind="bank";openQuestion(b.dataset.id);return;}
   if(name==="retry"){openQuestion(current.id,null,true);return;}
