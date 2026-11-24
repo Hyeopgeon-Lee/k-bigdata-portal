@@ -148,8 +148,14 @@ test('2025 original document registrations are exact three sessions and do not p
   assert.ok(d.answerKey.every(answer=>Number.isInteger(answer)&&answer>=1&&answer<=4));
   assert.equal(d.pages.length,expectedPages[round]);
   assert.equal(d.importStatus,'source_scan_only');
-  assert.equal(d.scanAvailability,'metadata_only');
-  assert.ok(d.pages.every(p=>p.imageStatus==='not_uploaded'));
+  assert.ok(d.pages.every(p=>p.imageStatus==='not_uploaded'||(Array.isArray(p.base64Chunks)&&p.base64Chunks.length>0)),'scan page must declare whether its image is actually registered');
+  const imagePages=d.pages.filter(p=>Array.isArray(p.base64Chunks)&&p.base64Chunks.length>0);
+  if(round===1)assert.equal(imagePages.length,6,'2025 round 1 six scanned page images must be available');
+  for(const page of imagePages){
+   assert.match(page.mediaType,/^image\/(?:png|webp|jpeg)$/);
+   assert.match(page.sha256,/^[0-9a-f]{64}$/);
+   assert.ok(page.base64Chunks.join('').length>1000);
+  }
   assert.deepEqual(d.subjects.map(s=>[s.from,s.to]),[[1,20],[21,40],[41,60]]);
   assert.ok(d.pages.some(p=>p.questionFrom===null),'answer key page must be indexed');
  }
