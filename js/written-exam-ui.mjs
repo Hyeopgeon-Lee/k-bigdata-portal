@@ -377,6 +377,17 @@ export function mountWrittenExam({examType,label,storageKey}){
   })).values()].sort((a,b)=>b.year-a.year||a.round-b.round);
   let chosenYear=history.state?.questionBrowser?.selected||"";
   let chosenSession=history.state?.questionBrowser?.secondary||"";
+  const validYear=!chosenYear||sessionChoices.some(s=>String(s.year)===chosenYear);
+  const validSession=!chosenSession||sessionChoices.some(s=>s.key===chosenSession);
+  if(!validYear||!validSession){
+   chosenYear=validYear?chosenYear:"";
+   chosenSession=validSession?chosenSession:"";
+   const oldState=history.state||{};
+   history.replaceState({...oldState,questionBrowser:{
+    ...(oldState.questionBrowser||{}),selected:chosenYear,secondary:chosenSession,
+    additional:"",query:"",page:0,ids:[],activeId:""
+   }},"");
+  }
   const refreshFilters=()=>{
    const subjectSelect=$(".question-browser #qb-additional-select");
    if(subjectSelect){
