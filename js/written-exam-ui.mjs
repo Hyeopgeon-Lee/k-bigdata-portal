@@ -49,7 +49,7 @@ export function validateWrittenQuestion(q,examType){
    evidence.reviewer.trim().length>=2&&verifiedDate;
 }
 
-export function mountWrittenExam({examType,label,dataUrl,additionalDataUrls=[],storageKey,sourceIndexUrl=null,scanManifestUrl=null}){
+export function mountWrittenExam({examType,label,dataUrl,additionalDataUrls=[],storageKey,sourceIndexUrl=null,scanManifestUrl=null,scanYear=null,scanSubjectNames=[]}){
  const root=$("#bank-content"),status=$("#bank-status"),storageStatus=$("#storage-status");
  if(!root||!status)throw Error("필기 문제풀이 화면을 찾을 수 없습니다.");
  let bank=[],browser=null,view="bank",current=null,queue=[],queueIndex=0,queueKind="bank";
@@ -372,8 +372,10 @@ export function mountWrittenExam({examType,label,dataUrl,additionalDataUrls=[],s
   browser=createQuestionBrowser({
    title:label+" 필기 기출문제",questions:bank,
    category:q=>String(q.year),categoryLabel:y=>y+"년",
+   extraCategories:scanYear?[String(scanYear)]:[],
+   onCategoryChange:selectedYear=>{const viewer=$("#industrial-scanned-round-2026");if(viewer)viewer.hidden=!!selectedYear&&selectedYear!==String(scanYear);},
    secondaryFilter:{label:"회차 선택",categoryLabel:"출제년도",options:uniqueRounds().map(r=>({value:String(r),label:r+"회"+(r===1?" / 통합회차 포함":"")})),matches:(q,r)=>String(q.round)===r},
-   additionalFilter:{label:"과목별 필터",options:[...new Set(bank.map(q=>q.subject||"기타"))].sort().map(s=>({value:s,label:s})),matches:(q,s)=>(q.subject||"기타")===s},
+   additionalFilter:{label:"과목별 필터",options:[...new Set([...bank.map(q=>q.subject||"기타"),...scanSubjectNames])].sort().map(s=>({value:s,label:s})),matches:(q,s)=>(q.subject||"기타")===s},
    describe:q=>q.number+"번 · "+q.question.slice(0,85),
    searchText:q=>[q.id,q.year+"년",q.round+"회",q.subject||"",q.question,...q.options].join(" "),
    metaText:q=>labelFor(q)+" · "+(q.subject||"필기")+" · "+sourceLabel(q),
@@ -386,6 +388,13 @@ export function mountWrittenExam({examType,label,dataUrl,additionalDataUrls=[],s
   section.querySelector(".qb-heading").after(menu);
   if(sourceIndexUrl)void mountWrittenSources(section,sourceIndexUrl,examType);
   if(scanManifestUrl)void mountWrittenExamScans(section,scanManifestUrl);
+  const scanJump=menu.querySelector(".written-scan-jump");
+  scanJump?.addEventListener("click",event=>{
+   event.preventDefault();
+   if(scanYear)browser.selectCategory(String(scanYear));
+   const viewer=$("#industrial-scanned-round-2026");
+   if(viewer){viewer.hidden=false;viewer.scrollIntoView({behavior:"smooth",block:"start"});}
+  });
   section.querySelector(".qb-progress-hint").textContent="풀이 횟수와 최근 날짜는 이 브라우저의 필기 기록 기준입니다.";
   if(!bank.length){
    const notice=document.createElement("p");
