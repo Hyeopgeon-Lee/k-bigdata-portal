@@ -116,6 +116,12 @@ test('subject filter and multiple exam files are connected only to industrial wr
  const engine=read('js/written-exam-ui.mjs');
  const bootstrap=read('js/industrial-written-ui.js');
  assert.ok(browser.includes('additionalFilter.matches(q,selectedAdditional)'));
+ assert.ok(browser.includes('...extraCategories'));
+ assert.ok(bootstrap.includes('scanYear:2026'));
+ assert.ok(bootstrap.includes('scanSubjectNames:'));
+ assert.ok(engine.includes('scanJump?.addEventListener'));
+ assert.ok(engine.includes('scanManifestUrl'));
+
  assert.ok(engine.includes('additionalFilter:{label:"과목별 필터"'));
  assert.ok(engine.includes('id="random-subject"'));
  assert.ok(bootstrap.includes('questions-20200822.json'));
