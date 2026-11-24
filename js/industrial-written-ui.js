@@ -1,8 +1,8 @@
-import {mountWrittenExam} from "./written-exam-ui.mjs?v=20261124-remove-mock";
+import {mountWrittenExam} from "./written-exam-ui.mjs?v=20261124-hwpx100-v1";
 mountWrittenExam({
  examType:"industrial",
  label:"정보처리산업기사",
- dataUrl:"data/industrial-written/questions.json?v=20261123-unified-1",
+ dataUrl:"data/industrial-written/questions.json?v=20261124-hwpx100-v1",
  storageKey:"kbigdata-industrial-written-attempts-v2",
  sourceIndexUrl:"data/industrial-written/sources.json?v=20261123-index-1"
 });
