@@ -1,4 +1,4 @@
-import {mountWrittenExam} from "./written-exam-ui.mjs?v=20261124-multi-round-v3";
+import {mountWrittenExam} from "./written-exam-ui.mjs?v=20261124-multi-round-v4";
 mountWrittenExam({
  examType:"industrial",
  label:"정보처리산업기사",
