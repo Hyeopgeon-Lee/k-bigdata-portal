@@ -50,7 +50,7 @@ export function mountWrittenExam({examType,label,storageKey,scanSubjectNames=[],
  if(!root||!status)throw Error("필기 문제풀이 화면을 찾을 수 없습니다.");
  let bank=[],browser=null,view="bank",current=null,queue=[],queueIndex=0,queueKind="bank";
  let attempt=null,records=[],lastQuestionId="",pageLimit=24,selectedAnswer=null;
- let filters={year:"all",round:"all",subject:"all",source:"all",completion:"all",sort:"latest",query:""};
+ let filters={year:"all",round:"all",subject:"all",completion:"all",sort:"latest",query:""};
  const memoryKey=storageKey||"kbigdata-written-"+examType+"-v1";
  function readStorage(){
   try{const obj=JSON.parse(localStorage.getItem(memoryKey)||"{}");
@@ -77,7 +77,6 @@ export function mountWrittenExam({examType,label,storageKey,scanSubjectNames=[],
    (filters.year==="all"||String(q.year)===filters.year)&&
    (filters.round==="all"||String(q.round)===filters.round)&&
    (filters.subject==="all"||(q.subject||"기타")===filters.subject)&&
-   (filters.source==="all"||q.sourceType===filters.source)&&
    (filters.completion==="all"||(filters.completion==="solved"?solved(q.id):!solved(q.id)))&&
    words.every(term=>(q.question+" "+(q.subject||"")+" "+q.options.join(" ")).toLowerCase().includes(term)));
   if(filters.sort==="random")return shuffle(result);
@@ -346,11 +345,11 @@ export function mountWrittenExam({examType,label,storageKey,scanSubjectNames=[],
   }catch(e){notice.textContent=e.message||"가져오기에 실패했습니다.";}
  }
  root.addEventListener("change",event=>{void importLearning(event);});
- const sortKeys=["year","round","subject","source","completion","sort"];
+ const sortKeys=["year","round","subject","completion","sort"];
  for(const key of sortKeys){$("#"+key+"-filter")?.addEventListener("change",event=>{filters[key]=event.target.value;pageLimit=24;renderFilteredBank();});}
  let timer;$("#bank-query")?.addEventListener("input",event=>{clearTimeout(timer);timer=setTimeout(()=>{filters.query=event.target.value;pageLimit=24;renderFilteredBank();},100);});
  function resetFilters(){
-  filters={year:"all",round:"all",subject:"all",source:"all",completion:"all",sort:"latest",query:""};for(const key of sortKeys)$("#"+key+"-filter").value="all";
+  filters={year:"all",round:"all",subject:"all",completion:"all",sort:"latest",query:""};for(const key of sortKeys)$("#"+key+"-filter").value="all";
   $("#sort-filter").value="latest";$("#bank-query").value="";pageLimit=24;renderFilteredBank();
  }
  $("#bank-reset")?.addEventListener("click",resetFilters);
