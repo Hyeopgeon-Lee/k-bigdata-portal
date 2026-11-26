@@ -1,6 +1,6 @@
 // Main dashboard: favorites, recent shortcuts and published recruitment deadlines.
-import {services} from "./services.js?v=20261112-alumni-integrated-1";
-import {getFavorites,getRecent,toggleFavorite} from "./portal-personal.js?v=20261116-concurrency-1";
+import {services} from "./services.js?v=20261126-hub-1";
+import {getFavorites,getRecent,toggleFavorite} from "./portal-personal.js?v=20261126-hub-1";
 const $=selector=>document.querySelector(selector);
 const esc=v=>String(v??"").replace(/[&<>'"]/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[char]));
 const serviceById=id=>services.find(service=>service.id===id);

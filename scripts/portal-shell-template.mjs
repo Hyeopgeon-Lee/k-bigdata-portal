@@ -32,6 +32,7 @@ export function renderServiceNavigation(page,id){
 </nav>`);
 }
 function renderIntroExtras(id){
+  if(id==='coding')return '<a class="kh-shortcut kh-coding-link" href="k-bigdata-hub.html"><span class="kh-shortcut-mark" aria-hidden="true">K↑</span><span><strong>내 풀이를 GitHub에 저장하기</strong><small>K-BigData Hub 설치 및 사용 방법</small></span><span class="kh-shortcut-arrow" aria-hidden="true">→</span></a>';
   if(id==='interview')return '<p id="interview-stats" class="interview-stats" aria-live="polite"></p>';
   if(id==='project-guide')return '<div class="guide-actions"><a class="button button-primary" href="#process">주제 선정 시작하기 <span aria-hidden="true">↓</span></a><a class="button button-secondary" href="https://portfolio.k-bigdata.kr/">선배 작품 살펴보기 <span aria-hidden="true">↗</span></a></div>';
   if(id==='docs')return '';

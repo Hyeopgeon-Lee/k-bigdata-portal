@@ -6,7 +6,7 @@ import {renderHeader,renderServiceNavigation,renderToolbar,renderPageIntro} from
 const root=fileURLToPath(new URL('../',import.meta.url));
 // Keep the responsive account/menu loader cache-busted when regenerating page shells.
 const navigationScriptVersion='20261116-concurrency-1';
-const shellEntryScriptVersion='20261116-concurrency-1';
+const shellEntryScriptVersion='20261126-hub-1';
 function discover(dir){return readdirSync(dir,{withFileTypes:true}).flatMap(item=>item.name.startsWith('.')||['node_modules','ui-screenshots','test-results','alumni','admin','supabase'].includes(item.name)?[]:item.isDirectory()?discover(path.join(dir,item.name)):item.name.endsWith('.html')?[path.relative(root,path.join(dir,item.name)).replaceAll('\\','/')]:[]);}
 export const htmlPages=discover(root).sort();
 const region=(name,content)=>`<!-- portal:${name}:start (generated; edit scripts/portal-shell-template.mjs) -->\n${content}\n<!-- portal:${name}:end -->`;
@@ -38,9 +38,9 @@ for(const file of htmlPages){
   // Coding/learning UI assets have their own content versions and can be updated
   // without unnecessarily invalidating the shared portal shell.
   html=html.replace(/(href="css\/[^"?]+\.css)(?:\?v=[^"]+)?"/g,(match,asset)=>
-    ['href="css/written-exam.css','href="css/question-browser.css','href="css/study-review.css','href="css/coding.css','href="css/practical.css','href="css/home-refresh.css','href="css/learning-dashboard.css','href="css/room.css','href="css/home-grade.css','href="css/my-certifications.css','href="css/my-page.css','href="css/study.css'].includes(asset) ? match : `${asset}?v=${shellVersion}"`);
+    ['href="css/written-exam.css','href="css/question-browser.css','href="css/study-review.css','href="css/coding.css','href="css/practical.css','href="css/home-refresh.css','href="css/learning-dashboard.css','href="css/room.css','href="css/home-grade.css','href="css/my-certifications.css','href="css/my-page.css','href="css/study.css','href="css/k-bigdata-hub.css'].includes(asset) ? match : `${asset}?v=${shellVersion}"`);
   html=html.replace(/(src="js\/(?:app|home-dashboard|learning-ui|portal-shell-entry|coding)\.js)(?:\?v=[^"]+)?"/g,(match,asset)=>
-    (asset==='src="js/coding.js' || asset==='src="js/learning-ui.js' || asset==='src="js/home-dashboard.js') ? match : `${asset}?v=${asset==='src="js/portal-shell-entry.js'?shellEntryScriptVersion:shellVersion}"`);
+    (asset==='src="js/coding.js' || asset==='src="js/learning-ui.js' || asset==='src="js/home-dashboard.js') ? match : `${asset}?v=${asset==='src="js/portal-shell-entry.js'||asset==='src="js/app.js'?shellEntryScriptVersion:shellVersion}"`);
   html=html.replace(/<main\b([^>]*)(?<!tabindex="-1")>/,match=>match.includes('tabindex=')?match:match.slice(0,-1)+' tabindex="-1">');
   if(html!==original){outdated.push(file);if(!process.argv.includes('--check'))writeFileSync(path.join(root,file),html);}
 }

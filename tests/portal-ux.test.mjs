@@ -9,7 +9,7 @@ const read=path=>readFileSync(new URL(path,root),'utf8').replaceAll('\r\n','\n')
 const pages=Object.keys(portalPages);
 for(const page of pages){
  const html=read(page+'.html');
- assert.match(html,/<meta name="robots" content="noindex,\s*nofollow">/);
+ assert.match(html,/<meta name="robots" content="noindex,\s*nofollow(?:,\s*noarchive)?">/);
  assert.ok(html.includes('skip-link'));
  assert.ok(html.includes('footer-links'));
  assert.ok(html.includes('css/portal-ux.css'));

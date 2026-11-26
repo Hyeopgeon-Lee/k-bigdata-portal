@@ -1,4 +1,4 @@
-import {initPortalShell} from "./portal-shell.js?v=20261116-concurrency-1";
+import {initPortalShell} from "./portal-shell.js?v=20261126-hub-1";
 
 initPortalShell().catch(error=>{
  console.error("Portal shell initialization failed",error);

@@ -1,17 +1,18 @@
-import {categories, services, portalNavLinks} from './services.js?v=20261112-alumni-integrated-1';
+import {categories, services, portalNavLinks} from './services.js?v=20261126-hub-1';
 
 export const shellVersion = '20261112-page-intro-2';
 export const portalPages = {
   index: {title:'통합 포털', group:null},
   services: {title:'전체 서비스', group:null, directory:true, eyebrow:'ALL SERVICES', description:'필요한 서비스를 찾아보세요.', headingId:'directory-title'},
   coding: {title:'기초 코딩 350제', group:'learning', eyebrow:'CODING PRACTICE', description:'Java·C·Python·Ubuntu 문제풀이', headingId:'coding-heading', quiz:true},
+  'k-bigdata-hub': {title:'K-BigData Hub · GitHub 연동', group:'learning', eyebrow:'STUDENT DEVELOPED · CHROME EXTENSION', description:'기초 코딩 문제의 내 풀이를 GitHub에 기록하는 Chrome 확장 프로그램입니다.'},
   study: {title:'자율학습 관리', group:null, navGroup:'learning', eyebrow:'STUDENT LEARNING · AFTER SCHOOL', description:'이번 주 자율학습을 계획하고 기록하세요.', locked:true},
   'study-absence': {title:'자율학습 미참여 사유', group:null, locked:true},
   mypage: {title:'마이페이지', group:null, locked:true},
   'my-certifications': {title:'나의 자격증', group:null, navGroup:'learning', locked:true},
   'my-learning': {title:'나의 학습현황', group:null, navGroup:'learning', eyebrow:'STUDENT LEARNING · MY PROGRESS', description:'문제풀이와 오답 복습 현황을 확인하세요.', locked:true},
   'teacher-learning': {title:'학급 학습통계', group:null, navGroup:'learning', eyebrow:'SUPER ADMIN · WEEKLY LEARNING', description:'학생 학습 현황과 주간 메일 발송을 관리하세요.', locked:true},
-  'industrial-written': {title:'정보처리산업기사 필기 기출문제', group:'learning', eyebrow:'WRITTEN EXAM', description:'2025년 1·2·3회와 2026년 2회 필기 자료 중 문항별 검증이 끝난 객관식 문제만 학습하세요.',headingId:'industrial-written-title',quiz:true},
+  'industrial-written': {title:'정보처리산업기사 필기 기출문제', group:'learning', eyebrow:'WRITTEN EXAM', description:'2025년 1·2·3회와 2026년 2회 자료를 문항별 텍스트 객관식으로 전환합니다. 정확하게 검증된 문제만 등록·표시합니다.',headingId:'industrial-written-title',quiz:true},
   practical: {title:'정보처리 기출문제', group:'learning', eyebrow:'PRACTICAL EXAM', description:'정보처리기사·정보처리산업기사의 C·Java·Python·SQL 실기 기출문제를 학습하세요.', headingId:'portal-intro-title-practical', quiz:true},
   interview: {title:'기술면접 문제은행', group:'learning', eyebrow:'TECHNICAL INTERVIEW', description:'IT 직무 기술면접 문제풀이'},
   certifications: {title:'IT 자격증', group:'learning', eyebrow:'CERTIFICATIONS', description:'자격증별 시험 정보와 취득 시기를 확인하세요.'},

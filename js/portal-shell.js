@@ -1,7 +1,7 @@
 import {initPortalUX} from "./portal-ux.js?v=20261026-card-label-1";
-import {initRecentTracking} from "./portal-personal.js?v=20261116-concurrency-1";
-import {initGroupedSearch} from "./search-ui.js?v=20261026-card-label-1";
-import {footerLinks} from "./services.js?v=20261112-alumni-integrated-1";
+import {initRecentTracking} from "./portal-personal.js?v=20261126-hub-1";
+import {initGroupedSearch} from "./search-ui.js?v=20261126-hub-1";
+import {footerLinks} from "./services.js?v=20261126-hub-1";
 
 const esc=v=>String(v??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
 

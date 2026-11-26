@@ -28,8 +28,8 @@ try{
   assert.ok(homeWidth<=2,'home has no horizontal overflow at '+width+': '+homeWidth);
   await page.goto('http://127.0.0.1:8765/services.html',{waitUntil:'domcontentloaded'});
   await page.locator('.directory-catalog .service-card').first().waitFor({timeout:15000});
-  assert.equal(await page.locator('.directory-catalog .service-card').count(),19,'all services remain visible '+width);
-  assert.equal(await page.locator('.directory-favorite-button').count(),19,'favorite buttons '+width);
+  assert.equal(await page.locator('.directory-catalog .service-card').count(),21,'all services remain visible '+width);
+  assert.equal(await page.locator('.directory-favorite-button').count(),21,'favorite buttons '+width);
   await page.waitForFunction(()=>document.querySelector('#directory-favorites-list')?.textContent?.includes('정보처리 기출문제'));
   await page.locator('.directory-favorites summary').click();
   assert.ok((await page.locator('#directory-favorites-list').innerText()).includes('정보처리 기출문제'));
@@ -37,7 +37,7 @@ try{
   assert.ok(await page.locator('.directory-service-tile:visible').count()>=1,'NCP search '+width);
   assert.ok((await page.locator('#directory-status').innerText()).includes('개 서비스'));
   await page.locator('#directory-clear').click();
-  assert.equal(await page.locator('.directory-service-tile:visible').count(),19,'search reset '+width);
+  assert.equal(await page.locator('.directory-service-tile:visible').count(),21,'search reset '+width);
   const directoryWidth=await page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);
   assert.ok(directoryWidth<=2,'directory has no horizontal overflow at '+width+': '+directoryWidth);
   assert.deepEqual(errors,[], 'no page exceptions at '+width);

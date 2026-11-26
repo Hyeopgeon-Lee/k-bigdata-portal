@@ -15,7 +15,7 @@ for(const [id,url] of Object.entries(baseline.services))assert.equal(services.fi
 assert.equal(new Set(services.map(s=>s.id)).size,services.length);
 assert.deepEqual(navigationItems.map(item=>item.id).sort(),services.map(item=>item.id).sort());
 assert.deepEqual(Object.keys(categories),['career','learning','project','campus']);
-const expected={career:['jobs','resume','ready','recruit','apply','alumni'],learning:['study','coding','certifications','ncp','practical','interview','docs','tech-blog'],project:['portfolio','project-guide'],campus:['schedule','room','help']};
+const expected={career:['jobs','resume','ready','recruit','apply','alumni'],learning:['study','coding','k-bigdata-hub','certifications','ncp','industrial-written','practical','interview','docs','tech-blog'],project:['portfolio','project-guide'],campus:['schedule','room','help']};
 for(const [category,ids] of Object.entries(expected))assert.deepEqual(services.filter(s=>s.category===category).sort((a,b)=>a.order-b.order).map(s=>s.id),ids);
 assert.equal(services.find(s=>s.id==='tech-blog').url,'https://prof.k-bigdata.kr/blog/');
 assert.equal(serviceKind(services.find(s=>s.id==='tech-blog')),'EXTERNAL');
@@ -30,11 +30,11 @@ for(const page of pages){
  const pageId=page.replace(/\.html$/,'');
   if(!portalPages[pageId]){
    // Admin routes have a separate role-gated shell tested by admin-isolation.
-   assert.match(html,/<meta name="robots" content="noindex,\s*nofollow">/,page);
+   assert.match(html,/<meta name="robots" content="noindex,\s*nofollow(?:,\s*noarchive)?">/,page);
    continue;
   }
   assert.ok(html.includes(renderHeader(portalPages[pageId])),page+' canonical header');
- assert.match(html,/<meta name="robots" content="noindex,\s*nofollow">/,page);
+ assert.match(html,/<meta name="robots" content="noindex,\s*nofollow(?:,\s*noarchive)?">/,page);
  assert.ok(!html.includes('content="index, follow"'));
  for(const text of ['skip-link','menu-toggle','aria-controls="portal-nav"',page==='practical.html'?'study-footer':'footer-links'])assert.ok(html.includes(text),page+' '+text);
  for(const [,url] of html.matchAll(/(?:href|src)="([^"]+)"/g))if(!/^(https?:|#|mailto:)/.test(url))assert.ok(existsSync(new URL(url.split(/[?#]/)[0],root)),page+' '+url);
