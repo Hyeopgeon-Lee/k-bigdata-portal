@@ -26,8 +26,10 @@ test('home, directory and shared shell reuse one personal-state singleton',()=>{
  const modules=files.map(p=>read(p).match(/\.\/portal-personal\.js\?v=[a-zA-Z0-9-]+/)?.[0]);
  assert.ok(modules.every(Boolean),'personal module imported everywhere');
  assert.equal(new Set(modules).size,1,'browser must not instantiate duplicate personal state');
- assert.match(read('index.html'),/home-dashboard\.js\?v=20261116-concurrency-2/);
- assert.match(read('services.html'),/directory\.js\?v=20261116-concurrency-2/);
+ const homeVersion=read('index.html').match(/home-dashboard\.js\?v=([a-zA-Z0-9-]+)/)?.[1];
+ const directoryVersion=read('services.html').match(/directory\.js\?v=([a-zA-Z0-9-]+)/)?.[1];
+ assert.ok(homeVersion&&directoryVersion,'both entry points must be versioned');
+ assert.equal(homeVersion,directoryVersion,'both entry points use the same release version');
 });
 test('learning writes are batched, idempotent and cross-tab serialized',()=>{
  assert.match(activity,/LEARNING_BATCH_SIZE=25/);
