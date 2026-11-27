@@ -25,7 +25,7 @@ export const categories = {
   }
 };
 export const services = [
-  {id:"engineer-written",name:"정보처리기사 필기 기출문제",englishName:"ENGINEER WRITTEN EXAM",category:"learning",url:"engineer-written.html",icon:"book",accent:"blue",order:9.44,description:"2023·2024·2025년 1·2·3회와 2026년 1·2회 총 1,100문항을 5과목별·회차별로 학습하세요.",shortDescription:"기사 필기 기출문제 1,100문항 및 정답 확인.",tags:["정보처리기사","필기","기출문제","CBT"],aliases:"기사 필기 정보처리기사 문제은행",featured:false},
+  {id:"engineer-written",name:"정보처리기사 필기 기출문제",englishName:"ENGINEER WRITTEN EXAM",category:"learning",url:"engineer-written.html",icon:"book",accent:"blue",order:9.44,description:"2022·2023·2024·2025년 1·2·3회와 2026년 1·2회 총 1,400문항을 5과목별·회차별로 학습하세요.",shortDescription:"기사 필기 기출문제 1,400문항 및 정답 확인.",tags:["정보처리기사","필기","기출문제","CBT"],aliases:"기사 필기 정보처리기사 문제은행",featured:false},
   {
     id:"industrial-written", name:"정보처리산업기사 필기 기출문제", englishName:"INDUSTRIAL ENGINEER WRITTEN EXAM",
     category:"learning", url:"industrial-written.html", icon:"book", accent:"blue", order:9.45,
