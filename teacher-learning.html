@@ -26,7 +26,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <script defer src="js/portal-navigation.js?v=20261116-concurrency-1"></script>
 <!-- portal:assets:end -->
 <link rel="stylesheet" href="css/study.css?v=20261112-page-intro-2">
-</head><body data-page="teacher-learning" data-requires-super-admin>
+<link rel="stylesheet" href="css/written-dashboard.css?v=20261127-v1"></head><body data-page="teacher-learning" data-requires-super-admin>
 <p id="learning-notice" role="status">로그인 및 재학 상태를 확인 중입니다. <a href="/">포털 메인</a></p>
 <a class="skip-link" href="#main-content">본문으로 바로가기</a>
 <!-- portal:header:start (generated; edit scripts/portal-shell-template.mjs) -->
@@ -66,6 +66,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <div class="container learn-container">
 <div class="learn-tools"><p class="learn-note">학습 통계: 월요일 00:00 ~ 다음 월요일 00:00 · 한국시간</p><button id="teacher-refresh" type="button">통계 새로고침</button></div>
 <p id="teacher-status" class="learn-status" role="status" aria-live="polite">관리자 권한을 확인하고 있습니다.</p>
+<section id="industrial-teacher-stats" class="learn-section written-dashboard"></section>
 <section class="learn-section learn-mail-section" aria-labelledby="teacher-mail-heading">
   <h2 id="teacher-mail-heading">주간 메일 발송</h2>
   <p id="teacher-mail-status" class="learn-mail-status" role="status" aria-live="polite">설정 확인 중…</p>
@@ -125,4 +126,4 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <script type="application/x-learning" data-module="js/teacher-learning.js?v=20261113-snapshot-1"></script>
 <script type="application/x-learning" data-module="js/study-teacher.js?v=20261113-current-grade-1"></script>
 <script type="application/x-learning" data-module="js/portal-shell-entry.js?v=20261116-concurrency-1"></script>
-</body></html>
+<script type="application/x-learning" data-module="js/written-admin.js?v=20261127-v1"></script></body></html>
