@@ -56,7 +56,7 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
  let filters={year:"all",round:"all",subject:"all",completion:"all",sort:"latest",query:""};
  const memoryKey=storageKey||"kbigdata-written-"+examType+"-v1";
  const userId=window.portalVerifiedUserId,db=window.portalSupabaseClient;
- const cloud=examType==="industrial"&&!!userId&&!!db&&window.portalLearning?.read===true;
+ const cloud=!!userId&&!!db&&window.portalLearning?.read===true;
  const writable=cloud&&window.portalLearning?.write===true;
  const scopedKey=cloud?memoryKey+":"+userId:memoryKey;
  const table="written_learning_attempts";
@@ -99,7 +99,7 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
     records=merge(remote,pending);
     if(records.length)lastQuestionId=records.at(-1).id;
     cache();syncMessage(writable?"":"계정 기록 조회 전용");
-    browser?.refresh();
+    browser?.refresh();refreshSolveProgress();
     if(!current&&view==="wrong")renderWrong();
     if(!current&&view==="progress")renderProgress();
     if(!current&&view==="home")renderHome();
@@ -117,7 +117,9 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
   }else syncMessage(saved?"현재 기기에 저장 · 로그인하면 계정 동기화 가능":"브라우저 저장소를 사용할 수 없습니다.");
  }
  readStorage();
- document.addEventListener("visibilitychange",()=>{if(!attempt||attempt.revealed)return;const now=Date.now();if(document.hidden){if(attempt.activeSince!==null)attempt.activeMs+=Math.max(0,now-attempt.activeSince);attempt.activeSince=null;}else attempt.activeSince=now;});
+ window.addEventListener("pagehide",()=>finalizeAttempt());
+ window.addEventListener("pageshow",event=>{if(event.persisted&&current&&attempt?.recorded&&!attempt.revealed){attempt.revealed=true;revealAnswer();}if(event.persisted&&cloud)void sync();});
+ document.addEventListener("visibilitychange",()=>{if(!attempt||attempt.revealed||attempt.recorded)return;const now=Date.now();if(document.hidden){if(attempt.activeSince!==null)attempt.activeMs+=Math.max(0,now-attempt.activeSince);attempt.activeSince=null;}else attempt.activeSince=now;});
  if(cloud){window.addEventListener("online",()=>void sync());document.addEventListener("visibilitychange",()=>{if(!document.hidden)void sync();});}
  function getProgress(q){
   const rows=records.filter(r=>r.id===q.id);
@@ -172,6 +174,7 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
   $("main").classList.remove("qb-browsing");
  }
  function selectView(next){
+  finalizeAttempt();attempt=null;
   if(mock?.isActive())mock.stop();
   view=examType==="industrial"&&next==="home"?"bank":next;current=null;selectedAnswer=null;queue=[];queueIndex=0;
   root.classList.remove("study-split");
@@ -219,18 +222,18 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
  function renderLegacyProgress(){
   const expanded=[...root.querySelectorAll(".written-round[open]")].map(x=>x.dataset.session);
   const cutoff=Date.now()-7*24*3600*1000,week=records.filter(r=>r.at>=cutoff);
-  root.innerHTML=(examType==="industrial"?writtenDashboard(bank,records,writable):"")+(examType==="industrial"?"<h2>기간별 학습현황</h2>":'<h2>내 학습현황</h2><p>'+(cloud?"계정에 저장된 필기 학습 기록입니다.":"현재 기기에 저장된 필기 학습 기록입니다.")+'</p>')+'<section class="bank-empty"><h3>오늘 · '+today()+'</h3>'+stats(records.filter(r=>formatDate(r.at)===formatDate(Date.now())))+'</section><h3>최근 7일</h3><div class="bank-progress-grid">'+
+  root.innerHTML=(examType==="industrial"?writtenDashboard(bank,records,writable):"")+(examType==="industrial"?"<h2>기간별 학습현황</h2>":'<h2>내 학습현황</h2><p>'+(cloud?"계정에 저장된 필기 학습 기록입니다.":"현재 기기에 저장된 필기 학습 기록입니다.")+'</p>')+'<section class="bank-empty"><h3>오늘 · '+today()+'</h3>'+stats(records.filter(r=>formatDate(r.at)===formatDate(Date.now())))+'</section><section class="bank-empty"><h3>최근 7일</h3>'+stats(week)+'</section><section class="bank-empty"><h3>최근 30일</h3>'+stats(records.filter(r=>r.at>=Date.now()-30*86400000))+'</section><section class="bank-empty"><h3>전체 학습현황</h3><p>완료 '+bank.filter(q=>solved(q.id)).length+' / '+bank.length+'문항</p>'+stats(records)+'</section><h3>최근 7일 과목별 학습현황</h3><div class="bank-progress-grid">'+
     [...new Set(bank.map(q=>q.subject||"필기"))].map(sub=>{
       const ids=new Set(bank.filter(q=>(q.subject||"필기")===sub).map(q=>q.id));
       return '<article><h3>'+esc(sub)+'</h3>'+stats(week.filter(r=>ids.has(r.id)))+'</article>';
-    }).join("")+'</div>'+(examType==="industrial"?"":'<details><summary>학습기록 관리</summary><p>학습기록을 백업하거나 삭제할 수 있습니다.</p>'+(writable?action("import-device","기존 이 기기 기록 가져오기"):"")+action("export-learning","학습 기록 내보내기")+
+    }).join("")+'</div><h3>연도·회차별 풀이율</h3><div class="written-round-list">'+summarizeWritten(bank,records).rounds.map(r=>'<article class="written-round"><strong>'+esc(r.key.replace("-","년 ")+"회")+'</strong><p>'+r.solved+' / '+r.total+'문항 · '+Math.round(r.solved/Math.max(1,r.total)*100)+'%</p><progress value="'+r.solved+'" max="'+Math.max(1,r.total)+'"></progress></article>').join("")+'</div>'+(examType==="industrial"?"":'<details><summary>학습기록 관리</summary><p>학습기록을 백업하거나 삭제할 수 있습니다.</p>'+(writable?action("import-device","기존 이 기기 기록 가져오기"):"")+action("export-learning","학습 기록 내보내기")+
     '<label for="import-learning">학습 기록 가져오기 (JSON)</label><input id="import-learning" type="file" accept="application/json,.json"><p id="import-status" role="status"></p>'+
     action("confirm-clear","내 학습기록 삭제")+'<div id="clear-confirm"></div></details>');
   for(const el of root.querySelectorAll(".written-round"))if(expanded.includes(el.dataset.session))el.open=true;
   if(examType==="industrial"&&mock)void mock.showHistory();
  }
  function renderWrong(){
-  if(examType!=="industrial"){renderLegacyWrong();return;}
+  
   const summary=summarizeWritten(bank,records),groups={unresolved:summary.all.wrong,repeated:summary.all.repeated,recovered:summary.all.recovered};
   const questions=groups[wrongFilter]||[],allWrong=summary.all.wrong.length+summary.all.recovered.length;
   root.innerHTML='<section class="written-dashboard written-overview"><h2>오답노트</h2><div class="written-kpis"><article><small>미해결 오답</small><strong>'+groups.unresolved.length+'문항</strong></article><article><small>반복 오답</small><strong>'+groups.repeated.length+'문항</strong></article><article><small>해결률</small><strong>'+(allWrong?Math.round(groups.recovered.length/allWrong*100)+"%":"—")+'</strong><p>해결 '+groups.recovered.length+'문항</p></article></div><div id="written-mock-recommend"></div><div class="written-year-tabs" role="group" aria-label="오답 분류">'+[["unresolved","미해결"],["repeated","반복"],["recovered","해결"]].map(([k,v])=>'<button type="button" class="button button-secondary" data-action="wrong-filter" data-filter="'+k+'" aria-pressed="'+(wrongFilter===k)+'">'+v+' ('+groups[k].length+')</button>').join("")+'</div>'+(questions.length?action("wrong-queue","이 항목 다시 풀기"):'<p>해당하는 문항이 없습니다.</p>')+'<div class="written-round-list">'+questions.map(q=>{const rows=summary.history.get(q.id),last=rows.at(-1);return '<details class="written-round"><summary><span><strong>'+esc(labelFor(q))+'</strong><small>'+esc(q.subject)+'</small><span>'+esc(q.question)+'</span></span><span class="written-pill '+(last.correct?"good":"bad")+'">'+(last.correct?"해결":"미해결")+'</span></summary><p>틀린 횟수 '+rows.filter(r=>!r.correct).length+'회 · 최근 '+formatDate(last.at)+'</p><p>최근 선택 '+last.answer+'번 · 정답 '+q.answer+'번</p>'+action("open","다시 풀기",'data-id="'+esc(q.id)+'"')+'</details>';}).join("")+'</div></section>';
@@ -266,6 +269,8 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
  }
  function openQuestion(id,items=null,fresh=false){
   const q=bank.find(item=>item.id===id);if(!q)return;
+  if(current?.id===id&&!fresh)return;
+  finalizeAttempt();
   if(items){queue=items;queueIndex=Math.max(0,queue.findIndex(item=>item.id===q.id));queueKind="bank";}
   else if(!queue.length){queue=filtered();queueIndex=Math.max(0,queue.findIndex(item=>item.id===q.id));queueKind="bank";}
   current=q;lastQuestionId=q.id;persist();selectedAnswer=null;hideBrowser();setId(q.id);
@@ -292,30 +297,46 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
    (Array.isArray(q.visuals)?q.visuals.map((visual,i)=>'<figure class="written-source-figure"><img loading="lazy" src="'+esc(visual.dataUri)+'" alt="'+esc(q.number+'번 문제의 원본 그림 '+(i+1))+'"></figure>').join(''):'')+
    (q.code?'<div class="code-scroll" tabindex="0" role="region" aria-label="문제 코드"><pre><code>'+esc(q.code)+'</code></pre></div>':"")+
    '<form id="answer-form" class="quiz-answer"><label>내가 생각한 정답</label><div class="ncp-options written-options" role="group" aria-label="정답 선택">'+answerMarkup+'</div>'+
-   '<p class="hint" id="answer-hint">정답이라고 생각하는 보기 하나를 선택하세요.</p>'+
+   '<p class="hint" id="answer-hint">보기를 선택한 뒤 다음 문제로 이동하면 자동 채점·저장됩니다.</p>'+
    '<div class="quiz-solve-actions" role="group" aria-label="문제 풀이 도움말">'+
    '<button type="button" class="quiz-solve-action quiz-solve-action--hint" data-action="toggle-hint" aria-controls="solve-hint" aria-expanded="false">힌트 보기</button>'+
    '<button type="submit" class="study-open quiz-solve-action quiz-solve-action--answer" id="submit-answer" aria-controls="answer-result" aria-expanded="false">정답·해설 보기</button></div></form>'+
    '<section id="solve-hint" class="quiz-solve-panel" hidden><h3>힌트</h3><p>'+esc(q.hint||"문제의 핵심 개념과 선택지의 차이를 비교하세요.")+'</p></section>'+
-   '<div id="answer-result"></div><nav class="study-nav">'+action("previous","이전 문제",adjacentWrittenQuestion(bank,queue,q.id,-1,queueKind==="bank")?"":"disabled")+action("next","다음 문제",adjacentWrittenQuestion(bank,queue,q.id,1,queueKind==="bank")?"":"disabled")+'</nav></article>';
+   '<div id="answer-result"></div><nav class="study-nav">'+action("previous","이전 문제",adjacentWrittenQuestion(bank,queue,q.id,-1,queueKind==="bank")?"":"disabled")+action("next",adjacentWrittenQuestion(bank,queue,q.id,1,queueKind==="bank")?"다음 문제":queueKind==="bank"?"목록으로":"학습 완료")+'</nav></article>';
   const sidebar=document.createElement("aside");sidebar.className="study-side-list";
-  sidebar.innerHTML='<h2>문제 목록</h2><div role="list">'+queue.map(item=>'<button type="button" data-action="pick-question" data-id="'+esc(item.id)+'"'+(item.id===q.id?' aria-current="true"':'')+'>'+esc(labelFor(item))+'</button>').join("")+'</div>';
-  root.prepend(sidebar);
+  sidebar.innerHTML='<h2>문제 목록</h2><p class="written-practice-count" role="status"></p><progress aria-label="문제 풀이 진도"></progress><div role="list">'+queue.map(item=>'<button type="button" data-action="pick-question" data-id="'+esc(item.id)+'"'+(item.id===q.id?' aria-current="true"':'')+'>'+esc(labelFor(item))+' <span class="written-practice-state"></span></button>').join("")+'</div>';
+  root.prepend(sidebar);refreshSolveProgress();
   $("#answer-form").addEventListener("submit",event=>{
    event.preventDefault();
    if(attempt.revealed){toggleAnswer();return;}
+   finalizeAttempt();
    attempt.answer=selectedAnswer;
    attempt.correct=selectedAnswer?selectedAnswer===q.answer:null;
    attempt.revealed=true;
-   attempt.recorded=Boolean(selectedAnswer);
-   if(selectedAnswer){
-    const at=Date.now(),elapsedSeconds=Math.max(0,Math.round((attempt.activeMs+(attempt.activeSince===null?0:at-attempt.activeSince))/1000));
-    const record={id:q.id,year:q.year,round:q.round,answer:selectedAnswer,correct:attempt.correct,at,elapsedSeconds,usedHint:attempt.usedHint};
-    records=merge(records,[record]);persist([record]);browser?.refresh();
-   }
    revealAnswer();
    $("#result-heading")?.focus({preventScroll:true});
   });
+ }
+ function finalizeAttempt(){
+  if(!current||!attempt||attempt.recorded||attempt.revealed||!Number.isInteger(selectedAnswer)||selectedAnswer<1||selectedAnswer>4)return false;
+  const q=current,at=Date.now(),elapsedSeconds=Math.max(0,Math.round((attempt.activeMs+(attempt.activeSince===null?0:at-attempt.activeSince))/1000));
+  attempt.answer=selectedAnswer;attempt.correct=selectedAnswer===q.answer;attempt.recorded=true;
+  const record={id:q.id,year:q.year,round:q.round,answer:selectedAnswer,correct:attempt.correct,at,elapsedSeconds,usedHint:attempt.usedHint};
+  records=merge(records,[record]);persist([record]);browser?.refresh();refreshSolveProgress();
+  return true;
+ }
+ function refreshSolveProgress(){
+  const side=root.querySelector(".study-side-list");if(!side)return;
+  const latest=new Map();for(const r of records)latest.set(r.id,r);
+  let done=0;
+  for(const button of side.querySelectorAll("[data-action='pick-question']")){
+   const r=latest.get(button.dataset.id),state=r?(r.correct?"correct":"incorrect"):"unseen";
+   if(r)done++;
+   button.dataset.practiceState=state;
+   const chip=button.querySelector(".written-practice-state");if(chip)chip.textContent=r?(r.correct?"✓ 정답":"✕ 오답"):"미풀이";
+  }
+  const count=side.querySelector(".written-practice-count");if(count)count.textContent=done+" / "+queue.length+"문항 풀이 완료";
+  const bar=side.querySelector("progress");if(bar){bar.max=Math.max(1,queue.length);bar.value=done;}
  }
  function revealAnswer(){
   const q=current,correct=attempt.correct,selected=attempt.answer;
@@ -372,7 +393,7 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
  root.addEventListener("click",event=>{
   const b=event.target.closest("[data-action], [data-answer-index]");if(!b)return;
   if(b.dataset.answerIndex){
-   if(attempt?.revealed)return;
+   if(attempt?.revealed||attempt?.recorded)return;
    selectedAnswer=Number(b.dataset.answerIndex);
    root.querySelectorAll(".written-choice").forEach(el=>{const selected=Number(el.dataset.answerIndex)===selectedAnswer;el.setAttribute("aria-pressed",String(selected));el.classList.toggle("is-selected",selected);});
    return;
@@ -381,8 +402,8 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
   if(examType==="industrial"&&["export-learning","confirm-clear","cancel-delete","delete-learning","import-device"].includes(name))return;
   if(examType==="industrial"&&name==="round-year"){roundYear=b.dataset.year;renderProgress();return;}
   if(examType==="industrial"&&name==="period-filter"){periodDays=Number(b.dataset.days);renderProgress();return;}
-  if(examType==="industrial"&&name==="wrong-filter"){wrongFilter=b.dataset.filter;renderWrong();return;}
-  if(examType==="industrial"&&["wrong-queue","unresolved-wrong","practice-weak","practice-subject"].includes(name)){
+  if(name==="wrong-filter"){wrongFilter=b.dataset.filter;renderWrong();return;}
+  if(["wrong-queue","unresolved-wrong","practice-weak","practice-subject"].includes(name)){
    const sm=summarizeWritten(bank,records);let items=[];
    if(name==="wrong-queue")items=({unresolved:sm.all.wrong,repeated:sm.all.repeated,recovered:sm.all.recovered})[wrongFilter]||[];
    else if(name==="unresolved-wrong")items=sm.all.wrong;
@@ -408,9 +429,10 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
   if(name==="wrong-view"){selectView("wrong");return;}
   if(name==="progress-view"){selectView("progress");return;}
   if(name==="random-again"){selectView("random");return;}
-  if(name==="open"){queue=filtered();queueIndex=Math.max(0,queue.findIndex(q=>q.id===b.dataset.id));queueKind="bank";openQuestion(b.dataset.id,null,true);return;}
-  if(name==="pick-question"){queueIndex=Math.max(0,queue.findIndex(q=>q.id===b.dataset.id));openQuestion(b.dataset.id);return;}
+  if(name==="open"){queue=view==="wrong"?(({unresolved:summarizeWritten(bank,records).all.wrong,repeated:summarizeWritten(bank,records).all.repeated,recovered:summarizeWritten(bank,records).all.recovered})[wrongFilter]||[]):filtered();queueIndex=Math.max(0,queue.findIndex(q=>q.id===b.dataset.id));queueKind=view==="wrong"?"review":"bank";openQuestion(b.dataset.id,null,true);return;}
+  if(name==="pick-question"){if(current?.id===b.dataset.id)return;queueIndex=Math.max(0,queue.findIndex(q=>q.id===b.dataset.id));openQuestion(b.dataset.id);return;}
   if(name==="previous"||name==="next"){
+   if(b.disabled)return;
    const direction=name==="next"?1:-1;
    const target=current&&adjacentWrittenQuestion(bank,queue,current.id,direction,queueKind==="bank");
    if(target){
@@ -419,7 +441,7 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
     openQuestion(target.question.id);
    }else if(direction===1&&queueKind==="bank")selectView("bank");
    else if(direction===1){
-    const count=queue.length;selectView(examType==="industrial"?"progress":"home");
+    finalizeAttempt();const count=queue.filter(q=>solved(q.id)).length;selectView(examType==="industrial"?"progress":"home");
     root.innerHTML='<section class="bank-empty"><h2 tabindex="-1">학습 완료</h2><p>'+count+'문제를 연습했습니다.</p>'+(examType==="industrial"?action("progress-view","학습현황"):action("home-view","학습 시작으로"))+action("wrong-view","오답노트")+'</section>';
     root.querySelector("h2")?.focus();
    }
