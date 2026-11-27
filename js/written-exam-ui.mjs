@@ -1,5 +1,5 @@
-import {normalizeSubject,summarizeWritten,writtenDashboard} from "./written-dashboard.mjs?v=20261127-chart-v5";
-import {createMockExam} from "./written-mock.mjs?v=20261127-chart-v5";
+import {normalizeSubject,summarizeWritten,writtenDashboard,writtenConfig} from "./written-dashboard.mjs?v=20261127-engineer-parity-v1";
+import {createMockExam} from "./written-mock.mjs?v=20261127-engineer-parity-v1";
 import {quizNavigation,quizHeading,quizDisclosure,quizFeedback,scrollToQuizAnswer} from "./quiz-unified.js?v=20261112-answer-focus-1";
 import {createQuestionBrowser} from "./question-browser.js?v=20261124-subject-filter-v2";
 import {reviewControls} from "./study-review.js?v=20261116-concurrency-1";
@@ -48,6 +48,7 @@ export function validateWrittenQuestion(q,examType){
 }
 
 export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}){
+ const {subjects:examSubjects,total:examTotal,minutes:examMinutes}=writtenConfig(examType);
  const root=$("#bank-content"),status=$("#bank-status"),storageStatus=$("#storage-status");
  if(!root||!status)throw Error("필기 문제풀이 화면을 찾을 수 없습니다.");
  let bank=[],browser=null,view="bank",current=null,queue=[],queueIndex=0,queueKind="bank";
@@ -154,13 +155,13 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
  }
  function updateNav(){
   document.querySelectorAll("[data-view]").forEach(b=>{
-   const active=b.dataset.view===(view==="mock"?"mock-lobby":view)&&(examType==="industrial"||!current);
+   const active=b.dataset.view===(view==="mock"?"mock-lobby":view);
    b.setAttribute("aria-pressed",String(active));
    b.classList.toggle("button-primary",active);
    b.classList.toggle("button-secondary",!active);
   });
   $("#quick-filters").hidden=true; // Browser and in-page tabs are the single navigation source.
-  $(".bank-nav").hidden=examType==="industrial"?false:!!current;
+  $(".bank-nav").hidden=false;
   $("#bank-controls").hidden=!!current||view!=="bank";
   $("#usage-guide").hidden=!!current;
   document.body.classList.toggle("is-solving",!!current);
@@ -177,11 +178,11 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
  function selectView(next){
   finalizeAttempt();attempt=null;
   if(mock?.isActive())mock.stop();
-  view=examType==="industrial"&&next==="home"?"bank":next;current=null;selectedAnswer=null;queue=[];queueIndex=0;
+  view=next==="home"?"bank":next;current=null;selectedAnswer=null;queue=[];queueIndex=0;
   root.classList.remove("study-split");
   hideBrowser();setId(null);updateNav();
   if(view==="bank"){browserView();return;}
-  status.textContent=examType==="industrial"?"":bank.length+"문항";
+  status.textContent="";
   if(view==="home")renderHome();
   else if(view==="random")renderRandom();
   else if(view==="wrong")renderWrong();
@@ -191,7 +192,7 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
  }
  function renderMockLobby(){
   status.textContent="";
-  root.innerHTML='<section class="written-dashboard"><h2>실전 모의고사</h2><div class="written-kpis"><article><small>전체 문항</small><strong>60문항</strong></article><article><small>시험시간</small><strong>90분</strong></article><article><small>합격 기준</small><strong>평균 60점</strong><p>과목별 40점 이상</p></article></div><div class="written-parts">'+["정보시스템 기반 기술","프로그래밍 언어 활용","데이터베이스 활용"].map(name=>'<article><h3>'+esc(name)+'</h3><p>20문항</p></article>').join("")+'</div>'+(mock&&writable?action("mock-random-start","실전 모의고사 시작",'class="button button-primary"'):'<p>학습 가능한 계정으로 로그인한 후 응시하세요.</p>')+'<h3>모의고사 성적 이력</h3><div id="written-mock-history" role="status"></div></section>';
+  root.innerHTML='<section class="written-dashboard"><h2>실전 모의고사</h2><div class="written-kpis"><article><small>전체 문항</small><strong>'+examTotal+'문항</strong></article><article><small>시험시간</small><strong>'+examMinutes+'분</strong></article><article><small>합격 기준</small><strong>평균 60점</strong><p>과목별 40점 이상</p></article></div><div class="written-parts">'+examSubjects.map(name=>'<article><h3>'+esc(name)+'</h3><p>20문항</p></article>').join("")+'</div>'+(mock&&writable?action("mock-random-start","실전 모의고사 시작",'class="button button-primary"'):'<p>학습 가능한 계정으로 로그인한 후 응시하세요.</p>')+'<h3>모의고사 성적 이력</h3><div id="written-mock-history" role="status"></div></section>';
   if(mock)void mock.showHistory();
  }
  function renderHome(){
@@ -227,7 +228,7 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
     [...new Set(bank.map(q=>q.subject||"필기"))].map(sub=>{
       const ids=new Set(bank.filter(q=>(q.subject||"필기")===sub).map(q=>q.id));
       return '<article><h3>'+esc(sub)+'</h3>'+stats(week.filter(r=>ids.has(r.id)))+'</article>';
-    }).join("")+'</div><h3>연도·회차별 풀이율</h3><div class="written-round-list">'+summarizeWritten(bank,records).rounds.map(r=>'<article class="written-round"><strong>'+esc(r.key.replace("-","년 ")+"회")+'</strong><p>'+r.solved+' / '+r.total+'문항 · '+Math.round(r.solved/Math.max(1,r.total)*100)+'%</p><progress value="'+r.solved+'" max="'+Math.max(1,r.total)+'"></progress></article>').join("")+'</div>'+(examType==="industrial"?"":'<details><summary>학습기록 관리</summary><p>학습기록을 백업하거나 삭제할 수 있습니다.</p>'+(writable?action("import-device","기존 이 기기 기록 가져오기"):"")+action("export-learning","학습 기록 내보내기")+
+    }).join("")+'</div><h3>연도·회차별 풀이율</h3><div class="written-round-list">'+summarizeWritten(bank,records,examType).rounds.map(r=>'<article class="written-round"><strong>'+esc(r.key.replace("-","년 ")+"회")+'</strong><p>'+r.solved+' / '+r.total+'문항 · '+Math.round(r.solved/Math.max(1,r.total)*100)+'%</p><progress value="'+r.solved+'" max="'+Math.max(1,r.total)+'"></progress></article>').join("")+'</div>'+(examType==="industrial"?"":'<details><summary>학습기록 관리</summary><p>학습기록을 백업하거나 삭제할 수 있습니다.</p>'+(writable?action("import-device","기존 이 기기 기록 가져오기"):"")+action("export-learning","학습 기록 내보내기")+
     '<label for="import-learning">학습 기록 가져오기 (JSON)</label><input id="import-learning" type="file" accept="application/json,.json"><p id="import-status" role="status"></p>'+
     action("confirm-clear","내 학습기록 삭제")+'<div id="clear-confirm"></div></details>');
   for(const el of root.querySelectorAll(".written-round"))if(expanded.includes(el.dataset.session))el.open=true;
@@ -243,7 +244,7 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
   return items.sort((a,b)=>criteria.sort==="recent"?recent(b)-recent(a)||count(b)-count(a):criteria.sort==="exam"?b.year-a.year||a.round-b.round||a.number-b.number:count(b)-count(a)||recent(b)-recent(a));
  }
  function renderWrong(){
-  const summary=summarizeWritten(bank,records),groups=wrongGroups(summary);
+  const summary=summarizeWritten(bank,records,examType),groups=wrongGroups(summary);
   const unresolved=groups.unresolved.length,repeated=groups.repeated.length,recovered=groups.recovered.length,total=unresolved+recovered;
   const rate=total?Math.round(recovered/total*100):0;
   const subjects=[...new Set(bank.map(q=>q.subject||"기타"))];
@@ -278,14 +279,15 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
  }
  function periodCutoff(days){if(!days)return 0;const now=Date.now(),kst=9*3600000;return Math.floor((now+kst)/86400000)*86400000-kst-(days-1)*86400000;}
  function renderProgress(){
-  if(examType!=="industrial"){renderLegacyProgress();return;}
+  
   const expanded=[...root.querySelectorAll(".written-round[open]")].map(x=>x.dataset.session);
-  const cutoff=periodCutoff(periodDays),summary=summarizeWritten(bank,records),rows=[...summary.history.values()].flat().filter(r=>r.at>=cutoff),n=rows.length,right=rows.filter(r=>r.correct).length;
+  const cutoff=periodCutoff(periodDays),summary=summarizeWritten(bank,records,examType),rows=[...summary.history.values()].flat().filter(r=>r.at>=cutoff),n=rows.length,right=rows.filter(r=>r.correct).length;
   const avg=n?Math.round(rows.reduce((a,r)=>a+Number(r.elapsedSeconds||0),0)/n)+"초":"—";
   const kpi=(l,v,sub="")=>'<article><small>'+l+'</small><strong>'+v+'</strong><p>'+sub+'</p></article>';
-  root.innerHTML=writtenDashboard(bank,records,writable,roundYear)+'<section class="written-dashboard written-overview"><h2>기간별 학습현황</h2><div class="written-year-tabs" role="group" aria-label="조회 기간">'+[[1,"오늘"],[7,"최근 7일"],[30,"최근 30일"],[0,"전체"]].map(([d,l])=>'<button type="button" class="button button-secondary" data-action="period-filter" data-days="'+d+'" aria-pressed="'+(d===periodDays)+'">'+l+'</button>').join("")+'</div><div class="written-kpis">'+kpi("기출 연습 횟수",n+"회","고유 "+new Set(rows.map(r=>r.id)).size+"문항")+kpi("실전 모의고사",'<span id="written-period-mock" data-cutoff="'+cutoff+'">—</span>')+kpi("기출 정답률",n?Math.round(right/n*100)+"%":"—","정답 "+right+" / "+n)+kpi("기출 평균 풀이시간",avg)+'</div><div class="written-parts overview-subjects">'+["정보시스템 기반 기술","프로그래밍 언어 활용","데이터베이스 활용"].map(sub=>{const ids=new Set(bank.filter(q=>q.subject===sub).map(q=>q.id)),rs=rows.filter(r=>ids.has(r.id)),r=rs.filter(x=>x.correct).length;return '<article><h4>'+esc(sub)+'</h4><strong class="overview-number">'+(rs.length?Math.round(r/rs.length*100)+"%":"—")+'</strong><p>풀이 '+rs.length+' · 정답 '+r+' · 오답 '+(rs.length-r)+'</p><p>평균 '+(rs.length?Math.round(rs.reduce((a,x)=>a+x.elapsedSeconds,0)/rs.length)+"초":"—")+'</p></article>';}).join("")+'</div></section>';
+  root.innerHTML=writtenDashboard(bank,records,writable,roundYear,examType)+'<section class="written-dashboard written-overview"><h2>기간별 학습현황</h2><div class="written-year-tabs" role="group" aria-label="조회 기간">'+[[1,"오늘"],[7,"최근 7일"],[30,"최근 30일"],[0,"전체"]].map(([d,l])=>'<button type="button" class="button button-secondary" data-action="period-filter" data-days="'+d+'" aria-pressed="'+(d===periodDays)+'">'+l+'</button>').join("")+'</div><div class="written-kpis">'+kpi("기출 연습 횟수",n+"회","고유 "+new Set(rows.map(r=>r.id)).size+"문항")+kpi("실전 모의고사",'<span id="written-period-mock" data-cutoff="'+cutoff+'">—</span>')+kpi("기출 정답률",n?Math.round(right/n*100)+"%":"—","정답 "+right+" / "+n)+kpi("기출 평균 풀이시간",avg)+'</div><div class="written-parts overview-subjects">'+examSubjects.map(sub=>{const ids=new Set(bank.filter(q=>q.subject===sub).map(q=>q.id)),rs=rows.filter(r=>ids.has(r.id)),r=rs.filter(x=>x.correct).length;return '<article><h4>'+esc(sub)+'</h4><strong class="overview-number">'+(rs.length?Math.round(r/rs.length*100)+"%":"—")+'</strong><p>풀이 '+rs.length+' · 정답 '+r+' · 오답 '+(rs.length-r)+'</p><p>평균 '+(rs.length?Math.round(rs.reduce((a,x)=>a+x.elapsedSeconds,0)/rs.length)+"초":"—")+'</p></article>';}).join("")+'</div></section>';
   for(const el of root.querySelectorAll(".written-round"))if(expanded.includes(el.dataset.session))el.open=true;
-  if(mock)void mock.showHistory();
+  if(examType==="engineer"&&writable&&Array.isArray(readLocal(memoryKey).attempts)&&readLocal(memoryKey).attempts.length)root.insertAdjacentHTML("beforeend",'<section class="bank-empty"><h3>기존 기기 학습기록</h3><p>본인의 이전 기록만 계정으로 가져오세요.</p>'+action("import-device","기존 기기 기록 가져오기")+'</section>');
+  if(mock)void mock.showHistory();else{const historyNode=$("#written-mock-history");if(historyNode)historyNode.textContent="로그인 후 모의고사 기록을 확인할 수 있습니다.";}
  }
  function uniqueYears(){return [...new Set(bank.map(q=>q.year))].sort((a,b)=>b-a);}
  function uniqueRounds(){return [...new Set(bank.map(q=>q.round))].sort((a,b)=>a-b);}
@@ -437,27 +439,27 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
   }
   const name=b.dataset.action;
   if(examType==="industrial"&&["export-learning","confirm-clear","cancel-delete","delete-learning","import-device"].includes(name))return;
-  if(examType==="industrial"&&name==="round-year"){roundYear=b.dataset.year;renderProgress();return;}
-  if(examType==="industrial"&&name==="period-filter"){periodDays=Number(b.dataset.days);renderProgress();return;}
+  if(name==="round-year"){roundYear=b.dataset.year;renderProgress();return;}
+  if(name==="period-filter"){periodDays=Number(b.dataset.days);renderProgress();return;}
   if(name==="wrong-filter"){wrongFilter=b.dataset.filter;wrongPage=0;renderWrong();return;}
   if(name==="wrong-page"){if(b.disabled)return;wrongPage=Number(b.dataset.page);renderWrong();$("#wrong-list-panel")?.scrollIntoView({block:"start"});return;}
   if(name==="wrong-reset"){wrongCriteria={subject:"",year:"",round:"",sort:"count",query:""};wrongPage=0;renderWrong();return;}
-  if(name==="wrong-recommend"){wrongFilter=b.dataset.filter;wrongCriteria={subject:b.dataset.subject||"",year:"",round:"",sort:"count",query:""};wrongPage=0;const items=wrongItems(summarizeWritten(bank,records));if(items.length)startQueue(items,"review");else renderWrong();return;}
+  if(name==="wrong-recommend"){wrongFilter=b.dataset.filter;wrongCriteria={subject:b.dataset.subject||"",year:"",round:"",sort:"count",query:""};wrongPage=0;const items=wrongItems(summarizeWritten(bank,records,examType));if(items.length)startQueue(items,"review");else renderWrong();return;}
   if(["wrong-queue","unresolved-wrong","practice-weak","practice-subject"].includes(name)){
-   const sm=summarizeWritten(bank,records);let items=[];
+   const sm=summarizeWritten(bank,records,examType);let items=[];
    if(name==="wrong-queue")items=wrongItems(sm);
    else if(name==="unresolved-wrong")items=sm.all.wrong;
-   else{const parts=["정보시스템 기반 기술","프로그래밍 언어 활용","데이터베이스 활용"].map(sub=>{const qs=bank.filter(q=>q.subject===sub),solved=qs.filter(q=>sm.history.has(q.id));return {sub,rate:solved.length?solved.filter(q=>sm.history.get(q.id).at(-1).correct).length/solved.length:null};});const target=b.dataset.subject||parts.sort((a,b)=>(a.rate??-1)-(b.rate??-1))[0].sub;const qs=bank.filter(q=>q.subject===target);items=[...shuffle(qs.filter(q=>sm.all.wrong.includes(q))),...shuffle(qs.filter(q=>!sm.history.has(q.id))),...shuffle(qs.filter(q=>sm.history.has(q.id)&&!sm.all.wrong.includes(q)))].slice(0,10);}
+   else{const parts=examSubjects.map(sub=>{const qs=bank.filter(q=>q.subject===sub),solved=qs.filter(q=>sm.history.has(q.id));return {sub,rate:solved.length?solved.filter(q=>sm.history.get(q.id).at(-1).correct).length/solved.length:null};});const target=b.dataset.subject||parts.sort((a,b)=>(a.rate??-1)-(b.rate??-1))[0].sub;const qs=bank.filter(q=>q.subject===target);items=[...shuffle(qs.filter(q=>sm.all.wrong.includes(q))),...shuffle(qs.filter(q=>!sm.history.has(q.id))),...shuffle(qs.filter(q=>sm.history.has(q.id)&&!sm.all.wrong.includes(q)))].slice(0,10);}
    if(items.length)startQueue(items,"review");return;
   }
-  if(examType==="industrial"&&["round-unseen","round-wrong","round-all","repeat-wrong"].includes(name)){
-   const summary=summarizeWritten(bank,records),r=summary.rounds.find(x=>x.key===b.dataset.round);
+  if(["round-unseen","round-wrong","round-all","repeat-wrong"].includes(name)){
+   const summary=summarizeWritten(bank,records,examType),r=summary.rounds.find(x=>x.key===b.dataset.round);
    let items=name==="repeat-wrong"?summary.all.repeated:name==="round-wrong"?(r?.wrong||[]):name==="round-unseen"?(r?.qs||[]).filter(q=>!summary.history.has(q.id)):r?.qs||[];
    if(b.dataset.subject)items=items.filter(q=>normalizeSubject(q.subject)===b.dataset.subject);
    if(!items.length){syncMessage("해당하는 복습 문항이 없습니다.");return;}startQueue(items,"review");return;
   }
-  if(name==="mock-random-start"){if(!mock||!writable||!confirm("60문항 · 90분. 실전 모의고사를 시작할까요?"))return;void mock.start("random").catch(()=>syncMessage("모의고사를 시작하지 못했습니다. 다시 시도해 주세요."));return;}
-  if(name==="mock-start"){if(!mock||!writable)return;if(!confirm("60문항 실전 모의고사를 시작하시겠습니까? 기존 진행 중인 시험이 있으면 이어집니다."))return;void mock.start(b.dataset.round).catch(()=>syncMessage("모의고사를 시작하지 못했습니다. 연결 상태를 확인해 주세요."));return;}
+  if(name==="mock-random-start"){if(!mock||!writable||!confirm(examTotal+"문항 · "+examMinutes+"분. 실전 모의고사를 시작할까요?"))return;void mock.start("random").catch(()=>syncMessage("모의고사를 시작하지 못했습니다. 다시 시도해 주세요."));return;}
+  if(name==="mock-start"){if(!mock||!writable)return;if(!confirm(examTotal+"문항 실전 모의고사를 시작하시겠습니까? 기존 진행 중인 시험이 있으면 이어집니다."))return;void mock.start(b.dataset.round).catch(()=>syncMessage("모의고사를 시작하지 못했습니다. 연결 상태를 확인해 주세요."));return;}
   if(name==="toggle-hint"){
    const hint=$("#solve-hint");hint.hidden=!hint.hidden;b.setAttribute("aria-expanded",String(!hint.hidden));
    if(!hint.hidden&&attempt)attempt.usedHint=true;return;
@@ -469,7 +471,7 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
   if(name==="wrong-view"){selectView("wrong");return;}
   if(name==="progress-view"){selectView("progress");return;}
   if(name==="random-again"){selectView("random");return;}
-  if(name==="open"){queue=view==="wrong"?wrongItems(summarizeWritten(bank,records)):filtered();queueIndex=Math.max(0,queue.findIndex(q=>q.id===b.dataset.id));queueKind=view==="wrong"?"review":"bank";openQuestion(b.dataset.id,null,true);return;}
+  if(name==="open"){queue=view==="wrong"?wrongItems(summarizeWritten(bank,records,examType)):filtered();queueIndex=Math.max(0,queue.findIndex(q=>q.id===b.dataset.id));queueKind=view==="wrong"?"review":"bank";openQuestion(b.dataset.id,null,true);return;}
   if(name==="pick-question"){if(current?.id===b.dataset.id)return;queueIndex=Math.max(0,queue.findIndex(q=>q.id===b.dataset.id));openQuestion(b.dataset.id);return;}
   if(name==="previous"||name==="next"){
    if(b.disabled)return;
@@ -481,8 +483,8 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
     openQuestion(target.question.id);
    }else if(direction===1&&queueKind==="bank")selectView("bank");
    else if(direction===1){
-    finalizeAttempt();const count=queue.filter(q=>solved(q.id)).length;selectView(examType==="industrial"?"progress":"home");
-    root.innerHTML='<section class="bank-empty"><h2 tabindex="-1">학습 완료</h2><p>'+count+'문제를 연습했습니다.</p>'+(examType==="industrial"?action("progress-view","학습현황"):action("home-view","학습 시작으로"))+action("wrong-view","오답노트")+'</section>';
+    finalizeAttempt();const count=queue.filter(q=>solved(q.id)).length;selectView("progress");
+    root.innerHTML='<section class="bank-empty"><h2 tabindex="-1">학습 완료</h2><p>'+count+'문제를 연습했습니다.</p>'+action("progress-view","학습현황")+action("wrong-view","오답노트")+'</section>';
     root.querySelector("h2")?.focus();
    }
    return;
@@ -552,9 +554,9 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
    if(!validateWrittenQuestion(q,examType)||seen.has(q.id))return false;
    seen.add(q.id);return true;
   });
-  if(examType==="industrial")bank=bank.map(q=>({...q,subject:normalizeSubject(q.subject)}));
+  bank=bank.map(q=>({...q,subject:normalizeSubject(q.subject)}));
   bank.sort((a,b)=>b.year-a.year||b.round-a.round||a.number-b.number);
-  if(examType==="industrial"&&cloud)mock=createMockExam({root,db,bank,writable,back:()=>selectView("mock-lobby"),reviewWrong:items=>{selectView("progress");startQueue(items,"review");},enter:()=>{view="mock";current=null;hideBrowser();updateNav();$("#usage-guide").hidden=true;}});
+  if(cloud)mock=createMockExam({root,db,bank,writable,examType,back:()=>selectView("mock-lobby"),reviewWrong:items=>{selectView("progress");startQueue(items,"review");},enter:()=>{finalizeAttempt();attempt=null;view="mock";current=null;hideBrowser();updateNav();$("#usage-guide").hidden=true;}});
   fillFilters();
 
   const archiveSessions=(Array.isArray(expectedSessions)?expectedSessions:[])
@@ -564,7 +566,7 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
     key:q.year+"-"+q.round,year:q.year,round:q.round,roundLabel:q.roundLabel||q.round+"회"
    })),...archiveSessions].map(x=>[x.key,x])).values()]
    .sort((a,b)=>b.year-a.year||a.round-b.round);
-  const historicalSubjects=examType==="industrial"?["정보시스템 기반 기술","프로그래밍 언어 활용","데이터베이스 활용"]:["정보시스템 기반 기술","프로그래밍언어 활용","데이터베이스 활용"];
+  const historicalSubjects=examSubjects;
   const archivedOnly=bank.length===0&&archiveSessions.length>0;
   let chosenYear=history.state?.questionBrowser?.selected||"";
   let chosenSession=history.state?.questionBrowser?.secondary||"";
@@ -641,23 +643,15 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
   });
   const section=$(".question-browser"),menu=document.createElement("nav");
   menu.className="bank-nav written-browser-nav";menu.setAttribute("aria-label","필기 학습 메뉴");
-  menu.innerHTML=(examType==="industrial"?"":'<button type="button" class="button button-secondary" data-view="home">학습 시작</button>')+'<button type="button" class="button button-primary" data-view="bank">전체 문제</button><button type="button" class="button button-secondary" data-view="random">랜덤 설정</button>'+(examType==="industrial"?'<button type="button" class="button button-secondary" data-view="mock-lobby">실전 모의고사</button>':"")+'<button type="button" class="button button-secondary" data-view="wrong">오답노트</button><button type="button" class="button button-secondary" data-view="progress">학습현황</button>';
-  if(examType!=="industrial")section.querySelector(".qb-heading").after(menu);
-  else{const common=document.getElementById("industrial-written-nav");if(common)section.before(common);section.querySelector(".qb-heading").textContent="전체 문제";}
+  const common=document.querySelector(".written-common-nav");if(common)section.before(common);section.querySelector(".qb-heading").textContent="전체 문제";
   if(archivedOnly){
    document.querySelectorAll('[data-view="home"],[data-view="random"],[data-view="wrong"],[data-view="progress"]')
     .forEach(button=>{button.hidden=true;});
   }
-  if(examType!=="industrial"){
-   const verified=document.createElement("p");
-   verified.className="written-transcription-status";
-   verified.setAttribute("role","status");
-   section.querySelector(".qb-heading").after(verified);
-  }
   section.querySelector("#qb-additional-select")?.addEventListener("change",()=>refreshFilters());
   
   refreshFilters();
-  if(examType==="industrial")section.querySelector(".qb-progress-hint").hidden=true;else section.querySelector(".qb-progress-hint").textContent="풀이 횟수와 최근 날짜는 계정 또는 현재 기기의 학습 기록 기준입니다.";
+  section.querySelector(".qb-progress-hint").hidden=true;
   if(!bank.length&&!archiveSessions.length){
    const notice=document.createElement("p");
    notice.className="written-empty-notice";notice.textContent="등록된 문제가 없습니다.";
