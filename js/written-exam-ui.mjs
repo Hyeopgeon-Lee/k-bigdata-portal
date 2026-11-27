@@ -1,7 +1,7 @@
 import {quizNavigation,quizHeading,quizDisclosure,quizFeedback,scrollToQuizAnswer} from "./quiz-unified.js?v=20261112-answer-focus-1";
 import {createQuestionBrowser} from "./question-browser.js?v=20261124-subject-filter-v2";
 import {reviewControls} from "./study-review.js?v=20261116-concurrency-1";
-import {loadWrittenExamQuestions} from "./written-exam-data.mjs?v=20261124-questions-text-v1";
+import {loadWrittenExamQuestions} from "./written-exam-data.mjs?v=20261127-engineer-2023";
 import {adjacentWrittenQuestion} from "./written-exam-navigation.mjs?v=20261124-next-fix-1";
 
 const esc=value=>String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",'"':"&quot;","'":"&#39;"}[c]));
