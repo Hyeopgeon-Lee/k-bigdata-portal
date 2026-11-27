@@ -47,8 +47,7 @@ export function renderPageIntro(page,id){
   <a class="portal-page-back" href="index.html">← 포털 홈</a>
   <p class="portal-page-eyebrow">${esc(page.eyebrow)}</p>
   <h1 id="${esc(headingId)}" class="portal-page-title">${title}</h1>
-  <p class="portal-page-description">${esc(page.description)}</p>
-  ${renderIntroExtras(id)}
+${id==='industrial-written'?'':`  <p class="portal-page-description">${esc(page.description)}</p>\n`}  ${renderIntroExtras(id)}
 </section>`);
 }
 export function renderToolbar(page){
