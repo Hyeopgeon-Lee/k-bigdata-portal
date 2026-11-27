@@ -1,0 +1,37 @@
+/* Learning administration only: keep grade selection visible during long reports. */
+body[data-admin-page="learning"]{overflow-x:clip}
+body[data-admin-page="learning"] .admin-grade-panel{position:sticky;top:76px;z-index:24;background:#fff;box-shadow:0 3px 13px #153d8018}
+body[data-admin-page="learning"] .admin-grade-choice{min-width:90px}
+.learning-grade-overview{margin:0 0 18px}
+.learning-grade-description{color:var(--admin-muted);font-size:15px;line-height:1.6;margin:6px 0 16px}
+.learning-grade-cards,.learning-grade-chart-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;min-width:0}
+.learning-grade-cards:has(>article:only-child){grid-template-columns:1fr}
+.learning-grade-chart-grid{margin-top:14px}
+.learning-grade-card{padding:15px;border:1px solid #cbd9e9;border-top:4px solid #245e9d;background:#f7faff;border-radius:12px;min-width:0}
+.learning-grade-card[data-grade="2"]{border-top-color:#268076}
+.learning-grade-card-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.learning-grade-card-head h3{font-size:21px;line-height:1.4;color:#193b63;margin:0}
+.learning-grade-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-bottom:12px}
+.learning-grade-metric{background:white;padding:11px;border:1px solid #e1e8f2;border-radius:9px;display:grid;gap:3px;min-width:0}
+.learning-grade-metric small{color:var(--admin-muted);font-size:14px;font-weight:650}
+.learning-grade-metric strong{font-size:23px;color:var(--admin-ink);font-variant-numeric:tabular-nums;line-height:1.3}
+.learning-grade-local-chart .admin-chart{box-shadow:none}
+.learning-scope-label{display:inline-flex;margin:4px 0 8px;background:#eaf2ff;color:#245e9d;padding:5px 11px;font-size:15px;font-weight:750;border-radius:8px}
+.learning-detail-heading{margin:18px 0 12px;color:#193b63;font-size:23px}
+body[data-admin-page="learning"] .study-admin-table .study-grade-divider td{background:#eaf2ff;color:#193b63;font-size:15px;padding:12px;text-align:left;white-space:normal}
+body[data-admin-page="learning"] .study-admin-table .study-grade-divider[data-grade-group="2"] td{background:#e5f4ef;color:#195c54}
+body[data-admin-page="learning"] .study-admin-table .study-grade-divider td strong{font-size:17px}
+.written-grade-section{border:1px solid #cad9ea;border-radius:12px;margin:16px 0;padding:13px;min-width:0}
+.written-grade-section h3{font-size:19px;color:#245e9d;margin:0}
+.written-grade-section[data-grade-group="2"] h3{color:#206f65}
+.written-grade-summary{color:var(--admin-muted);font-size:14px;margin:4px 0 10px}
+@media(max-width:700px){
+ body[data-admin-page="learning"] .admin-grade-panel{top:0;padding:10px;margin-bottom:13px}
+ body[data-admin-page="learning"] .admin-grade-choice{min-width:0}
+ .learning-grade-cards,.learning-grade-chart-grid{grid-template-columns:1fr;gap:12px}
+ .learning-grade-card{padding:12px}
+ .learning-grade-metric{padding:10px}
+ .learning-grade-metric strong{font-size:22px}
+ body[data-admin-page="learning"] .study-admin-table .study-grade-divider td,body[data-admin-page="learning"] .study-admin-table .study-grade-empty td{display:block!important;width:100%;grid-column:1/-1}
+ body[data-admin-page="learning"] .study-admin-table .study-grade-divider td::before,body[data-admin-page="learning"] .study-admin-table .study-grade-empty td::before{display:none}
+}
