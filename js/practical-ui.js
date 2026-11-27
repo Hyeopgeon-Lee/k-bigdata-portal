@@ -363,7 +363,7 @@ root.addEventListener("click",event=>{
    const plan=planToday(),remaining=plan.filter(q=>!done.has(q.id));startQueue(remaining.length?remaining:plan,"today");
  }
  if(action==="quick-random")startQueue(shuffle(basicPool().filter(q=>q.sourceType==="reconstructed")).slice(0,5),"random");
- if(action==="bank-view")selectView("bank");
+ if(action==="bank-view"){selectView("bank");browserEntry?.show(false);}
  if(action==="wrong-view")selectView("wrong");
  if(action==="progress-view")selectView("progress");
  if(action==="load-more"){pageLimit+=24;render();}
@@ -399,14 +399,14 @@ root.addEventListener("click",event=>{
    if(!queue.length){
      const done=new Set(getAttempts().map(a=>a.questionId));
      const next=basicPool().find(q=>q.id!==current.id&&!done.has(q.id))||basicPool().find(q=>q.id!==current.id);
-     if(next)openQuestion(next.id,true);else selectView("home");
+     if(next)openQuestion(next.id,true);else{selectView("bank");browserEntry?.show(false);}
    }else{
      queueIndex++;if(queueIndex<queue.length)openQuestion(queue[queueIndex].id,false);
      else if(queueKind==="bank"){selectView("bank");browserEntry.show();}
-     else{const count=queue.length;savePreferences({learningQueue:null});selectView("home");root.innerHTML='<section class="bank-empty"><h2 tabindex="-1">학습 완료</h2><p>'+count+'문제를 연습했습니다. 어려웠던 개념은 오답노트에서 다시 확인하세요.</p>'+button("home-view","학습 시작으로")+button("quick-random","다시 5문제")+'</section>';root.querySelector("h2").focus();}
+     else{const count=queue.length;savePreferences({learningQueue:null});selectView("bank");root.innerHTML='<section class="bank-empty"><h2 tabindex="-1">학습 완료</h2><p>'+count+'문제를 연습했습니다. 어려웠던 개념은 오답노트에서 다시 확인하세요.</p>'+button("bank-view","전체 문제로")+button("quick-random","다시 5문제")+'</section>';root.querySelector("h2").focus();}
    }
  }
- if(action==="home-view")selectView("home");
+ if(action==="home-view"){selectView("bank");browserEntry?.show(false);}
 
  if(action==="random-again")selectView("random");
  if(action==="start-random"){
@@ -480,6 +480,8 @@ loadPracticalBank().then(result=>{
    describe:q=>q.title,searchText:q=>[q.id,questionText(q)].join(" "),
    openQuestion(q,items){queue=items;queueIndex=items.indexOf(q);queueKind="bank";openQuestion(q.id,false);},
  });
+ const questionBrowserSection=document.querySelector("main > .question-browser");
+ if(questionBrowserSection)$("#practical-dashboard-nav").after(questionBrowserSection);
  dashboard=createPracticalDashboard({host:root,bank,aliases,initialExam:filters.exam,answerFor:displayAnswer,goView:selectView,openSet(items){view="bank";startQueue(items,"bank");}});
  practicalProgress.attach();
  if(browserEntry.resume(id))return;

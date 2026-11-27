@@ -1,5 +1,5 @@
 /* Match the shared written and coding dashboard shell without affecting solve controls. */
-html[data-portal-page="practical"] main > #practical-dashboard-nav{width:min(var(--quiz-content-max,1240px),calc(100% - 32px));max-width:var(--quiz-content-max,1240px);margin:0 auto 18px;box-sizing:border-box;grid-template-columns:repeat(5,minmax(0,1fr));padding:6px;gap:6px}
+html[data-portal-page="practical"] main > #practical-dashboard-nav{width:min(var(--quiz-content-max,1240px),calc(100% - 32px));max-width:var(--quiz-content-max,1240px);margin:0 auto 18px;box-sizing:border-box;grid-template-columns:repeat(4,minmax(0,1fr));padding:6px;gap:6px}
 html[data-portal-page="practical"] main.qb-browsing > #practical-dashboard-nav{display:grid!important}
 html[data-portal-page="practical"] main > .learning-content{width:min(var(--quiz-content-max,1240px),calc(100% - 32px));max-width:var(--quiz-content-max,1240px);margin:0 auto;padding-inline:0;box-sizing:border-box}
 html[data-portal-page="practical"] main > #practical-dashboard-nav button{font-size:15px;min-height:46px;padding:8px 4px;border-radius:9px;white-space:normal}
@@ -14,4 +14,4 @@ html[data-portal-page="practical"] main > #practical-dashboard-nav button{font-s
 .practical-dashboard .pd-record{margin:6px 0}
 .practical-dashboard .cd-card .cd-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
 .pd-local-management{margin-top:18px;padding:14px;background:#fff;border:1px solid #d4dfed;border-radius:12px}
-@media(max-width:760px){html[data-portal-page="practical"] main > #practical-dashboard-nav{grid-template-columns:repeat(3,minmax(0,1fr));width:calc(100% - 24px)}html[data-portal-page="practical"] main > .learning-content{width:calc(100% - 24px)}.practical-dashboard .pd-answers{grid-template-columns:1fr}.practical-dashboard .cd-card .cd-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){html[data-portal-page="practical"] main > #practical-dashboard-nav{grid-template-columns:repeat(2,minmax(0,1fr));width:calc(100% - 24px)}html[data-portal-page="practical"] main > .learning-content{width:calc(100% - 24px)}.practical-dashboard .pd-answers{grid-template-columns:1fr}.practical-dashboard .cd-card .cd-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}

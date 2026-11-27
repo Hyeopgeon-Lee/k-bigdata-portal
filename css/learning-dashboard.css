@@ -9,4 +9,4 @@
 .learning-dashboard-common .pd-record{margin:6px 0}
 .learning-dashboard-common .cd-card .cd-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
 
-@media(max-width:760px){html[data-portal-page="practical"] main > #practical-dashboard-nav{grid-template-columns:repeat(3,minmax(0,1fr));width:calc(100% - 24px)}html[data-portal-page="practical"] main > .learning-content{width:calc(100% - 24px)}.learning-dashboard-common .pd-answers{grid-template-columns:1fr}.learning-dashboard-common .cd-card .cd-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){html[data-portal-page="practical"] main > .learning-content{width:calc(100% - 24px)}.learning-dashboard-common .pd-answers{grid-template-columns:1fr}.learning-dashboard-common .cd-card .cd-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
