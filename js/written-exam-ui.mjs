@@ -1,5 +1,5 @@
 import {normalizeSubject,summarizeWritten,writtenDashboard} from "./written-dashboard.mjs?v=20261127-clean-v1";
-import {createMockExam} from "./written-mock.mjs?v=20261127-random-v1";
+import {createMockExam} from "./written-mock.mjs?v=20261127-review-v2";
 import {quizNavigation,quizHeading,quizDisclosure,quizFeedback,scrollToQuizAnswer} from "./quiz-unified.js?v=20261112-answer-focus-1";
 import {createQuestionBrowser} from "./question-browser.js?v=20261124-subject-filter-v2";
 import {reviewControls} from "./study-review.js?v=20261116-concurrency-1";
