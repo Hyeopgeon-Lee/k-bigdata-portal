@@ -52,17 +52,68 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
  let attempt=null,records=[],lastQuestionId="",pageLimit=24,selectedAnswer=null;
  let filters={year:"all",round:"all",subject:"all",completion:"all",sort:"latest",query:""};
  const memoryKey=storageKey||"kbigdata-written-"+examType+"-v1";
+ const userId=window.portalVerifiedUserId,db=window.portalSupabaseClient;
+ const cloud=examType==="industrial"&&!!userId&&!!db&&window.portalLearning?.read===true;
+ const writable=cloud&&window.portalLearning?.write===true;
+ const scopedKey=cloud?memoryKey+":"+userId:memoryKey;
+ const table="written_learning_attempts";
+ const key=r=>[r.id,r.at,r.answer].join(":");
+ const valid=r=>r&&/^[A-Za-z0-9_-]{1,80}$/.test(r.id)&&Number.isInteger(r.answer)&&r.answer>=1&&r.answer<=4&&typeof r.correct==="boolean"&&Number.isSafeInteger(r.at)&&r.at>0&&Number.isFinite(r.elapsedSeconds)&&r.elapsedSeconds>=0&&r.elapsedSeconds<=2147483647;
+ const merge=(...lists)=>[...new Map(lists.flat().filter(valid).map(r=>[key(r),r])).values()].sort((a,b)=>a.at-b.at||a.id.localeCompare(b.id)||a.answer-b.answer);
+ let pending=[],syncChain=Promise.resolve();
+ function readLocal(k){try{return JSON.parse(localStorage.getItem(k)||"{}")||{};}catch{return {};}}
  function readStorage(){
-  try{const obj=JSON.parse(localStorage.getItem(memoryKey)||"{}");
-   records=Array.isArray(obj.attempts)?obj.attempts.filter(v=>v&&typeof v.id==="string"&&Number.isInteger(v.answer)&&Number.isFinite(v.at)).slice(-5000):[];
-   lastQuestionId=typeof obj.lastQuestionId==="string"?obj.lastQuestionId:"";
-  }catch{records=[];}
+  const obj=readLocal(scopedKey);
+  records=merge(Array.isArray(obj.attempts)?obj.attempts:[]);
+  pending=merge(Array.isArray(obj.pending)?obj.pending:[]);
+  lastQuestionId=typeof obj.lastQuestionId==="string"?obj.lastQuestionId:"";
  }
- function persist(){
-  try{localStorage.setItem(memoryKey,JSON.stringify({schemaVersion:1,attempts:records.slice(-5000),lastQuestionId}));storageStatus.textContent="";}
-  catch{storageStatus.textContent="브라우저 저장소를 사용할 수 없어 기록이 유지되지 않을 수 있습니다.";}
+ function cache(){
+  try{localStorage.setItem(scopedKey,JSON.stringify({schemaVersion:2,attempts:records,pending,lastQuestionId}));return true;}catch{return false;}
+ }
+ function syncMessage(message){if(storageStatus)storageStatus.textContent=message;}
+ function row(r){return {user_id:userId,exam_type:examType,question_id:r.id,attempted_at:r.at,answer:r.answer,correct:r.correct,elapsed_seconds:Math.round(r.elapsedSeconds),used_hint:!!r.usedHint};}
+ function fromRow(r){return {id:r.question_id,at:Number(r.attempted_at),answer:r.answer,correct:r.correct,elapsedSeconds:r.elapsed_seconds,usedHint:r.used_hint};}
+ function sync(){
+  if(!cloud)return Promise.resolve(false);
+  syncChain=syncChain.catch(()=>{}).then(async()=>{
+   if(window.portalVerifiedUserId!==userId)return false;
+   try{
+    if(writable&&pending.length){
+     const batch=[...pending];
+     for(let i=0;i<batch.length;i+=200){
+      const {error}=await db.from(table).upsert(batch.slice(i,i+200).map(row),{onConflict:"user_id,exam_type,question_id,attempted_at,answer",ignoreDuplicates:true});if(error)throw error;
+     }
+     const sent=new Set(batch.map(key));pending=pending.filter(r=>!sent.has(key(r)));cache();
+    }
+    const remote=[];
+    for(let offset=0;;offset+=500){
+     const {data,error}=await db.from(table).select("question_id,attempted_at,answer,correct,elapsed_seconds,used_hint").eq("user_id",userId).eq("exam_type",examType).order("attempted_at").order("question_id").order("answer").range(offset,offset+499);
+     if(error)throw error;
+     remote.push(...data.map(fromRow));if(data.length<500)break;
+    }
+    records=merge(remote,pending);
+    if(records.length)lastQuestionId=records.at(-1).id;
+    cache();syncMessage(writable?"계정 학습기록 동기화 완료":"계정 기록 조회 전용");
+    browser?.refresh();
+    if(!current&&view==="wrong")renderWrong();
+    if(!current&&view==="progress")renderProgress();
+    if(!current&&view==="home")renderHome();
+    return true;
+   }catch(error){syncMessage("동기화 실패 · 기기 기록을 유지합니다. 연결 후 다시 시도합니다.");console.warn("Written learning sync failed",error.code||error.message);return false;}
+  });
+  return syncChain;
+ }
+ function persist(newRows=[]){
+  if(writable)pending=merge(pending,newRows);
+  const saved=cache();
+  if(cloud){
+   if(writable&&newRows.length){syncMessage(saved?"학습기록 동기화 중…":"기기 저장 실패 · DB 저장 시도 중…");void sync();}
+   else if(!writable&&newRows.length)syncMessage("조회 전용 계정 · 새 기록은 다른 기기에 저장되지 않습니다.");
+  }else syncMessage(saved?"현재 기기에 저장 · 로그인하면 계정 동기화 가능":"브라우저 저장소를 사용할 수 없습니다.");
  }
  readStorage();
+ if(cloud){window.addEventListener("online",()=>void sync());document.addEventListener("visibilitychange",()=>{if(!document.hidden)void sync();});}
  function getProgress(q){
   const rows=records.filter(r=>r.id===q.id);
   if(!rows.length)return {kind:"unseen",text:"미풀이"};
@@ -154,11 +205,11 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
  }
  function renderProgress(){
   const cutoff=Date.now()-7*24*3600*1000,week=records.filter(r=>r.at>=cutoff);
-  root.innerHTML='<h2>내 학습현황</h2><p>이 브라우저에 저장된 필기 학습 기록입니다.</p><section class="bank-empty"><h3>오늘 · '+today()+'</h3>'+stats(records.filter(r=>formatDate(r.at)===formatDate(Date.now())))+'</section><h3>최근 7일</h3><div class="bank-progress-grid">'+
+  root.innerHTML='<h2>내 학습현황</h2><p>'+(cloud?"계정에 저장된 필기 학습 기록입니다.":"현재 기기에 저장된 필기 학습 기록입니다.")+'</p><section class="bank-empty"><h3>오늘 · '+today()+'</h3>'+stats(records.filter(r=>formatDate(r.at)===formatDate(Date.now())))+'</section><h3>최근 7일</h3><div class="bank-progress-grid">'+
     [...new Set(bank.map(q=>q.subject||"필기"))].map(sub=>{
       const ids=new Set(bank.filter(q=>(q.subject||"필기")===sub).map(q=>q.id));
       return '<article><h3>'+esc(sub)+'</h3>'+stats(week.filter(r=>ids.has(r.id)))+'</article>';
-    }).join("")+'</div><details><summary>학습기록 관리</summary><p>브라우저 학습기록을 백업하거나 삭제할 수 있습니다.</p>'+action("export-learning","학습 기록 내보내기")+
+    }).join("")+'</div><details><summary>학습기록 관리</summary><p>학습기록을 백업하거나 삭제할 수 있습니다.</p>'+(writable?action("import-device","기존 이 기기 기록 가져오기"):"")+action("export-learning","학습 기록 내보내기")+
     '<label for="import-learning">학습 기록 가져오기 (JSON)</label><input id="import-learning" type="file" accept="application/json,.json"><p id="import-status" role="status"></p>'+
     action("confirm-clear","내 학습기록 삭제")+'<div id="clear-confirm"></div></details>';
  }
@@ -225,8 +276,8 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
    attempt.recorded=Boolean(selectedAnswer);
    if(selectedAnswer){
     const at=Date.now(),elapsedSeconds=Math.max(0,Math.round((at-attempt.startedAt)/1000));
-    records.push({id:q.id,year:q.year,round:q.round,answer:selectedAnswer,correct:attempt.correct,at,elapsedSeconds,usedHint:attempt.usedHint});
-    records=records.slice(-5000);persist();browser?.refresh();
+    const record={id:q.id,year:q.year,round:q.round,answer:selectedAnswer,correct:attempt.correct,at,elapsedSeconds,usedHint:attempt.usedHint};
+    records=merge(records,[record]);persist([record]);browser?.refresh();
    }
    revealAnswer();
    $("#result-heading")?.focus({preventScroll:true});
@@ -340,7 +391,24 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
   }
   if(name==="confirm-clear"){$("#clear-confirm").innerHTML='<p>모든 필기 학습기록을 삭제하시겠습니까?</p>'+action("delete-learning","삭제 확인")+action("cancel-delete","취소");return;}
   if(name==="cancel-delete"){$("#clear-confirm").innerHTML="";return;}
-  if(name==="delete-learning"){records=[];lastQuestionId="";persist();browser?.refresh();renderProgress();return;}
+  if(name==="import-device"){
+   if(!writable||!window.confirm("현재 기기의 기존 기록이 본인의 기록인지 확인하세요. 이 계정으로 가져옵니다."))return;
+   const legacy=readLocal(memoryKey),accepted=merge(Array.isArray(legacy.attempts)?legacy.attempts:[]);
+   if(!accepted.length){syncMessage("가져올 기존 기록이 없습니다.");return;}
+   records=merge(records,accepted);persist(accepted);browser?.refresh();renderProgress();return;
+  }
+  if(name==="delete-learning"){
+   if(cloud){
+    if(!writable){syncMessage("조회 전용 계정입니다.");return;}
+    b.disabled=true;
+    syncChain=syncChain.catch(()=>{}).then(async()=>{
+     const {error}=await db.from(table).delete().eq("user_id",userId).eq("exam_type",examType);
+     if(error){syncMessage("DB 기록 삭제 실패 · 다시 시도해 주세요.");b.disabled=false;return;}
+     records=[];pending=[];lastQuestionId="";cache();browser?.refresh();renderProgress();syncMessage("계정 학습기록 삭제 완료");
+    });return;
+   }
+   records=[];lastQuestionId="";persist();browser?.refresh();renderProgress();return;
+  }
  });
  async function importLearning(event){
   if(event.target.id!=="import-learning")return;
@@ -349,7 +417,7 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
    if(file.size>5*1024*1024)throw Error("5MB 이하 파일만 가져올 수 있습니다.");
    const content=JSON.parse(await file.text());if(content.examType!==examType||!Array.isArray(content.attempts))throw Error("다른 시험의 학습기록이거나 형식이 올바르지 않습니다.");
    const accepted=content.attempts.filter(row=>row&&/^[A-Za-z0-9_-]{1,80}$/.test(row.id)&&Number.isInteger(row.answer)&&row.answer>=1&&row.answer<=4&&typeof row.correct==="boolean"&&Number.isFinite(row.at)&&row.at>0&&Number.isFinite(row.elapsedSeconds)&&row.elapsedSeconds>=0).slice(-5000);
-   records=[...records,...accepted].sort((a,b)=>a.at-b.at).slice(-5000);persist();browser?.refresh();renderProgress();$("#import-status").textContent=accepted.length+"건을 가져왔습니다.";
+   records=merge(records,accepted);persist(accepted);browser?.refresh();renderProgress();$("#import-status").textContent=accepted.length+"건을 가져왔습니다.";
   }catch(e){notice.textContent=e.message||"가져오기에 실패했습니다.";}
  }
  root.addEventListener("change",event=>{void importLearning(event);});
@@ -362,7 +430,7 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
  }
  $("#bank-reset")?.addEventListener("click",resetFilters);
  async function initialize(){
-  const result=await loadWrittenExamQuestions(examType);
+  const [result]=await Promise.all([loadWrittenExamQuestions(examType),cloud?sync():Promise.resolve()]);
   const seen=new Set();
   bank=result.filter(q=>{
    if(!validateWrittenQuestion(q,examType)||seen.has(q.id))return false;
@@ -468,7 +536,7 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
   section.querySelector("#qb-additional-select")?.addEventListener("change",()=>refreshFilters());
   
   refreshFilters();
-  section.querySelector(".qb-progress-hint").textContent="풀이 횟수와 최근 날짜는 이 브라우저의 필기 기록 기준입니다.";
+  section.querySelector(".qb-progress-hint").textContent="풀이 횟수와 최근 날짜는 계정 또는 현재 기기의 학습 기록 기준입니다.";
   if(!bank.length&&!archiveSessions.length){
    const notice=document.createElement("p");
    notice.className="written-empty-notice";notice.textContent="현재 검증·등록된 문제는 0개입니다. 실제 기출문항은 원문·정답·재게시 권한 확인 후 추가됩니다.";
