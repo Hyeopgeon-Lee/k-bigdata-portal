@@ -40,6 +40,7 @@ jobs:
         run: |
           node tests/admin-isolation.test.mjs
           node tests/admin-alumni-integration.test.mjs
+          node tests/admin-mock-exam.test.mjs
           node tests/portal-auth.test.mjs
           node tests/portal-student-certifications.test.mjs
           node tests/room-integration.test.mjs
@@ -52,6 +53,7 @@ jobs:
         run: |
           python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/admin-portal-test.log 2>&1 &
           node tests/admin-browser.mjs
+          node tests/admin-mock-exam-browser.mjs
       - name: Save mobile and desktop admin previews
         if: always()
         uses: actions/upload-artifact@v4

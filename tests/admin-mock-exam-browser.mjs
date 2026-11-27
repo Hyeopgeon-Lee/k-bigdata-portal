@@ -1,0 +1,36 @@
+import assert from "node:assert/strict";
+import {readFile} from "node:fs/promises";
+import {chromium} from "playwright";
+import {examConfig} from "../admin/js/mock-exam-model.mjs";
+const bank=Object.fromEntries(["engineer","industrial"].map(type=>[type,examConfig(type).subjects.flatMap((subject,s)=>Array.from({length:25},(_,i)=>({id:type+"-"+s+"-"+i,examType:type,subject,question:subject+" 실습 문제 "+i+"번. 다음 지문에서 맞는 내용을 선택하시오.",code:i%4===0?"for(int i=0; i<10; i++){\n    System.out.println(i);\n}":"",options:["첫 번째 답","두 번째 답","세 번째 답","네 번째 답"],answer:i%4+1,sourceVerified:true,answerVerified:true})))]));
+const makeAuth=admin=>`const bank=${JSON.stringify(bank)};
+document.documentElement.dataset.portalAccess="approved";document.getElementById("learning-lock")?.remove();document.getElementById("learning-notice")?.remove();
+window.portalLearning={read:true,write:true};window.portalVerifiedUserId="qa";window.portalVerifiedContext={user:{id:"qa"},isAdmin:${admin}};
+window.portalSupabaseClient={from(){throw Error("unexpected full bank query")},async rpc(name,args){if(name==="portal_super_admin_allowed")return {data:${admin},error:null};if(name==="portal_written_index")return {data:bank[args.p_exam_type].map(({code,...q})=>q),error:null};if(name==="portal_written_details")return {data:bank[args.p_exam_type].filter(q=>args.p_ids.includes(q.id)),error:null};throw Error("Unexpected RPC: "+name)}};
+await import("/admin/js/guard.mjs");`;
+const base=process.env.PORTAL_TEST_URL||"http://127.0.0.1:8765";
+const browser=await chromium.launch({headless:true,args:["--no-sandbox"]});
+try{
+ const page=await browser.newPage({acceptDownloads:true,viewport:{width:1280,height:900}});
+ let errors=[];page.on("pageerror",e=>errors.push(e.message));
+ await page.route("**/js/portal-auth.mjs?*",r=>r.fulfill({body:makeAuth(true),contentType:"application/javascript"}));
+ await page.goto(base+"/admin/mock-exam.html");
+ await page.locator("#exam-subjects li").first().waitFor();
+ const getPdf=async locator=>{const [d]=await Promise.all([page.waitForEvent("download",{timeout:120000}),locator.click()]);const path=await d.path();const bytes=await readFile(path);assert.equal(bytes.subarray(0,8).toString(),"%PDF-1.4");const str=bytes.toString("latin1");assert.match(str,/\/MediaBox \[0 0 595\.28 841\.89\]/);return Number(/\/Type \/Pages \/Count (\d+)/.exec(str)[1]);};
+ await page.locator("#exam-variants").check();
+ const full=await getPdf(page.locator("#exam-generate"));assert.ok(full>1);
+ assert.equal(await getPdf(page.locator('[data-download="questions"]')),full-1);
+ assert.equal(await getPdf(page.locator('[data-download="answers"]')),1);
+ await page.locator('[data-form="B"]').click();await page.locator("#exam-last").click();assert.match(await page.locator("#exam-preview-image").getAttribute("alt"),/B형 정답표/);
+ assert.equal(await getPdf(page.locator('[data-download="answers"]')),1);
+ await page.locator('input[value="industrial"]').check();await page.locator("#exam-variants").uncheck();
+ await page.setViewportSize({width:390,height:844});
+ assert.equal(await page.locator("#exam-subjects li").count(),3);
+ assert.ok(await getPdf(page.locator("#exam-generate"))>1);
+ assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
+ assert.deepEqual(errors,[]);
+ const denied=await browser.newPage();
+ await denied.route("**/js/portal-auth.mjs?*",r=>r.fulfill({body:makeAuth(false),contentType:"application/javascript"}));
+ await denied.goto(base+"/admin/mock-exam.html");await denied.locator("#admin-denied").waitFor();assert.equal(await denied.locator("#exam-generate").isVisible(),false);
+ console.log("PASS: Administrator can download A4 PDFs in three forms and both exam types; non-admin denied; mobile width valid.");
+}finally{await browser.close();}

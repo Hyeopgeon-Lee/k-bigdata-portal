@@ -1,0 +1,36 @@
+<!doctype html><html lang="ko" data-admin-access="pending"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>실전 모의고사 생성 | 포털 관리자</title><style id="learning-lock">body>:not(#portal-auth-layer):not(#learning-notice){display:none!important}#learning-notice{position:fixed;inset:0;display:grid;place-items:center;background:#f7f9fc;color:transparent;font-size:0;z-index:1}#learning-notice::after{content:"";width:32px;height:32px;border:3px solid #dce6f3;border-top-color:#245791;border-radius:50%;animation:admin-spin .8s linear infinite}@keyframes admin-spin{to{transform:rotate(360deg)}}</style>
+<link rel="stylesheet" href="../css/style.css?v=20261112-page-intro-2"><link rel="stylesheet" href="../css/portal-ux.css?v=20261112-page-intro-2"><link rel="stylesheet" href="css/admin.css?v=20261113-portal-home-unified-1"><link rel="stylesheet" href="css/mock-exam.css?v=20261128-1"></head>
+<body data-admin-module="mock-exam.js" data-admin-module-version="20261128-1" data-admin-page="mock-exam"><p id="learning-notice" role="status">관리자 로그인 및 권한 확인 중입니다.</p>
+<header class="admin-header site-header">
+  <div class="admin-header-inner header-inner">
+    <a class="admin-brand brand" href="index.html" aria-label="학과 관리자 포털 홈"><span class="brand-mark" aria-hidden="true"><span></span></span><span class="admin-brand-copy brand-copy"><strong>빅데이터SW학과</strong><small>관리자 포털</small></span></a>
+    <nav class="admin-header-links" aria-label="관리자 상단 메뉴"><a class="admin-header-link" href="index.html">관리자 홈</a><a class="admin-header-link" href="../index.html">포털 홈</a><a class="admin-header-link" href="../mypage.html">마이페이지</a></nav>
+  </div>
+</header>
+<main id="main-content" class="admin-main"><div class="admin-intro admin-intro--subpage"><div class="admin-intro-copy"><p class="admin-kicker">ADMIN PORTAL</p><h1>실전 모의고사 생성</h1><p>정보처리기사·산업기사 기출문제를 활용하여 학생 배부용 시험지를 만듭니다.</p></div><a class="admin-intro-link" href="index.html"><span aria-hidden="true">←</span> 관리자 홈</a></div>
+<section id="admin-denied" class="admin-message" hidden><p id="admin-gate-status" role="alert"></p><a href="../index.html">포털 홈으로 돌아가기</a></section>
+<div id="admin-secure" hidden><nav class="admin-menu" aria-label="관리자 업무 메뉴"><a class="admin-menu-home" href="index.html">관리자 홈</a><a href="accounts.html?view=approvals">가입 승인 요청</a><a href="accounts.html?view=students">학생 계정 관리</a><a href="learning.html">학급 학습통계</a><a href="certifications.html">학생 자격증 관리</a><a href="mock-exam.html">실전 모의고사 생성</a><a href="rooms.html">프로젝트실 관리</a><a href="help.html">학과 요청 관리</a><a href="alumni.html">졸업생 네트워크 관리</a></nav> 
+  <section class="exam-builder" aria-labelledby="exam-heading">
+    <div class="exam-section-title"><div><p class="admin-kicker">PRINTABLE MOCK EXAM</p><h2 id="exam-heading">시험지 만들기</h2><p>전체 등록 기출문제에서 과목별 20문항을 무작위로 선택합니다.</p></div><span class="exam-tag">관리자 전용 · A4</span></div>
+    <fieldset class="exam-fieldset"><legend>시험 종류</legend>
+      <div class="exam-types">
+        <label class="exam-type"><input type="radio" name="exam-type" value="engineer" checked><span><strong>정보처리기사</strong><span class="exam-count">100<small>문항</small></span><span>5과목 · 150분</span></span></label>
+        <label class="exam-type"><input type="radio" name="exam-type" value="industrial"><span><strong>정보처리산업기사</strong><span class="exam-count">60<small>문항</small></span><span>3과목 · 90분</span></span></label>
+      </div>
+    </fieldset>
+    <div class="exam-scope"><strong>출제 범위: 전체 등록 기출문제</strong><p>정답·선택지가 확인된 문항을 사용하며, 같은 시험지에 중복 문항을 넣지 않습니다.</p><ul id="exam-subjects" class="exam-subjects"></ul></div>
+    <label class="exam-checkbox"><input type="checkbox" id="exam-variants"> <span><strong>A형·B형 함께 생성</strong><small>같은 문항을 과목별로 순서를 바꾸어 배치하고, 각 유형의 정답표를 별도로 작성합니다.</small></span></label>
+    <div class="exam-actions"><button class="button" id="exam-generate" type="button">시험지 PDF 생성</button><span>다운로드는 이 기기에서 직접 처리됩니다.</span></div>
+    <p id="exam-status" class="exam-status" role="status" aria-live="polite">시험 종류를 선택하고 생성 버튼을 누르세요.</p>
+  </section>
+  <section class="exam-builder exam-result" id="exam-result" hidden aria-labelledby="exam-result-title">
+    <div class="exam-section-title"><div><p class="admin-kicker">PDF READY</p><h2 id="exam-result-title">생성된 시험지</h2><p id="exam-result-info"></p></div><span class="exam-tag" id="exam-form-tag">A형</span></div>
+    <div id="exam-form-switch" class="exam-form-switch" hidden aria-label="시험지 유형"><button type="button" class="button button-secondary" data-form="A" aria-pressed="true">A형</button><button type="button" class="button button-secondary" data-form="B" aria-pressed="false">B형</button></div>
+    <div class="exam-downloads"><button type="button" class="button" data-download="full">시험지 + 정답표 PDF</button><button type="button" class="button button-secondary" data-download="questions">학생용 시험지만 PDF</button><button type="button" class="button button-secondary" data-download="answers">교수자용 정답표만 PDF</button></div>
+    <p class="exam-help">학생에게 배부할 때는 정답표가 제외된 학생용 PDF를 사용하세요. 인쇄 설정은 A4 · 실제 크기(100%)를 권장합니다.</p>
+    <div class="exam-preview-top"><h3>시험지 미리보기</h3><div class="exam-paging"><button type="button" class="button button-secondary" id="exam-prev" aria-label="이전 페이지">이전</button><span id="exam-page-label" aria-live="polite"></span><button type="button" class="button button-secondary" id="exam-next" aria-label="다음 페이지">다음</button><button type="button" class="button button-secondary" id="exam-last">정답표</button></div></div>
+    <div class="exam-preview"><img id="exam-preview-image" alt="생성된 A4 시험지 페이지"></div>
+  </section>
+</div></main>
+<script type="module" src="../js/portal-auth.mjs?v=20261128-performance-1"></script>
+<script type="application/x-learning" data-module="js/guard.mjs?v=20261128-performance-1"></script></body></html>

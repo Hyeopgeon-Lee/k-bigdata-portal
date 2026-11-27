@@ -1,0 +1,26 @@
+.exam-builder{margin:18px 0;padding:clamp(18px,3vw,32px);background:#fff;border:1px solid var(--admin-border);border-radius:18px;box-shadow:0 8px 26px rgba(16,36,72,.04)}
+.exam-section-title{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.exam-section-title h2{margin:0;color:var(--admin-ink);font-size:24px;line-height:1.35}
+.exam-section-title p:not(.admin-kicker){margin:7px 0 0;color:var(--admin-muted)}
+.exam-tag{white-space:nowrap;font-size:13px;font-weight:750;padding:6px 12px;border-radius:99px;background:#edf4ff;color:var(--admin-primary)}
+.exam-fieldset{padding:0;margin:0;border:0;min-width:0}.exam-fieldset legend{font-weight:800;font-size:16px;margin-bottom:10px}
+.exam-types{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.exam-type{position:relative;display:flex;gap:12px;align-items:flex-start;padding:19px;border:1px solid var(--admin-border);border-radius:13px;cursor:pointer}
+.exam-type:has(input:checked){border:2px solid var(--admin-primary);padding:18px;background:#f4f8ff}
+.exam-type input{margin:5px 0 0;width:19px;height:19px;accent-color:var(--admin-primary);flex:none}
+.exam-type>span{display:grid;gap:4px;color:var(--admin-muted);line-height:1.5}
+.exam-type strong{font-size:18px;color:var(--admin-ink)}.exam-count{font-size:33px;line-height:1.2;font-weight:850;color:var(--admin-primary)}
+.exam-count small{font-size:15px;margin-left:4px}.exam-scope{margin:20px 0;padding:15px 18px;background:#f5f8fc;border:1px solid #e2ebf6;border-radius:12px}
+.exam-scope p{margin:4px 0;color:var(--admin-muted);font-size:14px}
+.exam-subjects{display:flex;gap:7px 12px;flex-wrap:wrap;padding:0;margin:11px 0 0;list-style:none}.exam-subjects li{background:#fff;border:1px solid #dbe6f3;border-radius:7px;padding:4px 9px;font-size:13px;color:#294970}
+.exam-checkbox{display:flex;align-items:flex-start;gap:10px;margin:20px 0;padding:13px;border:1px solid var(--admin-border);border-radius:10px;cursor:pointer}
+.exam-checkbox input{width:19px;height:19px;accent-color:var(--admin-primary);flex:none;margin-top:4px}.exam-checkbox small{display:block;color:var(--admin-muted);font-size:13px}
+.exam-actions,.exam-downloads,.exam-paging,.exam-form-switch{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.exam-actions>span,.exam-help{font-size:13px;color:var(--admin-muted)}
+.exam-builder .button{font:inherit;font-weight:750;min-height:44px;cursor:pointer;border:1px solid var(--admin-primary);border-radius:9px;background:var(--admin-primary);color:#fff;padding:9px 16px}
+.exam-builder .button-secondary{background:#fff;color:var(--admin-primary);border-color:#aebfd9}.exam-builder .button-secondary[aria-pressed=true]{background:#e9f1ff;border-color:var(--admin-primary)}
+.exam-builder button:disabled{opacity:.5;cursor:not-allowed}.exam-status{margin:15px 0 0;font-size:14px;color:var(--admin-muted);min-height:24px}
+.exam-status[data-error=true]{color:#952e2e;font-weight:700}.exam-form-switch{margin:0 0 15px}.exam-preview-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:20px 0 12px}.exam-preview-top h3{margin:0;font-size:18px}
+.exam-paging .button{min-height:36px;font-size:13px;padding:6px 10px}.exam-preview{background:#e9eef5;border:1px solid #d8e2ee;border-radius:12px;padding:clamp(8px,2vw,24px);text-align:center}
+.exam-preview img{display:block;width:min(100%,700px);height:auto;margin:auto;background:#fff;box-shadow:0 2px 14px rgba(16,36,72,.16)}
+@media(max-width:560px){.exam-types{grid-template-columns:1fr}.exam-downloads .button,.exam-actions .button{width:100%}.exam-type{padding:15px}.exam-type:has(input:checked){padding:14px}}
