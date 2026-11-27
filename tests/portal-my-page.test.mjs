@@ -25,7 +25,7 @@ assert.match(html,/학과 포털 내부 정보/);
 assert.match(js,/api\.auth\.signInWithPassword\(/,'current password verified');
 assert.match(js,/api\.auth\.updateUser\(\{password:next\}\)/,'Supabase Auth updates password');
 assert.match(js,/api\.rpc\("start_portal_session"\)/,'new login session authorized');
-assert.match(js,/api\.rpc\("update_my_academic_status",\{p_status:next\}\)/,"academic status no longer sends phone");
+assert.match(js,/request_my_academic_status/,"students submit an approval request");
 assert.match(js,/api\.rpc\("update_my_mobile_phone",\{p_mobile_phone:phone\}\)/,"phone saves separately");
 assert.doesNotMatch(js,/phoneInput\.required=graduating/,"graduation does not require phone");
 assert.match(js,/!validMobile\(phone\)/,"phone form validates before saving");
@@ -41,7 +41,7 @@ assert.match(alumniLockSql,/public\.alumni_profiles a where a\.user_id=v_id/i,'r
 assert.match(alumniLockSql,/raise exception 'ACADEMIC_STATUS_CHANGE_NOT_ALLOWED'/i,'server refuses academic change');
 assert.match(alumniLockSql,/revoke all on function public\.my_alumni_profile_registered\(\) from public,anon/i,'anonymous access denied');
 assert.match(alumniLockSql,/grant execute on function public\.my_alumni_profile_registered\(\) to authenticated/i,'RPC only for signed-in members');
-assert.match(js,/sessionStorage\.setItem\("portal:mypage-success"/,'user gets result after reload');
+assert.match(js,/관리자 승인 전에는 현재 학적이 유지됩니다/,"request success does not assert status changed");
 assert.match(css,/@media\(max-width:740px\)/,'mobile layout present');
 assert.match(sql,/v_id uuid := auth\.uid\(\)/,'uses session user id only');
 assert.match(sql,/private\.portal_read_allowed\(\)/,'server checks session');
@@ -54,7 +54,7 @@ assert.match(graduatedSql,/p_status not in \('1','2','leave','graduated'\)/,'gra
 assert.match(graduatedSql,/p\.signup_type in \('student','alumni'\) and p\.enrollment_status='graduated'/,'graduate can log in');
 assert.match(graduatedSql,/private\.portal_study_write_allowed/,'study restricted after graduation');
 assert.match(graduatedSql,/private\.portal_academic_status_history/,'graduation recorded in audit log');
-assert.match(js,/next==="graduated"&&!confirm/,'graduation requires confirmation');
+assert.match(js,/if\(!confirm\("학적 변경을 관리자에게 요청/,"academic requests require confirmation");
 assert.match(js,/profile\.enrollment_status==="graduated"/,'graduate status shown in UI');
 assert.match(phoneSql,/FUNCTION public\.register_portal_member_v4/i,"signup includes mobile");
 assert.match(phoneSql,/FUNCTION public\.update_my_mobile_phone/i,"self-service phone RPC exists");

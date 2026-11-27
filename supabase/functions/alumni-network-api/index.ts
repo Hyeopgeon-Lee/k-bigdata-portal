@@ -18,6 +18,7 @@ const err=(message:string,status=400)=>new Response(JSON.stringify({success:fals
 const result=(value:unknown,status=200)=>new Response(JSON.stringify(value),{status,headers});
 const text=(v:unknown,max=2000)=>String(v??"").trim().slice(0,max);
 const yes=(v:unknown)=>["true","1","yes","on"].includes(String(v??"").trim().toLowerCase());
+const consent=(v:unknown)=>String(v??"").trim()===""?null:yes(v);
 const strList=(v:unknown)=>Array.isArray(v)?v.map(x=>text(x,100)).filter(Boolean):text(v).split("|").map(s=>s.trim()).filter(Boolean);
 const esc=(v:unknown)=>text(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]!));
 const now=()=>new Date().toISOString();
@@ -596,8 +597,8 @@ async function handle(action:string,b:Record<string,unknown>,a:Actor){
   if(view==="alumni")return okay((await allAlumni()).map(r=>{
    const x=cleanProfile(r.data);
    return {...x,email:text(r.data.email),phone:text(r.data.phone),status:text(r.data.status),
-    created_at:text(r.data.created_at),career_mail_enabled:yes(r.data.career_mail_enabled),
-    alumni_news_mail_enabled:yes(r.data.alumni_news_mail_enabled)};
+    created_at:text(r.data.created_at),career_mail_enabled:consent(r.data.career_mail_enabled),
+    alumni_news_mail_enabled:consent(r.data.alumni_news_mail_enabled)};
   }));
   if(view==="jobs"){
    const am=new Map((await allAlumni()).map(r=>[r.source_id,r.data]));
@@ -642,6 +643,7 @@ async function handle(action:string,b:Record<string,unknown>,a:Actor){
   const record=await one(kind,text(b[key]));
   if(!record)throw Error("대상 등록 정보를 찾을 수 없습니다.");
   const previousStatus=text(record.data.status);
+  if(action==="adminNewsSendMail"&&previousStatus!=="APPROVED")throw Error("공개 상태인 동문소식만 메일을 발송할 수 있습니다.");
   const after=action.includes("Hide")?"HIDDEN":"APPROVED";
   if(after==="APPROVED"&&record.data.status==="REJECTED"&&!action.includes("Publish"))
    throw Error("반려된 등록은 다시 신청해야 합니다.");

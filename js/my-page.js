@@ -73,27 +73,27 @@ async function start(){
   if(original)form.elements.academic_status.value=original;
   selectedCards(form);
   form.addEventListener("change",()=>selectedCards(form));
+  const requestLabels={"1":"1학년","2":"2학년","leave":"휴학","graduated":"졸업","early_employment":"조기취업"};
+  const {data:previousRequest,error:requestError}=await api.rpc("my_academic_request");
+  if(!requestError&&previousRequest){
+   const result=({pending:"승인 대기",approved:"승인",rejected:"반려",cancelled:"취소"})[previousRequest.state]||previousRequest.state;
+   notify("my-page-academic-message","최근 요청: "+(requestLabels[previousRequest.requested_status]||"")+" · "+result+(previousRequest.decision_note?" · "+previousRequest.decision_note:""));
+  }
   form.addEventListener("submit",async event=>{
    event.preventDefault();
    const next=form.elements.academic_status.value;
-   if(!["1","2","leave","graduated","early_employment"].includes(next)){notify("my-page-academic-message","변경할 상태를 선택해 주세요.","error");return;}
-   if(next===original){
-    notify("my-page-academic-message","현재 설정과 동일합니다.");return;
-   }
-   if(next==="early_employment"&&!confirm("조기취업으로 저장하면 기존 학습기록은 유지되고 자율학습 계획·출결 및 해당 안내 메일 대상에서 제외됩니다. 계속할까요?"))return;
-   if(next==="leave"&&!confirm("휴학으로 변경하면 기존 학습기록은 보존되지만 새 학습기록을 저장할 수 없습니다. 변경할까요?"))return;
-   if(next==="graduated"&&!confirm("졸업 상태를 저장할까요? 기존 계정과 문제풀이 기록은 유지되며 재학생 전용 자율학습·안내 메일 대상에서는 제외됩니다."))return;
-   busy(form,true);notify("my-page-academic-message","학적 상태를 저장하고 있습니다.");
+   if(!["1","2","leave","graduated","early_employment"].includes(next)){notify("my-page-academic-message","요청할 상태를 선택해 주세요.","error");return;}
+   if(next===original){notify("my-page-academic-message","현재 설정과 동일합니다.");return;}
+   if(!confirm("학적 변경을 관리자에게 요청하시겠습니까? 승인 전에는 기존 학적과 이용 권한이 유지됩니다."))return;
+   busy(form,true);notify("my-page-academic-message","변경 요청을 등록하고 있습니다.");
    try{
-    const {error}=await api.rpc("update_my_academic_status",{p_status:next});
+    const {error}=await api.rpc("request_my_academic_status",{p_status:next,p_reason:form.elements.academic_reason.value.trim()});
     if(error)throw error;
-    sessionStorage.setItem("portal:mypage-success",next==="graduated"?"졸업 상태를 저장했습니다. 기존 학습기록은 유지됩니다.":"포털 학적 상태를 저장했습니다. 재학생 학년 변경은 메인화면에도 반영됩니다.");
-    location.reload();
+    notify("my-page-academic-message","학적 변경 요청을 등록했습니다. 관리자 승인 전에는 현재 학적이 유지됩니다.","success");
    }catch(err){
-    console.error("Academic status update failed",err?.code||"unknown");
-    notify("my-page-academic-message","학적 상태를 저장하지 못했습니다. 다시 로그인한 후 시도해 주세요.","error");
-    busy(form,false);
-   }
+    console.error("Academic request failed",err?.code||"unknown");
+    notify("my-page-academic-message","학적 변경 요청을 등록하지 못했습니다. 다시 시도해 주세요.","error");
+   }finally{busy(form,false);}
   });
   }
  }

@@ -84,7 +84,7 @@ Deno.serve(async(req:Request)=>{
    if(!["pending","rejected","suspended"].includes(member.approval_status))
      return respond({error:"ALREADY_APPROVED_OR_UNAVAILABLE"},409);
    const enrollment=String(input.enrollmentStatus||member.enrollment_status);
-   if(!["enrolled","leave","graduated"].includes(enrollment)||
+   if(!["enrolled","leave","graduated","early_employment"].includes(enrollment)||
       (member.signup_type==="alumni"&&enrollment!=="graduated"))
      return respond({error:"INVALID_ENROLLMENT"},400);
    const {error:approveError}=await actor.rpc("admin_update_student",{

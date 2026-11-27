@@ -41,8 +41,10 @@ assert.match(auth,/href:"admin\/index.html"/);
 assert.doesNotMatch(auth,/function renderAdmin\(|function renderApprovalRequests\(|function renderWithdrawnDeletion\(/,
  "shared user login must not contain manager actions");
 const accounts=read("admin/js/accounts.js");
-assert.match(accounts,/<option value=\"enrolled\" selected>재학<\/option>/,"students page defaults to enrolled");
-assert.match(accounts,/member\.signup_type!==\"alumni\"&&member\.enrollment_status===\"enrolled\"/,"default excludes alumni even if stale status says enrolled");
+const unified=read("admin/js/unified-users.mjs");
+assert.match(unified,/status:"enrolled"/,"students page defaults to enrolled");
+assert.match(unified,/admin_user_list/,"directory uses paged server RPC");
+assert.match(accounts,/admin_pending_signup_requests/,"pending approvals query only pending accounts");
 for(const term of ["renderApprovalRequests","renderAdmin","renderWithdrawnDeletion","approve-portal-signup","admin-delete-student","admin_update_student"])
  assert.ok(accounts.includes(term),"account feature preserved: "+term);
 for(const [html,script,forbidden] of [
@@ -90,3 +92,11 @@ assert.match(studyJS,/\.gte\('started_at',kstMidnightISO\(weeks\.thisWeek\)\)/,"
 assert.match(studyJS,/\.eq\('status','active'\)\.maybeSingle\(\)/,"active session is fetched separately");
 assert.doesNotMatch(studyJS,/db\.from\('study_sessions'\)\.select\('\*'\)/,"no unbounded full-column session query");
 console.log("PASS: admin isolation plus lazy Help Desk details and date-bounded study queries.");
+
+const consolidated=read("supabase/migrations/20261128073000_admin_unified_user_management.sql");
+assert.match(consolidated,/portal_super_admin_allowed/,"server gate on privileged queries");
+assert.match(consolidated,/portal_academic_requests_one_pending/,"one pending academic change per student");
+assert.match(consolidated,/perform public.request_my_academic_status/,"cached self-service clients cannot directly edit student status");
+assert.match(consolidated,/portal_student_deletion_jobs/,"resumable deletion ledger");
+assert.match(read("supabase/functions/approve-portal-signup/index.ts"),/\["enrolled","leave","graduated","early_employment"\]\.includes\(enrollment\)/,"early employment can be approved");
+assert.match(read("supabase/functions/alumni-network-api/index.ts"),/action==="adminNewsSendMail"&&previousStatus!=="APPROVED"/,"hidden news cannot be published by send mail");
