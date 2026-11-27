@@ -1,3 +1,5 @@
+import {normalizeSubject,summarizeWritten,writtenDashboard} from "./written-dashboard.mjs?v=20261127-v1";
+import {createMockExam} from "./written-mock.mjs?v=20261127-v1";
 import {quizNavigation,quizHeading,quizDisclosure,quizFeedback,scrollToQuizAnswer} from "./quiz-unified.js?v=20261112-answer-focus-1";
 import {createQuestionBrowser} from "./question-browser.js?v=20261124-subject-filter-v2";
 import {reviewControls} from "./study-review.js?v=20261116-concurrency-1";
@@ -49,6 +51,7 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
  const root=$("#bank-content"),status=$("#bank-status"),storageStatus=$("#storage-status");
  if(!root||!status)throw Error("필기 문제풀이 화면을 찾을 수 없습니다.");
  let bank=[],browser=null,view="bank",current=null,queue=[],queueIndex=0,queueKind="bank";
+ let mock=null;
  let attempt=null,records=[],lastQuestionId="",pageLimit=24,selectedAnswer=null;
  let filters={year:"all",round:"all",subject:"all",completion:"all",sort:"latest",query:""};
  const memoryKey=storageKey||"kbigdata-written-"+examType+"-v1";
@@ -113,6 +116,7 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
   }else syncMessage(saved?"현재 기기에 저장 · 로그인하면 계정 동기화 가능":"브라우저 저장소를 사용할 수 없습니다.");
  }
  readStorage();
+ document.addEventListener("visibilitychange",()=>{if(!attempt||attempt.revealed)return;const now=Date.now();if(document.hidden){if(attempt.activeSince!==null)attempt.activeMs+=Math.max(0,now-attempt.activeSince);attempt.activeSince=null;}else attempt.activeSince=now;});
  if(cloud){window.addEventListener("online",()=>void sync());document.addEventListener("visibilitychange",()=>{if(!document.hidden)void sync();});}
  function getProgress(q){
   const rows=records.filter(r=>r.id===q.id);
@@ -167,6 +171,7 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
   $("main").classList.remove("qb-browsing");
  }
  function selectView(next){
+  if(mock?.isActive())mock.stop();
   view=next;current=null;selectedAnswer=null;queue=[];queueIndex=0;
   hideBrowser();setId(null);updateNav();
   if(view==="bank"){browserView();return;}
@@ -204,14 +209,17 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
   return '<p>풀이 '+count+' · 정답 '+right+' · 오답 '+(count-right)+'</p><p>정답률 '+(count?Math.round(right/count*100)+"%":"—")+' · 평균 풀이시간 '+average+'초</p>';
  }
  function renderProgress(){
+  const expanded=[...root.querySelectorAll(".written-round[open]")].map(x=>x.dataset.session);
   const cutoff=Date.now()-7*24*3600*1000,week=records.filter(r=>r.at>=cutoff);
-  root.innerHTML='<h2>내 학습현황</h2><p>'+(cloud?"계정에 저장된 필기 학습 기록입니다.":"현재 기기에 저장된 필기 학습 기록입니다.")+'</p><section class="bank-empty"><h3>오늘 · '+today()+'</h3>'+stats(records.filter(r=>formatDate(r.at)===formatDate(Date.now())))+'</section><h3>최근 7일</h3><div class="bank-progress-grid">'+
+  root.innerHTML=(examType==="industrial"?writtenDashboard(bank,records,writable):"")+'<h2>내 학습현황</h2><p>'+(cloud?"계정에 저장된 필기 학습 기록입니다.":"현재 기기에 저장된 필기 학습 기록입니다.")+'</p><section class="bank-empty"><h3>오늘 · '+today()+'</h3>'+stats(records.filter(r=>formatDate(r.at)===formatDate(Date.now())))+'</section><h3>최근 7일</h3><div class="bank-progress-grid">'+
     [...new Set(bank.map(q=>q.subject||"필기"))].map(sub=>{
       const ids=new Set(bank.filter(q=>(q.subject||"필기")===sub).map(q=>q.id));
       return '<article><h3>'+esc(sub)+'</h3>'+stats(week.filter(r=>ids.has(r.id)))+'</article>';
     }).join("")+'</div><details><summary>학습기록 관리</summary><p>학습기록을 백업하거나 삭제할 수 있습니다.</p>'+(writable?action("import-device","기존 이 기기 기록 가져오기"):"")+action("export-learning","학습 기록 내보내기")+
     '<label for="import-learning">학습 기록 가져오기 (JSON)</label><input id="import-learning" type="file" accept="application/json,.json"><p id="import-status" role="status"></p>'+
     action("confirm-clear","내 학습기록 삭제")+'<div id="clear-confirm"></div></details>';
+  for(const el of root.querySelectorAll(".written-round"))if(expanded.includes(el.dataset.session))el.open=true;
+  if(examType==="industrial"&&mock)void mock.showHistory();
  }
  function uniqueYears(){return [...new Set(bank.map(q=>q.year))].sort((a,b)=>b-a);}
  function uniqueRounds(){return [...new Set(bank.map(q=>q.round))].sort((a,b)=>a-b);}
@@ -236,7 +244,7 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
   else if(!queue.length){queue=filtered();queueIndex=Math.max(0,queue.findIndex(item=>item.id===q.id));queueKind="bank";}
   current=q;lastQuestionId=q.id;persist();selectedAnswer=null;hideBrowser();setId(q.id);
   const previous=records.filter(r=>r.id===q.id).at(-1);
-  attempt={startedAt:Date.now(),usedHint:false,revealed:false,recorded:false,answer:null,correct:null};
+  attempt={startedAt:Date.now(),activeMs:0,activeSince:document.hidden?null:Date.now(),usedHint:false,revealed:false,recorded:false,answer:null,correct:null};
   if(!fresh&&previous&&previous.answer>=1&&previous.answer<=4){/* A new attempt begins without preselecting the prior answer. */}
   updateNav();renderQuestion();root.querySelector("#solve-title")?.focus({preventScroll:true});window.scrollTo({top:0,behavior:"auto"});
  }
@@ -275,7 +283,7 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
    attempt.revealed=true;
    attempt.recorded=Boolean(selectedAnswer);
    if(selectedAnswer){
-    const at=Date.now(),elapsedSeconds=Math.max(0,Math.round((at-attempt.startedAt)/1000));
+    const at=Date.now(),elapsedSeconds=Math.max(0,Math.round((attempt.activeMs+(attempt.activeSince===null?0:at-attempt.activeSince))/1000));
     const record={id:q.id,year:q.year,round:q.round,answer:selectedAnswer,correct:attempt.correct,at,elapsedSeconds,usedHint:attempt.usedHint};
     records=merge(records,[record]);persist([record]);browser?.refresh();
    }
@@ -344,6 +352,13 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
    return;
   }
   const name=b.dataset.action;
+  if(examType==="industrial"&&["round-unseen","round-wrong","round-all","repeat-wrong"].includes(name)){
+   const summary=summarizeWritten(bank,records),r=summary.rounds.find(x=>x.key===b.dataset.round);
+   let items=name==="repeat-wrong"?summary.all.repeated:name==="round-wrong"?(r?.wrong||[]):name==="round-unseen"?(r?.qs||[]).filter(q=>!summary.history.has(q.id)):r?.qs||[];
+   if(b.dataset.subject)items=items.filter(q=>normalizeSubject(q.subject)===b.dataset.subject);
+   if(!items.length){syncMessage("해당하는 복습 문항이 없습니다.");return;}startQueue(items,"review");return;
+  }
+  if(name==="mock-start"){if(!mock||!writable)return;if(!confirm("60문항 실전 모의고사를 시작하시겠습니까? 기존 진행 중인 시험이 있으면 이어집니다."))return;void mock.start(b.dataset.round).catch(()=>syncMessage("모의고사를 시작하지 못했습니다. 연결 상태를 확인해 주세요."));return;}
   if(name==="toggle-hint"){
    const hint=$("#solve-hint");hint.hidden=!hint.hidden;b.setAttribute("aria-expanded",String(!hint.hidden));
    if(!hint.hidden&&attempt)attempt.usedHint=true;return;
@@ -436,7 +451,9 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
    if(!validateWrittenQuestion(q,examType)||seen.has(q.id))return false;
    seen.add(q.id);return true;
   });
+  if(examType==="industrial")bank=bank.map(q=>({...q,subject:normalizeSubject(q.subject)}));
   bank.sort((a,b)=>b.year-a.year||b.round-a.round||a.number-b.number);
+  if(examType==="industrial"&&cloud)mock=createMockExam({root,db,bank,back:()=>selectView("progress"),enter:()=>{view="mock";current=null;hideBrowser();updateNav();$(".bank-nav").hidden=true;$("#usage-guide").hidden=true;}});
   fillFilters();
 
   const archiveSessions=(Array.isArray(expectedSessions)?expectedSessions:[])
@@ -446,7 +463,7 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
     key:q.year+"-"+q.round,year:q.year,round:q.round,roundLabel:q.roundLabel||q.round+"회"
    })),...archiveSessions].map(x=>[x.key,x])).values()]
    .sort((a,b)=>b.year-a.year||a.round-b.round);
-  const historicalSubjects=["정보시스템 기반 기술","프로그래밍언어 활용","데이터베이스 활용"];
+  const historicalSubjects=examType==="industrial"?["정보시스템 기반 기술","프로그래밍 언어 활용","데이터베이스 활용"]:["정보시스템 기반 기술","프로그래밍언어 활용","데이터베이스 활용"];
   const archivedOnly=bank.length===0&&archiveSessions.length>0;
   let chosenYear=history.state?.questionBrowser?.selected||"";
   let chosenSession=history.state?.questionBrowser?.secondary||"";
