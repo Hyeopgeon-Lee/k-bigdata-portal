@@ -1,0 +1,24 @@
+import assert from "node:assert/strict";
+import {practicalRecords} from "../js/practical-dashboard.mjs";
+const bank=[{id:"A"},{id:"B"},{id:"C"},{id:"D"}];
+const a=(id,q,result,submitted_at,metadata={})=>({bank:"practical",client_attempt_id:id,question_id:q,result,submitted_at,metadata});
+const events=[a("1","A","incorrect","2026-11-01"),a("2","A","correct","2026-11-02",{corrects_attempt_id:"1"}),a("3","B","incorrect","2026-11-01"),a("4","B","incorrect","2026-11-02"),a("5","B","correct","2026-11-03"),a("6","C","timeout","2026-11-03"),a("7","old-D","ungraded","2026-11-03")];
+const rows=practicalRecords(bank,events,{"old-D":"D"});
+assert.equal(rows[0].count,1);assert.equal(rows[0].wrong,0);assert.equal(rows[0].last.result,"correct");
+assert.equal(rows[1].wrong,2);assert.equal(rows[1].count,3);assert.equal(rows[1].last.result,"correct");
+assert.equal(rows[2].last,null);assert.equal(rows[3].last.result,"ungraded");
+assert.equal(practicalRecords(bank,[...events,events[0],events[1]],{"old-D":"D"})[0].count,1);
+console.log("PASS: correction deduplication, repeat wrong, historical timeout exclusion, alias mapping.");
+
+const {createPracticalDashboard}=await import("../js/practical-dashboard.mjs");
+globalThis.document={addEventListener(){}};
+globalThis.portalLearning={read:true,write:true,expires:Date.now()+60000};
+globalThis.portalVerifiedUserId="test-user";
+const sample=[{id:"A",title:"배열",language:"C",questionType:"output",sourceType:"reconstructed",concepts:["배열"],history:[{examType:"engineer",year:2025,round:1}]}];
+globalThis.portalSupabaseClient={from(){return {select(){return this},eq(){return this},order(){return this},range(){return Promise.resolve({data:[{...events[1],used_hint:false,elapsed_seconds:24,answer_text:"1"}],error:null})}}}};
+const host={addEventListener(){}},panel={isConnected:true,classList:{add(){}},innerHTML:""};
+const dashboard=createPracticalDashboard({host,bank:sample,aliases:{},openSet(){},answerFor:()=>"1"});
+dashboard.show("progress",panel);await new Promise(r=>setImmediate(r));
+assert.match(panel.innerHTML,/전체 학습 진행률/);assert.match(panel.innerHTML,/일별 학습 추이/);assert.match(panel.innerHTML,/연도·회차별 기출문제 진도/);assert.match(panel.innerHTML,/100%/);
+dashboard.show("wrong",panel);await new Promise(r=>setImmediate(r));assert.match(panel.innerHTML,/복습 해결률/);
+console.log("PASS: dashboard and review rendering with simulated account records.");

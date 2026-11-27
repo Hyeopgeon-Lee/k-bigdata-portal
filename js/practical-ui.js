@@ -1,15 +1,17 @@
 import {quizNavigation,quizHeading,quizDisclosure,quizFeedback,scrollToQuizAnswer} from "./quiz-unified.js?v=20261112-answer-focus-1";
 import {createQuestionBrowser} from "./question-browser.js?v=20261116-progress-v1";
 import {createLearningProgressStore} from "./learning-list-progress.mjs?v=20261116-concurrency-1";
-import {bindReview,reviewControls,gradeLabels} from "./study-review.js?v=20261116-concurrency-1";
+import {bindReview,reviewControls,gradeLabels} from "./coding-review.js?v=20261127-dashboard-1";
+import {createPracticalDashboard} from "./practical-dashboard.mjs?v=20261127-dashboard-1";
 import {loadPracticalBank} from "./practical-data.js?v=20261127-no-timer-1";
-import {examLabels,typeLabels,languages,escapeHTML as esc,questionText,shuffle,recommendFive,matchesExam,localDay,summarizeAttempts,highlightCode,formatCodeForDisplay,canResumeUnfinishedAttempt} from "./practical-core.js?v=20261127-no-timer-1";
+import {examLabels,typeLabels,languages,escapeHTML as esc,questionText,shuffle,recommendFive,matchesExam,localDay,highlightCode,formatCodeForDisplay,canResumeUnfinishedAttempt} from "./practical-core.js?v=20261127-no-timer-1";
 import {getAttempts,saveAttempt,getSession,saveSession,clearLocalLearning,storageAvailable,getPreferences,savePreferences,exportLearning,importLearning} from "./practical-store.js";
 import {matches} from "./search-core.js?v=20261005-perf-1";
 import {beginnerExplanation,examMemory,solutionTrace} from "./practical-explanation.js?v=20261006-audit-2";
 import {learningReportUrl} from "./learning-report.js?v=20261009-1";
 
 const $=selector=>document.querySelector(selector),root=$("#bank-content"),status=$("#bank-status");
+let dashboard;
 let bank=[],view="bank",current=null,attempt=null,queue=[],queueIndex=0,aliases={},pageLimit=24,queueKind="random",solveActionsObserver=null;
 let browserEntry;
 let localProgress=new Map();
@@ -189,7 +191,7 @@ async function copyCurrentProblemLink(){
   setShareStatus("링크를 복사할 수 없습니다. 다시 시도해 주세요.");
  }
 }
-function selectView(next){disconnectSolveObserver();current=null;attempt=null;queue=[];view=next;pageLimit=24;setUrl();render();window.scrollTo({top:0,behavior:"auto"});}
+function selectView(next){document.querySelector("main").classList.remove("qb-browsing");const list=document.querySelector(".question-browser");if(list)list.hidden=true;disconnectSolveObserver();current=null;attempt=null;queue=[];view=next;pageLimit=24;setUrl();render();window.scrollTo({top:0,behavior:"auto"});}
 function planToday(){
  const key=[localDay(),filters.exam,filters.language].join(":");
  const plans=getPreferences().dailyPlans||{},ids=plans[key];
@@ -221,11 +223,11 @@ function render(){
  $("#quick-filters").hidden=!!current||!["home","bank"].includes(view);
  // The shared page introduction is always visible in list, home and question modes.
  $("#study-intro").hidden=false;
- $(".bank-nav").hidden=!!current||view==="home";
+ $(".bank-nav").hidden=false;
  $("#usage-guide").hidden=!!current;
  document.body.classList.toggle("is-solving",!!current);
  syncFilters();
- document.querySelectorAll("[data-view]").forEach(b=>{const selected=!current&&b.dataset.view===view;b.setAttribute("aria-pressed",String(selected));b.classList.toggle("button-primary",selected);b.classList.toggle("button-secondary",!selected);});
+ document.querySelectorAll("[data-view]").forEach(b=>{const selected=b.dataset.view===(current?"bank":view);b.setAttribute("aria-pressed",String(selected));b.classList.toggle("button-primary",selected);b.classList.toggle("button-secondary",!selected);});
  status.textContent="";
  if(current){renderQuestion();return;}
  if(view==="home")renderHome();
@@ -241,16 +243,10 @@ function renderRandom(){
  root.innerHTML='<section class="bank-empty"><h2>랜덤 종이 풀이</h2><div class="bank-filter-grid"><label>시험<select id="random-exam"><option value="all">전체</option>'+Object.entries(examLabels).map(([id,label])=>'<option value="'+id+'">'+label+'</option>').join("")+'</select></label><label>언어<select id="random-language"><option value="all">전체</option>'+languages.map(l=>'<option>'+l+'</option>').join("")+'</select></label><label>종류<select id="random-source"><option value="reconstructed">복원기출만</option><option value="all">전체 종류</option></select></label><label>문제 수<select id="random-count"><option>5</option><option>10</option><option>20</option></select></label></div>'+button("start-random","랜덤 연습 시작")+'<p id="random-status" role="status"></p></section>';
  $("#random-exam").value=filters.exam;$("#random-language").value=filters.language;
 }
-function renderWrong(){
- const all=getAttempts(),ids=[...new Set(all.filter(a=>a.correct===false||a.reviewGrade==="ungraded").map(a=>a.questionId))];
- const items=ids.map(id=>bank.find(q=>q.id===id)).filter(Boolean);
- root.innerHTML='<h2>오답노트</h2><p>틀렸거나 판단을 보류한 문제를 다시 풀어보세요.</p>'+(items.length?'<div class="bank-card-grid">'+items.map(q=>{const records=all.filter(a=>a.questionId===q.id),last=records.at(-1);return card(q,'<p>최근 풀이: '+esc(new Date(last.submittedAt).toLocaleString("ko-KR"))+'</p><p>틀린 횟수 '+records.filter(a=>a.correct===false).length+'회 · 최근 결과 '+(last.correct===true?'정답':last.correct===false?'오답':last.reviewGrade==='ungraded'?'판단 보류':'직접 비교 대기')+'</p><details><summary>이전 답·정답 확인</summary><p>최근 입력 답</p><div class="bank-answer-preview">'+esc(last.answer)+'</div><p>정답</p><div class="bank-answer-preview">'+esc(displayAnswer(q))+'</div></details>');}).join("")+'</div>':'<div class="bank-empty"><p>아직 기록된 오답이 없습니다.</p></div>');
-}
-function statsHTML(s){return '<p>풀이 '+s.total+' · 정답 '+s.correct+' · 오답 '+s.wrong+' · 판정 대기 '+s.pending+'</p><p>정답률 '+(s.rate===null?'—':s.rate+'%')+' · 평균 풀이시간 '+s.average+'초</p>';}
+function renderWrong(){root.innerHTML='<section id="practical-dashboard"></section>';dashboard?.show("wrong",$("#practical-dashboard"));}
 function renderProgress(){
- const all=getAttempts(),today=localDay(),cutoff=new Date();cutoff.setHours(0,0,0,0);cutoff.setDate(cutoff.getDate()-6);
- const week=all.filter(a=>a.submittedAt>=cutoff.getTime());
- root.innerHTML='<h2>내 학습현황</h2><p>SQL 직접 비교를 마치면 정답률에 반영됩니다.</p><section class="bank-empty"><h3>오늘 · '+today+'</h3>'+statsHTML(summarizeAttempts(all.filter(a=>localDay(new Date(a.submittedAt))===today)))+'</section><h3>최근 7일 · 오늘 포함</h3><div class="bank-progress-grid">'+languages.map(language=>'<article><h3>'+language+'</h3>'+statsHTML(summarizeAttempts(week.filter(a=>bank.find(q=>q.id===a.questionId)?.language===language)))+'</article>').join("")+'</div><details><summary>학습기록 관리</summary><p>삭제하면 이 기기에 저장된 풀이와 오답노트가 모두 지워지며 복구할 수 없습니다.</p>'+button("export-learning","학습 기록 내보내기")+'<label for="import-learning">학습 기록 가져오기 (JSON, 현재 기록과 병합)</label><input id="import-learning" type="file" accept=".json,application/json"><p id="import-status" role="status"></p>'+button("confirm-clear","내 학습기록 삭제")+'<div id="clear-confirm"></div></details>';
+ root.innerHTML='<section id="practical-dashboard"></section><details class="pd-local-management"><summary>기기 내 학습기록 관리</summary><p>이 기능은 이 기기에 저장된 기록만 관리합니다. 계정 DB 이력은 삭제되지 않습니다.</p>'+button("export-learning","학습 기록 내보내기")+'<label for="import-learning">학습 기록 가져오기 (JSON, 현재 기록과 병합)</label><input id="import-learning" type="file" accept=".json,application/json"><p id="import-status" role="status"></p>'+button("confirm-clear","기기 기록 삭제")+'<div id="clear-confirm"></div></details>';
+ dashboard?.show("progress",$("#practical-dashboard"));
 }
 function openQuestion(id,fresh=false){
  id=aliases[id]||id;
@@ -329,11 +325,12 @@ function revealAnswer({expanded=true}={}){
    reviewControls()+button("retry","다시 풀기")+'</section>';
  $("#answer-result").hidden=!expanded;
  const item=attempt;
- bindReview(root.querySelector(".study-review"),{bank:"practical",questionId:q.id,clientAttemptId:item.id,answerText:item.answer,
-   elapsedSeconds:Math.round((Date.now()-item.startedAt)/1000),usedHint:item.usedHint},
-   item.reviewGrade||(item.submittedAt?"historical":null),result=>{
+ bindReview(root.querySelector(".study-review"),{bank:"practical",questionId:q.id,clientAttemptId:item.reviewAttemptId||item.id,answerText:item.answer,
+   get elapsedSeconds(){return item.elapsedSeconds??Math.round((Date.now()-item.startedAt)/1000);},usedHint:item.usedHint},
+   item.reviewGrade||(item.correct===true?"correct":item.correct===false?"incorrect":null),(result,attemptId)=>{
+     item.reviewAttemptId=attemptId;
      item.reviewGrade=result;item.correct=result==="correct"?true:result==="incorrect"?false:null;
-     item.submittedAt=Date.now();item.elapsedSeconds=Math.round((item.submittedAt-item.startedAt)/1000);
+     item.elapsedSeconds=item.elapsedSeconds??Math.round((Date.now()-item.startedAt)/1000);item.submittedAt=Date.now();
      item.selfGraded=true;saveAttempt(item);
      refreshDeviceProgress();browserEntry?.refresh();
      if(getSession(q.id)?.id===item.id)saveSession(q.id,item);
@@ -422,7 +419,7 @@ root.addEventListener("click",event=>{
  if(action==="cancel-delete")$("#clear-confirm").innerHTML="";
  if(action==="delete-learning"){clearLocalLearning();refreshDeviceProgress();browserEntry?.refresh();render();}
 });
-document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>selectView(b.dataset.view)));
+document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>{selectView(b.dataset.view);if(b.dataset.view==="bank")browserEntry?.show(false);}));
 for(const key of ["exam","language","source","difficulty","type","sort","completion","year","round"]){$("#"+key+"-filter").addEventListener("change",event=>{filters[key]=event.target.value;pageLimit=24;render();});}
 document.querySelectorAll("[data-filter]").forEach(b=>b.addEventListener("click",()=>{filters[b.dataset.filter]=b.dataset.value;$("#"+b.dataset.filter+"-filter").value=b.dataset.value;pageLimit=24;const url=new URL(location.href);if(filters.exam==="all")url.searchParams.delete("exam");else url.searchParams.set("exam",filters.exam);history.replaceState(history.state,"",url);render();}));
 let bankSearchTimer=0;$("#bank-query").addEventListener("input",event=>{const value=event.target.value;clearTimeout(bankSearchTimer);bankSearchTimer=window.setTimeout(()=>{filters.query=value;pageLimit=24;render();},80);});
@@ -483,6 +480,7 @@ loadPracticalBank().then(result=>{
    describe:q=>q.title,searchText:q=>[q.id,questionText(q)].join(" "),
    openQuestion(q,items){queue=items;queueIndex=items.indexOf(q);queueKind="bank";openQuestion(q.id,false);},
  });
+ dashboard=createPracticalDashboard({host:root,bank,aliases,initialExam:filters.exam,answerFor:displayAnswer,goView:selectView,openSet(items){view="bank";startQueue(items,"bank");}});
  practicalProgress.attach();
  if(browserEntry.resume(id))return;
  const savedQueue=getPreferences().learningQueue;

@@ -19,7 +19,7 @@ assert.ok(ui.includes('정답·해설 보기'));
 assert.ok(ui.includes('id="solve-hint"'));
 assert.ok(ui.includes('bindReview('));
 assert.doesNotMatch(ui,/HINT_SECONDS|ANSWER_SECONDS|REVEAL_SECONDS|WAIT_SECONDS|remainingSeconds|remainingAnswerSeconds|secondsUntilHint|secondsUntilAnswer|hintAvailable|answerDeadlineReached|shouldAutoReveal|autoRevealed|lateSubmittedAt|lateEditable|revealReason|hintShownAt/);
-assert.ok(ui.includes('elapsedSeconds:Math.round'));
+assert.ok(ui.includes('get elapsedSeconds()'));
 assert.ok(ui.includes('usedHint:item.usedHint'));
 assert.doesNotMatch(ui,/setInterval\(updateGate|autoRevealAnswer|answerDeadlineReached\(/);
 assert.match(html,/css\/practical\.css\?v=[\w-]+/);

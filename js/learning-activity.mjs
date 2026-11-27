@@ -132,7 +132,7 @@ export async function fetchLearningAttempts(bank=null){
  if(bank!==null&&!VALID_BANKS.has(bank))throw new Error('INVALID_PROGRESS_BANK');
  const user=await account();const all=[];
  for(let from=0;from<10000;from+=500){
-  const query=db().from('learning_attempts').select('id,bank,question_id,result,grading_method,submitted_at,used_hint,elapsed_seconds,client_attempt_id'+(bank==='coding'?',metadata':'')).eq('user_id',user.id);
+  const query=db().from('learning_attempts').select('id,bank,question_id,result,grading_method,submitted_at,used_hint,elapsed_seconds,client_attempt_id'+(bank==='coding'?',metadata':bank==='practical'?',metadata,answer_text':'')).eq('user_id',user.id);
   if(bank!==null)query.eq('bank',bank);
   const {data,error}=await query.order('submitted_at',{ascending:false}).range(from,from+499);
   if(error)throw error;all.push(...(data||[]));if((data||[]).length<500)break;

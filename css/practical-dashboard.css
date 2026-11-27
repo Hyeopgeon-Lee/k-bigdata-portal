@@ -1,0 +1,17 @@
+/* Match the shared written and coding dashboard shell without affecting solve controls. */
+html[data-portal-page="practical"] main > #practical-dashboard-nav{width:min(var(--quiz-content-max,1240px),calc(100% - 32px));max-width:var(--quiz-content-max,1240px);margin:0 auto 18px;box-sizing:border-box;grid-template-columns:repeat(5,minmax(0,1fr));padding:6px;gap:6px}
+html[data-portal-page="practical"] main.qb-browsing > #practical-dashboard-nav{display:grid!important}
+html[data-portal-page="practical"] main > .learning-content{width:min(var(--quiz-content-max,1240px),calc(100% - 32px));max-width:var(--quiz-content-max,1240px);margin:0 auto;padding-inline:0;box-sizing:border-box}
+html[data-portal-page="practical"] main > #practical-dashboard-nav button{font-size:15px;min-height:46px;padding:8px 4px;border-radius:9px;white-space:normal}
+.practical-dashboard{width:100%;margin:0;min-width:0}
+.practical-dashboard .cd-card{margin:0}
+.practical-dashboard .pd-select{display:grid;gap:5px;justify-self:start;font-size:.9rem;color:#526780}
+.practical-dashboard .pd-filters{padding:12px 16px;background:#fff;border:1px solid #d4dfed;border-radius:12px}
+.practical-dashboard .pd-record details{margin-top:8px}
+.practical-dashboard .pd-answers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:8px}
+.practical-dashboard .pd-answers>div{background:#f5f8fc;border:1px solid #d4dfed;padding:10px;border-radius:8px;min-width:0}
+.practical-dashboard .pd-answers pre{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;margin:6px 0 0}
+.practical-dashboard .pd-record{margin:6px 0}
+.practical-dashboard .cd-card .cd-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+.pd-local-management{margin-top:18px;padding:14px;background:#fff;border:1px solid #d4dfed;border-radius:12px}
+@media(max-width:760px){html[data-portal-page="practical"] main > #practical-dashboard-nav{grid-template-columns:repeat(3,minmax(0,1fr));width:calc(100% - 24px)}html[data-portal-page="practical"] main > .learning-content{width:calc(100% - 24px)}.practical-dashboard .pd-answers{grid-template-columns:1fr}.practical-dashboard .cd-card .cd-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}

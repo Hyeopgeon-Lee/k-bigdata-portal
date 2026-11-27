@@ -1,0 +1,86 @@
+import {fetchLearningAttempts} from "./learning-activity.mjs?v=20261127-practical-dashboard";
+import {escapeHTML as esc,examLabels,typeLabels,languages,matchesExam} from "./practical-core.js?v=20261127-no-timer-1";
+const labels={correct:"정답",incorrect:"오답",ungraded:"판단 보류",completed:"완료"};
+const allowed=new Set(Object.keys(labels));
+const percent=(a,b)=>b?Math.round(a/b*1000)/10:0;
+const rate=(a,b)=>b?percent(a,b)+"%":"—";
+const day=t=>{const d=new Date(t);return Number.isFinite(d.getTime())?new Intl.DateTimeFormat("sv-SE",{timeZone:"Asia/Seoul",year:"numeric",month:"2-digit",day:"2-digit"}).format(d):"";};
+const date=t=>day(t)?new Date(t).toLocaleString("ko-KR",{timeZone:"Asia/Seoul",dateStyle:"short",timeStyle:"short"}):"기록 없음";
+const byTime=(a,b)=>String(a.submitted_at).localeCompare(String(b.submitted_at));
+export function practicalRecords(bank,attempts,aliases={}){
+ const result=new Map(bank.map(q=>[q.id,{q,events:[],last:null,wrong:0,count:0}]));
+ const corrected=new Set(attempts.filter(a=>a.bank==="practical").map(a=>a.metadata?.corrects_attempt_id).filter(Boolean));
+ const seen=new Set();
+ for(const a of [...attempts].sort(byTime)){
+  const v=result.get(aliases[a.question_id]||a.question_id);
+  if(a.bank!=="practical"||!v||!allowed.has(a.result)||corrected.has(a.client_attempt_id)||(a.client_attempt_id&&seen.has(a.client_attempt_id)))continue;
+  if(a.client_attempt_id)seen.add(a.client_attempt_id);
+  v.events.push(a);v.last=a;v.count++;if(a.result==="incorrect")v.wrong++;
+ }
+ return [...result.values()];
+}
+const stats=rows=>({total:rows.length,done:rows.filter(v=>v.last).length,c:rows.filter(v=>v.last?.result==="correct").length,w:rows.filter(v=>v.last?.result==="incorrect").length,p:rows.filter(v=>v.last?.result==="ungraded").length});
+const btn=(label,action,attrs="")=>'<button type="button" class="cd-btn" data-pd-action="'+action+'" '+attrs+'>'+esc(label)+'</button>';
+const select=(key,value,opts,label)=>'<label class="pd-select">'+esc(label)+'<select data-pd-select="'+key+'">'+opts.map(([k,v])=>'<option value="'+esc(k)+'"'+(String(value)===String(k)?" selected":"")+'>'+esc(v)+'</option>').join("")+'</select></label>';
+const kpi=(n,v,s="")=>'<article class="cd-kpi"><small>'+esc(n)+'</small><strong>'+esc(v)+'</strong><small>'+esc(s)+'</small></article>';
+const card=(title,html)=>'<article class="cd-card"><h3>'+esc(title)+'</h3>'+html+'</article>';
+const bar=(a,b,color="")=>'<div class="cd-track" role="progressbar" aria-label="비율" aria-valuenow="'+percent(a,b)+'" aria-valuemin="0" aria-valuemax="100"><span class="'+color+'" style="width:'+percent(a,b)+'%"></span></div>';
+const line=(label,value)=>'<div class="cd-line"><strong>'+esc(label)+'</strong><span>'+esc(value)+'</span></div>';
+const donut=(value,caption,style)=>'<div class="cd-donut pd-donut" role="img" aria-label="'+esc(caption+" "+value)+'" style="'+style+'"><div><strong>'+esc(value)+'</strong><small>'+esc(caption)+'</small></div></div>';
+const timeLabel=n=>Number.isFinite(n)?Math.floor(Math.round(n)/60)+"분 "+(Math.round(n)%60)+"초":"—";
+const examOpts=[["all","전체"],...Object.entries(examLabels)],langOpts=[["all","전체 언어"],...languages.map(x=>[x,x==="C"?"C언어":x])];
+export function createPracticalDashboard({host,bank,aliases,openSet,goView,answerFor,initialExam="all"}){
+ let exam=initialExam,lang="all",round="all",kind="incorrect",period=7,topicLang="all",goal=10,rows=[],mode="",loaded=false,failed=false,req=0,seq=0,activeHost=null,sets=new Map();
+ const readable=()=>globalThis.portalLearning?.read===true&&Date.now()<globalThis.portalLearning.expires;
+ const storageKey=()=>globalThis.portalVerifiedUserId?"practical:goal:"+globalThis.portalVerifiedUserId:null;
+ const scope=()=>rows.filter(v=>matchesExam(v.q,exam,bank));
+ function actionSet(label,items,action="set"){const key=String(++seq);sets.set(key,items.map(v=>v.q));return btn(label,action,'data-id="'+key+'" '+(items.length?"":"disabled"));}
+ function historyLabel(q){return q.history?.map(h=>examLabels[h.examType]+" "+h.year+"년 "+h.round+"회").join(" · ")||"기출유형 연습";}
+ function row(v,compare=false){
+  const a=v.last,old=[...v.events].reverse().find(a=>a.result==="incorrect")||a;
+  const details=compare&&old?'<details><summary>이전 입력 답안 · 정답 비교</summary><div class="pd-answers"><div><small>입력 답안</small><pre>'+esc(old.answer_text||"미입력 / 기록 없음")+'</pre></div><div><small>정답</small><pre>'+esc(answerFor(v.q))+'</pre></div></div></details>':"";
+  return '<article class="cd-record pd-record"><div><small>'+esc(historyLabel(v.q))+' · '+esc(v.q.language)+' · '+esc(v.q.id)+'</small><strong>'+esc(v.q.title)+'</strong><small>풀이 '+v.count+'회 · 오답 '+v.wrong+'회 · '+esc(date(a?.submitted_at))+' · 힌트 '+(a?.used_hint?"사용":"미사용")+'</small>'+details+'</div><span class="cd-pill '+esc(a?.result||"")+'">'+esc(labels[a?.result]||"미학습")+'</span>'+actionSet("다시 풀기",[v])+'</article>';
+ }
+ function filters(){return '<div class="cd-toolbar pd-filters">'+select("exam",exam,examOpts,"시험 구분")+'</div>';}
+ function render(){
+  if(!activeHost||!activeHost.isConnected)return;seq=0;sets=new Map();
+  const heading='<h2>'+(mode==="wrong"?"오답노트":"학습현황")+'</h2>';
+  if(!readable()){activeHost.innerHTML=heading+card("개인 학습 기록","<p>로그인 후 확인할 수 있습니다.</p>");return;}
+  if(!loaded){activeHost.innerHTML=heading+card("학습 기록",failed?'<p>기록을 불러오지 못했습니다.</p>'+btn("다시 시도","refresh"):'<p role="status">학습 기록을 불러오는 중…</p>');return;}
+  const all=scope(),g=stats(all),wrong=all.filter(v=>v.last?.result==="incorrect"),pending=all.filter(v=>v.last?.result==="ungraded"),repeat=wrong.filter(v=>v.wrong>=2),solved=all.filter(v=>v.last?.result==="correct"&&v.wrong),unseen=all.filter(v=>!v.last);
+  const recent=all.filter(v=>v.last).sort((a,b)=>byTime(b.last,a.last));
+  if(mode==="wrong"){
+   const groups={incorrect:wrong,ungraded:pending,repeat,solved};
+   const rounds=[...new Set(all.flatMap(v=>v.q.history.filter(h=>exam==="all"||h.examType===exam).map(h=>h.year+"-"+h.round)))].sort().reverse();
+   const items=groups[kind].filter(v=>(lang==="all"||v.q.language===lang)&&(round==="all"||v.q.history.some(h=>(exam==="all"||h.examType===exam)&&h.year+"-"+h.round===round))).sort((a,b)=>b.wrong-a.wrong||byTime(b.last,a.last));
+   activeHost.innerHTML=heading+filters()+'<div class="cd-kpis">'+kpi("미해결 오답",wrong.length+"문제")+kpi("반복 오답",repeat.length+"문제")+kpi("판단 보류",pending.length+"문제")+kpi("복습 해결",solved.length+"문제")+'</div>'+card("복습 해결률",line("해결 "+solved.length+" / "+(solved.length+wrong.length)+"문제",rate(solved.length,solved.length+wrong.length))+bar(solved.length,solved.length+wrong.length,"good"))+'<div class="cd-toolbar">'+Object.entries({incorrect:"미해결",repeat:"반복 오답",ungraded:"판단 보류",solved:"해결"}).map(([k,n])=>btn(n+" ("+groups[k].length+")","kind",'data-id="'+k+'" aria-pressed="'+(kind===k)+'"')).join("")+select("lang",lang,langOpts,"언어")+select("round",round,[["all","전체 회차"],...rounds.map(k=>[k,k.replace("-","년 ")+"회"])],"회차")+actionSet("이 항목 연속 다시 풀기",items)+'</div>'+(items.length?items.map(v=>row(v,true)).join(""):card("복습 기록","<p>해당 조건의 문제가 없습니다.</p>"));return;
+  }
+  const today=day(Date.now()),daily=new Map(),events=all.flatMap(v=>v.events.map(a=>({...a,qid:v.q.id}))).sort(byTime);
+  for(const a of events){const d=day(a.submitted_at);if(!d)continue;if(!daily.has(d))daily.set(d,new Map());daily.get(d).set(a.qid,a.result);}
+  const todayCount=daily.get(today)?.size||0,now=new Date();let streak=0;while(daily.has(day(now))){streak++;now.setUTCDate(now.getUTCDate()-1);}
+  const start=new Date();start.setUTCDate(start.getUTCDate()-(Number(period)||7)+1);
+  const days=period==="all"?(()=>{const dates=[...daily.keys()].sort();if(!dates.length)return [];const first=new Date(dates[0]+"T00:00:00+09:00"),last=new Date(today+"T00:00:00+09:00"),out=[];for(let d=first;d<=last;d.setUTCDate(d.getUTCDate()+1))out.push(day(d));return out;})():Array.from({length:Number(period)},(_,i)=>{let d=new Date(start);d.setUTCDate(d.getUTCDate()+i);return day(d);});
+  const vals=days.map(d=>({d,a:[...(daily.get(d)?.values()||[])]})),max=Math.max(1,...vals.map(v=>v.a.length)),sum=vals.reduce((s,v)=>s+v.a.length,0);
+  const trend='<div class="cd-chart-scroll"><div class="cd-trend" style="--days:'+Math.max(7,vals.length)+'">'+vals.map(({d,a})=>{const c=a.filter(x=>x==="correct").length,w=a.filter(x=>x==="incorrect").length,p=a.length-c-w;return '<div class="cd-day"><strong>'+a.length+'</strong><div class="cd-day-track" title="'+esc(d+" · 정답 "+c+" / 오답 "+w+" / 기타 "+p)+'"><div style="height:'+percent(a.length,max)+'%"><i class="good" style="flex:'+c+'"></i><i class="bad" style="flex:'+w+'"></i><i class="pending" style="flex:'+p+'"></i></div></div><small>'+esc(d.slice(5))+'</small></div>'}).join("")+'</div></div><div class="cd-legend">🟢 정답　🔴 오답　🟠 판단 보류·기타</div><p>기간 학습량 '+sum+'문제 · 일평균 '+(days.length?(sum/days.length).toFixed(1):"0")+'문제 · 연속 '+streak+'일</p>';
+  const areas=languages.map(l=>{const a=all.filter(v=>v.q.language===l),s=stats(a);return '<div class="cd-area">'+line(l+" · 진도율 "+s.done+" / "+s.total,rate(s.done,s.total))+bar(s.done,s.total)+line("자기평가 정답률",rate(s.c,s.c+s.w))+bar(s.c,s.c+s.w,"good")+'<small>정답 '+s.c+' · 오답 '+s.w+' · 보류 '+s.p+'</small><div class="cd-toolbar">'+actionSet("미학습 풀기",a.filter(v=>!v.last))+actionSet("오답 복습",a.filter(v=>v.last?.result==="incorrect"))+'</div></div>'}).join("");
+  const years=[...new Set(all.flatMap(v=>v.q.history.map(h=>h.year)))].sort((a,b)=>b-a);
+  const yearChart=years.map(y=>'<div class="cd-area"><strong>'+y+'년</strong>'+Object.entries(examLabels).filter(([k])=>exam==="all"||exam===k).map(([k,n])=>{const a=all.filter(v=>v.q.history.some(h=>h.examType===k&&h.year===y)),s=stats(a);return line(n, s.total?s.done+" / "+s.total+" · "+rate(s.done,s.total):"등록 없음")+bar(s.done,s.total,k==="engineer"?"":"good")}).join("")+'</div>').join("");
+  const rounds=[];for(const y of years)for(const [k,n] of Object.entries(examLabels))if(exam==="all"||exam===k)for(const r of [...new Set(all.flatMap(v=>v.q.history.filter(h=>h.year===y&&h.examType===k).map(h=>h.round)))].sort((a,b)=>b-a)){const a=all.filter(v=>v.q.history.some(h=>h.year===y&&h.examType===k&&h.round===r)),s=stats(a);rounds.push('<div class="cd-area">'+line(n+" "+y+"년 "+r+"회",s.done+" / "+s.total+" · "+rate(s.done,s.total))+bar(s.done,s.total)+actionSet("미학습 풀기",a.filter(v=>!v.last))+'</div>');}
+  const types=Object.entries(typeLabels).map(([k,n])=>({name:n,items:all.filter(v=>v.q.questionType===k)}));
+  const concepts=new Map();for(const v of all){if(topicLang!=="all"&&v.q.language!==topicLang)continue;for(const c of new Set(v.q.concepts||[])){const key=v.q.language+" · "+c;if(!concepts.has(key))concepts.set(key,[]);concepts.get(key).push(v);}}
+  const rank=groups=>groups.map(t=>({...t,...stats(t.items)})).sort((a,b)=>(a.c+a.w<3)-(b.c+b.w<3)||percent(a.c,a.c+a.w)-percent(b.c,b.c+b.w));
+  const typeRank=rank(types),conceptRank=rank([...concepts].map(([name,items])=>({name,items})));
+  const weak=[...typeRank,...conceptRank].filter(t=>t.c+t.w>=3&&percent(t.c,t.c+t.w)<60).sort((a,b)=>percent(a.c,a.c+a.w)-percent(b.c,b.c+b.w))[0];
+  const rankHTML=entries=>entries.map(t=>'<div class="cd-area">'+line(t.name,t.c+t.w<3?"평가 데이터 부족":rate(t.c,t.c+t.w))+bar(t.c,t.c+t.w,t.c+t.w<3?"muted":percent(t.c,t.c+t.w)<60?"bad":"good")+'<small>정답 '+t.c+' / 평가 '+(t.c+t.w)+' · 완료 '+t.done+' / '+t.total+'</small>'+actionSet("집중 학습",t.items.filter(v=>v.last?.result!=="correct"))+'</div>').join("");
+  const judged=all.filter(v=>["correct","incorrect"].includes(v.last?.result)),hint=judged.filter(v=>v.last.used_hint===true),noHint=judged.filter(v=>v.last.used_hint===false),independent=noHint.filter(v=>v.last.result==="correct"),elapsed=all.filter(v=>v.last&&Number.isFinite(v.last.elapsed_seconds)&&v.last.elapsed_seconds>=0).map(v=>v.last.elapsed_seconds);
+  const accuracy=rate(g.c,g.c+g.w),p=percent(g.done,g.total),c=percent(g.c,g.done),w=percent(g.w,g.done),pendingPct=percent(g.p,g.done),breakdown='background:conic-gradient(#258764 0 '+c+'%,#ce5555 '+c+'% '+(c+w)+'%,#d69b42 '+(c+w)+'% '+(c+w+pendingPct)+'%,#e8eef5 '+(c+w+pendingPct)+'% 100%)';
+  const latest=[...unseen].filter(v=>v.q.history.length).sort((a,b)=>Math.max(...b.q.history.map(h=>h.year*10+h.round))-Math.max(...a.q.history.map(h=>h.year*10+h.round)));
+  activeHost.innerHTML=heading+filters()+'<p class="cd-note">등록된 활성 문제 및 계정 학습 기록 기준 · 정답률은 자기평가 기준입니다.</p><div class="cd-kpis">'+kpi("전체 문제",g.total+"문제")+kpi("학습 완료",g.done+"문제","미학습 "+unseen.length+"문제")+kpi("전체 진도율",p+"%")+kpi("자기평가 정답률",accuracy,"평가 "+(g.c+g.w)+"문제")+kpi("오늘 학습",todayCount+"문제")+kpi("복습 필요",wrong.length+pending.length+"문제","오답 "+wrong.length+" · 보류 "+pending.length)+'</div><div class="cd-grid">'+card("전체 학습 진행률",'<div class="cd-donut-row">'+donut(p+"%","전체 진도율","--p:"+p+"%")+'<div><p>학습 완료 '+g.done+'문제</p><p>미학습 '+unseen.length+'문제</p></div></div>')+card("풀이 결과",'<div class="cd-donut-row">'+donut(accuracy,"자기평가 정답률",g.done?breakdown:"background:#e8eef5")+'<div><p>🟢 정답 '+g.c+'문제</p><p>🔴 오답 '+g.w+'문제</p><p>🟠 판단 보류 '+g.p+'문제</p></div></div>')+'</div>'+card("언어별 학습현황",areas)+card("일별 학습 추이",select("period",period,[[7,"최근 7일"],[30,"최근 30일"],["all","전체 기간"]],"조회 기간")+trend)+card("연도·회차별 기출문제 진도",'<p class="cd-note">포털 등록 기출문제 기준 · 중복 출제는 각 회차에 반영</p>'+yearChart+'<details><summary>회차별 상세 현황</summary><div class="cd-topics">'+rounds.join("")+'</div></details>')+card("문제 유형별 취약 영역",'<p class="cd-note">평가 3문제 이상인 영역 분석</p>'+rankHTML(typeRank))+card("세부 개념 분석",select("topicLang",topicLang,langOpts,"언어")+'<div class="cd-topics">'+rankHTML(conceptRank)+'</div>')+card("나의 문제 해결 현황",'<div class="cd-kpis">'+kpi("힌트 사용률",rate(hint.length,hint.length+noHint.length))+kpi("힌트 없이 맞힌 비율",rate(independent.length,judged.length))+kpi("복습 해결률",rate(solved.length,solved.length+wrong.length))+kpi("평균 학습 소요시간",timeLabel(elapsed.length?elapsed.reduce((a,b)=>a+b,0)/elapsed.length:NaN),"참고 지표 · 해설 포함 가능")+'</div>'+line("힌트 미사용 정답률",rate(independent.length,noHint.length))+bar(independent.length,noHint.length,"good")+line("힌트 사용 정답률",rate(hint.filter(v=>v.last.result==="correct").length,hint.length))+bar(hint.filter(v=>v.last.result==="correct").length,hint.length,"good"))+card("오늘의 학습 목표",'<label>하루 목표 <input type="number" min="1" max="350" data-pd-goal value="'+goal+'"></label>'+btn("목표 저장","goal")+line(todayCount+" / "+goal+"문제",rate(Math.min(todayCount,goal),goal))+bar(Math.min(todayCount,goal),goal,"good"))+card("추천 학습",'<p>'+esc(weak?weak.name+" · 집중 복습 추천":"평가 기록이 쌓이면 취약 영역을 추천합니다.")+'</p><div class="cd-toolbar">'+actionSet("이어서 학습하기",recent.length?unseen.filter(v=>v.q.language===recent[0].q.language).slice(0,10):unseen.slice(0,10))+actionSet("반복 오답 복습",repeat)+actionSet("취약 영역 집중 학습",weak?weak.items.filter(v=>v.last?.result!=="correct"):[])+actionSet("최신 기출문제 풀기",latest.slice(0,10))+actionSet("힌트 없이 다시 풀기",all.filter(v=>v.last?.used_hint===true))+'</div>')+card("최근 학습 기록",recent.length?recent.slice(0,10).map(v=>row(v,true)).join(""):"<p>아직 학습 기록이 없습니다.</p>");
+ }
+ async function refresh(){const id=++req;if(!readable()){loaded=false;render();return;}try{const data=await fetchLearningAttempts("practical");if(id!==req)return;rows=practicalRecords(bank,data,aliases);loaded=true;failed=false;const k=storageKey();if(k)try{goal=Math.max(1,Math.min(350,Number(localStorage.getItem(k))||10));}catch{}}catch{if(id!==req)return;loaded=false;failed=true;}render();}
+ function show(next,element){mode=next;activeHost=element;activeHost.classList.add("coding-dashboard-panel","practical-dashboard");render();refresh();}
+ host.addEventListener("click",e=>{const b=e.target.closest("[data-pd-action]");if(!b||!activeHost?.contains(b))return;if(b.dataset.pdAction==="refresh"){refresh();return;}if(b.dataset.pdAction==="kind"){kind=b.dataset.id;render();return;}if(b.dataset.pdAction==="goal"){const input=activeHost.querySelector("[data-pd-goal]"),v=Number(input.value);if(!Number.isInteger(v)||v<1||v>350){input.reportValidity();return;}goal=v;const k=storageKey();if(k)try{localStorage.setItem(k,String(v));}catch{}render();return;}const items=sets.get(b.dataset.id);if(items?.length)openSet(items);});
+ host.addEventListener("change",e=>{const k=e.target.dataset.pdSelect;if(!k)return;const v=e.target.value;if(k==="exam"){exam=v;round="all";}if(k==="lang")lang=v;if(k==="round")round=v;if(k==="topicLang")topicLang=v;if(k==="period")period=v==="all"?"all":Number(v);render();});
+ document.addEventListener("portal-learning-sync",e=>{if(e.detail?.state==="saved"&&activeHost?.isConnected)refresh();});
+ return {show};
+}
