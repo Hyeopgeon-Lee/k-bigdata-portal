@@ -1,0 +1,12 @@
+.learning-dashboard-common{width:100%;margin:0;min-width:0}
+.learning-dashboard-common .cd-card{margin:0}
+.learning-dashboard-common .pd-select{display:grid;gap:5px;justify-self:start;font-size:.9rem;color:#526780}
+.learning-dashboard-common .pd-filters{padding:12px 16px;background:#fff;border:1px solid #d4dfed;border-radius:12px}
+.learning-dashboard-common .pd-record details{margin-top:8px}
+.learning-dashboard-common .pd-answers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:8px}
+.learning-dashboard-common .pd-answers>div{background:#f5f8fc;border:1px solid #d4dfed;padding:10px;border-radius:8px;min-width:0}
+.learning-dashboard-common .pd-answers pre{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;margin:6px 0 0}
+.learning-dashboard-common .pd-record{margin:6px 0}
+.learning-dashboard-common .cd-card .cd-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+
+@media(max-width:760px){html[data-portal-page="practical"] main > .learning-content{width:calc(100% - 24px)}.learning-dashboard-common .pd-answers{grid-template-columns:1fr}.learning-dashboard-common .cd-card .cd-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}

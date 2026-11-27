@@ -43,6 +43,36 @@ try{
       await filter.selectOption("all");
       assert.equal(await filter.inputValue(),"all","staff can still view all account statuses");
     }
+    if(name==="learning"){
+      const layout=()=>page.evaluate(()=>{
+       const grid=document.querySelector("#study-admin-summary");
+       const toggle=document.querySelector("#study-admin-mail");
+       const section=document.querySelector("#teacher-study-panel");
+       return {
+        grid:getComputedStyle(grid).display,
+        columns:getComputedStyle(grid).gridTemplateColumns.split(" ").length,
+        toggle:getComputedStyle(toggle).appearance,
+        toggleWidth:getComputedStyle(toggle).width,
+        sectionBackground:getComputedStyle(section).backgroundColor,
+        pageWidth:document.documentElement.scrollWidth,
+        viewport:document.documentElement.clientWidth
+       };
+      });
+      const mobile=await layout();
+      assert.equal(mobile.grid,"grid","admin learning KPI layout restored");
+      assert.equal(mobile.columns,2,"admin mobile learning cards use two columns");
+      assert.equal(mobile.toggle,"none","admin email switch uses custom styling");
+      assert.equal(mobile.toggleWidth,"49px","admin email switch retains accessible size");
+      assert.equal(mobile.sectionBackground,"rgb(255, 255, 255)","learning section background restored");
+      assert.ok(mobile.pageWidth<=mobile.viewport+1,"admin learning mobile has no global horizontal overflow");
+      await page.screenshot({path:"ui-screenshots/admin/learning-admin-mobile.png",fullPage:true});
+      await page.setViewportSize({width:1280,height:900});
+      const wide=await layout();
+      assert.equal(wide.columns,4,"admin desktop learning cards use four columns");
+      assert.ok(wide.pageWidth<=wide.viewport+1,"admin learning desktop has no global overflow");
+      await page.screenshot({path:"ui-screenshots/admin/learning-admin-desktop.png",fullPage:true});
+      await page.setViewportSize({width:390,height:850});
+    }
     if(name==="alumni"){
       await page.locator(".admin-table--alumni tbody tr").first().waitFor({state:"visible",timeout:15000});
       const narrow=await page.evaluate(()=>{
@@ -105,6 +135,26 @@ try{
     }
    }
    assert.deepEqual(errors.filter(e=>!e.includes("net::")),[],name+" JS exceptions");
+   await page.close();
+  }
+  if(!admin){
+   const page=await context.newPage();
+   await page.goto("http://127.0.0.1:8765/my-learning.html",{waitUntil:"domcontentloaded"});
+   const layout=()=>page.evaluate(()=>{
+    const grid=document.querySelector("#learn-summary");
+    const section=document.querySelector(".learn-section");
+    return {display:getComputedStyle(grid).display,
+     columns:getComputedStyle(grid).gridTemplateColumns.split(" ").length,
+     radius:getComputedStyle(section).borderTopLeftRadius,
+     historyOverflow:getComputedStyle(document.querySelector("#learn-recent")).overflowX};
+   });
+   const mobile=await layout();
+   assert.equal(mobile.display,"grid","student learning overview grid restored");
+   assert.equal(mobile.columns,2,"student mobile has two learning card columns");
+   assert.equal(mobile.radius,"14px","student learning sections have restored card borders");
+   assert.equal(mobile.historyOverflow,"auto","student history has local overflow containment");
+   await page.setViewportSize({width:1280,height:900});
+   assert.equal((await layout()).columns,4,"student desktop has four learning card columns");
    await page.close();
   }
   await context.close();

@@ -4,6 +4,8 @@ on:
     branches: [main]
     paths:
       - "admin/**"
+      - "css/learning-dashboard.css"
+      - "my-learning.html"
       - "js/portal-auth.mjs"
       - "js/help.js"
       - "js/room.js"

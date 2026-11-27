@@ -33,6 +33,19 @@ assert.match(teacherUI,/action:'update_mail_setting'/);
 assert.match(teacherUI,/saveMailSetting/);
 assert.match(teacherCSS,/data-page="teacher-learning"/);
 assert.ok(teacherCSS.includes("@media(max-width:700px)"));
+assert.match(teacherCSS,/\[data-admin-page="learning"\]\) \.learn-mail-switch-row/,'administrator route receives restored switch styles');
+assert.match(teacherCSS,/\.learn-grid\{display:grid;/,'learning overview uses a responsive grid');
+assert.match(teacherCSS,/\[data-page="my-learning"\] \.learn-history-result/,'student history retains result styles');
+for(const path of ['admin/learning.html','my-learning.html','teacher-learning.html','study.html']){
+ assert.match(read(path),/href="(?:\.\.\/)?css\/learning-dashboard\.css\?v=/,path+' loads analytics CSS');
+}
+const commonCSS=read('css/learning-dashboard-common.css');
+assert.match(commonCSS,/\.learning-dashboard-common \.pd-answers\{display:grid;/);
+assert.match(commonCSS,/@media\(max-width:760px\)/);
+for(const path of ['coding.html','practical.html']){
+ assert.match(read(path),/href="css\/learning-dashboard-common\.css\?v=/,path+' loads lightweight shared dashboard CSS');
+ assert.doesNotMatch(read(path),/href="css\/learning-dashboard\.css\?v=/);
+}
 assert.match(read('js/portal-auth.mjs'),/my-learning\.html/);
 assert.match(read('js/portal-auth.mjs'),/href:"admin\/index\.html"/,'faculty controls are linked only through admin hub');
 assert.match(read('admin/index.html'),/href="learning\.html"/,'admin hub links to the faculty reporting page');

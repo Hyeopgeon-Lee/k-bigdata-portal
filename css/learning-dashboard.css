@@ -1,12 +1,257 @@
-.learning-dashboard-common{width:100%;margin:0;min-width:0}
-.learning-dashboard-common .cd-card{margin:0}
-.learning-dashboard-common .pd-select{display:grid;gap:5px;justify-self:start;font-size:.9rem;color:#526780}
-.learning-dashboard-common .pd-filters{padding:12px 16px;background:#fff;border:1px solid #d4dfed;border-radius:12px}
-.learning-dashboard-common .pd-record details{margin-top:8px}
-.learning-dashboard-common .pd-answers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:8px}
-.learning-dashboard-common .pd-answers>div{background:#f5f8fc;border:1px solid #d4dfed;padding:10px;border-radius:8px;min-width:0}
-.learning-dashboard-common .pd-answers pre{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;margin:6px 0 0}
-.learning-dashboard-common .pd-record{margin:6px 0}
-.learning-dashboard-common .cd-card .cd-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
 
-@media(max-width:760px){html[data-portal-page="practical"] main > .learning-content{width:calc(100% - 24px)}.learning-dashboard-common .pd-answers{grid-template-columns:1fr}.learning-dashboard-common .cd-card .cd-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* Learning analytics for student, study and administrator pages.
+ * Legacy teacher shell keeps its own geometry; report controls also support the admin route. */
+.learn-main{min-height:75vh;padding-bottom:80px}
+.learn-hero{padding:40px 0 20px}
+.learn-eyebrow{font-size:12px;font-weight:800;letter-spacing:.15em;color:#3665a8;margin:0}
+.learn-hero h1{font-size:clamp(26px,3.4vw,37px);line-height:1.3;color:#13284b;margin:8px 0}
+.learn-lead{color:#50637f;line-height:1.8;margin:8px 0 18px}
+.learn-container{max-width:1120px}
+[data-page="my-learning"] .learn-main > .container{width:min(calc(100% - var(--portal-shell-gutter) * 2),var(--portal-shell-max))}
+.learn-tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:22px}
+.learn-tools a,.learn-tools button,.learn-tools select,.learn-review-card a{display:inline-flex;align-items:center;justify-content:center;padding:11px 16px;border:1px solid #cbd9ea;border-radius:9px;color:#184779;background:#fff;text-decoration:none;font:700 14px/1.4 inherit;cursor:pointer}
+.learn-tools a:hover,.learn-review-card a:hover{background:#edf4fe}
+.learn-status{min-height:27px;color:#1f5980;font-weight:650;font-size:14px;line-height:1.6}
+.learn-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.learn-stat{border:1px solid #dce5f1;background:#fff;border-radius:14px;padding:20px;min-width:0}
+.learn-stat small{font-size:13px;color:#5c7190;line-height:1.5}
+.learn-stat strong{display:block;font-size:clamp(21px,3vw,29px);line-height:1.3;color:#143b7a;margin-top:8px;font-variant-numeric:tabular-nums}
+.learn-stat p{margin:7px 0 0;font-size:12px;color:#5c7190;line-height:1.6}
+.learn-section{padding:22px 25px;background:#fff;border:1px solid #dae4f0;border-radius:14px;margin-top:19px}
+.learn-section h2{font-size:19px;line-height:1.5;margin:0 0 6px;color:#1a3558}
+.learn-section>p{margin:6px 0 14px;font-size:14px;line-height:1.7;color:#566b83}
+.learn-progress-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.learn-progress-item{background:#f5f8fd;border:1px solid #e3ebf5;border-radius:10px;padding:13px 15px}
+.learn-progress-item strong{display:flex;justify-content:space-between;gap:12px;color:#25486d;font-size:14px}
+.learn-progress-item progress{display:block;width:100%;height:10px;accent-color:#285da4;margin:10px 0 2px}
+.learn-review-list{display:grid;gap:10px}
+.learn-review-card{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:14px 16px;background:#fafcff;border:1px solid #e1eaf4;border-radius:10px;min-width:0}
+.learn-review-card strong{display:block;overflow-wrap:anywhere;font-size:14px;color:#1b3c65}
+.learn-review-card small{display:block;color:#687b95;margin-top:5px}
+.learn-review-card a{white-space:nowrap;flex:0 0 auto}
+.learn-empty{padding:23px;text-align:center;color:#64768d;background:#f6f8fc;border:1px dashed #dce6f2;border-radius:11px}
+.learn-consent{display:flex;gap:12px;align-items:flex-start;line-height:1.65;color:#344b65;cursor:pointer}
+.learn-consent input{accent-color:#1d4d90;width:18px;height:18px;margin-top:4px;flex:none}
+.learn-note{color:#637793;font-size:13px;line-height:1.7}
+.learn-table-wrap{max-width:100%;overflow-x:auto}
+.learn-table{width:100%;border-collapse:collapse;font-size:14px}
+.learn-table th,.learn-table td{padding:12px;text-align:left;border-bottom:1px solid #e3eaf3}
+.learn-table th{background:#f3f7fd;color:#2d4a6f;font-weight:800}
+.learn-rate-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin-top:16px}
+.learn-rate{padding:17px 20px;background:#f5f9ff;border:1px solid #dce7f5;border-radius:11px}
+.learn-rate span{font-size:14px;color:#455b76}
+.learn-rate strong{display:block;font-size:24px;color:#1c4a84;margin:7px 0}
+.learn-rate small{font-size:12px;color:#627691}
+.learn-filter{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.learn-filter label{font-size:14px;color:#35516f;font-weight:700}
+.learn-filter select{min-height:42px;border:1px solid #cddbeb;border-radius:9px;background:#fff;padding:8px 10px;font:inherit}
+@media(max-width:850px){.learn-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.learn-progress-list{grid-template-columns:1fr}.learn-section{padding:19px}}
+@media(max-width:530px){.learn-hero{padding-top:25px}.learn-grid{gap:9px}.learn-stat{padding:13px}.learn-stat strong{font-size:22px}.learn-rate-grid{grid-template-columns:1fr}.learn-review-card{display:grid}.learn-review-card a{justify-self:start}.learn-section{padding:16px}}
+
+/* Learning history readability (2026-11-11) */
+body[data-page="my-learning"] .learn-main{min-height:0;padding-bottom:clamp(36px,5vw,60px)}
+body[data-page="my-learning"] .learn-section{min-width:0;box-shadow:0 3px 16px rgba(18,48,88,.025)}
+body[data-page="my-learning"] .learn-section>p{line-height:1.75;word-break:keep-all}
+body[data-page="my-learning"] .learn-table-wrap{max-width:100%;min-width:0;overflow-x:auto}
+body[data-page="my-learning"] .learn-table{width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;font-size:14px}
+body[data-page="my-learning"] .learn-table th,body[data-page="my-learning"] .learn-table td{padding:14px 15px;line-height:1.55;vertical-align:middle;border-bottom:1px solid #e3eaf3;text-align:left;overflow-wrap:anywhere}
+body[data-page="my-learning"] .learn-table th{background:#f2f6fc;color:#344e6e;font-size:13px;font-weight:800;white-space:nowrap}
+body[data-page="my-learning"] .learn-table tbody tr:last-child td{border-bottom:0}
+body[data-page="my-learning"] .learn-table tbody tr:hover{background:#f8fbff}
+body[data-page="my-learning"] .learn-table th:nth-child(1){width:19%}
+body[data-page="my-learning"] .learn-table th:nth-child(2){width:15%}
+body[data-page="my-learning"] .learn-table th:nth-child(3){width:26%}
+body[data-page="my-learning"] .learn-table th:nth-child(4){width:23%}
+body[data-page="my-learning"] .learn-table th:nth-child(5){width:17%}
+body[data-page="my-learning"] .learn-history-date{color:#536780;white-space:nowrap;font-variant-numeric:tabular-nums}
+body[data-page="my-learning"] .learn-history-subject{color:#203d62;font-weight:750;word-break:keep-all}
+body[data-page="my-learning"] .learn-history-problem a{color:#1e5598;font-weight:750;text-decoration:underline;text-decoration-color:#9fb9df;text-underline-offset:3px}
+body[data-page="my-learning"] .learn-history-method{color:#526781;word-break:keep-all}
+body[data-page="my-learning"] .learn-history-result{color:#34516f;font-weight:750;word-break:keep-all}
+body[data-page="my-learning"] .learn-history-result[data-result="correct"]{color:#176c4b}
+body[data-page="my-learning"] .learn-history-result[data-result="incorrect"]{color:#b3373e}
+body[data-page="my-learning"] .learn-history-result[data-result="ungraded"],body[data-page="my-learning"] .learn-history-result[data-result="timeout"]{color:#79511d}
+body[data-page="my-learning"] .learn-mobile-label{display:none}
+body[data-page="my-learning"] .learn-sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:760px){
+ body[data-page="my-learning"] .learn-hero{padding-top:22px}
+ body[data-page="my-learning"] .learn-lead{font-size:15px;line-height:1.7;word-break:keep-all}
+ body[data-page="my-learning"] .learn-tools{gap:10px;margin-bottom:16px}
+ body[data-page="my-learning"] .learn-tools a,body[data-page="my-learning"] .learn-tools button{min-height:42px;padding:9px 12px}
+ body[data-page="my-learning"] .learn-section{padding:17px 16px;margin-top:16px}
+ body[data-page="my-learning"] .learn-section h2{font-size:18px}
+ body[data-page="my-learning"] .learn-section>p{font-size:14px}
+ body[data-page="my-learning"] .learn-table-wrap{overflow:visible}
+ body[data-page="my-learning"] .learn-table,body[data-page="my-learning"] .learn-table tbody{display:block;width:100%}
+ body[data-page="my-learning"] .learn-table thead{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+ body[data-page="my-learning"] .learn-table tbody{display:grid;gap:10px}
+ body[data-page="my-learning"] .learn-table .learn-history-row{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"subject result" "problem problem" "date method";column-gap:12px;row-gap:9px;align-items:center;padding:15px;border:1px solid #dce7f3;border-radius:12px;background:#fafdff;min-width:0}
+ body[data-page="my-learning"] .learn-table .learn-history-row:hover{background:#f5f9ff}
+ body[data-page="my-learning"] .learn-table .learn-history-row td{display:block;padding:0;min-width:0;border:0;line-height:1.5;overflow-wrap:anywhere}
+ body[data-page="my-learning"] .learn-table .learn-history-subject{grid-area:subject;font-size:16px;line-height:1.4}
+ body[data-page="my-learning"] .learn-table .learn-history-row td.learn-history-result{grid-area:result;justify-self:end;align-self:start;padding:5px 9px;border-radius:7px;background:#eef3fa;color:#2d4b70;font-size:12px;white-space:nowrap}
+ body[data-page="my-learning"] .learn-table .learn-history-result[data-result="correct"]{background:#e7f6ed;color:#14643e}
+ body[data-page="my-learning"] .learn-table .learn-history-result[data-result="incorrect"]{background:#fff0f0;color:#a52d36}
+ body[data-page="my-learning"] .learn-table .learn-history-result[data-result="ungraded"],body[data-page="my-learning"] .learn-table .learn-history-result[data-result="timeout"]{background:#fff5e6;color:#82521b}
+ body[data-page="my-learning"] .learn-table .learn-history-problem{grid-area:problem;font-size:14px}
+ body[data-page="my-learning"] .learn-table .learn-mobile-label{display:inline;margin-right:7px;color:#6b7e94;font-size:12px;font-weight:650}
+ body[data-page="my-learning"] .learn-table .learn-history-date{grid-area:date;font-size:12px;color:#62758c;white-space:nowrap}
+ body[data-page="my-learning"] .learn-table .learn-history-method{grid-area:method;justify-self:end;font-size:12px;color:#62758c;text-align:right}
+}
+
+
+/* Faculty dashboard: high-contrast data, readable mobile cards, no horizontal page overflow. */
+[data-page="teacher-learning"] .learn-main{background:linear-gradient(180deg,#f3f7fc 0,#fff 280px);padding-bottom:64px}
+[data-page="teacher-learning"] .learn-main .container{width:min(calc(100% - 40px),1120px)}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-hero{padding-top:38px;padding-bottom:19px}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-hero h1{font-size:clamp(29px,3.5vw,39px);letter-spacing:-.035em}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-lead{max-width:830px;color:#38516e;font-size:15px;line-height:1.75}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-tools{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px 18px;padding:16px 18px;border:1px solid #dce6f3;border-radius:15px;background:#fff;margin-bottom:16px}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-tools .learn-filter{grid-column:1/-1;gap:12px 18px}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-tools .learn-note{margin:0;align-self:center;color:#4c637f;font-size:13px}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) #teacher-refresh{min-height:43px;font-family:inherit;font-size:14px;font-weight:750;line-height:1.4;border-radius:10px;color:#fff;background:#204f8e;border-color:#204f8e}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) #teacher-refresh:hover{background:#173c70}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) #teacher-refresh:focus-visible,:is([data-page="teacher-learning"],[data-admin-page="learning"]) select:focus-visible,:is([data-page="teacher-learning"],[data-admin-page="learning"]) summary:focus-visible{outline:3px solid #87baf2;outline-offset:3px}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-filter label{display:grid;gap:5px;min-width:180px;color:#2e486a}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-filter select{width:100%;font-size:14px;color:#1d3552;min-height:44px}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) #teacher-status{margin:12px 0 16px;padding:10px 14px;border-radius:10px;background:#edf4fc;color:#245078;font-size:13px}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-stat{box-shadow:0 2px 10px rgba(28,54,91,.035);padding:19px}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-stat small{font-size:13px;font-weight:650;color:#4f6684}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-stat strong{font-size:clamp(23px,2.6vw,30px);color:#153d77;overflow-wrap:anywhere}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-stat p{font-size:13px;color:#4d647f}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-section{padding:24px 26px;margin-top:17px;box-shadow:0 2px 10px rgba(28,54,91,.025)}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-section h2{font-size:20px;font-weight:800;letter-spacing:-.025em;line-height:1.4}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-section>p{font-size:14px;color:#4d637f}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-table{table-layout:fixed;font-size:14px}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-table th,:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-table td{padding:13px 12px;line-height:1.55;overflow-wrap:anywhere;vertical-align:middle}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-table th{background:#eef4fb;color:#2a4669}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-table tr:last-child td{border-bottom:0}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-rate{background:#f5f9ff;padding:18px}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-rate strong{font-size:27px}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-review-card{align-items:flex-start}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-review-card small{white-space:nowrap;font-weight:650}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-section-heading{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:9px 18px;margin-bottom:8px}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-section-kicker{margin:0 0 4px;font-size:11px;font-weight:800;letter-spacing:.13em;color:#4774ac}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-schedule{padding:6px 11px;margin:0;color:#36577c;border:1px solid #d6e5f5;background:#f2f7fd;border-radius:999px;font-size:12px;font-weight:750}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-description{max-width:850px}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-status{margin:10px 0;padding:10px 12px;color:#335a80;font-size:13px}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-period{font-weight:700;color:#345676;font-size:14px;margin:15px 0 12px}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-card{border:1px solid #dce5f1;border-radius:13px;background:#fafdff;padding:18px;min-width:0}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-card-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin-bottom:11px}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-card-head strong{font-size:16px;color:#203f64}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-tag{border:1px solid #c8dbee;border-radius:999px;padding:4px 9px;font-size:12px;font-weight:800;white-space:nowrap;color:#315985;background:#edf4fb}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-tag[data-state="sent"]{color:#175c45;background:#e5f5ed;border-color:#b9e2cc}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-tag[data-state="failed"]{color:#a32b31;background:#fff0f0;border-color:#f0c8c9}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-tag[data-state="paused"]{color:#725827;background:#fff7e8;border-color:#f1dfb4}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-card-value{font-size:22px;font-weight:850;letter-spacing:-.03em;color:#123d72;line-height:1.35}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-card p{color:#546d88;font-size:13px;line-height:1.65;margin:7px 0 0;overflow-wrap:anywhere}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 14px;margin:15px 0;padding:14px 16px;border-radius:12px;background:#f6f9fd;border:1px solid #e3ebf5}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-meta p{margin:0;font-size:13px;line-height:1.6;color:#405c7b;overflow-wrap:anywhere}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-subheading{color:#27476e;font-size:16px;margin:22px 0 8px;line-height:1.45}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-section .learn-table-wrap{border:1px solid #e0e9f3;border-radius:11px}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-details{margin-top:16px;border:1px solid #dbe6f2;border-radius:12px;background:#fff;padding:0 16px}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-details summary{cursor:pointer;font-weight:800;color:#24476e;font-size:14px;padding:16px 0}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-details summary span{font-size:12px;font-weight:600;color:#62788f;margin-left:6px}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-details>p{color:#57708a;font-size:13px;margin:0 0 13px;line-height:1.6}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-details .learn-table-wrap{margin-bottom:16px}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-error{color:#a82d37;font-size:12px;overflow-wrap:anywhere}
+@media(max-width:850px){
+ [data-page="teacher-learning"] .learn-main .container{width:min(calc(100% - 32px),1120px)}
+ :is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-section{padding:19px 20px}
+ :is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-grid{gap:10px}
+}
+@media(max-width:700px){
+ :is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-tools{display:flex;flex-direction:column;align-items:stretch;gap:12px;padding:14px}
+ :is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-tools .learn-filter{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ :is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-filter label{min-width:0;font-size:13px}
+ :is([data-page="teacher-learning"],[data-admin-page="learning"]) #teacher-refresh{width:100%}
+ :is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-cards{grid-template-columns:1fr}
+ :is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-meta{grid-template-columns:1fr}
+ :is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-table{display:block;width:100%;table-layout:auto}
+ :is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-table thead{display:none}
+ :is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-table tbody{display:grid;gap:10px;padding:9px}
+ :is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-table tr{display:grid;border:1px solid #e2eaf5;border-radius:11px;overflow:hidden;background:#fff}
+ :is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-table td{display:grid;grid-template-columns:minmax(105px,40%) minmax(0,1fr);gap:8px;align-items:start;width:100%;font-size:13px;line-height:1.55;text-align:left;border-bottom:1px solid #edf1f7;padding:9px 11px}
+ :is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-table td:first-child{background:#f4f8fd;font-weight:800;color:#23476c}
+ :is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-table td:not([data-label])::before{content:""}
+ :is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-table td[data-label]::before{content:attr(data-label);font-size:12px;font-weight:750;color:#607894}
+ :is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-table tr:last-child td{border-bottom:1px solid #edf1f7}
+ :is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-table tr td:last-child{border-bottom:0}
+}
+@media(max-width:530px){
+ [data-page="teacher-learning"] .learn-main .container{width:calc(100% - 28px)}
+ :is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-hero{padding-top:25px}
+ :is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-hero h1{font-size:28px}
+ :is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-lead{font-size:14px;margin-bottom:8px}
+ :is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-stat{padding:15px 13px}
+ :is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-stat strong{font-size:23px}
+ :is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-stat small,:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-stat p{font-size:12px}
+ :is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-section{padding:17px 14px;border-radius:13px}
+ :is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-section h2{font-size:18px}
+ :is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-card{padding:15px}
+ :is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-schedule{font-size:11px;white-space:normal;border-radius:8px}
+ :is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-details{padding:0 11px}
+ :is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-table td{grid-template-columns:minmax(100px,40%) minmax(0,1fr)}
+}
+@media(max-width:350px){
+ :is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-tools .learn-filter{grid-template-columns:1fr}
+ :is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-grid{grid-template-columns:1fr}
+}
+
+
+/* Compact weekly mail controls: only two labeled switches remain visible. */
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-section{padding:19px 24px}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-section h2{margin:0;font-size:18px}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-status{margin:9px 0 0;font-size:13px;line-height:1.5;color:#a33a3a}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-section .learn-sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-switch-list{display:grid;margin-top:7px}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-switch-list[hidden]{display:none}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-switch-row{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:60px;padding:12px 0;border-bottom:1px solid #e8eef5;cursor:pointer}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-switch-row:last-child{border-bottom:0}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-switch-name{font-size:15px;font-weight:700;line-height:1.4;color:#263d5b;word-break:keep-all}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-switch-row input[type="checkbox"]{appearance:none;-webkit-appearance:none;position:relative;display:block;width:49px;height:28px;flex:0 0 49px;margin:0;border:1px solid #c4ceda;border-radius:999px;background:#dce3ec;cursor:pointer;transition:background-color .15s,border-color .15s}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-switch-row input[type="checkbox"]::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(16,35,57,.22);transition:transform .15s}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-switch-row input[type="checkbox"]:checked{background:#217b58;border-color:#217b58}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-switch-row input[type="checkbox"]:checked::after{transform:translateX(21px)}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-switch-row input[type="checkbox"]:focus-visible{outline:3px solid #80b8f3;outline-offset:3px}
+:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-switch-row input[type="checkbox"]:disabled{opacity:.55;cursor:wait}
+@media(max-width:530px){:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-section{padding:16px 17px}:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-switch-row{min-height:56px}:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-switch-name{font-size:15px}}
+@media(prefers-reduced-motion:reduce){:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-switch-row input[type="checkbox"],:is([data-page="teacher-learning"],[data-admin-page="learning"]) .learn-mail-switch-row input[type="checkbox"]::after{transition:none}}
+
+/* Admin grade and period toggles (2026-11-13) */
+.learn-tools .learn-filter{width:100%;min-width:0;display:flex;align-items:center;gap:12px 24px;flex-wrap:wrap}
+.learn-filter .learn-control-row{display:flex;align-items:center;gap:11px;flex-wrap:wrap;min-width:0}
+.learn-filter .learn-control-title{font-size:14px;line-height:1.45;font-weight:800;color:#193960;white-space:nowrap}
+.learn-filter .learn-button-group{display:inline-flex;align-items:center;gap:3px;padding:4px;background:#edf3fb;border:1px solid #d8e4f3;border-radius:12px}
+.learn-tools .learn-filter .learn-choice-button{min-height:39px;padding:8px 15px;border:1px solid transparent;background:transparent;color:#334e71;border-radius:9px;font-family:inherit;font-weight:750;font-size:14px;line-height:1.35;white-space:nowrap;box-shadow:none}
+.learn-tools .learn-filter .learn-choice-button:hover{background:#dae8fa}
+.learn-tools .learn-filter .learn-choice-button[aria-pressed="true"]{background:#173b72;border-color:#173b72;color:#fff}
+.learn-tools .learn-filter .learn-choice-button[aria-pressed="true"]:hover{background:#204b8c}
+.learn-filter .learn-period-navigation{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.learn-tools .learn-filter .learn-period-arrow,.learn-tools .learn-filter .learn-period-today{min-height:39px;padding:8px 12px;border:1px solid #cbd9ea;background:#fff;color:#234a78;font-family:inherit;font-weight:750;font-size:13px;line-height:1.4;border-radius:9px;white-space:nowrap}
+.learn-filter .learn-period-label{display:inline-block;min-width:185px;text-align:center;color:#142e57;font-size:14px;font-weight:850;line-height:1.5;font-variant-numeric:tabular-nums}
+.learn-tools .learn-filter button:disabled{cursor:default;opacity:.48}
+.learn-tools .learn-filter button:focus-visible{outline:3px solid #8cbcf4;outline-offset:2px}
+@media(max-width:750px){
+ .learn-tools .learn-filter{align-items:stretch;gap:12px}
+ .learn-filter .learn-control-row{width:100%;justify-content:space-between}
+ .learn-filter .learn-period-navigation{width:100%;justify-content:center}
+ .learn-filter .learn-period-label{min-width:0;flex:1}
+ .learn-tools .learn-filter .learn-choice-button{padding:9px 13px}
+}
+@media(max-width:440px){
+ .learn-filter .learn-control-row{align-items:flex-start}
+ .learn-filter .learn-control-title{padding-top:9px}
+ .learn-tools .learn-filter .learn-choice-button{padding:9px 10px;font-size:13px}
+ .learn-filter .learn-period-navigation{gap:6px}
+ .learn-filter .learn-period-label{order:-1;width:100%;flex:auto;text-align:center}
+}
+
+/* Learning period snapshot states */
+.learn-tools .learn-filter #teacher-period-rebuild[hidden]{display:none!important}
+.learn-filter .learn-period-state{display:inline-flex;align-items:center;justify-content:center;min-width:59px;min-height:28px;padding:4px 10px;border-radius:18px;border:1px solid #dce3ef;background:#f3f6fb;color:#38526e;font-size:12px;font-weight:800;white-space:nowrap}
+.learn-filter .learn-period-state[data-state="completed"]{border-color:#b9d8ca;background:#f1f8f4;color:#1d654b}
+.learn-filter .learn-period-state[data-state="live"]{border-color:#ccdbf4;background:#eef4ff;color:#23559c}
+.learn-filter .learn-period-state[data-state="missing"],.learn-filter .learn-period-state[data-state="failed"]{border-color:#efd2c1;background:#fff6ec;color:#874a21}
+#teacher-study-period-summary{margin-top:14px}
