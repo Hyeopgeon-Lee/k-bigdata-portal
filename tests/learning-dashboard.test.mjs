@@ -1,0 +1,17 @@
+import assert from "node:assert/strict";
+import {learningRecords} from "../js/learning-dashboard-core.mjs";
+import {createLearningDashboard} from "../js/learning-dashboard.mjs";
+const bank=[{id:"A",language:"java",title:"배열",topic:"반복문",level:"입문",code:"1"},{id:"B",language:"c",title:"조건",topic:"조건문",level:"입문",code:"2"}];
+const attempts=[{bank:"coding",question_id:"A",client_attempt_id:"one",result:"incorrect",submitted_at:"2026-11-01",used_hint:true,elapsed_seconds:23,answer_text:"2",metadata:{hint_tracking:true}},{bank:"coding",question_id:"A",client_attempt_id:"two",result:"correct",submitted_at:"2026-11-03",metadata:{corrects_attempt_id:"one"}},{bank:"practical",question_id:"B",result:"correct",submitted_at:"2026-11-02"}];
+const rows=learningRecords(bank,attempts,{},"coding");
+assert.equal(rows[0].count,1);assert.equal(rows[0].wrong,0);assert.equal(rows[0].last.submitted_at,"2026-11-01");assert.equal(rows[0].last.used_hint,true);assert.equal(rows[0].last.elapsed_seconds,23);assert.equal(rows[1].last,null);
+globalThis.document={addEventListener(){}};
+globalThis.portalLearning={read:true,write:true,expires:Date.now()+60000};globalThis.portalVerifiedUserId="test-user";
+globalThis.portalSupabaseClient={from(table){return {select(){return this},eq(){return this},order(){return this},range(){return Promise.resolve({data:attempts,error:null})},maybeSingle(){return Promise.resolve({data:{daily_goal:15},error:null})},upsert(){return Promise.resolve({error:null})}}}};
+const host={addEventListener(){}},panel={isConnected:true,classList:{add(){}},innerHTML:""};
+const d=createLearningDashboard({host,bank,bankType:"coding",languageLabels:{java:"Java",c:"C언어"},openSet(){},answerFor:q=>q.code});
+d.show("progress",panel);await new Promise(r=>setImmediate(r));
+for(const text of ["전체 학습 진행률","풀이 결과","언어별 학습현황","일별 학습 추이","학습 단원별 취약 영역","난이도별 학습 분석","힌트 사용률","오늘의 학습 목표"])assert.ok(panel.innerHTML.includes(text),text);
+assert.ok(panel.innerHTML.includes('value="15"'));assert.ok(!panel.innerHTML.includes("연도·회차별"));
+d.show("wrong",panel);await new Promise(r=>setImmediate(r));assert.ok(panel.innerHTML.includes("복습노트"));
+console.log("PASS: shared dashboard, account goal, service scope, original attempt dates and measurements.");

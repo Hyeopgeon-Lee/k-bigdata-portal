@@ -2,7 +2,7 @@ import {quizNavigation,quizHeading,quizDisclosure,quizFeedback,scrollToQuizAnswe
 import {createQuestionBrowser} from "./question-browser.js?v=20261116-progress-v1";
 import {createLearningProgressStore} from "./learning-list-progress.mjs?v=20261116-concurrency-1";
 import {bindReview,reviewControls,gradeLabels} from "./coding-review.js?v=20261127-dashboard-1";
-import {createPracticalDashboard} from "./practical-dashboard.mjs?v=20261127-dashboard-1";
+import {createPracticalDashboard} from "./practical-dashboard.mjs?v=20261127-shared-1";
 import {loadPracticalBank} from "./practical-data.js?v=20261127-no-timer-1";
 import {examLabels,typeLabels,languages,escapeHTML as esc,questionText,shuffle,recommendFive,matchesExam,localDay,highlightCode,formatCodeForDisplay,canResumeUnfinishedAttempt} from "./practical-core.js?v=20261127-no-timer-1";
 import {getAttempts,saveAttempt,getSession,saveSession,clearLocalLearning,storageAvailable,getPreferences,savePreferences,exportLearning,importLearning} from "./practical-store.js";

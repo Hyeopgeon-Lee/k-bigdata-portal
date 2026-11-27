@@ -2,7 +2,7 @@ import {quizNavigation,quizHeading,quizFeedback,scrollToQuizAnswer,mountQuizDisc
 import {createQuestionBrowser} from "./question-browser.js?v=20261117-language-persist-1";
 import {createLearningProgressStore} from "./learning-list-progress.mjs?v=20261116-concurrency-1";
 import {bindReview,reviewControls,gradeLabels} from "./coding-review.js?v=20261127-dashboard-1";
-import {mountCodingDashboard} from "./coding-dashboard.mjs?v=20261127-dashboard-1";
+import {mountCodingDashboard} from "./coding-dashboard.mjs?v=20261127-shared-1";
 import {learningLocal as localStorage, learningSession as sessionStorage} from "./learning-storage.mjs";
 import {debounceCloudDraft,fetchCloudDraft} from "./learning-activity.mjs?v=20261116-concurrency-1";
 import {codingProblems as sampleProblems} from "../data/coding-samples.js?v=20261111-ubuntu-vim-only-2";
@@ -456,10 +456,11 @@ document.getElementById("coding-quiz-heading").innerHTML=quizHeading({
   ]
 });
 mountQuizDisclosure(document.getElementById("coding-answer"),{title:"해설",open:true});
-let codingAttemptId;
+let codingAttemptId, codingStartedAt=Date.now(), codingHintUsed=false;
 let dashboard, reviewSession=false;
 let answerHighlighterPromise;
 function showQuestion(q) {
+  codingStartedAt=Date.now();codingHintUsed=false;
   codingAttemptId=(reviewSession?"":getSafe("coding-attempt-"+q.id))||crypto.randomUUID();
   if(!reviewSession)setSafe("coding-attempt-"+q.id,codingAttemptId);
   if (!q) return;
@@ -605,7 +606,7 @@ async function copyCurrentProblemLink() {
 }
 $("#coding-share-button").addEventListener("click", () => { void shareCurrentProblem(); });
 $("#coding-link-button").addEventListener("click", () => { void copyCurrentProblemLink(); });
-$("#coding-hint-button").addEventListener("click", () => reveal("#coding-hint","#coding-hint-button"));
+$("#coding-hint-button").addEventListener("click", () => {if($("#coding-hint").hidden)codingHintUsed=true;reveal("#coding-hint","#coding-hint-button");});
 $("#coding-answer-button").addEventListener("click", () => {
   reveal("#coding-answer","#coding-answer-button");
   const slot=$("#coding-review-slot"),q=current;
@@ -626,7 +627,7 @@ $("#coding-answer-button").addEventListener("click", () => {
   slot.innerHTML=quizFeedback({label:"정답·해설 공개",details:"작성한 답안과 비교한 후 내 풀이 결과를 선택하세요."})+reviewControls();
   const key="coding-review-"+q.id;
   bindReview(slot,{bank:"coding",questionId:q.id,clientAttemptId:codingAttemptId,
-    get answerText(){return $("#coding-editor").value;},usedHint:!$("#coding-hint").hidden,metadata:{language:q.language}},
+    get answerText(){return $("#coding-editor").value;},get usedHint(){return codingHintUsed;},get elapsedSeconds(){return Math.max(0,Math.round((Date.now()-codingStartedAt)/1000));},metadata:{language:q.language,hint_tracking:true}},
     reviewSession?"":getSafe(key),(result,attemptId)=>{
       setSafe("coding-attempt-"+q.id,attemptId);
       setSafe(key,result);doneIds.add(q.id);setSafe(DONE_KEY,JSON.stringify([...doneIds]));
