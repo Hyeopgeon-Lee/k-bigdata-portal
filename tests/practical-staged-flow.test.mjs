@@ -1,41 +1,15 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {
-  HINT_SECONDS,ANSWER_SECONDS,remainingSeconds,remainingAnswerSeconds,
-  hintAvailable,answerDeadlineReached,canSubmit,canReveal
-} from '../js/practical-core.js';
+import {canResumeUnfinishedAttempt} from '../js/practical-core.js';
 
 const root=new URL('../',import.meta.url);
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 
-assert.equal(HINT_SECONDS,30);
-assert.equal(ANSWER_SECONDS,60);
 const startedAt=1_000_000;
 const attempt={startedAt,submittedAt:null,viewedExplanation:false};
-assert.equal(remainingSeconds(startedAt,startedAt),30);
-assert.equal(remainingSeconds(startedAt,startedAt+29_999),1);
-assert.equal(remainingSeconds(startedAt,startedAt+30_000),0);
-assert.equal(hintAvailable(attempt,startedAt+29_999),false);
-assert.equal(hintAvailable(attempt,startedAt+30_000),true);
-assert.equal(hintAvailable(attempt,startedAt+59_999),true);
-assert.equal(remainingAnswerSeconds(startedAt,startedAt+30_000),30);
-assert.equal(remainingAnswerSeconds(startedAt,startedAt+59_999),1);
-assert.equal(remainingAnswerSeconds(startedAt,startedAt+60_000),0);
-assert.equal(canSubmit(attempt,'42',startedAt+1),true);
-assert.equal(canSubmit(attempt,'42',startedAt+30_000),true);
-assert.equal(canSubmit(attempt,'42',startedAt+59_999),true);
-assert.equal(canSubmit(attempt,'42',startedAt+60_000),false);
-assert.equal(canSubmit(attempt,'   ',startedAt+40_000),false);
-assert.equal(canReveal(attempt,startedAt+59_999),false);
-assert.equal(answerDeadlineReached(attempt,startedAt+59_999),false);
-assert.equal(answerDeadlineReached(attempt,startedAt+60_000),true);
-assert.equal(canReveal(attempt,startedAt+60_000),true);
-const early={...attempt,submittedAt:startedAt+20_000};
-assert.equal(canReveal(early,startedAt+20_000),true,'submitted answer must reveal immediately');
-assert.equal(hintAvailable(early,startedAt+40_000),false,'submitted answer must not later show hint');
-assert.equal(canSubmit(early,'43',startedAt+40_000),false,'submitted answer is immutable');
-const late={...attempt,submittedAt:startedAt+60_000,viewedExplanation:true,autoRevealed:true};
-assert.equal(canSubmit(late,'43',startedAt+75_000),true,'late answers can be saved without grading');
+for(const offset of [0,30_000,60_000,360_000]) assert.equal(canResumeUnfinishedAttempt(attempt,startedAt+offset),true);
+assert.equal(canResumeUnfinishedAttempt({...attempt,viewedExplanation:true},startedAt+60_000),false);
+assert.equal(canResumeUnfinishedAttempt({...attempt,submittedAt:startedAt+60_000},startedAt+60_000),false);
 
 const ui=read('js/practical-ui.js');
 const css=read('css/practical.css');
@@ -44,8 +18,11 @@ const html=read('practical.html');
 assert.ok(ui.includes('정답·해설 보기'));
 assert.ok(ui.includes('id="solve-hint"'));
 assert.ok(ui.includes('bindReview('));
+assert.doesNotMatch(ui,/HINT_SECONDS|ANSWER_SECONDS|REVEAL_SECONDS|WAIT_SECONDS|remainingSeconds|remainingAnswerSeconds|secondsUntilHint|secondsUntilAnswer|hintAvailable|answerDeadlineReached|shouldAutoReveal|autoRevealed|lateSubmittedAt|lateEditable|revealReason|hintShownAt/);
+assert.ok(ui.includes('elapsedSeconds:Math.round'));
+assert.ok(ui.includes('usedHint:item.usedHint'));
 assert.doesNotMatch(ui,/setInterval\(updateGate|autoRevealAnswer|answerDeadlineReached\(/);
 assert.match(html,/css\/practical\.css\?v=[\w-]+/);
 assert.match(html,/js\/practical-ui\.js\?v=[\w-]+/);
 
-console.log('PASS: 0-30 self solve, 30-60 hint, immediate submit grading, 60-second auto reveal, and responsive staged UI contract.');
+console.log('PASS: unrestricted manual hint and answer flow; session continuity and UI contracts.');

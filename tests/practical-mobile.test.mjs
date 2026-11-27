@@ -1,35 +1,20 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {buildBank,canSubmit,canReveal,remainingSeconds,remainingAnswerSeconds,hintAvailable,answerDeadlineReached,recommendFive,matchesExam,shuffle,escapeHTML,gradeAnswer,canResumeUnfinishedAttempt} from '../js/practical-core.js';
+import {buildBank,recommendFive,matchesExam,shuffle,escapeHTML,gradeAnswer,canResumeUnfinishedAttempt} from '../js/practical-core.js';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const base=JSON.parse(read('data/practical/questions.json')),imported=JSON.parse(read('data/practical/normalized.json'));
 const bank=buildBank([...base,...imported.questions],JSON.parse(read('data/practical/exam-history.json')));
 assert.equal(bank.length,220);assert.equal(new Set(bank.map(q=>q.id)).size,220);
 for(const q of bank){assert.ok(q.answer&&q.solution?.summary&&q.solution?.flow?.length>=1);if(q.sourceType==='reconstructed')assert.ok(q.history.length&&q.sources.length);if(q.originalQuestionId)assert.ok(bank.some(p=>p.id===q.originalQuestionId));}
 const startedAt=100000,a={startedAt,submittedAt:null,answer:'20'};
-for(const offset of [0,20000,29999,30000,59999]){
- assert.equal(canSubmit(a,a.answer,startedAt+offset),true);
- assert.equal(hintAvailable(a,startedAt+offset),offset>=30000);
-}
-assert.equal(remainingAnswerSeconds(startedAt,startedAt+30000),30);
-assert.equal(canSubmit(a,a.answer,startedAt+59999),true);
-assert.equal(answerDeadlineReached(a,startedAt+59999),false);
-assert.equal(answerDeadlineReached(a,startedAt+60000),true);
-assert.equal(canSubmit(a,a.answer,startedAt+60000),false);
-assert.equal(canReveal(a,startedAt+59999),false);
-assert.equal(canReveal(a,startedAt+60000),true);
-assert.equal(canReveal({...a,submittedAt:startedAt+20000},startedAt+20000),true);
-assert.equal(canSubmit({...a,submittedAt:startedAt+20000},'21',startedAt+60000),false);
-const late={...a,viewedExplanation:true,submittedAt:startedAt+60000,autoRevealed:true};
-assert.equal(canSubmit(late,'later answer',startedAt+70000),true);
-assert.equal(canSubmit({...late,lateSubmittedAt:startedAt+70000},'next',startedAt+80000),false);
-assert.equal(canSubmit(a,'',startedAt),false);
+for(const offset of [0,30000,60000,120000]) assert.equal(canResumeUnfinishedAttempt(a,startedAt+offset),true);
 assert.equal(canResumeUnfinishedAttempt({...a,viewedExplanation:false},startedAt+1000),true,'unfinished question resumes draft');
 assert.equal(canResumeUnfinishedAttempt({...a,viewedExplanation:true},startedAt+1000),false,'revealed question must reopen as a fresh editable attempt');
 assert.equal(canResumeUnfinishedAttempt({...a,submittedAt:startedAt+1000,viewedExplanation:false},startedAt+1000),false,'submitted question must not reopen locked');
 assert.equal(canResumeUnfinishedAttempt({...a,startedAt:startedAt+2000},startedAt+1000),false,'future session timestamp is invalid');
 assert.equal(canResumeUnfinishedAttempt(null,startedAt+1000),false);
 const fake=()=>{const data=new Map();return {getItem:k=>data.get(k)||null,setItem:(k,v)=>data.set(k,v),removeItem:k=>data.delete(k)};};
+globalThis.portalLearning={read:true,write:true,expires:Date.now()+60000};
 globalThis.localStorage=fake();globalThis.sessionStorage=fake();
 const store=await import('../js/practical-store.js');
 const confirmed={...a,id:'confirmed',questionId:bank[0].id,submittedAt:startedAt+20000,elapsedSeconds:20,correct:null,viewedExplanation:false};
@@ -37,11 +22,8 @@ store.saveSession(confirmed.questionId,confirmed);store.saveAttempt(confirmed);
 globalThis.sessionStorage=fake();
 const resumed=store.getSession(confirmed.questionId);
 assert.equal(resumed.startedAt,startedAt);assert.equal(resumed.answer,'20');assert.equal(resumed.submittedAt,startedAt+20000);
-assert.equal(canReveal(resumed,startedAt+20000),true,'submitted answers reveal immediately');
 assert.equal(store.getAttempts()[0].correct,null,'stored confirmation does not pre-grade outside UI');
 store.saveSession(confirmed.questionId,{...a,id:'retry',questionId:confirmed.questionId,startedAt:startedAt+70000,answer:''});
-assert.equal(remainingSeconds(store.getSession(confirmed.questionId).startedAt,startedAt+70000),30);
-assert.equal(canReveal(store.getSession(confirmed.questionId),startedAt+70000),false);
 for(const exam of ['all','engineer','industrial_engineer'])for(const language of ['all','C','Java','Python','SQL']){
  const pool=bank.filter(q=>matchesExam(q,exam,bank)&&(language==='all'||q.language===language));
  const plan=recommendFive(pool,[],'2026-10-04');
@@ -66,4 +48,4 @@ assert.ok(ui.includes('aliases[id]||id'));assert.ok(ui.includes('params.get("exa
 assert.ok(ui.includes('rel="noopener noreferrer"'));assert.ok(ui.includes('slice(0,pageLimit)'));
 assert.ok(!ui.includes('첨부 데이터 516'));
 assert.ok(html.includes('data-filter="language"')&&!html.includes('class="study-header"'));
-console.log('PASS: immediate submit reveal, 30s hint / 60s auto-answer boundaries, persistence, retry, exam-language pools, grading, aliases, paging, noindex, escaping and links.');
+console.log('PASS: manual solve flow, persistence, question bank and navigation contracts.');

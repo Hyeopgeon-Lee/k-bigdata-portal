@@ -1,4 +1,4 @@
-import {buildBank} from "./practical-core.js?v=20261006-audit-2";
+import {buildBank} from "./practical-core.js?v=20261127-no-timer-1";
 
 const DATA_VERSION="20261006-audit-2";
 

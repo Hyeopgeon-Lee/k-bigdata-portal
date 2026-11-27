@@ -1,27 +1,10 @@
 // Pure learning rules. No browser storage, network, or code execution here.
-export const HINT_SECONDS = 30;
-export const ANSWER_SECONDS = 60;
-export const REVEAL_SECONDS = ANSWER_SECONDS;
-export const WAIT_SECONDS = HINT_SECONDS;
 export const sourceLabels = {reconstructed:"비공식 복원기출",normalized:"공개 복원자료 기반 정규화",transformed:"기출 기반 변형",practice:"추가 연습문제"};
 export const examLabels = {engineer:"정보처리기사",industrial_engineer:"정보처리산업기사"};
 export const typeLabels = {output:"실행결과",blank:"빈칸채우기",interpret:"코드해석",sql_result:"SQL 결과",sql_write:"SQL 작성",error:"오류 찾기",other:"기타"};
 export const languages = ["C","Java","Python","SQL"];
 export const escapeHTML = value => String(value ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 export const elapsedSeconds = (startedAt,now=Date.now()) => Math.max(0,Math.floor((now-startedAt)/1000));
-export const remainingSeconds = (startedAt,now=Date.now()) => Math.max(0,Math.ceil((HINT_SECONDS*1000-(now-startedAt))/1000));
-export const remainingAnswerSeconds = (startedAt,now=Date.now()) => Math.max(0,Math.ceil((ANSWER_SECONDS*1000-(now-startedAt))/1000));
-export const secondsUntilHint = remainingSeconds;
-export const secondsUntilAnswer = remainingAnswerSeconds;
-export const hintAvailable = (attempt,now=Date.now()) => !!attempt && !attempt.submittedAt && !attempt.viewedExplanation && Number.isFinite(attempt.startedAt) && now-attempt.startedAt>=HINT_SECONDS*1000;
-export const answerDeadlineReached = (attempt,now=Date.now()) => !!attempt && !attempt.submittedAt && !attempt.viewedExplanation && Number.isFinite(attempt.startedAt) && now-attempt.startedAt>=ANSWER_SECONDS*1000;
-export const shouldAutoReveal = answerDeadlineReached;
-// Answers remain editable after the 60-second reveal, but late submissions are excluded from grading statistics.
-export const canSubmit = (attempt,answer,now=Date.now()) => !!attempt && Number.isFinite(attempt.startedAt) && now>=attempt.startedAt && !!String(answer??"").trim() && (
-  (attempt.autoRevealed===true && !attempt.lateSubmittedAt) ||
-  (!attempt.submittedAt && !attempt.viewedExplanation && now-attempt.startedAt<ANSWER_SECONDS*1000)
-);
-export const canReveal = (attempt,now=Date.now()) => !!attempt && Number.isFinite(attempt.startedAt) && (!!attempt.submittedAt || now-attempt.startedAt>=ANSWER_SECONDS*1000);
 // A completed or revealed question must start a fresh writable session when reopened.
 export const canResumeUnfinishedAttempt = (previous,now=Date.now()) => !!previous && Number.isFinite(previous.startedAt) && previous.startedAt<=now && !previous.submittedAt && !previous.viewedExplanation;
 export function gradeAnswer(question, answer) {

@@ -23,7 +23,7 @@ export function importLearning(data){
  if(items.some(a=>!a||typeof a.id!=="string"||a.id.length>200||typeof a.questionId!=="string"||a.questionId.length>200||!Number.isFinite(a.submittedAt)||a.submittedAt<0||!Number.isFinite(a.elapsedSeconds)||a.elapsedSeconds<0||typeof a.answer!=="string"||a.answer.length>10000||![true,false,null].includes(a.correct)))throw Error("학습 기록 형식이 올바르지 않습니다.");
  const merged=new Map(getAttempts().map(a=>[a.id,a]));for(const a of items)if(!merged.has(a.id))merged.set(a.id,a);
  writeAttempts([...merged.values()].sort((a,b)=>a.submittedAt-b.submittedAt));
- // Never import running sessions or timer/unlock state.
+ // Never import running sessions or disclosure state.
  return items.length;
 }
 export function clearLocalLearning(){writeAttempts([]);sessions={};preferences={};try{sessionStorage.removeItem(sessionKey);localStorage.removeItem(sessionKey);localStorage.removeItem(preferencesKey);}catch{storageAvailable=false;}}

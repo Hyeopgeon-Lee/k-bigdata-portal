@@ -2,8 +2,8 @@ import {quizNavigation,quizHeading,quizDisclosure,quizFeedback,scrollToQuizAnswe
 import {createQuestionBrowser} from "./question-browser.js?v=20261116-progress-v1";
 import {createLearningProgressStore} from "./learning-list-progress.mjs?v=20261116-concurrency-1";
 import {bindReview,reviewControls,gradeLabels} from "./study-review.js?v=20261116-concurrency-1";
-import {loadPracticalBank} from "./practical-data.js?v=20261006-audit-2";
-import {examLabels,typeLabels,languages,escapeHTML as esc,questionText,shuffle,recommendFive,matchesExam,localDay,summarizeAttempts,highlightCode,formatCodeForDisplay,canResumeUnfinishedAttempt} from "./practical-core.js?v=20261112-practical-resume-1";
+import {loadPracticalBank} from "./practical-data.js?v=20261127-no-timer-1";
+import {examLabels,typeLabels,languages,escapeHTML as esc,questionText,shuffle,recommendFive,matchesExam,localDay,summarizeAttempts,highlightCode,formatCodeForDisplay,canResumeUnfinishedAttempt} from "./practical-core.js?v=20261127-no-timer-1";
 import {getAttempts,saveAttempt,getSession,saveSession,clearLocalLearning,storageAvailable,getPreferences,savePreferences,exportLearning,importLearning} from "./practical-store.js";
 import {matches} from "./search-core.js?v=20261005-perf-1";
 import {beginnerExplanation,examMemory,solutionTrace} from "./practical-explanation.js?v=20261006-audit-2";
@@ -258,14 +258,14 @@ function openQuestion(id,fresh=false){
  const previous=getSession(id),now=Date.now();current=q;
  // Wrong-note reattempts and explicit retries always start a fresh thinking period.
  if(!fresh&&view!=="wrong"&&canResumeUnfinishedAttempt(previous,now))attempt=previous;
- else attempt={id:globalThis.crypto?.randomUUID?.()||id+"-"+now,questionId:id,startedAt:now,submittedAt:null,answer:"",correct:null,viewedExplanation:false,hintShownAt:null,usedHint:false,autoRevealed:false,revealReason:null,retryCount:getAttempts().filter(a=>a.questionId===id).length};
+ else attempt={id:globalThis.crypto?.randomUUID?.()||id+"-"+now,questionId:id,startedAt:now,submittedAt:null,answer:"",correct:null,viewedExplanation:false,usedHint:false,retryCount:getAttempts().filter(a=>a.questionId===id).length};
  saveSession(id,attempt);savePreferences({lastQuestionId:id,learningQueue:queue.length?{ids:queue.map(q=>q.id),index:queueIndex,kind:queueKind}:null});setUrl(id);render();$("#solve-title").focus({preventScroll:true});window.scrollTo({top:0,behavior:"auto"});
 }
 function tablesHTML(q){return (q.tables||[]).map((t,index)=>{const hintId="table-scroll-hint-"+index;return '<div class="table-scroll" tabindex="0" role="region" aria-label="'+esc(t.name)+' 데이터 표 · 좌우 스크롤 가능" data-scroll-hint="'+hintId+'"><table><caption>'+esc(t.name)+'</caption><thead><tr>'+t.columns.map(c=>'<th scope="col">'+esc(c)+'</th>').join("")+'</tr></thead><tbody>'+t.rows.map(row=>'<tr>'+row.map(v=>'<td>'+esc(v===null?'NULL':v)+'</td>').join("")+'</tr>').join("")+'</tbody></table></div><p id="'+hintId+'" class="scroll-hint table-scroll-hint" hidden aria-hidden="true">← 좌우로 밀어 표 보기 →</p>';}).join("");}
 function renderQuestion(){
  const q=current,revealed=!!attempt.viewedExplanation,submitted=!!attempt.submittedAt;
  const traceItems=solutionTrace(q);
- const multiline=q.questionType==="sql_write"||q.answer.includes("\n"), lateEditable=attempt.autoRevealed&&!attempt.lateSubmittedAt,attributes='id="my-answer" maxlength="10000" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-describedby="answer-hint" '+((revealed||submitted)&&!lateEditable?'disabled':'');
+ const multiline=q.questionType==="sql_write"||q.answer.includes("\n"),attributes='id="my-answer" maxlength="10000" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-describedby="answer-hint" '+((revealed||submitted)?'disabled':'');
  const input=multiline?'<textarea '+attributes+' rows="'+(q.questionType==="sql_write"?7:4)+'">'+esc(attempt.answer||"")+'</textarea>':'<input '+attributes+' type="text" enterkeyhint="done" value="'+esc(attempt.answer||"")+'">';
  const shownCode=displayCode(q);
  root.innerHTML='<article class="bank-solve">'+
