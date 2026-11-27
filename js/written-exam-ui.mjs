@@ -1,5 +1,5 @@
-import {normalizeSubject,summarizeWritten,writtenDashboard} from "./written-dashboard.mjs?v=20261127-dashboard-v4";
-import {createMockExam} from "./written-mock.mjs?v=20261127-dashboard-v4";
+import {normalizeSubject,summarizeWritten,writtenDashboard} from "./written-dashboard.mjs?v=20261127-chart-v5";
+import {createMockExam} from "./written-mock.mjs?v=20261127-chart-v5";
 import {quizNavigation,quizHeading,quizDisclosure,quizFeedback,scrollToQuizAnswer} from "./quiz-unified.js?v=20261112-answer-focus-1";
 import {createQuestionBrowser} from "./question-browser.js?v=20261124-subject-filter-v2";
 import {reviewControls} from "./study-review.js?v=20261116-concurrency-1";
@@ -580,6 +580,7 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
   menu.className="bank-nav written-browser-nav";menu.setAttribute("aria-label","필기 학습 메뉴");
   menu.innerHTML=(examType==="industrial"?"":'<button type="button" class="button button-secondary" data-view="home">학습 시작</button>')+'<button type="button" class="button button-primary" data-view="bank">전체 문제</button><button type="button" class="button button-secondary" data-view="random">랜덤 설정</button>'+(examType==="industrial"?'<button type="button" class="button button-secondary" data-view="mock-lobby">실전 모의고사</button>':"")+'<button type="button" class="button button-secondary" data-view="wrong">오답노트</button><button type="button" class="button button-secondary" data-view="progress">학습현황</button>';
   if(examType!=="industrial")section.querySelector(".qb-heading").after(menu);
+  else{const common=document.getElementById("industrial-written-nav");if(common)section.before(common);section.querySelector(".qb-heading").textContent="전체 문제";}
   if(archivedOnly){
    document.querySelectorAll('[data-view="home"],[data-view="random"],[data-view="wrong"],[data-view="progress"]')
     .forEach(button=>{button.hidden=true;});
