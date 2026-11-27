@@ -52,6 +52,7 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
  if(!root||!status)throw Error("필기 문제풀이 화면을 찾을 수 없습니다.");
  let bank=[],browser=null,view="bank",current=null,queue=[],queueIndex=0,queueKind="bank";
  let mock=null,roundYear="",wrongFilter="unresolved",periodDays=7;
+ let wrongPage=0,wrongCriteria={subject:"",year:"",round:"",sort:"count",query:""};const wrongPageSize=10;
  let attempt=null,records=[],lastQuestionId="",pageLimit=24,selectedAnswer=null;
  let filters={year:"all",round:"all",subject:"all",completion:"all",sort:"latest",query:""};
  const memoryKey=storageKey||"kbigdata-written-"+examType+"-v1";
@@ -232,11 +233,47 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
   for(const el of root.querySelectorAll(".written-round"))if(expanded.includes(el.dataset.session))el.open=true;
   if(examType==="industrial"&&mock)void mock.showHistory();
  }
+ function wrongGroups(summary){return {unresolved:summary.all.wrong,repeated:summary.all.repeated,recovered:summary.all.recovered};}
+ function wrongItems(summary,criteria=wrongCriteria,filter=wrongFilter){
+  const items=(wrongGroups(summary)[filter]||[]).filter(q=>
+   (!criteria.subject||q.subject===criteria.subject)&&(!criteria.year||String(q.year)===criteria.year)&&
+   (!criteria.round||String(q.round)===criteria.round)&&(!criteria.query||[q.question,q.subject,labelFor(q),q.id].join(" ").toLowerCase().includes(criteria.query.toLowerCase())));
+  const count=q=>summary.history.get(q.id).filter(r=>!r.correct).length;
+  const recent=q=>summary.history.get(q.id).at(-1).at;
+  return items.sort((a,b)=>criteria.sort==="recent"?recent(b)-recent(a)||count(b)-count(a):criteria.sort==="exam"?b.year-a.year||a.round-b.round||a.number-b.number:count(b)-count(a)||recent(b)-recent(a));
+ }
  function renderWrong(){
-  
-  const summary=summarizeWritten(bank,records),groups={unresolved:summary.all.wrong,repeated:summary.all.repeated,recovered:summary.all.recovered};
-  const questions=groups[wrongFilter]||[],allWrong=summary.all.wrong.length+summary.all.recovered.length;
-  root.innerHTML='<section class="written-dashboard written-overview"><h2>오답노트</h2><div class="written-kpis"><article><small>미해결 오답</small><strong>'+groups.unresolved.length+'문항</strong></article><article><small>반복 오답</small><strong>'+groups.repeated.length+'문항</strong></article><article><small>해결률</small><strong>'+(allWrong?Math.round(groups.recovered.length/allWrong*100)+"%":"—")+'</strong><p>해결 '+groups.recovered.length+'문항</p></article></div><div id="written-mock-recommend"></div><div class="written-year-tabs" role="group" aria-label="오답 분류">'+[["unresolved","미해결"],["repeated","반복"],["recovered","해결"]].map(([k,v])=>'<button type="button" class="button button-secondary" data-action="wrong-filter" data-filter="'+k+'" aria-pressed="'+(wrongFilter===k)+'">'+v+' ('+groups[k].length+')</button>').join("")+'</div>'+(questions.length?action("wrong-queue","이 항목 다시 풀기"):'<p>해당하는 문항이 없습니다.</p>')+'<div class="written-round-list">'+questions.map(q=>{const rows=summary.history.get(q.id),last=rows.at(-1);return '<details class="written-round"><summary><span><strong>'+esc(labelFor(q))+'</strong><small>'+esc(q.subject)+'</small><span>'+esc(q.question)+'</span></span><span class="written-pill '+(last.correct?"good":"bad")+'">'+(last.correct?"해결":"미해결")+'</span></summary><p>틀린 횟수 '+rows.filter(r=>!r.correct).length+'회 · 최근 '+formatDate(last.at)+'</p><p>최근 선택 '+last.answer+'번 · 정답 '+q.answer+'번</p>'+action("open","다시 풀기",'data-id="'+esc(q.id)+'"')+'</details>';}).join("")+'</div></section>';
+  const summary=summarizeWritten(bank,records),groups=wrongGroups(summary);
+  const unresolved=groups.unresolved.length,repeated=groups.repeated.length,recovered=groups.recovered.length,total=unresolved+recovered;
+  const rate=total?Math.round(recovered/total*100):0;
+  const subjects=[...new Set(bank.map(q=>q.subject||"기타"))];
+  const parts=subjects.map(name=>({name,wrong:groups.unresolved.filter(q=>(q.subject||"기타")===name).length,repeat:groups.repeated.filter(q=>(q.subject||"기타")===name).length})).sort((a,b)=>b.wrong-a.wrong||a.name.localeCompare(b.name,"ko"));
+  const weak=parts.find(p=>p.wrong>0);
+  const questions=wrongItems(summary),pages=Math.max(1,Math.ceil(questions.length/wrongPageSize));wrongPage=Math.min(Math.max(0,wrongPage),pages-1);
+  const visible=questions.slice(wrongPage*wrongPageSize,(wrongPage+1)*wrongPageSize);
+  const all=[...groups.unresolved,...groups.recovered];
+  const opt=(v,label,current)=>'<option value="'+esc(v)+'"'+(String(v)===current?" selected":"")+'>'+esc(label)+'</option>';
+  const select=(key,label,options)=>'<label class="wrong-field">'+label+'<select data-wrong-field="'+key+'">'+options.map(([v,l])=>opt(v,l,wrongCriteria[key])).join("")+'</select></label>';
+  const years=[...new Set(all.map(q=>q.year))].sort((a,b)=>b-a);
+  const rounds=[...new Set(all.filter(q=>!wrongCriteria.year||String(q.year)===wrongCriteria.year).map(q=>q.round))].sort((a,b)=>a-b);
+  const kpi=(kind,icon,title,n,desc)=>'<article class="wrong-kpi '+kind+'"><span class="wrong-kpi-icon" aria-hidden="true">'+icon+'</span><div><small>'+title+'</small><strong>'+n+'<span>문항</span></strong><p>'+desc+'</p></div></article>';
+  const primary=(name,label,attrs="")=>action(name,label,'class="button wrong-primary" '+attrs);
+  const filterName=({unresolved:"미해결",repeated:"반복 오답",recovered:"해결 완료"})[wrongFilter];
+  root.innerHTML='<section class="wrong-dashboard"><header class="wrong-heading"><div><h2>오답노트</h2><p>틀린 문제를 복습하고 취약한 개념을 보완하세요.</p></div><span class="wrong-source">기출 연습 기록</span></header>'+
+   '<div class="wrong-kpis">'+kpi("negative","×","미해결 오답",unresolved,"아직 정답을 맞히지 못한 문제")+kpi("repeat","↻","반복 오답",repeated,"2회 이상 틀린 미해결 문제")+kpi("positive","✓","해결 완료",recovered,"복습 후 정답을 맞힌 문제")+
+   '<article class="wrong-kpi resolution"><div class="wrong-donut" style="--wrong-rate:'+rate+'%" role="img" aria-label="오답 해결률 '+(total?rate+"%":"기록 없음")+'"><div><strong>'+(total?rate+"%":"—")+'</strong></div></div><div><small>오답 해결률</small><p>'+recovered+' / '+total+'문항 해결</p><small>목표 100%</small></div></article></div>'+
+   '<div class="wrong-insights"><section class="wrong-chart"><div class="wrong-section-head"><div><h3>과목별 미해결 오답</h3><p>미해결 '+unresolved+'문항 · 반복 오답 포함</p></div><span class="wrong-chart-key"><i></i>반복 <i></i>기타 미해결</span></div>'+
+   (parts.length?'<div class="wrong-bars">'+parts.map(p=>'<div class="wrong-bar-row"><div><strong>'+esc(p.name)+'</strong><b>'+p.wrong+'문항</b></div><div class="wrong-bar-track" role="img" aria-label="'+esc(p.name)+' 미해결 '+p.wrong+'문항 중 반복 '+p.repeat+'문항"><span style="width:'+(unresolved?100*p.repeat/unresolved:0)+'%"></span><span style="width:'+(unresolved?100*(p.wrong-p.repeat)/unresolved:0)+'%"></span></div><small>반복 '+p.repeat+'문항'+(unresolved?' · 전체 미해결의 '+Math.round(100*p.wrong/unresolved)+'%':'')+'</small></div>').join("")+'</div>':'<p class="wrong-empty">등록된 과목이 없습니다.</p>')+'</section>'+
+   '<section class="wrong-priority"><span class="wrong-eyebrow">맞춤 복습 추천</span><h3>'+(repeated?"반복 오답부터 복습하세요":weak?"취약 과목을 집중 복습하세요":"꾸준히 학습하세요")+'</h3><p>'+(repeated?'2회 이상 틀린 '+repeated+'문항을 먼저 정리하세요.':weak?esc(weak.name)+' 과목의 미해결 오답 '+weak.wrong+'문항을 집중 복습해 보세요.':"현재 미해결 오답이 없습니다. 새로운 문제에 도전하세요.")+'</p>'+
+   (repeated?primary("wrong-recommend","반복 오답 "+repeated+"문항 풀기",'data-filter="repeated"'):weak?primary("wrong-recommend",weak.name+" 복습",'data-filter="unresolved" data-subject="'+esc(weak.name)+'"'):primary("bank-view","전체 문제 풀기"))+
+   (weak&&repeated?'<button type="button" class="wrong-subject-link" data-action="wrong-recommend" data-filter="unresolved" data-subject="'+esc(weak.name)+'">'+esc(weak.name)+' 오답 '+weak.wrong+'문항 복습 →</button>':"")+'</section></div>'+
+   (mock?'<section class="wrong-mock"><div class="wrong-mock-icon" aria-hidden="true">▤</div><div><h3>실전 모의고사 복습</h3><p>최근 모의고사의 오답·미응답을 별도로 복습하세요.</p></div><div id="written-mock-recommend" aria-live="polite"></div></section>':"")+
+   '<section class="wrong-list-panel" id="wrong-list-panel"><div class="wrong-section-head"><div><h3>오답 문제 목록 <span class="wrong-count">'+questions.length+'문항</span></h3><p>정답을 미리 보지 않고 다시 풀어 보세요.</p></div>'+ (questions.length?primary("wrong-queue",filterName+" "+questions.length+"문항 다시 풀기 →"):"")+'</div>'+
+   '<div class="wrong-tabs" role="group" aria-label="오답 분류">'+[["unresolved","미해결"],["repeated","반복 오답"],["recovered","해결 완료"]].map(([k,v])=>'<button type="button" class="button" data-action="wrong-filter" data-filter="'+k+'" aria-pressed="'+(wrongFilter===k)+'">'+v+' <b>'+groups[k].length+'</b></button>').join("")+'</div>'+
+   '<form id="wrong-search-form" class="wrong-controls">'+select("subject","과목",[["","전체 과목"],...subjects.map(v=>[v,v])])+select("year","연도",[["","전체 연도"],...years.map(v=>[v,v+"년"])])+select("round","회차",[["","전체 회차"],...rounds.map(v=>[v,v+"회"])])+select("sort","정렬",[["count","오답 횟수 높은 순"],["recent","최근 풀이 순"],["exam","출제 연도·회차 순"]])+
+   '<label class="wrong-field wrong-search">문제 검색<input type="search" id="wrong-query" value="'+esc(wrongCriteria.query)+'" placeholder="문제 내용 또는 키워드"></label><button type="submit" class="button button-secondary">검색</button>'+action("wrong-reset","초기화")+'</form>'+
+   '<div class="wrong-items">'+(visible.length?visible.map(q=>{const rows=summary.history.get(q.id),last=rows.at(-1),n=rows.filter(r=>!r.correct).length;return '<article class="wrong-item '+(!last.correct&&n>=2?'is-repeat':last.correct?'is-solved':'')+'"><header><span class="wrong-number">'+String(q.number).padStart(2,"0")+'</span><div class="wrong-item-meta"><strong>'+esc(q.year+"년 "+(q.roundLabel||q.round+"회"))+'</strong><small>'+esc(q.subject||"기타")+'</small></div><span class="wrong-badge '+(last.correct?"solved":n>=2?"repeat":"negative")+'">'+(last.correct?"해결 완료":n>=2?"반복 오답":"미해결")+'</span></header><p class="wrong-stem">'+esc(q.question).replace(/\n/g,"<br>")+'</p><div class="wrong-item-footer"><span>오답 <b>'+n+'회</b> · 최근 '+formatDate(last.at)+'</span><div>'+primary("open","다시 풀기 →",'data-id="'+esc(q.id)+'"')+'</div></div><details class="wrong-answer"><summary>정답·이전 답 확인</summary><p>내 답 <b>'+last.answer+'번</b> · 정답 <b>'+q.answer+'번</b></p><p>'+esc(q.options[q.answer-1])+'</p></details></article>';}).join(""):'<div class="wrong-empty"><strong>해당하는 오답이 없습니다.</strong><p>다른 분류나 검색 조건을 선택해 보세요.</p></div>')+'</div>'+
+   (questions.length?'<nav class="wrong-pagination" aria-label="오답 목록 페이지">'+action("wrong-page","이전",'data-page="'+(wrongPage-1)+'" '+(wrongPage===0?"disabled":""))+'<span>'+(wrongPage+1)+' / '+pages+' 페이지 · '+(wrongPage*wrongPageSize+1)+'–'+Math.min((wrongPage+1)*wrongPageSize,questions.length)+'문항</span>'+action("wrong-page","다음",'data-page="'+(wrongPage+1)+'" '+(wrongPage>=pages-1?"disabled":""))+'</nav>':"")+'</section></section>';
   if(mock)void mock.showHistory();
  }
  function periodCutoff(days){if(!days)return 0;const now=Date.now(),kst=9*3600000;return Math.floor((now+kst)/86400000)*86400000-kst-(days-1)*86400000;}
@@ -402,10 +439,13 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
   if(examType==="industrial"&&["export-learning","confirm-clear","cancel-delete","delete-learning","import-device"].includes(name))return;
   if(examType==="industrial"&&name==="round-year"){roundYear=b.dataset.year;renderProgress();return;}
   if(examType==="industrial"&&name==="period-filter"){periodDays=Number(b.dataset.days);renderProgress();return;}
-  if(name==="wrong-filter"){wrongFilter=b.dataset.filter;renderWrong();return;}
+  if(name==="wrong-filter"){wrongFilter=b.dataset.filter;wrongPage=0;renderWrong();return;}
+  if(name==="wrong-page"){if(b.disabled)return;wrongPage=Number(b.dataset.page);renderWrong();$("#wrong-list-panel")?.scrollIntoView({block:"start"});return;}
+  if(name==="wrong-reset"){wrongCriteria={subject:"",year:"",round:"",sort:"count",query:""};wrongPage=0;renderWrong();return;}
+  if(name==="wrong-recommend"){wrongFilter=b.dataset.filter;wrongCriteria={subject:b.dataset.subject||"",year:"",round:"",sort:"count",query:""};wrongPage=0;const items=wrongItems(summarizeWritten(bank,records));if(items.length)startQueue(items,"review");else renderWrong();return;}
   if(["wrong-queue","unresolved-wrong","practice-weak","practice-subject"].includes(name)){
    const sm=summarizeWritten(bank,records);let items=[];
-   if(name==="wrong-queue")items=({unresolved:sm.all.wrong,repeated:sm.all.repeated,recovered:sm.all.recovered})[wrongFilter]||[];
+   if(name==="wrong-queue")items=wrongItems(sm);
    else if(name==="unresolved-wrong")items=sm.all.wrong;
    else{const parts=["정보시스템 기반 기술","프로그래밍 언어 활용","데이터베이스 활용"].map(sub=>{const qs=bank.filter(q=>q.subject===sub),solved=qs.filter(q=>sm.history.has(q.id));return {sub,rate:solved.length?solved.filter(q=>sm.history.get(q.id).at(-1).correct).length/solved.length:null};});const target=b.dataset.subject||parts.sort((a,b)=>(a.rate??-1)-(b.rate??-1))[0].sub;const qs=bank.filter(q=>q.subject===target);items=[...shuffle(qs.filter(q=>sm.all.wrong.includes(q))),...shuffle(qs.filter(q=>!sm.history.has(q.id))),...shuffle(qs.filter(q=>sm.history.has(q.id)&&!sm.all.wrong.includes(q)))].slice(0,10);}
    if(items.length)startQueue(items,"review");return;
@@ -429,7 +469,7 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
   if(name==="wrong-view"){selectView("wrong");return;}
   if(name==="progress-view"){selectView("progress");return;}
   if(name==="random-again"){selectView("random");return;}
-  if(name==="open"){queue=view==="wrong"?(({unresolved:summarizeWritten(bank,records).all.wrong,repeated:summarizeWritten(bank,records).all.repeated,recovered:summarizeWritten(bank,records).all.recovered})[wrongFilter]||[]):filtered();queueIndex=Math.max(0,queue.findIndex(q=>q.id===b.dataset.id));queueKind=view==="wrong"?"review":"bank";openQuestion(b.dataset.id,null,true);return;}
+  if(name==="open"){queue=view==="wrong"?wrongItems(summarizeWritten(bank,records)):filtered();queueIndex=Math.max(0,queue.findIndex(q=>q.id===b.dataset.id));queueKind=view==="wrong"?"review":"bank";openQuestion(b.dataset.id,null,true);return;}
   if(name==="pick-question"){if(current?.id===b.dataset.id)return;queueIndex=Math.max(0,queue.findIndex(q=>q.id===b.dataset.id));openQuestion(b.dataset.id);return;}
   if(name==="previous"||name==="next"){
    if(b.disabled)return;
@@ -495,7 +535,8 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
    records=merge(records,accepted);persist(accepted);browser?.refresh();renderProgress();$("#import-status").textContent=accepted.length+"건을 가져왔습니다.";
   }catch(e){notice.textContent=e.message||"가져오기에 실패했습니다.";}
  }
- root.addEventListener("change",event=>{void importLearning(event);});
+ root.addEventListener("change",event=>{const key=event.target.dataset.wrongField;if(key&&Object.hasOwn(wrongCriteria,key)){wrongCriteria[key]=event.target.value;if(key==="year")wrongCriteria.round="";wrongPage=0;renderWrong();return;}void importLearning(event);});
+ root.addEventListener("submit",event=>{if(event.target.id!=="wrong-search-form")return;event.preventDefault();wrongCriteria.query=($("#wrong-query")?.value||"").trim();wrongPage=0;renderWrong();});
  const sortKeys=["year","round","subject","completion","sort"];
  for(const key of sortKeys){$("#"+key+"-filter")?.addEventListener("change",event=>{filters[key]=event.target.value;pageLimit=24;renderFilteredBank();});}
  let timer;$("#bank-query")?.addEventListener("input",event=>{clearTimeout(timer);timer=setTimeout(()=>{filters.query=event.target.value;pageLimit=24;renderFilteredBank();},100);});
