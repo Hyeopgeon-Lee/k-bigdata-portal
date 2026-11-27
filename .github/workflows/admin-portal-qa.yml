@@ -21,6 +21,7 @@ on:
       - "alumni/js/config.js"
       - "alumni/css/jobs.css"
       - "tests/admin-*.mjs"
+      - "tests/learning-tracking.test.mjs"
       - "tests/portal-auth.test.mjs"
       - "tests/room-integration.test.mjs"
       - "tests/portal-student-certifications.test.mjs"
@@ -40,6 +41,7 @@ jobs:
           node-version: "22"
       - name: Verify server-gated role access and extracted UI
         run: |
+          node tests/learning-tracking.test.mjs
           node tests/admin-isolation.test.mjs
           node tests/admin-alumni-integration.test.mjs
           node tests/admin-mock-exam.test.mjs

@@ -78,7 +78,7 @@ export async function approvedStudent(context, profileOverride={}, registeredAlu
     functions:{async invoke(){return {data:{ok:false,error:"ADMIN_NOT_AUTHORIZED"},error:null};}},
     async rpc(name){return {data:({portal_bootstrap:{profile:{user_id:user.id,full_name:"Student",approval_status:"approved",enrollment_status:"enrolled",signup_type:"student",...profileOverride},expires:new Date(Date.now()+90*86400000).toISOString(),access:{read:true,write:true},admin:superAdmin},
      start_portal_session:new Date(Date.now()+90*86400000).toISOString(),
-     portal_learning_access:{read:true,write:true},portal_super_admin_allowed:superAdmin,admin_list_students:[],my_alumni_profile_registered:registeredAlumni})[name]};}
+     portal_learning_access:{read:true,write:true},portal_my_learning_overview:{period:[],progress:[],review:[],recent:[],count:0,recovered:0},portal_super_admin_allowed:superAdmin,admin_list_students:[],my_alumni_profile_registered:registeredAlumni})[name]};}
    };
   };`
  }));

@@ -140,6 +140,8 @@ try{
   if(!admin){
    const page=await context.newPage();
    await page.goto("http://127.0.0.1:8765/my-learning.html",{waitUntil:"domcontentloaded"});
+   // Wait until the login gate has opened and the fixture overview has rendered.
+   await page.locator("#learn-summary .learn-stat").first().waitFor({state:"visible",timeout:20000});
    const layout=()=>page.evaluate(()=>{
     const grid=document.querySelector("#learn-summary");
     const section=document.querySelector(".learn-section");
