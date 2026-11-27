@@ -8,6 +8,7 @@ export async function approvedStudent(context, profileOverride={}, registeredAlu
    function database(){try{return JSON.parse(localStorage.getItem(key)||"{}");}catch{return {};}}
    function save(db){localStorage.setItem(key,JSON.stringify(db));}
    const user={id:"fixture",email:"student@example.test"};
+   const fixtureLearningAttempt={bank:"coding",question_id:"JAVA-001",result:"correct",grading_method:"self",submitted_at:new Date().toISOString()};
    const profileOverride=${JSON.stringify(profileOverride)};
    const registeredAlumni=${JSON.stringify(registeredAlumni)};
    const superAdmin=${JSON.stringify(superAdmin)};
@@ -78,7 +79,7 @@ export async function approvedStudent(context, profileOverride={}, registeredAlu
     functions:{async invoke(){return {data:{ok:false,error:"ADMIN_NOT_AUTHORIZED"},error:null};}},
     async rpc(name){return {data:({portal_bootstrap:{profile:{user_id:user.id,full_name:"Student",approval_status:"approved",enrollment_status:"enrolled",signup_type:"student",...profileOverride},expires:new Date(Date.now()+90*86400000).toISOString(),access:{read:true,write:true},admin:superAdmin},
      start_portal_session:new Date(Date.now()+90*86400000).toISOString(),
-     portal_learning_access:{read:true,write:true},portal_my_learning_overview:{period:[],progress:[],review:[],recent:[],count:0,recovered:0},portal_super_admin_allowed:superAdmin,admin_list_students:[],my_alumni_profile_registered:registeredAlumni})[name]};}
+     portal_learning_access:{read:true,write:true},portal_my_learning_overview:{period:[fixtureLearningAttempt],progress:[fixtureLearningAttempt],review:[],recent:[fixtureLearningAttempt],count:1,recovered:0},portal_super_admin_allowed:superAdmin,admin_list_students:[],my_alumni_profile_registered:registeredAlumni})[name]};}
    };
   };`
  }));

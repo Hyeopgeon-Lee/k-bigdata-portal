@@ -142,21 +142,30 @@ try{
    await page.goto("http://127.0.0.1:8765/my-learning.html",{waitUntil:"domcontentloaded"});
    // Wait until the login gate has opened and the fixture overview has rendered.
    await page.locator("#learn-summary .learn-stat").first().waitFor({state:"visible",timeout:20000});
+   await page.locator("#learn-recent .learn-history-row").first().waitFor({state:"visible",timeout:10000});
    const layout=()=>page.evaluate(()=>{
     const grid=document.querySelector("#learn-summary");
     const section=document.querySelector(".learn-section");
     return {display:getComputedStyle(grid).display,
      columns:getComputedStyle(grid).gridTemplateColumns.split(" ").length,
      radius:getComputedStyle(section).borderTopLeftRadius,
-     historyOverflow:getComputedStyle(document.querySelector("#learn-recent")).overflowX};
+     historyOverflow:getComputedStyle(document.querySelector("#learn-recent")).overflowX,
+     historyRow:getComputedStyle(document.querySelector(".learn-history-row")).display,
+     scroll:document.documentElement.scrollWidth,viewport:document.documentElement.clientWidth};
    });
    const mobile=await layout();
    assert.equal(mobile.display,"grid","student learning overview grid restored");
    assert.equal(mobile.columns,2,"student mobile has two learning card columns");
    assert.equal(mobile.radius,"14px","student learning sections have restored card borders");
-   assert.equal(mobile.historyOverflow,"auto","student history has local overflow containment");
+   assert.equal(mobile.historyRow,"grid","student mobile history displays responsive cards");
+   assert.equal(mobile.historyOverflow,"visible","mobile history cards do not need a local scrollbar");
+   assert.ok(mobile.scroll<=mobile.viewport+1,"student mobile has no global horizontal overflow");
    await page.setViewportSize({width:1280,height:900});
-   assert.equal((await layout()).columns,4,"student desktop has four learning card columns");
+   const wide=await layout();
+   assert.equal(wide.columns,4,"student desktop has four learning card columns");
+   assert.equal(wide.historyRow,"table-row","student desktop history displays a table");
+   assert.equal(wide.historyOverflow,"auto","student desktop history contains wide tables");
+   assert.ok(wide.scroll<=wide.viewport+1,"student desktop has no global horizontal overflow");
    await page.close();
   }
   await context.close();
