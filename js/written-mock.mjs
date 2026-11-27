@@ -1,4 +1,4 @@
-import {normalizeSubject,writtenConfig} from "./written-dashboard.mjs?v=20261127-engineer-parity-v1";
+import {normalizeSubject,writtenConfig} from "./written-dashboard.mjs?v=20261127-written-parity-v3";
 const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const button=(name,text,extra="")=>'<button type="button" class="button button-secondary" data-mock-action="'+name+'" '+extra+'>'+text+'</button>';
 

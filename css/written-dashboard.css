@@ -35,12 +35,24 @@ body.written-bank-page .question-browser .qb-heading{font-size:1.3rem;margin-bot
 .mock-score-hero{background:linear-gradient(120deg,#fff 50%,#edf4fc);border-color:#d8e5f2}.mock-score-metrics>div{background:#fff;border:1px solid #dce7f3}.written-recommend{background:linear-gradient(125deg,#e7f1fc,#f3f7fc);border-left:4px solid #3275a8}
 @media(max-width:800px){.written-chart-grid{grid-template-columns:1fr}.written-chart-card{padding:14px}.written-chart-svg{min-width:340px}.chart-donut{width:140px}}
 
-html[data-portal-page="engineer-written"] .written-parts,html[data-portal-page="engineer-written"] .overview-subjects{grid-template-columns:repeat(auto-fit,minmax(min(100%,205px),1fr))}
+body.written-bank-page .written-parts,body.written-bank-page .overview-subjects{grid-template-columns:repeat(auto-fit,minmax(min(100%,205px),1fr))}
 html[data-portal-page="engineer-written"] .written-question-numbers{grid-template-columns:repeat(auto-fill,minmax(44px,1fr))}
-@media(max-width:600px){html[data-portal-page="engineer-written"] .written-parts,html[data-portal-page="engineer-written"] .overview-subjects{grid-template-columns:1fr}}
+@media(max-width:600px){body.written-bank-page .written-parts,body.written-bank-page .overview-subjects{grid-template-columns:1fr}}
 
 /* Both written banks use exactly the same centered shell, including list and solve views. */
 body.written-bank-page main > :is(#industrial-written-nav,#engineer-written-nav){grid-template-columns:repeat(5,minmax(0,1fr))!important;margin-inline:auto!important;flex:none;min-width:0}
 body.written-bank-page main > .question-browser{margin-top:0}
 @media(max-width:690px){body.written-bank-page main > :is(#industrial-written-nav,#engineer-written-nav),body.written-bank-page main > .question-browser{width:calc(100% - 24px)!important}}
 @media(max-width:600px){body.written-bank-page main > :is(#industrial-written-nav,#engineer-written-nav){grid-template-columns:repeat(3,minmax(0,1fr))!important}}
+
+/* Shared written learning dashboard charts */
+.written-result-donut{background:conic-gradient(#21855f 0 var(--chart-progress),#c95252 var(--chart-progress) 100%)}
+.practice-chart-grid,.written-subject-charts{grid-template-columns:repeat(2,minmax(0,1fr))}
+.written-period-scroll{overflow-x:auto;min-width:0;padding-bottom:6px}
+.written-period-bars{display:grid;grid-template-columns:repeat(var(--day-count),minmax(42px,1fr));gap:8px;min-width:calc(var(--day-count)*50px);padding:10px 0}
+.written-period-day{display:grid;grid-template-rows:20px 120px 20px;align-items:end;text-align:center;gap:4px;font-size:12px;color:#50647e}
+.written-period-track{height:100%;display:flex;align-items:flex-end;justify-content:center;background:#f1f5f9;border-radius:5px;overflow:hidden}
+.written-period-track>div{width:70%;max-width:32px;display:flex;flex-direction:column-reverse;overflow:hidden;border-radius:4px 4px 0 0}
+.written-period-track i{display:block;min-height:0}.written-period-track .right{background:#21855f}.written-period-track .wrong{background:#c95252}
+.written-subject-charts .subject-chart-row small{color:#50647e;font-size:12px}
+@media(max-width:800px){.practice-chart-grid,.written-subject-charts{grid-template-columns:1fr}}
