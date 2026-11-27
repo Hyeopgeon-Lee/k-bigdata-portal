@@ -4,6 +4,7 @@ import {readFileSync,mkdtempSync,rmSync,writeFileSync,mkdirSync} from "node:fs";
 import {join,resolve} from "node:path";
 import {tmpdir} from "node:os";
 import {spawnSync} from "node:child_process";
+import {codingIndex} from "../data/coding-index.js";
 
 const root=resolve(import.meta.dirname,"..");
 const raw=readFileSync(join(root,"data","coding-ubuntu-ppt.js"),"utf8");
@@ -79,7 +80,10 @@ assert(observed["종합 활용"]===10,"expected 10 comprehensive tasks");
 const html=readFileSync(join(root,"coding.html"),"utf8");
 const client=readFileSync(join(root,"js","coding.js"),"utf8");
 assert(client.includes("ubuntuPptProblems")&&!client.includes("ubuntuLegacyGuides"),"client is not using PPT data exclusively");
-assert(client.includes('sampleProblems.filter(p=>p.language!=="linux")'),"legacy first two problems not filtered");
+const linuxIndex=codingIndex.filter(p=>p.language==="linux");
+assert(linuxIndex.length===50,"indexed Ubuntu problem count must equal 50");
+assert(linuxIndex.every((p,i)=>["id","language","title","topic","level","statement"].every(k=>p[k]===problems[i]?.[k])),
+ "Ubuntu list must match the complete PPT problem bank; legacy samples must not be mixed in");
 assert(client.includes('coding-ubuntu-output-note')&&client.includes('coding-ubuntu-terminal-demo\",isUbuntu'),"Ubuntu output note/terminal toggle missing");
 assert(/js\/coding\.js\?v=\d{8}-[\w-]+/.test(html),"HTML module cache not refreshed");
 for(const el of ["coding-ubuntu-guide","coding-ubuntu-parts","coding-ubuntu-output-note","coding-ubuntu-verify","coding-ubuntu-mistake"]){
