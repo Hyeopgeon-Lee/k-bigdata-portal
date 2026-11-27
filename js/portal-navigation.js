@@ -19,6 +19,15 @@
     if(document.documentElement.dataset.portalPage==="industrial-written")link.setAttribute("aria-current","page");
     practicalLink.after(link);
   }
+  if(practicalLink&&!learningGroup.querySelector('a[data-nav-id="engineer-written"]')){
+    const link=document.createElement("a");
+    link.href="engineer-written.html";
+    link.dataset.navId="engineer-written";
+    link.dataset.navGroup="learning";
+    link.textContent="기사 필기";
+    if(document.documentElement.dataset.portalPage==="engineer-written")link.setAttribute("aria-current","page");
+    practicalLink.after(link);
+  }
   const toggle=menu.querySelector('summary');
   const compact=matchMedia('(max-width:1240px)');
   const disclosures=[menu,...document.querySelectorAll('.portal-nav-more')];
