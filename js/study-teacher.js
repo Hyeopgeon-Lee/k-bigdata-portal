@@ -76,6 +76,17 @@ function render(){
   const p=document.createElement('p');p.textContent=sub;
   card.append(small,strong,p);$('study-admin-summary').append(card);
  }
+ const ui=window.portalAdminUI;
+ if(ui){
+  ui.renderDonut(ui.chartMount($('study-admin-summary'),'study-plan-chart'),'계획 등록 현황',[
+   ['계획 등록',plannedStudents],['미등록',students.length-plannedStudents]
+  ],{caption:ui.gradeLabel(grade)+' · 선택 주간, 0일 계획 포함'});
+  const days=[0,0,0,0,0,0,0],ids=new Set(students.map(s=>s.id));
+  for(const session of report.sessions){if(!ids.has(session.user_id))continue;
+   const day=kdate(session.started_at);for(let i=0;i<7;i++)if(day===dateAt(week,i))days[i]+=sessionDuration(session)/3600;
+  }
+  ui.renderBars(ui.chartMount($('study-admin-summary'),'study-days-chart'),'요일별 공부시간',days.map((v,i)=>[['월','화','수','목','금','토','일'][i],Math.round(v*10)/10]),{unit:'시간',caption:'휴식시간·검토 대상 세션 제외'});
+ }
  $('study-admin-table-body').innerHTML=rows.join('')||'<tr><td colspan="8">등록된 학생이 없습니다.</td></tr>';
 }
 async function saveMail(){
@@ -91,6 +102,8 @@ const base=monday(),select=$('study-admin-week');
 for(let i=-4;i<=1;i++){const d=dateAt(base,i*7);select.add(new Option(d+' 주간',d));}
 select.value=base;
 select.addEventListener('change',()=>void load().catch(e=>setStatus('관리자 자료 조회 실패',true)));
+$('study-admin-grade').value=window.portalAdminUI?.getGrade()||'';
+window.portalAdminUI?.onGrade(value=>{$('study-admin-grade').value=value;render();});
 $('study-admin-grade').addEventListener('change',render);
 $('study-admin-refresh').addEventListener('click',()=>void load().catch(e=>setStatus('관리자 자료 조회 실패',true)));
 $('study-admin-mail').addEventListener('change',()=>void saveMail());

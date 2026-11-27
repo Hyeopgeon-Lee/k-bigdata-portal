@@ -8,7 +8,7 @@ const browser=await chromium.launch({headless:true,args:["--no-sandbox"]});
 try{
  for(const admin of [false,true]){
   const context=await browser.newContext({viewport:{width:390,height:850}});
-  await approvedStudent(context,{signup_type:"student",enrollment_status:"enrolled",academic_year:2},false,admin);
+  await approvedStudent(context,{signup_type:"student",enrollment_status:"enrolled",academic_year:2},false,admin,admin);
   // All legacy alumni requests reuse the logged-in portal session; mock only the Edge response.
   await context.route("https://zjsindkakjfzmjgrkaou.supabase.co/functions/v1/alumni-network-api",route=>{
    const payload=route.request().postDataJSON()||{};
@@ -35,9 +35,28 @@ try{
    if(admin){
     assert.equal(await page.locator(".admin-intro h1").isVisible(),true);
     assert.equal(await page.locator(".brand-mark").isVisible(),true,"shared H logo "+name);
+    if(!["alumni","mock-exam"].includes(name)){
+      await page.locator(".admin-grade-group").waitFor({state:"visible"});
+      assert.equal(await page.locator("[data-admin-grade][aria-pressed=true]").getAttribute("data-admin-grade"),name==="index"?"":"2");
+      assert.equal(await page.locator("[data-admin-grade='2']").evaluate(b=>Math.round(b.getBoundingClientRect().height)),48);
+    }
+    if(name!=="index"){
+      assert.equal(await page.locator(".admin-nav-toggle").isVisible(),true);
+      await page.locator(".admin-nav-toggle").click();
+      assert.equal(await page.locator("#admin-work-nav").isVisible(),true);
+      await page.locator(".admin-nav-toggle").click();
+    }
     if(name==="accounts"){
       const filter=page.locator("#users-status");
       await filter.waitFor({state:"visible",timeout:15000});
+      assert.equal(await page.locator("#users-grade").inputValue(),"2","grade preference persists across routes");
+      await page.getByRole("button",{name:"상세보기"}).first().waitFor();
+      assert.equal(await page.locator(".users-table tbody tr").count(),2);
+      await page.locator("[data-admin-grade='1']").click();
+      await page.getByText("테스트 학생",{exact:true}).waitFor();
+      assert.equal(await page.locator(".users-table tbody tr").count(),1);
+      await page.locator("[data-admin-grade='2']").click();
+      await page.getByText("2학년 학생 A",{exact:true}).waitFor();
       assert.equal(await filter.inputValue(),"enrolled","student accounts must initially show current students");
       assert.equal(await filter.locator("option:checked").textContent(),"재학");
       await page.getByRole("button",{name:"상세보기"}).first().waitFor({state:"visible",timeout:15000});
@@ -49,7 +68,45 @@ try{
       await filter.selectOption("all");
       assert.equal(await filter.inputValue(),"all","staff can still view all account statuses");
     }
+    if(name==="certifications"){
+      await page.locator("#cert-status-chart .admin-chart").waitFor();
+      assert.equal(await page.locator("#cert-admin-grade").inputValue(),"2");
+      assert.equal(await page.locator("#cert-admin-list .cert-item").count(),2);
+      await page.locator("[data-admin-grade='1']").click();
+      await page.getByText("테스트 학생 · 1학년",{exact:true}).waitFor();
+      assert.equal(await page.locator("#cert-admin-list .cert-item").count(),1);
+      await page.locator("[data-admin-grade='2']").click();
+      await page.locator("#cert-admin-list .cert-item").nth(1).waitFor();
+    }
+    if(name==="rooms"){
+      await page.locator("#admin-room-week-chart .admin-chart").waitFor();
+      assert.equal(await page.locator(".room-my-card").count(),2);
+      await page.locator("[data-admin-grade='1']").click();
+      await page.getByText("1학년 예약",{exact:true}).waitFor();
+      assert.equal(await page.locator(".room-my-card").count(),1);
+      await page.locator("[data-admin-grade='2']").click();
+      await page.locator(".room-my-card").nth(1).waitFor();
+    }
+    if(name==="help"){
+      await page.locator("#help-status-chart .admin-chart").waitFor();
+      assert.equal(await page.locator(".help-ticket").count(),2);
+      await page.locator("[data-admin-grade='1']").click();
+      await page.getByText("1학년 요청",{exact:true}).waitFor();
+      assert.equal(await page.locator(".help-ticket").count(),1);
+      await page.locator("[data-admin-grade='2']").click();
+      await page.locator(".help-ticket").nth(1).waitFor();
+    }
     if(name==="learning"){
+      await page.locator("#study-plan-chart .admin-chart").waitFor();
+      await page.locator("#teacher-subject-chart .admin-chart").waitFor();
+      await page.locator("#iw-admin-chart .admin-chart").waitFor();
+      assert.equal(await page.locator("#iw-grade").inputValue(),"2");
+      assert.equal(await page.locator("#study-admin-table-body tr").count(),2);
+      await page.locator("[data-admin-grade='1']").click();
+      await page.locator("#teacher-summary").getByText("1명",{exact:true}).waitFor();
+      assert.equal(await page.locator("#study-admin-table-body tr").count(),1);
+      await page.locator("[data-admin-grade='2']").click();
+      await page.locator("#teacher-summary").getByText("2명",{exact:true}).waitFor();
       const layout=()=>page.evaluate(()=>{
        const grid=document.querySelector("#study-admin-summary");
        const toggle=document.querySelector("#study-admin-mail");
@@ -92,10 +149,12 @@ try{
         };
       });
       assert.ok(narrow.pageWidth<=narrow.viewport+1,"alumni mobile has no global horizontal overflow");
-      assert.ok(narrow.localScroll,"wide alumni tables scroll within their panel");
+      assert.ok(!narrow.localScroll,"mobile alumni cards do not scroll horizontally");
       const tabWidth=await page.locator(".alumni-admin .tabs button").first().evaluate(node=>Math.round(node.getBoundingClientRect().width));
       assert.ok(tabWidth<200,"mobile alumni tabs must not consume the entire viewport width");
-      assert.equal(narrow.nowrap,true,"all eight alumni table headings stay on one line");
+      assert.equal(narrow.nowrap,true,"desktop table headings retain their nowrap rule");
+      assert.equal(await page.locator(".admin-table--alumni thead").isVisible(),false,"mobile uses readable record cards");
+      await page.locator("#alumni-admin-charts .admin-chart").first().waitFor();
       await page.screenshot({path:"ui-screenshots/admin/alumni-admin-mobile.png",fullPage:true});
       await page.setViewportSize({width:1280,height:900});
       const desktop=await page.evaluate(()=>({
@@ -106,6 +165,11 @@ try{
       assert.ok(desktop.scroll<=desktop.viewport+1,"alumni desktop has no global overflow");
       assert.equal(desktop.shell,desktop.parent,"alumni header and content widths match");
       await page.screenshot({path:"ui-screenshots/admin/alumni-admin-desktop.png",fullPage:true});
+      await page.locator("#admin-year").selectOption("2025");
+      await page.waitForFunction(()=>document.getElementById("admin-summary")?.textContent.includes("1명"));
+      assert.equal(await page.locator(".admin-table--alumni tbody tr").count(),1);
+      await page.locator("#admin-year").selectOption("");
+      await page.waitForFunction(()=>document.getElementById("admin-summary")?.textContent.includes("2명"));
       await page.getByRole("button",{name:"채용정보 관리"}).click();
       await page.getByText("조건에 맞는 데이터가 없습니다.").waitFor({state:"visible",timeout:15000});
       await page.getByRole("button",{name:"졸업생 현황"}).click();
@@ -123,9 +187,14 @@ try{
       });
       assert.equal(result.tiles,8,"eight management tasks including printable mock exams");
       assert.equal(await page.locator('a.admin-tile[href="mock-exam.html"]').count(),1,"printable exam menu exists");
-      assert.equal(result.cols,1,"featured cards are single column on mobile");
+      assert.equal(result.cols,2,"compact two-column shortcuts on mobile");
       assert.ok(result.tileHeight>=100,"full touch-height cards");
       assert.ok(result.scroll<=result.viewport+1,"no mobile horizontal overflow");
+      await page.locator("#admin-overview-attention .admin-chart").waitFor();
+      await page.locator("#admin-overview-kpis").getByText("3명",{exact:true}).waitFor();
+      await page.locator("[data-admin-grade='2']").click();
+      await page.waitForFunction(()=>document.getElementById("admin-overview-caption")?.textContent==="2학년 · 승인된 재학생 기준");
+      await page.locator("#admin-overview-kpis").getByText("2명",{exact:true}).first().waitFor();
       await page.screenshot({path:"ui-screenshots/admin/admin-home-mobile.png",fullPage:true});
       await page.setViewportSize({width:1280,height:900});
       const wide=await page.evaluate(()=>({
@@ -138,6 +207,27 @@ try{
       assert.ok(wide.scroll<=wide.viewport+1,"no desktop overflow");
       await page.screenshot({path:"ui-screenshots/admin/admin-home-desktop.png",fullPage:true});
       await page.setViewportSize({width:390,height:850});
+    }
+    if(name==="mock-exam")await page.locator("#exam-subject-chart .admin-chart").waitFor();
+    for(const width of [360,390,430,768,1280]){
+      await page.setViewportSize({width,height:850});
+      const geometry=await page.evaluate(()=>({viewport:innerWidth,body:document.documentElement.scrollWidth}));
+      assert.ok(geometry.body<=geometry.viewport+1,name+" "+width+"px no global overflow");
+      const clipped=await page.evaluate(()=>[...document.querySelectorAll("#admin-secure button")].filter(b=>b.getBoundingClientRect().width>0&&b.getBoundingClientRect().height>0&&b.scrollWidth>b.clientWidth+2).map(b=>b.textContent.trim()).filter(Boolean));
+      assert.deepEqual(clipped,[],name+" "+width+"px button labels fit");
+      if(width===390||width===1280)await page.screenshot({path:"ui-screenshots/admin/"+name+"-"+width+".png",fullPage:true});
+    }
+    await page.setViewportSize({width:390,height:850});
+    if(name==="accounts"){
+      await page.goto("http://127.0.0.1:8765/admin/accounts.html?view=approvals");
+      await page.getByText("2학년 가입 대기",{exact:true}).waitFor();
+      assert.equal(await page.locator(".portal-approval-item:visible").count(),1);
+      await page.locator("[data-admin-grade='1']").click();
+      await page.getByText("1학년 가입 대기",{exact:true}).waitFor();
+      assert.equal(await page.locator(".portal-approval-item:visible").count(),1);
+      await page.locator("[data-admin-grade='2']").click();
+      await page.getByText("2학년 가입 대기",{exact:true}).waitFor();
+      await page.screenshot({path:"ui-screenshots/admin/approvals-390.png",fullPage:true});
     }
    }
    assert.deepEqual(errors.filter(e=>!e.includes("net::")),[],name+" JS exceptions");
