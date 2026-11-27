@@ -18,7 +18,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <script defer src="js/portal-navigation.js?v=20261127-engineer-v1"></script>
 <!-- portal:assets:end -->
 <link rel="stylesheet" href="css/study-review.css?v=20261112-grade-colors-1"><link rel="stylesheet" href="css/question-browser.css?v=20261116-progress-v1"><link rel="stylesheet" href="css/quiz-unified.css?v=20261112-page-intro-2">
-<link rel="stylesheet" href="css/written-exam.css?v=20261124-text-only-v1"><link rel="stylesheet" href="css/written-dashboard.css?v=20261127-review-v2"></head>
+<link rel="stylesheet" href="css/written-exam.css?v=20261124-text-only-v1"><link rel="stylesheet" href="css/written-dashboard.css?v=20261127-nav-v3"></head>
 <body class="practical-page written-bank-page" data-page="industrial-written"><p id="learning-notice" role="status">학습 권한을 확인하고 있습니다. <a href="/">포털 메인</a></p><a class="skip-link" href="#content">본문으로 건너뛰기</a>
 <!-- portal:header:start (generated; edit scripts/portal-shell-template.mjs) -->
 <header class="site-header" data-portal-shell="20261112-page-intro-2">
@@ -53,9 +53,10 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
   
 </section>
 <!-- portal:intro:end -->
+<nav id="industrial-written-nav" class="container bank-nav written-common-nav" aria-label="학습 화면"><button type="button" class="button" data-view="bank">전체 문제</button><button type="button" class="button" data-view="random">랜덤 설정</button><button type="button" class="button" data-view="mock-lobby">실전 모의고사</button><button type="button" class="button" data-view="wrong">오답노트</button><button type="button" class="button" data-view="progress">학습현황</button></nav>
 <section class="container learning-content">
 <div id="quick-filters"><div class="study-segment" role="group" aria-label="학습 방식"><button type="button" data-view="bank" aria-pressed="true">전체 문제</button><button type="button" data-view="random" aria-pressed="false">랜덤 설정</button><button type="button" data-view="mock-lobby" aria-pressed="false">실전 모의고사</button><button type="button" data-view="wrong" aria-pressed="false">오답노트</button></div></div>
-<nav class="bank-nav" aria-label="학습 화면" hidden><button type="button" class="button" data-view="bank">전체 문제</button><button type="button" class="button" data-view="random">랜덤 설정</button><button type="button" class="button" data-view="mock-lobby">실전 모의고사</button><button type="button" class="button" data-view="wrong">오답노트</button><button type="button" class="button" data-view="progress">학습현황</button></nav>
+
 <p id="storage-status" role="status"></p>
 <div id="bank-controls" class="bank-controls" hidden>
 <details id="advanced-filters"><summary>상세 필터 · 검색</summary><div class="bank-filter-grid">
@@ -77,4 +78,4 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
     </div>
     <div class="container footer-bottom"><p>© <span id="current-year"></span> K-BigData Service Portal</p></div>
   </footer>
-<script type="application/x-learning" data-module="js/portal-shell-entry.js?v=20261116-concurrency-1"></script><script type="application/x-learning" data-module="js/industrial-written-ui.js?v=20261127-review-v2"></script></body></html>
+<script type="application/x-learning" data-module="js/portal-shell-entry.js?v=20261116-concurrency-1"></script><script type="application/x-learning" data-module="js/industrial-written-ui.js?v=20261127-nav-v3"></script></body></html>
