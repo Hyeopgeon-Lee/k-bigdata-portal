@@ -1,5 +1,5 @@
 import {normalizeSubject,summarizeWritten,writtenDashboard} from "./written-dashboard.mjs?v=20261127-clean-v1";
-import {createMockExam} from "./written-mock.mjs?v=20261127-v2";
+import {createMockExam} from "./written-mock.mjs?v=20261127-random-v1";
 import {quizNavigation,quizHeading,quizDisclosure,quizFeedback,scrollToQuizAnswer} from "./quiz-unified.js?v=20261112-answer-focus-1";
 import {createQuestionBrowser} from "./question-browser.js?v=20261124-subject-filter-v2";
 import {reviewControls} from "./study-review.js?v=20261116-concurrency-1";
@@ -172,7 +172,8 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
  }
  function selectView(next){
   if(mock?.isActive())mock.stop();
-  view=next;current=null;selectedAnswer=null;queue=[];queueIndex=0;
+  view=examType==="industrial"&&next==="home"?"bank":next;current=null;selectedAnswer=null;queue=[];queueIndex=0;
+  root.classList.remove("study-split");
   hideBrowser();setId(null);updateNav();
   if(view==="bank"){browserView();return;}
   status.textContent=bank.length+"문항";
@@ -180,7 +181,13 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
   else if(view==="random")renderRandom();
   else if(view==="wrong")renderWrong();
   else if(view==="progress")renderProgress();
+  else if(view==="mock-lobby")renderMockLobby();
   window.scrollTo({top:0,behavior:"auto"});
+ }
+ function renderMockLobby(){
+  status.textContent="";
+  root.innerHTML='<section class="written-dashboard"><h2>실전 모의고사</h2><div class="written-kpis"><article><small>전체 문항</small><strong>60문항</strong></article><article><small>시험시간</small><strong>90분</strong></article><article><small>합격 기준</small><strong>평균 60점</strong><p>과목별 40점 이상</p></article></div><div class="written-parts">'+["정보시스템 기반 기술","프로그래밍 언어 활용","데이터베이스 활용"].map(name=>'<article><h3>'+esc(name)+'</h3><p>20문항</p></article>').join("")+'</div>'+(mock&&writable?action("mock-random-start","실전 모의고사 시작",'class="button button-primary"'):'<p>학습 가능한 계정으로 로그인한 후 응시하세요.</p>')+'<h3>모의고사 성적 이력</h3><div id="written-mock-history" role="status"></div></section>';
+  if(mock)void mock.showHistory();
  }
  function renderHome(){
   const todays=records.filter(r=>formatDate(r.at)===formatDate(Date.now()));
@@ -359,6 +366,7 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
    if(b.dataset.subject)items=items.filter(q=>normalizeSubject(q.subject)===b.dataset.subject);
    if(!items.length){syncMessage("해당하는 복습 문항이 없습니다.");return;}startQueue(items,"review");return;
   }
+  if(name==="mock-random-start"){if(!mock||!writable||!confirm("60문항 · 90분. 실전 모의고사를 시작할까요?"))return;void mock.start("random").catch(()=>syncMessage("모의고사를 시작하지 못했습니다. 다시 시도해 주세요."));return;}
   if(name==="mock-start"){if(!mock||!writable)return;if(!confirm("60문항 실전 모의고사를 시작하시겠습니까? 기존 진행 중인 시험이 있으면 이어집니다."))return;void mock.start(b.dataset.round).catch(()=>syncMessage("모의고사를 시작하지 못했습니다. 연결 상태를 확인해 주세요."));return;}
   if(name==="toggle-hint"){
    const hint=$("#solve-hint");hint.hidden=!hint.hidden;b.setAttribute("aria-expanded",String(!hint.hidden));
@@ -382,8 +390,8 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
     openQuestion(target.question.id);
    }else if(direction===1&&queueKind==="bank")selectView("bank");
    else if(direction===1){
-    const count=queue.length;selectView("home");
-    root.innerHTML='<section class="bank-empty"><h2 tabindex="-1">학습 완료</h2><p>'+count+'문제를 연습했습니다.</p>'+action("home-view","학습 시작으로")+action("wrong-view","오답노트")+'</section>';
+    const count=queue.length;selectView(examType==="industrial"?"progress":"home");
+    root.innerHTML='<section class="bank-empty"><h2 tabindex="-1">학습 완료</h2><p>'+count+'문제를 연습했습니다.</p>'+(examType==="industrial"?action("progress-view","학습현황"):action("home-view","학습 시작으로"))+action("wrong-view","오답노트")+'</section>';
     root.querySelector("h2")?.focus();
    }
    return;
@@ -454,7 +462,7 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
   });
   if(examType==="industrial")bank=bank.map(q=>({...q,subject:normalizeSubject(q.subject)}));
   bank.sort((a,b)=>b.year-a.year||b.round-a.round||a.number-b.number);
-  if(examType==="industrial"&&cloud)mock=createMockExam({root,db,bank,writable,back:()=>selectView("progress"),enter:()=>{view="mock";current=null;hideBrowser();updateNav();$(".bank-nav").hidden=true;$("#usage-guide").hidden=true;}});
+  if(examType==="industrial"&&cloud)mock=createMockExam({root,db,bank,writable,back:()=>selectView("mock-lobby"),reviewWrong:items=>{selectView("progress");startQueue(items,"review");},enter:()=>{view="mock";current=null;hideBrowser();updateNav();$(".bank-nav").hidden=true;$("#usage-guide").hidden=true;}});
   fillFilters();
 
   const archiveSessions=(Array.isArray(expectedSessions)?expectedSessions:[])
@@ -541,7 +549,7 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
   });
   const section=$(".question-browser"),menu=document.createElement("nav");
   menu.className="bank-nav written-browser-nav";menu.setAttribute("aria-label","필기 학습 메뉴");
-  menu.innerHTML='<button type="button" class="button button-secondary" data-view="home">학습 시작</button><button type="button" class="button button-primary" data-view="bank">전체 문제</button><button type="button" class="button button-secondary" data-view="random">랜덤 설정</button><button type="button" class="button button-secondary" data-view="wrong">오답노트</button><button type="button" class="button button-secondary" data-view="progress">학습현황</button>';
+  menu.innerHTML=(examType==="industrial"?"":'<button type="button" class="button button-secondary" data-view="home">학습 시작</button>')+'<button type="button" class="button button-primary" data-view="bank">전체 문제</button><button type="button" class="button button-secondary" data-view="random">랜덤 설정</button>'+(examType==="industrial"?'<button type="button" class="button button-secondary" data-view="mock-lobby">실전 모의고사</button>':"")+'<button type="button" class="button button-secondary" data-view="wrong">오답노트</button><button type="button" class="button button-secondary" data-view="progress">학습현황</button>';
   section.querySelector(".qb-heading").after(menu);
   if(archivedOnly){
    document.querySelectorAll('[data-view="home"],[data-view="random"],[data-view="wrong"],[data-view="progress"]')
