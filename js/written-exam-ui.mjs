@@ -547,10 +547,12 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
    document.querySelectorAll('[data-view="home"],[data-view="random"],[data-view="wrong"],[data-view="progress"]')
     .forEach(button=>{button.hidden=true;});
   }
-  const verified=document.createElement("p");
-  verified.className="written-transcription-status";
-  verified.setAttribute("role","status");
-  section.querySelector(".qb-heading").after(verified);
+  if(examType!=="industrial"){
+   const verified=document.createElement("p");
+   verified.className="written-transcription-status";
+   verified.setAttribute("role","status");
+   section.querySelector(".qb-heading").after(verified);
+  }
   section.querySelector("#qb-additional-select")?.addEventListener("change",()=>refreshFilters());
   
   refreshFilters();
