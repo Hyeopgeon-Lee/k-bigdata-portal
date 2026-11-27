@@ -65,7 +65,7 @@ assert.ok(directoryJS.includes('service.url'));
 assert.ok(shell.includes('initRecentTracking()'));
 assert.ok(searchUI.includes('event.preventDefault()'));
 assert.equal(services.length,21,'the complete service registry is retained');
-assert.equal(services.find(s=>s.id==='practical').name,'정보처리 실기기출문제');
+assert.equal(services.find(s=>s.id==='practical').name,'정보처리 실기 기출문제');
 assert.equal(services.find(s=>s.id==='ncp').name,'NCP 기출문제');
 // Account-backed shortcuts are inaccessible without an authorized Supabase session.
 const personal=read('js/portal-personal.js');

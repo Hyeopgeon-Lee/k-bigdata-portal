@@ -62,7 +62,7 @@ try{
     });
     assert.equal(practicalNav.heading,codingNav.heading,"matching learning group heading "+width);
     assert.deepEqual(practicalNav.tabs,codingNav.tabs,"matching learning navigation buttons "+width);
-    assert.equal(practicalNav.active,"정보처리 실기기출문제");
+    assert.equal(practicalNav.active,"정보처리 실기 기출문제");
     assert.deepEqual(practicalNav.buttonStyle,codingNav.buttonStyle,"matching active navigation button styles "+width);
     assert.equal(practicalNav.toolbarCount,0,"practical auxiliary toolbar removed "+width);
     assert.equal(codingNav.toolbarCount,0,"coding auxiliary toolbar removed "+width);

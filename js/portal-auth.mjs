@@ -386,7 +386,7 @@ async function importDevicePersonalData(){
  if(!window.confirm("현재 기기에 남아 있는 즐겨찾기·오늘의 할 일이 본인의 기록인지 확인하세요. 확인을 누르면 이 계정으로 가져옵니다."))return;
  status("기존 개인 설정을 가져오고 있습니다.");
  try{
-  const {importLegacyShortcuts}=await import("./portal-personal.js?v=20261128-practical-name-1");
+  const {importLegacyShortcuts}=await import("./portal-personal.js?v=20261128-practical-name-2");
   const imported=await importLegacyShortcuts();
   const day=new Date(Date.now()+9*3600000).toISOString().slice(0,10);
   let legacy=null;try{legacy=JSON.parse(localStorage.getItem("kbigdata:daily-plan:v1")||"null");}catch{}

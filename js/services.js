@@ -60,7 +60,7 @@ export const services = [
     tags:["GitHub","Chrome","확장 프로그램","코딩","포트폴리오"], aliases:"깃허브 크롬 확장프로그램 K-BigData Hub 소스코드 저장 설치 사용법", featured:false
   },
   {
-    id:"practical", name:"정보처리 실기기출문제", englishName:"PAPER FIRST PRACTICE",
+    id:"practical", name:"정보처리 실기 기출문제", englishName:"PAPER FIRST PRACTICE",
     category:"learning", url:"practical.html", icon:"book", accent:"blue", order:9.5,
     description:"정보처리기사·산업기사 실기 C, Java, Python, SQL 비공식 복원기출을 직접 손으로 풀어보세요.",
     shortDescription:"정보처리기사·산업기사 기출·기출 기반 문제를 학습하세요.",
@@ -339,7 +339,7 @@ export const portalNavLinks = [
   {id:"coding",label:"기초학습",group:"learning"},
   {id:"k-bigdata-hub",label:"GitHub 연동",group:"learning"},
   {id:"study",label:"자율학습",group:"learning"},
-  {id:"practical",label:"정보처리 실기기출문제",group:"learning"},
+  {id:"practical",label:"정보처리 실기 기출문제",group:"learning"},
   {id:"engineer-written",label:"기사 필기",group:"learning"},
   {id:"industrial-written",label:"산업기사 필기",group:"learning"},
   {id:"interview",label:"기술면접",group:"learning"},

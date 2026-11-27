@@ -1,6 +1,6 @@
 // Main dashboard: favorites, recent shortcuts and published recruitment deadlines.
-import {services} from "./services.js?v=20261128-practical-name-1";
-import {getFavorites,getRecent,toggleFavorite} from "./portal-personal.js?v=20261128-practical-name-1";
+import {services} from "./services.js?v=20261128-practical-name-2";
+import {getFavorites,getRecent,toggleFavorite} from "./portal-personal.js?v=20261128-practical-name-2";
 const $=selector=>document.querySelector(selector);
 const esc=v=>String(v??"").replace(/[&<>'"]/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[char]));
 const serviceById=id=>services.find(service=>service.id===id);
@@ -65,7 +65,7 @@ const quickCopy=Object.freeze({
  docs:["개발 공식문서","Spring Boot · 클라우드 · AI"],
  jobs:["IT 직무 가이드","목표 직무 탐색"],
  "project-guide":["프로젝트 가이드","기획 · 설계 · 구현"],
- practical:["정보처리 실기기출문제","C · Java · Python · SQL"],
+ practical:["정보처리 실기 기출문제","C · Java · Python · SQL"],
  certifications:["IT 자격증","기사 · 산업기사 시험 안내"],
  recruit:["추천 채용공고","기업 · 직무 · 마감일"],
  apply:["입사지원 현황","지원 이력 · 주간 목표"],

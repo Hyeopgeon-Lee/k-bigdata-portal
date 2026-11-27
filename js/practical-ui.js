@@ -450,7 +450,7 @@ loadPracticalBank().then(result=>{
  }
  const params=new URLSearchParams(location.search),id=params.get("id"),exam=params.get("exam"),shared=params.get("share")==="1";if(Object.keys(examLabels).includes(exam)){filters.exam=exam;$("#exam-filter").value=exam;}if(shared){const canonical=new URL(location.href);canonical.searchParams.delete("share");history.replaceState(history.state,"",canonical);}
  browserEntry=createQuestionBrowser({
-   title:"정보처리 실기기출문제",questions:sorted(bank),
+   title:"정보처리 실기 기출문제",questions:sorted(bank),
    progressFor:q=>practicalProgress.get(q.id),
    category:q=>q.language,categoryLabel:key=>key,
    secondaryFilter:{
