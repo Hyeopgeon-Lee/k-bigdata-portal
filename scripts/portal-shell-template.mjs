@@ -32,6 +32,12 @@ export function renderServiceNavigation(page,id){
 </nav>`);
 }
 function renderIntroExtras(id){
+  const manuals={
+    'engineer-written':{path:'media/manuals/engineer-written-guide.pdf',label:'정보처리기사'},
+    'industrial-written':{path:'media/manuals/industrial-written-guide.pdf',label:'정보처리산업기사'}
+  };
+  const manual=manuals[id];
+  if(manual)return `<a class="button button-secondary written-manual-download" href="${manual.path}" download="${manual.label}_필기_문제풀이_사용설명서.pdf" aria-label="${manual.label} 필기 사용설명서 PDF 다운로드"><span aria-hidden="true">↓</span> 사용설명서 PDF</a>`;
   if(id==='coding')return '<a class="kh-shortcut kh-coding-link" href="k-bigdata-hub.html"><span class="kh-shortcut-mark" aria-hidden="true">K↑</span><span><strong>내 풀이를 GitHub에 저장하기</strong><small>K-BigData Hub 설치 및 사용 방법</small></span><span class="kh-shortcut-arrow" aria-hidden="true">→</span></a>';
   if(id==='interview')return '<p id="interview-stats" class="interview-stats" aria-live="polite"></p>';
   if(id==='project-guide')return '<div class="guide-actions"><a class="button button-primary" href="#process">주제 선정 시작하기 <span aria-hidden="true">↓</span></a><a class="button button-secondary" href="https://portfolio.k-bigdata.kr/">선배 작품 살펴보기 <span aria-hidden="true">↗</span></a></div>';

@@ -154,3 +154,33 @@
   overflow-wrap: anywhere;
   min-width: 0;
 }
+
+/* Written exam manuals: static downloads, scoped to the two written pages. */
+body.written-bank-page #study-intro{
+  display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:16px;align-items:center;
+}
+body.written-bank-page #study-intro>.portal-page-back{
+  grid-column:1/-1;grid-row:1;justify-self:start;
+}
+body.written-bank-page #study-intro>.portal-page-eyebrow{grid-column:1/-1;grid-row:2}
+body.written-bank-page #study-intro>.portal-page-title{grid-column:1;grid-row:3;min-width:0}
+body.written-bank-page #study-intro>.portal-page-description{grid-column:1/-1;grid-row:4}
+body.written-bank-page #study-intro>.written-manual-download{
+  grid-column:2;grid-row:3;justify-self:end;display:inline-flex;align-items:center;
+  justify-content:center;gap:7px;min-height:44px;max-width:100%;margin:0 0 9px;
+  padding:9px 14px;border:1px solid #bccde1;border-radius:9px;background:#fff;
+  color:#18376b;font-size:14px;line-height:1.4;font-weight:700;white-space:nowrap;
+  text-decoration:none;box-sizing:border-box;
+}
+body.written-bank-page #study-intro>.written-manual-download:hover{background:#eaf2ff;border-color:#819abb;color:#102d61}
+body.written-bank-page #study-intro>.written-manual-download:focus-visible{outline:3px solid #2b67ad;outline-offset:3px}
+@media(max-width:767px){
+  body.written-bank-page #study-intro{display:block}
+  body.written-bank-page #study-intro>.written-manual-download{
+    margin:10px 0 0;min-height:44px;font-size:14px;
+  }
+}
+body.written-bank-page.is-solving #study-intro>.written-manual-download,
+body.written-bank-page:has(.written-mock-screen:not(.mock-result)) #study-intro>.written-manual-download{
+  display:none;
+}
