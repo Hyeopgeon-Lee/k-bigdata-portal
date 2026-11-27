@@ -1,5 +1,5 @@
 import {normalizeSubject,summarizeWritten,writtenDashboard} from "./written-dashboard.mjs?v=20261127-v1";
-import {createMockExam} from "./written-mock.mjs?v=20261127-v1";
+import {createMockExam} from "./written-mock.mjs?v=20261127-v2";
 import {quizNavigation,quizHeading,quizDisclosure,quizFeedback,scrollToQuizAnswer} from "./quiz-unified.js?v=20261112-answer-focus-1";
 import {createQuestionBrowser} from "./question-browser.js?v=20261124-subject-filter-v2";
 import {reviewControls} from "./study-review.js?v=20261116-concurrency-1";
@@ -453,7 +453,7 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
   });
   if(examType==="industrial")bank=bank.map(q=>({...q,subject:normalizeSubject(q.subject)}));
   bank.sort((a,b)=>b.year-a.year||b.round-a.round||a.number-b.number);
-  if(examType==="industrial"&&cloud)mock=createMockExam({root,db,bank,back:()=>selectView("progress"),enter:()=>{view="mock";current=null;hideBrowser();updateNav();$(".bank-nav").hidden=true;$("#usage-guide").hidden=true;}});
+  if(examType==="industrial"&&cloud)mock=createMockExam({root,db,bank,writable,back:()=>selectView("progress"),enter:()=>{view="mock";current=null;hideBrowser();updateNav();$(".bank-nav").hidden=true;$("#usage-guide").hidden=true;}});
   fillFilters();
 
   const archiveSessions=(Array.isArray(expectedSessions)?expectedSessions:[])
