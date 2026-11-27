@@ -136,3 +136,21 @@
 @media(max-width:1050px){.wrong-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.wrong-controls{grid-template-columns:repeat(4,minmax(0,1fr))}.wrong-search{grid-column:span 2}}
 @media(max-width:700px){.wrong-insights,.wrong-items{grid-template-columns:1fr}.wrong-dashboard{gap:12px}.wrong-chart,.wrong-list-panel,.wrong-mock{padding:14px}.wrong-controls{grid-template-columns:repeat(2,minmax(0,1fr))}.wrong-search{grid-column:span 2}.wrong-kpi{padding:12px;gap:8px}.wrong-kpi-icon{width:28px;height:28px;font-size:1.25rem}.wrong-kpi p{font-size:.7rem}.wrong-donut{width:56px}.wrong-donut strong{font-size:.92rem}.wrong-section-head>.wrong-primary{width:100%}.wrong-mock #written-mock-recommend{width:100%;margin:0}.wrong-mock #written-mock-recommend button{width:100%}}
 @media(max-width:360px){.wrong-kpis{grid-template-columns:1fr}.wrong-tabs{gap:4px}.wrong-tabs button{padding:8px 5px;font-size:12px}}
+
+/* Preserve meaningful line breaks and wrap Korean text at word boundaries. */
+.written-bank-page .bank-solve .solve-question,
+.written-bank-page .written-choice > span:not(.written-choice-num),
+.written-bank-page .quiz-solve-panel p,
+.written-bank-page .beginner-explanation,
+.written-bank-page .wrong-stem,
+.written-bank-page .wrong-answer p,
+.written-bank-page .mock-question > p,
+.written-bank-page .written-mock-choices button,
+.written-bank-page .mock-review-question,
+.written-bank-page .mock-review-options > div,
+.written-bank-page .mock-explanation p {
+  white-space: pre-wrap;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
