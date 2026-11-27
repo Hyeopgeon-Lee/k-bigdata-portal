@@ -1,7 +1,8 @@
 import {quizNavigation,quizHeading,quizFeedback,scrollToQuizAnswer,mountQuizDisclosure} from "./quiz-unified.js?v=20261112-answer-focus-1";
 import {createQuestionBrowser} from "./question-browser.js?v=20261117-language-persist-1";
 import {createLearningProgressStore} from "./learning-list-progress.mjs?v=20261116-concurrency-1";
-import {bindReview,reviewControls,gradeLabels} from "./study-review.js?v=20261116-concurrency-1";
+import {bindReview,reviewControls,gradeLabels} from "./coding-review.js?v=20261127-dashboard-1";
+import {mountCodingDashboard} from "./coding-dashboard.mjs?v=20261127-dashboard-1";
 import {learningLocal as localStorage, learningSession as sessionStorage} from "./learning-storage.mjs";
 import {debounceCloudDraft,fetchCloudDraft} from "./learning-activity.mjs?v=20261116-concurrency-1";
 import {codingProblems as sampleProblems} from "../data/coding-samples.js?v=20261111-ubuntu-vim-only-2";
@@ -456,10 +457,11 @@ document.getElementById("coding-quiz-heading").innerHTML=quizHeading({
 });
 mountQuizDisclosure(document.getElementById("coding-answer"),{title:"해설",open:true});
 let codingAttemptId;
+let dashboard, reviewSession=false;
 let answerHighlighterPromise;
 function showQuestion(q) {
-  codingAttemptId=getSafe("coding-attempt-"+q.id)||crypto.randomUUID();
-  setSafe("coding-attempt-"+q.id,codingAttemptId);
+  codingAttemptId=(reviewSession?"":getSafe("coding-attempt-"+q.id))||crypto.randomUUID();
+  if(!reviewSession)setSafe("coding-attempt-"+q.id,codingAttemptId);
   if (!q) return;
   current = q;
   if(language!==q.language){language=q.language;refreshFilters();}
@@ -625,13 +627,14 @@ $("#coding-answer-button").addEventListener("click", () => {
   const key="coding-review-"+q.id;
   bindReview(slot,{bank:"coding",questionId:q.id,clientAttemptId:codingAttemptId,
     get answerText(){return $("#coding-editor").value;},usedHint:!$("#coding-hint").hidden,metadata:{language:q.language}},
-    getSafe(key),result=>{
+    reviewSession?"":getSafe(key),(result,attemptId)=>{
+      setSafe("coding-attempt-"+q.id,attemptId);
       setSafe(key,result);doneIds.add(q.id);setSafe(DONE_KEY,JSON.stringify([...doneIds]));
       if(current.id===q.id){updateSummary();listQuestions(true);browserEntry?.refresh();}
     });
-  if(getSafe(key)){
+  if(getSafe(key)&&!reviewSession){
     const retry=document.createElement("button");retry.textContent="다시 풀기";
-    retry.onclick=()=>{setSafe(key,"");setSafe("coding-attempt-"+q.id,"");showQuestion(q);};slot.append(retry);
+    retry.onclick=()=>{reviewSession=true;showQuestion(q);};slot.append(retry);
   }
 });
 $("#coding-trace-button").addEventListener("click", () => reveal("#coding-trace","#coding-trace-button"));
@@ -640,6 +643,7 @@ $("#coding-editor").addEventListener("input", event => {
   debounceCloudDraft("coding",current.id,event.target.value);
 });
 function openCodingList(){
+  dashboard?.showBank();reviewSession=false;
   browserEntry.show();
 }
 $("#coding-show-list").addEventListener("click",openCodingList);
@@ -755,7 +759,7 @@ browserEntry=createQuestionBrowser({
  progressFor:q=>codingProgress.get(q.id),
  describe:q=>q.title,searchText:q=>[q.id,q.title,q.statement,q.topic,q.level].join(" "),
  openQuestion(q,items){
-   entrySet=items;language=q.language;topicFilter=levelFilter="all";query="";
+   reviewSession=false;dashboard?.showBank();entrySet=items;language=q.language;topicFilter=levelFilter="all";query="";
    $("#coding-search").value="";refreshFilters();
    document.body.dataset.codingView="question";showQuestion(q);$("#coding-title").focus();
  },
@@ -765,6 +769,11 @@ codingProgress.attach();
 refreshFilters();
 if(!browserEntry.resume(requestedId))showQuestion(current);
 if(!requestedId)browserEntry.show(false);
+dashboard=mountCodingDashboard({questions:codingProblems,labels,openList:openCodingList,openSet(items){
+  if(!items.length)return;
+  reviewSession=true;entrySet=items;document.querySelector(".question-browser").hidden=true;document.querySelector("main").classList.remove("qb-browsing");
+  document.body.dataset.codingView="question";language=items[0].language;topicFilter=levelFilter="all";query="";$("#coding-search").value="";refreshFilters();showQuestion(items[0]);$("#coding-title").focus();
+}});
 void import("./coding-editor.js?v=20261116-tab4-v1")
   .then(({createCodingEditor}) => {
     codeEditor = createCodingEditor({
