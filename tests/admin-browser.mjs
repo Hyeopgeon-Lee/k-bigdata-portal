@@ -22,7 +22,7 @@ try{
     body:JSON.stringify({success:true,data:rows,message:"정상 처리"})});
   });
 
-  for(const name of ["index","accounts","certifications","rooms","help","learning","alumni"]){
+  for(const name of ["index","accounts","certifications","rooms","help","learning","alumni","mock-exam"]){
    const page=await context.newPage(),errors=[];
    page.on("pageerror",e=>errors.push(e.message));
    await page.goto("http://127.0.0.1:8765/admin/"+name+".html",{waitUntil:"domcontentloaded"});
@@ -85,7 +85,8 @@ try{
         tileHeight:Math.round(tile.getBoundingClientRect().height),
         scroll:document.documentElement.scrollWidth,viewport:document.documentElement.clientWidth};
       });
-      assert.equal(result.tiles,7,"seven management tasks preserved");
+      assert.equal(result.tiles,8,"eight management tasks including printable mock exams");
+      assert.equal(await page.locator('a.admin-tile[href="mock-exam.html"]').count(),1,"printable exam menu exists");
       assert.equal(result.cols,1,"featured cards are single column on mobile");
       assert.ok(result.tileHeight>=100,"full touch-height cards");
       assert.ok(result.scroll<=result.viewport+1,"no mobile horizontal overflow");
@@ -108,5 +109,5 @@ try{
   }
   await context.close();
  }
- console.log("PASS: seven super-admin routes; alumni tabs, mobile table scroll and shared 390/1280px geometry.");
+ console.log("PASS: eight super-admin routes; alumni tabs, mobile table scroll and shared 390/1280px geometry.");
 }finally{await browser.close();}
