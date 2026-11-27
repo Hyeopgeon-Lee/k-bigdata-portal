@@ -1,9 +1,9 @@
 import {quizNavigation,quizHeading,quizFeedback,scrollToQuizAnswer,mountQuizDisclosure} from "./quiz-unified.js?v=20261112-answer-focus-1";
 import {createQuestionBrowser} from "./question-browser.js?v=20261117-language-persist-1";
 import {createLearningProgressStore} from "./learning-list-progress.mjs?v=20261116-concurrency-1";
-import {bindReview,reviewControls,gradeLabels} from "./study-review.js?v=20261116-concurrency-1";
+import {bindReview,reviewControls,gradeLabels} from "./study-review.js?v=20261127-grade-correction-1";
 import {learningLocal as localStorage, learningSession as sessionStorage} from "./learning-storage.mjs";
-import {debounceCloudDraft,fetchCloudDraft} from "./learning-activity.mjs?v=20261116-concurrency-1";
+import {debounceCloudDraft,fetchCloudDraft} from "./learning-activity.mjs?v=20261127-grade-correction-1";
 import {codingProblems as sampleProblems} from "../data/coding-samples.js?v=20261111-ubuntu-vim-only-2";
 import {javaProblems} from "../data/coding-java-98.js?v=20261113-java062-flush-cleanup-1";
 import {cFoundationProblems} from "../data/coding-c-foundations.js?v=20261111-essential-ranges-1";
@@ -623,16 +623,17 @@ $("#coding-answer-button").addEventListener("click", () => {
   slot.dataset.questionId=q.id;
   slot.innerHTML=quizFeedback({label:"정답·해설 공개",details:"작성한 답안과 비교한 후 내 풀이 결과를 선택하세요."})+reviewControls();
   const key="coding-review-"+q.id;
+  const retry=document.createElement("button");retry.type="button";retry.textContent="다시 풀기";
+  retry.hidden=!getSafe(key);
+  retry.onclick=()=>{setSafe(key,"");setSafe("coding-attempt-"+q.id,"");showQuestion(q);};
   bindReview(slot,{bank:"coding",questionId:q.id,clientAttemptId:codingAttemptId,
     get answerText(){return $("#coding-editor").value;},usedHint:!$("#coding-hint").hidden,metadata:{language:q.language}},
     getSafe(key),result=>{
       setSafe(key,result);doneIds.add(q.id);setSafe(DONE_KEY,JSON.stringify([...doneIds]));
+      retry.hidden=false;
       if(current.id===q.id){updateSummary();listQuestions(true);browserEntry?.refresh();}
-    });
-  if(getSafe(key)){
-    const retry=document.createElement("button");retry.textContent="다시 풀기";
-    retry.onclick=()=>{setSafe(key,"");setSafe("coding-attempt-"+q.id,"");showQuestion(q);};slot.append(retry);
-  }
+    },{onBusy:busy=>{retry.disabled=busy;}});
+  slot.append(retry);
 });
 $("#coding-trace-button").addEventListener("click", () => reveal("#coding-trace","#coding-trace-button"));
 $("#coding-editor").addEventListener("input", event => {
