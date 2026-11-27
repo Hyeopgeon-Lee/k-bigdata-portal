@@ -1,7 +1,7 @@
 // Service-directory controls reuse the canonical service registry and existing browser-only favorites.
-import "./app.js?v=20261126-hub-1";
-import {services} from "./services.js?v=20261126-hub-1";
-import {getFavorites,toggleFavorite} from "./portal-personal.js?v=20261126-hub-1";
+import "./app.js?v=20261128-practical-name-1";
+import {services} from "./services.js?v=20261128-practical-name-1";
+import {getFavorites,toggleFavorite} from "./portal-personal.js?v=20261128-practical-name-1";
 const input=document.getElementById("directory-query");
 const clear=document.getElementById("directory-clear");
 const category=document.getElementById("directory-category");

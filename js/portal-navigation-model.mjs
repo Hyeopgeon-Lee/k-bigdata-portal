@@ -1,4 +1,4 @@
-import {categories, services, portalNavLinks} from './services.js?v=20261126-hub-1';
+import {categories, services, portalNavLinks} from './services.js?v=20261128-practical-name-1';
 
 export const shellVersion = '20261112-page-intro-2';
 export const portalPages = {
@@ -14,7 +14,7 @@ export const portalPages = {
   'teacher-learning': {title:'학급 학습통계', group:null, navGroup:'learning', eyebrow:'SUPER ADMIN · WEEKLY LEARNING', description:'학생 학습 현황과 주간 메일 발송을 관리하세요.', locked:true},
   'engineer-written': {title:'정보처리기사 필기 기출문제',group:'learning',eyebrow:'WRITTEN EXAM',description:'2022·2023·2024·2025년 1·2·3회와 2026년 1·2회 총 1,400문항을 학습하세요.',headingId:'engineer-written-title',quiz:true},
   'industrial-written': {title:'정보처리산업기사 필기 기출문제', group:'learning', eyebrow:'WRITTEN EXAM', description:'2022~2026년 산업기사 필기 기출문제 840문항을 학습하세요.',headingId:'industrial-written-title',quiz:true},
-  practical: {title:'정보처리 기출문제', group:'learning', eyebrow:'PRACTICAL EXAM', description:'정보처리기사·정보처리산업기사의 C·Java·Python·SQL 실기 기출문제를 학습하세요.', headingId:'portal-intro-title-practical', quiz:true},
+  practical: {title:'정보처리 실기기출문제', group:'learning', eyebrow:'PRACTICAL EXAM', description:'정보처리기사·정보처리산업기사의 C·Java·Python·SQL 실기 기출문제를 학습하세요.', headingId:'portal-intro-title-practical', quiz:true},
   interview: {title:'기술면접 문제은행', group:'learning', eyebrow:'TECHNICAL INTERVIEW', description:'IT 직무 기술면접 문제풀이'},
   certifications: {title:'IT 자격증', group:'learning', eyebrow:'CERTIFICATIONS', description:'자격증별 시험 정보와 취득 시기를 확인하세요.'},
   ncp: {title:'NCP 기출문제', group:'learning', eyebrow:'NCP CERTIFICATION', description:'NCP Professional 공개 복원문제 75문항을 학습하고 원문 번호와 출처를 확인하세요.', headingId:'ncp-title', quiz:true},

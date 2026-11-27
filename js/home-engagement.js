@@ -1,4 +1,4 @@
-import {koreaDay,freshDailyState,makeDailyPlan} from "./home-engagement-core.mjs";
+import {koreaDay,freshDailyState,makeDailyPlan} from "./home-engagement-core.mjs?v=20261128-practical-name-1";
 import {getPreferences} from "./practical-store.js";
 const $=id=>document.getElementById(id);
 const root=$("home-today"),list=$("home-today-list");
