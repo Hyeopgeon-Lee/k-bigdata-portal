@@ -43,6 +43,30 @@ function cleanse(raw:unknown):EventRow[]{
   }];
  });
 }
+const dbUrl=Deno.env.get("SUPABASE_URL")||"";
+const dbKey=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")||"";
+const dbHeaders=()=>({"apikey":dbKey,"Authorization":"Bearer "+dbKey,"Content-Type":"application/json"});
+async function readShared():Promise<Snapshot|null>{
+ if(!dbUrl||!dbKey)return null;
+ try{
+  const res=await fetch(dbUrl+"/rest/v1/portal_calendar_snapshot?singleton=eq.true&select=payload,refreshed_at",{headers:dbHeaders(),signal:AbortSignal.timeout(3000)});
+  if(!res.ok)return null;
+  const [row]=await res.json();
+  if(!row?.payload||row.payload.ok!==true)return null;
+  const age=Date.now()-Date.parse(row.refreshed_at);
+  if(!Number.isFinite(age)||age<0||age>=STALE_MS)return null;
+  const value:Snapshot={ok:true,updatedAt:String(row.payload.updatedAt||"").slice(0,100),refreshedAt:row.refreshed_at,events:cleanse(row.payload.events)};
+  snapshot=value;loadedAt=Date.parse(row.refreshed_at);
+  return value;
+ }catch{return null;}
+}
+async function writeShared(value:Snapshot){
+ if(!dbUrl||!dbKey)return;
+ try{
+  const res=await fetch(dbUrl+"/rest/v1/portal_calendar_snapshot?on_conflict=singleton",{method:"POST",headers:{...dbHeaders(),"Prefer":"resolution=merge-duplicates,return=minimal"},body:JSON.stringify({singleton:true,payload:value,refreshed_at:value.refreshedAt}),signal:AbortSignal.timeout(3000)});
+  if(!res.ok)console.warn("Shared calendar cache update failed",res.status);
+ }catch{console.warn("Shared calendar cache unavailable");}
+}
 async function refresh():Promise<Snapshot>{
  const response=await fetch(UPSTREAM,{
   headers:{"Accept":"application/json"},
@@ -59,11 +83,24 @@ async function refresh():Promise<Snapshot>{
   refreshedAt:new Date().toISOString(),events
  };
  snapshot=next;loadedAt=Date.now();
+ await writeShared(next);
  return next;
 }
 async function resolve():Promise<Snapshot>{
  if(snapshot&&Date.now()-loadedAt<FRESH_MS)return snapshot;
- if(!inFlight)inFlight=refresh().finally(()=>{inFlight=null;});
+ if(!inFlight){
+  inFlight=(async()=>{
+   const shared=await readShared();
+   if(shared&&Date.now()-loadedAt<FRESH_MS)return shared;
+   return refresh();
+  })().finally(()=>{inFlight=null;});
+ }
+ // Serve a confirmed shared snapshot during refresh where Edge background tasks are supported.
+ const runtime=(globalThis as unknown as {EdgeRuntime?:{waitUntil:(p:Promise<unknown>)=>void}}).EdgeRuntime;
+ if(runtime&&snapshot&&Date.now()-loadedAt<STALE_MS){
+  runtime.waitUntil(inFlight.catch(()=>{}));
+  return {...snapshot,stale:true};
+ }
  try{return await inFlight;}
  catch(error){
   console.error("Public calendar source failed",error instanceof Error?error.message:"UNKNOWN");

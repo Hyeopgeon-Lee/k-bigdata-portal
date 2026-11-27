@@ -24,6 +24,7 @@ function resetLearning(){
   activeUser=null;
   window.portalLearning=null;
   window.portalVerifiedUserId=null;
+  window.portalVerifiedContext=null;
   delete document.documentElement.dataset.portalAccess;
   document.documentElement.style.visibility="hidden";
   location.reload();
@@ -42,7 +43,18 @@ async function checkLearning(){
     if(!data?.read || data.write!==activeWrite)resetLearning();
   }finally{accessCheckInFlight=false;}
 }
-window.addEventListener("pageshow",event=>{if(event.persisted)location.reload();});
+window.addEventListener("pageshow",event=>{
+ if(!event.persisted||!activeUser)return;
+ document.documentElement.style.visibility="hidden";
+ void (async()=>{
+  const {data:{user},error}=await client.auth.getUser();
+  if(error||user?.id!==activeUser){resetLearning();return;}
+  const {data,error:issue}=await client.rpc("portal_bootstrap");
+  if(issue||!data?.access?.read||data.access.write!==activeWrite||data.admin!==isAdmin||data.profile?.approval_status!=="approved"||data.profile?.enrollment_status!==currentProfile?.enrollment_status||data.profile?.academic_year!==currentProfile?.academic_year){resetLearning();return;}
+  lastAccessCheck=Date.now();
+  document.documentElement.style.visibility="";
+ })().catch(()=>resetLearning());
+});
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)void checkLearning().catch(()=>{});});
 setInterval(()=>{if(!document.hidden)void checkLearning().catch(()=>{});},180000);
 const professorEmail="hglee67@kopo.ac.kr";
@@ -280,6 +292,7 @@ async function logout(){
   delete document.documentElement.dataset.portalAccess;
   window.portalLearning=null;
   window.portalVerifiedUserId=null;
+  window.portalVerifiedContext=null;
   renderLogin();
 }
 function showAccount(){
@@ -386,7 +399,7 @@ async function importDevicePersonalData(){
  if(!window.confirm("현재 기기에 남아 있는 즐겨찾기·오늘의 할 일이 본인의 기록인지 확인하세요. 확인을 누르면 이 계정으로 가져옵니다."))return;
  status("기존 개인 설정을 가져오고 있습니다.");
  try{
-  const {importLegacyShortcuts}=await import("./portal-personal.js?v=20261128-practical-name-2");
+  const {importLegacyShortcuts}=await import("./portal-personal.js?v=20261128-performance-1");
   const imported=await importLegacyShortcuts();
   const day=new Date(Date.now()+9*3600000).toISOString().slice(0,10);
   let legacy=null;try{legacy=JSON.parse(localStorage.getItem("kbigdata:daily-plan:v1")||"null");}catch{}
@@ -417,14 +430,14 @@ async function activate(interactive=true){
   }
   currentUser=user;
   currentProfile=null;isAdmin=false;
-  let profile=null;
-  const {data:found,error:readError}=await client.from("profiles").select("*").eq("user_id",user.id).maybeSingle();
+  let {data:bootstrap,error:readError}=await client.rpc("portal_bootstrap");
   if(readError){
+    if(/SESSION_|EMAIL_NOT_VERIFIED/.test(readError.message||"")){await logout();return;}
     renderLogin("회원 정보를 확인하지 못했습니다.");
     return;
   }
-  if(found)profile=found;
-  else{
+  let profile=bootstrap?.profile;
+  if(!profile){
     if(isRestrictedSignupEmail(user.email)&&user.email?.toLowerCase()!==professorEmail){
       renderComplete(user);showAccount();return;
     }
@@ -444,6 +457,9 @@ async function activate(interactive=true){
       showAccount();return;
     }
     profile=registered;
+    const next=await client.rpc("portal_bootstrap");
+    if(next.error||!next.data?.profile){renderLogin("회원 정보를 확인하지 못했습니다.");return;}
+    bootstrap=next.data;profile=bootstrap.profile;
   }
   // Verified applicants only: server checks the authenticated user, email
   // confirmation, pending profile, toggle, and one-mail-per-user record.
@@ -451,26 +467,17 @@ async function activate(interactive=true){
   if(profile.approval_status==="pending"&&["student","alumni"].includes(profile.signup_type)){
     void client.functions.invoke("notify-signup-admin",{body:{action:"notify"}}).catch(()=>{});
   }
-  const {data:expiry,error:sessionError}=await client.rpc("start_portal_session");
-  if(sessionError){
-    await client.auth.signOut();
-    currentUser=null;currentProfile=null;isAdmin=false;
-    showAccount();
-    renderLogin("로그인 세션이 만료되었거나 취소되었습니다. 다시 로그인해 주세요.");
-    return;
-  }
   currentProfile=profile;
-  const {data:allowed}=await client.rpc("portal_super_admin_allowed");
-  isAdmin=allowed===true;
+  isAdmin=bootstrap.admin===true;
   if(profile.approval_status!=="approved" || !eligible(profile)){
     showAccount();
     renderPending(profile);
     return;
   }
-  expires=Date.parse(expiry);
+  expires=Date.parse(bootstrap.expires);
   if(!Number.isFinite(expires)||expires<=Date.now()){await logout();return;}
-  const {data:access,error:accessError}=await client.rpc("portal_learning_access");
-  if(accessError || access?.read!==true){
+  const access=bootstrap.access;
+  if(access?.read!==true){
     renderPending(profile);
     return;
   }
@@ -485,6 +492,8 @@ async function activate(interactive=true){
   window.portalLearning={read:true,write:activeWrite,expires};
   // A UI-only hint; all database permissions remain enforced server-side.
   window.portalVerifiedUserId=user.id;
+  window.portalVerifiedContext=Object.freeze({user:{id:user.id,email:user.email},profile:Object.freeze({...profile}),isAdmin});
+  lastAccessCheck=Date.now();
   document.documentElement.dataset.portalAccess="approved";
   root.hidden=true;
   showAccount();

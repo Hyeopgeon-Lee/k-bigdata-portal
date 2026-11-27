@@ -21,23 +21,13 @@ async function authorize(){
  try{
   const {data:{user},error:userError}=await client.auth.getUser();
   if(userError||!user){block("학과 통합 포털 로그인이 필요합니다.");return;}
-  // Bind the current verified Auth session to a non-revoked portal session.
-  const {error:sessionError}=await client.rpc("start_portal_session");
-  if(sessionError){block("포털 계정이 승인되었는지 확인한 후 다시 로그인해 주세요.");return;}
-  const {data:access,error:accessError}=await client.rpc("portal_learning_access");
-  if(accessError||access?.read!==true){block("포털 계정 이용 권한을 확인하지 못했습니다.");return;}
-  const {data:profile,error:profileError}=await client.from("profiles")
-   .select("full_name,signup_type,enrollment_status,approval_status,alumni_source_id,graduation_year,student_no,alumni_student_no,mobile_phone")
-   .eq("user_id",user.id).single();
-  if(profileError||profile?.approval_status!=="approved"){
-   block("승인된 포털 회원만 졸업생 네트워크를 이용할 수 있습니다.");return;
-  }
-  if(document.documentElement.hasAttribute("data-alumni-requires-admin")){
-   const {data:superAdmin,error:roleError}=await client.rpc("portal_super_admin_allowed");
-   if(roleError||superAdmin!==true){
-    block("관리자 전용 페이지입니다. 슈퍼 관리자 계정으로 접속해 주세요.");
-    return;
-   }
+  // Use the shared server-owned session and profile bootstrap.
+  const {data:bootstrap,error:bootstrapError}=await client.rpc("portal_bootstrap");
+  if(bootstrapError||bootstrap?.access?.read!==true){block("포털 계정 이용 권한을 확인하지 못했습니다.");return;}
+  const profile=bootstrap.profile;
+  if(profile?.approval_status!=="approved"){block("승인된 포털 회원만 졸업생 네트워크를 이용할 수 있습니다.");return;}
+  if(document.documentElement.hasAttribute("data-alumni-requires-admin")&&bootstrap.admin!==true){
+   block("관리자 전용 페이지입니다. 슈퍼 관리자 계정으로 접속해 주세요.");return;
   }
   const label=document.getElementById("alumni-portal-member");
   if(label)label.textContent=profile.full_name||"이름 미등록";
@@ -62,8 +52,11 @@ async function authorize(){
 }
 window.alumniPortalReady=authorize();
 await window.alumniPortalReady;
+let lastCheck=Date.now();
+window.addEventListener("pageshow",event=>{if(event.persisted){document.documentElement.style.visibility="hidden";void authorize().finally(()=>{document.documentElement.style.visibility="";});}});
 document.addEventListener("visibilitychange",()=>{
- if(!document.hidden&&document.documentElement.dataset.alumniPortalAuth==="approved"){
+ if(!document.hidden&&document.documentElement.dataset.alumniPortalAuth==="approved"&&Date.now()-lastCheck>=60000){
+  lastCheck=Date.now();
   client.auth.getUser().then(({data,error})=>{if(error||!data.user)block("포털 로그인 세션이 만료되었습니다. 다시 로그인해 주세요.");})
    .catch(()=>block("포털 로그인을 확인하지 못했습니다."));
  }

@@ -1,27 +1,29 @@
 import {quizNavigation,quizHeading,quizFeedback,scrollToQuizAnswer,mountQuizDisclosure} from "./quiz-unified.js?v=20261112-answer-focus-1";
 import {createQuestionBrowser} from "./question-browser.js?v=20261117-language-persist-1";
-import {createLearningProgressStore} from "./learning-list-progress.mjs?v=20261116-concurrency-1";
-import {bindReview,reviewControls,gradeLabels} from "./coding-review.js?v=20261127-dashboard-1";
-import {mountCodingDashboard} from "./coding-dashboard.mjs?v=20261127-shared-1";
+import {createLearningProgressStore} from "./learning-list-progress.mjs?v=20261128-performance-1";
+import {bindReview,reviewControls,gradeLabels} from "./coding-review.js?v=20261128-performance-1";
+import {mountCodingDashboard} from "./coding-dashboard.mjs?v=20261128-performance-1";
 import {learningLocal as localStorage, learningSession as sessionStorage} from "./learning-storage.mjs";
-import {debounceCloudDraft,fetchCloudDraft} from "./learning-activity.mjs?v=20261116-concurrency-1";
-import {codingProblems as sampleProblems} from "../data/coding-samples.js?v=20261111-ubuntu-vim-only-2";
-import {javaProblems} from "../data/coding-java-98.js?v=20261113-java062-flush-cleanup-1";
-import {cFoundationProblems} from "../data/coding-c-foundations.js?v=20261111-essential-ranges-1";
-import {cAdvancedProblems} from "../data/coding-c-advanced.js?v=20261111-essential-ranges-1";
-import {pythonFoundationProblems} from "../data/coding-python-foundations.js?v=20261111-essential-ranges-1";
-import {pythonAdvancedProblems} from "../data/coding-python-advanced.js?v=20261111-essential-ranges-1";
-
-
-
-import {ubuntuPptProblems} from "../data/coding-ubuntu-ppt.js?v=20261111-vim-reference-1";
+import {debounceCloudDraft,fetchCloudDraft} from "./learning-activity.mjs?v=20261128-performance-1";
+import {codingIndex as codingProblems} from "../data/coding-index.js?v=20261128-performance-1";
 import {getUbuntuRelatedOptions} from "../data/coding-ubuntu-command-reference.js?v=20261111-command-options-1";
 import {learningReportUrl} from "./learning-report.js?v=20261020-study-share-1";
-const codingProblems = [...sampleProblems.filter(p=>p.language!=="linux"), ...javaProblems, ...cFoundationProblems, ...cAdvancedProblems, ...pythonFoundationProblems, ...pythonAdvancedProblems, ...ubuntuPptProblems].sort((a,b) =>
-  a.language.localeCompare(b.language) || Number(a.id.split("-").at(-1))-Number(b.id.split("-").at(-1))
-);
-// Reuse the comprehensive ls option definitions from LINUX-004 for every Ubuntu problem that uses ls.
-const lsOptionRows = ubuntuPptProblems.find(p=>p.id==="LINUX-004")?.commandParts || [];
+const loadedLanguages=new Map();
+let lsOptionRows=[];
+async function loadLanguage(language){
+ if(loadedLanguages.has(language))return loadedLanguages.get(language);
+ const promise=(async()=>{
+  const sample=language==="linux"?[]:(await import("../data/coding-samples.js?v=20261111-ubuntu-vim-only-2")).codingProblems.filter(p=>p.language===language);
+  let full=[];
+  if(language==="java")full=(await import("../data/coding-java-98.js?v=20261113-java062-flush-cleanup-1")).javaProblems;
+  if(language==="c"){const [f,a]=await Promise.all([import("../data/coding-c-foundations.js?v=20261111-essential-ranges-1"),import("../data/coding-c-advanced.js?v=20261111-essential-ranges-1")]);full=[...f.cFoundationProblems,...a.cAdvancedProblems];}
+  if(language==="python"){const [f,a]=await Promise.all([import("../data/coding-python-foundations.js?v=20261111-essential-ranges-1"),import("../data/coding-python-advanced.js?v=20261111-essential-ranges-1")]);full=[...f.pythonFoundationProblems,...a.pythonAdvancedProblems];}
+  if(language==="linux"){full=(await import("../data/coding-ubuntu-ppt.js?v=20261111-vim-reference-1")).ubuntuPptProblems;lsOptionRows=full.find(p=>p.id==="LINUX-004")?.commandParts||[];}
+  const byId=new Map([...sample,...full].map(q=>[q.id,q]));
+  for(const q of codingProblems.filter(q=>q.language===language)){const detail=byId.get(q.id);if(!detail)throw Error("문제 상세 누락: "+q.id);Object.assign(q,detail);}
+ })().catch(e=>{loadedLanguages.delete(language);throw e;});
+ loadedLanguages.set(language,promise);return promise;
+}
 
 // PPT 3장에 실제 수록된 Vim 명령·키 조작만 안내합니다.
 const vimReferenceRows = [
@@ -241,8 +243,8 @@ function listQuestions(syncPage=false) {
     link.addEventListener("click",event=>{
       if(event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
       event.preventDefault();
-      showQuestion(q);
       document.body.dataset.codingView="question";
+      showQuestion(q);
       if(matchMedia("(max-width:800px)").matches)$("#coding-title").focus();
 
     });
@@ -459,7 +461,15 @@ mountQuizDisclosure(document.getElementById("coding-answer"),{title:"해설",ope
 let codingAttemptId, codingStartedAt=Date.now(), codingHintUsed=false;
 let dashboard, reviewSession=false;
 let answerHighlighterPromise;
-function showQuestion(q) {
+let questionRequest=0;
+async function showQuestion(q) {
+  if(!q)return;
+  const request=++questionRequest;
+  if(document.body.dataset.codingView!=="question"){current=q;listQuestions();return;}
+  try{await loadLanguage(q.language);}
+  catch{if(request===questionRequest)$("#coding-title").textContent="문제 데이터를 불러오지 못했습니다. 다시 선택하세요.";return;}
+  if(request!==questionRequest||document.body.dataset.codingView!=="question")return;
+  queueMicrotask(()=>ensureCodingEditor());
   codingStartedAt=Date.now();codingHintUsed=false;
   codingAttemptId=(reviewSession?"":getSafe("coding-attempt-"+q.id))||crypto.randomUUID();
   if(!reviewSession)setSafe("coding-attempt-"+q.id,codingAttemptId);
@@ -770,12 +780,15 @@ codingProgress.attach();
 refreshFilters();
 if(!browserEntry.resume(requestedId))showQuestion(current);
 if(!requestedId)browserEntry.show(false);
-dashboard=mountCodingDashboard({questions:codingProblems,labels,openList:openCodingList,openSet(items){
+dashboard=mountCodingDashboard({questions:codingProblems,labels,loadQuestion:q=>loadLanguage(q.language),openList:openCodingList,openSet(items){
   if(!items.length)return;
   reviewSession=true;entrySet=items;document.querySelector(".question-browser").hidden=true;document.querySelector("main").classList.remove("qb-browsing");
   document.body.dataset.codingView="question";language=items[0].language;topicFilter=levelFilter="all";query="";$("#coding-search").value="";refreshFilters();showQuestion(items[0]);$("#coding-title").focus();
 }});
-void import("./coding-editor.js?v=20261116-tab4-v1")
+let editorLoad=null;
+function ensureCodingEditor(){
+ if(codeEditor||editorLoad)return;
+ editorLoad=import("./coding-editor.js?v=20261116-tab4-v1")
   .then(({createCodingEditor}) => {
     codeEditor = createCodingEditor({
       textarea:nativeEditor,
@@ -792,3 +805,5 @@ void import("./coding-editor.js?v=20261116-tab4-v1")
     const notice = $(".coding-notice");
     if (notice) notice.textContent += " 코드 편집기를 불러오지 못해 기본 입력창으로 표시합니다. Tab 들여쓰기는 이용할 수 있습니다.";
   });
+
+}

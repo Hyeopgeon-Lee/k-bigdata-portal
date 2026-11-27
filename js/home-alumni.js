@@ -34,7 +34,7 @@ async function load(){
   if(error||!data?.session?.access_token)throw Error("로그인 세션을 확인하지 못했습니다.");
   const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),15000);
   let response;
-  try{response=await fetch(endpoint,{method:"POST",headers:{"Authorization":"Bearer "+data.session.access_token,"apikey":publicKey,"Content-Type":"application/json"},body:JSON.stringify({action:"home",data:{}}),signal:controller.signal,credentials:"omit"});}
+  try{response=await fetch(endpoint,{method:"POST",headers:{"Authorization":"Bearer "+data.session.access_token,"apikey":publicKey,"Content-Type":"application/json"},body:JSON.stringify({action:"homePreview",data:{}}),signal:controller.signal,credentials:"omit"});}
   finally{clearTimeout(timer);}
   const result=await response.json();
   if(!response.ok||result.success!==true)throw Error("동문소식을 조회하지 못했습니다.");

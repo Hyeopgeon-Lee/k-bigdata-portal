@@ -17,9 +17,9 @@ test('auth checks are throttled without weakening server authorization',()=>{
  for(const p of ['js/portal-personal.js','js/home-engagement.js','js/learning-activity.mjs'])
   assert.match(read(p),/portalVerifiedUserId/,p);
  const nav=read('js/portal-navigation.js');
- assert.match(nav,/portal-auth\.mjs\?v=20261116-concurrency-1/);
+ assert.match(nav,/portal-auth\.mjs\?v=20261128-performance-1/);
  for(const p of ['study.html','help.html','admin/index.html'])
-  assert.match(read(p),/portal-auth\.mjs\?v=20261116-concurrency-1/);
+  assert.match(read(p),/portal-auth\.mjs\?v=20261128-performance-1/);
 });
 test('home, directory and shared shell reuse one personal-state singleton',()=>{
  const files=['js/portal-shell.js','js/home-dashboard.js','js/directory.js'];
@@ -52,7 +52,7 @@ test('published calendar uses coalesced server-to-server cache',()=>{
  assert.match(read('js/schedule.js'),/force\?await readPublishedSchedules/);
 });
 test('published alumni list cache never caches personal/administrator responses',()=>{
- assert.match(alumni,/const PUBLIC_CACHEABLE=new Set\(\["list","home","jobs","newsList","careerPublic"\]\)/);
+ assert.match(alumni,/const PUBLIC_CACHEABLE=new Set\(\["list","home","jobs","newsList","careerPublic","homePreview"\]\)/);
  assert.match(alumni,/const CACHE_MS=30000/);
  assert.match(alumni,/publishedInFlight/);
  assert.match(alumni,/admin\.from\("alumni_profiles"\)/);

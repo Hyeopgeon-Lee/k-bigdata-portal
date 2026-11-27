@@ -6,8 +6,8 @@ const status=document.getElementById("admin-gate-status");
 try{
  const client=window.portalSupabaseClient;
  if(!client||window.portalLearning?.read!==true)throw Error("PORTAL_LOGIN_REQUIRED");
- const {data,error}=await client.rpc("portal_super_admin_allowed");
- if(error||data!==true)throw Error("SUPER_ADMIN_REQUIRED");
+ const context=window.portalVerifiedContext;
+ if(!context||context.user.id!==window.portalVerifiedUserId||context.isAdmin!==true)throw Error("SUPER_ADMIN_REQUIRED");
  window.portalAdminAllowed=true;
  const name=document.body.dataset.adminModule;
  if(!/^[a-z-]+\.js$/.test(name||""))throw Error("INVALID_ADMIN_MODULE");

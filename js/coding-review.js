@@ -1,6 +1,6 @@
-import {recordLearningAttempt} from "./learning-activity.mjs?v=20261116-concurrency-1";
-export {reviewControls,gradeLabels} from "./study-review.js?v=20261116-concurrency-1";
-import {gradeLabels} from "./study-review.js?v=20261116-concurrency-1";
+import {recordLearningAttempt} from "./learning-activity.mjs?v=20261128-performance-1";
+export {reviewControls,gradeLabels} from "./study-review.js?v=20261128-performance-1";
+import {gradeLabels} from "./study-review.js?v=20261128-performance-1";
 export function bindReview(container,eventData,previous,onSaved){
  const buttons=[...container.querySelectorAll("[data-grade]")],status=container.querySelector("[role=status]");
  let result=previous||null,attemptId=eventData.clientAttemptId||crypto.randomUUID(),busy=false;

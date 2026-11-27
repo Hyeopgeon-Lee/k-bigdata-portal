@@ -1,7 +1,7 @@
 /* Per-question summary displayed by the three public-facing quiz lists.
  * The cloud progress table is authoritative; historical browser records are
  * shown separately and are never added to cloud counts. */
-import {fetchLearningProgress} from "./learning-activity.mjs?v=20261116-concurrency-1";
+import {fetchLearningProgress} from "./learning-activity.mjs?v=20261128-performance-1";
 
 export function progressDate(value){
  const date=new Date(value);

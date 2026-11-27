@@ -60,18 +60,23 @@ function ensureSignedIn(user){
  try{body=response.json();}catch{return false;}
  if(!body?.access_token||!body?.user?.id)return false;
  token=body.access_token;userId=body.user.id;
- const portal=requestApi("/rest/v1/rpc/start_portal_session","POST",{});
+ const portal=requestApi("/rest/v1/rpc/portal_bootstrap","POST",{});
  return check(portal,{"portal session starts":r=>r.status===200});
 }
 export default function(data){
  const user=data.users[__VU-1];
  if(!user)return;
- const page=["index.html","coding.html","practical.html","ncp.html","schedule.html"][(__ITER+__VU)%5];
+ const page=["index.html","coding.html","practical.html","ncp.html","schedule.html","engineer-written.html","industrial-written.html","my-learning.html","study.html","alumni/index.html"][(__ITER+__VU)%10];
  const html=http.get(BASE+"/"+page,{timeout:"12s"});
  check(html,{"static page available":r=>r.status===200});
  if(!ensureSignedIn(user)){sleep(3);return;}
  const access=requestApi("/rest/v1/rpc/portal_learning_access","POST",{});
  if(!check(access,{"read access available":r=>r.status===200})){sleep(3);return;}
+ if(page.includes("-written.html")){
+  const exam=page.startsWith("engineer")?"engineer":"industrial";
+  const bank=requestApi("/rest/v1/rpc/portal_written_index","POST",{p_exam_type:exam});
+  check(bank,{"written list available":r=>r.status===200});
+ }
  const pref={headers:{...api.headers,Authorization:"Bearer "+token}};
  const read=http.batch([
   ["GET",DB+"/rest/v1/learning_progress?select=bank,question_id,attempts_count&bank=eq.coding&limit=100",null,pref],

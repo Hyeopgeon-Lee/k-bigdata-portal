@@ -15,9 +15,9 @@ const actions={
 };
 const bridge=read("alumni/js/portal-bridge.mjs");
 assert.doesNotMatch(read("alumni/css/portal-bridge.css"),/\.alumni-portal-top/,"obsolete dark navigation CSS removed");
-assert.match(bridge,/start_portal_session/,"reuses verified portal session");
-assert.match(bridge,/portal_learning_access/,"server-side portal authorization");
-assert.match(bridge,/\.eq\("user_id",user\.id\)/,"profile lookup is own user");
+assert.match(bridge,/portal_bootstrap/,"reuses verified portal session");
+assert.match(bridge,/bootstrap\?\.access\?\.read!==true/,"server-side portal authorization");
+assert.match(read("supabase/migrations/20261127215834_portal_perf_alumni_bootstrap.sql"),/where user_id=auth\.uid\(\)/,"profile lookup is own user");
 assert.match(bridge,/profile\?\.approval_status!=="approved"/,"only approved members");
 assert.match(bridge,/storageKey:"kbigdata-portal-auth-v1"/,"uses same portal authentication storage");
 assert.match(bridge,/\.alumni_source_id/,"prefills legacy account identifier");
@@ -95,6 +95,7 @@ assert.match(read("alumni/js/portal-bridge.mjs"),/window\.alumniPortalClient=cli
 
 for(const name of pages){
  const html=read("alumni/"+name);
+ if(name==="admin.html"){assert.match(html,/location.replace\(/);assert.match(html,/admin\/alumni.html/);continue;}
  assert.match(html,/id="alumni-portal-gate"/,"secure portal login gate "+name);
  assert.doesNotMatch(html,/alumni-portal-top/,"duplicate navy menu removed "+name);
  assert.match(html,/href="\.\.\/index\.html" data-portal-site>포털 홈<\/a>/,"white header has portal home "+name);

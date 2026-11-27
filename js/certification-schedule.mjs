@@ -204,8 +204,7 @@ export function initCertificationSchedule({onEvents}){
   active=true;
   const api=getApi();
   try{
-   const {data,error}=await api.rpc('portal_super_admin_allowed');
-   admin=!error&&data===true;
+   admin=window.portalVerifiedContext?.isAdmin===true;
    if(admin){showAdminForm();await loadSyncSummary();}
    await fetchEvents();
    window.setInterval(()=>{if(!document.hidden){fetchEvents();if(admin)loadSyncSummary();}},10*60*1000);

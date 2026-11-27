@@ -56,7 +56,7 @@ const PORTAL_FIELDS:Record<string,string[]>={
  alumni_news_mail_logs:["news_id","news_type","subject","recipient_count","sent_count","failed_count","sent_at","status"],
  contact_requests:["requester_name","requester_type","requester_student_id_or_year","requester_email","requester_phone","share_email","share_phone","share_competencies","category","subject","message","message_html","status","created_at","sent_at"]
 };
-async function rows(kind:string):Promise<Rec[]>{
+async function rows(kind:string,scope?:{published?:boolean;member?:string}):Promise<Rec[]>{
  if(Object.hasOwn(PORTAL_TABLES,kind)){
   if(kind==="job_mail_logs"||kind==="alumni_news_mail_logs"){
    const {data,error}=await admin.from("alumni_dispatch_logs").select("*").eq("kind",kind).limit(2000);
@@ -78,7 +78,11 @@ async function rows(kind:string):Promise<Rec[]>{
      status:is_visible?"APPROVED":"HIDDEN"}};
    });
   }
-  const {data,error}=await admin.from(PORTAL_TABLES[kind]).select("*").order("id",{ascending:true}).limit(2000);
+  let query=admin.from(PORTAL_TABLES[kind]).select("*");
+  if(scope?.published&&["jobs","alumni_news"].includes(kind))query=query.eq("status","APPROVED");
+  if(scope?.member&&kind==="jobs")query=query.eq("author_user_id",scope.member);
+  if(scope?.member&&kind==="alumni_news")query=query.eq("subject_user_id",scope.member);
+  const {data,error}=await query.order("id",{ascending:true}).limit(2000);
   if(error){console.error("Alumni records read",kind,error.code);throw Error("DB_READ_"+kind);}
   return (data||[]).map((d:any)=>{
    const row:Record<string,unknown>={...d};
@@ -113,8 +117,17 @@ async function one(kind:string,recordId:string):Promise<Rec|null>{
  }
 
  if(Object.hasOwn(PORTAL_TABLES,kind)){
-  const items=await rows(kind);
-  return items.find(r=>r.source_id===recordId||(kind==="alumni"&&r.data.legacy_alumni_id===recordId))||null;
+  if(kind==="job_mail_logs"||kind==="alumni_news_mail_logs"){
+   const items=await rows(kind);return items.find(r=>r.source_id===recordId)||null;
+  }
+  const {data:d,error}=await admin.from(PORTAL_TABLES[kind]).select("*").eq("id",recordId).maybeSingle();
+  if(error)throw Error("DB_LOOKUP_"+kind);
+  if(!d)return null;
+  const row:Record<string,unknown>={...d};
+  if(kind==="jobs"){row.job_id=d.id;row.alumni_id=d.author_user_id;}
+  else if(kind==="alumni_news"){row.news_id=d.id;row.alumni_id=d.subject_user_id;row.submitted_by_alumni_id=d.author_user_id;}
+  else{row.request_id=d.id;row.alumni_id=d.recipient_user_id||d.legacy_recipient_id;row.requester_user_id=d.sender_user_id;}
+  return {source_kind:kind,source_id:d.id,data:row};
  }
  const {data,error}=await admin.from("alumni_network_records").select("source_kind,source_id,data")
   .eq("source_kind",kind).eq("source_id",recordId).maybeSingle();
@@ -339,20 +352,23 @@ function safeContactMessage(delta:unknown,legacy:unknown):{plain:string;html:str
 }
 
 async function handle(action:string,b:Record<string,unknown>,a:Actor){
- const allAlumni=async()=>await rows("alumni");
+ let alumniPromise:Promise<Rec[]>|null=null;
+ const allAlumni=()=>alumniPromise??=(rows("alumni"));
  const approved=async()=> (await allAlumni()).filter(r=>r.data.status==="APPROVED");
  const allJobs=async()=>await rows("jobs");
  const allNews=async()=>await rows("alumni_news");
  const publicList=async()=> (await approved()).map(r=>cleanProfile(r.data));
- const jobList=async()=>{
+ const jobList=async(member?:string)=>{
+  if(member&&!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(member))return [];
   const am=new Map((await allAlumni()).map(r=>[text(r.source_id),r.data]));
-  return (await allJobs()).filter(r=>visibleJob(r.data))
+  return (await rows("jobs",{published:true,member})).filter(r=>visibleJob(r.data))
    .sort((x,y)=>text(y.data.approved_at||y.data.created_at).localeCompare(text(x.data.approved_at||x.data.created_at)))
    .map(r=>cleanJob(r.data,am.get(r.source_id)||am.get(text(r.data.alumni_id))||{}));
  };
- const newsList=async()=>{
+ const newsList=async(member?:string)=>{
+  if(member&&!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(member))return [];
   const am=new Map((await allAlumni()).map(r=>[r.source_id,r.data]));
-  return (await allNews()).filter(r=>r.data.status==="APPROVED")
+  return (await rows("alumni_news",{published:true,member})).filter(r=>r.data.status==="APPROVED")
    .sort((x,y)=>text(y.data.event_date||y.data.created_at).localeCompare(text(x.data.event_date||x.data.created_at)))
    .map(r=>cleanNews(r.data,am.get(text(r.data.alumni_id))||{}));
  };
@@ -380,29 +396,36 @@ async function handle(action:string,b:Record<string,unknown>,a:Actor){
  switch(action){
  case "list":return okay(await publicList());
  case "detail":return okay(cleanProfile((await getProfile(text(b.id))).data));
+ case "homePreview":{
+  const [jobs,news]=await Promise.all([jobList(),newsList()]);
+  return okay({jobs:jobs.slice(0,3),news:news.slice(0,4)});
+ }
  case "home":{
   const [alumni,jobs,news]=await Promise.all([publicList(),jobList(),newsList()]);
   return okay({alumni,jobs:jobs.slice(0,3),news:news.slice(0,5)});
  }
  case "alumniDetail":{
-  const k=text(b.id),[profile,jobs,news]=await Promise.all([getProfile(k),jobList(),newsList()]);
+  const k=text(b.id),profile=await getProfile(k);
+  const [jobs,news]=await Promise.all([jobList(profile.source_id),newsList(profile.source_id)]);
   return okay({profile:cleanProfile(profile.data),jobs:jobs.filter(j=>j.alumni_id===profile.source_id),news:news.filter(n=>n.alumni_id===profile.source_id)});
  }
  case "careerPublic":return okay((await approved()).filter(r=>r.data.employment_status==="취업 중"&&r.data.company&&r.data.job).map(r=>({graduation_year:text(r.data.graduation_year),masked_name:maskName(r.data.name),company:text(r.data.company),job:text(r.data.job)})).sort((x,y)=>y.graduation_year.localeCompare(x.graduation_year)||x.company.localeCompare(y.company)));
  case "jobs":return okay(await jobList());
  case "jobDetail":{
-  const item=(await jobList()).find(j=>j.job_id===text(b.id));
-  if(!item)throw Error("채용정보를 찾을 수 없습니다.");
-  return okay(item);
+  const row=await one("jobs",text(b.id));
+  if(!row||!visibleJob(row.data))throw Error("채용정보를 찾을 수 없습니다.");
+  const member=await one("alumni",text(row.data.alumni_id));
+  return okay(cleanJob(row.data,member?.data||{}));
  }
- case "alumniJobs":return okay((await jobList()).filter(j=>j.alumni_id===text(b.id)));
+ case "alumniJobs":return okay(text(b.id)?await jobList(text(b.id)):[]);
  case "newsList":return okay(await newsList());
  case "newsDetail":{
-  const item=(await newsList()).find(n=>n.news_id===text(b.id));
-  if(!item)throw Error("동문소식을 찾을 수 없습니다.");
-  return okay(item);
+  const row=await one("alumni_news",text(b.id));
+  if(!row||row.data.status!=="APPROVED")throw Error("동문소식을 찾을 수 없습니다.");
+  const member=await one("alumni",text(row.data.alumni_id));
+  return okay(cleanNews(row.data,member?.data||{}));
  }
- case "alumniNews":return okay((await newsList()).filter(n=>n.alumni_id===text(b.id)));
+ case "alumniNews":return okay(text(b.id)?await newsList(text(b.id)):[]);
  case "myAlumniProfile":{
   if(!isGraduateMember(a))return okay({eligible:false,registered:false,profile:null});
   const r=await ownRecordForAccount(a);
@@ -674,7 +697,7 @@ async function handle(action:string,b:Record<string,unknown>,a:Actor){
 }
 // Only authorized, user-independent published results may be reused.
 // No admin, profile-edit or private contact response enters this cache.
-const PUBLIC_CACHEABLE=new Set(["list","home","jobs","newsList","careerPublic"]);
+const PUBLIC_CACHEABLE=new Set(["list","home","jobs","newsList","careerPublic","homePreview"]);
 const CACHE_MS=30000;
 const publishedCache=new Map<string,{expires:number,value:unknown}>();
 const publishedInFlight=new Map<string,Promise<unknown>>();
@@ -703,7 +726,7 @@ Deno.serve(async(request:Request)=>{
   const run=()=>handle(action,(body.data&&typeof body.data==="object"&&!Array.isArray(body.data)?
    body.data:{} ) as Record<string,unknown>,a);
   const data=PUBLIC_CACHEABLE.has(action)?await cachedPublic(action,run):await run();
-  if(!PUBLIC_CACHEABLE.has(action))publishedCache.clear();
+  if(!PUBLIC_CACHEABLE.has(action)&&!["detail","jobDetail","newsDetail","alumniDetail","alumniJobs","alumniNews","myAlumniProfile"].includes(action))publishedCache.clear();
   return result(data);
  }catch(e){
   const message=text((e as Error)?.message,280)||"요청을 처리하지 못했습니다.";

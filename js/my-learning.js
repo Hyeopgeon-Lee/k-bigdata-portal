@@ -1,10 +1,10 @@
-import {fetchLearningAttempts,fetchLearningProgress,flushLearningQueue} from './learning-activity.mjs?v=20261116-concurrency-1';
+import {flushLearningQueue} from './learning-activity.mjs?v=20261128-performance-1';
 const get=id=>document.getElementById(id);
 const label={coding:'기초 350제',ncp:'NCP 기출',practical:'정보처리 기출'};
 const grade={correct:'정답',incorrect:'오답',ungraded:'미판정',completed:'완료 표시',timeout:'시간 초과'};
-const subjectOrder=['JAVA','C','PYTHON','LINUX','NCP','PRACTICAL'];
-const subjectName={JAVA:'Java',C:'C언어',PYTHON:'Python',LINUX:'Ubuntu',NCP:'NCP',PRACTICAL:'정보처리'};
-const totals={JAVA:100,C:100,PYTHON:100,LINUX:50,NCP:75,PRACTICAL:null};
+const subjectOrder=['JAVA','C','PYTHON','LINUX','NCP','PRACTICAL','WRITTEN_INDUSTRIAL','WRITTEN_ENGINEER'];
+const subjectName={JAVA:'Java',C:'C언어',PYTHON:'Python',LINUX:'Ubuntu',NCP:'NCP',PRACTICAL:'정보처리 실기',WRITTEN_INDUSTRIAL:'산업기사 필기',WRITTEN_ENGINEER:'기사 필기'};
+const totals={JAVA:100,C:100,PYTHON:100,LINUX:50,NCP:75,PRACTICAL:null,WRITTEN_INDUSTRIAL:840,WRITTEN_ENGINEER:1400};
 function element(tag,txt,className){
  const n=document.createElement(tag);
  if(txt!==undefined&&txt!==null)n.textContent=String(txt);
@@ -12,10 +12,10 @@ function element(tag,txt,className){
  return n;
 }
 function subject(row){
- return row.bank==='coding'?String(row.question_id).split('-')[0]:row.bank==='ncp'?'NCP':'PRACTICAL';
+ return row.bank==='coding'?String(row.question_id).split('-')[0]:row.bank==='ncp'?'NCP':row.bank==='written_industrial'?'WRITTEN_INDUSTRIAL':row.bank==='written_engineer'?'WRITTEN_ENGINEER':'PRACTICAL';
 }
 function link(row){
- const path={coding:'coding.html',ncp:'ncp.html',practical:'practical.html'}[row.bank]||'index.html';
+ const path={coding:'coding.html',ncp:'ncp.html',practical:'practical.html',written_industrial:'industrial-written.html',written_engineer:'engineer-written.html'}[row.bank]||'index.html';
  return path+'?id='+encodeURIComponent(row.question_id);
 }
 function dateTime(value){
@@ -54,8 +54,10 @@ function buildTable(headers,rows){
 }
 async function load(){
  get('learn-status').textContent='학습기록을 클라우드에서 불러오는 중입니다...';
- const [attempts,progress]=await Promise.all([fetchLearningAttempts(),fetchLearningProgress()]);
  const monday=thisMonday();
+ const {data:overview,error}=await window.portalSupabaseClient.rpc("portal_my_learning_overview",{p_week_start:new Date(monday).toISOString()});
+ if(error||!overview)throw error||Error("NO_OVERVIEW");
+ const attempts=overview.period,progress=overview.progress;
  const week=attempts.filter(a=>Date.parse(a.submitted_at)>=monday);
  const previous=attempts.filter(a=>Date.parse(a.submitted_at)>=monday-7*86400000&&Date.parse(a.submitted_at)<monday);
  const difference=week.length-previous.length;
@@ -64,18 +66,7 @@ async function load(){
  const self=graded.filter(a=>a.grading_method==='self');
  const auto=graded.filter(a=>a.grading_method==='automatic');
  const pending=week.filter(a=>a.result==='ungraded'||a.result==='timeout');
- const latest=new Map(),everWrong=new Set();
- for(const a of [...attempts].reverse()){
-  if(!['correct','incorrect'].includes(a.result)&&!(a.result==='ungraded'&&a.grading_method==='self'))continue;
-  latest.set(a.bank+':'+a.question_id,a);
-  if(a.result==='incorrect')everWrong.add(a.bank+':'+a.question_id);
- }
- const review=progress.filter(p=>{
-  const k=p.bank+':'+p.question_id;return ['incorrect','ungraded'].includes(latest.get(k)?.result);
- });
- const recovered=progress.filter(p=>{
-  const k=p.bank+':'+p.question_id;return everWrong.has(k)&&latest.get(k)?.result==='correct';
- });
+ const review=overview.review;
  get('learn-summary').replaceChildren(
   stat('이번 주 풀이 문제',unique.size+'개','서로 다른 문제 수'),
   stat('이번 주 시도',week.length+'회','지난주 전체 '+previous.length+'회 대비 '+(difference>0?'+':'')+difference+'회'),
@@ -106,13 +97,13 @@ async function load(){
   const anchor=element('a','다시 풀기');anchor.href=link(p);card.append(section,anchor);reviewRoot.append(card);
  }
  const recent=get('learn-recent');recent.replaceChildren();
- if(!attempts.length)recent.append(element('p','아직 클라우드에 기록된 풀이가 없습니다. 문제를 풀고 정답 여부를 기록해 보세요.','learn-empty'));
+ if(!overview.recent.length)recent.append(element('p','아직 클라우드에 기록된 풀이가 없습니다. 문제를 풀고 정답 여부를 기록해 보세요.','learn-empty'));
  else {
   const table=element('table',null,'learn-table');table.append(element('caption','최근 학습 기록','learn-sr-only'));const head=element('thead');const tr=element('tr');
   for(const h of ['일시','과목','문제','평가 방법','결과']){const th=element('th',h);th.scope='col';tr.append(th);}
   head.append(tr);table.append(head);
   const body=element('tbody');
-  for(const a of attempts.slice(0,35)){
+  for(const a of overview.recent){
    const row=element('tr',null,'learn-history-row');
    const date=element('td',dateTime(a.submitted_at),'learn-history-date');
    const name=subjectName[subject(a)]||label[a.bank]||'기타';
@@ -129,7 +120,7 @@ async function load(){
   }
   table.append(body);recent.append(table);
  }
- get('learn-status').textContent='클라우드 기록 '+attempts.length+'회 · 누적 '+progress.length+'문제 · 오답 복습 완료 '+recovered.length+'문제';
+ get('learn-status').textContent='클라우드 기록 '+overview.count+'회 · 누적 '+progress.length+'문제 · 오답 복습 완료 '+overview.recovered+'문제';
 }
 get('learn-refresh').addEventListener('click',()=>{void load().catch(()=>get('learn-status').textContent='학습기록을 불러오지 못했습니다. 다시 시도해 주세요.');});
 flushLearningQueue().catch(()=>{}).then(()=>load()).catch(error=>{

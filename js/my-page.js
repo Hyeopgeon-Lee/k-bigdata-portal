@@ -10,12 +10,10 @@ const displayMobile=value=>String(value??"").replace(/^(01\d)(\d{3,4})(\d{4})$/,
 function statusLabel(profile){return profile.enrollment_status==="early_employment"?"조기취업":profile.enrollment_status==="graduated"?"졸업":profile.enrollment_status==="leave"?"휴학":[1,2].includes(Number(profile.academic_year))?profile.academic_year+"학년":"학년 미설정";}
 async function start(){
  if(!api||!globalThis.portalLearning?.read){notify("my-page-password-message","로그인 상태를 확인할 수 없습니다. 다시 로그인해 주세요.","error");return;}
- const {data:{user},error:authError}=await api.auth.getUser();
- if(authError||!user){notify("my-page-password-message","로그인 세션을 확인하지 못했습니다.","error");return;}
- const {data:profile,error:profileError}=await api.from("profiles")
-  .select("full_name,email,student_no,signup_type,academic_year,enrollment_status,approval_status,graduation_year,mobile_phone")
-  .eq("user_id",user.id).single();
- if(profileError||!profile){notify("my-page-password-message","회원 정보를 불러오지 못했습니다.","error");return;}
+ const context=window.portalVerifiedContext,user=context?.user;
+ if(!user){notify("my-page-password-message","로그인 세션을 확인하지 못했습니다.","error");return;}
+ const profile=context.profile?{...context.profile}:null;
+ if(!profile){notify("my-page-password-message","회원 정보를 불러오지 못했습니다.","error");return;}
  byId("my-page-name").textContent=profile.full_name||"이름 미등록";
  byId("my-page-email").textContent=user.email||profile.email||"-";
  byId("my-page-student-no").textContent=profile.signup_type==="student"?(profile.student_no||"-"):profile.signup_type==="alumni"?profile.graduation_year+"년 졸업":"관리자";
@@ -23,8 +21,8 @@ async function start(){
  byId("my-page-state").textContent=profile.approval_status==="approved"?"승인 완료":"승인 확인 필요";
  // Personal qualifications are for members, not portal administrators.
  // Default-hidden shortcut is exposed only after both checks pass.
- const {data:adminAllowed,error:adminCheckError}=await api.rpc("portal_super_admin_allowed");
- byId("my-page-cert-shortcut").hidden=Boolean(adminCheckError)||adminAllowed!==false||!["student","alumni"].includes(profile.signup_type);
+ const adminAllowed=context.isAdmin;
+ byId("my-page-cert-shortcut").hidden=adminAllowed!==false||!["student","alumni"].includes(profile.signup_type);
  if(["student","alumni"].includes(profile.signup_type)){
   byId("my-page-mobile-summary").hidden=false;
   byId("my-page-mobile-summary-value").textContent=profile.mobile_phone?displayMobile(profile.mobile_phone):"미등록";

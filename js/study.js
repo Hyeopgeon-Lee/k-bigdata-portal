@@ -39,7 +39,7 @@ async function load(){
  if(!verified)throw Error('로그인 정보를 확인하지 못했습니다.');
  uid=verified;
  // Weekly attendance and study duration always use the current KST week, regardless of plan selection.
- const [p,s,a,m]=await Promise.all([
+ const [p,s,a]=await Promise.all([
   db.from('study_weekly_plans')
    .select('week_start,weekdays,no_plan_reason')
    .eq('user_id',uid).in('week_start',[weeks.thisWeek,week]),
@@ -52,15 +52,14 @@ async function load(){
   // An unfinished session can predate this week: never hide the resume/end controls.
   db.from('study_sessions')
    .select('id,status,started_at,paused_at,break_seconds,duration_seconds')
-   .eq('user_id',uid).eq('status','active').maybeSingle(),
-  db.from('profiles').select('signup_type,enrollment_status').eq('user_id',uid).single()
+   .eq('user_id',uid).eq('status','active').maybeSingle()
  ]);
- if(p.error||s.error||a.error||m.error||!m.data)throw p.error||s.error||a.error||m.error||Error('PROFILE_NOT_FOUND');
+ const member=window.portalVerifiedContext?.profile;
+ if(p.error||s.error||a.error||!member)throw p.error||s.error||a.error||Error('PROFILE_NOT_FOUND');
  const rows=s.data||[];
  if(a.data&&!rows.some(item=>item.id===a.data.id))rows.push(a.data);
  sessions=rows.sort((left,right)=>Date.parse(right.started_at)-Date.parse(left.started_at));
  active=a.data||sessions.find(item=>item.status==='active')||null;
- const member=m.data;
  canWrite=window.portalLearning?.write===true&&member.signup_type==="student"&&member.enrollment_status==="enrolled";
  const plans=p.data||[];
  plan=plans.find(row=>row.week_start===week)||null;
@@ -174,7 +173,12 @@ async function session(action){
   const {data,error}=await Promise.race([db.rpc(rpc),timeout]);
   if(error)throw error;
   if(!data?.id)throw Error('STUDY_EMPTY_RESPONSE');
-  await load();
+  if(action==='restart')await load(); // past stale record is also changed by this RPC
+  else{
+   sessions=[data,...sessions.filter(row=>row.id!==data.id)].sort((l,r)=>Date.parse(r.started_at)-Date.parse(l.started_at));
+   active=data.status==='active'?data:null;
+   render();
+  }
   message(action==='finish'&&data.status==='needs_review'
    ?'12시간을 초과한 기록은 교수자 확인 대상으로 보관했습니다.':
    action==='start'||action==='restart'?'학습을 시작했습니다.':
@@ -230,11 +234,12 @@ $('study-reload').addEventListener('click',()=>void load().catch(e=>message(e.me
 setInterval(tick,1000);
 if(!canWrite)$('study-write-note').hidden=false;
 $('study-session-primary').disabled=true;
+let lastVisibleRefresh=Date.now();
 document.addEventListener('visibilitychange',()=>{
- if(!document.hidden&&!sessionBusy)void load().catch(error=>{
+ if(!document.hidden&&!sessionBusy&&Date.now()-lastVisibleRefresh>=60000){lastVisibleRefresh=Date.now();void load().catch(error=>{
   void reportError('load',error);
   message('학습 상태를 다시 불러오지 못했습니다. 새로고침을 눌러 주세요.',true);
- });
+ });}
 });
 load().catch(error=>{
  console.error('Study load failed',error);

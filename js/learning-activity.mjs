@@ -3,7 +3,7 @@ const VALID_BANKS=new Set(['coding','ncp','practical']);
 const VALID_RESULTS=new Set(['correct','incorrect','completed','ungraded','timeout']);
 const VALID_METHODS=new Set(['self','automatic','completion','none']);
 const storage=globalThis.localStorage;
-const timers=new Map();
+const timers=new Map(),savedDrafts=new Map(),readCache=new Map();
 let accountPromise=null;
 const db=()=>globalThis.portalSupabaseClient;
 const writable=()=>globalThis.portalLearning?.write===true && Date.now()<globalThis.portalLearning.expires;
@@ -70,7 +70,7 @@ async function flushLearningInternal(){
  if(!writable())return {state:'readonly'};
  const user=await account();
  return withQueueLock(user.id,async()=>{
-  let error=null;
+  let error=null,changed=false;
   for(let iteration=0;iteration<20;iteration++){
    const batch=pending(user.id).slice(0,LEARNING_BATCH_SIZE);
    if(!batch.length)break;
@@ -81,6 +81,7 @@ async function flushLearningInternal(){
       onConflict:'user_id,client_attempt_id',ignoreDuplicates:true
     });
     if(result.error)throw result.error;
+    changed=true;readCache.clear();
     const done=new Set(batch.map(r=>r.client_attempt_id));
     // Preserve any new events appended by this or another tab.
     setPending(user.id,pending(user.id).filter(row=>!done.has(row.client_attempt_id)));
@@ -96,7 +97,7 @@ async function flushLearningInternal(){
    if(error?.code!=='42501'&&error?.status!==401&&error?.status!==403)retryLater();
   }else{
    clearRetry();
-   notify('saved','학습 결과가 클라우드에 저장되었습니다.');
+   if(changed)notify('saved','학습 결과가 클라우드에 저장되었습니다.');
   }
   return {state:count?'pending':'saved',count};
  });
@@ -128,18 +129,29 @@ export async function recordLearningAttempt(data){
  // Always flush after recording; failures retain the on-device copy.
  return flushLearningQueue();
 }
-export async function fetchLearningAttempts(bank=null){
+function cachedRead(key,work){
+ const scoped=(globalThis.portalVerifiedUserId||"")+":"+key;
+ const previous=readCache.get(scoped);
+ if(previous&&Date.now()-previous.at<30000)return previous.promise;
+ const promise=Promise.resolve().then(work).catch(error=>{readCache.delete(scoped);throw error;});
+ readCache.set(scoped,{at:Date.now(),promise});
+ return promise;
+}
+export function invalidateLearningReads(){readCache.clear();}
+export function fetchLearningAttempts(bank=null){return cachedRead("attempts:"+bank,()=>readLearningAttempts(bank));}
+async function readLearningAttempts(bank=null){
  if(bank!==null&&!VALID_BANKS.has(bank))throw new Error('INVALID_PROGRESS_BANK');
  const user=await account();const all=[];
  for(let from=0;from<10000;from+=500){
-  const query=db().from('learning_attempts').select('id,bank,question_id,result,grading_method,submitted_at,used_hint,elapsed_seconds,client_attempt_id'+(['coding','practical'].includes(bank)?',metadata,answer_text':'')).eq('user_id',user.id);
+  const query=db().from('learning_attempts').select('id,bank,question_id,result,grading_method,submitted_at,used_hint,elapsed_seconds,client_attempt_id'+(['coding','practical'].includes(bank)?',metadata':'')).eq('user_id',user.id);
   if(bank!==null)query.eq('bank',bank);
   const {data,error}=await query.order('submitted_at',{ascending:false}).range(from,from+499);
   if(error)throw error;all.push(...(data||[]));if((data||[]).length<500)break;
  }
  return all;
 }
-export async function fetchLearningProgress(bank=null){
+export function fetchLearningProgress(bank=null){return cachedRead("progress:"+bank,()=>readLearningProgress(bank));}
+async function readLearningProgress(bank=null){
  if(bank!==null&&!VALID_BANKS.has(bank))throw new Error('INVALID_PROGRESS_BANK');
  const user=await account();const all=[];
  for(let from=0;from<10000;from+=500){
@@ -152,26 +164,34 @@ export async function fetchLearningProgress(bank=null){
  }
  return all;
 }
+export async function fetchLearningAttemptAnswer(attemptId){
+ const user=await account();
+ const {data,error}=await db().from('learning_attempts').select('answer_text').eq('user_id',user.id).eq('id',attemptId).maybeSingle();
+ if(error)throw error;return data?.answer_text||'';
+}
 export function debounceCloudDraft(bank,questionId,text){
  if(!writable()||!VALID_BANKS.has(bank)||!/^[A-Za-z0-9_-]{1,90}$/.test(questionId))return;
- const key=bank+':'+questionId;
+ const key=(globalThis.portalVerifiedUserId||'')+':'+bank+':'+questionId;
+ const value=String(text).slice(0,10000);
  clearTimeout(timers.get(key));
+ if(savedDrafts.get(key)===value)return;
  timers.set(key,setTimeout(async()=>{
   timers.delete(key);
   try{
    const user=await account();
-   const {error}=await db().from('learning_drafts').upsert({user_id:user.id,bank,question_id:questionId,draft_text:String(text).slice(0,10000),updated_at:new Date().toISOString()},{onConflict:'user_id,bank,question_id'});
+   const {error}=await db().from('learning_drafts').upsert({user_id:user.id,bank,question_id:questionId,draft_text:value,updated_at:new Date().toISOString()},{onConflict:'user_id,bank,question_id'});
    if(error)notify('pending','초안을 이 기기에 저장했습니다. 클라우드 동기화를 다시 확인해 주세요.');
+   else savedDrafts.set(key,value);
   }catch{notify('pending','초안이 기기에만 저장되었습니다.');}
- },1600));
+ },5000));
 }
 export async function fetchCloudDraft(bank,questionId){
  const user=await account();
  const {data,error}=await db().from('learning_drafts').select('draft_text').eq('user_id',user.id).eq('bank',bank).eq('question_id',questionId).maybeSingle();
- if(error)throw error;return data?.draft_text||'';
+ if(error)throw error;const text=data?.draft_text||'';savedDrafts.set(user.id+':'+bank+':'+questionId,text);return text;
 }
 if(typeof window!=='undefined'){
- window.addEventListener('online',()=>{flushLearningQueue().catch(()=>{});});
+ window.addEventListener('online',()=>{readCache.clear();flushLearningQueue().catch(()=>{});});
  window.addEventListener('portal-learning-ready',()=>{flushLearningQueue().catch(()=>{});});
  window.addEventListener('storage',event=>{
   if(event.key?.startsWith('kbigdata:learning:pending:v2:')&&event.newValue)

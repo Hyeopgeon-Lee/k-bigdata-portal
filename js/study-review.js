@@ -1,4 +1,4 @@
-import {recordLearningAttempt} from "./learning-activity.mjs?v=20261116-concurrency-1";
+import {recordLearningAttempt} from "./learning-activity.mjs?v=20261128-performance-1";
 
 export const gradeLabels = {correct:"맞혔어요", incorrect:"틀렸어요", ungraded:"판단 보류"};
 export function reviewControls() {

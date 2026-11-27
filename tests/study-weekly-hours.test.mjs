@@ -43,7 +43,7 @@ for(let i=0;i<5;i++){
  assert.ok(html.includes('id="study-weekday-total-'+i+'"'));
 }
 assert.match(html,/id="study-week-range"/);
-assert.match(html,/js\/study\.js\?v=20261120-weekly-hours-1/);
+assert.match(html,/js\/study\.js\?v=20261128-performance-1/);
 assert.match(css,/study-weekly-days/);
 assert.match(css,/@media\(max-width:760px\)/);
 console.log('PASS: current-week weekday totals remain stable while Friday next-week planning opens.');

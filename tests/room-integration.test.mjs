@@ -33,7 +33,7 @@ assert.ok(page.includes('8318')&&page.includes('8319'));
 
 assert.match(logic,/portalSupabaseClient/);
 assert.match(logic,/portalLearning\?\.write/);
-assert.match(logic,/portal_super_admin_allowed/);
+assert.match(logic,/portalVerifiedContext/);
 assert.match(logic,/room_schedule/);
 assert.match(logic,/from\('room_reservations'\)/);
 assert.match(logic,/eq\('owner_id',person\.id\)/);

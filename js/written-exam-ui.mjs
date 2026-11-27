@@ -1,9 +1,9 @@
 import {normalizeSubject,summarizeWritten,writtenDashboard,writtenConfig,writtenPeriodChart} from "./written-dashboard.mjs?v=20261127-written-parity-v3";
-import {createMockExam} from "./written-mock.mjs?v=20261127-written-parity-v3";
+import {createMockExam} from "./written-mock.mjs?v=20261128-performance-1";
 import {quizNavigation,quizHeading,quizDisclosure,quizFeedback,scrollToQuizAnswer} from "./quiz-unified.js?v=20261112-answer-focus-1";
 import {createQuestionBrowser} from "./question-browser.js?v=20261124-subject-filter-v2";
-import {reviewControls} from "./study-review.js?v=20261116-concurrency-1";
-import {loadWrittenExamQuestions} from "./written-exam-data.mjs?v=20261127-engineer-2023";
+import {reviewControls} from "./study-review.js?v=20261128-performance-1";
+import {loadWrittenExamQuestions,loadWrittenDetails} from "./written-exam-data.mjs?v=20261128-performance-1";
 import {adjacentWrittenQuestion} from "./written-exam-navigation.mjs?v=20261124-next-fix-1";
 
 const esc=value=>String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -65,7 +65,7 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
  const key=r=>[r.id,r.at,r.answer].join(":");
  const valid=r=>r&&/^[A-Za-z0-9_-]{1,80}$/.test(r.id)&&Number.isInteger(r.answer)&&r.answer>=1&&r.answer<=4&&typeof r.correct==="boolean"&&Number.isSafeInteger(r.at)&&r.at>0&&Number.isFinite(r.elapsedSeconds)&&r.elapsedSeconds>=0&&r.elapsedSeconds<=2147483647;
  const merge=(...lists)=>[...new Map(lists.flat().filter(valid).map(r=>[key(r),r])).values()].sort((a,b)=>a.at-b.at||a.id.localeCompare(b.id)||a.answer-b.answer);
- let pending=[],syncChain=Promise.resolve();
+ let pending=[],syncChain=Promise.resolve(),indexedRecords=null,attemptIndex=new Map(),lastRemoteSync=0,lastFullSync=0,remoteCursor=0;
  function readLocal(k){try{return JSON.parse(localStorage.getItem(k)||"{}")||{};}catch{return {};}}
  function readStorage(){
   const obj=readLocal(scopedKey);
@@ -92,13 +92,18 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
      const sent=new Set(batch.map(key));pending=pending.filter(r=>!sent.has(key(r)));cache();
     }
     if(!refresh){cache();return true;}
-    const remote=[];
+    if(Date.now()-lastRemoteSync<30000)return true;
+    const remote=[],full=Date.now()-lastFullSync>=300000||!remoteCursor;
     for(let offset=0;;offset+=500){
-     const {data,error}=await db.from(table).select("question_id,attempted_at,answer,correct,elapsed_seconds,used_hint").eq("user_id",userId).eq("exam_type",examType).order("attempted_at").order("question_id").order("answer").range(offset,offset+499);
+     let query=db.from(table).select("question_id,attempted_at,answer,correct,elapsed_seconds,used_hint").eq("user_id",userId).eq("exam_type",examType);
+     if(!full)query=query.gte("attempted_at",remoteCursor);
+     const {data,error}=await query.order("attempted_at").order("question_id").order("answer").range(offset,offset+499);
      if(error)throw error;
      remote.push(...data.map(fromRow));if(data.length<500)break;
     }
-    records=merge(remote,pending);
+    records=full?merge(remote,pending):merge(records,remote,pending);
+    if(full){lastFullSync=Date.now();remoteCursor=0;}
+    if(remote.length)remoteCursor=Math.max(remoteCursor,remote.at(-1).at);lastRemoteSync=Date.now();
     if(records.length)lastQuestionId=records.at(-1).id;
     cache();syncMessage(writable?"":"계정 기록 조회 전용");
     browser?.refresh();refreshSolveProgress();
@@ -123,14 +128,18 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
  window.addEventListener("pageshow",event=>{if(event.persisted&&current&&attempt?.recorded&&!attempt.revealed){attempt.revealed=true;revealAnswer();}if(event.persisted&&cloud)void sync();});
  document.addEventListener("visibilitychange",()=>{if(!attempt||attempt.revealed||attempt.recorded)return;const now=Date.now();if(document.hidden){if(attempt.activeSince!==null)attempt.activeMs+=Math.max(0,now-attempt.activeSince);attempt.activeSince=null;}else attempt.activeSince=now;});
  if(cloud){window.addEventListener("online",()=>void sync());document.addEventListener("visibilitychange",()=>{if(!document.hidden)void sync();});}
+ function rowsFor(id){
+  if(indexedRecords!==records){attemptIndex=new Map();for(const row of records){if(!attemptIndex.has(row.id))attemptIndex.set(row.id,[]);attemptIndex.get(row.id).push(row);}indexedRecords=records;}
+  return attemptIndex.get(id)||[];
+ }
  function getProgress(q){
-  const rows=records.filter(r=>r.id===q.id);
+  const rows=rowsFor(q.id);
   if(!rows.length)return {kind:"unseen",text:"미풀이"};
   const last=rows.at(-1);
   return {kind:"done",text:"풀이 완료 · "+rows.length+"회 · 최근 "+formatDate(last.at),count:rows.length};
  }
- const attemptsFor=q=>records.filter(r=>r.id===q.id);
- const solved=id=>records.some(r=>r.id===id);
+ const attemptsFor=q=>rowsFor(q.id);
+ const solved=id=>rowsFor(id).length>0;
  function filtered(){
   const words=filters.query.toLowerCase().trim().split(/\s+/).filter(Boolean);
   const result=bank.filter(q=>
@@ -176,6 +185,7 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
   $("main").classList.remove("qb-browsing");
  }
  function selectView(next){
+  questionLoad++;
   finalizeAttempt();attempt=null;
   if(mock?.isActive())mock.stop();
   view=next==="home"?"bank":next;current=null;selectedAnswer=null;queue=[];queueIndex=0;
@@ -206,33 +216,6 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
  }
  function renderRandom(){
   root.innerHTML='<section class="bank-empty"><h2>랜덤 필기 풀이</h2><div class="bank-filter-grid"><label>출제년도<select id="random-year"><option value="all">전체</option>'+uniqueYears().map(v=>'<option value="'+v+'">'+v+'년</option>').join("")+'</select></label><label>회차<select id="random-round"><option value="all">전체</option>'+uniqueRounds().map(v=>'<option value="'+v+'">'+v+'회</option>').join("")+'</select></label><label>과목<select id="random-subject"><option value="all">전체 과목</option>'+[...new Set(bank.map(q=>q.subject||"기타"))].sort().map(v=>'<option value="'+esc(v)+'">'+esc(v)+'</option>').join("")+'</select></label><label>문제 수<select id="random-count"><option>5</option><option>10</option><option>20</option></select></label></div>'+action("start-random","랜덤 연습 시작")+'<p id="random-status" role="status"></p></section>';
- }
- function renderLegacyWrong(){
-  const ids=[...new Set(records.filter(r=>!r.correct).map(r=>r.id))];
-  const questions=ids.map(id=>bank.find(q=>q.id===id)).filter(Boolean);
-  root.innerHTML='<h2>오답노트</h2><p>틀린 문제와 이전에 선택한 답을 확인하고 다시 풀어보세요.</p>'+(questions.length?
-    '<div class="bank-card-grid">'+questions.map(q=>{
-      const rows=attemptsFor(q),last=rows.at(-1);
-      return '<article class="bank-card"><div class="bank-badges"><span class="badge">'+esc(labelFor(q))+'</span><span class="badge">'+esc(q.subject||"필기")+'</span></div><h2>'+esc(q.question)+'</h2><p>틀린 횟수 '+rows.filter(r=>!r.correct).length+'회 · 최근 '+formatDate(last.at)+'</p><details><summary>이전 답·정답 확인</summary><p>최근 선택 '+last.answer+'번 · 정답 '+q.answer+'번</p></details>'+action("open","다시 풀기",'data-id="'+esc(q.id)+'"')+'</article>';
-    }).join("")+'</div>':'<div class="bank-empty"><p>아직 기록된 오답이 없습니다.</p></div>');
- }
- function stats(rows){
-  const count=rows.length,right=rows.filter(r=>r.correct).length;
-  const average=count?Math.round(rows.reduce((sum,r)=>sum+Number(r.elapsedSeconds||0),0)/count):0;
-  return '<p>풀이 '+count+' · 정답 '+right+' · 오답 '+(count-right)+'</p><p>정답률 '+(count?Math.round(right/count*100)+"%":"—")+' · 평균 풀이시간 '+average+'초</p>';
- }
- function renderLegacyProgress(){
-  const expanded=[...root.querySelectorAll(".written-round[open]")].map(x=>x.dataset.session);
-  const cutoff=Date.now()-7*24*3600*1000,week=records.filter(r=>r.at>=cutoff);
-  root.innerHTML=(examType==="industrial"?writtenDashboard(bank,records,writable):"")+(examType==="industrial"?"<h2>기간별 학습현황</h2>":'<h2>내 학습현황</h2><p>'+(cloud?"계정에 저장된 필기 학습 기록입니다.":"현재 기기에 저장된 필기 학습 기록입니다.")+'</p>')+'<section class="bank-empty"><h3>오늘 · '+today()+'</h3>'+stats(records.filter(r=>formatDate(r.at)===formatDate(Date.now())))+'</section><section class="bank-empty"><h3>최근 7일</h3>'+stats(week)+'</section><section class="bank-empty"><h3>최근 30일</h3>'+stats(records.filter(r=>r.at>=Date.now()-30*86400000))+'</section><section class="bank-empty"><h3>전체 학습현황</h3><p>완료 '+bank.filter(q=>solved(q.id)).length+' / '+bank.length+'문항</p>'+stats(records)+'</section><h3>최근 7일 과목별 학습현황</h3><div class="bank-progress-grid">'+
-    [...new Set(bank.map(q=>q.subject||"필기"))].map(sub=>{
-      const ids=new Set(bank.filter(q=>(q.subject||"필기")===sub).map(q=>q.id));
-      return '<article><h3>'+esc(sub)+'</h3>'+stats(week.filter(r=>ids.has(r.id)))+'</article>';
-    }).join("")+'</div><h3>연도·회차별 풀이율</h3><div class="written-round-list">'+summarizeWritten(bank,records,examType).rounds.map(r=>'<article class="written-round"><strong>'+esc(r.key.replace("-","년 ")+"회")+'</strong><p>'+r.solved+' / '+r.total+'문항 · '+Math.round(r.solved/Math.max(1,r.total)*100)+'%</p><progress value="'+r.solved+'" max="'+Math.max(1,r.total)+'"></progress></article>').join("")+'</div>'+(examType==="industrial"?"":'<details><summary>학습기록 관리</summary><p>학습기록을 백업하거나 삭제할 수 있습니다.</p>'+(writable?action("import-device","기존 이 기기 기록 가져오기"):"")+action("export-learning","학습 기록 내보내기")+
-    '<label for="import-learning">학습 기록 가져오기 (JSON)</label><input id="import-learning" type="file" accept="application/json,.json"><p id="import-status" role="status"></p>'+
-    action("confirm-clear","내 학습기록 삭제")+'<div id="clear-confirm"></div></details>');
-  for(const el of root.querySelectorAll(".written-round"))if(expanded.includes(el.dataset.session))el.open=true;
-  if(examType==="industrial"&&mock)void mock.showHistory();
  }
  function wrongGroups(summary){return {unresolved:summary.all.wrong,repeated:summary.all.repeated,recovered:summary.all.recovered};}
  function wrongItems(summary,criteria=wrongCriteria,filter=wrongFilter){
@@ -306,14 +289,40 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
   root.innerHTML=items.length?'<div class="bank-card-grid">'+items.slice(0,pageLimit).map(q=>'<article class="bank-card"><div class="bank-badges"><span class="badge">'+esc(labelFor(q))+'</span><span class="badge">'+esc(q.subject||"필기")+'</span></div><h2>'+esc(q.question)+'</h2>'+action("open","문제 풀기",'data-id="'+esc(q.id)+'"')+'</article>').join("")+'</div>'+(items.length>pageLimit?action("load-more","문제 더 보기"):""):
    '<div class="bank-empty"><h2>조건에 맞는 문제가 없습니다.</h2><p>필터를 변경하거나 등록된 회차를 확인하세요.</p>'+action("reset","필터 초기화")+'</div>';
  }
- function openQuestion(id,items=null,fresh=false){
+ let questionLoad=0;
+ const hydrated=new Set(),detailsInFlight=new Map();
+ async function hydrate(ids){
+  const missing=[...new Set(ids)].filter(id=>!hydrated.has(id));
+  if(!missing.length)return;
+  const work=missing.filter(id=>!detailsInFlight.has(id));
+  if(work.length){
+   const request=loadWrittenDetails(examType,work).then(details=>{
+    for(const item of details){
+     if(!validateWrittenQuestion(item,examType))throw Error("문제 상세 검증 실패");
+     const q=bank.find(it=>it.id===item.id);if(q){Object.assign(q,item,{subject:normalizeSubject(item.subject)});hydrated.add(item.id);}
+    }
+   }).finally(()=>{for(const id of work)detailsInFlight.delete(id);});
+   for(const id of work)detailsInFlight.set(id,request);
+  }
+  await Promise.all([...new Set(missing.map(id=>detailsInFlight.get(id)).filter(Boolean))]);
+ }
+ async function openQuestion(id,items=null,fresh=false){
   const q=bank.find(item=>item.id===id);if(!q)return;
   if(current?.id===id&&!fresh)return;
+  const request=++questionLoad;
+  // Fetch a selected round in a single batch; subsequent questions are instant.
+  if(!hydrated.has(id)){
+   status.textContent="문제를 불러오는 중입니다…";
+   try{await hydrate(bank.filter(item=>item.year===q.year&&item.round===q.round).map(item=>item.id));}
+   catch(error){if(request===questionLoad)status.textContent="문제를 불러오지 못했습니다. 다시 선택해 주세요.";return;}
+   if(request!==questionLoad)return;
+  }
+  status.textContent="";
   finalizeAttempt();
   if(items){queue=items;queueIndex=Math.max(0,queue.findIndex(item=>item.id===q.id));queueKind="bank";}
   else if(!queue.length){queue=filtered();queueIndex=Math.max(0,queue.findIndex(item=>item.id===q.id));queueKind="bank";}
   current=q;lastQuestionId=q.id;persist();selectedAnswer=null;hideBrowser();setId(q.id);
-  const previous=records.filter(r=>r.id===q.id).at(-1);
+  const previous=rowsFor(q.id).at(-1);
   attempt={startedAt:Date.now(),activeMs:0,activeSince:document.hidden?null:Date.now(),usedHint:false,revealed:false,recorded:false,answer:null,correct:null};
   if(!fresh&&previous&&previous.answer>=1&&previous.answer<=4){/* A new attempt begins without preselecting the prior answer. */}
   updateNav();renderQuestion();root.querySelector("#solve-title")?.focus({preventScroll:true});window.scrollTo({top:0,behavior:"auto"});
@@ -521,7 +530,7 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
     syncChain=syncChain.catch(()=>{}).then(async()=>{
      const {error}=await db.from(table).delete().eq("user_id",userId).eq("exam_type",examType);
      if(error){syncMessage("DB 기록 삭제 실패 · 다시 시도해 주세요.");b.disabled=false;return;}
-     records=[];pending=[];lastQuestionId="";cache();browser?.refresh();renderProgress();syncMessage("계정 학습기록 삭제 완료");
+     records=[];pending=[];lastQuestionId="";remoteCursor=0;lastFullSync=0;lastRemoteSync=0;cache();browser?.refresh();renderProgress();syncMessage("계정 학습기록 삭제 완료");
     });return;
    }
    records=[];lastQuestionId="";persist();browser?.refresh();renderProgress();return;
@@ -548,15 +557,17 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
  }
  $("#bank-reset")?.addEventListener("click",resetFilters);
  async function initialize(){
-  const [result]=await Promise.all([loadWrittenExamQuestions(examType),cloud?sync():Promise.resolve()]);
+  const result=await loadWrittenExamQuestions(examType);
+  if(cloud)void sync();
   const seen=new Set();
   bank=result.filter(q=>{
    if(!validateWrittenQuestion(q,examType)||seen.has(q.id))return false;
    seen.add(q.id);return true;
   });
   bank=bank.map(q=>({...q,subject:normalizeSubject(q.subject)}));
+  for(const q of bank)if(q.explanation!==undefined||q.hint!==undefined)hydrated.add(q.id);
   bank.sort((a,b)=>b.year-a.year||b.round-a.round||a.number-b.number);
-  if(cloud)mock=createMockExam({root,db,bank,writable,examType,back:()=>selectView("mock-lobby"),reviewWrong:items=>{selectView("progress");startQueue(items,"review");},enter:()=>{finalizeAttempt();attempt=null;view="mock";current=null;hideBrowser();updateNav();$("#usage-guide").hidden=true;}});
+  if(cloud)mock=createMockExam({root,db,bank,writable,examType,loadDetails:hydrate,back:()=>selectView("mock-lobby"),reviewWrong:items=>{selectView("progress");startQueue(items,"review");},enter:()=>{finalizeAttempt();attempt=null;view="mock";current=null;hideBrowser();updateNav();$("#usage-guide").hidden=true;}});
   fillFilters();
 
   const archiveSessions=(Array.isArray(expectedSessions)?expectedSessions:[])

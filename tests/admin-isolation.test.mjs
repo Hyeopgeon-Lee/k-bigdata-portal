@@ -21,8 +21,8 @@ for(const name of ["index","accounts","learning","certifications","rooms","help"
  if(name!=="index")assert.match(page,/aria-label="관리자 업무 메뉴"/,"common subpage nav "+name);
 }
 
-assert.match(guarded,/portal_super_admin_allowed/,"role must be server verified");
-assert.match(guarded,/data!==true/,"unauthorized users denied");
+assert.match(guarded,/portalVerifiedContext/,"role must be server verified");
+assert.match(guarded,/context.isAdmin!==true/,"unauthorized users denied");
 assert.match(guarded,/panel\.hidden=true/,"on failure admin contents hidden");
 assert.match(guarded,/await import/,"admin modules loaded after role check");
 for(let i=0;i<routes.length;i++){
@@ -71,9 +71,10 @@ assert.match(signupAdminMigration,/enable row level security/g,"settings and del
 assert.match(signupAdminMigration,/revoke all .* from public, anon, authenticated/,"client roles cannot access mail settings");
 
 const alumniAdmin=read("alumni/admin.html"),bridge=read("alumni/js/portal-bridge.mjs");
-assert.match(alumniAdmin,/data-alumni-requires-admin/);
+assert.match(alumniAdmin,/location.replace\(/);
+assert.match(alumniAdmin,/admin\/alumni.html/);
 assert.match(bridge,/hasAttribute\("data-alumni-requires-admin"\)/);
-assert.match(bridge,/portal_super_admin_allowed/);
+assert.match(bridge,/bootstrap.admin!==true/);
 for(const source of ["js/portal-auth.mjs","js/my-certifications.js","js/room.js","js/help.js","admin/js/guard.mjs","admin/js/accounts.js","admin/js/certifications.js","admin/js/rooms.js","admin/js/help.js","admin/js/learning.js"])
  execFileSync(process.execPath,["--check",new URL("../"+source,import.meta.url).pathname]);
 const studentHelp=read("js/help.js"),adminHelp=read("admin/js/help.js");

@@ -31,9 +31,9 @@ assert.match(source,/'#portal-login-form input\[name="email"\]'\)/,"login focuse
 assert.match(source,/autocomplete="username"/,"email retains username autofill");
 assert.match(source,/signInWithPassword\(/);
 assert.match(source,/getUser\(/);
-assert.match(source,/start_portal_session/);
+assert.match(source,/portal_bootstrap/);
 assert.match(source,/register_portal_member/);
-assert.match(source,/portal_super_admin_allowed/);
+assert.match(source,/bootstrap.admin===true/);
 // Super admins must not see personal study or legacy device-import controls in their account drawer.
 const accountDrawer=source.slice(source.indexOf("function renderAccount(){"),source.indexOf("async function importDevicePersonalData()"));
 assert.match(accountDrawer,/if\(!isAdmin\)\{\s*const learning=addSection\("학습"\)/,"student/alumni learning section must be admin-hidden");

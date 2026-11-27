@@ -17,8 +17,8 @@ function subjectChart(latest,subjectNames){
  const parts=subjectNames.map(n=>latest.result.subjects.find(p=>normalizeSubject(p.subject)===n)).filter(Boolean);
  return '<section class="written-chart-card"><div class="chart-heading"><h3>과목별 점수 비교</h3><span class="written-pill">최근 시험</span></div><div class="subject-chart">'+parts.map((p,i)=>'<div class="subject-chart-row"><div><strong>'+esc(normalizeSubject(p.subject))+'</strong><b>'+p.score+'점</b></div><div class="subject-chart-track"><div style="width:'+Math.max(0,Math.min(100,Number(p.score)))+'%;background:'+chartColors[i+1]+'"></div><i class="subject-pass"></i><i class="subject-goal"></i></div></div>').join("")+'<div class="subject-chart-scale"><span>0</span><span>20</span><span>40</span><span>60</span><span>80</span><span>100</span></div></div><div class="chart-legend"><span><i style="background:#c78b36"></i>과락 기준 40점</span><span><i style="background:#188866"></i>학습 목표 60점</span></div></section>';
 }
-export function createMockExam({root,db,bank,back,enter,reviewWrong,writable=true,examType="industrial"}){
- const {subjects:subjectNames,total:examTotal}=writtenConfig(examType),sessionTable=examType==="engineer"?"written_mock_engineer_sessions":"written_mock_sessions",rpc=examType==="engineer"?"written_mock_engineer_action":"written_mock_action";
+export function createMockExam({root,db,bank,back,enter,reviewWrong,loadDetails,writable=true,examType="industrial"}){
+ const {subjects:subjectNames,total:examTotal}=writtenConfig(examType),sessionTable="portal_mock_sessions",rpc=examType==="engineer"?"written_mock_engineer_action":"written_mock_action";
  let session=null,index=0,timer=null,busy=false,active=false,serverOffset=0,reviewFilter="wrong";
  const examLabel=x=>x.mode==="random"?"랜덤 모의고사":x.exam_year+"년 "+x.exam_round+"회";
  const lookup=new Map(bank.map(q=>[q.id,q]));
@@ -27,7 +27,7 @@ export function createMockExam({root,db,bank,back,enter,reviewWrong,writable=tru
  const history=async()=>{
   if(lastHistory&&Date.now()-historyAt<30000)return lastHistory;
   if(historyPromise)return historyPromise;
-  historyPromise=(async()=>{const {data,error}=await db.from(sessionTable).select("id,mode,exam_year,exam_round,started_at,deadline,submitted_at,result").order("started_at",{ascending:false}).limit(100);if(error)throw error;lastHistory=data||[];historyAt=Date.now();return lastHistory;})();
+  historyPromise=(async()=>{const {data,error}=await db.from(sessionTable).select("id,mode,exam_year,exam_round,started_at,deadline,submitted_at,result").eq("exam_type",examType).order("started_at",{ascending:false}).limit(100);if(error)throw error;lastHistory=data||[];historyAt=Date.now();return lastHistory;})();
   try{return await historyPromise;}finally{historyPromise=null;}
  };
  const showHistory=async()=>{
@@ -42,7 +42,7 @@ export function createMockExam({root,db,bank,back,enter,reviewWrong,writable=tru
    el.innerHTML=(activeRow&&writable?button("resume","진행 중 모의고사 이어서",'data-id="'+esc(activeRow.id)+'"'):"")+(finished.length?'<div class="written-kpis mock-history-kpis"><article><small>응시 횟수'+(items.length===100?" (최근 100건)":"")+'</small><strong>'+finished.length+'회</strong></article><article><small>최고 점수</small><strong>'+Math.max(...finished.map(x=>Number(x.result.average))).toFixed(1)+'점</strong></article><article><small>직전 대비</small><strong>'+(finished.length>1?(Number(latest.result.average)-Number(finished[1].result.average)).toFixed(1)+'점':'—')+'</strong></article><article><small>연속 기준 충족</small><strong>'+((finished.findIndex(x=>!x.result.passed)+finished.length+1)%(finished.length+1))+'회</strong></article></div>'+trend+'<div class="written-mock-history">'+finished.map(x=>'<article><div class="mock-history-head"><strong>'+score(x)+'점</strong><span class="written-pill '+(x.result.passed?"good":"bad")+'">'+(x.result.passed?"합격 기준 충족":"기준 미달")+'</span></div><small>'+esc(examLabel(x))+' · '+new Date(x.submitted_at).toLocaleString("ko-KR",{timeZone:"Asia/Seoul"})+'</small><p>'+x.result.subjects.map(p=>esc(normalizeSubject(p.subject))+' '+p.score+'점').join(" · ")+'</p>'+button("review","답안 확인",'data-id="'+esc(x.id)+'"')+'</article>').join("")+'</div>':"<p>완료한 모의고사가 없습니다.</p>");
   }catch{if(el?.isConnected)el.textContent="모의고사 기록을 불러오지 못했습니다.";if(summary?.isConnected)summary.textContent="모의고사 성적 조회 실패";if(period?.isConnected)period.textContent="조회 실패";}
  };
- async function get(id){const {data,error}=await db.from(sessionTable).select("*").eq("id",id).single();if(error)throw error;return data;}
+ async function get(id){const {data,error}=await db.from(sessionTable).select("*").eq("exam_type",examType).eq("id",id).single();if(error)throw error;return data;}
  function close(){active=false;clearInterval(timer);timer=null;session=null;back();}
  function clock(){if(!session||!active)return;const seconds=Math.max(0,Math.ceil((Date.parse(session.deadline)-Date.now()-serverOffset)/1000));const node=root.querySelector("#mock-clock");if(node)node.textContent=Math.floor(seconds/60)+":"+String(seconds%60).padStart(2,"0");if(!seconds&&!busy)void submit(true);}
  function render(){
@@ -68,12 +68,12 @@ export function createMockExam({root,db,bank,back,enter,reviewWrong,writable=tru
    (shown.length?shown.map(({q,i,a,status})=>'<details class="written-round mock-review-item"><summary><span class="mock-review-number">'+(i+1)+'번</span><span class="mock-review-stem">'+esc(q.question)+'</span><span class="written-pill '+(status==="correct"?"good":"bad")+'">'+(status==="correct"?"정답":status==="wrong"?"오답":"미응답")+'</span></summary><div class="mock-review-body"><p class="mock-review-question">'+esc(q.question)+'</p>'+(q.code?'<pre>'+esc(q.code)+'</pre>':"")+(q.visuals||[]).map(v=>'<img alt="문제 그림" src="'+esc(v.dataUri)+'">').join("")+'<div class="mock-review-options">'+q.options.map((o,j)=>'<div class="'+(j+1===q.answer?"is-correct":j+1===a?"is-wrong":"")+'"><strong>'+(j+1)+'.</strong> '+esc(o)+(q.optionVisuals?.[j]?'<img alt="선택지 그림" src="'+esc(q.optionVisuals[j].dataUri)+'">':"")+(j+1===q.answer?' <span class="written-pill good">정답</span>':"")+(j+1===a?' <span class="written-pill '+(a===q.answer?"good":"bad")+'">내 답</span>':"")+'</div>').join("")+'</div><p><strong>내 답:</strong> '+(a?a+"번":"미응답")+' · <strong>정답:</strong> '+q.answer+'번</p>'+(q.explanation?'<div class="mock-explanation"><strong>해설</strong><p>'+esc(q.explanation)+'</p></div>':"")+'</div></details>').join(""):'<p class="mock-empty">해당 문항이 없습니다.</p>')+'</section>';
  }
  async function submit(auto=false){if(busy||!session||session.submitted_at)return;if(!auto&&!confirm("미응답 "+(examTotal-Object.keys(session.answers).length)+"문항. 시험을 제출하시겠습니까?"))return;busy=true;try{session=await call({p_action:"submit",p_id:session.id});lastHistory=null;reviewFilter="wrong";render();}catch(e){const n=root.querySelector("#mock-status");if(n)n.textContent="제출 실패 · 연결을 확인하고 다시 제출해 주세요.";}finally{busy=false;}}
- async function start(key){if(busy)return;busy=true;try{const [year,round]=String(key).split("-").map(Number);session=await call(key==="random"?{p_action:"start-random"}:{p_action:"start",p_year:year,p_round:round});lastHistory=null;active=true;enter();index=0;render();}finally{busy=false;}}
- async function resume(id){reviewFilter="wrong";session=await get(id);active=true;enter();index=0;render();}
+ async function start(key){if(busy)return;busy=true;try{const [year,round]=String(key).split("-").map(Number);session=await call(key==="random"?{p_action:"start-random"}:{p_action:"start",p_year:year,p_round:round});lastHistory=null;await loadDetails?.(session.question_ids);active=true;enter();index=0;render();}finally{busy=false;}}
+ async function resume(id){reviewFilter="wrong";session=await get(id);await loadDetails?.(session.question_ids);active=true;enter();index=0;render();}
  root.addEventListener("click",async e=>{const b=e.target.closest("[data-mock-action]");if(!b||busy)return;const a=b.dataset.mockAction;
  try{
  if(a==="resume"&&!writable)return;
- if(a==="review-wrong-id"){const row=await get(b.dataset.id);const items=row.question_ids.filter(id=>row.answers[id]!==lookup.get(id)?.answer).map(id=>lookup.get(id)).filter(Boolean);reviewWrong?.(items);return;}
+ if(a==="review-wrong-id"){const row=await get(b.dataset.id);await loadDetails?.(row.question_ids);const items=row.question_ids.filter(id=>row.answers[id]!==lookup.get(id)?.answer).map(id=>lookup.get(id)).filter(Boolean);reviewWrong?.(items);return;}
  if(a==="resume"||a==="review"){await resume(b.dataset.id);return;}
  if(!active)return;
  if(a==="close"||a==="pause"){close();return;}

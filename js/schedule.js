@@ -1,5 +1,5 @@
 import {schedules} from "../data/schedules.js?v=20261019-1";
-import {initCertificationSchedule} from "./certification-schedule.mjs?v=20261113-1";
+import {initCertificationSchedule} from "./certification-schedule.mjs?v=20261128-performance-1";
 import {scheduleShareUrl,copyScheduleLink,downloadScheduleIcs,openBandShare} from "./schedule-sharing.js?v=20261024-1";
 import {SCHEDULE_API_URL} from "../data/schedule-config.js?v=20261019-google-calendar-live-1";
 import {publishedGrade} from "../data/calendar-grade-bridge.js?v=20261112-memo-grades-1";

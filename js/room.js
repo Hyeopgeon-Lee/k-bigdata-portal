@@ -222,10 +222,10 @@ async function createBooking(event){
 }
 async function start(){
  if(!db){tell('포털 로그인 연결에 문제가 있습니다.');return;}
- const {data:{user},error}=await db.auth.getUser();
- if(error||!user){tell('로그인 후 이용할 수 있습니다.');return;}
+ const context=window.portalVerifiedContext,user=context?.user;
+ if(!user){tell('로그인 후 이용할 수 있습니다.');return;}
  person=user;
- const a=await db.rpc('portal_super_admin_allowed');admin=a.data===true;
+ admin=context.isAdmin===true;
  allowed=window.portalLearning?.write===true;
  if(!allowed&&!admin){tell('승인된 재학생과 관리자만 예약할 수 있습니다.');return;}
  byId('room-app').hidden=false;

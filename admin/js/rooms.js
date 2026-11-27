@@ -4,14 +4,18 @@ if(window.portalAdminAllowed!==true||!db)throw Error("ADMIN_SESSION_REQUIRED");
 const list=document.getElementById("admin-room-list"),count=document.getElementById("admin-room-count"),feedback=document.getElementById("admin-room-feedback");
 const node=(tag,value,cls)=>{const e=document.createElement(tag);if(value!==undefined&&value!==null)e.textContent=String(value);if(cls)e.className=cls;return e;};
 const fmt=raw=>new Intl.DateTimeFormat("ko-KR",{timeZone:"Asia/Seoul",year:"numeric",month:"2-digit",day:"2-digit",hour12:false}).format(new Date(raw));
+const PAGE_SIZE=50;let page=0,requestId=0,studentsCache=null;
 async function load(){
+ const current=++requestId;
  feedback.textContent="전체 예약 확인 중...";
- const [users,rows]=await Promise.all([db.rpc("admin_list_students"),
-  db.from("room_reservations").select("id,owner_id,source,legacy_student_name,legacy_student_no,room_code,starts_at,ends_at,purpose,memo,status,created_at").order("created_at",{ascending:false}).limit(1000)]);
- if(users.error||rows.error){feedback.textContent="관리자 예약 조회 권한을 확인하지 못했습니다.";return;}
+ const [users,rows,active]=await Promise.all([studentsCache||db.rpc("admin_list_students"),
+  db.from("room_reservations").select("id,owner_id,source,legacy_student_name,legacy_student_no,room_code,starts_at,ends_at,purpose,memo,status,created_at",{count:"exact"}).order("created_at",{ascending:false}).order("id").range(page*PAGE_SIZE,(page+1)*PAGE_SIZE-1),db.from("room_reservations").select("id",{count:"exact",head:true}).eq("status","ACTIVE")]);
+ if(current!==requestId)return;
+ if(users.error||rows.error||active.error){feedback.textContent="관리자 예약 조회 권한을 확인하지 못했습니다.";return;}
+ studentsCache=users;
  const names=new Map((users.data||[]).map(x=>[x.user_id,[x.full_name,x.student_no].filter(Boolean).join(" · ")]));
  const items=rows.data||[];
- count.textContent="총 "+items.length+"건 · 예약 중 "+items.filter(x=>x.status==="ACTIVE").length+"건";
+ count.textContent="총 "+rows.count+"건 · 예약 중 "+active.count+"건";
  list.replaceChildren();
  for(const r of items){
   const card=node("article",null,"room-my-card"),head=node("div",null,"room-row");
@@ -34,7 +38,9 @@ async function load(){
   list.append(card);
  }
  if(!items.length)list.append(node("p","예약 내역이 없습니다.","room-muted"));
+ const pages=Math.max(1,Math.ceil(rows.count/PAGE_SIZE));if(page>=pages){page=pages-1;return load();}
+ const nav=node("div",null,"room-row"),prev=node("button","이전","room-secondary"),next=node("button","다음","room-secondary");prev.type=next.type="button";prev.disabled=page===0;next.disabled=page+1>=pages;prev.onclick=()=>{page--;void load();};next.onclick=()=>{page++;void load();};nav.append(prev,node("span",(page+1)+" / "+pages),next);list.append(nav);
  feedback.textContent="";
 }
-document.getElementById("admin-room-refresh").addEventListener("click",()=>void load());
+document.getElementById("admin-room-refresh").addEventListener("click",()=>{studentsCache=null;page=0;void load();});
 await load();

@@ -253,3 +253,12 @@ DataQ·KAIT·대한상공회의소는 공식 출처를 확인했으나 자동 �
 - `study-absence-reminder` Edge Function과 `.github/workflows/study-absence-reminder.yml`은 한국시간 화~토 오전 9시에 전날 약속 미이행을 점검합니다. 이메일 본문은 Resend로 전송하고 미참여 사유 입력 버튼을 제공합니다.
 - **메일 발송은 기본 OFF**입니다. 교수자 화면의 토글을 명시적으로 켜기 전에는 자동 발송하지 않습니다.
 - 회귀 검증: `node scripts/build-portal-shell.mjs --check` 및 `node --test tests/study-feature.test.mjs tests/portal-ux.test.mjs tests/portal-shell.test.mjs tests/portal-redesign.test.mjs tests/portal-dashboard.test.mjs`.
+
+### Portal performance release (2026-11-28)
+
+- Shared authenticated bootstrap RPC, existing RLS and session checks, identical cache-versioned ES modules.
+- Run `node scripts/build-learning-indexes.mjs` after modifying the coding/practical source bank, and `node scripts/build-learning-indexes.mjs --check` in QA. Source banks remain the authoritative datasets.
+- Written bank lists are separated from round details; incremental attempt synchronization reconciles a full snapshot every five minutes. Exam session tables remain intact behind an invoker-security read view.
+- Apply matching `supabase/migrations/*portal_perf*` migrations before publishing the static assets. Deploy `public-calendar-cache` and `alumni-network-api` with their existing JWT settings; they keep server-side authorization and return only published information.
+- Run `node --test tests/portal-performance-refactor.test.mjs` and `node scripts/build-portal-shell.mjs --check`. The 50-user k6 scenario is staging-only; never run it against production.
+- Legacy admin URLs redirect to the canonical admin portal. Do not drop historical tables, indexes, or archives based solely on a zero-scan statistic.

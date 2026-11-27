@@ -1,4 +1,4 @@
-import {initPortalShell} from "./portal-shell.js?v=20261128-practical-name-2";
+import {initPortalShell} from "./portal-shell.js?v=20261128-performance-1";
 import {matches,jobSearchText,docSearchText,certificationSearchText} from "./search-core.js?v=20261005-perf-1";
 import {services} from "./services.js?v=20261128-practical-name-2";
 

@@ -1,6 +1,6 @@
-import {fetchLearningAttempts,fetchLearningGoal,saveLearningGoal} from "./learning-activity.mjs?v=20261127-shared-dashboard";
+import {fetchLearningAttempts,fetchLearningGoal,saveLearningGoal,fetchLearningAttemptAnswer,invalidateLearningReads} from "./learning-activity.mjs?v=20261128-performance-1";
 import {escapeHTML as esc,examLabels,typeLabels,languages,matchesExam} from "./practical-core.js?v=20261127-no-timer-1";
-import {learningRecords,stats} from "./learning-dashboard-core.mjs?v=20261127-shared-1";
+import {learningRecords,stats} from "./learning-dashboard-core.mjs?v=20261128-performance-1";
 import {btn,select,kpi,card,bar,line,donut} from "./learning-charts.mjs?v=20261127-shared-1";
 const labels={correct:"정답",incorrect:"오답",ungraded:"판단 보류",completed:"완료"};
 const percent=(a,b)=>b?Math.round(a/b*1000)/10:0;
@@ -10,7 +10,7 @@ const date=t=>day(t)?new Date(t).toLocaleString("ko-KR",{timeZone:"Asia/Seoul",d
 const byTime=(a,b)=>String(a.submitted_at).localeCompare(String(b.submitted_at));
 const timeLabel=n=>Number.isFinite(n)?Math.floor(Math.round(n)/60)+"분 "+(Math.round(n)%60)+"초":"—";
 const examOpts=[["all","전체"],...Object.entries(examLabels)];
-export function createLearningDashboard({host,bank,aliases={},openSet,answerFor,initialExam="all",bankType="practical",languageLabels=Object.fromEntries(languages.map(x=>[x,x==="C"?"C언어":x])),defaultGoal=10}){
+export function createLearningDashboard({host,bank,aliases={},openSet,answerFor,loadQuestion=async()=>{},initialExam="all",bankType="practical",languageLabels=Object.fromEntries(languages.map(x=>[x,x==="C"?"C언어":x])),defaultGoal=10}){
  const isPractical=bankType==="practical",langOpts=[["all","전체 언어"],...Object.entries(languageLabels)],areaKeys=Object.keys(languageLabels);
  const hintKnown=a=>!!a&&(isPractical?typeof a.used_hint==="boolean":a.metadata?.hint_tracking===true||a.used_hint===true);
  let exam=initialExam,lang="all",round="all",kind="incorrect",period=7,topicLang="all",goal=defaultGoal,goalMessage="",rows=[],mode="",loaded=false,failed=false,req=0,seq=0,activeHost=null,sets=new Map();
@@ -21,7 +21,8 @@ export function createLearningDashboard({host,bank,aliases={},openSet,answerFor,
  function historyLabel(q){if(!isPractical)return q.topic||"기초 학습";return q.history?.map(h=>examLabels[h.examType]+" "+h.year+"년 "+h.round+"회").join(" · ")||"기출유형 연습";}
  function row(v,compare=false){
   const a=v.last,old=[...v.events].reverse().find(a=>a.result==="incorrect")||a;
-  const details=compare&&old?'<details><summary>이전 입력 답안 · 정답 비교</summary><div class="pd-answers"><div><small>입력 답안</small><pre>'+esc(old.answer_text||"미입력 / 기록 없음")+'</pre></div><div><small>정답</small><pre>'+esc(answerFor(v.q))+'</pre></div></div></details>':"";
+  const details=compare&&old?'<details data-answer-id="'+esc(old.answer_id||old.id||"")+'" data-answer-question="'+esc(v.q.id)+'"><summary>이전 입력 답안 · 정답 비교</summary><div class="pd-answers"><div><small>입력 답안</small><pre data-input-answer>펼치면 조회됩니다.</pre></div><div><small>정답</small><pre data-correct-answer>펼치면 조회됩니다.</pre></div></div></details>':"";
+
   return '<article class="cd-record pd-record"><div><small>'+esc(historyLabel(v.q))+' · '+esc(languageLabels[v.q.language]||v.q.language)+' · '+esc(v.q.id)+'</small><strong>'+esc(v.q.title)+'</strong><small>풀이 '+v.count+'회 · 오답 '+v.wrong+'회 · '+esc(date(a?.submitted_at))+' · 힌트 '+(hintKnown(a)?(a.used_hint?"사용":"미사용"):"기록 없음")+'</small>'+details+'</div><span class="cd-pill '+esc(a?.result||"")+'">'+esc(labels[a?.result]||"미학습")+'</span>'+actionSet("다시 풀기",[v])+'</article>';
  }
  function filters(){if(!isPractical)return "";return '<div class="cd-toolbar pd-filters">'+select("exam",exam,examOpts,"시험 구분")+'</div>';}
@@ -62,7 +63,17 @@ export function createLearningDashboard({host,bank,aliases={},openSet,answerFor,
  }
  async function refresh(){const id=++req;if(!readable()){loaded=false;render();return;}try{const [data,cloudGoal]=await Promise.all([fetchLearningAttempts(bankType),fetchLearningGoal(bankType).catch(()=>null)]);if(id!==req)return;rows=learningRecords(bank,data,aliases,bankType);loaded=true;failed=false;const k=storageKey();if(Number.isInteger(cloudGoal)&&cloudGoal>=1&&cloudGoal<=350)goal=cloudGoal;else if(k)try{goal=Math.max(1,Math.min(350,Number(localStorage.getItem(k))||defaultGoal));}catch{}}catch{if(id!==req)return;loaded=false;failed=true;}render();}
  function show(next,element){mode=next;activeHost=element;activeHost.classList.add("coding-dashboard-panel","learning-dashboard-common");loaded=false;failed=false;render();refresh();}
- host.addEventListener("click",async e=>{const b=e.target.closest("[data-pd-action]");if(!b||!activeHost?.contains(b))return;if(b.dataset.pdAction==="refresh"){refresh();return;}if(b.dataset.pdAction==="kind"){kind=b.dataset.id;render();return;}if(b.dataset.pdAction==="goal"){const input=activeHost.querySelector("[data-pd-goal]"),v=Number(input.value);if(!Number.isInteger(v)||v<1||v>350){input.reportValidity();return;}b.disabled=true;try{await saveLearningGoal(bankType,v);goal=v;goalMessage="계정에 목표를 저장했습니다.";const k=storageKey();if(k)try{localStorage.setItem(k,String(v));}catch{}}catch{goalMessage="목표 저장 실패 · 다시 시도해 주세요.";}render();return;}const items=sets.get(b.dataset.id);if(items?.length)openSet(items);});
+ host.addEventListener("toggle",async event=>{
+  const detail=event.target;if(!detail.matches?.("details[data-answer-id]")||!detail.open||detail.dataset.loaded==="true")return;
+  const q=bank.find(q=>q.id===detail.dataset.answerQuestion);if(!q)return;
+  detail.dataset.loaded="true";
+  try{
+   const [answer]=await Promise.all([detail.dataset.answerId?fetchLearningAttemptAnswer(detail.dataset.answerId):Promise.resolve(""),loadQuestion(q)]);
+   detail.querySelector("[data-input-answer]").textContent=answer||"미입력 / 기록 없음";
+   detail.querySelector("[data-correct-answer]").textContent=answerFor(q)||"등록된 정답 없음";
+  }catch{detail.dataset.loaded="false";detail.querySelector("[data-input-answer]").textContent="조회 실패 · 닫았다 다시 열어 주세요.";}
+ },true);
+ host.addEventListener("click",async e=>{const b=e.target.closest("[data-pd-action]");if(!b||!activeHost?.contains(b))return;if(b.dataset.pdAction==="refresh"){invalidateLearningReads();refresh();return;}if(b.dataset.pdAction==="kind"){kind=b.dataset.id;render();return;}if(b.dataset.pdAction==="goal"){const input=activeHost.querySelector("[data-pd-goal]"),v=Number(input.value);if(!Number.isInteger(v)||v<1||v>350){input.reportValidity();return;}b.disabled=true;try{await saveLearningGoal(bankType,v);goal=v;goalMessage="계정에 목표를 저장했습니다.";const k=storageKey();if(k)try{localStorage.setItem(k,String(v));}catch{}}catch{goalMessage="목표 저장 실패 · 다시 시도해 주세요.";}render();return;}const items=sets.get(b.dataset.id);if(items?.length)openSet(items);});
  host.addEventListener("change",e=>{const k=e.target.dataset.pdSelect;if(!k)return;const v=e.target.value;if(k==="exam"){exam=v;round="all";}if(k==="lang")lang=v;if(k==="round")round=v;if(k==="topicLang")topicLang=v;if(k==="period")period=v==="all"?"all":Number(v);render();});
  document.addEventListener("portal-learning-sync",e=>{if(e.detail?.state==="saved"&&activeHost?.isConnected&&!activeHost.hidden)refresh();});
  if(typeof window!=="undefined")window.addEventListener("portal-learning-ready",()=>{if(activeHost?.isConnected&&!activeHost.hidden)refresh();});

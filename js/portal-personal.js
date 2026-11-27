@@ -57,10 +57,15 @@ function matchService(raw){
 }
 const recorded=new Map();
 export function recordService(id){
- if(!validIds.has(id)||!loaded||!canWrite())return;
- const previous=recorded.get(id)||0;
+ if(!validIds.has(id)||!canWrite())return;
+ userId=globalThis.portalVerifiedUserId;
+ if(!userId)return;
+ const dedupeKey="kbigdata:recent:"+userId+":"+id;
+ let previous=recorded.get(id)||0;
+ try{previous=Math.max(previous,Number(sessionStorage.getItem(dedupeKey)||0));}catch{}
  if(Date.now()-previous<60000)return;
  recorded.set(id,Date.now());
+ try{sessionStorage.setItem(dedupeKey,String(Date.now()));}catch{}
  state.recent=[id,...state.recent.filter(v=>v!==id)].slice(0,8);notify();
  writeQueue=writeQueue.then(async()=>{
   const payload={user_id:userId,service_id:id,last_opened_at:new Date().toISOString()};
@@ -103,7 +108,7 @@ export async function importLegacyShortcuts(){
 }
 export function initRecentTracking(){
  async function onReady(){
-  await load();
+  if(document.querySelector("#favorite-services")||document.querySelector("[data-favorite]")||/\/services\.html$/.test(location.pathname))await load();
   const current=matchService(location.href);
   if(current)recordService(current.id);
  }
@@ -115,8 +120,8 @@ export function initRecentTracking(){
   const anchor=target.closest("a[href]");
   if(!anchor)return;
   const service=matchService(anchor.href);
-  if(service&&loaded){
-   recordService(service.id);
+  if(service){
+   if(new URL(service.url,location.href).origin!==location.origin)recordService(service.id);
    if(location.hostname==="portal.k-bigdata.kr"&&typeof window.gtag==="function")
     window.gtag("event","portal_service_open",{service_key:service.id,page_context:document.documentElement.dataset.portalPage||"unknown"});
   }

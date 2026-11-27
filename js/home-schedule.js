@@ -176,8 +176,9 @@ async function refresh(){
 if(root){
   const cached=readCache();
   if(cached!==null)render(cached);
-  refresh();
-  setInterval(()=>{if(document.visibilityState==="visible")refresh();},600000);
+  if(cached===null)window.addEventListener("portal-learning-ready",()=>void refresh(),{once:true});
+  if(cached===null&&window.portalLearning?.read)void refresh();
+  setInterval(()=>{if(document.visibilityState==="visible"&&window.portalLearning?.read&&readCache()===null)refresh();},600000);
   window.addEventListener("storage",event=>{
     if(event.key!==CACHE_KEY||!event.newValue)return;
     const snapshot=readCache();

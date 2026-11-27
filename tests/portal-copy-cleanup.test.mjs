@@ -18,7 +18,7 @@ assert.doesNotMatch(news,/id="news-auth"|id="news-author-email"|id="news-author-
 assert.doesNotMatch(newsJs,/news-author-|news-account-summary|news-account-help/);
 assert.match(newsJs,/verifyNewsAlumni/);
 assert.ok(read("alumni/js/common.js").includes("consent.insertAdjacentHTML('beforeend'"),"consent controls retained");
-assert.match(read("alumni/js/portal-bridge.mjs"),/portal_learning_access/);
+assert.match(read("alumni/js/portal-bridge.mjs"),/portal_bootstrap/);
 assert.match(read("supabase/functions/alumni-network-api/index.ts"),/status:"APPROVED"/);
 assert.match(read("room.html"),/id="room-booking-form"/);
 assert.match(read("help.html"),/id="help/);

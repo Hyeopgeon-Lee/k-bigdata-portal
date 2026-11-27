@@ -97,7 +97,7 @@ assert.ok(html.includes('id="coding-ubuntu-output-note"'),'expected-result outpu
 assert.ok(!html.includes('coding-ubuntu-states'),'duplicate before/after details removed');
 assert.ok(js.includes('coding-ubuntu-terminal-demo",isUbuntu'),'all Ubuntu questions use terminal presentation');
 
-assert.ok(js.includes('...ubuntuPptProblems')&&!js.includes('ubuntuLegacyGuides'),'browser uses only the PPT Linux data');
+assert.ok(js.includes('coding-ubuntu-ppt.js')&&!js.includes('ubuntuLegacyGuides'),'browser uses only the PPT Linux data');
 assert.match(html,/js\/coding\.js\?v=\d{8}-[\w-]+/,'up-to-date script reference');
 const firstVisitAutocomplete=html.includes('id="coding-autocomplete-toggle" type="checkbox" role="switch"')
   && !/<input[^>]+id="coding-autocomplete-toggle"[^>]+checked/.test(html);
@@ -148,3 +148,6 @@ assert.ok(reported.href.length<120,'report link should remain compact');
 assert.equal(learningReportUrl('unknown',{id:'test'}),'');
 assert.match(index, /type="module" src="js\/app\.js\?v=[^"]+"/,'home loads versioned service registry entry');
 console.log('PASS: 350 unique questions including 50 PPT-grounded Linux exercises, difficulty breakdown and unchanged other languages');
+
+const indexCheck=spawnSync(process.execPath,['scripts/build-learning-indexes.mjs','--check'],{cwd:new URL('../',import.meta.url),encoding:'utf8'});
+assert.equal(indexCheck.status,0,indexCheck.stderr);

@@ -8,6 +8,7 @@ const pill=(text,kind)=>make('span',text,'cert-badge'+(kind?' is-'+kind:''));
 const button=(text,action,id)=>{const b=make('button',text,'cert-secondary');b.type='button';b.dataset.action=action;b.dataset.id=id;return b;};
 const message=(id,text,kind='info')=>{const n=el(id);if(n){n.textContent=text;n.dataset.kind=kind;}};
 const todayInKorea=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+const CERT_PAGE_SIZE=50;let certPage=0;
 let all=[],profileById=new Map(),admin=true;
 function studentInfo(id){
   const p=profileById.get(id)||{};
@@ -39,7 +40,8 @@ function renderAdmin(){
   }
   const records=filteredAdmin(),list=el('cert-admin-list');list.replaceChildren();
   if(!records.length)list.append(make('p','검색 조건에 해당하는 등록 내용이 없습니다.','cert-empty'));
-  for(const c of records){
+  const pages=Math.max(1,Math.ceil(records.length/CERT_PAGE_SIZE));certPage=Math.min(certPage,pages-1);
+  for(const c of records.slice(certPage*CERT_PAGE_SIZE,(certPage+1)*CERT_PAGE_SIZE)){
     const info=studentInfo(c.user_id),card=make('article',undefined,'cert-item');
     const head=make('div',undefined,'cert-item-head'),badges=make('div',undefined,'cert-badges');
     head.append(make('strong',info.name+' · '+info.grade,'cert-item-title'));
@@ -53,6 +55,7 @@ function renderAdmin(){
     actions.append(button('확인완료','verify',c.id),button('반려','reject',c.id),button('확인대기로','pending',c.id));
     card.append(actions);list.append(card);
   }
+  const nav=make("div",undefined,"cert-item-actions"),prev=make("button","이전","cert-secondary"),next=make("button","다음","cert-secondary");prev.type=next.type="button";prev.disabled=certPage===0;next.disabled=certPage+1>=pages;prev.onclick=()=>{certPage--;renderAdmin();};next.onclick=()=>{certPage++;renderAdmin();};nav.append(prev,make("span",(certPage+1)+" / "+pages),next);list.append(nav);
   const grouped=new Map();
   for(const c of all.filter(x=>x.pass_status==='final'&&x.verification_status==='verified')){
     if(!grouped.has(c.certificate_name))grouped.set(c.certificate_name,new Set());
@@ -65,11 +68,14 @@ function renderAdmin(){
   }
   message('cert-admin-message','등록 '+all.length+'건 중 '+records.length+'건 표시 · 통계는 관리자 확인완료 건을 별도 집계합니다.');
 }
+async function readCerts(){
+ const rows=[];for(let start=0;;start+=500){const {data,error}=await api.from("student_certifications").select("id,user_id,certificate_name,pass_status,written_pass_date,final_pass_date,certificate_number,verification_status,verification_note,created_at").order("created_at",{ascending:false}).order("id").range(start,start+499);if(error)return {error};rows.push(...data);if(data.length<500)return {data:rows};}
+}
 async function loadAdmin(){
   if(!admin)return;
   const [students,certs]=await Promise.all([
     api.rpc('admin_list_students'),
-    api.from('student_certifications').select('*').order('created_at',{ascending:false}).limit(1000)
+    readCerts()
   ]);
   if(students.error||certs.error)throw students.error||certs.error;
   profileById=new Map((students.data||[]).map(p=>[p.user_id,p]));
@@ -95,7 +101,7 @@ function exportCSV(){
 
 el('cert-admin-panel').hidden=false;
 for(const id of ['cert-admin-search','cert-admin-grade','cert-admin-status'])
- el(id).addEventListener(id==='cert-admin-search'?'input':'change',renderAdmin);
+ el(id).addEventListener(id==='cert-admin-search'?'input':'change',()=>{certPage=0;renderAdmin();});
 el('cert-export').addEventListener('click',exportCSV);
 el('cert-admin-list').addEventListener('click',async event=>{
  const b=event.target.closest('button[data-action]');if(!b)return;

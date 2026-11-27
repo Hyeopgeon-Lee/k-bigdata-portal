@@ -1,4 +1,4 @@
-import {mountWrittenExam} from "./written-exam-ui.mjs?v=20261127-written-parity-v3";
+import {mountWrittenExam} from "./written-exam-ui.mjs?v=20261128-performance-1";
 mountWrittenExam({
  examType:"industrial",
  label:"정보처리산업기사",

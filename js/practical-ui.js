@@ -1,9 +1,9 @@
 import {quizNavigation,quizHeading,quizDisclosure,quizFeedback,scrollToQuizAnswer} from "./quiz-unified.js?v=20261112-answer-focus-1";
 import {createQuestionBrowser} from "./question-browser.js?v=20261116-progress-v1";
-import {createLearningProgressStore} from "./learning-list-progress.mjs?v=20261116-concurrency-1";
-import {bindReview,reviewControls,gradeLabels} from "./coding-review.js?v=20261127-dashboard-1";
-import {createPracticalDashboard} from "./practical-dashboard.mjs?v=20261127-shared-1";
-import {loadPracticalBank} from "./practical-data.js?v=20261127-no-timer-1";
+import {createLearningProgressStore} from "./learning-list-progress.mjs?v=20261128-performance-1";
+import {bindReview,reviewControls,gradeLabels} from "./coding-review.js?v=20261128-performance-1";
+import {createPracticalDashboard} from "./practical-dashboard.mjs?v=20261128-performance-1";
+import {loadPracticalBank,loadPracticalLanguage} from "./practical-data.js?v=20261128-performance-1";
 import {examLabels,typeLabels,languages,escapeHTML as esc,questionText,shuffle,recommendFive,matchesExam,localDay,highlightCode,formatCodeForDisplay,canResumeUnfinishedAttempt} from "./practical-core.js?v=20261127-no-timer-1";
 import {getAttempts,saveAttempt,getSession,saveSession,clearLocalLearning,storageAvailable,getPreferences,savePreferences,exportLearning,importLearning} from "./practical-store.js";
 import {matches} from "./search-core.js?v=20261005-perf-1";
@@ -191,7 +191,7 @@ async function copyCurrentProblemLink(){
   setShareStatus("링크를 복사할 수 없습니다. 다시 시도해 주세요.");
  }
 }
-function selectView(next){document.querySelector("main").classList.remove("qb-browsing");const list=document.querySelector(".question-browser");if(list)list.hidden=true;disconnectSolveObserver();current=null;attempt=null;queue=[];view=next;pageLimit=24;setUrl();render();window.scrollTo({top:0,behavior:"auto"});}
+function selectView(next){questionRequest++;document.querySelector("main").classList.remove("qb-browsing");const list=document.querySelector(".question-browser");if(list)list.hidden=true;disconnectSolveObserver();current=null;attempt=null;queue=[];view=next;pageLimit=24;setUrl();render();window.scrollTo({top:0,behavior:"auto"});}
 function planToday(){
  const key=[localDay(),filters.exam,filters.language].join(":");
  const plans=getPreferences().dailyPlans||{},ids=plans[key];
@@ -248,9 +248,14 @@ function renderProgress(){
  root.innerHTML='<section id="practical-dashboard"></section><details class="pd-local-management"><summary>기기 내 학습기록 관리</summary><p>이 기능은 이 기기에 저장된 기록만 관리합니다. 계정 DB 이력은 삭제되지 않습니다.</p>'+button("export-learning","학습 기록 내보내기")+'<label for="import-learning">학습 기록 가져오기 (JSON, 현재 기록과 병합)</label><input id="import-learning" type="file" accept=".json,application/json"><p id="import-status" role="status"></p>'+button("confirm-clear","기기 기록 삭제")+'<div id="clear-confirm"></div></details>';
  dashboard?.show("progress",$("#practical-dashboard"));
 }
-function openQuestion(id,fresh=false){
+let questionRequest=0;
+async function openQuestion(id,fresh=false){
  id=aliases[id]||id;
  const q=bank.find(q=>q.id===id);if(!q)return;
+ const request=++questionRequest;
+ status.textContent="문제를 불러오는 중입니다…";
+ try{await loadPracticalLanguage(bank,q.language);}catch{if(request===questionRequest)status.textContent="문제를 불러오지 못했습니다. 다시 선택해 주세요.";return;}
+ if(request!==questionRequest)return;
  const previous=getSession(id),now=Date.now();current=q;
  // Wrong-note reattempts and explicit retries always start a fresh thinking period.
  if(!fresh&&view!=="wrong"&&canResumeUnfinishedAttempt(previous,now))attempt=previous;
@@ -482,7 +487,7 @@ loadPracticalBank().then(result=>{
  });
  const questionBrowserSection=document.querySelector("main > .question-browser");
  if(questionBrowserSection)$("#practical-dashboard-nav").after(questionBrowserSection);
- dashboard=createPracticalDashboard({host:root,bank,aliases,initialExam:filters.exam,answerFor:displayAnswer,goView:selectView,openSet(items){view="bank";startQueue(items,"bank");}});
+ dashboard=createPracticalDashboard({host:root,bank,aliases,initialExam:filters.exam,answerFor:displayAnswer,loadQuestion:q=>loadPracticalLanguage(bank,q.language),goView:selectView,openSet(items){view="bank";startQueue(items,"bank");}});
  practicalProgress.attach();
  if(browserEntry.resume(id))return;
  const savedQueue=getPreferences().learningQueue;

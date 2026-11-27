@@ -184,8 +184,8 @@ function initForm(){
 }
 async function start(){
  if(!api){say('포털 인증 모듈을 불러오지 못했습니다.');return;}
- const {data:{user:current},error}=await api.auth.getUser();
- if(error||!current){say('로그인이 필요합니다.');return;}
+ const current=window.portalVerifiedContext?.user;
+ if(!current){say('로그인이 필요합니다.');return;}
  user=current;
  writer=window.portalLearning?.write===true;
  if(!writer){

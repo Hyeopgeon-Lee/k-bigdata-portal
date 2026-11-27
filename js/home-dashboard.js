@@ -1,6 +1,6 @@
 // Main dashboard: favorites, recent shortcuts and published recruitment deadlines.
 import {services} from "./services.js?v=20261128-practical-name-2";
-import {getFavorites,getRecent,toggleFavorite} from "./portal-personal.js?v=20261128-practical-name-2";
+import {getFavorites,getRecent,toggleFavorite} from "./portal-personal.js?v=20261128-performance-1";
 const $=selector=>document.querySelector(selector);
 const esc=v=>String(v??"").replace(/[&<>'"]/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[char]));
 const serviceById=id=>services.find(service=>service.id===id);

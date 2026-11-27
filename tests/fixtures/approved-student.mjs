@@ -12,7 +12,7 @@ export async function approvedStudent(context, profileOverride={}, registeredAlu
    const registeredAlumni=${JSON.stringify(registeredAlumni)};
    const superAdmin=${JSON.stringify(superAdmin)};
    function from(table){
-    let mode="select",where=[],ordering=null,max=1000,values=null;
+    let mode="select",where=[],ordering=null,max=1000,offset=0,values=null;
     const match=(row)=>where.every(([type,k,v])=>{
      const x=row[k];if(type==="eq")return x===v;
      if(type==="gte")return x>=v;if(type==="lte")return x<=v;
@@ -28,7 +28,7 @@ export async function approvedStudent(context, profileOverride={}, registeredAlu
      }
      let data=rows.filter(match);
      if(ordering){const [col,ascending]=ordering;data=data.slice().sort((a,b)=>(String(a[col]||"").localeCompare(String(b[col]||"")))*(ascending?1:-1));}
-     return {data:data.slice(0,max),error:null};
+     return {data:data.slice(offset,offset+max),count:data.length,error:null};
     }
     const builder={
      select(){mode="select";return this;},
@@ -39,7 +39,8 @@ export async function approvedStudent(context, profileOverride={}, registeredAlu
      neq(k,v){where.push(["neq",k,v]);return this;},
      order(k,options={}){ordering=[k,options.ascending!==false];return this;},
      limit(n){max=n;return this;},
-     range(a,b){max=b-a+1;return this;},
+     range(a,b){offset=a;max=b-a+1;return this;},
+     or(){return this;},
      delete(){mode="delete";return this;},
      update(row){mode="update";values=row;return this;},
      upsert(items){return this.insert(items,true);},
@@ -75,7 +76,8 @@ export async function approvedStudent(context, profileOverride={}, registeredAlu
     },
     from,
     functions:{async invoke(){return {data:{ok:false,error:"ADMIN_NOT_AUTHORIZED"},error:null};}},
-    async rpc(name){return {data:({start_portal_session:new Date(Date.now()+90*86400000).toISOString(),
+    async rpc(name){return {data:({portal_bootstrap:{profile:{user_id:user.id,full_name:"Student",approval_status:"approved",enrollment_status:"enrolled",signup_type:"student",...profileOverride},expires:new Date(Date.now()+90*86400000).toISOString(),access:{read:true,write:true},admin:superAdmin},
+     start_portal_session:new Date(Date.now()+90*86400000).toISOString(),
      portal_learning_access:{read:true,write:true},portal_super_admin_allowed:superAdmin,admin_list_students:[],my_alumni_profile_registered:registeredAlumni})[name]};}
    };
   };`

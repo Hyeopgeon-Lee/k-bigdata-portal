@@ -9,7 +9,7 @@ export function learningRecords(bank,attempts,aliases={},bankType="practical"){
   const v=result.get(aliases[a.question_id]||a.question_id);
   if(a.bank!==bankType||!v||!allowed.has(a.result)||corrected.has(a.client_attempt_id)||(a.client_attempt_id&&seen.has(a.client_attempt_id)))continue;
   if(a.client_attempt_id)seen.add(a.client_attempt_id);
-  const first=original(a),effective={...a,submitted_at:first.submitted_at,used_hint:first.used_hint,elapsed_seconds:first.elapsed_seconds,answer_text:first.answer_text,metadata:first.metadata};v.events.push(effective);v.count++;if(a.result==="incorrect")v.wrong++;
+  const first=original(a),effective={...a,submitted_at:first.submitted_at,used_hint:first.used_hint,elapsed_seconds:first.elapsed_seconds,answer_text:first.answer_text,answer_id:first.id,metadata:first.metadata};v.events.push(effective);v.count++;if(a.result==="incorrect")v.wrong++;
  }
  for(const v of result.values()){v.events.sort(byTime);v.last=v.events.at(-1)||null;}return [...result.values()];
 }

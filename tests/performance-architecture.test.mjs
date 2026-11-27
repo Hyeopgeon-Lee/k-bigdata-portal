@@ -55,7 +55,8 @@ const passes=[
    assert.ok(!practicalUi.includes('from "./search.js"'));
    assert.ok(practicalUi.includes('bankSearchTimer'));
    assert.ok(practicalUi.includes('setTimeout(()=>{filters.query=value;pageLimit=24;render();},80)'));
-   assert.ok(practicalData.includes('const [questions,extraReconstructed,history,coverage,imported]=await Promise.all(['));
+   assert.ok(practicalData.includes('load("index.json")'));
+   assert.ok(practicalData.includes('load(language.toLowerCase()+".json")'));
    assert.ok(!practicalData.includes('const imported=await load("../data/practical/normalized.json")'));
  }],
  ['07 interview practice avoids jobs/search payloads',()=>{

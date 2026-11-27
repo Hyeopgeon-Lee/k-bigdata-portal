@@ -6,6 +6,23 @@ function getDb(){
  return db;
 }
 export async function loadWrittenExamQuestions(examType){
+ const {data,error}=await getDb().rpc("portal_written_index",{p_exam_type:examType});
+ if(!error&&Array.isArray(data))return data;
+ // Compatible with the old database in local QA and upgrades.
+ return loadFullBank(examType);
+}
+export async function loadWrittenDetails(examType,ids){
+ const unique=[...new Set(ids)],result=[];
+ for(let i=0;i<unique.length;i+=100){
+  const batch=unique.slice(i,i+100);
+  const {data,error}=await getDb().rpc("portal_written_details",{p_exam_type:examType,p_ids:batch});
+  if(error)throw error;
+  if(!Array.isArray(data)||data.length!==batch.length)throw Error("문제 상세 데이터가 누락되었습니다.");
+  result.push(...data);
+ }
+ return result;
+}
+async function loadFullBank(examType){
  const items=[];
  const pageSize=500;
  for(let offset=0;;offset+=pageSize){

@@ -19,8 +19,9 @@ function todayRange(day){
  const from=new Date(day+"T00:00:00+09:00");
  return [from.toISOString(),new Date(from.getTime()+86400000).toISOString()];
 }
-async function load(){
- if(!root||!db()||!globalThis.portalLearning?.read||state.busy)return;
+let lastLoad=0;
+async function load(force=false){
+ if(!root||!db()||!globalThis.portalLearning?.read||state.busy||["admin","alumni"].includes(document.body.dataset.homePersona)||(!force&&Date.now()-lastLoad<60000))return;
  state.busy=true;const day=koreaDay(),[start,end]=todayRange(day);
  try{
   const userId=globalThis.portalVerifiedUserId;
@@ -28,7 +29,7 @@ async function load(){
   state.userId=userId;
   const [checks,custom,attempts]=await Promise.all([
    db().from("daily_task_checks").select("task_key").eq("user_id",userId).eq("task_date",day),
-   db().from("personal_tasks").select("id,title,due_date,status,completed_at").eq("user_id",userId).lte("due_date",day).order("created_at",{ascending:false}).limit(100),
+   db().from("personal_tasks").select("id,title,due_date,status,completed_at").eq("user_id",userId).lte("due_date",day).or("status.eq.open,and(status.eq.done,completed_at.gte."+start+")").order("created_at",{ascending:false}).limit(100),
    db().from("learning_attempts").select("question_id,result,submitted_at").eq("user_id",userId).eq("bank","practical").gte("submitted_at",start).lt("submitted_at",end).limit(200)
   ]);
   if(checks.error||custom.error||attempts.error)throw checks.error||custom.error||attempts.error;
@@ -42,7 +43,7 @@ async function load(){
   state.attempts=(attempts.data||[]).filter(item=>item.result!=="timeout").map(item=>({
    questionId:item.question_id,submittedAt:Date.parse(item.submitted_at),viewedExplanation:true,autoRevealed:false
   }));
-  state.loaded=true;state.error="";render();
+  lastLoad=Date.now();state.loaded=true;state.error="";render();
  }catch(error){
   state.error="개인 학습 정보를 불러오지 못했습니다. 새로고침해 다시 시도해 주세요.";
   console.error("Daily tasks sync failed",error);render();
@@ -140,7 +141,7 @@ function ensureForm(){
   try{
    const {error}=await db().from("personal_tasks").insert({user_id:state.userId,title,due_date:koreaDay()});
    if(error)throw error;
-   input.value="";await load();
+   input.value="";await load(true);
   }catch(error){console.error(error);notify("할 일을 저장하지 못했습니다. 다시 시도해 주세요.");}
   finally{submit.disabled=false;}
  });
@@ -154,7 +155,7 @@ if(root&&list){
   try{
    if(btn.dataset.dailyTask)await changeDaily(btn.dataset.dailyTask);
    else await updateCustom(btn.dataset.personalId||btn.dataset.personalDelete,btn.dataset.personalDelete?"delete":"toggle");
-   await load();
+   await load(true);
   }catch(error){console.error(error);notify("변경사항을 저장하지 못했습니다. 다시 시도해 주세요.");btn.disabled=false;}
  });
  window.addEventListener("kbigdata:home-gradechange",render);

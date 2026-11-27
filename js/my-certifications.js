@@ -145,13 +145,11 @@ async function deleteOwn(item){
 }
 async function start(){
   if(!api||!globalThis.portalLearning?.read){message('cert-page-message','포털 로그인 상태를 확인할 수 없습니다.','error');return;}
-  const {data:{user:active},error:authError}=await api.auth.getUser();
-  if(authError||!active){message('cert-page-message','로그인 세션을 확인할 수 없습니다.','error');return;}
-  // Disallow direct visits by administrators; this route is member self-service.
-  const {data:profile,error:profileError}=await api.from('profiles')
-    .select('signup_type').eq('user_id',active.id).single();
-  const {data:adminAllowed,error:adminCheckError}=await api.rpc('portal_super_admin_allowed');
-  if(profileError||adminCheckError||adminAllowed!==false||!['student','alumni'].includes(profile?.signup_type)){
+  const context=window.portalVerifiedContext,active=context?.user;
+  if(!active){message('cert-page-message','로그인 세션을 확인할 수 없습니다.','error');return;}
+  // UI role comes from the verified bootstrap. The server enforces write policy.
+  const profile=context.profile,adminAllowed=context.isAdmin;
+  if(!profile||adminAllowed!==false||!['student','alumni'].includes(profile?.signup_type)){
     const main=document.querySelector('main');
     if(main){
       const panel=make('section',undefined,'my-page-panel');

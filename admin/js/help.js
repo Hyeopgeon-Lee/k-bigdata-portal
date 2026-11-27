@@ -205,22 +205,28 @@ async function openDetail(request,target,button){
   target.append(field,send,hint);
  }
 }
+let helpPage=0,helpRequestId=0;
+const HELP_PAGE_SIZE=50;
 async function loadRequests(all){
+ const current=++helpRequestId;
  const root=el(all?'help-admin-list':'help-my-list');
  root.replaceChildren(node('p','요청을 불러오는 중...','help-meta'));
  const cols='id,owner_id,legacy_request_id,category,location,title,status,created_at';
- let query=api.from('help_requests').select(cols).order('created_at',{ascending:false}).limit(200);
+ let query=api.from('help_requests').select(cols,{count:"exact"}).order('created_at',{ascending:false}).order("id").range(helpPage*HELP_PAGE_SIZE,(helpPage+1)*HELP_PAGE_SIZE-1);
  if(!all)query=query.eq('owner_id',user.id);
- const {data,error}=await query;
+ const [{data,error,count},...statusCounts]=await Promise.all([query,...(all?Object.keys(statusText).map(status=>api.from("help_requests").select("id",{count:"exact",head:true}).eq("status",status)):[])]);
+ if(current!==helpRequestId)return;
  if(error){root.textContent='요청을 불러오지 못했습니다. 로그인 상태를 확인하세요.';return;}
  cached=data||[];
  root.replaceChildren();
- if(!cached.length){root.append(node('p',all?'요청이 없습니다.':'아직 등록한 요청이 없습니다.','help-meta'));return;}
+ if(!cached.length)root.append(node("p",all?"요청이 없습니다.":"아직 등록한 요청이 없습니다.","help-meta"));
  if(all){
-  const counts=Object.fromEntries(Object.keys(statusText).map(key=>[key,cached.filter(row=>row.status===key).length]));
-  el('help-admin-counts').textContent='총 '+cached.length+'건 · 접수 '+counts.RECEIVED+' · 확인 '+counts.CHECKING+' · 처리 '+counts.PROCESSING+' · 완료 '+counts.COMPLETED;
+  const counts=Object.fromEntries(Object.keys(statusText).map((key,i)=>[key,statusCounts[i].count??"—"]));
+  el('help-admin-counts').textContent='총 '+count+'건 · 접수 '+counts.RECEIVED+' · 확인 '+counts.CHECKING+' · 처리 '+counts.PROCESSING+' · 완료 '+counts.COMPLETED;
  }
  for(const request of cached)root.append(card(request));
+ const pages=Math.max(1,Math.ceil(count/HELP_PAGE_SIZE));if(helpPage>=pages){helpPage=pages-1;return loadRequests(all);}
+ const nav=node("div",null,"help-actions"),prev=node("button","이전","help-secondary"),next=node("button","다음","help-secondary");prev.type=next.type="button";prev.disabled=helpPage===0;next.disabled=helpPage+1>=pages;prev.onclick=()=>{helpPage--;void loadRequests(all);};next.onclick=()=>{helpPage++;void loadRequests(all);};nav.append(prev,node("span",(helpPage+1)+" / "+pages),next);root.append(nav);
 }
 
 // Super-admin role was checked by admin/js/guard.mjs before this module loaded.
