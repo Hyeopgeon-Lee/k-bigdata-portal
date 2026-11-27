@@ -1,4 +1,4 @@
-/* Supabase-backed learning events. Events are appended, never overwritten. */
+/* Supabase-backed learning events. New attempts are appended; coding self-assessment results may be corrected. */
 const VALID_BANKS=new Set(['coding','ncp','practical']);
 const VALID_RESULTS=new Set(['correct','incorrect','completed','ungraded','timeout']);
 const VALID_METHODS=new Set(['self','automatic','completion','none']);
@@ -127,6 +127,24 @@ export async function recordLearningAttempt(data){
  notify('pending','학습 기록을 클라우드에 동기화하는 중입니다.');
  // Always flush after recording; failures retain the on-device copy.
  return flushLearningQueue();
+}
+// Correct an existing attempt, never create a second attempt or change the answer/time.
+export async function correctCodingGrade(questionId,attemptId,result){
+ if(!['correct','incorrect','ungraded'].includes(result)||!attemptId)throw new Error('INVALID_CODING_GRADE');
+ if(!writable())return {state:'readonly'};
+ const user=await account();
+ // Finish any pending insert first so a correction cannot race the initial save.
+ await flushLearningQueue();
+ return withQueueLock(user.id,async()=>{
+  if(pending(user.id).some(row=>row.client_attempt_id===attemptId))throw new Error('CORRECTION_PENDING');
+  const {data,error}=await db().from('learning_attempts').update({result})
+    .eq('user_id',user.id).eq('bank','coding').eq('grading_method','self')
+    .eq('question_id',questionId).eq('client_attempt_id',attemptId)
+    .select('result').maybeSingle();
+  if(error||data?.result!==result)throw error||new Error('CORRECTION_NOT_FOUND');
+  notify('saved','풀이 결과가 수정되었습니다.');
+  return {state:'saved'};
+ });
 }
 export async function fetchLearningAttempts(){
  const user=await account();const all=[];
