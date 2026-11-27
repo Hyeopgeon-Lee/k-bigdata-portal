@@ -641,9 +641,8 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
    progressFor:getProgress,
    openQuestion(q,items){queue=items;queueIndex=items.indexOf(q);queueKind="bank";openQuestion(q.id);}
   });
-  const section=$(".question-browser"),menu=document.createElement("nav");
-  menu.className="bank-nav written-browser-nav";menu.setAttribute("aria-label","필기 학습 메뉴");
-  const common=document.querySelector(".written-common-nav");if(common)section.before(common);section.querySelector(".qb-heading").textContent="전체 문제";
+  const section=$(".question-browser");
+  const common=document.querySelector(".written-common-nav");if(common&&common.nextElementSibling!==section)section.before(common);section.querySelector(".qb-heading").textContent="전체 문제";
   if(archivedOnly){
    document.querySelectorAll('[data-view="home"],[data-view="random"],[data-view="wrong"],[data-view="progress"]')
     .forEach(button=>{button.hidden=true;});
