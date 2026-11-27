@@ -25,10 +25,11 @@ export const categories = {
   }
 };
 export const services = [
+  {id:"engineer-written",name:"정보처리기사 필기 기출문제",englishName:"ENGINEER WRITTEN EXAM",category:"learning",url:"engineer-written.html",icon:"book",accent:"blue",order:9.44,description:"2026년 1·2회 총 200문항을 5과목별·회차별로 학습하세요.",shortDescription:"기사 필기 기출문제 200문항 및 정답 확인.",tags:["정보처리기사","필기","기출문제","CBT"],aliases:"기사 필기 정보처리기사 문제은행",featured:false},
   {
     id:"industrial-written", name:"정보처리산업기사 필기 기출문제", englishName:"INDUSTRIAL ENGINEER WRITTEN EXAM",
     category:"learning", url:"industrial-written.html", icon:"book", accent:"blue", order:9.45,
-    description:"2025년 1·2·3회와 2026년 2회 중 검증 완료된 개별 객관식 문제를 학습하세요.",
+    description:"2022~2026년 산업기사 필기 기출문제 840문항을 학습하세요.",
     shortDescription:"검증 완료된 산업기사 필기 개별문제·선택지·정답 확인.",
     tags:["정보처리산업기사","필기","기출문제","CBT","문제은행"], aliases:"산업기사 필기 정보처리 필기 연도별 회차별 기출",featured:false
   },
@@ -339,6 +340,7 @@ export const portalNavLinks = [
   {id:"k-bigdata-hub",label:"GitHub 연동",group:"learning"},
   {id:"study",label:"자율학습",group:"learning"},
   {id:"practical",label:"정보처리 기출문제",group:"learning"},
+  {id:"engineer-written",label:"기사 필기",group:"learning"},
   {id:"industrial-written",label:"산업기사 필기",group:"learning"},
   {id:"interview",label:"기술면접",group:"learning"},
   {id:"docs",label:"공식문서",group:"learning"},
