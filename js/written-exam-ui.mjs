@@ -31,7 +31,7 @@ export function validateWrittenQuestion(q,examType){
   const validPicture=v=>v&&typeof v==="object"&&
    /^data:image\/(?:gif|png|jpeg);base64,[A-Za-z0-9+/]+=*$/.test(v.dataUri||"")&&
    /^[0-9a-f]{64}$/.test(v.sha256||"");
-  return examType==="industrial"&&permittedSession&&q.sourceVerified===true&&q.answerVerified===true&&
+  return ["industrial","engineer"].includes(examType)&&permittedSession&&q.sourceVerified===true&&q.answerVerified===true&&
    Array.isArray(q.visuals)&&q.visuals.length<=8&&q.visuals.every(validPicture)&&
    (!q.optionVisuals||(q.optionVisuals.length===4&&q.optionVisuals.every(validPicture)));
  }
