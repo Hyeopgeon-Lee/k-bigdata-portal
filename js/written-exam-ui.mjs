@@ -150,13 +150,13 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
  }
  function updateNav(){
   document.querySelectorAll("[data-view]").forEach(b=>{
-   const active=b.dataset.view===view&&!current;
+   const active=b.dataset.view===(view==="mock"?"mock-lobby":view)&&(examType==="industrial"||!current);
    b.setAttribute("aria-pressed",String(active));
    b.classList.toggle("button-primary",active);
    b.classList.toggle("button-secondary",!active);
   });
   $("#quick-filters").hidden=true; // Browser and in-page tabs are the single navigation source.
-  $(".bank-nav").hidden=!!current;
+  $(".bank-nav").hidden=examType==="industrial"?false:!!current;
   $("#bank-controls").hidden=!!current||view!=="bank";
   $("#usage-guide").hidden=!!current;
   document.body.classList.toggle("is-solving",!!current);
@@ -462,7 +462,7 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
   });
   if(examType==="industrial")bank=bank.map(q=>({...q,subject:normalizeSubject(q.subject)}));
   bank.sort((a,b)=>b.year-a.year||b.round-a.round||a.number-b.number);
-  if(examType==="industrial"&&cloud)mock=createMockExam({root,db,bank,writable,back:()=>selectView("mock-lobby"),reviewWrong:items=>{selectView("progress");startQueue(items,"review");},enter:()=>{view="mock";current=null;hideBrowser();updateNav();$(".bank-nav").hidden=true;$("#usage-guide").hidden=true;}});
+  if(examType==="industrial"&&cloud)mock=createMockExam({root,db,bank,writable,back:()=>selectView("mock-lobby"),reviewWrong:items=>{selectView("progress");startQueue(items,"review");},enter:()=>{view="mock";current=null;hideBrowser();updateNav();$("#usage-guide").hidden=true;}});
   fillFilters();
 
   const archiveSessions=(Array.isArray(expectedSessions)?expectedSessions:[])
@@ -550,7 +550,7 @@ export function mountWrittenExam({examType,label,storageKey,expectedSessions=[]}
   const section=$(".question-browser"),menu=document.createElement("nav");
   menu.className="bank-nav written-browser-nav";menu.setAttribute("aria-label","필기 학습 메뉴");
   menu.innerHTML=(examType==="industrial"?"":'<button type="button" class="button button-secondary" data-view="home">학습 시작</button>')+'<button type="button" class="button button-primary" data-view="bank">전체 문제</button><button type="button" class="button button-secondary" data-view="random">랜덤 설정</button>'+(examType==="industrial"?'<button type="button" class="button button-secondary" data-view="mock-lobby">실전 모의고사</button>':"")+'<button type="button" class="button button-secondary" data-view="wrong">오답노트</button><button type="button" class="button button-secondary" data-view="progress">학습현황</button>';
-  section.querySelector(".qb-heading").after(menu);
+  if(examType!=="industrial")section.querySelector(".qb-heading").after(menu);
   if(archivedOnly){
    document.querySelectorAll('[data-view="home"],[data-view="random"],[data-view="wrong"],[data-view="progress"]')
     .forEach(button=>{button.hidden=true;});
