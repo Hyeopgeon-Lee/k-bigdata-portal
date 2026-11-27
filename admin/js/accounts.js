@@ -152,22 +152,32 @@ async function renderApprovalRequests(){
   const targetUserId=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(mailTarget||"")?mailTarget:null;
   let targetItem=null;
   const count=$("#portal-approval-count");
+  const ui=window.portalAdminUI;
+  const summary=document.createElement("div");summary.className="admin-chart-mount";count.before(summary);
   let remaining=pending.length;
   const redraw=()=>{
-    count.textContent=remaining?"승인 대기 "+remaining+"명":"현재 승인 대기 중인 가입 요청이 없습니다.";
-    if(!remaining){
-      const empty=document.createElement("p");
-      empty.className="portal-approval-empty";
-      empty.textContent="새로운 가입 신청이 들어오면 이곳에 표시됩니다.";
-      list.replaceChildren(empty);
+    const grade=ui.getGrade(),items=[...list.querySelectorAll(".portal-approval-item")];
+    const selected=items.filter(item=>!grade||item.dataset.grade===grade);
+    for(const item of items)item.hidden=!selected.includes(item);
+    count.textContent=ui.gradeLabel(grade)+" · 승인 대기 "+selected.length+"명";
+    list.querySelector(".portal-approval-empty")?.remove();
+    if(!selected.length){
+      const empty=document.createElement("p");empty.className="portal-approval-empty";
+      empty.textContent="선택한 학년에 가입 승인 요청이 없습니다.";list.append(empty);
     }
+    ui.renderBars(summary,"가입 승인 대기 · 전체 학년 비교",[
+      ["1학년",items.filter(x=>x.dataset.grade==="1").length],
+      ["2학년",items.filter(x=>x.dataset.grade==="2").length],
+      ["기타·학년 미설정",items.filter(x=>!["1","2"].includes(x.dataset.grade)).length]
+    ],{unit:"명",caption:"승인 대기 목록 기준"});
   };
+  ui.onGrade(redraw);
   for(const member of pending){
-    const item=document.createElement("article");item.className="portal-approval-item";
+    const item=document.createElement("article");item.className="portal-approval-item";item.dataset.grade=member.signup_type==="student"?String(member.academic_year||""):"";
     const top=document.createElement("div");top.className="portal-approval-item-header";
     const title=document.createElement("h2");title.textContent=member.full_name||"이름 미등록";
     const badge=document.createElement("span");badge.className="portal-approval-badge";
-    badge.textContent=member.signup_type==="alumni"?"졸업생":"재학생";
+    badge.textContent=member.signup_type==="alumni"?"졸업생":member.academic_year?member.academic_year+"학년":"학년 미설정";
     top.append(title,badge);
     const details=document.createElement("div");details.className="portal-approval-meta";
     const id=document.createElement("span");id.textContent=member.signup_type==="alumni"?
@@ -224,6 +234,7 @@ async function renderApprovalRequests(){
   redraw();
   if(targetUserId){
     if(targetItem){
+      if(targetItem.hidden)ui.setGrade(targetItem.dataset.grade);
       targetItem.classList.add("portal-approval-target");
       targetItem.setAttribute("aria-label","메일에서 선택한 가입 신청");
       list.prepend(targetItem);
@@ -247,7 +258,7 @@ async function renderApprovalRequests(){
 
 // The unified directory keeps the existing approval and explicit permanent-deletion flows.
 async function renderAdmin(){
-  await import("./unified-users.mjs?v=20261128-users-1").then(mod=>mod.renderUnifiedUsers({
+  await import("./unified-users.mjs?v=20261128-ui-1").then(mod=>mod.renderUnifiedUsers({
     client,root,card,status,renderAccount,approvePortalMember,retryApprovalEmail,renderWithdrawnDeletion
   }));
 }

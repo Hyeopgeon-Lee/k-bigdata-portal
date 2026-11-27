@@ -8,6 +8,7 @@ const pill=(text,kind)=>make('span',text,'cert-badge'+(kind?' is-'+kind:''));
 const button=(text,action,id)=>{const b=make('button',text,'cert-secondary');b.type='button';b.dataset.action=action;b.dataset.id=id;return b;};
 const message=(id,text,kind='info')=>{const n=el(id);if(n){n.textContent=text;n.dataset.kind=kind;}};
 const todayInKorea=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+const ui=window.portalAdminUI;
 const CERT_PAGE_SIZE=50;let certPage=0;
 let all=[],profileById=new Map(),admin=true;
 function studentInfo(id){
@@ -15,29 +16,38 @@ function studentInfo(id){
   const grade=['graduated','early_employment'].includes(p.enrollment_status)?(p.enrollment_status==='graduated'?'졸업':'조기취업'):[1,2].includes(Number(p.academic_year))?p.academic_year+'학년':'학년 미설정';
   return {name:p.full_name||'이름 미확인',student:p.student_no||'',grade};
 }
+function gradeRecords(){
+  const grade=el('cert-admin-grade').value;
+  return all.filter(c=>{
+    const p=profileById.get(c.user_id)||{};
+    if(grade==='graduate')return ['graduated','early_employment'].includes(p.enrollment_status);
+    return !grade||(String(p.academic_year)===grade&&['enrolled','leave'].includes(p.enrollment_status));
+  });
+}
 function filteredAdmin(){
   const query=el('cert-admin-search').value.trim().toLowerCase();
-  const grade=el('cert-admin-grade').value,status=el('cert-admin-status').value;
-  return all.filter(c=>{
+  const status=el('cert-admin-status').value;
+  return gradeRecords().filter(c=>{
     const p=profileById.get(c.user_id)||{};
     const info=studentInfo(c.user_id);
     if(query&&![info.name,info.student,c.certificate_name].some(v=>String(v).toLowerCase().includes(query)))return false;
     if(status&&c.verification_status!==status)return false;
-    if(grade==='graduate'&&!['graduated','early_employment'].includes(p.enrollment_status))return false;
-    if(['1','2'].includes(grade)&&(String(p.academic_year)!==grade||!['enrolled','leave'].includes(p.enrollment_status)))return false;
     return true;
   });
 }
 function renderAdmin(){
   if(!admin)return;
   const panel=el('cert-admin-stats');panel.replaceChildren();
+  const scoped=gradeRecords(),grade=el('cert-admin-grade').value,label=grade==='graduate'?'졸업·조기취업':ui.gradeLabel(grade);
   for(const [label,count] of [
-    ['전체 등록',all.length],
-    ['확인대기',all.filter(x=>x.verification_status==='pending').length],
-    ['확인완료 최종합격',all.filter(x=>x.verification_status==='verified'&&x.pass_status==='final').length]
+    ['선택 학년 등록',scoped.length],
+    ['확인대기',scoped.filter(x=>x.verification_status==='pending').length],
+    ['확인완료 최종합격',scoped.filter(x=>x.verification_status==='verified'&&x.pass_status==='final').length]
   ]){
     const article=make('article');article.append(make('span',label),make('strong',count+'건'));panel.append(article);
   }
+  const chart=ui.chartMount(panel,'cert-status-chart');
+  ui.renderDonut(chart,label+' · 확인 상태',[['확인대기',scoped.filter(x=>x.verification_status==='pending').length],['확인완료',scoped.filter(x=>x.verification_status==='verified').length],['반려',scoped.filter(x=>x.verification_status==='rejected').length]],{unit:'건'});
   const records=filteredAdmin(),list=el('cert-admin-list');list.replaceChildren();
   if(!records.length)list.append(make('p','검색 조건에 해당하는 등록 내용이 없습니다.','cert-empty'));
   const pages=Math.max(1,Math.ceil(records.length/CERT_PAGE_SIZE));certPage=Math.min(certPage,pages-1);
@@ -57,7 +67,7 @@ function renderAdmin(){
   }
   const nav=make("div",undefined,"cert-item-actions"),prev=make("button","이전","cert-secondary"),next=make("button","다음","cert-secondary");prev.type=next.type="button";prev.disabled=certPage===0;next.disabled=certPage+1>=pages;prev.onclick=()=>{certPage--;renderAdmin();};next.onclick=()=>{certPage++;renderAdmin();};nav.append(prev,make("span",(certPage+1)+" / "+pages),next);list.append(nav);
   const grouped=new Map();
-  for(const c of all.filter(x=>x.pass_status==='final'&&x.verification_status==='verified')){
+  for(const c of scoped.filter(x=>x.pass_status==='final'&&x.verification_status==='verified')){
     if(!grouped.has(c.certificate_name))grouped.set(c.certificate_name,new Set());
     grouped.get(c.certificate_name).add(c.user_id);
   }
@@ -66,7 +76,8 @@ function renderAdmin(){
   else for(const [name,users] of [...grouped.entries()].sort((a,b)=>b[1].size-a[1].size)){
     const r=make('div',undefined,'cert-item cert-item-head');r.append(make('strong',name,'cert-item-title'),make('span',users.size+'명','cert-item-meta'));byType.append(r);
   }
-  message('cert-admin-message','등록 '+all.length+'건 중 '+records.length+'건 표시 · 통계는 관리자 확인완료 건을 별도 집계합니다.');
+  ui.renderBars(ui.chartMount(byType,'cert-type-chart'),'자격증별 최종합격 인원',[...grouped.entries()].sort((a,b)=>b[1].size-a[1].size).map(([name,users])=>[name,users.size]),{unit:'명',caption:label+' · 확인완료 최종합격, 자격증별 고유 학생 수'});
+  message('cert-admin-message',label+' · 등록 '+scoped.length+'건 중 '+records.length+'건 표시');
 }
 async function readCerts(){
  const rows=[];for(let start=0;;start+=500){const {data,error}=await api.from("student_certifications").select("id,user_id,certificate_name,pass_status,written_pass_date,final_pass_date,certificate_number,verification_status,verification_note,created_at").order("created_at",{ascending:false}).order("id").range(start,start+499);if(error)return {error};rows.push(...data);if(data.length<500)return {data:rows};}
@@ -100,8 +111,10 @@ function exportCSV(){
 }
 
 el('cert-admin-panel').hidden=false;
+el('cert-admin-grade').value=ui.getGrade();
+ui.onGrade(grade=>{el('cert-admin-grade').value=grade;certPage=0;renderAdmin();});
 for(const id of ['cert-admin-search','cert-admin-grade','cert-admin-status'])
- el(id).addEventListener(id==='cert-admin-search'?'input':'change',()=>{certPage=0;renderAdmin();});
+ el(id).addEventListener(id==='cert-admin-search'?'input':'change',()=>{certPage=0;if(id==='cert-admin-grade'&&el(id).value!=='graduate'&&el(id).value!==ui.getGrade()){ui.setGrade(el(id).value);return;}renderAdmin();});
 el('cert-export').addEventListener('click',exportCSV);
 el('cert-admin-list').addEventListener('click',async event=>{
  const b=event.target.closest('button[data-action]');if(!b)return;

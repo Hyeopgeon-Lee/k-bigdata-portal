@@ -1,0 +1,184 @@
+/* Admin-only responsive design tokens, after all page-specific styles. */
+body[data-admin-page]{
+ --admin-primary:#245e9d;--admin-ink:#142c49;--admin-muted:#52667d;--admin-border:#d8e3ef;
+ --admin-bg:#f5f7fb;--admin-radius:12px;--admin-action-height:48px;--admin-action-font:15px;
+ font-size:16px;line-height:1.6;
+}
+.admin-main,.admin-header{word-break:keep-all;overflow-wrap:break-word}
+.admin-main *{box-sizing:border-box}
+.admin-main :is(h1,h2,h3,p,li,small,label,td,th){word-break:keep-all;overflow-wrap:break-word}
+.admin-intro h1{font-size:clamp(25px,3vw,34px);line-height:1.35;letter-spacing:-.035em}
+.admin-intro-copy>p:last-child,.admin-section-head p,.admin-tile-copy>span{font-size:15px;line-height:1.6}
+.admin-kicker{font-size:12px}
+.admin-main :is(.admin-section-head h2,.admin-panel-heading,.learn-section h2,.my-page-panel h2,.exam-section-title h2){font-size:20px;line-height:1.4;letter-spacing:-.02em}
+.admin-main :is(.admin-panel,.admin-inline-card,.learn-section,.my-page-panel,.exam-builder,.alumni-admin .panel,.admin-chart){border:1px solid var(--admin-border);border-radius:var(--admin-radius);box-shadow:0 3px 12px #153d8010}
+.admin-main :is(.admin-panel,.admin-inline-card,.learn-section,.my-page-panel,.exam-builder,.alumni-admin .panel){min-width:0}
+.admin-main :is(.admin-count,.users-note,.users-list-meta,.admin-monitor-status,.help-meta,.room-muted,.cert-item-meta,.learn-stat p,.learn-section>p,.written-round small,.alumni-admin small){font-size:14px;line-height:1.6}
+.admin-main :is(.users-table,.learn-table,.study-admin-table,.admin-table,.portal-admin-table){font-size:15px}
+.admin-main :is(button,a.button,.users-link,.admin-intro-link,.admin-menu a,.admin-nav-toggle,.admin-grade-choice):not(.users-kpi):not(.portal-account-trigger):not(.learn-answer-link){
+ min-height:var(--admin-action-height)!important;padding:10px 14px!important;font-size:var(--admin-action-font)!important;
+ font-family:inherit;font-weight:700;line-height:1.35!important;border-radius:10px!important;
+ white-space:nowrap;word-break:keep-all;overflow-wrap:normal;max-width:100%;box-shadow:none;align-items:center;justify-content:center;
+}
+.admin-main button:not(.users-kpi):not(.learn-answer-link),.admin-main a.button,.admin-main .users-link{cursor:pointer;background:var(--admin-primary);color:#fff;border:1px solid var(--admin-primary)}
+.admin-main :is(button,a.button,.users-link):focus-visible{outline:3px solid #39a4d1;outline-offset:2px}
+.admin-main button:disabled{opacity:.55;cursor:not-allowed}
+.admin-main :is(.users-actions,.users-tabs,.users-pagination,.portal-approval-buttons,.portal-auth-actions,.learn-button-group,.learn-period-navigation,.cert-item-actions,.room-row,.help-actions,.admin-actions,.written-actions,.exam-actions,.exam-downloads,.exam-paging,.exam-form-switch,.alumni-admin .tabs,.alumni-admin .actions){flex-wrap:wrap;gap:8px;min-width:0}
+.admin-main :is(.cert-secondary,.room-secondary,.help-secondary,.button--secondary,.button-secondary,.users-secondary,.users-link,.portal-approval-reject,.button--ghost,.study-outline,.learn-period-arrow,.learn-period-today,.learn-choice-button,.admin-nav-toggle,.admin-grade-choice){background:#fff;color:var(--admin-primary);border:1px solid #b6c9df}
+.admin-main :is(.portal-approval-accept,#exam-generate,#cert-export,.admin-monitor-refresh,.users-detail-btn,.help-primary,.button--primary){background:var(--admin-primary);color:#fff;border:1px solid var(--admin-primary)}
+.admin-main :is(.users-danger,.portal-approval-reject,[data-action="reject"],[data-action="adminHide"],[data-action="adminJobHide"],[data-action="adminNewsHide"]){background:#fff4f3!important;color:#a52724!important;border:1px solid #e2b5b1!important}
+.admin-main :is(button[aria-pressed="true"],button[aria-selected="true"]):not(.users-kpi){background:var(--admin-primary)!important;border-color:var(--admin-primary)!important;color:#fff!important}
+.admin-main :is(input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),select,textarea){font-size:16px!important;min-height:46px;max-width:100%;min-width:0;border-radius:10px;word-break:normal}
+.admin-main :is(.users-layout,.help-layout,.alumni-admin,.written-dashboard,.learn-container){min-width:0}
+.admin-main :is(.users-sub,.users-table td,.alumni-admin .admin-table td,.portal-approval-meta span){overflow-wrap:anywhere;word-break:keep-all}
+.admin-nav-toggle{display:none}
+.admin-grade-panel{background:#fff;border:1px solid var(--admin-border);border-radius:12px;padding:14px 16px;display:flex;gap:16px;align-items:center;justify-content:space-between;margin:0 0 20px}
+.admin-grade-heading{display:grid;gap:2px;min-width:0}
+.admin-grade-heading strong{font-size:17px}
+.admin-grade-heading span{font-size:13px;color:var(--admin-muted)}
+.admin-grade-group{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;min-width:0}
+.admin-grade-choice{min-width:80px}
+.admin-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:12px 0}
+.admin-kpi{display:grid;gap:5px;padding:16px;border:1px solid var(--admin-border);background:#fff;border-radius:12px;min-width:0;text-decoration:none;color:var(--admin-ink)}
+.admin-kpi:hover{border-color:#90adce}
+.admin-kpi-label{font-size:14px;color:var(--admin-muted);font-weight:650}
+.admin-kpi-value{font-size:clamp(23px,3vw,31px);font-weight:850;line-height:1.25;color:var(--admin-primary);font-variant-numeric:tabular-nums}
+.admin-kpi-link{font-size:12px;color:var(--admin-primary);font-weight:700}
+.admin-chart-mount{min-width:0;margin:12px 0}
+.admin-chart-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:12px 0}
+.admin-chart{padding:16px;background:#fff;min-width:0;margin:0}
+.admin-chart-title{font-size:19px!important;line-height:1.4;margin:0 0 6px!important;color:var(--admin-ink)}
+.admin-chart-caption,.admin-chart-empty{font-size:14px;color:var(--admin-muted);margin:0 0 12px;line-height:1.55}
+.admin-chart-bars{display:grid;gap:13px;margin-top:13px}
+.admin-chart-row{display:grid;gap:6px;min-width:0}
+.admin-chart-label{display:flex;justify-content:space-between;align-items:start;gap:10px;line-height:1.4;font-size:15px}
+.admin-chart-label span{min-width:0;overflow-wrap:break-word;word-break:keep-all}
+.admin-chart-label strong{white-space:nowrap;color:var(--admin-ink);font-variant-numeric:tabular-nums}
+.admin-chart-track{background:#e7eef7;height:13px;border-radius:10px;overflow:hidden}
+.admin-chart-fill{height:100%;display:block;border-radius:10px}
+.admin-donut-layout{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:18px;margin-top:14px}
+.admin-donut{display:grid;place-items:center;flex:0 0 134px;height:134px;border-radius:50%;background:#e7eef7}
+.admin-donut-center{border-radius:50%;background:#fff;display:grid;place-items:center;width:98px;height:98px;font-size:21px;font-weight:800;color:var(--admin-ink);font-variant-numeric:tabular-nums}
+.admin-chart-legend{list-style:none;margin:0;padding:0;flex:1 1 140px;min-width:0;display:grid;gap:8px}
+.admin-chart-legend li{display:flex;align-items:center;gap:8px;justify-content:space-between;font-size:14px}
+.admin-chart-legend li span:nth-child(2){flex:1;min-width:0}
+.admin-chart-legend strong{white-space:nowrap}
+.admin-chart-swatch{width:10px;height:10px;border-radius:3px;flex:0 0 10px}
+.admin-overview{margin:0 0 24px;min-width:0}
+.admin-overview .admin-section-head{margin-bottom:6px}
+.admin-filter-detail{border:1px solid var(--admin-border);border-radius:10px;padding:10px 12px;background:#f8fafd}
+.admin-filter-detail>summary{font-weight:700;cursor:pointer;min-height:44px;align-content:center}
+.admin-filter-detail .users-filters{margin-top:6px}
+.admin-main .users-kpi{min-height:76px;white-space:normal!important}
+.admin-main .users-kpi small{font-size:14px}
+.admin-main .users-filters label{font-size:15px}
+.admin-main .users-detail-header{flex-wrap:wrap}
+.admin-main .users-bar{height:13px}
+.admin-main .alumni-admin .admin-table td{min-width:0}
+@media(max-width:700px){
+ .admin-header.site-header{position:static}
+ .admin-header-inner.header-inner{min-height:60px!important;padding:8px 0!important;gap:8px;flex-wrap:wrap}
+ .admin-header-links{width:auto;flex:1 1 auto;order:0;justify-content:flex-end;gap:2px}
+ .admin-header-links .admin-header-link{min-height:44px;font-size:14px;padding:7px!important}
+ .admin-header-links .admin-header-link:first-child,.admin-header-links .admin-header-link[href="../mypage.html"]{display:none}
+ .admin-main{width:calc(100% - 24px);padding:16px 0 48px}
+ .admin-intro{margin-bottom:14px;gap:6px}
+ .admin-intro-link{display:none}
+ .admin-intro-copy>p:last-child{font-size:15px}
+ .admin-nav-toggle{display:flex;width:100%;background:#fff;margin:0 0 8px;justify-content:space-between!important}
+ .admin-nav-toggle::after{content:"▾";font-size:18px}
+ .admin-nav-toggle[aria-expanded="true"]::after{content:"▴"}
+ .admin-menu[aria-label="관리자 업무 메뉴"]{display:none;overflow:visible;margin-bottom:12px;width:100%}
+ .admin-menu[aria-label="관리자 업무 메뉴"].admin-nav-open{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+ .admin-menu[aria-label="관리자 업무 메뉴"] a{white-space:nowrap;font-size:14px!important;text-align:center;padding:9px 7px!important;min-height:48px!important}
+ .admin-grade-panel{display:grid;gap:10px;padding:12px;margin:0 0 16px}
+ .admin-grade-heading{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:4px}
+ .admin-grade-group{width:100%}
+ .admin-grade-choice{min-width:0}
+ .admin-kpis,.admin-monitor-metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .admin-kpi{padding:12px}
+ .admin-chart-grid{grid-template-columns:1fr;gap:10px}
+ .admin-chart{padding:14px}
+ .admin-section{margin-top:20px}
+ .admin-grid--featured,.admin-grid--services{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .admin-tile,.admin-tile--featured{min-height:105px;display:flex;flex-direction:column;align-items:flex-start;padding:12px;gap:5px}
+ .admin-tile-symbol{width:32px;height:32px;flex:0 0 32px;border-radius:9px}
+ .admin-tile-symbol svg{width:20px;height:20px}
+ .admin-tile-copy{padding:0;gap:3px}
+ .admin-tile-copy strong,.admin-tile--featured .admin-tile-copy strong{font-size:16px;line-height:1.4}
+ .admin-tile-copy>span{font-size:13px}
+ .admin-tile-arrow{display:none}
+ .admin-main :is(.admin-panel,.admin-inline-card,.learn-section,.my-page-panel,.exam-builder,.alumni-admin .panel){padding:14px!important;margin-bottom:12px}
+ .admin-section-head{flex-wrap:wrap;align-items:flex-start}
+ .admin-main .users-kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .admin-main .users-actions>*{flex:1 1 auto;min-width:0}
+ .admin-main .users-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+ .admin-main .users-tabs button{font-size:14px!important;padding:9px 5px!important}
+ .admin-main .users-filters{grid-template-columns:1fr}
+ .admin-main .users-table-scroll,.admin-main #admin-table{overflow:visible;max-width:100%}
+ .admin-main :is(.users-table,.alumni-admin .admin-table){display:block;min-width:0!important;width:100%;border:0}
+ .admin-main :is(.users-table,.alumni-admin .admin-table) thead{display:none}
+ .admin-main :is(.users-table,.alumni-admin .admin-table) tbody{display:block}
+ .admin-main :is(.users-table,.alumni-admin .admin-table) tr{display:block;width:100%;border:1px solid var(--admin-border);border-radius:12px;padding:12px;margin:0 0 10px;background:#fff}
+ .admin-main :is(.users-table,.alumni-admin .admin-table) td{display:grid!important;grid-template-columns:minmax(72px,32%) minmax(0,1fr);gap:5px 10px;padding:7px 0!important;border:0;width:100%;text-align:left;white-space:normal!important;font-size:15px}
+ .admin-main :is(.users-table,.alumni-admin .admin-table) td::before{content:attr(data-label);font-size:13px;color:var(--admin-muted);font-weight:650}
+ .admin-main :is(.users-table,.alumni-admin .admin-table) td:first-child{display:block!important;font-size:17px;font-weight:700;border-bottom:1px solid #e6edf5;padding-bottom:10px!important}
+ .admin-main :is(.users-table,.alumni-admin .admin-table) td:first-child::before{display:none}
+ .admin-main :is(.users-table,.alumni-admin .admin-table) td:last-child:has(button, a.button){display:block!important}
+ .admin-main :is(.users-table,.alumni-admin .admin-table) td:last-child:has(button, a.button)::before{display:none}
+ .admin-main :is(.users-table,.alumni-admin .admin-table) td:last-child button{width:100%}
+ .admin-main .alumni-admin .admin-table td br{display:initial}
+ .admin-main .alumni-admin .admin-table td>small{grid-column:2}
+ .admin-main .alumni-admin .admin-actions{display:flex;flex-wrap:wrap}
+ .admin-main .alumni-admin .admin-actions>*{flex:1 1 auto}
+ .admin-main .alumni-admin .tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+ .admin-main .alumni-admin .tabs button{font-size:14px!important;padding:8px 6px!important}
+ .admin-main .alumni-admin .filter-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .admin-main :is(.portal-approval-buttons,.cert-item-actions,.help-actions,.room-row,.exam-downloads) button{flex:1 1 auto}
+ .admin-main .learn-stat{min-width:0;padding:12px}
+ .admin-main .learn-stat strong{font-size:23px}
+ .admin-main .learn-stat small{font-size:14px}
+ .admin-main .learn-stat p{font-size:13px}
+ .admin-main .exam-subjects li{font-size:14px}
+}
+@media(max-width:380px){.admin-main .alumni-admin .filter-grid{grid-template-columns:1fr}.admin-grade-heading span{font-size:12px}.admin-main .users-tabs button{font-size:13px!important}}
+
+.admin-chart-drilldown{padding:5px 6px;border-radius:8px;text-decoration:none;color:inherit}
+.admin-chart-drilldown:hover{background:#f3f7fc}
+.admin-chart-drilldown .admin-chart-label span::after{content:" →";color:var(--admin-primary)}
+.admin-main .portal-auth-danger{background:#a52724;color:#fff}
+.admin-main .admin-grade-panel button:focus-visible{outline:3px solid #39a4d1;outline-offset:2px}
+.admin-main :is(.cert-stats,.users-kpis,.learn-summary){min-width:0}
+@media(max-width:700px){
+ .admin-main .cert-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .admin-main .cert-admin-filters{grid-template-columns:1fr}
+ .admin-main .alumni-admin .admin-table td:last-child small{display:block}
+ .admin-main .users-table td:last-child:has(button){padding-top:10px!important}
+}
+
+.admin-cell-value{min-width:0;overflow-wrap:anywhere;word-break:keep-all}
+.admin-main .users-data-grid>div{word-break:keep-all}
+@media(max-width:700px){
+ .admin-main :is(.users-table,.alumni-admin .admin-table) .admin-cell-value{grid-column:2}
+ .admin-main .users-table td:first-child .admin-cell-value{grid-column:auto}
+ .admin-main .alumni-admin .admin-table td .admin-cell-value:has(button,select){display:grid;gap:6px}
+ .admin-main .alumni-admin .admin-table .admin-actions{display:flex}
+ .admin-main .users-table td[data-label="이메일"]{font-size:14px}
+ .admin-main .users-layout .users-detail-btn{width:100%}
+}
+
+.admin-header-links .admin-header-link{min-height:48px;border-radius:10px;font-size:15px}
+.admin-main .admin-intro-link{min-height:48px}
+.admin-main .users-kpi-label{font-size:14px}
+
+.admin-main .learn-answer-link{min-width:44px;min-height:44px}
+.admin-main .admin-nav-toggle{background:#fff;color:var(--admin-primary)}
+.admin-main .admin-grade-choice:not([aria-pressed="true"]){background:#fff;color:var(--admin-primary)}
+.admin-main .users-tabs button:not([aria-pressed="true"]){background:#fff;color:var(--admin-primary);border-color:#b6c9df}
+.admin-main .alumni-admin .tabs button:not([aria-selected="true"]){background:#fff;color:var(--admin-primary);border-color:#b6c9df}
+.admin-main .users-actions .users-link{background:#fff;color:var(--admin-primary);border-color:#b6c9df}
+.admin-main .admin-main-filter{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media(max-width:700px){
+ .admin-main .admin-main-filter{grid-template-columns:1fr}
+ .admin-main .users-tabs button{white-space:nowrap}
+}

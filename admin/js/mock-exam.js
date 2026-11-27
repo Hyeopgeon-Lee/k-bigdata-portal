@@ -15,6 +15,8 @@ function updateSubjects(){
  $("exam-subjects").replaceChildren(...examConfig(getType()).subjects.map(s=>{
   const li=document.createElement("li");li.textContent=s+" 20문항";return li;
  }));
+ const config=examConfig(getType()),ui=window.portalAdminUI;
+ ui.renderBars(ui.chartMount($("exam-subjects"),"exam-subject-chart"),"과목별 출제 문항",config.subjects.map(subject=>[subject,20]),{unit:"문항",caption:config.label+" · 총 "+config.total+"문항",max:20});
 }
 function resetResult(){
  if(previewUrl)URL.revokeObjectURL(previewUrl);previewUrl=null;

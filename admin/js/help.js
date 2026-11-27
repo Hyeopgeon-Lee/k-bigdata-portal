@@ -205,24 +205,37 @@ async function openDetail(request,target,button){
   target.append(field,send,hint);
  }
 }
-let helpPage=0,helpRequestId=0;
+const ui=window.portalAdminUI;
+let helpPage=0,helpRequestId=0,helpStudents=null;
 const HELP_PAGE_SIZE=50;
 async function loadRequests(all){
  const current=++helpRequestId;
  const root=el(all?'help-admin-list':'help-my-list');
  root.replaceChildren(node('p','요청을 불러오는 중...','help-meta'));
  const cols='id,owner_id,legacy_request_id,category,location,title,status,created_at';
- let query=api.from('help_requests').select(cols,{count:"exact"}).order('created_at',{ascending:false}).order("id").range(helpPage*HELP_PAGE_SIZE,(helpPage+1)*HELP_PAGE_SIZE-1);
+ const grade=all?ui.getGrade():"";
+ if(all&&grade&&!helpStudents){
+  const profiles=await api.rpc("admin_list_students");
+  if(current!==helpRequestId)return;
+  if(profiles.error){root.textContent="학생 정보를 불러오지 못했습니다.";return;}
+  helpStudents=profiles.data||[];
+ }
+ const ids=(helpStudents||[]).filter(x=>ui.matchesGrade(x,grade)).map(x=>x.user_id);
+ const scope=q=>grade?q.in("owner_id",ids):q;
+ let query=scope(api.from('help_requests').select(cols,{count:"exact"})).order('created_at',{ascending:false}).order("id").range(helpPage*HELP_PAGE_SIZE,(helpPage+1)*HELP_PAGE_SIZE-1);
  if(!all)query=query.eq('owner_id',user.id);
- const [{data,error,count},...statusCounts]=await Promise.all([query,...(all?Object.keys(statusText).map(status=>api.from("help_requests").select("id",{count:"exact",head:true}).eq("status",status)):[])]);
+ const chart=all?ui.chartMount(el("help-admin-counts"),"help-status-chart"):null;chart?.replaceChildren();
+ const empty={data:[],count:0,error:null};
+ const [{data,error,count},...statusCounts]=grade&&!ids.length?[empty,...Object.keys(statusText).map(()=>empty)]:await Promise.all([query,...(all?Object.keys(statusText).map(status=>scope(api.from("help_requests").select("id",{count:"exact",head:true})).eq("status",status)):[])]);
  if(current!==helpRequestId)return;
  if(error){root.textContent='요청을 불러오지 못했습니다. 로그인 상태를 확인하세요.';return;}
  cached=data||[];
  root.replaceChildren();
  if(!cached.length)root.append(node("p",all?"요청이 없습니다.":"아직 등록한 요청이 없습니다.","help-meta"));
  if(all){
-  const counts=Object.fromEntries(Object.keys(statusText).map((key,i)=>[key,statusCounts[i].count??"—"]));
-  el('help-admin-counts').textContent='총 '+count+'건 · 접수 '+counts.RECEIVED+' · 확인 '+counts.CHECKING+' · 처리 '+counts.PROCESSING+' · 완료 '+counts.COMPLETED;
+  const counts=Object.fromEntries(Object.keys(statusText).map((key,i)=>[key,statusCounts[i].error?null:statusCounts[i].count??null]));
+  el('help-admin-counts').textContent=ui.gradeLabel(grade)+' · 총 '+count+'건'+(grade?' · 계정 연결 요청 기준':'');
+  ui.renderBars(chart,'요청 처리 현황',Object.keys(statusText).map(key=>[statusText[key],counts[key],key==='RECEIVED'?'warning':undefined]),{unit:'건',caption:'선택 학년의 전체 조회 결과'});
  }
  for(const request of cached)root.append(card(request));
  const pages=Math.max(1,Math.ceil(count/HELP_PAGE_SIZE));if(helpPage>=pages){helpPage=pages-1;return loadRequests(all);}
@@ -234,5 +247,6 @@ if(window.portalAdminAllowed!==true)throw Error("ADMIN_SESSION_REQUIRED");
 const {data:{user:active},error:authError}=await api.auth.getUser();
 if(authError||!active)throw Error("ADMIN_LOGIN_REQUIRED");
 user=active;
-document.getElementById("admin-help-refresh").addEventListener("click",()=>void loadRequests(true));
+ui.onGrade(()=>{helpPage=0;void loadRequests(true);});
+document.getElementById("admin-help-refresh").addEventListener("click",()=>{helpStudents=null;helpPage=0;void loadRequests(true);});
 await loadRequests(true);

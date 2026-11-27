@@ -22,6 +22,8 @@ try{
    if(samePath&&sameView)link.setAttribute("aria-current","page");
    else link.removeAttribute("aria-current");
  }
+ const {setupAdminUI}=await import("./admin-ui.mjs?v=20261128-ui-1");
+ setupAdminUI();
  // Expose the ready state only after the protected content is no longer hidden.
  document.documentElement.dataset.adminAccess="approved";
  const moduleUrl=new URL("./"+name,import.meta.url);

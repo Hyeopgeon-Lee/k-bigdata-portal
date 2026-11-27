@@ -12,51 +12,65 @@ const approvalList=[["all","전체 가입 상태"],["approved","승인"],["pendi
 const attentionList=[["all","전체"],["academic","학적 변경 요청"],["mail_failed","승인메일 실패"],["no_plan","이번 주 자율학습 계획 미등록"],["inactive","최근 7일 기록된 학습 없음"],["mock_failed","모의고사 불합격 기록"],["no_cert","확인된 최종합격 자격증 없음"],["no_application","2학년 입사지원 기록 미등록"],["followup","상담 후속 조치 기한 도래"]];
 const careerList=[["","미입력"],["preparing","준비 중"],["applied","지원 중"],["interview","면접"],["offer","합격"],["employed","취업"]];
 const tabs=[["profile","기본·계정 정보"],["learning","학습현황"],["study","자율학습"],["certifications","자격증"],["guidance","상담·취업지도"],["services","서비스 이용"],["alumni","졸업생"],["history","변경 이력"]];
-const table=(heads,rows)=>rows.length?'<div class="users-table-scroll"><table class="users-table"><thead><tr>'+heads.map(x=>'<th scope="col">'+esc(x)+'</th>').join("")+'</tr></thead><tbody>'+rows.map(row=>'<tr>'+row.map((v,i)=>'<td data-label="'+esc(heads[i])+'">'+v+'</td>').join("")+'</tr>').join("")+'</tbody></table></div>':'<p class="users-empty">등록된 기록이 없습니다.</p>';
+const table=(heads,rows)=>rows.length?'<div class="users-table-scroll"><table class="users-table"><thead><tr>'+heads.map(x=>'<th scope="col">'+esc(x)+'</th>').join("")+'</tr></thead><tbody>'+rows.map(row=>'<tr>'+row.map((v,i)=>'<td data-label="'+esc(heads[i])+'"><div class="admin-cell-value">'+v+'</div></td>').join("")+'</tr>').join("")+'</tbody></table></div>':'<p class="users-empty">등록된 기록이 없습니다.</p>';
 const field=(name,title,value,type="text",extra="")=>'<label>'+esc(title)+'<input name="'+esc(name)+'" type="'+esc(type)+'" value="'+esc(value??"")+'" '+extra+'></label>';
 const select=(name,title,items,value,extra="")=>'<label>'+esc(title)+'<select name="'+esc(name)+'" '+extra+'>'+options(items,value)+'</select></label>';
 const consent=v=>v==null||String(v).trim()===""?"미설정":/^(true|1|yes|on)$/i.test(String(v))?"동의":"거부";
 const roleText=p=>p.enrollment_status==="enrolled"&&p.academic_year?esc(p.academic_year)+"학년":label(p.enrollment_status);
-let state={status:"enrolled",grade:"",approval:"all",type:"all",attention:"all",search:"",page:1};
+const ui=window.portalAdminUI;
+let stopGrade;
+let state={status:"enrolled",grade:ui.getGrade(),approval:"all",type:"all",attention:"all",search:"",page:1};
 export async function renderUnifiedUsers(ctx){
  const {client,root,card,status,renderAccount,approvePortalMember,retryApprovalEmail,renderWithdrawnDeletion}=ctx;
  const $=s=>root.querySelector(s);
  const query=new URLSearchParams(location.search);
+ for(const [name,choices] of [["status",statusList],["attention",attentionList],["approval",approvalList]]){const value=query.get(name);if(choices.some(([v])=>v===value))state[name]=value;}
  const rpc=async(name,args={})=>{const {data,error}=await client.rpc(name,args);if(error)throw error;return data;};
  const notice=(node,message,error=false)=>{if(node){node.textContent=message;node.dataset.error=String(error);}};
  let generation=0, selected=null, listResult=null, debounce, detailTab="profile", days=30;
+ stopGrade?.();stopGrade=ui.onGrade(value=>{state.grade=value;state.page=1;if(query.has("grade"))query.set("grade",value);if(!selected)void list();});
  const goList=()=>{selected=null;query.delete("user");history.replaceState(null,"",location.pathname+"?"+query.toString());return list();};
  const searchParam=query.get("user");
  async function list(){
   const ticket=++generation;selected=null;
   card("통합 사용자 관리",'<div class="users-layout"><p class="portal-auth-lead">학생과 졸업생의 계정·학적·학습·자격증·지도 현황을 관리합니다.</p>'+
-    '<div id="users-kpis" class="users-kpis" aria-label="학적별 인원"><p>인원 확인 중…</p></div>'+
+    '<div id="users-filter-kpis"></div><div id="users-grade-chart"></div><details class="admin-filter-detail"><summary>전체 학적 구성 및 빠른 분류</summary><div id="users-kpis" class="users-kpis" aria-label="전체 학적별 인원"><p>인원 확인 중…</p></div></details>'+
     '<div class="users-actions"><a class="users-link" href="accounts.html?view=approvals">가입 승인 요청</a><a class="users-link" href="alumni.html">졸업생 네트워크 관리</a><button type="button" id="users-stats">운영 통계 보기</button></div>'+
     '<section id="users-stats-panel" hidden></section>'+
-    '<div class="users-filters">'+field("search","사용자 검색",state.search,"search",'id="users-search" placeholder="이름 · 학번 · 이메일 · 연락처" autocomplete="off"')+
-    select("status","학적 상태",statusList,state.status,'id="users-status"')+
+    '<div class="admin-main-filter">'+field("search","사용자 검색",state.search,"search",'id="users-search" placeholder="이름 · 학번 · 이메일 · 연락처" autocomplete="off"')+
+    select("status","학적 상태",statusList,state.status,'id="users-status"')+'</div><details class="admin-filter-detail"'+(state.approval!=="all"||state.attention!=="all"||state.type!=="all"?' open':'')+'><summary>상세 검색 조건</summary><div class="users-filters">'+
     select("grade","학년",[["","전체 학년"],["1","1학년"],["2","2학년"]],state.grade,'id="users-grade"')+
     select("approval","가입 상태",approvalList,state.approval,'id="users-approval"')+
     select("type","가입 유형",[["all","전체"],["student","학생"],["alumni","졸업생"]],state.type,'id="users-type"')+
     select("attention","관리 대상",attentionList,state.attention,'id="users-attention"')+
-    '</div><div class="users-list-meta" id="users-meta" aria-live="polite">목록 조회 중…</div><div id="users-table"></div>'+
+    '</div></details><div class="users-list-meta" id="users-meta" aria-live="polite">목록 조회 중…</div><div id="users-table"></div>'+
     '<div class="users-pagination"><button id="users-prev">이전</button><span id="users-page"></span><button id="users-next">다음</button></div>'+
     '<p class="users-note">목록 이메일은 일부 마스킹됩니다. 상세정보는 관리자만 조회할 수 있습니다. 로그인하지 않은 학습은 기록에 포함되지 않으며, 등록된 기록이 없다는 사실만으로 미학습으로 판단하지 않습니다.</p></div>');
   $(".portal-auth-card").classList.add("users-card");
   const filters=["status","grade","approval","type","attention"];
-  for(const name of filters)$("#users-"+name).addEventListener("change",e=>{state[name]=e.target.value;state.page=1;reload();});
+  for(const name of filters)$("#users-"+name).addEventListener("change",e=>{state[name]=e.target.value;state.page=1;if(name==="grade"){ui.setGrade(state.grade);return;}reload();});
   $("#users-search").addEventListener("input",e=>{state.search=e.target.value;state.page=1;clearTimeout(debounce);debounce=setTimeout(()=>reload(),300);});
   $("#users-prev").onclick=()=>{if(state.page>1){state.page--;reload();}};
   $("#users-next").onclick=()=>{if(state.page*25<(listResult?.total||0)){state.page++;reload();}};
-  $("#users-kpis").onclick=e=>{const b=e.target.closest("button[data-filter]");if(!b)return;const f=b.dataset.filter;state.status=f.startsWith("grade")?"enrolled":["academic","mail_failed","pending"].includes(f)?"all":f;state.grade=f.startsWith("grade")?f.slice(-1):"";state.attention=["academic","mail_failed"].includes(f)?f:"all";state.approval=f==="pending"?"pending":"all";state.type="all";state.page=1;list();};
+  $("#users-kpis").onclick=e=>{const b=e.target.closest("button[data-filter]");if(!b)return;const f=b.dataset.filter;state.status=f.startsWith("grade")?"enrolled":["academic","mail_failed","pending"].includes(f)?"all":f;state.grade=f.startsWith("grade")?f.slice(-1):ui.getGrade();state.attention=["academic","mail_failed"].includes(f)?f:"all";state.approval=f==="pending"?"pending":"all";state.type="all";state.page=1;if(state.grade!==ui.getGrade())ui.setGrade(state.grade);else list();};
   $("#users-table").onclick=e=>{const b=e.target.closest("button[data-user]");if(b){selected=b.dataset.user;detailTab="profile";detail(selected);}};
   $("#users-stats").onclick=async()=>{
    const panel=$("#users-stats-panel");if(!panel.hidden){panel.hidden=true;return;}
    panel.hidden=false;panel.textContent="운영 통계 조회 중…";
-   try{const x=await rpc("admin_user_statistics");if(ticket!==generation)return;
-    panel.innerHTML='<h3>학과 운영 지표</h3><div class="users-kpis">'+[
+   try{
+    if(state.grade){
+     const args={p_status:"enrolled",p_grade:Number(state.grade),p_type:"student",p_approval:"approved",p_page:1,p_size:1};
+     const [cohort,plan,active,cert]=await Promise.all([rpc("admin_user_list",args),...["no_plan","inactive","no_cert"].map(p_attention=>rpc("admin_user_list",{...args,p_attention}))]);
+     if(ticket!==generation)return;
+     ui.renderBars(panel,ui.gradeLabel(state.grade)+" · 재학생 운영 지표",[
+      ["승인된 재학생",cohort.total],["이번 주 계획 등록",cohort.total-plan.total],["최근 7일 학습 기록",cohort.total-active.total],["확인된 최종합격 자격증",cohort.total-cert.total]
+     ],{unit:"명",caption:"선택 학년 승인 재학생 기준"});
+    }else{
+     const x=await rpc("admin_user_statistics");if(ticket!==generation)return;
+     ui.renderBars(panel,"전체 학과 운영 지표",[
       ["승인된 재학생",x.enrolled],["이번 주 계획 등록",x.plan],["최근 7일 문제풀이",x.active_learning],["확인된 자격증 취득 학생",x.certified],["조기취업 상태",x.early],["동문 등록",x.alumni_registered],["가입 승인 대기",x.pending],["승인메일 실패",x.mail_failed]
-    ].map(([n,v])=>'<div class="users-kpi"><small>'+esc(n)+'</small><strong>'+int(v)+'명</strong></div>').join("")+'</div><p class="users-note">학습·계획·자격증 지표는 승인된 재학생 기준입니다. 공식 취업률은 별도 학적·취업 조사 기준이 필요합니다.</p>';
+     ],{unit:"명",caption:"학습·계획·자격증 지표는 승인된 재학생 기준입니다."});
+    }
    }catch{panel.textContent="운영 통계를 불러오지 못했습니다.";}
   };
   let sequence=0;
@@ -69,9 +83,11 @@ export async function renderUnifiedUsers(ctx){
     listResult=result;const c=result.counts||{};
     const kpis=[["grade1","1학년",c.grade1],["grade2","2학년",c.grade2],["early_employment","조기취업",c.early_employment],["leave","휴학",c.leave],["graduated","졸업",c.graduated],["withdrawn","자퇴",c.withdrawn],["pending","승인 대기",c.pending],["academic","학적 요청",c.requests],["mail_failed","메일 실패",c.mail_failed]];
     $("#users-kpis").innerHTML=kpis.map(([f,n,v])=>'<button class="users-kpi" type="button" data-filter="'+f+'"><small>'+n+'</small><strong>'+int(v)+'명</strong></button>').join("");
+    ui.renderDonut($("#users-grade-chart"),"전체 재학 계정 학년 비교",[["1학년",c.grade1??0],["2학년",c.grade2??0]],{caption:"현재 검색과 별개인 전체 재학 계정"});
+    ui.renderKPIs($("#users-filter-kpis"),[[ui.gradeLabel(state.grade)+" · 검색 결과",result.total,"명"]]);
     const total=Number(result.total||0),pages=Math.max(1,Math.ceil(total/25));
     if(state.page>pages){state.page=pages;return reload();}
-    meta.textContent="전체 등록 "+int(c.all)+"명 · 검색 결과 "+int(total)+"명";
+    meta.textContent=ui.gradeLabel(state.grade)+" · 검색 결과 "+int(total)+"명 · 전체 등록 "+int(c.all)+"명";
     $("#users-table").innerHTML=table(["이름","학번 / 졸업년도","학적","가입 상태","이메일","학적 요청 / 메일","상세"],(result.rows||[]).map(p=>[
      '<strong>'+val(p.full_name)+'</strong><small class="users-sub">'+label(p.signup_type)+'</small>',
      val(p.student_no|| (p.graduation_year?p.graduation_year+"년":"-")),roleText(p),'<span class="users-pill">'+label(p.approval_status)+'</span>',val(p.email_mask),

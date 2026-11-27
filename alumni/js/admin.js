@@ -3,7 +3,7 @@ window.AlumniAdminOnReady=callback=>{
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",callback,{once:true});
  else callback();
 };
-(function(){'use strict';const U=AlumniUI;let view='alumni',data=[],page=1,total=0,sequence=0,debounce;const st=()=>U.qs('#admin-status'),badge=v=>`<span class="admin-badge admin-badge--${U.esc(String(v||'').toLowerCase())}">${U.esc(v)}</span>`;
+(function(){'use strict';const U=AlumniUI;let view='alumni',data=[],page=1,total=0,sequence=0,debounce,directoryStats=null,directoryGroups=null;const st=()=>U.qs('#admin-status'),badge=v=>`<span class="admin-badge admin-badge--${U.esc(String(v||'').toLowerCase())}">${U.esc(v)}</span>`;
 const consent=v=>v===null||v===undefined||String(v).trim()===''?'미설정':/^(true|1|yes|on)$/i.test(String(v))?'동의':'거부';
 const paged=()=>['alumni','requests'].includes(view);
 async function rpc(name,args){const {data,error}=await window.portalSupabaseClient.rpc(name,args);if(error)throw Error(error.message||'관리자 조회 실패');return data;}
@@ -13,7 +13,7 @@ async function load(){
   const q=U.qs('#admin-query').value.trim(),status=U.qs('#admin-status-filter').value,year=U.qs('#admin-year').value;
   if(view==='alumni'){
    const result=await rpc('admin_alumni_directory',{p_search:q,p_year:year,p_visibility:status,p_consent:U.qs('#admin-consent').value,p_employment:U.qs('#admin-employment').value,p_page:page,p_size:25});
-   if(current!==sequence)return;data=result.rows||[];total=result.total||0;
+   if(current!==sequence)return;data=result.rows||[];total=result.total||0;directoryStats=result;directoryGroups=null;
    const el=U.qs('#admin-employment'),prior=el.value;
    el.innerHTML='<option value="">전체 취업 상태</option>'+result.employment_values.map(x=>`<option value="${U.esc(x)}">${U.esc(x)}</option>`).join('');el.value=prior;
    U.qs('#admin-summary').textContent='검색 결과 '+total+'명 · 기업 '+result.companies+'곳 · 멘토링 및 연락 가능 '+result.mentor_count+'명';
@@ -25,6 +25,20 @@ async function load(){
    if(current!==sequence)return;data=result.data||[];total=data.length;
   }
   U.qs('#admin-app').hidden=false;render();st().hidden=true;
+  if(view==='alumni'&&window.portalAdminUI&&total>data.length){
+   // Exact distribution over the filtered directory, not just the first 25 records.
+   const params={p_search:q,p_year:year,p_visibility:status,p_consent:U.qs('#admin-consent').value,p_employment:U.qs('#admin-employment').value,p_size:100};
+   const allRows=[];
+   try{
+    for(let p=1;p<=Math.ceil(total/100);p++){
+     const batch=await rpc('admin_alumni_directory',{...params,p_page:p});
+     if(current!==sequence)return;
+     allRows.push(...(batch.rows||[]));
+    }
+    if(current!==sequence)return;
+    if(allRows.length===total&&new Set(allRows.map(x=>x.alumni_id)).size===total){directoryGroups=allRows;render();}
+   }catch{/* The initial chart is explicitly labelled as current page only. */}
+  }
  }catch(e){if(current===sequence)U.status(st(),e.message,'error');}
 }
 function alumniTable(rows){return`<table class="admin-table admin-table--alumni"><thead><tr><th>이름 / 계정</th><th>졸업 / 갱신</th><th>회사 / 직무</th><th>기술·멘토링</th><th>채용메일</th><th>동문소식메일</th><th>상태</th><th>관리</th></tr></thead><tbody>${rows.map(x=>`<tr><td data-label="이름"><strong>${U.esc(x.name)}</strong><br><small>${U.esc(x.approval_status==='approved'?'승인':x.approval_status)}</small></td><td data-label="졸업">${U.esc(x.graduation_year)}<br><small>${U.esc(String(x.updated_at||'').slice(0,10))}</small></td><td data-label="회사">${U.esc(x.company)||'-'}<br>${U.esc(x.job)||'-'}<br><small>${U.esc(x.employment_status||'')}</small></td><td data-label="기술·멘토링">${U.esc(x.skills)||'-'}<br>${U.esc(x.mentoring_topics)||'-'}</td><td data-label="채용메일">${consent(x.career_mail_enabled)}</td><td data-label="동문소식메일">${consent(x.alumni_news_mail_enabled)}</td><td data-label="상태">${badge(x.status)}</td><td data-label="관리"><div class="admin-actions"><a class="button button--secondary" href="accounts.html?view=students&user=${encodeURIComponent(x.alumni_id)}">통합 상세</a>${x.approval_status==='approved'?`<button class="button--ghost" data-id="${U.esc(x.alumni_id)}" data-action="${x.status==='HIDDEN'?'adminShow':'adminHide'}">${x.status==='HIDDEN'?'공개':'비공개'}</button>`:''}</div></td></tr>`).join('')}</tbody></table>`}
@@ -40,6 +54,25 @@ function render(){
  U.qs('#admin-pagination').hidden=!paged();U.qs('#admin-page').textContent=page+' / '+Math.max(1,Math.ceil(total/25));U.qs('#admin-prev').disabled=page<=1;U.qs('#admin-next').disabled=page*25>=total;
  if(!paged())U.qs('#admin-summary').textContent='검색 결과 '+rows.length+'건';
  U.qs('#admin-alumni-filters').hidden=view!=='alumni';
+ const ui=window.portalAdminUI;
+ if(ui){
+  for(const cell of U.qs('#admin-table').querySelectorAll('td')){
+   const content=document.createElement('div');content.className='admin-cell-value';content.append(...cell.childNodes);cell.append(content);
+  }
+  const charts=ui.chartMount(U.qs('#admin-summary'),'alumni-admin-charts');
+  charts.replaceChildren();
+  if(view==='alumni'){
+   const kpis=document.createElement('div'),grid=document.createElement('div');grid.className='admin-chart-grid';charts.append(kpis,grid);
+   ui.renderKPIs(kpis,[['검색 졸업생',total,'명'],['등록 기업',directoryStats?.companies,'곳'],['연락 가능 멘토',directoryStats?.mentor_count,'명']]);
+   const a=document.createElement('div'),b=document.createElement('div');grid.append(a,b);
+   const groupRows=directoryGroups||rows,scope=groupRows.length===total?'전체 검색 결과 '+total+'명 기준':'현재 표시 페이지 '+rows.length+'명 기준';
+   ui.renderBars(a,'졸업연도별 구성',ui.groupCounts(groupRows,x=>x.graduation_year?String(x.graduation_year)+'년':'미설정'),{unit:'명',caption:scope});
+   ui.renderBars(b,'취업 상태',ui.groupCounts(groupRows,x=>x.employment_status),{unit:'명',caption:scope+' · 공식 취업률 아님'});
+  }else{
+   ui.renderBars(charts,'조회 상태 분포',ui.groupCounts(rows,x=>x.status),{unit:'건',caption:paged()?'현재 표시 페이지 기준':'현재 검색 결과 기준'});
+  }
+ }
+
 }
 function filterChanged(){page=1;if(paged()){clearTimeout(debounce);debounce=setTimeout(load,250);}else render();}
 async function utility(action,button,question){if(!confirm(question))return;U.busy(button,true,'처리 중…');try{const r=await AlumniAPI.request(action,{method:'POST',data:{}});U.status(st(),r.message,'success');await load()}catch(e){U.status(st(),e.message,'error')}finally{U.busy(button,false)}}

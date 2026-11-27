@@ -1,7 +1,8 @@
 /* Aggregated, super-admin-only data comes from the guarded Edge Function. */
 const db=window.portalSupabaseClient, get=id=>document.getElementById(id);
 const names={JAVA:'Java',C:'C언어',PYTHON:'Python',LINUX:'Ubuntu',NCP:'NCP',PRACTICAL:'정보처리'};
-let gradeFilter='', periodMode='week',periodOffset=0,requestSequence=0;
+const adminUI=window.portalAdminUI;
+let gradeFilter=adminUI?.getGrade()||'', periodMode='week',periodOffset=0,requestSequence=0;
 const node=(tag,text,className)=>{const el=document.createElement(tag);if(text!==undefined&&text!==null)el.textContent=String(text);if(className)el.className=className;return el;};
 function card(label,value,sub){
  const c=node('article',null,'learn-stat');c.append(node('small',label),node('strong',value),node('p',sub));return c;
@@ -30,6 +31,7 @@ function renderFilters(){
   button.type='button';button.dataset.learningGrade=value;
   button.setAttribute('aria-pressed',String(value===gradeFilter));
   button.addEventListener('click',()=>{
+   if(adminUI){adminUI.setGrade(value);return;}
    if(gradeFilter===value)return;
    gradeFilter=value;
    for(const item of gradeButtons.querySelectorAll('button'))item.setAttribute('aria-pressed',String(item.dataset.learningGrade===gradeFilter));
@@ -39,7 +41,7 @@ function renderFilters(){
   });
   gradeButtons.append(button);
  }
- gradeRow.append(gradeButtons);panel.append(gradeRow);
+ gradeRow.append(gradeButtons);if(!adminUI)panel.append(gradeRow);
  const periodRow=node('div',null,'learn-control-row');
  periodRow.append(node('span','조회 기간','learn-control-title'));
  const periodGroup=node('div',null,'learn-button-group');
@@ -162,6 +164,7 @@ function fetchSummary(){
 async function load(){
  const status=get('teacher-status'),sequence=++requestSequence;
  answerRequest++;answers.replaceChildren();get('teacher-content').hidden=true;
+ for(const id of ['teacher-subject-chart','teacher-rate-chart'])get(id)?.replaceChildren();
  renderFilters();updatePeriodControls();
  status.textContent='선택한 학년과 기간의 학습통계를 불러오는 중입니다...';
  const {data,error}=await fetchSummary();
@@ -194,6 +197,10 @@ async function load(){
   Object.keys(names).map(key=>[names[key],action(String(a.subjects?.[key]?.attempts??0),()=>showAnswers(key,false,data.periodStart)),a.subjects?.[key]?.unique??0,
    action(String(a.subjects?.[key]?.wrong??0),()=>showAnswers(key,true,data.periodStart)),b?.subjects?.[key]?.attempts??'—'])
  ),answers);
+ if(adminUI){
+  adminUI.renderBars(adminUI.chartMount(get('teacher-summary'),'teacher-subject-chart'),'과목별 학습 시도',Object.keys(names).map(key=>[names[key],a.subjects?.[key]?.attempts??0]),{unit:'회',caption:adminUI.gradeLabel(gradeFilter)+' · 선택 기간'});
+  adminUI.renderBars(adminUI.chartMount(get('teacher-rates'),'teacher-rate-chart'),'학습 정답률',[['자가평가',a.selfAccuracy],['브라우저 정답 비교',a.autoAccuracy]],{unit:'%',max:100,caption:'집계 분모가 없는 경우 — 표시'});
+ }
  const rates=get('teacher-rates');rates.replaceChildren();
  for(const [label,correct,total,rate] of [
   ['자가평가',a.selfCorrect,a.selfTotal,a.selfAccuracy],
@@ -301,3 +308,9 @@ get('teacher-refresh').addEventListener('click',()=>{
 });
 load().catch(error=>{console.error('Professor learning report',error);get('teacher-status').textContent='학급 통계 조회에 실패했습니다. 슈퍼 관리자 계정으로 로그인해 주세요.';});
 loadMailSettings().catch(error=>{console.error('Weekly mail settings',error);setMailStatus('발송 설정을 불러오지 못했습니다. 다시 시도해 주세요.',true);});
+
+if(adminUI)adminUI.onGrade(value=>{
+ if(value===gradeFilter)return;
+ gradeFilter=value;
+ void load().catch(()=>{get("teacher-status").textContent="학습통계를 조회하지 못했습니다.";});
+});

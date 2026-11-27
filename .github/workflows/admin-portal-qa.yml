@@ -27,6 +27,16 @@ on:
       - "tests/portal-student-certifications.test.mjs"
       - "tests/fixtures/approved-student.mjs"
       - ".github/workflows/admin-portal-qa.yml"
+  pull_request:
+    paths:
+      - "admin/**"
+      - "js/teacher-learning.js"
+      - "js/study-teacher.js"
+      - "js/written-admin.js"
+      - "alumni/js/admin.js"
+      - "tests/admin-*.mjs"
+      - "tests/fixtures/approved-student.mjs"
+      - ".github/workflows/admin-portal-qa.yml"
   workflow_dispatch:
 permissions:
   contents: read
@@ -43,6 +53,7 @@ jobs:
         run: |
           node tests/learning-tracking.test.mjs
           node tests/admin-isolation.test.mjs
+          node tests/admin-mobile-ui.test.mjs
           node tests/admin-alumni-integration.test.mjs
           node tests/admin-mock-exam.test.mjs
           node tests/portal-auth.test.mjs
