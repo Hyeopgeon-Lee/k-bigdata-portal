@@ -91,12 +91,18 @@ async function removeRows(table:string,column:string,value:string){
   const {error}=await admin.from(table).delete().eq(column,value);
   if(error)throw Error("CLEANUP_FAILED_"+table);
 }
+async function markJob(id:string,state:string,step:string,errorCode:string|null=null){
+  const {error}=await admin.from("portal_student_deletion_jobs").update({state,step,error_code:errorCode,updated_at:new Date().toISOString()}).eq("user_id",id);
+  if(error)throw Error("DELETION_JOB_UPDATE_FAILED");
+}
 async function erase(student:any,stock:any){
+  await markJob(student.user_id,"running","storage");
   for(let i=0;i<stock.paths.length;i+=100){
     const {error}=await admin.storage.from("help-attachments").remove(stock.paths.slice(i,i+100));
     if(error)throw Error("STORAGE_DELETE_FAILED");
   }
   const id=student.user_id;
+  await markJob(id,"running","database");
   await removeRows("help_messages","author_id",id);
   await removeRows("help_attachments","uploader_id",id);
   await removeRows("help_requests","owner_id",id);
@@ -105,7 +111,8 @@ async function erase(student:any,stock:any){
   await removeLegacy("room_reservations",student,stock.legacyRoomIds);
   await removeRows("report_deliveries","recipient_user_id",id);
   if(student.email)await removeRows("report_deliveries","recipient_email",student.email);
-  await removeRows("admin_audit_log","target_user_id",id);
+  // Foreign key SET NULL preserves audit events without retaining the deleted member ID.
+  await markJob(id,"running","auth");
   // On-delete CASCADE removes linked profile, auth session, learning and personal records.
   const {error}=await admin.auth.admin.deleteUser(id);
   if(error)throw Error("AUTH_DELETE_FAILED");
@@ -117,6 +124,7 @@ Deno.serve(async request=>{
     return respond({error:"ORIGIN_DENIED"},403);
   const actorId=await isAdministrator(request);
   if(!actorId)return respond({error:"ADMIN_DENIED"},403);
+  let claimedId:string|null=null;
   try{
     const input=await request.json();
     if(!isUUID(input?.userId)||!["preview","delete"].includes(input?.action))return respond({error:"INVALID_REQUEST"},400);
@@ -124,7 +132,12 @@ Deno.serve(async request=>{
     if(input.action==="preview")return respond({ok:true,fullName:student.full_name,counts:stock.counts,version:stock.version});
     if(input.fullName!==student.full_name||input.confirmWord!=="영구삭제"||input.version!==stock.version)
       return respond({error:"CONFIRMATION_MISMATCH"},409);
+    const {data:claimed,error:claimError}=await admin.rpc("claim_portal_student_deletion",{p_user_id:student.user_id,p_actor_id:actorId,p_version:stock.version});
+    if(claimError)throw Error("DELETION_CLAIM_FAILED");
+    if(claimed!==true)return respond({error:"DELETION_ALREADY_RUNNING_OR_CHANGED"},409);
+    claimedId=student.user_id;
     await erase(student,stock);
+    await markJob(student.user_id,"completed","completed");
     // Retain an accountable deletion event without restoring the removed student's identity.
     const {error:auditError}=await admin.from("admin_audit_log").insert({
       actor_user_id:actorId,target_user_id:null,old_status:"withdrawn",new_status:"permanently_deleted"
@@ -133,6 +146,7 @@ Deno.serve(async request=>{
     return respond({ok:true,deleted:true,auditRecorded:!auditError});
   }catch(error){
     const message=error instanceof Error?error.message:"UNKNOWN_ERROR";
+    if(claimedId){try{await markJob(claimedId,"failed","retry",message.slice(0,100));}catch{console.error("DELETION_JOB_UPDATE_FAILED");}}
     console.error("admin-delete-student:",message);
     return respond({error:message},["NOT_FOUND","NOT_WITHDRAWN","ADMIN_PROTECTED","CONFIRMATION_MISMATCH"].includes(message)?409:500);
   }

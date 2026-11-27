@@ -36,10 +36,16 @@ try{
     assert.equal(await page.locator(".admin-intro h1").isVisible(),true);
     assert.equal(await page.locator(".brand-mark").isVisible(),true,"shared H logo "+name);
     if(name==="accounts"){
-      const filter=page.locator("#portal-admin-filter");
+      const filter=page.locator("#users-status");
       await filter.waitFor({state:"visible",timeout:15000});
       assert.equal(await filter.inputValue(),"enrolled","student accounts must initially show current students");
       assert.equal(await filter.locator("option:checked").textContent(),"재학");
+      await page.getByRole("button",{name:"상세보기"}).first().waitFor({state:"visible",timeout:15000});
+      await page.getByRole("button",{name:"상세보기"}).first().click();
+      await page.locator("#user-profile-form").waitFor({state:"visible"});
+      await page.getByRole("button",{name:"학습현황",exact:true}).click();
+      await page.getByText("서비스별 학습량 및 정답률").waitFor({state:"visible"});
+      await page.getByRole("button",{name:"← 사용자 목록"}).click();
       await filter.selectOption("all");
       assert.equal(await filter.inputValue(),"all","staff can still view all account statuses");
     }

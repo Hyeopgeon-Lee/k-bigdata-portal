@@ -68,6 +68,7 @@ async function renderWithdrawnDeletion(member){
       check();
       return;
     }
+    const listUrl=new URL(location.href);listUrl.searchParams.delete("user");history.replaceState(null,"",listUrl);
     await renderAdmin();
     status(preview.fullName+" 학생의 계정과 연결 데이터를 영구 삭제했습니다.");
   });
@@ -140,7 +141,7 @@ async function renderApprovalRequests(){
       mailStatus.textContent="설정을 저장하지 못했습니다. 다시 시도해 주세요.";
     }finally{mailToggle.disabled=false;}
   });
-  const {data,error}=await client.rpc("admin_list_students");
+  const {data,error}=await client.rpc("admin_pending_signup_requests");
   const list=$("#portal-approval-list");
   if(!list)return;
   if(error){$("#portal-approval-count").textContent="승인 요청을 불러오지 못했습니다.";return;}
@@ -230,7 +231,8 @@ async function renderApprovalRequests(){
       targetButton?.focus({preventScroll:true});
       targetItem.scrollIntoView({block:"center",behavior:"smooth"});
     }else{
-      const already=(data||[]).find(member=>member.user_id===targetUserId);
+      const lookup=await client.rpc("admin_user_detail",{p_user_id:targetUserId,p_tab:"profile"});
+      const already=lookup.data?.profile;
       const message=document.createElement("p");
       message.className="portal-approval-link-notice";
       message.textContent=already?.approval_status==="approved"
@@ -243,144 +245,11 @@ async function renderApprovalRequests(){
   }
 }
 
+// The unified directory keeps the existing approval and explicit permanent-deletion flows.
 async function renderAdmin(){
-  if(!isAdmin){renderAccount();return;}
-  card("학생 계정 관리",
-    '<p class="portal-auth-lead">기존 회원의 학적과 이용 상태를 관리합니다.</p>'+
-    '<div class="portal-admin-toolbar">'+
-      '<label>학생 검색<input id="portal-admin-search" type="search" placeholder="이름 · 학번 · 이메일" autocomplete="off"></label>'+
-      '<label>학적 상태<select id="portal-admin-filter"><option value="all">전체 학생</option><option value="enrolled" selected>재학</option><option value="leave">휴학</option><option value="withdrawn">자퇴</option><option value="graduated">졸업</option><option value="early_employment">조기취업</option></select></label>'+
-    '</div>'+
-    '<p class="portal-admin-summary" id="portal-admin-summary" aria-live="polite"></p>'+
-    '<div class="portal-admin-scroll"><table class="portal-admin-table"><thead><tr><th>이름</th><th>가입 유형</th><th>학번 / 졸업년도</th><th>이메일</th><th>가입 상태</th><th>학적</th><th>주간 메일</th><th>변경</th></tr></thead><tbody id="portal-student-list"></tbody></table></div>'+
-    '<p class="portal-auth-note">주간 학습 메일은 발송 설정에 따라 재학생에게 전송됩니다.</p>'+
-    '<div class="portal-auth-actions"><button type="button" id="portal-admin-close">닫기</button></div>');
-  $("#portal-admin-close").addEventListener("click",renderAccount);
-  const {data,error}=await client.rpc("admin_list_students");
-  if(error){status("학생 목록을 불러오지 못했습니다. 관리자 권한을 확인해 주세요.");return;}
-  const body=$("#portal-student-list");
-  const options=(items,value)=>{
-    const select=document.createElement("select");
-    for(const [v,label] of items){const option=document.createElement("option");option.value=v;option.textContent=label;select.append(option);}
-    select.value=value;return select;
-  };
-  const rows=[];
-  for(const member of (data||[]).filter(member=>member.approval_status!=="pending")){
-    const tr=document.createElement("tr");
-    tr.className="portal-admin-member-row";
-    const identity=[member.full_name,member.signup_type==="alumni"?"졸업생":"재학생",
-       member.signup_type==="alumni"?member.graduation_year+"년 졸업":member.student_no||"-",member.email];
-    identity.forEach((item,index)=>{
-      const td=document.createElement("td");td.textContent=item;
-      td.dataset.label=["이름","가입 유형","학번 / 졸업년도","이메일"][index];tr.append(td);
-    });
-    const approval=options([["approved","승인"],["rejected","반려"],["suspended","정지"]],member.approval_status);
-    const enrollment=options([["enrolled","재학"],["leave","휴학"],["withdrawn","자퇴"],["graduated","졸업"],["early_employment","조기취업"]],member.enrollment_status);
-    if(member.signup_type==="alumni"){enrollment.value="graduated";enrollment.disabled=true;enrollment.title="졸업생의 학적은 졸업으로 유지됩니다.";}
-    approval.setAttribute("aria-label",member.full_name+" 가입 상태");
-    enrollment.setAttribute("aria-label",member.full_name+" 학적");
-    for(const [select,label] of [[approval,"가입 상태"],[enrollment,"학적"]]){
-      const td=document.createElement("td");td.dataset.label=label;td.append(select);tr.append(td);
-    }
-    const mailTd=document.createElement("td");mailTd.dataset.label="주간 메일";
-    const mailStatus=document.createElement("span");mailStatus.className="portal-admin-mail-status";
-    const updateMailStatus=()=>{
-      const graduated=member.signup_type==="alumni"||["graduated","early_employment"].includes(enrollment.value);
-      // Keep the column in place: hiding the td shifts the account-save button
-      // under the weekly-mail header for graduates and early-employed members.
-      const eligible=!graduated&&approval.value==="approved"&&enrollment.value==="enrolled";
-      const unsaved=approval.value!==member.approval_status||enrollment.value!==member.enrollment_status;
-      mailStatus.textContent=graduated?"대상 아님":(eligible?"발송 후보":"발송 제외")+(unsaved?" · 저장 전":"");
-      mailStatus.dataset.eligible=String(eligible);
-    };
-    approval.addEventListener("change",updateMailStatus);
-    enrollment.addEventListener("change",updateMailStatus);
-    updateMailStatus();
-    mailTd.append(mailStatus);tr.append(mailTd);
-    const td=document.createElement("td");td.dataset.label="변경";
-    const save=document.createElement("button");save.type="button";save.textContent="저장";
-    save.setAttribute("aria-label",member.full_name+" 계정 상태 저장");
-    save.addEventListener("click",async()=>{
-      if(!window.confirm(member.full_name+" 학생의 계정 상태를 변경하시겠습니까?"))return;
-      save.disabled=true;
-      try{
-        let result=null;
-        if(approval.value==="approved"&&member.approval_status!=="approved")
-          result=await approvePortalMember(member,enrollment.value);
-        else{
-          const {error}=await client.rpc("admin_update_student",{
-            p_target_user_id:member.user_id,p_approval_status:approval.value,p_enrollment_status:enrollment.value
-          });
-          if(error)throw error;
-        }
-        member.approval_status=approval.value;
-        member.enrollment_status=enrollment.value;
-        updateMailStatus();syncDeleteButton();updateResults();
-        if(result?.notificationStatus==="failed"){
-          retryMail.hidden=false;
-          status("계정 승인은 완료되었으나 메일 발송에 실패했습니다. ‘메일 재시도’를 선택하세요.");
-        }else if(result?.notificationStatus==="sending"){
-          status(member.full_name+"님의 계정 승인 완료 · 메일 발송 중");
-        }else if(result?.notificationStatus==="sent"){
-          retryMail.hidden=true;status(member.full_name+"님의 계정 승인 및 안내 메일 발송 완료");
-        }else status(member.full_name+"님의 계정·학적 상태를 저장했습니다.");
-      }catch{status("저장 실패: 관리자 권한과 입력값을 확인해 주세요.");}
-      finally{save.disabled=false;}
-    });
-    const actions=document.createElement("div");actions.className="portal-admin-row-actions";
-    const deleteButton=document.createElement("button");
-    deleteButton.type="button";deleteButton.className="portal-admin-delete-button";
-    deleteButton.textContent="영구 삭제";
-    deleteButton.setAttribute("aria-label",member.full_name+" 계정과 연결 데이터 영구 삭제");
-    const syncDeleteButton=()=>{
-      deleteButton.hidden=member.enrollment_status!=="withdrawn"||member.signup_type==="alumni";
-      deleteButton.disabled=enrollment.value!==member.enrollment_status;
-    };
-    enrollment.addEventListener("change",syncDeleteButton);
-    deleteButton.addEventListener("click",()=>renderWithdrawnDeletion(member));
-    const retryMail=document.createElement("button");
-    retryMail.type="button";retryMail.className="portal-admin-retry-mail";
-    retryMail.textContent="메일 재시도";retryMail.hidden=true;
-    retryMail.addEventListener("click",async()=>{
-      retryMail.disabled=true;
-      try{
-        const result=await retryApprovalEmail(member);
-        if(result.notificationStatus==="sent"){retryMail.hidden=true;status(member.full_name+"님의 승인 안내 메일 발송 완료");}
-        else status("메일 처리 중입니다. 잠시 후 확인해 주세요.");
-      }catch{status("메일 재시도에 실패했습니다.");}
-      retryMail.disabled=false;
-    });
-    actions.append(save,retryMail,deleteButton);td.append(actions);tr.append(td);body.append(tr);
-    rows.push({member,tr,searchText:identity.join(" ").toLowerCase(),retryMail});
-    syncDeleteButton();
-  }
-  const updateResults=()=>{
-    const term=String($("#portal-admin-search").value||"").trim().toLowerCase();
-    const filter=$("#portal-admin-filter").value;
-    let visible=0;
-    for(const {member,tr,searchText} of rows){
-      const matchesStatus=filter==="all"||(filter==="enrolled"
-        ?member.signup_type!=="alumni"&&member.enrollment_status==="enrolled"
-        :member.enrollment_status===filter);
-      const show=matchesStatus&&searchText.includes(term);
-      tr.hidden=!show;if(show)visible++;
-    }
-    const tally={enrolled:0,leave:0,withdrawn:0,graduated:0,early_employment:0};
-    for(const {member} of rows)if(member.enrollment_status in tally)tally[member.enrollment_status]++;
-    $("#portal-admin-summary").textContent=
-      "재학 "+tally.enrolled+"명 · 휴학 "+tally.leave+"명 · 조기취업 "+tally.early_employment+"명 · 자퇴 "+tally.withdrawn+"명 · 졸업 "+tally.graduated+"명 · 표시 "+visible+"명";
-  };
-  $("#portal-admin-search").addEventListener("input",updateResults);
-  $("#portal-admin-filter").addEventListener("change",updateResults);
-  updateResults();
-  const {data:mailRecords,error:mailError}=await client.functions.invoke("approve-portal-signup",{
-    body:{action:"email_statuses"}
-  });
-  if(!mailError&&mailRecords?.notifications&&$("#portal-student-list")===body){
-    const failed=new Set(mailRecords.notifications.filter(n=>n.delivery_status==="failed").map(n=>n.user_id));
-    for(const row of rows)if(row.member.approval_status==="approved"&&failed.has(row.member.user_id))
-      row.retryMail.hidden=false;
-  }
+  await import("./unified-users.mjs?v=20261128-users-1").then(mod=>mod.renderUnifiedUsers({
+    client,root,card,status,renderAccount,approvePortalMember,retryApprovalEmail,renderWithdrawnDeletion
+  }));
 }
 
 if(new URLSearchParams(location.search).get("view")==="approvals")await renderApprovalRequests();
