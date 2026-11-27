@@ -1,7 +1,7 @@
 import {normalizeSubject} from "./written-dashboard.mjs?v=20261127-v1";
 const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const button=(name,text,extra="")=>'<button type="button" class="button button-secondary" data-mock-action="'+name+'" '+extra+'>'+text+'</button>';
-export function createMockExam({root,db,bank,back,enter}){
+export function createMockExam({root,db,bank,back,enter,writable=true}){
  let session=null,index=0,timer=null,busy=false,active=false,serverOffset=0;
  const lookup=new Map(bank.map(q=>[q.id,q]));
  const call=async args=>{const {data,error}=await db.rpc("written_mock_action",args);if(error)throw error;return data;};
@@ -12,8 +12,8 @@ export function createMockExam({root,db,bank,back,enter}){
  const showHistory=async()=>{
   const el=root.querySelector("#written-mock-history");if(!el)return;
   try{const items=await history();if(!el.isConnected)return;const finished=items.filter(x=>x.result),activeRow=items.find(x=>!x.submitted_at);
-   el.innerHTML=(activeRow?button("resume","진행 중 모의고사 이어서",'data-id="'+esc(activeRow.id)+'"'):"")+
-    (finished.length?'<div class="written-mock-history">'+finished.map(x=>'<article><strong>'+x.exam_year+'년 '+x.exam_round+'회 · '+Number(x.result.average).toFixed(1)+'점</strong><span class="written-pill '+(x.result.passed?"good":"bad")+'">'+(x.result.passed?"모의 합격":"기준 미달")+'</span><small>'+new Date(x.submitted_at).toLocaleString("ko-KR",{timeZone:"Asia/Seoul"})+'</small><p>'+x.result.subjects.map(p=>esc(normalizeSubject(p.subject))+' '+p.score+'점').join(" · ")+'</p>'+button("review","답안 확인",'data-id="'+esc(x.id)+'"')+'</article>').join("")+'</div>':"<p>완료한 모의고사가 없습니다.</p>");
+   el.innerHTML=(activeRow&&writable?button("resume","진행 중 모의고사 이어서",'data-id="'+esc(activeRow.id)+'"'):"")+
+    (finished.length?'<h4>최근 모의고사 성적 변화</h4><div class="written-parts">'+finished.slice(0,5).reverse().map(x=>'<article><small>'+x.exam_year+'년 '+x.exam_round+'회</small><progress max="100" value="'+Number(x.result.average)+'"></progress><strong>'+Number(x.result.average).toFixed(1)+'점</strong><p>'+(x.result.passed?"모의 합격":"기준 미달")+'</p></article>').join("")+'</div><div class="written-mock-history">'+finished.map(x=>'<article><strong>'+x.exam_year+'년 '+x.exam_round+'회 · '+Number(x.result.average).toFixed(1)+'점</strong><span class="written-pill '+(x.result.passed?"good":"bad")+'">'+(x.result.passed?"모의 합격":"기준 미달")+'</span><small>'+new Date(x.submitted_at).toLocaleString("ko-KR",{timeZone:"Asia/Seoul"})+'</small><p>'+x.result.subjects.map(p=>esc(normalizeSubject(p.subject))+' '+p.score+'점').join(" · ")+'</p>'+button("review","답안 확인",'data-id="'+esc(x.id)+'"')+'</article>').join("")+'</div>':"<p>완료한 모의고사가 없습니다.</p>");
   }catch{if(el.isConnected)el.textContent="모의고사 기록을 불러오지 못했습니다.";}
  };
  async function get(id){const {data,error}=await db.from("written_mock_sessions").select("*").eq("id",id).single();if(error)throw error;return data;}
@@ -33,6 +33,7 @@ export function createMockExam({root,db,bank,back,enter}){
  async function resume(id){session=await get(id);active=true;enter();index=0;render();}
  root.addEventListener("click",async e=>{const b=e.target.closest("[data-mock-action]");if(!b||busy)return;const a=b.dataset.mockAction;
  try{
+ if(a==="resume"&&!writable)return;
  if(a==="resume"||a==="review"){await resume(b.dataset.id);return;}
  if(!active)return;
  if(a==="close"||a==="pause"){close();return;}
