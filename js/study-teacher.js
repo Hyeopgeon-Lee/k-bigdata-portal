@@ -32,7 +32,8 @@ function render(){
  const grade=$('study-admin-grade').value,today=kdate(Date.now()),week=selectedWeek();
  const students=report.students.filter(s=>[1,2].includes(Number(s.academic_year))&&(!grade||String(s.academic_year)===grade));
  let committed=0,met=0,missed=0,hours=0,plannedStudents=0,zeroPlanStudents=0;
- const rows=[];
+ const rows=[],byGrade=new Map([1,2].map(g=>[g,{students:0,planned:0,hours:0,committed:0,met:0,rows:[]} ]));
+ const scope=$('study-grade-scope');if(scope)scope.textContent=(grade?grade+'학년':'1·2학년 구분')+' · 학생 '+students.length+'명';
  for(const person of students){
   const plan=report.plans.find(p=>p.user_id===person.id),selected=plan?.weekdays||[];
   const ss=report.sessions.filter(s=>s.user_id===person.id);
@@ -54,14 +55,15 @@ function render(){
    const r=reasons.find(x=>x.study_date===day);
    return day.slice(5)+' '+(r?(reasonLabels[r.reason]||'기타')+(r.details?' · '+safe(r.details):''):'사유 미입력');
   }).join(' / '):'—';
-  rows.push('<tr><td data-label="학생"><strong>'+safe(person.name)+'</strong></td>'+
+  const row='<tr data-study-grade="'+Number(person.academic_year)+'"><td data-label="학생"><strong>'+safe(person.name)+'</strong></td>'+
    '<td data-label="학년">'+safe(person.academic_year+'학년')+'</td>'+
    '<td data-label="계획일">'+(selected.length?selected.map(d=>['월','화','수','목','금'][d-1]).join('·'):'—')+'</td>'+
    '<td data-label="실천">'+attendedPlanned+'/'+due.length+'일</td>'+
    '<td data-label="공부시간">'+fmt(hoursSec)+'</td>'+
    '<td data-label="상태">'+status+'</td>'+
    '<td data-label="계획 없음 사유" class="study-admin-reasons">'+(plan&&!selected.length?(plan.no_plan_reason?safe(plan.no_plan_reason):'<span class="study-tag missed">사유 미작성 (기존 기록)</span>'):'—')+'</td>'+
-   '<td data-label="사유" class="study-admin-reasons">'+desc+'</td></tr>');
+   '<td data-label="사유" class="study-admin-reasons">'+desc+'</td></tr>';
+  rows.push(row);const group=byGrade.get(Number(person.academic_year));group.students++;group.planned+=plan?1:0;group.hours+=hoursSec;group.committed+=due.length;group.met+=attendedPlanned;group.rows.push(row);
  }
  $('study-admin-summary').replaceChildren();
  for(const [label,value,sub] of [
@@ -87,7 +89,21 @@ function render(){
   }
   ui.renderBars(ui.chartMount($('study-admin-summary'),'study-days-chart'),'요일별 공부시간',days.map((v,i)=>[['월','화','수','목','금','토','일'][i],Math.round(v*10)/10]),{unit:'시간',caption:'휴식시간·검토 대상 세션 제외'});
  }
- $('study-admin-table-body').innerHTML=rows.join('')||'<tr><td colspan="8">등록된 학생이 없습니다.</td></tr>';
+ const comparison=$('study-grade-comparison');
+ if(comparison&&ui){
+  comparison.replaceChildren();comparison.hidden=!!grade;
+  if(!grade){
+   for(const [title,key,unit,max] of [['학년별 계획 등록률','planned','%',100],['학년별 누적 공부시간','hours','시간',null]]){
+    const chart=document.createElement('div');comparison.append(chart);
+    const values=[...byGrade].map(([g,v])=>[g+'학년',key==='hours'?Math.round(v.hours/360)/10:v.students?Math.round(v.planned/v.students*100):null]);
+    ui.renderBars(chart,title,values,{unit,max,caption:'선택 주간 기준'});
+   }
+  }
+ }
+ const body=$('study-admin-table-body');
+ if(!grade&&scope){
+  body.innerHTML=[...byGrade].map(([g,v])=>'<tr class="study-grade-divider" data-grade-group="'+g+'"><td colspan="8"><strong>'+g+'학년</strong> · 학생 '+v.students+'명 · 계획 '+v.planned+'명 · '+fmt(v.hours)+'</td></tr>'+(v.rows.join('')||'<tr class="study-grade-empty"><td colspan="8">등록된 학생이 없습니다.</td></tr>')).join('');
+ }else body.innerHTML=rows.join('')||'<tr><td colspan="8">등록된 학생이 없습니다.</td></tr>';
 }
 async function saveMail(){
  const input=$('study-admin-mail');input.disabled=true;

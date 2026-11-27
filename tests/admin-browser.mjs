@@ -107,6 +107,26 @@ try{
       assert.equal(await page.locator("#study-admin-table-body tr").count(),1);
       await page.locator("[data-admin-grade='2']").click();
       await page.locator("#teacher-summary").getByText("2명",{exact:true}).waitFor();
+      await page.locator("[data-admin-grade='']").click();
+      await page.locator(".learning-grade-card[data-grade='1'] .learning-grade-metrics").waitFor();
+      await page.locator(".learning-grade-card[data-grade='2'] .learning-grade-metrics").waitFor();
+      assert.equal(await page.locator(".learning-grade-card").count(),2,"both grades have their own summary");
+      assert.equal(await page.locator(".learning-grade-card[data-grade='1'] .learning-grade-metric").first().locator("strong").textContent(),"1명");
+      assert.equal(await page.locator(".learning-grade-card[data-grade='2'] .learning-grade-metric").first().locator("strong").textContent(),"2명");
+      assert.equal(await page.locator("#study-admin-table-body .study-grade-divider").count(),2);
+      assert.equal(await page.locator("#study-admin-table-body [data-study-grade='1']").count(),1);
+      assert.equal(await page.locator("#study-admin-table-body [data-study-grade='2']").count(),2);
+      await page.locator("#iw-results [data-grade-group='1'] .written-round").first().waitFor();
+      assert.equal(await page.locator("#iw-results [data-grade-group='1'] .written-round").count(),1);
+      assert.equal(await page.locator("#iw-results [data-grade-group='2'] .written-round").count(),2);
+      await page.screenshot({path:"ui-screenshots/admin/learning-grade-comparison-mobile.png",fullPage:true});
+      await page.locator(".learning-grade-card[data-grade='1'] button").click();
+      await page.getByRole("heading",{name:"1학년 상세 통계",exact:true}).waitFor();
+      await page.locator("#iw-results [data-grade-group='1'] .written-round").first().waitFor();
+      assert.equal(await page.locator("#iw-results [data-grade-group='2']").count(),0);
+      assert.equal(await page.locator("#study-admin-table-body [data-study-grade='2']").count(),0);
+      await page.locator("[data-admin-grade='2']").click();
+      await page.locator("#teacher-summary").getByText("2명",{exact:true}).waitFor();
       const layout=()=>page.evaluate(()=>{
        const grid=document.querySelector("#study-admin-summary");
        const toggle=document.querySelector("#study-admin-mail");

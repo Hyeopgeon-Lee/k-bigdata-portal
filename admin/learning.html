@@ -1,6 +1,6 @@
 <!doctype html><html lang="ko" data-admin-access="pending"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>학급 학습통계 | 포털 관리자</title><style id="learning-lock">body>:not(#portal-auth-layer):not(#learning-notice){display:none!important}#learning-notice{position:fixed;inset:0;display:grid;place-items:center;background:#f7f9fc;color:transparent;font-size:0;z-index:1}#learning-notice::after{content:"";width:32px;height:32px;border:3px solid #dce6f3;border-top-color:#245791;border-radius:50%;animation:admin-spin .8s linear infinite}@keyframes admin-spin{to{transform:rotate(360deg)}}</style>
-<link rel="stylesheet" href="../css/style.css?v=20261112-page-intro-2"><link rel="stylesheet" href="../css/portal-ux.css?v=20261112-page-intro-2"><link rel="stylesheet" href="../css/learning-dashboard.css?v=20261128-learning-restore-1"><link rel="stylesheet" href="../css/study.css?v=20261116-study-recovery-1"><link rel="stylesheet" href="css/admin.css?v=20261128-ui-1"><link rel="stylesheet" href="../css/written-dashboard.css?v=20261128-performance-1"><link rel="stylesheet" href="css/admin-mobile.css?v=20261128-ui-1"></head>
-<body data-admin-module="learning.js" data-admin-page="learning" data-admin-module-version="20261128-ui-1"><p id="learning-notice" role="status">관리자 로그인 및 권한 확인 중입니다.</p>
+<link rel="stylesheet" href="../css/style.css?v=20261112-page-intro-2"><link rel="stylesheet" href="../css/portal-ux.css?v=20261112-page-intro-2"><link rel="stylesheet" href="../css/learning-dashboard.css?v=20261128-learning-restore-1"><link rel="stylesheet" href="../css/study.css?v=20261116-study-recovery-1"><link rel="stylesheet" href="css/admin.css?v=20261128-ui-1"><link rel="stylesheet" href="../css/written-dashboard.css?v=20261128-performance-1"><link rel="stylesheet" href="css/admin-mobile.css?v=20261128-ui-1"><link rel="stylesheet" href="css/learning-grades.css?v=20261128-grade-1"></head>
+<body data-admin-module="learning.js" data-admin-page="learning" data-admin-module-version="20261128-grade-1"><p id="learning-notice" role="status">관리자 로그인 및 권한 확인 중입니다.</p>
 <header class="admin-header site-header">
   <div class="admin-header-inner header-inner">
     <a class="admin-brand brand" href="index.html" aria-label="학과 관리자 포털 홈"><span class="brand-mark" aria-hidden="true"><span></span></span><span class="admin-brand-copy brand-copy"><strong>빅데이터SW학과</strong><small>관리자 포털</small></span></a>
@@ -12,6 +12,11 @@
 <div id="admin-secure" hidden><nav class="admin-menu" aria-label="관리자 업무 메뉴"><a class="admin-menu-home" href="index.html">관리자 홈</a><a href="accounts.html?view=approvals">가입 승인 요청</a><a href="accounts.html?view=students">통합 사용자 관리</a><a href="learning.html">학급 학습통계</a><a href="certifications.html">학생 자격증 관리</a><a href="mock-exam.html">실전 모의고사 생성</a><a href="rooms.html">프로젝트실 관리</a><a href="help.html">학과 요청 관리</a><a href="alumni.html">졸업생 네트워크 관리</a></nav><div class="container learn-container">
 <div class="learn-tools"><p class="learn-note">학습 통계: 월요일 00:00 ~ 다음 월요일 00:00 · 한국시간</p><button id="teacher-refresh" type="button">통계 새로고침</button></div>
 <p id="teacher-status" class="learn-status" role="status" aria-live="polite">관리자 권한을 확인하고 있습니다.</p>
+<section class="learn-section learning-grade-overview" aria-labelledby="learning-grade-title">
+ <h2 id="learning-grade-title">1·2학년 학습 현황 비교</h2>
+ <p class="learning-grade-description">전체에서는 학년별 현황을 비교하고, 1학년 또는 2학년을 선택하면 아래 모든 학생 학습 통계가 해당 학년으로 변경됩니다.</p>
+ <div id="learning-grade-overview" aria-live="polite">학년별 통계를 불러오는 중…</div>
+</section>
 <section class="learn-section learn-mail-section" aria-labelledby="teacher-mail-heading">
   <h2 id="teacher-mail-heading">주간 메일 발송</h2>
   <p id="teacher-mail-status" class="learn-mail-status" role="status" aria-live="polite">설정 확인 중…</p>
@@ -27,7 +32,7 @@
   </div>
 </section>
 <section class="learn-section study-layout" aria-labelledby="teacher-study-title" id="teacher-study-panel">
-  <div class="study-topline"><h2 id="teacher-study-title">자율학습 관리</h2>
+  <div class="study-topline"><h2 id="teacher-study-title">자율학습 관리</h2><p id="study-grade-scope" class="learning-scope-label">전체 학년</p>
   <div class="study-admin-controls">
    <label>조회 주간 <select id="study-admin-week" aria-label="자율학습 조회 주간"></select></label>
    <input type="hidden" id="study-admin-grade" value="">
@@ -35,7 +40,7 @@
   </div></div>
   <p class="study-text">학생이 스스로 등록한 학습 날짜와 실제 시작 기록을 비교합니다. 과거 날짜의 미참여만 집계합니다.</p>
   <p id="study-admin-status" class="learn-status study-status" role="status" aria-live="polite">자율학습 현황 확인 중…</p>
-  <div class="learn-grid" id="study-admin-summary"></div>
+  <div class="learn-grid" id="study-admin-summary"></div><div id="study-grade-comparison" class="learning-grade-chart-grid" hidden></div>
   <div class="study-admin-table-wrap">
    <table class="study-admin-table"><thead><tr><th>학생</th><th>학년</th><th>계획일</th><th>실천</th><th>공부시간</th><th>상태</th><th>계획 없음 사유</th><th>미참여 사유</th></tr></thead><tbody id="study-admin-table-body"></tbody></table>
   </div>
@@ -64,7 +69,7 @@
  <tbody id="study-diagnostics-errors"><tr><td colspan="5">조회 중…</td></tr></tbody></table></div>
 </section>
 <section id="industrial-teacher-stats" class="learn-section written-dashboard"></section>
-<div id="teacher-content" hidden>
+<div id="teacher-content" hidden><h2 id="teacher-grade-heading" class="learning-detail-heading">전체 학년 상세 통계</h2>
 <div class="learn-grid" id="teacher-summary"></div>
 <section class="learn-section" aria-labelledby="teacher-study-period-title">
  <h2 id="teacher-study-period-title">선택 기간 자율학습 통계</h2>
