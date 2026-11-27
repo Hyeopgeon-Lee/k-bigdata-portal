@@ -214,6 +214,7 @@ async function loadRequests(all){
  root.replaceChildren(node('p','요청을 불러오는 중...','help-meta'));
  const cols='id,owner_id,legacy_request_id,category,location,title,status,created_at';
  const grade=all?ui.getGrade():"";
+ if(all){el('help-admin-counts').textContent='조회 중…';el('help-status-chart')?.replaceChildren();}
  if(all&&grade&&!helpStudents){
   const profiles=await api.rpc("admin_list_students");
   if(current!==helpRequestId)return;

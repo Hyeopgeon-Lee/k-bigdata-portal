@@ -3,13 +3,16 @@ const db=window.portalSupabaseClient;
 if(window.portalAdminAllowed!==true||!db)throw Error("ADMIN_SESSION_REQUIRED");
 const list=document.getElementById("admin-room-list"),count=document.getElementById("admin-room-count"),feedback=document.getElementById("admin-room-feedback");
 const node=(tag,value,cls)=>{const e=document.createElement(tag);if(value!==undefined&&value!==null)e.textContent=String(value);if(cls)e.className=cls;return e;};
-const fmt=raw=>new Intl.DateTimeFormat("ko-KR",{timeZone:"Asia/Seoul",year:"numeric",month:"2-digit",day:"2-digit",hour12:false}).format(new Date(raw));
+const fmt=raw=>new Intl.DateTimeFormat("ko-KR",{timeZone:"Asia/Seoul",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hourCycle:"h23"}).format(new Date(raw));
 const ui=window.portalAdminUI;
 const PAGE_SIZE=50;let page=0,requestId=0,studentsCache=null;
 async function load(){
  const current=++requestId;
  feedback.textContent="선택 학년 예약 확인 중…";
  list.replaceChildren();
+ count.textContent="조회 중…";
+ document.getElementById("admin-room-chart")?.replaceChildren();
+ document.getElementById("admin-room-week-chart")?.replaceChildren();
  const grade=ui.getGrade();
  const users=await (studentsCache||db.rpc("admin_list_students"));
  if(current!==requestId)return;

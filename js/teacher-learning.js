@@ -164,7 +164,7 @@ function fetchSummary(){
 async function load(){
  const status=get('teacher-status'),sequence=++requestSequence;
  answerRequest++;answers.replaceChildren();get('teacher-content').hidden=true;
- for(const id of ['teacher-subject-chart','teacher-rate-chart'])get(id)?.replaceChildren();
+ for(const id of ['teacher-subject-chart','teacher-rate-chart','teacher-comparison-chart'])get(id)?.replaceChildren();
  renderFilters();updatePeriodControls();
  status.textContent='선택한 학년과 기간의 학습통계를 불러오는 중입니다...';
  const {data,error}=await fetchSummary();
@@ -225,6 +225,7 @@ async function load(){
   ['자가평가 정답률',a.selfAccuracy==null?'—':a.selfAccuracy+'%',b?.selfAccuracy==null?'—':b.selfAccuracy+'%',delta(a.selfAccuracy,b?.selfAccuracy,'%p')],
   ['브라우저 답안 일치율',a.autoAccuracy==null?'—':a.autoAccuracy+'%',b?.autoAccuracy==null?'—':b.autoAccuracy+'%',delta(a.autoAccuracy,b?.autoAccuracy,'%p')]
  ]));
+ if(adminUI)adminUI.renderBars(adminUI.chartMount(get('teacher-comparison'),'teacher-comparison-chart'),'기간별 문제 풀이 비교',[[thisPeriod,a.attempts],[compared,b?.attempts]],{unit:'회',caption:data.partial?'현재 기간은 집계 시각까지, 비교 기간은 전체 확정치':'기간별 확정 통계'});
  const study=get('teacher-study-period-summary');
  if(study&&data.study){
   const v=data.study,sec=Number(v.studySeconds||0),hours=Math.floor(sec/3600),minutes=Math.floor((sec%3600)/60);

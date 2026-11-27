@@ -45,5 +45,5 @@ test("admin completion saves the answer before attempting email, supports retry"
  assert.match(admin,/mailButton\.onclick=\(\)=>void completionMail/);
  assert.match(admin,/oldStatus!=='COMPLETED'/);
  assert.match(admin,/요청자 포털 계정이 연결되지 않아/);
- assert.match(read("admin/help.html"),/data-admin-module-version="20261128-performance-1"/);
+ assert.match(read("admin/help.html"),/data-admin-module-version="20261128-ui-1"/);
 });

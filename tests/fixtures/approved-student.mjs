@@ -15,6 +15,8 @@ export async function approvedStudent(context, profileOverride={}, registeredAlu
    const adminFixtures=${JSON.stringify(adminFixtures)};
    const fixtureMember={user_id:"11111111-1111-4111-8111-111111111111",full_name:"테스트 학생",student_no:"2026000001",academic_year:1,signup_type:"student",approval_status:"approved",enrollment_status:"enrolled",email:"test@example.test",email_mask:"te***@example.test"};
    const adminStudents=[fixtureMember,{...fixtureMember,user_id:"22222222-2222-4222-8222-222222222221",full_name:"2학년 학생 A",academic_year:2,student_no:"2025000001"},{...fixtureMember,user_id:"22222222-2222-4222-8222-222222222222",full_name:"2학년 학생 B",academic_year:2,student_no:"2025000002"}];
+   const pendingStudents=adminStudents.slice(0,2).map((s,i)=>({...s,user_id:"33333333-3333-4333-8333-33333333333"+i,full_name:i?"2학년 가입 대기":"1학년 가입 대기",approval_status:"pending"}));
+   const adminAlumni=[{alumni_id:"22222222-2222-4222-8222-222222222222",name:"졸업생 테스트",graduation_year:2025,company:"테스트 회사",employment_status:"취업",approval_status:"approved",career_mail_enabled:true,alumni_news_mail_enabled:false,status:"APPROVED"},{alumni_id:"22222222-2222-4222-8222-222222222223",name:"2026 졸업생",graduation_year:2026,company:"다른 회사",employment_status:"구직",approval_status:"approved",career_mail_enabled:false,alumni_news_mail_enabled:false,status:"APPROVED"}];
    const adminTables={
     student_certifications:adminStudents.map((s,i)=>({id:"cert-"+i,user_id:s.user_id,certificate_name:i?"정보처리산업기사":"SQLD",pass_status:"final",verification_status:i===2?"pending":"verified",final_pass_date:"2026-11-20",created_at:"2026-11-20"})),
     room_reservations:adminStudents.map((s,i)=>({id:"room-"+i,owner_id:s.user_id,room_code:i?"8319":"8318",starts_at:new Date().toISOString(),ends_at:new Date(Date.now()+3600000).toISOString(),purpose:i?"2학년 예약":"1학년 예약",status:i===2?"CANCELLED":"ACTIVE",created_at:new Date().toISOString()})),
@@ -95,11 +97,17 @@ export async function approvedStudent(context, profileOverride={}, registeredAlu
     async rpc(name,args){
       if(adminFixtures&&superAdmin){
        if(name==="admin_list_students")return {data:adminStudents,error:null};
+       if(name==="admin_pending_signup_requests")return {data:pendingStudents,error:null};
+       if(name==="admin_alumni_directory"){
+        const rows=adminAlumni.filter(x=>!args?.p_year||String(x.graduation_year)===String(args.p_year));
+        return {data:{rows,total:rows.length,employment_values:["취업","구직"],companies:rows.length,mentor_count:0},error:null};
+       }
        if(name==="admin_user_list"){
         let rows=adminStudents.filter(x=>!args?.p_grade||x.academic_year===args.p_grade);
-        if(args?.p_approval==="pending"||args?.p_attention==="academic")rows=[];
+        if(args?.p_approval==="pending")rows=pendingStudents.filter(x=>!args.p_grade||x.academic_year===args.p_grade);
+        if(args?.p_attention==="academic")rows=[];
         if(args?.p_attention==="inactive"||args?.p_attention==="no_plan"||args?.p_attention==="no_cert")rows=rows.filter(x=>x.academic_year===2);
-        return {data:{rows:rows.slice(0,args?.p_size||25),total:rows.length,counts:{all:3,grade1:1,grade2:2,enrolled:3,leave:0,withdrawn:0,graduated:0,early_employment:0,pending:0,requests:0,mail_failed:0}},error:null};
+        return {data:{rows:rows.slice(0,args?.p_size||25),total:rows.length,counts:{all:3,grade1:1,grade2:2,enrolled:3,leave:0,withdrawn:0,graduated:0,early_employment:0,pending:2,requests:0,mail_failed:0}},error:null};
        }
        if(name==="admin_user_detail")return {data:args?.p_tab==="learning"?{summary:[],recent:[],mocks:[]}:{profile:adminStudents.find(x=>x.user_id===args?.p_user_id)||fixtureMember,weekly_opt_in:false},error:null};
        if(name==="study_admin_dashboard")return {data:{students:adminStudents.map(s=>({id:s.user_id,name:s.full_name,academic_year:s.academic_year})),plans:[],sessions:[],reasons:[],email_enabled:false},error:null};

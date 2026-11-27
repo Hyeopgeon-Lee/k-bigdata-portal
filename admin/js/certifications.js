@@ -114,7 +114,10 @@ el('cert-admin-panel').hidden=false;
 el('cert-admin-grade').value=ui.getGrade();
 ui.onGrade(grade=>{el('cert-admin-grade').value=grade;certPage=0;renderAdmin();});
 for(const id of ['cert-admin-search','cert-admin-grade','cert-admin-status'])
- el(id).addEventListener(id==='cert-admin-search'?'input':'change',()=>{certPage=0;if(id==='cert-admin-grade'&&el(id).value!=='graduate'&&el(id).value!==ui.getGrade()){ui.setGrade(el(id).value);return;}renderAdmin();});
+ el(id).addEventListener(id==='cert-admin-search'?'input':'change',()=>{certPage=0;if(id==='cert-admin-grade'){
+  if(el(id).value==='graduate'){ui.setGrade('');el(id).value='graduate';}
+  else if(el(id).value!==ui.getGrade()){ui.setGrade(el(id).value);return;}
+ }renderAdmin();});
 el('cert-export').addEventListener('click',exportCSV);
 el('cert-admin-list').addEventListener('click',async event=>{
  const b=event.target.closest('button[data-action]');if(!b)return;

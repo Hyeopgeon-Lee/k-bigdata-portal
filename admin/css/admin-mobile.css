@@ -20,7 +20,7 @@ body[data-admin-page]{
  font-family:inherit;font-weight:700;line-height:1.35!important;border-radius:10px!important;
  white-space:nowrap;word-break:keep-all;overflow-wrap:normal;max-width:100%;box-shadow:none;align-items:center;justify-content:center;
 }
-.admin-main button:not(.users-kpi):not(.learn-answer-link),.admin-main a.button,.admin-main .users-link{cursor:pointer;background:var(--admin-primary);color:#fff;border:1px solid var(--admin-primary)}
+.admin-main :where(button:not(.users-kpi):not(.learn-answer-link),a.button,.users-link){cursor:pointer;background:var(--admin-primary);color:#fff;border:1px solid var(--admin-primary)}
 .admin-main :is(button,a.button,.users-link):focus-visible{outline:3px solid #39a4d1;outline-offset:2px}
 .admin-main button:disabled{opacity:.55;cursor:not-allowed}
 .admin-main :is(.users-actions,.users-tabs,.users-pagination,.portal-approval-buttons,.portal-auth-actions,.learn-button-group,.learn-period-navigation,.cert-item-actions,.room-row,.help-actions,.admin-actions,.written-actions,.exam-actions,.exam-downloads,.exam-paging,.exam-form-switch,.alumni-admin .tabs,.alumni-admin .actions){flex-wrap:wrap;gap:8px;min-width:0}
@@ -30,6 +30,7 @@ body[data-admin-page]{
 .admin-main :is(button[aria-pressed="true"],button[aria-selected="true"]):not(.users-kpi){background:var(--admin-primary)!important;border-color:var(--admin-primary)!important;color:#fff!important}
 .admin-main :is(input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),select,textarea){font-size:16px!important;min-height:46px;max-width:100%;min-width:0;border-radius:10px;word-break:normal}
 .admin-main :is(.users-layout,.help-layout,.alumni-admin,.written-dashboard,.learn-container){min-width:0}
+.admin-main .alumni-admin{font-size:16px}
 .admin-main :is(.users-sub,.users-table td,.alumni-admin .admin-table td,.portal-approval-meta span){overflow-wrap:anywhere;word-break:keep-all}
 .admin-nav-toggle{display:none}
 .admin-grade-panel{background:#fff;border:1px solid var(--admin-border);border-radius:12px;padding:14px 16px;display:flex;gap:16px;align-items:center;justify-content:space-between;margin:0 0 20px}
@@ -181,4 +182,10 @@ body[data-admin-page]{
 @media(max-width:700px){
  .admin-main .admin-main-filter{grid-template-columns:1fr}
  .admin-main .users-tabs button{white-space:nowrap}
+}
+
+@media(max-width:700px){
+ body[data-admin-page="learning"] .admin-main .learn-table td{font-size:15px;grid-template-columns:minmax(80px,34%) minmax(0,1fr)}
+ body[data-admin-page="learning"] .admin-main .learn-table td[data-label]::before{font-size:13px}
+ .admin-main .admin-card-grid{min-width:0}
 }
