@@ -18,8 +18,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/style.css?v=20261112-page-intro-2">
 <link rel="stylesheet" href="css/portal-ux.css?v=20261112-page-intro-2">
-<link rel="stylesheet" href="css/my-page.css?v=20261112-page-intro-2">
-<link rel="stylesheet" href="css/ready.css?v=20261112-page-intro-2">
+<link rel="stylesheet" href="css/ready.css?v=20261128-ready-ui-2">
 <!-- portal:assets:start (generated; edit scripts/portal-shell-template.mjs) -->
 <link rel="stylesheet" href="css/portal-navigation.css?v=20261112-page-intro-2">
 <script defer src="js/portal-navigation.js?v=20261128-performance-1"></script>
@@ -45,7 +44,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
   </div>
 </header>
 <!-- portal:header:end -->
-<main id="main-content" class="container ready-main" tabindex="-1">
+<main id="main-content" class="ready-main" tabindex="-1">
 <!-- portal:services:start (generated; edit scripts/portal-shell-template.mjs) -->
 <nav class="container learning-cross-nav portal-service-nav portal-nav-compact" aria-label="현재 영역과 다른 서비스 바로가기" data-learning-nav>
   <div class="portal-nav-current"><strong class="portal-nav-title">취업 · 진로</strong></div>
@@ -61,11 +60,17 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
   
 </section>
 <!-- portal:intro:end -->
-<section class="ready-hero"><p class="my-page-kicker">CAREER READINESS · READY</p><h1>취업 준비 점검</h1><p>GitHub 활동과 프로젝트, 포트폴리오, 취업 서류 준비 현황을 확인하세요.</p><a href="my-certifications.html">나의 자격증 관리</a> · <a href="resume.html">자기소개서 작성 가이드</a></section>
-<p id="ready-status" role="status" aria-live="polite">준비 현황을 불러오는 중입니다.</p><div id="ready-root"></div>
+<div class="container ready-workspace">
+  <nav class="ready-related" aria-label="취업 준비 관련 서비스">
+    <a class="ready-link ready-secondary" href="my-certifications.html">나의 자격증 관리</a>
+    <a class="ready-link ready-secondary" href="resume.html">자기소개서 작성 가이드</a>
+  </nav>
+  <p id="ready-status" class="ready-notice" role="status" aria-live="polite">준비 현황을 불러오는 중입니다.</p>
+  <div id="ready-root" aria-busy="true"></div>
+</div>
 </main>
 <footer class="site-footer"><div class="container footer-grid"><div class="footer-brand"><span class="brand-mark" aria-hidden="true"><span></span></span><div><strong>빅데이터소프트웨어공학과</strong><p>한국폴리텍대학 서울강서캠퍼스</p></div></div><nav class="footer-links" aria-label="학과 대표 사이트"><p>학과 대표 사이트</p></nav></div><div class="container footer-bottom"><p>© <span id="current-year"></span> K-BigData Service Portal</p></div></footer>
 <script type="module" src="js/portal-auth.mjs?v=20261128-performance-1"></script>
-<script type="application/x-learning" data-module="js/ready.js?v=20261128-notion-oauth"></script>
+<script type="application/x-learning" data-module="js/ready.js?v=20261128-ready-ui-2"></script>
 <script type="application/x-learning" data-module="js/portal-shell-entry.js?v=20261128-ready-1"></script>
 </body></html>

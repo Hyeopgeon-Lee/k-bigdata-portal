@@ -1,4 +1,4 @@
-import {api,esc,tag,fmt,url,table,cards,panel,bars,status,details,history} from '../../js/ready-common.mjs?v=20261128-notion-oauth';
+import {api,esc,tag,fmt,url,table,cards,panel,bars,status,details,history} from '../../js/ready-common.mjs?v=20261128-ready-ui-2';
 const root=document.querySelector('#ready-root'),$=s=>root.querySelector(s);let d,grade='all',search='',state='all',busy=false;
 const filter=()=>d.rows.filter(x=>(grade==='all'||String(x.member.academic_year)===grade)&&(state==='all'||state==='미등록'&&!x.registered||x.evaluation.status===state)&&[x.member.full_name,x.member.student_no,x.student.career_target,x.student.github_username].join(' ').toLowerCase().includes(search.toLowerCase()));
 const counts=rows=>({total_students:rows.length,excellent:rows.filter(x=>x.evaluation.status==='준비 우수').length,good:rows.filter(x=>x.evaluation.status==='준비 양호').length,preparing:rows.filter(x=>x.evaluation.status==='준비 중').length,attention_count:rows.filter(x=>x.evaluation.status==='관심 필요').length});

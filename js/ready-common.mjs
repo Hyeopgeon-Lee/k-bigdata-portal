@@ -2,12 +2,29 @@ export const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;'
 export const fmt=v=>v?new Date(v).toLocaleString('ko-KR',{timeZone:'Asia/Seoul'}):'미점검';
 export const tag=v=>'<span class="ready-tag" data-status="'+esc(v)+'">'+esc(v||'미확인')+'</span>';
 export const url=v=>{try{const u=new URL(v);return ['https:','http:'].includes(u.protocol)&&!u.username&&!u.password?'<a rel="noopener noreferrer" target="_blank" href="'+esc(u.href)+'">'+esc(u.href)+'</a>':esc(v)}catch{return esc(v||'미등록')}};
-export const table=(heads,rows)=>'<div class="ready-scroll"><table class="ready-table"><thead><tr>'+heads.map(x=>'<th scope="col">'+esc(x)+'</th>').join('')+'</tr></thead><tbody>'+rows.map(row=>'<tr>'+row.map(x=>'<td>'+x+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>'+(rows.length?'':'<p class="ready-muted">등록된 내역이 없습니다.</p>');
+export const table=(heads,rows)=>'<div class="ready-scroll"><table class="ready-table" role="table"><thead role="rowgroup"><tr role="row">'+heads.map(x=>'<th scope="col" role="columnheader">'+esc(x)+'</th>').join('')+'</tr></thead><tbody role="rowgroup">'+rows.map(row=>'<tr role="row">'+row.map((x,i)=>'<td role="cell" data-label="'+esc(heads[i]||'')+'"><div class="ready-cell">'+x+'</div></td>').join('')+'</tr>').join('')+'</tbody></table></div>'+(rows.length?'':'<p class="ready-muted">등록된 내역이 없습니다.</p>');
 export const cards=items=>'<div class="ready-grid">'+items.map(([label,value])=>'<div class="ready-kpi">'+esc(label)+'<strong>'+esc(value)+'</strong></div>').join('')+'</div>';
 export const panel=(title,body)=>'<section class="ready-panel"><h2>'+esc(title)+'</h2>'+body+'</section>';
 export const bars=s=>[['준비 우수','excellent'],['준비 양호','good'],['준비 중','preparing'],['관심 필요','attention_count']].map(([label,key])=>'<div class="ready-controls"><span>'+label+' · '+Number(s[key]||0)+'명</span></div><div class="ready-bar"><i style="width:'+Math.min(100,Math.max(0,100*Number(s[key]||0)/Math.max(1,Number(s.total_students||0))))+'%"></i></div>').join('');
-export async function api(action,data={}){const {data:res,error}=await window.portalSupabaseClient.functions.invoke('ready-api',{body:{action,...data}});if(error){let m;try{m=(await error.context?.json())?.error}catch{}throw Error(m||error.message||'서버 연결 실패')}if(res?.error)throw Error(res.error);return res}
-export const status=(msg,err=false)=>{const e=document.querySelector('#ready-status');e.textContent=msg;e.dataset.error=String(err)};
+const errorMessages={
+ STUDENT_REQUIRED:'취업 준비 점검은 재학생 계정으로 이용할 수 있습니다.',
+ FORBIDDEN:'이 서비스를 이용할 권한이 없습니다.',
+ LOGIN_REQUIRED:'로그인 상태를 다시 확인해 주세요.',
+ READ_ONLY:'현재 계정은 조회만 가능합니다.',
+ READY_PROFILE_REQUIRED:'내 정보를 먼저 등록해 주세요.',
+ NOT_FOUND:'요청한 정보를 찾을 수 없습니다.',
+ DATABASE_ERROR:'정보를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.',
+ CHECK_SAVE_FAILED:'점검 결과를 저장하지 못했습니다. 잠시 후 다시 시도해 주세요.',
+ REQUEST_FAILED:'요청을 완료하지 못했습니다. 잠시 후 다시 시도해 주세요.',
+ UNKNOWN_ACTION:'요청을 처리할 수 없습니다. 새로고침 후 다시 시도해 주세요.'
+};
+export function readyErrorMessage(value){
+ const message=String(value||'').trim();
+ return Object.hasOwn(errorMessages,message)?errorMessages[message]:/[가-힣]/.test(message)?message:'서비스 연결이 원활하지 않습니다. 잠시 후 다시 시도해 주세요.';
+}
+function apiError(code){const e=Error(readyErrorMessage(code));e.code=String(code||'REQUEST_FAILED');return e}
+export async function api(action,data={}){const {data:res,error}=await window.portalSupabaseClient.functions.invoke('ready-api',{body:{action,...data}});if(error){let m;try{m=(await error.context?.json())?.error}catch{}throw apiError(m||error.message)}if(res?.error)throw apiError(res.error);return res}
+export const status=(msg,err=false)=>{const e=document.querySelector('#ready-status');if(e){e.textContent=err?readyErrorMessage(msg):msg;e.dataset.error=String(err);e.hidden=!msg}};
 export const issues=e=>'<ul class="ready-checklist">'+(e.issues||[]).map(x=>'<li><strong>'+esc(x.label)+'</strong><p>'+esc(x.evidence||x.why)+'</p><p class="ready-muted">'+esc(x.how)+'</p></li>').join('')+'</ul>';
 const labeled={career_target:'희망 직무',github_url:'GitHub 프로필',github_pages_url:'GitHub Pages',github_pages_repo:'GitHub Pages 저장소',notion_url:'Notion 포트폴리오',portfolio_url:'포트폴리오',blog_url:'기술 블로그',resume_status:'이력서',cover_letter_status:'자기소개서'};
 export const label=k=>labeled[k]||k;

@@ -1,5 +1,6 @@
-import {api,esc,fmt,tag,url,table,cards,panel,bars,status,issues,history,label,details} from './ready-common.mjs?v=20261128-notion-oauth';
-const root=document.querySelector('#ready-root');let b,tab='dashboard',busy=false;
+import {api,esc,fmt,tag,url,table,cards,panel,bars,status,issues,history,label,details} from './ready-common.mjs?v=20261128-ready-ui-2';
+const root=document.querySelector('#ready-root');
+const role=window.portalVerifiedContext;let b,tab='dashboard',busy=false;
 const $=s=>root.querySelector(s);
 const field=(key,type='text')=>'<label>'+esc(label(key))+'<input name="'+key+'" type="'+type+'" maxlength="'+(type==='url'?1000:200)+'" value="'+esc(b.student[key]||'')+'" '+(!b.write?'disabled':'')+'></label>';
 const choices=(key,options)=>'<label>'+esc(label(key))+'<select name="'+key+'" '+(!b.write?'disabled':'')+'>'+options.map(v=>'<option '+(v===(b.student[key]||'미작성')?'selected':'')+'>'+esc(v)+'</option>').join('')+'</select></label>';
@@ -37,8 +38,9 @@ async function completeOAuth(){
 async function load(){b=await api('mine');render();status(b.registered?'취업 준비 현황을 확인하세요.':'처음 이용하시나요? 내 정보를 등록해 주세요.');}
 async function act(action,payload={},message='저장했습니다.'){if(busy)return;busy=true;root.querySelectorAll('button,input,select').forEach(x=>x.disabled=true);status(action==='manual_check'?'GitHub·포트폴리오 점검 중입니다. 잠시 기다려 주세요.':'처리 중…');try{const r=await api(action,payload);await load();status(r.message||message+(r.check_status?' · '+r.check_status:''));}catch(e){status(e.message,true);render()}finally{busy=false}}
 function render(){
- const tabs=[['dashboard','내 현황'],['profile','내 정보 수정'],['class','학급 현황'],['guide','준비 기준 · README 예시'],['history','변경 이력']];
- root.innerHTML='<div class="ready-controls" role="group" aria-label="취업 준비 메뉴">'+tabs.map(([v,t])=>'<button class="ready-tab" data-tab="'+v+'" aria-pressed="'+(tab===v)+'">'+t+'</button>').join('')+'</div><div id="ready-content"></div>';
+ root.setAttribute('aria-busy','false');
+ const tabs=[['dashboard','내 현황'],['profile','내 정보 수정'],['class','학급 현황'],['guide','준비 기준'],['history','변경 이력']];
+ root.innerHTML='<nav class="ready-tabs" aria-label="취업 준비 메뉴">'+tabs.map(([v,t])=>'<button class="ready-tab" data-tab="'+v+'" aria-pressed="'+(tab===v)+'">'+t+'</button>').join('')+'</nav><div id="ready-content"></div>';
  const content=$('#ready-content');root.querySelectorAll('[data-tab]').forEach(x=>x.onclick=()=>{if(busy)return;tab=x.dataset.tab;render()});
  if(tab==='dashboard'){
   content.innerHTML=panel('내 취업 준비 현황','<p><strong>'+esc(b.member.full_name)+'</strong> · '+esc(b.member.student_no)+' · '+esc(b.member.academic_year)+'학년</p><p class="ready-muted">학번·이름·학년은 통합 포털 회원정보와 연결됩니다. 최근 정보 수정: '+esc(fmt(b.updated_at))+'</p><div class="ready-controls"><button id="check-now" '+(!b.registered||!b.write?'disabled':'')+'>지금 점검하기</button><button id="edit-profile" class="ready-secondary">'+(b.registered?'정보 수정':'정보 등록')+'</button></div>')+notionPanel()+details(b);bindNotion();
@@ -67,4 +69,31 @@ function render(){
   $('#readme-example').textContent=example;$('#copy-readme').onclick=async()=>{try{await navigator.clipboard.writeText(example);status('README 예시를 복사했습니다.')}catch{status('복사 권한을 확인하세요.',true)}};
  }
 }
-(async()=>{await load();await completeOAuth();})().catch(e=>status(e.message,true));
+function accessPanel(kind){
+ document.querySelector('.ready-related').hidden=true;
+ root.setAttribute('aria-busy','false');
+ if(kind==='admin'){
+  status('');
+  root.innerHTML=panel('취업 준비 관리','<div class="ready-access-card"><span class="ready-access-badge">관리자 계정</span><p>학생별 취업 준비 현황과 GitHub·Notion 점검 결과는 관리자 페이지에서 확인할 수 있습니다.</p><div class="ready-controls"><a class="ready-link" href="admin/ready.html">취업 준비 관리 바로가기</a><a class="ready-link ready-secondary" href="admin/index.html">관리자 홈</a></div></div>');
+ }else{
+  status('');
+  root.innerHTML=panel('재학생 전용 서비스','<div class="ready-access-card"><p>취업 준비 점검은 재학생 계정으로 이용할 수 있습니다. 다른 취업·진로 서비스는 포털 메뉴에서 확인하세요.</p><div class="ready-controls"><a class="ready-link" href="services.html#career">취업 · 진로 서비스</a><a class="ready-link ready-secondary" href="mypage.html">내 회원정보</a></div></div>');
+ }
+}
+async function init(){
+ // UI uses the verified portal bootstrap role only for navigation. The server remains the authority.
+ if(role?.isAdmin===true){accessPanel('admin');return}
+ if(role?.profile&&(role.profile.signup_type!=='student'||!['enrolled','leave','early_employment'].includes(role.profile.enrollment_status))){accessPanel('nonstudent');return}
+ root.setAttribute('aria-busy','true');
+ try{await load();await completeOAuth()}
+ catch(e){
+  if(e.code==='STUDENT_REQUIRED'||e.code==='FORBIDDEN'){
+   accessPanel(role?.isAdmin===true?'admin':'nonstudent');return
+  }
+  root.setAttribute('aria-busy','false');
+  status(e.message,true);
+  root.innerHTML=panel('준비 현황을 불러오지 못했습니다.','<p>네트워크 또는 로그인 상태를 확인한 후 다시 시도하세요.</p><div class="ready-controls"><button id="ready-retry">다시 불러오기</button><a class="ready-link ready-secondary" href="index.html">포털 홈</a></div>');
+  $('#ready-retry').onclick=()=>{root.innerHTML='';status('준비 현황을 불러오는 중입니다.');void init()};
+ }
+}
+void init();
