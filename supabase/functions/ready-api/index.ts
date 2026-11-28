@@ -2,7 +2,7 @@ import {createClient} from "npm:@supabase/supabase-js@2.49.10";
 import {evaluateStudentReadiness,readinessGuide} from "./rules.mjs";
 import {checkStudent,repoParts} from "./checks.mjs";
 import {githubIdentity} from "./oidc.ts";
-import {notionConfigured,notionPageId,notionStatus,startNotion,finishNotion,disconnectNotion} from "./notion.mjs";
+import {notionConfigured,notionPageId,notionStatus,notionStatusFromRow,startNotion,finishNotion,disconnectNotion} from "./notion.mjs";
 const url=Deno.env.get("SUPABASE_URL")!, key=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, anon=Deno.env.get("SUPABASE_ANON_KEY")!;
 const db=createClient(url,key,{auth:{persistSession:false,autoRefreshToken:false}});
 const origin="https://portal.k-bigdata.kr", stamp=()=>new Date().toISOString(), date=()=>new Date().toLocaleDateString('sv-SE',{timeZone:'Asia/Seoul'});
@@ -35,14 +35,31 @@ async function bundle(m:any,detail=false){
  const result:any={member:m,student:s,registered:!!profile,consent:!!profile?.peer_share_consent_at,updated_at:profile?.last_manual_update_at,evaluation,checks:c,primary,certificates:certs,plans,repositories:repos,repoChecks};
  if(detail){
   result.history=await read(db.from("ready_change_history").select("changed_at,category,field_name,old_value,new_value,changed_by").eq("user_id",id).order("changed_at",{ascending:false}).limit(300));
-  result.notion_connection=await notionStatus(db,id,s.notion_url||"");
-  if(result.notion_connection.status==="CONNECTED"&&c.notion?.check_status==="AUTH_REQUIRED")result.notion_connection.status="RECONNECT_REQUIRED";
+  result.notion_connection=await notionStatus(db,id,s.notion_url||"",c.notion||{});
  }
  return result;
 }
 const compact=(b:any)=>({member:b.member,registered:b.registered,evaluation:b.evaluation,certificate_count:b.certificates.filter((c:any)=>c.pass_status==="final").length,updated_at:b.updated_at,consent:b.consent,student:b.student});
 const stats=(rows:any[])=>({total_students:rows.length,registered:rows.filter(b=>b.registered).length,excellent:rows.filter(b=>b.evaluation.status==="준비 우수").length,good:rows.filter(b=>b.evaluation.status==="준비 양호").length,preparing:rows.filter(b=>b.evaluation.status==="준비 중").length,attention_count:rows.filter(b=>b.evaluation.status==="관심 필요").length,github_active_7d:rows.filter(b=>b.evaluation.github.active_days_7d>=3&&b.evaluation.github_fresh).length,github_inactive_14d:rows.filter(b=>b.evaluation.github_fresh&&b.evaluation.github.check_status==="SUCCESS"&&Number(b.evaluation.github.inactive_days)>=14).length,readme_missing:rows.filter(b=>b.evaluation.readme.status==="README 미작성").length,readme_needs_work:rows.filter(b=>["README 보완 필요","README 내용 부족"].includes(b.evaluation.readme.status)).length,portfolio_missing:rows.filter(b=>!b.evaluation.portfolio.registered).length,grade2_resume_incomplete:rows.filter(b=>b.student.grade==="2"&&b.student.resume_status!=="최종 완성").length,grade2_cover_incomplete:rows.filter(b=>b.student.grade==="2"&&!["기업 지원 가능","기본본 완성"].includes(b.student.cover_letter_status)).length,certificate_holders:rows.filter(b=>b.certificate_count>0).length});
-async function roster(){const members=await activeMembers(),out=[];for(let i=0;i<members.length;i+=6)out.push(...await Promise.all(members.slice(i,i+6).map((m:any)=>bundle(m).then(compact))));return out}
+async function roster(includeNotion=false){
+ const members=await activeMembers(),out:any[]=[];
+ // Admin-only Notion metadata; no student credential or connection identifier is returned.
+ const connections=new Map<string,any>();
+ if(includeNotion){
+  for(let i=0;i<members.length;i+=100){
+   const ids=members.slice(i,i+100).map((m:any)=>m.user_id);
+   const rows=await read(db.from("ready_notion_connections").select("user_id,page_id,connected_at").in("user_id",ids));
+   for(const row of rows)connections.set(row.user_id,row);
+  }
+ }
+ for(let i=0;i<members.length;i+=6){
+  out.push(...await Promise.all(members.slice(i,i+6).map(async(m:any)=>{
+   const b=await bundle(m),item=compact(b);
+   return includeNotion?{...item,notion_connection:notionStatusFromRow(b.student.notion_url||"",connections.get(m.user_id),b.checks.notion||{})}:item;
+  })));
+ }
+ return out;
+}
 async function saveProfile(id:string,body:any,old:any){
  const next={...old?.data};
  for(const f of fields)if(Object.hasOwn(body,f)){
@@ -112,7 +129,7 @@ Deno.serve(async req=>{
   const id=auth.user.id;
   if(action==="admin"||action==="admin_detail"||action==="admin_check"||action==="admin_settings"||action==="admin_snapshot"||action==="admin_send_weekly"){
    if(!a.admin)return reply({error:"FORBIDDEN"},403);
-   if(action==="admin"){const rows=await roster();return reply({rows,summary:stats(rows),settings:await settings(),logs:await read(db.from("ready_check_runs").select("*").order("started_at",{ascending:false}).limit(50)),snapshots:await read(db.from("ready_weekly_snapshots").select("*").order("snapshot_date",{ascending:false}).limit(15))})}
+   if(action==="admin"){const rows=await roster(true);return reply({rows,summary:stats(rows),settings:await settings(),logs:await read(db.from("ready_check_runs").select("*").order("started_at",{ascending:false}).limit(50)),snapshots:await read(db.from("ready_weekly_snapshots").select("*").order("snapshot_date",{ascending:false}).limit(15))})}
    if(action==="admin_settings"){const op=await settings();return reply({settings:op})}
    if(action==="admin_snapshot")return reply(await weekly(false));
    if(action==="admin_send_weekly"){if(!(await settings()).weekly_mail_enabled)return reply({error:"주간 메일 운영이 아직 활성화되지 않았습니다."},409);return reply(await weekly(true));}

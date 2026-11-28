@@ -66,14 +66,20 @@ async function revoke(credentials){
  if(!credentials?.access_token||!notionConfigured())return false;
  try{const r=await oauth('/oauth/revoke',{token:credentials.access_token});return r.ok||r.status===401;}catch{return false;}
 }
-export async function notionStatus(db,uid,value){
+// The admin roster uses the same status rules as an individual student. Only non-secret
+// metadata is accepted here; access/refresh credentials are never read for a roster.
+export function notionStatusFromRow(value,row,check={},configured=notionConfigured()){
  const page=notionPageId(value);
- const row=await read(db.from('ready_notion_connections').select('page_id,connected_at').eq('user_id',uid).maybeSingle());
- const base={configured:notionConfigured(),has_connection:!!row};
+ const base={configured,has_connection:!!row,check_status:check.check_status||null,checked_at:check.checked_at||null};
  if(!value)return {...base,status:'UNREGISTERED'};
  if(!page)return {...base,status:'INVALID_URL'};
- if(!base.configured)return {...base,status:'NOT_CONFIGURED'};
- return {...base,status:row?.page_id===page?'CONNECTED':'AUTH_REQUIRED',connected_at:row?.page_id===page?row.connected_at:null};
+ if(!configured)return {...base,status:'NOT_CONFIGURED'};
+ if(row?.page_id!==page)return {...base,status:'AUTH_REQUIRED'};
+ return {...base,status:check.check_status==='AUTH_REQUIRED'?'RECONNECT_REQUIRED':'CONNECTED',connected_at:row.connected_at||null,last_edited_at:check.check_status==='SUCCESS'?check.last_edited_at||null:null};
+}
+export async function notionStatus(db,uid,value,check={}){
+ const row=await read(db.from('ready_notion_connections').select('page_id,connected_at').eq('user_id',uid).maybeSingle());
+ return notionStatusFromRow(value,row,check);
 }
 export async function startNotion(db,uid,value){
  if(!notionConfigured())throw Error('관리자가 Notion OAuth 앱을 설정한 후 연결할 수 있습니다.');
