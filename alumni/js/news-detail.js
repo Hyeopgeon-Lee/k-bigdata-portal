@@ -3,19 +3,36 @@
   const U=AlumniUI;
   function row(k,v){return v?`<dt>${U.esc(k)}</dt><dd>${U.esc(v)}</dd>`:''}
   function shareContent(n){
-    const ob=n.news_type==='OBITUARY',lines=[`[BigData Alumni 동문소식 · ${n.news_type_label}]`,n.title,`${n.name} · ${n.graduation_year}년 졸업`];
-    if(n.event_date)lines.push(`${ob?'발인·관련일':'관련 날짜'}: ${NewsUI.date(n.event_date)}`);
-    if(n.location)lines.push(`${ob?'빈소·장소':'장소'}: ${n.location}`);
-    if(n.relationship)lines.push(`관계: ${n.relationship}`);
-    lines.push('',n.content);
-    if(ob)lines.push('','삼가 고인의 명복을 빕니다.');
-    if(n.external_url)lines.push('',`외부 안내: ${n.external_url}`);
-    return lines.join('\n');
+    const ob=n.news_type==='OBITUARY';
+    const category=n.news_type_label||NewsUI.labels[n.news_type]||'기타';
+    const author=[n.name,n.graduation_year?`${n.graduation_year}년 졸업`:''].filter(Boolean).join(' · ');
+    const info=[author];
+    if(n.event_date)info.push(`${ob?'발인·관련일':'관련 날짜'}: ${NewsUI.date(n.event_date)}`);
+    if(n.location)info.push(`${ob?'빈소·장소':'장소'}: ${n.location}`);
+    if(n.relationship)info.push(`관계: ${n.relationship}`);
+    const body=String(n.content??'').replace(/\r\n?/g,'\n').trim().replace(/\n[ \t]*\n(?:[ \t]*\n)*/g,'\n\n');
+    const sections=[`[동문소식 · ${category}]`,String(n.title??'').trim(),info.filter(Boolean).join('\n'),body];
+    if(ob&&!body.includes('삼가 고인의 명복을 빕니다.'))sections.push('삼가 고인의 명복을 빕니다.');
+    if(n.external_url)sections.push(`${ob?'부고 자세히 보기':'외부 안내'}\n${n.external_url}`);
+    sections.push(`동문소식 자세히 보기\n${location.href}`);
+    return sections.filter(Boolean).join('\n\n');
   }
   function bindShare(n){
     const text=shareContent(n),notice=U.qs('#news-share-status');
-    U.qs('#news-copy').onclick=async()=>{try{await U.copyText(`${text}\n\n${location.href}`);notice.textContent='게시글 내용과 링크를 복사했습니다.'}catch(e){notice.textContent=e.message}};
-    U.qs('#news-share').onclick=async()=>{try{const result=await U.shareText({title:n.title,text,url:location.href});notice.textContent=result==='copied'?'공유 기능을 지원하지 않아 게시글 내용을 복사했습니다.':'공유할 앱을 선택해 주세요.'}catch(e){if(e.name!=='AbortError')notice.textContent='공유하지 못했습니다. 내용 복사 버튼을 이용해 주세요.'}};
+    U.qs('#news-copy').onclick=async()=>{try{await U.copyText(text);notice.textContent='게시글 내용과 링크를 복사했습니다.'}catch(e){notice.textContent=e.message}};
+    U.qs('#news-share').onclick=async()=>{
+      try{
+        // Share one complete text payload so target apps cannot prepend the title or append the URL a second time.
+        const data={text};
+        if(navigator.share&&(!navigator.canShare||navigator.canShare(data))){
+          await navigator.share(data);
+          notice.textContent='공유할 앱을 선택해 주세요.';
+        }else{
+          await U.copyText(text);
+          notice.textContent='공유 기능을 지원하지 않아 게시글 내용을 복사했습니다.';
+        }
+      }catch(e){if(e.name!=='AbortError')notice.textContent='공유하지 못했습니다. 내용 복사 버튼을 이용해 주세요.'}
+    };
   }
   document.addEventListener('DOMContentLoaded',async()=>{
     const id=U.params().get('id'),st=U.qs('#news-detail-status'),root=U.qs('#news-detail');
