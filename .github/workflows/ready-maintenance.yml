@@ -5,6 +5,9 @@ on:
     - cron: "0 22 * * *"
     - cron: "0 23 * * 0"
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [".github/workflows/ready-maintenance.yml"]
 permissions:
   contents: read
   id-token: write
@@ -18,6 +21,7 @@ jobs:
     env:
       FUNCTION_URL: https://zjsindkakjfzmjgrkaou.supabase.co/functions/v1/ready-api
       GH_ACCESS_TOKEN: ${{ github.token }}
+      EVENT_NAME: ${{ github.event_name }}
       CRON: ${{ github.event.schedule }}
     steps:
       - name: Run authorized READY maintenance
@@ -29,7 +33,12 @@ jobs:
             oidc=$(curl --fail --silent --show-error --max-time 12 -H "Authorization: Bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=kbigdata-ready-maintenance" | jq -r .value)
             curl --fail-with-body --silent --show-error --max-time 140 -X POST "$FUNCTION_URL" -H "Authorization: Bearer $oidc" -H "Content-Type: application/json" --data "$1"
           }
-          if [[ "$CRON" == "0 23 * * 0" ]]; then
+          if [[ "$EVENT_NAME" == "push" ]]; then
+            payload=$(jq -nc --arg token "$GH_ACCESS_TOKEN" '{action:"scheduled_probe",github_token:$token}')
+            result=$(call "$payload")
+            jq '{authorized,registered_count,checking_enabled,weekly_mail_enabled,scheduled_github_ok,manual_github_secret_configured,notion_secret_configured,mail_secret_configured}' <<<"$result"
+            jq -e '.authorized and .scheduled_github_ok' <<<"$result" >/dev/null
+          elif [[ "$CRON" == "0 23 * * 0" ]]; then
             call '{"action":"scheduled_weekly"}' | jq '{mail,disabled}'
           else
             list=$(call '{"action":"scheduled_list"}')

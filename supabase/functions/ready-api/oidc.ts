@@ -6,7 +6,7 @@ function b64url(value:string){
  const raw=atob(normalized+"=".repeat((4-normalized.length%4)%4));
  return Uint8Array.from(raw,c=>c.charCodeAt(0));
 }
-async function githubIdentity(req:Request):Promise<"schedule"|"workflow_dispatch"|null>{
+async function githubIdentity(req:Request):Promise<"schedule"|"workflow_dispatch"|"push"|null>{
  const token=req.headers.get("authorization")?.replace(/^Bearer /i,"")||"";
  if(token.length>12000||token.split(".").length!==3)return null;
  const [h,p,s]=token.split(".");
@@ -19,7 +19,7 @@ async function githubIdentity(req:Request):Promise<"schedule"|"workflow_dispatch
     claims.aud!==audience||
     claims.repository!==repo||String(claims.repository_id)!=="1396624044"||
     claims.ref!=="refs/heads/main"||claims.workflow_ref!==workflow||
-    !["schedule","workflow_dispatch"].includes(claims.event_name)||
+    !["schedule","workflow_dispatch","push"].includes(claims.event_name)||
     typeof claims.exp!=="number"||claims.exp<=now||
     typeof claims.nbf!=="number"||claims.nbf>now+30||
     typeof claims.iat!=="number"||claims.iat>now+30)return null;

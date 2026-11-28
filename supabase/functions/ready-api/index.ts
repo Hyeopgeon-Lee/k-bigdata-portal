@@ -80,9 +80,16 @@ Deno.serve(async req=>{
   const token=req.headers.get("Authorization")?.replace(/^Bearer /i,"")||"";
   if(!token||token.length>12000)return reply({error:"LOGIN_REQUIRED"},401);
   const raw=await req.text();if(raw.length>25000)return reply({error:"REQUEST_TOO_LARGE"},413);const b=JSON.parse(raw),action=b.action;
-  if(["scheduled_list","scheduled_check","scheduled_weekly"].includes(action)){
-   if(!await githubIdentity(req))return reply({error:"FORBIDDEN"},403);
+  if(["scheduled_probe","scheduled_list","scheduled_check","scheduled_weekly"].includes(action)){
+   const event=await githubIdentity(req);if(!event||event==="push"&&action!=="scheduled_probe")return reply({error:"FORBIDDEN"},403);
    const op=await settings();
+   if(action==="scheduled_probe"){
+    const githubToken=text(b.github_token,300);
+    const gh=await fetch("https://api.github.com/rate_limit",{headers:{Authorization:"Bearer "+githubToken,"User-Agent":"KBigData-Portal-READY"},redirect:"error",signal:AbortSignal.timeout(8000)});
+    const rate=gh.ok?await gh.json():null;
+    const members=await activeMembers(),registered=await read(db.from("ready_profiles").select("user_id"));
+    return reply({authorized:true,checking_enabled:op.checking_enabled,weekly_mail_enabled:op.weekly_mail_enabled,registered_count:members.filter((m:any)=>registered.some((r:any)=>r.user_id===m.user_id)).length,scheduled_github_ok:gh.ok&&Number(rate?.rate?.limit)>60,manual_github_secret_configured:!!(Deno.env.get("READY_GITHUB_TOKEN")||Deno.env.get("GITHUB_TOKEN")),notion_secret_configured:!!(Deno.env.get("READY_NOTION_TOKEN")||Deno.env.get("NOTION_TOKEN")),mail_secret_configured:!!Deno.env.get("RESEND_API_KEY")});
+   }
    if(action==="scheduled_weekly"){if(!op.checking_enabled)return reply({disabled:true});return reply(await weekly(op.weekly_mail_enabled))}
    if(!op.checking_enabled)return reply({disabled:true,ids:[]});
    const members=(await activeMembers()).filter((m:any)=>m.enrollment_status!=="leave"),registered=await read(db.from("ready_profiles").select("user_id"));
