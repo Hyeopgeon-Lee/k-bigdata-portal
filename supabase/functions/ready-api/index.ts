@@ -11,32 +11,41 @@ const reply=(data:any,status=200)=>new Response(JSON.stringify(data),{status,hea
 const read=async(q:any)=>{const {data,error}=await q;if(error)throw Error("DATABASE_ERROR");return data};
 const write=read;
 const cols="user_id,full_name,student_no,academic_year,enrollment_status";
-const activeMembers=()=>read(db.from("profiles").select(cols).eq("approval_status","approved").eq("signup_type","student").eq("enrollment_status","enrolled").order("academic_year").order("full_name"));
+const activeMembers=(year?:number|string)=>{
+ let q=db.from("profiles").select(cols).eq("approval_status","approved").eq("signup_type","student").eq("enrollment_status","enrolled");
+ if(year!==undefined)q=q.eq("academic_year",year);
+ return read(q.order("academic_year").order("full_name"));
+};
 const settings=()=>read(db.from("ready_operations").select("*").eq("singleton",true).single());
 const text=(v:any,max=200)=>String(v??"").trim().slice(0,max);
 const fields=["career_target","github_url","github_pages_url","github_pages_repo","notion_url","portfolio_url","blog_url","resume_status","cover_letter_status"];
 const docStatus:Record<string,string[]>={resume_status:["미작성","작성중","1차 완성","최종 완성"],cover_letter_status:["미작성","작성중","기본본 완성","기업 지원 가능"]};
 function cleanURL(v:any){if(!v)return "";const u=new URL(text(v,1000));if(!["http:","https:"].includes(u.protocol)||u.username||u.password||u.port)throw Error("URL을 확인하세요.");return u.href}
-async function bundle(m:any,detail=false){
+async function bundle(m:any,detail=false,includeHistory=true){
  const id=m.user_id;
  const [profile,repos,checks,repoChecks,certs,plans]=await Promise.all([
- read(db.from("ready_profiles").select("data,peer_share_consent_at,updated_at,last_manual_update_at").eq("user_id",id).maybeSingle()),
+ read(db.from("ready_profiles").select("data,peer_share_consent_at,updated_at,last_manual_update_at,last_check_requested_at,check_lease_until").eq("user_id",id).maybeSingle()),
  read(db.from("ready_repositories").select("*").eq("user_id",id).eq("active",true).order("is_primary",{ascending:false}).order("display_order")),
  read(db.from("ready_student_checks").select("kind,checked_at,data").eq("user_id",id)),
  read(db.from("ready_repository_checks").select("repo_id,kind,checked_at,data").eq("user_id",id)),
  read(db.from("student_certifications").select("id,certificate_name,pass_status,final_pass_date,verification_status").eq("user_id",id)),
  read(db.from("ready_certificate_plans").select("id,certificate_name").eq("user_id",id).order("created_at"))
  ]);
+ const result=assembleBundle(m,profile,repos,checks,repoChecks,certs,plans);
+ if(detail){
+  if(includeHistory)result.history=await read(db.from("ready_change_history").select("changed_at,category,field_name,old_value,new_value,changed_by").eq("user_id",id).order("changed_at",{ascending:false}).limit(300));
+  result.notion_connection=await notionStatus(db,id,result.student.notion_url||"",result.checks.notion||{});
+ }
+ return result;
+}
+function assembleBundle(m:any,profile:any,repos:any[],checks:any[],repoChecks:any[],certs:any[],plans:any[]){
  const s={...profile?.data,grade:String(m.academic_year||""),name:m.full_name,student_no:m.student_no};
  const c=Object.fromEntries(checks.map((x:any)=>[x.kind,{...x.data,checked_at:x.checked_at}]));
  const r=repoChecks.filter((x:any)=>x.repo_id===repos[0]?.repo_id);
  const primary=Object.fromEntries(r.map((x:any)=>[x.kind,{...x.data,checked_at:x.checked_at}]));
  const evaluation=evaluateStudentReadiness(s,{...c,...primary,publicPortfolio:c.portfolio,repositoryCount:repos.length});
- const result:any={member:m,student:s,registered:!!profile,consent:!!profile?.peer_share_consent_at,updated_at:profile?.last_manual_update_at,evaluation,checks:c,primary,certificates:certs,plans,repositories:repos,repoChecks};
- if(detail){
-  result.history=await read(db.from("ready_change_history").select("changed_at,category,field_name,old_value,new_value,changed_by").eq("user_id",id).order("changed_at",{ascending:false}).limit(300));
-  result.notion_connection=await notionStatus(db,id,s.notion_url||"",c.notion||{});
- }
+ const nextCheck=Math.max((Date.parse(profile?.last_check_requested_at||"")||0)+600000,Date.parse(profile?.check_lease_until||"")||0);
+ const result:any={member:m,student:s,registered:!!profile,consent:!!profile?.peer_share_consent_at,updated_at:profile?.last_manual_update_at,next_manual_check_at:nextCheck>Date.now()?new Date(nextCheck).toISOString():null,evaluation,checks:c,primary,certificates:certs,plans,repositories:repos,repoChecks};
  return result;
 }
 const compact=(b:any)=>({member:b.member,registered:b.registered,evaluation:b.evaluation,certificate_count:b.certificates.filter((c:any)=>c.pass_status==="final").length,updated_at:b.updated_at,consent:b.consent,student:b.student});
@@ -59,6 +68,37 @@ async function roster(includeNotion=false){
   })));
  }
  return out;
+}
+async function gradeRoster(year:number|string){
+ const members=await activeMembers(year),out:any[]=[];
+ // Dedicated aggregate-only path. Query just the selected grade and omit history, plans and credentials.
+ const batchRead=async(table:string,columns:string,ids:string[],configure=(q:any)=>q)=>{
+  const rows:any[]=[];
+  for(let start=0;;start+=500){
+   const chunk=await read(configure(db.from(table).select(columns).in("user_id",ids)).order("user_id").range(start,start+499));
+   rows.push(...chunk);if(chunk.length<500)break;
+  }
+  return rows;
+ };
+ for(let i=0;i<members.length;i+=25){
+  const group=members.slice(i,i+25),ids=group.map((m:any)=>m.user_id);
+  const [profiles,repos,checks,repoChecks,certs]=await Promise.all([
+   batchRead("ready_profiles","user_id,data,peer_share_consent_at,last_manual_update_at",ids),
+   batchRead("ready_repositories","user_id,repo_id,is_primary,display_order",ids,q=>q.eq("active",true).order("is_primary",{ascending:false}).order("display_order").order("repo_id")),
+   batchRead("ready_student_checks","user_id,kind,checked_at,data",ids,q=>q.order("kind")),
+   batchRead("ready_repository_checks","user_id,repo_id,kind,checked_at,data",ids,q=>q.order("repo_id").order("kind")),
+   batchRead("student_certifications","user_id,id,pass_status",ids,q=>q.eq("pass_status","final").order("id"))
+  ]);
+  for(const m of group){
+   const mine=(xs:any[])=>xs.filter(x=>x.user_id===m.user_id);
+   out.push(compact(assembleBundle(m,profiles.find(x=>x.user_id===m.user_id),mine(repos),mine(checks),mine(repoChecks),mine(certs),[])));
+  }
+ }
+ return out;
+}
+function classStats(rows:any[]){
+ const s=stats(rows),eligible=rows.filter(x=>x.registered&&!x.evaluation.assessment_pending);
+ return {...s,excellent:eligible.filter(x=>x.evaluation.status==="준비 우수").length,good:eligible.filter(x=>x.evaluation.status==="준비 양호").length,preparing:eligible.filter(x=>x.evaluation.status==="준비 중").length,attention_count:eligible.filter(x=>x.evaluation.status==="관심 필요").length,pending:rows.filter(x=>x.registered&&x.evaluation.assessment_pending).length,unregistered:rows.length-s.registered,readme_ready:rows.filter(x=>x.registered&&x.evaluation.readme_ready).length,portfolio_registered:rows.filter(x=>x.evaluation.portfolio.registered).length,resume_complete:rows.filter(x=>x.student.resume_status==="최종 완성").length,github_active_7d:rows.filter(x=>x.registered&&x.evaluation.github_fresh&&["SUCCESS","PARTIAL"].includes(x.evaluation.github.check_status)&&x.evaluation.github.active_days_7d>=3).length};
 }
 async function saveProfile(id:string,body:any,old:any){
  const next={...old?.data};
@@ -140,10 +180,15 @@ Deno.serve(async req=>{
   }
   if(!a.read)return reply({error:"STUDENT_REQUIRED"},403);
   const member=await read(db.from("profiles").select(cols).eq("user_id",id).single());
-  if(action==="mine")return reply({...await bundle(member,true),write:a.write&&member.enrollment_status==="enrolled",guide:readinessGuide()});
+  if(action==="mine")return reply({...await bundle(member,true,b.history!==false),write:a.write&&member.enrollment_status==="enrolled",guide:readinessGuide()});
+  if(action==="history"){
+   const offset=Math.max(0,Math.min(10000,Math.floor(Number(b.offset)||0)));
+   const rows=await read(db.from("ready_change_history").select("changed_at,category,field_name,old_value,new_value,changed_by").eq("user_id",id).order("changed_at",{ascending:false}).order("history_id",{ascending:false}).range(offset,offset+30));
+   return reply({history:rows.slice(0,30),has_more:rows.length>30});
+  }
   if(action==="class"){
-   const rows=(await roster()).filter(x=>x.member.academic_year===member.academic_year);
-   return reply({summary:stats(rows),peers:rows.filter(x=>x.consent&&x.registered).map(x=>({name:x.member.full_name,status:x.evaluation.status,days:x.evaluation.github_fresh?x.evaluation.github.active_days_7d:null,readme:x.evaluation.readme.status,portfolio:x.evaluation.portfolio.status}))});
+   const rows=await gradeRoster(member.academic_year);
+   return reply({summary:classStats(rows),peers:rows.filter(x=>x.consent&&x.registered).map(x=>({name:x.member.full_name,status:x.evaluation.assessment_pending?"점검 확인 필요":x.evaluation.status,days:x.evaluation.github_fresh&&["SUCCESS","PARTIAL"].includes(x.evaluation.github.check_status)?x.evaluation.github.active_days_7d:null,readme:x.evaluation.readme_pending?"미점검":x.evaluation.readme.status,portfolio:x.evaluation.portfolio_pending?"점검 확인 필요":x.evaluation.portfolio.status}))});
   }
   if(action==="notion_disconnect")return reply(await disconnectNotion(db,id));
   if(!a.write||member.enrollment_status!=="enrolled")return reply({error:"READ_ONLY"},403);

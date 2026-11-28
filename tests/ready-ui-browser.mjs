@@ -7,7 +7,7 @@ const base=process.env.PORTAL_BASE_URL||'http://127.0.0.1:8765';
 const browser=await chromium.launch({headless:true,args:['--no-sandbox'],...(process.env.PORTAL_BROWSER_PATH?{executablePath:process.env.PORTAL_BROWSER_PATH}:{})});
 const student={career_target:'백엔드 개발자',grade:'1',github_url:'https://github.com/fixture',notion_url:'https://www.notion.so/portfolio-12345678123456789876abcdef012345',resume_status:'작성중',cover_letter_status:'작성중'};
 const repository={repo_id:'repo-fixture',repo_url:'https://github.com/fixture/'+('portfolio-project-with-long-repository-name-'.repeat(4)),is_primary:true,display_order:1};
-const bundle={member:{full_name:'테스트 학생',student_no:'2026000001',academic_year:1},student,registered:true,write:true,consent:false,updated_at:new Date().toISOString(),evaluation:evaluateStudentReadiness(student,{repositoryCount:1}),checks:{},primary:{},repositories:[repository],repoChecks:[],certificates:[],plans:[],history:[],guide:readinessGuide(),notion_connection:{status:'AUTH_REQUIRED',configured:true}};
+const bundle={member:{full_name:'테스트 학생',student_no:'2026000001',academic_year:1},student,registered:true,write:true,consent:false,updated_at:new Date().toISOString(),evaluation:evaluateStudentReadiness(student,{repositoryCount:1}),checks:{},primary:{},repositories:[repository],repoChecks:[],certificates:[],plans:[],guide:readinessGuide(),notion_connection:{status:'AUTH_REQUIRED',configured:true}};
 const source=readFileSync(new URL('../js/ready.js',import.meta.url),'utf8');
 const output='ui-screenshots/ready';mkdirSync(output,{recursive:true});
 async function fixture(width,role='student',fail=false){
@@ -15,7 +15,7 @@ async function fixture(width,role='student',fail=false){
  const admin=role==='admin',alumni=role==='alumni',inactive=['early_employment','leave'].includes(role);
  await approvedStudent(context,admin?{signup_type:'admin',full_name:'교수 계정'}:alumni?{signup_type:'alumni',enrollment_status:'graduated'}:inactive?{enrollment_status:role}:{},alumni,admin);
  await context.route('**/js/ready.js?v=*',route=>route.fulfill({contentType:'application/javascript',body:
-   'window.__readyRequests=[];window.portalSupabaseClient.functions.invoke=async(name,{body}={})=>{window.__readyRequests.push(body.action);if('+JSON.stringify(fail)+'&&window.__readyRequests.length===1)return {data:{error:"DATABASE_ERROR"},error:null};if(body.action==="mine")return {data:'+JSON.stringify({...bundle,write:!inactive})+',error:null};if(body.action==="class")return {data:{summary:{total_students:16,registered:8,github_active_7d:4,portfolio_missing:3,excellent:3,good:5,preparing:5,attention_count:3},peers:[]},error:null};return {data:{error:"FORBIDDEN"},error:null};};\n'+source
+   'window.__readyRequests=[];window.portalSupabaseClient.functions.invoke=async(name,{body}={})=>{window.__readyRequests.push(body.action);if('+JSON.stringify(fail)+'&&window.__readyRequests.length===1)return {data:{error:"DATABASE_ERROR"},error:null};if(body.action==="mine")return {data:'+JSON.stringify({...bundle,write:!inactive})+',error:null};if(body.action==="class")return {data:{summary:{total_students:16,registered:8,github_active_7d:4,portfolio_registered:5,excellent:2,good:2,preparing:1,attention_count:1,pending:2,unregistered:8,readme_ready:4,certificate_holders:1},peers:[]},error:null};if(body.action==="history")return {data:{history:[{changed_at:"2026-11-28T03:00:00Z",category:"프로필",field_name:"career_target",old_value:"개발",new_value:"백엔드"}],has_more:false},error:null};return {data:{error:"FORBIDDEN"},error:null};};\n'+source
  }));
  const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.goto(base+'/ready.html',{waitUntil:'domcontentloaded'});await page.waitForFunction(()=>document.querySelector('#ready-root')?.getAttribute('aria-busy')==='false'&&document.documentElement.dataset.portalAccess==='approved'&&!document.getElementById('learning-lock'));
@@ -40,6 +40,9 @@ try{
     assert.equal(await page.locator('#notion-start').textContent(),'내 Notion 연결하기');
     assert.equal(await page.locator('#notion-start').isEnabled(),true);
     assert.deepEqual(await page.evaluate(()=>window.__readyRequests),['mine']);
+    assert.equal(await page.locator('.ready-summary-card').count(),4);
+    assert.equal(await page.locator('.ready-day-box').count(),14);
+    assert.equal(await page.locator('.ready-readme-item').count(),9);
     await page.screenshot({path:output+'/student-'+width+'.png',fullPage:false});
     await page.locator('[data-tab="profile"]').click();
     assert.equal(await page.locator('input[name="notion_url"]').inputValue(),student.notion_url);
@@ -48,6 +51,13 @@ try{
     await page.locator('[data-tab="class"]').click();
     await page.getByRole('heading',{name:'우리 학년 준비 현황'}).waitFor();
     await geometry(page,width,role+' class');
+    assert.equal(await page.locator('.ready-donut').count(),1);
+    assert.match(await page.locator('.ready-legend').textContent(),/미등록/);
+    await page.screenshot({path:output+'/class-'+width+'.png',fullPage:false});
+    await page.locator('[data-tab="history"]').click();
+    await page.locator('.ready-timeline').waitFor();
+    assert.equal(await page.locator('#ready-history-next').isDisabled(),true);
+    await geometry(page,width,role+' history');
     await page.locator('[data-tab="guide"]').click();
     await page.locator('#readme-example').waitFor();
     await geometry(page,width,role+' guide');
@@ -77,4 +87,11 @@ try{
  assert.deepEqual(await page.evaluate(()=>window.__readyRequests),['mine','mine']);
  assert.deepEqual(errors,[]);await context.close();
  console.log('PASS: Korean error message and retry.');
+ const failure=await fixture(390,'student');await failure.page.locator('[data-tab="profile"]').click();
+ await failure.page.locator('input[name="career_target"]').fill('저장 실패 입력 보존');
+ await failure.page.locator('#profile-form button').click();
+ await failure.page.locator('#ready-status[data-error="true"]').waitFor();
+ assert.equal(await failure.page.locator('input[name="career_target"]').inputValue(),'저장 실패 입력 보존');
+ assert.equal(await failure.page.locator('#profile-form button').isEnabled(),true);
+ await failure.context.close();console.log('PASS: unsaved profile values survive save failure.');
 }finally{await browser.close()}

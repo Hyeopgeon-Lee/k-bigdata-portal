@@ -38,7 +38,7 @@ assert.equal(connected.status,'CONNECTED');assert.equal(connected.last_edited_at
 const server=readFileSync(new URL('../supabase/functions/ready-api/index.ts',import.meta.url),'utf8');
 assert.match(server,/if\(action==="admin"\)\{const rows=await roster\(true\)/);assert.match(server,/select\("user_id,page_id,connected_at"\)/);assert.match(server,/if\(!a.admin\)return reply\(\{error:"FORBIDDEN"\},403\)/);
 const migration=readFileSync(new URL('../supabase/migrations/20261128170000_ready_enrolled_only_checks.sql',import.meta.url),'utf8');
-assert.match(server,/const activeMembers=.*\.eq\("enrollment_status","enrolled"\)/);
+assert.match(server,/const activeMembers=[\s\S]*?\.eq\("enrollment_status","enrolled"\)/);
 assert.match(server,/if\(!a.write\|\|member.enrollment_status!=="enrolled"\)/);
 assert.match(server,/cohort:"enrolled_only"/);
 assert.match(migration,/and exists\(select 1 from public.profiles p where p.user_id=rp.user_id and p.approval_status='approved' and p.signup_type='student' and p.enrollment_status='enrolled'\)/);
