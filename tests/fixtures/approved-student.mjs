@@ -90,7 +90,9 @@ export async function approvedStudent(context, profileOverride={}, registeredAlu
     functions:{async invoke(name,{body}={}){
       if(adminFixtures&&superAdmin&&name==="learning-admin"&&body?.action==="summary"){
        const count=body.grade===1?1:body.grade===2?2:3;
-       return {data:{ok:true,cohortSize:count,periodStart:"2026-11-23T00:00:00+09:00",periodEnd:"2026-11-30T00:00:00+09:00",partial:true,current:{activeStudents:count,participationRate:100,attempts:count*3,unique:count,selfCorrect:count*2,selfTotal:count*3,selfAccuracy:67,autoCorrect:0,autoTotal:0,autoAccuracy:null,subjects:{JAVA:{attempts:count*3,unique:count,wrong:count}}},previous:null,topWrong:[],snapshotStatus:"live"},error:null};
+       const grades=(body.grade?[body.grade]:[1,2]).map(g=>({grade:g,cohortSize:g,activeStudents:g,attempts:g*3}));
+       const chartStats={cohortSize:count,activeStudents:count,attempts:count*3,grades,subjects:{JAVA:{participants:count,attempts:count*3}},gradingMethods:{self:count,automatic:0},questions:[],smallCohortHidden:true,daily:[]};
+       return {data:{ok:true,cohortSize:count,periodStart:"2026-11-23T00:00:00+09:00",periodEnd:"2026-11-30T00:00:00+09:00",partial:true,current:{chartStats,activeStudents:count,participationRate:100,attempts:count*3,unique:count,selfCorrect:count*2,selfTotal:count*3,selfAccuracy:67,autoCorrect:0,autoTotal:0,autoAccuracy:null,subjects:{JAVA:{attempts:count*3,unique:count,wrong:count}}},previous:null,topWrong:[],snapshotStatus:"live"},error:null};
       }
       return {data:{ok:false,error:"ADMIN_NOT_AUTHORIZED"},error:null};
      }},

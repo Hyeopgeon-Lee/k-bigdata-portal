@@ -25,10 +25,13 @@ if(root){root.innerHTML='<h2>정보처리 필기 · 학생별 합격 준비</h2>
   const unknown=list.filter(s=>![1,2].includes(Number(s.academic_year)));
   if(unknown.length)get("iw-results").insertAdjacentHTML("beforeend",'<section class="written-grade-section"><h3>학년 미설정</h3>'+unknown.map(renderStudent).join("")+'</section>');
  }
- if(ui&&!grade){
+ if(ui){
   const gradeChart=document.createElement("div");gradeChart.className="learning-grade-chart-grid";
   const rootChart=document.createElement("div");gradeChart.append(rootChart);get("iw-results").prepend(gradeChart);
-  ui.renderBars(rootChart,"학년별 필기 학습 참여율",targets.map(g=>{const students=list.filter(s=>Number(s.academic_year)===g);return [g+"학년",students.length?Math.round(students.filter(s=>s.attempts>0).length/students.length*100):null];}),{unit:"%",max:100,caption:"선택 시험 및 기간 기준"});
+  ui.renderBars(rootChart,"학년별 필기 학습 참여율",targets.map(g=>{const students=list.filter(s=>Number(s.academic_year)===g);const active=students.filter(s=>s.attempts>0).length;return [g+"학년 · "+active+"/"+students.length+"명",students.length?Math.round(active/students.length*100):null];}),{unit:"%",max:100,caption:"선택 시험 및 기간 기준"});
+   const achievement=document.createElement("div");gradeChart.append(achievement);const active=list.filter(s=>s.attempts>0);
+   const passed=active.filter(s=>s.recent?.passed===true).length,notPassed=active.filter(s=>s.recent&&s.recent.passed!==true).length,notCompleted=active.length-passed-notPassed;
+   ui.renderDonut(achievement,"필기 학습 성과 · 참여 "+active.length+"명",[["합격 기준 충족",passed],["기준 미충족",notPassed],["완료 회차 없음",notCompleted]],{caption:"선택 기간 참여 학생의 최근 완료 회차 기준 · 실제 자격시험 결과 아님"});
  }
  }catch{if(request===seq)get("iw-status").textContent="통계를 조회하지 못했습니다. 관리자 권한과 네트워크를 확인하세요.";}}
  for(const id of ["iw-exam","iw-period","iw-offset"])get(id).addEventListener("change",load);
