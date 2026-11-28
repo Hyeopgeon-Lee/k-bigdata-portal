@@ -1,6 +1,6 @@
 import {db,read,generate,getReport,calendar} from "../student-weekly-report/snapshot.ts";
 import {dateKey,lastWeek,shift,dateMs} from "../student-weekly-report/report.mjs";
-import {renderStudentMail,selectNews,selectJobs,studentEligible} from "./student-mail.mjs";
+import {renderStudentMail,selectNews,excludeRepublishedNews,selectJobs,studentEligible} from "./student-mail.mjs";
 /* GitHub Actions OIDC authorizes this job; no reusable webhook secret. */
 const mailKey=Deno.env.get("RESEND_API_KEY")||"";
 const sender=Deno.env.get("REPORT_FROM_EMAIL")||"noreply@noreply.k-bigdata.kr";
@@ -135,11 +135,14 @@ async function facultyReport(week:string,students:any[],adminIds:Set<string>){
   return await deliver(null,adminMail,"super_admin",period.date,"[학과 포털] 주간 학급 학습 보고서",body);
 }
 // Shared, private weekly snapshot plus latest approved alumni notices at send time.
-async function publicNotices(includeJobs:boolean){
- const [news,jobs]=await Promise.all([
-  read(db.from("alumni_news").select("id,news_type,title,content,status,approved_at,created_at").eq("status","APPROVED").order("approved_at",{ascending:false,nullsFirst:false}).order("created_at",{ascending:false,nullsFirst:false}).limit(100)),
+async function publicNotices(includeJobs:boolean,week:string){
+ const [allNews,jobs]=await Promise.all([
+  read(db.from("alumni_news").select("id,news_type,title,content,event_date,status,approved_at,created_at").eq("status","APPROVED").order("approved_at",{ascending:false,nullsFirst:false}).order("created_at",{ascending:false,nullsFirst:false}).limit(100)),
   includeJobs?read(db.from("alumni_jobs").select("id,company,job_title,recruit_type,employment_type,location,deadline,always_open,status,approved_at,created_at").eq("status","APPROVED").order("id").limit(1000)):Promise.resolve([])
  ]);
+ const recent=selectNews(allNews,week,100);
+ const audit=recent.length?await read(db.from("alumni_audit_logs").select("target_id,previous_status,new_status,created_at").eq("target_kind","alumni_news").eq("new_status","APPROVED").in("target_id",recent.map((n:any)=>n.id)).order("created_at",{ascending:true}).limit(1000)):[];
+ const news=excludeRepublishedNews(recent,audit,week).slice(0,3);
  return {news,jobs};
 }
 async function currentStudent(id:string,admins:Set<string>){
@@ -175,7 +178,7 @@ Deno.serve(async(req:Request)=>{
   const students=profiles.filter((p:any)=>studentEligible(p,admins));
   const members=students.filter((p:any)=>!cursor||p.user_id>cursor).slice(0,5);
   const next=members.length===5&&students.some((p:any)=>p.user_id>members[4].user_id)?members[4].user_id:null;
-  const notices=await publicNotices(members.some((m:any)=>Number(m.academic_year)===2));
+  const notices=await publicNotices(members.some((m:any)=>Number(m.academic_year)===2),week);
   const today=dateKey(Date.now());
   let adminResult="disabled",skippedUnverified=0,verifiedCount=0,previewed=0;
   if(!cursor&&controls.faculty&&!dryRun&&(await reportControls()).faculty){
@@ -209,6 +212,6 @@ Deno.serve(async(req:Request)=>{
     await new Promise(resolve=>setTimeout(resolve,650));
    }catch{counts.failed++}
   }
-  return response({ok:true,dry_run:dryRun,weekStart:week,controls,counts,adminResult,skippedUnverified,verifiedCount,previewed,cohortSize:students.length,approvedNews:selectNews(notices.news).length,openJobs:selectJobs(notices.jobs,2,today).length,emailProviderConfigured:!!mailKey,senderConfigured:!!sender,next:controls.students||dryRun?next:null});
+  return response({ok:true,dry_run:dryRun,weekStart:week,controls,counts,adminResult,skippedUnverified,verifiedCount,previewed,cohortSize:students.length,approvedNews:selectNews(notices.news,week).length,openJobs:selectJobs(notices.jobs,2,today).length,emailProviderConfigured:!!mailKey,senderConfigured:!!sender,next:controls.students||dryRun?next:null});
  }catch{console.error("Weekly report processing failed");return response({error:"REPORT_FAILED"},500)}
 });

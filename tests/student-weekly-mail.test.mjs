@@ -1,16 +1,41 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {renderStudentMail,selectJobs,selectNews,studentEligible} from '../supabase/functions/weekly-learning-report/student-mail.mjs';
+import {renderStudentMail,selectJobs,selectNews,excludeRepublishedNews,newsApprovalWindow,studentEligible} from '../supabase/functions/weekly-learning-report/student-mail.mjs';
 import {summarize} from '../supabase/functions/student-weekly-report/report.mjs';
 const week='2026-11-23',today='2026-11-30',when='2026-11-24T01:00:00Z';
 const learning=summarize(week,[{bank:'coding',question_id:'JAVA-001',result:'correct',submitted_at:when},{bank:'practical',question_id:'P1',result:'incorrect',submitted_at:when},{bank:'ncp',question_id:'N1',result:'correct',submitted_at:when}],[{exam_type:'engineer',question_id:'E1',correct:true,attempted_at:Date.parse(when)},{exam_type:'industrial',question_id:'I1',correct:false,attempted_at:Date.parse(when)}],[{started_at:when,duration_seconds:4500,status:'completed'}],{weekdays:[1,2]},[{question_id:'INT-1',practiced_at:when}]);
 const report={week_start:week,payload:{week_start:week,week_end:'2026-11-29',schedule_start:today,schedule_end:'2026-12-06',learning,career:{registered:true,status:'관심 필요',github_days:4,readme:'완료',portfolio:'보완 필요',repositories:1,certificates:0,documents:{resume:'완료',cover_letter:'미등록'}},calendar:{available:true,stale:false,events:[{title:'학과 일정 <script>',start:today,end:today,time:'10:00',important:true}]},tasks:[{id:'review',label:'오답 다시 풀기'}]},completed_tasks:[]};
 const student1={user_id:'1',signup_type:'student',full_name:'<script>테스트',email:'test@example.com',academic_year:1,approval_status:'approved',enrollment_status:'enrolled'};
 const student2={...student1,academic_year:2};
-const news=[{id:'N-1',title:'확정 동문소식 <img>',content:'안내 <script>',news_type:'ACHIEVEMENT',created_at:'2026-11-27',status:'APPROVED'},...['PENDING','HIDDEN','REJECTED'].map(status=>({id:status,title:'제외 '+status,status,created_at:'2026-11-28'}))];
+const news=[{id:'N-1',title:'확정 동문소식 <img>',content:'안내 <script>',news_type:'ACHIEVEMENT',created_at:'2026-11-27',approved_at:'2026-11-27T12:00:00+09:00',event_date:'2026-11-25',status:'APPROVED'},...['PENDING','HIDDEN','REJECTED'].map(status=>({id:status,title:'제외 '+status,status,created_at:'2026-11-28'}))];
 const job=(id,deadline,status='APPROVED',always_open='false')=>({id,company:'기업',job_title:'공고 '+id,deadline,status,always_open,employment_type:'정규직',location:'서울',recruit_type:'신입'});
 const jobs=[job('past','2026-11-29'),job('today',today),job('later','2026-12-04'),job('always','', 'APPROVED','TRUE'),job('pending','2026-12-02','PENDING'),job('hidden','2026-12-02','HIDDEN'),job('invalid','2026-02-31'),job('missing',''),job('after','2026-12-07')];
-assert.deepEqual(selectNews(news).map(x=>x.id),['N-1']);
+assert.deepEqual(selectNews(news,week).map(x=>x.id),['N-1']);
+const approved=(id,approved_at,event_date,extra={})=>({id,title:id,status:'APPROVED',approved_at,event_date,...extra});
+const historical=approved('old-wedding','2026-09-28T12:11:51+09:00','2026-10-10',{news_type:'MARRIAGE'});
+const fresh=[historical,
+ approved('old-reposted','2026-11-28T10:00:00+09:00','2026-10-10'),
+ approved('new-past-week','2026-11-25T10:00:00+09:00','2026-11-25'),
+ approved('upcoming','2026-11-29T10:00:00+09:00','2026-12-05'),
+ approved('undated','2026-11-28T10:00:00+09:00',null),
+ approved('before-boundary','2026-11-23T08:59:59+09:00','2026-11-23'),
+ approved('at-start','2026-11-23T09:00:00+09:00','2026-11-23'),
+ approved('at-end','2026-11-30T00:00:00Z','2026-12-05'),
+ approved('pre-end','2026-11-29T23:59:59Z','2026-12-05'),
+ approved('no-approval',null,'2026-12-05',{created_at:'2026-11-28'}),
+ approved('invalid-event','2026-11-28T10:00:00+09:00','2026-02-31'),
+ approved('not-approved','2026-11-28T10:00:00+09:00','2026-12-05',{status:'PENDING'})
+];
+assert.deepEqual(newsApprovalWindow(week),{from:Date.parse('2026-11-23T09:00:00+09:00'),to:Date.parse('2026-11-30T09:00:00+09:00')});
+assert.deepEqual(selectNews(fresh,week,100).map(x=>x.id),['pre-end','upcoming','undated','new-past-week','at-start']);
+assert.deepEqual(selectNews(fresh,week).map(x=>x.id),['pre-end','upcoming','undated']);
+assert.deepEqual(selectNews(fresh,'2026-11-30').map(x=>x.id),['at-end']);
+const recent=selectNews(fresh,week,100);
+const audit=[{target_id:'upcoming',new_status:'APPROVED',previous_status:'PENDING',created_at:'2026-11-20T08:00:00Z'},{target_id:'upcoming',new_status:'APPROVED',previous_status:'HIDDEN',created_at:'2026-11-29T10:00:00+09:00'},{target_id:'undated',new_status:'APPROVED',previous_status:'HIDDEN',created_at:'2026-11-28T10:00:00+09:00'},{target_id:'new-past-week',new_status:'APPROVED',previous_status:'PENDING',created_at:'2026-11-25T10:00:00+09:00'}];
+assert.deepEqual(excludeRepublishedNews(recent,audit,week).map(x=>x.id),['pre-end','new-past-week','at-start']);
+assert.doesNotMatch(renderStudentMail(student1,report,[],[historical],[],today).html,/동문소식|old-wedding/);
+assert.match(renderStudentMail(student2,report,[],[historical],jobs,today).html,/채용공고 4건/);
+
 assert.deepEqual(selectJobs(jobs,1,today),[]);
 assert.deepEqual(selectJobs(jobs,2,today).map(x=>x.id),['today','later','after','always']);
 const grade1=renderStudentMail(student1,report,[],news,jobs,today),grade2=renderStudentMail(student2,report,[],news,jobs,today);
@@ -41,4 +66,4 @@ for(const p of [{...student1,signup_type:'alumni'},{...student1,enrollment_statu
 assert.equal(studentEligible(student1,new Set(['1'])),false);
 const source=readFileSync('supabase/functions/weekly-learning-report/index.ts','utf8'),flow=readFileSync('.github/workflows/weekly-learning-report.yml','utf8');
 assert.match(source,/from "..\/student-weekly-report\/snapshot\.ts"/);assert.match(source,/event==="push"&&!dryRun/);assert.match(source,/email_confirmed_at/);assert.match(source,/if\(dryRun\)continue/);assert.match(source,/reportControls\(\)\)\.students/);assert.match(source,/report_deliveries/);assert.match(flow,/cron: "0 0 \* \* 1"/);
-console.log('PASS: shared snapshot, certificate filters, actual interview history, approved news, grade-specific current jobs, expiry and D-Day, empty sections, escaped content, responsive table HTML and safe delivery controls.');
+console.log('PASS: shared snapshot, certificate filters, actual interview history, newly approved KST weekly news, event-date and re-publication exclusions, grade-specific current jobs, expiry and D-Day, empty sections, escaped content, responsive table HTML and safe delivery controls.');

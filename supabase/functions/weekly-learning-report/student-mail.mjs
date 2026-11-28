@@ -1,5 +1,5 @@
 // Pure, email-client compatible student report rendering. All personal content is escaped.
-import {dateKey,reportForCertificates} from "../student-weekly-report/report.mjs";
+import {dateKey,dateMs,shift,validWeek,reportForCertificates} from "../student-weekly-report/report.mjs";
 const portal='https://portal.k-bigdata.kr/';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const n=v=>Number.isFinite(Number(v))?Math.max(0,Number(v)):0;
@@ -10,7 +10,42 @@ const duration=s=>{const min=Math.round(n(s)/60);return min>=60?Math.floor(min/6
 const isTrue=v=>['true','1','yes','on'].includes(String(v??'').trim().toLowerCase());
 const dateOnly=v=>{const d=String(v??'').slice(0,10);return /^\d{4}-\d{2}-\d{2}$/.test(d)&&Number.isFinite(Date.parse(d+'T00:00:00Z'))&&new Date(d+'T00:00:00Z').toISOString().slice(0,10)===d?d:''};
 const newest=(a,b)=>String(b.approved_at||b.created_at||'').localeCompare(String(a.approved_at||a.created_at||''))||String(a.id).localeCompare(String(b.id));
-export function selectNews(rows){return (rows||[]).filter(x=>x.status==='APPROVED'&&String(x.title||'').trim()).sort(newest).slice(0,3)}
+// Use fixed KST weekly mail boundaries rather than the job's actual run time.
+const approvalTime=value=>{
+ const s=String(value??'').trim();
+ if(!s)return NaN;
+ if(/^\d{4}-\d{2}-\d{2}$/.test(s))return dateOnly(s)?dateMs(s):NaN;
+ // Imported rows may contain an ISO local timestamp rather than an explicit offset.
+ return Date.parse(/(?:Z|[+-]\d{2}:?\d{2})$/i.test(s)?s:s+'+09:00');
+};
+export function newsApprovalWindow(week){
+ if(!validWeek(week))throw Error('INVALID_NEWS_REPORT_WEEK');
+ return {from:dateMs(week)+9*3600000,to:dateMs(shift(week,7))+9*3600000};
+}
+export function selectNews(rows,week,limit=3){
+ const {from,to}=newsApprovalWindow(week);
+ return (rows||[]).filter(x=>{
+  if(x.status!=='APPROVED'||!String(x.title||'').trim())return false;
+  const approved=approvalTime(x.approved_at);
+  if(!Number.isFinite(approved)||approved<from||approved>=to)return false;
+  // Recent approval cannot make an old event current. Undated notices use approval only.
+  const supplied=String(x.event_date??'').trim(),event=dateOnly(supplied);
+  return !supplied||(!!event&&event>=week);
+ }).sort((a,b)=>approvalTime(b.approved_at)-approvalTime(a.approved_at)||String(a.id).localeCompare(String(b.id))).slice(0,limit);
+}
+// Re-publishing a previously approved item must not make it new again.
+export function excludeRepublishedNews(rows,audit,week){
+ const {from}=newsApprovalWindow(week),first=new Map();
+ for(const a of audit||[]){
+  if(a.new_status!=='APPROVED')continue;
+  const t=approvalTime(a.created_at),previous=first.get(a.target_id);
+  if(Number.isFinite(t)&&(!previous||t<previous.time))first.set(a.target_id,{time:t,previous:a.previous_status});
+ }
+ return rows.filter(row=>{
+  const hit=first.get(row.id);
+  return !hit||(hit.time>=from&&!['HIDDEN','APPROVED'].includes(hit.previous));
+ });
+}
 export function selectJobs(rows,grade,today){
  if(Number(grade)!==2)return [];
  return (rows||[]).filter(x=>x.status==='APPROVED'&&String(x.job_title||'').trim()&&(isTrue(x.always_open)||(dateOnly(x.deadline)&&dateOnly(x.deadline)>=today)))
@@ -46,7 +81,7 @@ const panel=body=>table(row(body,'padding:12px;border:1px solid #dce5f0;border-r
 export function renderStudentMail(student,report,certificates=[],newsRows=[],jobRows=[],today=dateKey(Date.now())){
  if(!report?.payload)throw Error('SNAPSHOT_MISSING');
  const p=reportForCertificates(report,certificates).payload,l=p.learning,c=p.career,cal=p.calendar;
- const grade=Number(student.academic_year),news=selectNews(newsRows),jobs=selectJobs(jobRows,grade,today);
+ const grade=Number(student.academic_year),news=selectNews(newsRows,p.week_start),jobs=selectJobs(jobRows,grade,today);
  const previous=l.trend?.at(-2)?.attempts,delta=n(l.attempts)-n(previous);
  const range=fmtDate(p.week_start)+' ~ '+fmtDate(p.week_end);
  const title='[빅데이터SW학과] '+Number(p.week_start.slice(5,7))+'월 '+Math.ceil(Number(p.week_start.slice(8,10))/7)+'주차 나의 주간 리포트';
