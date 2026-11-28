@@ -6,9 +6,9 @@
 <link rel="stylesheet" href="../css/portal-ux.css?v=20261112-page-intro-2">
 <link rel="stylesheet" href="css/admin.css?v=20261128-ui-1">
 <link rel="stylesheet" href="../alumni/css/jobs.css?v=20261113-alumni-unified-1">
-<link rel="stylesheet" href="css/alumni.css?v=20261128-alumni-overview-1">
+<link rel="stylesheet" href="css/alumni.css?v=20261128-review-card-1">
 <link rel="stylesheet" href="css/admin-mobile.css?v=20261128-ui-1"></head>
-<body data-admin-module="alumni.js" data-admin-module-version="20261128-alumni-overview-1" data-admin-page="alumni">
+<body data-admin-module="alumni.js" data-admin-module-version="20261128-review-card-1" data-admin-page="alumni">
 <p id="learning-notice" role="status">관리자 로그인 및 권한 확인 중입니다.</p>
 <header class="admin-header site-header">
   <div class="admin-header-inner header-inner">
@@ -71,7 +71,7 @@
     </section>
     <div class="actions admin-utilities" aria-label="메일 관리"><button id="send-consent-invites" class="button--secondary" type="button">채용메일 수신 설정 안내</button><button id="send-news-consent-invites" class="button--secondary" type="button">동문소식 수신 설정 안내</button><button id="run-job-digest" class="button--secondary" type="button">채용정보 발송 관리</button></div>
     <dialog id="admin-content-dialog" class="admin-work-dialog" aria-labelledby="admin-content-title">
-      <div class="admin-create-heading"><h2 id="admin-content-title">등록 내용 확인</h2><button id="admin-close-content" type="button" class="button--ghost">닫기</button></div>
+      <div class="review-dialog-head"><div class="review-dialog-heading"><span>CONTENT REVIEW</span><h2 id="admin-content-title">등록 내용 확인</h2></div><button id="admin-close-content" type="button" class="button--ghost" autofocus><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>닫기</button></div>
       <div id="admin-content-detail"></div>
     </dialog>
     <dialog id="admin-mail-dialog" class="admin-work-dialog" aria-labelledby="admin-mail-title">
