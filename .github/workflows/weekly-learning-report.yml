@@ -1,40 +1,68 @@
-name: Weekly faculty learning report
+name: Weekly student learning report mail
 on:
-  # Sunday 23:00 UTC = Monday 08:00 Asia/Seoul.
+  # Monday 00:00 UTC = Monday 09:00 Asia/Seoul; dashboard snapshots run at 08:00.
   schedule:
-    - cron: "0 23 * * 0"
+    - cron: "0 0 * * 1"
   workflow_dispatch:
-  # Verify GitHub OIDC without sending mail when this workflow is first deployed.
+    inputs:
+      dry_run:
+        description: "Preview only (no mail delivery)"
+        type: boolean
+        default: true
   push:
     branches: [main]
     paths:
       - ".github/workflows/weekly-learning-report.yml"
+      - "supabase/functions/weekly-learning-report/**"
+      - "supabase/functions/student-weekly-report/**"
+      - "tests/student-weekly-mail.test.mjs"
 permissions:
   contents: read
   id-token: write
+concurrency:
+  group: weekly-student-learning-mail
+  cancel-in-progress: false
 jobs:
   send-weekly-reports:
     runs-on: ubuntu-24.04
-    timeout-minutes: 6
+    timeout-minutes: 15
     steps:
-      - name: Obtain short-lived GitHub Actions OIDC token and call report function
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node tests/student-weekly-mail.test.mjs
+      - name: Obtain short-lived GitHub OIDC token and process recipient batches
         env:
           EVENT_NAME: ${{ github.event_name }}
+          MANUAL_DRY_RUN: ${{ inputs.dry_run }}
           FUNCTION_URL: https://zjsindkakjfzmjgrkaou.supabase.co/functions/v1/weekly-learning-report
         shell: bash
         run: |
           set -euo pipefail
-          response=$(curl --fail --silent --show-error --retry 3 --max-time 12 \
-            -H "Authorization: Bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" \
-            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=kbigdata-weekly-learning-report")
-          id_token=$(printf '%s' "$response" | python3 -c 'import json,sys; print(json.load(sys.stdin)["value"])')
-          payload='{"dry_run":false}'
-          if [[ "$EVENT_NAME" == "push" ]]; then
-            payload='{"dry_run":true}'
-          fi
-          curl --fail-with-body --silent --show-error --retry 2 --max-time 80 \
-            -X POST "$FUNCTION_URL" \
-            -H "Authorization: Bearer $id_token" \
-            -H "Content-Type: application/json" \
-            --data "$payload"
-          echo
+          dry=true
+          if [[ "$EVENT_NAME" == "schedule" || ( "$EVENT_NAME" == "workflow_dispatch" && "$MANUAL_DRY_RUN" == "false" ) ]]; then dry=false; fi
+          cursor=""
+          failures=0
+          for i in $(seq 1 100); do
+            response=$(curl --fail --silent --show-error --retry 3 --max-time 12 \
+              -H "Authorization: Bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" \
+              "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=kbigdata-weekly-learning-report")
+            token=$(printf '%s' "$response" | python3 -c 'import json,sys; print(json.load(sys.stdin)["value"])')
+            payload=$(python3 -c 'import json,sys; print(json.dumps({"dry_run":sys.argv[1]=="true","cursor":sys.argv[2]}))' "$dry" "$cursor")
+            result=$(curl --fail-with-body --silent --show-error --retry 2 --max-time 85 \
+              -X POST "$FUNCTION_URL" \
+              -H "Authorization: Bearer $token" \
+              -H "Content-Type: application/json" \
+              --data "$payload")
+            # Do not log user identifiers; only aggregate diagnostics.
+            printf '%s' "$result" | python3 -c 'import json,sys; x=json.load(sys.stdin); assert x["ok"]; x.pop("next",None); print(json.dumps(x,ensure_ascii=False))'
+            failed=$(printf '%s' "$result" | python3 -c 'import json,sys; print(json.load(sys.stdin).get("counts",{}).get("failed",0))')
+            failures=$((failures+failed))
+            cursor=$(printf '%s' "$result" | python3 -c 'import json,sys; print(json.load(sys.stdin).get("next") or "")')
+            if [[ -z "$cursor" ]]; then
+              if [[ "$failures" -gt 0 ]]; then echo "::error::$failures weekly report failures"; exit 1; fi
+              exit 0
+            fi
+          done
+          exit 1

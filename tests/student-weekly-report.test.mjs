@@ -99,7 +99,8 @@ assert.deepEqual(scopedPractice.payload.learning.subjects.map(s=>s.id),['coding'
 assert.equal(scopedPractice.payload.learning.ncp_acquired,true);
 assert.ok(!summarize('2026-11-23',[],[],[],null,[]).subjects.some(s=>s.id==='interview'),'no fabricated old practice rows');
 assert.match(edge,/\.in\("certificate_code",\["engineer","industrial","ncp"\]\)/);
-assert.match(edge,/from\("interview_practice_events"\)\.select\("question_id,practiced_at"\)\.eq\("user_id",id\)/);
+const snapshotModule=readFileSync(new URL('../supabase/functions/student-weekly-report/snapshot.ts',import.meta.url),'utf8');
+assert.match(snapshotModule,/from\("interview_practice_events"\)\.select\("question_id,practiced_at"\)\.eq\("user_id",id\)/);
 const practiceSql=readFileSync(new URL('../supabase/migrations/20261128193000_interview_practice_events.sql',import.meta.url),'utf8');
 assert.match(practiceSql,/enable row level security/);assert.match(practiceSql,/v_user uuid:=auth\.uid\(\)/);
 assert.match(practiceSql,/delete from public\.interview_practice_events where user_id=v_user and mark_id=p_mark_id and question_id=p_question_id/);

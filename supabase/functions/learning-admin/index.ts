@@ -81,12 +81,12 @@ Deno.serve(async(req:Request)=>{
     // Read-only controls; browser never receives service credentials.
     const [settings,profiles]=await Promise.all([
       admin.from("weekly_report_controls").select("report_type,enabled,updated_at"),
-      admin.from("profiles").select("user_id,email").eq("approval_status","approved").eq("enrollment_status","enrolled").neq("email","hglee67@kopo.ac.kr").limit(2000)
+      admin.from("profiles").select("user_id,email").eq("approval_status","approved").eq("enrollment_status","enrolled").eq("signup_type","student").in("academic_year",[1,2]).neq("email","hglee67@kopo.ac.kr").limit(2000)
     ]);
     if(settings.error||profiles.error)throw Error("MAIL_SETTINGS_QUERY_FAILED");
     if(!["super_admin","student"].every(type=>settings.data?.some(r=>r.report_type===type)))throw Error("MAIL_SETTINGS_INCOMPLETE");
     return json({ok:true,settings:settings.data,studentRecipientCount:(profiles.data||[]).filter(r=>r.email).length,
-      professorRecipient:"hglee67@kopo.ac.kr",schedule:"매주 월요일 08:00 (한국시간)"});
+      professorRecipient:"hglee67@kopo.ac.kr",schedule:"매주 월요일 09:00 (한국시간)"});
   }
   if(action==="update_mail_setting"){
     if(!["super_admin","student"].includes(data.reportType)||typeof data.enabled!=="boolean")

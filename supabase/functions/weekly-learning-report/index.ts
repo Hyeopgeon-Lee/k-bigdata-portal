@@ -1,14 +1,13 @@
-import {createClient} from "npm:@supabase/supabase-js@2.49.10";
+import {db,read,generate,getReport,calendar} from "../student-weekly-report/snapshot.ts";
+import {dateKey,lastWeek,shift,dateMs} from "../student-weekly-report/report.mjs";
+import {renderStudentMail,selectNews,selectJobs,studentEligible} from "./student-mail.mjs";
 /* GitHub Actions OIDC authorizes this job; no reusable webhook secret. */
-const url=Deno.env.get("SUPABASE_URL")!;
-const roleKey=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const mailKey=Deno.env.get("RESEND_API_KEY")||"";
 const sender=Deno.env.get("REPORT_FROM_EMAIL")||"noreply@noreply.k-bigdata.kr";
 const adminMail="hglee67@kopo.ac.kr";
 const repo="Hyeopgeon-Lee/k-bigdata-portal";
 const workflow=repo+"/.github/workflows/weekly-learning-report.yml@refs/heads/main";
 const audience="kbigdata-weekly-learning-report";
-const db=createClient(url,roleKey,{auth:{persistSession:false,autoRefreshToken:false}});
 const response=(obj:unknown,status=200)=>new Response(JSON.stringify(obj),{status,headers:{"Content-Type":"application/json","Cache-Control":"no-store"}});
 const escape=(v:unknown)=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]!));
 function b64url(value:string){
@@ -43,13 +42,6 @@ async function githubIdentity(req:Request):Promise<"schedule"|"workflow_dispatch
   return verified?claims.event_name:null;
  }catch{return null;}
 }
-function lastWeek(){
- const kst=new Date(Date.now()+9*3600000),day=(kst.getUTCDay()+6)%7;
- const end=Date.UTC(kst.getUTCFullYear(),kst.getUTCMonth(),kst.getUTCDate()-day)-9*3600000;
- const start=end-7*86400000;
- return {start:new Date(start).toISOString(),end:new Date(end).toISOString(),
-   date:new Date(start+9*3600000).toISOString().slice(0,10)};
-}
 async function allAttempts(start:string,end:string){
  const all:any[]=[];
  for(let from=0;from<100000;from+=1000){
@@ -70,56 +62,9 @@ async function reportControls(){
  return {faculty:data.find(x=>x.report_type==="super_admin")?.enabled===true,
    students:data.find(x=>x.report_type==="student")?.enabled===true};
 }
-function industrialStudent(row:any){
- if(!row)return "";
- const r=row.recent;
- return '<h3>정보처리산업기사 필기</h3><p>이번 주 풀이 '+row.attempts+'회 · 고유 '+row.unique_count+'문항 · 정답률 '+pct(row.period_correct,row.attempts)+'</p><p>누적 완료 '+row.completed+'회 · 기준 충족 '+row.passed+'회 · 이번 주 모의고사 '+row.mocks+'회</p>'+
- (r?'<p>최근 완료 회차 '+r.year+'년 '+r.round+'회 · 평균 '+r.average+'점 · '+(r.passed?'학습 기준 충족':'학습 기준 미달')+'</p><ul>'+r.subjects.map((x:any)=>'<li>'+escape(x.subject)+' '+x.correct*5+'점'+(x.correct<8?' (과락)':x.correct<12?' (권장 목표 미달)':'')+'</li>').join('')+'</ul>':'<p>완료 회차 없음 · 미풀이 회차를 이어서 학습하세요.</p>')+'<p><a href="https://portal.k-bigdata.kr/industrial-written.html">회차별 학습현황 및 복습</a></p>';
-}
 function industrialFaculty(rows:any[]){
  const active=rows.filter(x=>x.attempts>0),atRisk=rows.filter(x=>x.recent&&!x.recent.passed);
  return '<h3>정보처리산업기사 필기</h3><p>주간 참여 '+active.length+'/'+rows.length+'명 · 총 풀이 '+rows.reduce((n,x)=>n+x.attempts,0)+'회 · 모의고사 '+rows.reduce((n,x)=>n+x.mocks,0)+'회 · 최근 완료 회차 기준 미달 '+atRisk.length+'명</p><p><a href="https://portal.k-bigdata.kr/teacher-learning.html">학생별 회차·과목 통계</a></p>';
-}
-const questionKey=(item:any)=>item.bank+":"+item.question_id;
-const judged=(rows:any[])=>rows.filter(x=>["correct","incorrect"].includes(x.result));
-function studentBody(student:any,all:any[],period:{start:string;end:string;date:string},industrial:any){
- const mine=all.filter(x=>x.user_id===student.user_id).sort((a,b)=>Date.parse(a.submitted_at)-Date.parse(b.submitted_at));
- const week=mine.filter(x=>x.submitted_at>=period.start);
- const previous=mine.filter(x=>x.submitted_at<period.start);
- const evaluated=judged(week),self=evaluated.filter(x=>x.grading_method==="self");
- const automatic=evaluated.filter(x=>x.grading_method==="automatic");
- const oldLatest=new Map<string,string>(),latest=new Map<string,string>(),errors=new Map<string,number>();
- for(const x of previous)if(["correct","incorrect","ungraded"].includes(x.result))oldLatest.set(questionKey(x),x.result);
- const improved=new Set<string>(),wrongSeen=new Set<string>();
- for(const x of week){
-   const key=questionKey(x);
-   if(x.result==="incorrect"){wrongSeen.add(key);errors.set(key,(errors.get(key)||0)+1);}
-   if(x.result==="correct"&&(wrongSeen.has(key)||oldLatest.get(key)==="incorrect"))improved.add(key);
-   if(["correct","incorrect","ungraded"].includes(x.result))latest.set(key,x.result);
- }
- for(const [key,value] of oldLatest)if(!latest.has(key))latest.set(key,value);
- const review=[...latest].filter(([key,result])=>result==="incorrect"||result==="ungraded")
-   .sort((a,b)=>(errors.get(b[0])||0)-(errors.get(a[0])||0)).slice(0,5);
- const link=(key:string)=>{
-   const cut=key.indexOf(":");if(cut<0)return escape(key);
-   const bank=key.slice(0,cut),question=key.slice(cut+1),path=({coding:"coding.html",ncp:"ncp.html",practical:"practical.html"} as Record<string,string>)[bank];
-   return path&&/^[A-Za-z0-9_-]{1,100}$/.test(question)?
-      '<a href="https://portal.k-bigdata.kr/'+path+'?id='+encodeURIComponent(question)+'">'+escape(question)+'</a>':escape(question);
- };
- const recovered=[...improved].filter(key=>latest.get(key)==="correct").slice(0,8);
- const difference=week.length-previous.length;
- const studentName=String(student.full_name||"학생").trim().slice(0,80);
- const part='<p>'+escape(studentName)+' 학생의 최근 1주일 학습 요약입니다.</p>'+
-   '<p>풀이 '+week.length+'회 / 서로 다른 문제 '+new Set(week.map(questionKey)).size+'개 · 지난주 '+previous.length+
-     '회 대비 '+(difference>0?"+":"")+difference+'회</p>'+
-   '<p>자가평가 정답률 '+pct(self.filter(x=>x.result==="correct").length,self.length)+
-     ' · 브라우저 답안 비교 '+pct(automatic.filter(x=>x.result==="correct").length,automatic.length)+'</p>'+
-   '<h3>오답에서 정답으로 개선한 문제</h3><ul>'+
-     (recovered.length?recovered.map(x=>'<li>'+link(x)+'</li>').join(""):"<li>이번 주 개선 기록 없음</li>")+'</ul>'+
-   '<h3>다음 주 추천 복습 문제</h3><ol>'+
-     (review.length?review.map(([key])=>'<li>'+link(key)+'</li>').join(""):"<li>기록된 오답·미판정 문제 없음</li>")+'</ol>'+
-   '<p>복습 추천은 실제 학습 기록을 기준으로 하며 시험 성적을 보장하지 않습니다.</p>';
- return html("주간 개인 학습 리포트",period.date,part+industrialStudent(industrial));
 }
 async function deliver(userId:string|null,email:string,kind:"super_admin"|"student",period:string,subject:string,body:string){
  const q=db.from("report_deliveries");
@@ -157,43 +102,16 @@ async function deliver(userId:string|null,email:string,kind:"super_admin"|"stude
   return "failed";
  }
 }
-Deno.serve(async(req:Request)=>{
- if(req.method!=="POST")return response({error:"METHOD_NOT_ALLOWED"},405);
- const event=await githubIdentity(req);
- if(!event)return response({error:"OIDC_NOT_AUTHORIZED"},403);
- let payload:any={};
- try{payload=await req.json();}catch{}
- const dryRun=payload.dry_run===true;
- if(event==="push"&&!dryRun)return response({error:"PUSH_MUST_DRY_RUN"},403);
- try{
-  const controls=await reportControls();
-  const period=lastWeek();
-  if(!controls.faculty&&!controls.students)return response({ok:true,weekStart:period.date,controls,skipped:"both_disabled",counts:{sent:0,failed:0,duplicate:0}});
-  if(!mailKey&&!dryRun)return response({error:"RESEND_API_KEY_NOT_CONFIGURED"},503);
-  const priorStart=new Date(Date.parse(period.start)-7*86400000).toISOString();
-  const [attempts,profiles,admins,written]=await Promise.all([
-   allAttempts(priorStart,period.end),
-   db.from("profiles").select("user_id,email,full_name,approval_status,enrollment_status,signup_type").eq("approval_status","approved"),
-   db.from("account_roles").select("user_id").eq("role","super_admin"),
-   db.rpc("written_weekly_service_summary",{p_start:period.start,p_end:period.end})
-  ]);
-  if(profiles.error||admins.error)throw Error("Recipient lookup failed");
-  if(written.error||!Array.isArray(written.data))throw Error("Written statistics unavailable");
-  const writtenRows=written.data;
-  const adminId=admins.data?.find(x=>(profiles.data||[]).some(p=>p.user_id===x.user_id&&p.email?.toLowerCase()===adminMail))?.user_id;
-  if(controls.faculty){
-   if(!adminId)throw Error("Missing verified super admin profile");
-   const verified=await db.auth.admin.getUserById(adminId);
-   if(verified.error||verified.data.user?.email?.toLowerCase()!==adminMail||!verified.data.user?.email_confirmed_at)throw Error("Unverified super admin");
-  }
-  const students=(profiles.data||[]).filter(p=>p.enrollment_status==="enrolled"&&p.signup_type!=="alumni"&&p.email?.toLowerCase()!==adminMail&&p.user_id!==adminId);
+async function facultyReport(week:string,students:any[],adminIds:Set<string>){
+  const period={date:week,start:new Date(dateMs(week)).toISOString(),end:new Date(dateMs(shift(week,7))).toISOString()};
+  const adminProfile=await read(db.from("profiles").select("user_id,email").eq("email",adminMail).maybeSingle());
+  if(!adminProfile||!adminIds.has(adminProfile.user_id))throw Error("Missing verified super admin profile");
+  const verified=await db.auth.admin.getUserById(adminProfile.user_id);
+  if(verified.error||verified.data.user?.email?.toLowerCase()!==adminMail||!verified.data.user?.email_confirmed_at)throw Error("Unverified super admin");
+  const [attempts,writtenRows]=await Promise.all([allAttempts(new Date(dateMs(shift(week,-7))).toISOString(),period.end),read(db.rpc("written_weekly_service_summary",{p_start:period.start,p_end:period.end}))]);
+  if(!Array.isArray(writtenRows))throw Error("Written statistics unavailable");
   const studentSet=new Set(students.map(s=>s.user_id));
   const cohort=attempts.filter(x=>studentSet.has(x.user_id)&&x.submitted_at>=period.start);
-  if(dryRun)return response({ok:true,dry_run:true,oidc:event,weekStart:period.date,controls,
-    cohortSize:students.length,attempts:cohort.length,writtenAttempts:writtenRows.reduce((n:number,x:any)=>n+x.attempts,0),
-    studentEmailRecipients:controls.students?students.filter(s=>s.email).length:0,
-    adminEmailRecipients:controls.faculty?1:0,emailProviderConfigured:!!mailKey,senderConfigured:!!sender});
-  const counts={sent:0,failed:0,duplicate:0};
   const subjectKey=(x:any)=>x.bank==="coding"?String(x.question_id).split("-")[0]:x.bank==="ncp"?"NCP":"PRACTICAL";
   const subjects=["JAVA","C","PYTHON","LINUX","NCP","PRACTICAL"].map(key=>
     "<li>"+escape({JAVA:"Java",C:"C",PYTHON:"Python",LINUX:"Ubuntu",NCP:"NCP",PRACTICAL:"정보처리"}[key])+
@@ -214,31 +132,83 @@ Deno.serve(async(req:Request)=>{
      " · 브라우저 답안 비교 "+pct(automatic.filter(x=>x.result==="correct").length,automatic.length)+"</p>"+
     "<h3>과목별 시도</h3><ul>"+subjects+"</ul><h3>반복 오답 문제</h3><ol>"+top+"</ol>"+industrialFaculty(writtenRows)+
     '<p><a href="https://portal.k-bigdata.kr/teacher-learning.html">교수 전용 학급 학습통계 확인</a></p>');
-  let adminResult="disabled";
-  if(controls.faculty){
-    adminResult=await deliver(null,adminMail,"super_admin",period.date,"[학과 포털] 주간 학급 학습 보고서",body);
-    counts[adminResult as keyof typeof counts]++;
+  return await deliver(null,adminMail,"super_admin",period.date,"[학과 포털] 주간 학급 학습 보고서",body);
+}
+// Shared, private weekly snapshot plus latest approved alumni notices at send time.
+async function publicNotices(includeJobs:boolean){
+ const [news,jobs]=await Promise.all([
+  read(db.from("alumni_news").select("id,news_type,title,content,status,approved_at,created_at").eq("status","APPROVED").order("approved_at",{ascending:false,nullsFirst:false}).order("created_at",{ascending:false,nullsFirst:false}).limit(100)),
+  includeJobs?read(db.from("alumni_jobs").select("id,company,job_title,recruit_type,employment_type,location,deadline,always_open,status,approved_at,created_at").eq("status","APPROVED").order("id").limit(1000)):Promise.resolve([])
+ ]);
+ return {news,jobs};
+}
+async function currentStudent(id:string,admins:Set<string>){
+ const profile=await read(db.from("profiles").select("user_id,email,full_name,academic_year,approval_status,enrollment_status,signup_type").eq("user_id",id).maybeSingle());
+ return studentEligible(profile,admins)?profile:null;
+}
+async function verifiedStudent(student:any){
+ const {data,error}=await db.auth.admin.getUserById(student.user_id);
+ return !error&&data.user?.email_confirmed_at&&data.user.email?.toLowerCase()===student.email.toLowerCase();
+}
+Deno.serve(async(req:Request)=>{
+ if(req.method!=="POST")return response({error:"METHOD_NOT_ALLOWED"},405);
+ const event=await githubIdentity(req);
+ if(!event)return response({error:"OIDC_NOT_AUTHORIZED"},403);
+ let payload:any={};
+ try{payload=await req.json();}catch{}
+ const dryRun=payload.dry_run===true;
+ if(event==="push"&&!dryRun)return response({error:"PUSH_MUST_DRY_RUN"},403);
+ // Only a signed scheduled invocation or explicit dispatch may send; push is preview-only.
+ const cursor=typeof payload.cursor==="string"?payload.cursor:"";
+ if(cursor&&!/^[0-9a-f-]{36}$/i.test(cursor))return response({error:"BAD_CURSOR"},400);
+ const week=lastWeek();
+ const counts={sent:0,failed:0,duplicate:0};
+ try{
+  const controls=await reportControls();
+  if(!controls.faculty&&!controls.students&&!dryRun)return response({ok:true,weekStart:week,controls,skipped:"both_disabled",counts,next:null});
+  if(!mailKey&&!dryRun)return response({error:"RESEND_API_KEY_NOT_CONFIGURED"},503);
+  const [profiles,roles]=await Promise.all([
+    read(db.from("profiles").select("user_id,email,full_name,academic_year,approval_status,enrollment_status,signup_type").eq("approval_status","approved").eq("enrollment_status","enrolled").eq("signup_type","student").in("academic_year",[1,2]).order("user_id")),
+    read(db.from("account_roles").select("user_id").eq("role","super_admin"))
+  ]);
+  const admins=new Set<string>(roles.map((r:any)=>r.user_id));
+  const students=profiles.filter((p:any)=>studentEligible(p,admins));
+  const members=students.filter((p:any)=>!cursor||p.user_id>cursor).slice(0,5);
+  const next=members.length===5&&students.some((p:any)=>p.user_id>members[4].user_id)?members[4].user_id:null;
+  const notices=await publicNotices(members.some((m:any)=>Number(m.academic_year)===2));
+  const today=dateKey(Date.now());
+  let adminResult="disabled",skippedUnverified=0,verifiedCount=0,previewed=0;
+  if(!cursor&&controls.faculty&&!dryRun&&(await reportControls()).faculty){
+   try{adminResult=await facultyReport(week,students,admins);counts[adminResult as keyof typeof counts]++}
+   catch{adminResult="failed";counts.failed++}
   }
-  let skippedUnverified=0;
-  if(controls.students){
-    for(const student of students){
-      if(!student.email){skippedUnverified++;continue;}
-      // Never email an account that has not verified its address.
-      const {data:verified,error:checkError}=await db.auth.admin.getUserById(student.user_id);
-      if(checkError||!verified.user?.email_confirmed_at||
-         verified.user.email?.toLowerCase()!==student.email.toLowerCase()){
-        skippedUnverified++;continue;
-      }
-      // Recheck before each delivery so a newly disabled switch stops the remainder.
-      const live=await reportControls();
-      if(!live.students)break;
-      const body=studentBody(student,attempts,period,writtenRows.find((x:any)=>x.user_id===student.user_id));
-      const state=await deliver(student.user_id,student.email,"student",period.date,
-        "[학과 포털] 나의 주간 학습 리포트",body);
-      counts[state as keyof typeof counts]++;
-      await new Promise(resolve=>setTimeout(resolve,650));
+  let calPromise:Promise<any>|undefined;
+  for(const candidate of members){
+   try{
+    if(!dryRun&&!(await reportControls()).students)break;
+    const student=await currentStudent(candidate.user_id,admins);
+    if(!student||!(await verifiedStudent(student))){skippedUnverified++;continue}
+    verifiedCount++;
+    let report=await getReport(student.user_id,week);
+    if(!report&&!dryRun){
+     // Retry missing 08:00 snapshots using the exact dashboard generator, never zeros.
+     calPromise??=calendar();
+     report=await generate(student,week,await calPromise);
     }
+    if(!report){if(dryRun)continue;throw Error("SNAPSHOT_MISSING")}
+    const certificates=await read(db.from("student_certifications").select("certificate_code,pass_status,verification_status").eq("user_id",student.user_id).in("certificate_code",["engineer","industrial","ncp"]));
+    const preview=renderStudentMail(student,report,certificates,notices.news,notices.jobs,today);
+    previewed++;
+    if(dryRun)continue;
+    // Recheck opt-in and eligibility immediately before each external delivery.
+    if(!(await reportControls()).students)break;
+    const latest=await currentStudent(student.user_id,admins);
+    if(!latest||latest.email!==student.email||latest.academic_year!==student.academic_year||!(await verifiedStudent(latest))){skippedUnverified++;continue}
+    const state=await deliver(student.user_id,student.email,"student",week,preview.subject,preview.html);
+    counts[state as keyof typeof counts]++;
+    await new Promise(resolve=>setTimeout(resolve,650));
+   }catch{counts.failed++}
   }
-  return response({ok:true,controls,counts,adminResult,skippedUnverified,weekStart:period.date});
- }catch(error){console.error("Weekly learning report failed",error);return response({error:"REPORT_FAILED"},500);}
+  return response({ok:true,dry_run:dryRun,weekStart:week,controls,counts,adminResult,skippedUnverified,verifiedCount,previewed,cohortSize:students.length,approvedNews:selectNews(notices.news).length,openJobs:selectJobs(notices.jobs,2,today).length,emailProviderConfigured:!!mailKey,senderConfigured:!!sender,next:controls.students||dryRun?next:null});
+ }catch{console.error("Weekly report processing failed");return response({error:"REPORT_FAILED"},500)}
 });
