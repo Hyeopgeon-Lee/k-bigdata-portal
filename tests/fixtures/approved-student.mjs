@@ -43,7 +43,7 @@ export async function approvedStudent(context, profileOverride={}, registeredAlu
      return {data:data.slice(offset,offset+max),count:data.length,error:null};
     }
     const builder={
-     select(){mode="select";return this;},
+     select(){if(!(table==="student_certifications"&&mode==="update"))mode="select";return this;},
      eq(k,v){where.push(["eq",k,v]);return this;},
      in(k,v){where.push(["in",k,v]);return this;},
      gte(k,v){where.push(["gte",k,v]);return this;},
@@ -139,3 +139,4 @@ export async function approvedStudent(context, profileOverride={}, registeredAlu
   };`
  }));
 }
+

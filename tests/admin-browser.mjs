@@ -80,14 +80,62 @@ try{
       assert.equal(await filter.inputValue(),"all","staff can still view all account statuses");
     }
     if(name==="certifications"){
-      await page.locator("#cert-status-chart .admin-chart").waitFor();
-      assert.equal(await page.locator("#cert-admin-grade").inputValue(),"2");
+      await page.locator("#cert-grade-chart .admin-chart").waitFor();
+      assert.equal(await page.locator("#cert-admin-grade").count(),0,"single shared grade selector");
+      assert.equal(await page.locator("#cert-export").count(),0,"CSV export removed");
+      assert.equal(await page.locator("#cert-admin-stats .admin-kpi").count(),6);
+      assert.equal(await page.locator("#cert-admin-stats .admin-kpi-value").nth(0).textContent(),"2명");
+      assert.equal(await page.locator("#cert-admin-stats .admin-kpi-value").nth(2).textContent(),"50%");
+      await page.locator("#cert-type-chart .admin-chart").waitFor();
+      await page.locator("#cert-month-chart svg").waitFor();
+      await page.locator("#cert-tab-review").click();
+      assert.equal(await page.locator("#cert-admin-status").inputValue(),"pending");
+      assert.equal(await page.locator("#cert-admin-list .cert-item").count(),1);
+      await page.locator("#cert-admin-list .cert-review-head").click();
+      await page.locator(".cert-admin-note").waitFor();
+      await page.getByRole("button",{name:"반려",exact:true}).click();
+      await page.getByText("반려 사유를 입력해 주세요.",{exact:true}).waitFor();
+      await page.locator(".cert-admin-note").fill("확인 자료 보완");
+      page.once("dialog",d=>d.accept());
+      await page.getByRole("button",{name:"반려",exact:true}).click();
+      await page.getByText("확인 상태를 저장했습니다.",{exact:true}).waitFor();
+      assert.equal(await page.locator("#cert-admin-list .cert-item").count(),0);
+      await page.locator("#cert-admin-status").selectOption("rejected");
+      await page.locator("#cert-admin-list .cert-review-head").click();
+      await page.locator(".cert-admin-note").waitFor();
+      assert.equal(await page.locator(".cert-admin-note").inputValue(),"확인 자료 보완");
+      page.once("dialog",d=>d.accept());
+      await page.getByRole("button",{name:"확인완료",exact:true}).click();
+      await page.getByText("확인 상태를 저장했습니다.",{exact:true}).waitFor();
+      await page.locator("#cert-admin-status").selectOption("verified");
+      await page.locator("#cert-admin-list .cert-review-head").filter({hasText:"2학년 학생 B"}).click();
+      await page.locator(".cert-admin-note").waitFor();
+      page.once("dialog",d=>d.accept());
+      await page.getByRole("button",{name:"확인대기로",exact:true}).click();
+      await page.getByText("확인 상태를 저장했습니다.",{exact:true}).waitFor();
+      await page.locator("#cert-admin-status").selectOption("");
       assert.equal(await page.locator("#cert-admin-list .cert-item").count(),2);
       await page.locator("[data-admin-grade='1']").click();
-      await page.getByText("테스트 학생 · 1학년",{exact:true}).waitFor();
+      await page.getByText("테스트 학생 · 1학년 · 2026000001",{exact:true}).waitFor();
       assert.equal(await page.locator("#cert-admin-list .cert-item").count(),1);
       await page.locator("[data-admin-grade='2']").click();
-      await page.locator("#cert-admin-list .cert-item").nth(1).waitFor();
+      await page.locator("#cert-tab-students").click();
+      assert.equal(await page.locator("#cert-student-list .cert-student-card").count(),2);
+      await page.locator("#cert-student-state").selectOption("no-verified");
+      assert.equal(await page.locator("#cert-student-list .cert-student-card").count(),1);
+      await page.locator("#cert-student-list .cert-student-head").click();
+      await page.locator("#cert-student-list .cert-student-record").waitFor();
+      await page.locator("#cert-tab-overview").click();
+      for(const width of [320,390,768,1280]){
+       await page.setViewportSize({width,height:900});
+       for(const tab of ["overview","review","students"]){
+        await page.locator("#cert-tab-"+tab).click();
+        assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),"certificate "+tab+" "+width+"px no overflow");
+       }
+       await page.locator("#cert-tab-overview").click();
+       if(width===390||width===1280)await page.screenshot({path:"ui-screenshots/admin/certifications-"+width+".png",fullPage:true});
+      }
+      await page.setViewportSize({width:390,height:850});
     }
     if(name==="rooms"){
       await page.locator("#admin-room-week-chart .admin-chart").waitFor();
@@ -459,3 +507,4 @@ try{
  }
  console.log("PASS: eight super-admin routes; alumni tabs, mobile table scroll and shared 390/1280px geometry.");
 }finally{await browser.close();}
+

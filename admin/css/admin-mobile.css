@@ -25,7 +25,7 @@ body[data-admin-page]{
 .admin-main button:disabled{opacity:.55;cursor:not-allowed}
 .admin-main :is(.users-actions,.users-tabs,.users-pagination,.portal-approval-buttons,.portal-auth-actions,.learn-button-group,.learn-period-navigation,.cert-item-actions,.room-row,.help-actions,.admin-actions,.written-actions,.exam-actions,.exam-downloads,.exam-paging,.exam-form-switch,.alumni-admin .tabs,.alumni-admin .actions){flex-wrap:wrap;gap:8px;min-width:0}
 .admin-main :is(.cert-secondary,.room-secondary,.help-secondary,.button--secondary,.button-secondary,.users-secondary,.users-link,.portal-approval-reject,.button--ghost,.study-outline,.learn-period-arrow,.learn-period-today,.learn-choice-button,.admin-nav-toggle,.admin-grade-choice){background:#fff;color:var(--admin-primary);border:1px solid #b6c9df}
-.admin-main :is(.portal-approval-accept,#exam-generate,#cert-export,.admin-monitor-refresh,.users-detail-btn,.help-primary,.button--primary){background:var(--admin-primary);color:#fff;border:1px solid var(--admin-primary)}
+.admin-main :is(.portal-approval-accept,#exam-generate,.admin-monitor-refresh,.users-detail-btn,.help-primary,.button--primary){background:var(--admin-primary);color:#fff;border:1px solid var(--admin-primary)}
 .admin-main :is(.users-danger,.portal-approval-reject,[data-action="reject"],[data-action="adminHide"],[data-action="adminJobHide"],[data-action="adminNewsHide"]){background:#fff4f3!important;color:#a52724!important;border:1px solid #e2b5b1!important}
 .admin-main :is(button[aria-pressed="true"],button[aria-selected="true"]):not(.users-kpi){background:var(--admin-primary)!important;border-color:var(--admin-primary)!important;color:#fff!important}
 .admin-main :is(input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),select,textarea){font-size:16px!important;min-height:46px;max-width:100%;min-width:0;border-radius:10px;word-break:normal}
@@ -189,3 +189,4 @@ body[data-admin-page]{
  body[data-admin-page="learning"] .admin-main .learn-table td[data-label]::before{font-size:13px}
  .admin-main .admin-card-grid{min-width:0}
 }
+

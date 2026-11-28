@@ -1,0 +1,104 @@
+/* Scoped to the administrator certificate dashboard; student-facing CSS is unchanged. */
+.cert-admin-dashboard{min-width:0;display:grid;gap:14px;color:var(--admin-ink)}
+.cert-admin-dashboard [hidden]{display:none!important}
+.cert-dashboard-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.cert-dashboard-head h2{font-size:clamp(21px,2.4vw,26px);line-height:1.35;margin:0 0 4px}
+.cert-dashboard-head p,.cert-panel-description{margin:0;color:var(--admin-muted);font-size:14px}
+.cert-disclaimer{border:1px solid #d8e3ef;background:#f0f5fb;border-radius:10px;padding:12px 14px;color:#48627c;font-size:14px;margin:0;line-height:1.6}
+.cert-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:6px;background:#e9eff7;border-radius:12px}
+.admin-main .cert-tabs button{display:flex;gap:5px;background:#fff;color:var(--admin-primary);border:1px solid transparent;min-width:0;white-space:normal!important;font-size:15px!important;padding:9px 8px!important}
+.cert-tab-count{border-radius:20px;background:#f9e9cc;color:#873e0d;padding:1px 7px;font-size:12px;line-height:1.5;font-variant-numeric:tabular-nums}
+.cert-admin-dashboard .my-page-message{margin:0;font-size:14px}
+.cert-admin-dashboard .my-page-message:empty{display:none}
+.cert-admin-dashboard .my-page-message[data-kind=error]{color:#a52724;background:#fff2f0;padding:12px;border-radius:10px}
+.cert-admin-dashboard .admin-kpis{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 0 14px}
+.cert-admin-dashboard .admin-kpi{background:#fff;min-height:112px;align-content:start;border-top:3px solid #9eb8d6;gap:5px}
+.cert-admin-dashboard .admin-kpi:nth-child(2),.cert-admin-dashboard .admin-kpi:nth-child(3),.cert-admin-dashboard .admin-kpi:nth-child(5){border-top-color:#469e84}
+.cert-admin-dashboard .admin-kpi:nth-child(2) .admin-kpi-value,.cert-admin-dashboard .admin-kpi:nth-child(3) .admin-kpi-value{color:#176b52}
+.cert-admin-dashboard .admin-kpi:nth-child(4),.cert-admin-dashboard .admin-kpi:nth-child(6){border-top-color:#d08b35}
+.cert-admin-dashboard .admin-kpi:nth-child(4) .admin-kpi-value,.cert-admin-dashboard .admin-kpi:nth-child(6) .admin-kpi-value{color:#a15c18}
+.admin-main .cert-kpi-action{background:#f0f5fb;color:#245791;border:1px solid #cfdeef;white-space:normal!important;font-size:12px!important;min-height:36px!important;padding:6px 8px!important;text-align:left;justify-self:start}
+.cert-chart-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:start}
+.cert-chart-grid>div{min-width:0}
+.cert-chart-grid .admin-chart{min-width:0}
+.cert-chart-grid #cert-grade-chart .admin-chart{min-height:238px}
+.cert-chart-grid #cert-holdings-chart .admin-chart{min-height:238px}
+.cert-chart-legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin:8px 0 15px;color:#52667d;font-size:13px}
+.cert-chart-legend span{display:inline-flex;gap:5px;align-items:center}
+.cert-chart-legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
+.cert-type-bars{display:grid;gap:15px}
+.cert-type-row{display:grid;gap:6px;min-width:0}
+.cert-chart-label{display:flex;justify-content:space-between;gap:12px;font-size:14px;align-items:start}
+.cert-chart-label span{min-width:0;overflow-wrap:anywhere;font-weight:650}
+.cert-chart-label strong{white-space:nowrap;font-variant-numeric:tabular-nums}
+.cert-type-track{display:flex;height:13px;border-radius:8px;background:#e7eef7;overflow:hidden}
+.cert-type-track span{height:100%;display:block}
+.cert-type-counts{display:flex;gap:5px;flex-wrap:wrap}
+.cert-type-counts span{font-size:12px;color:#36526e;padding:2px 7px;border-radius:6px;font-variant-numeric:tabular-nums}
+.cert-month-svg{display:block;width:100%;height:auto;overflow:visible;max-width:100%}
+.cert-axis-label{fill:#52667d;font-size:12px;font-family:inherit;font-variant-numeric:tabular-nums}
+.cert-month-detail{border-top:1px solid var(--admin-border);margin-top:10px;padding-top:8px}
+.cert-month-detail summary{cursor:pointer;font-size:14px;font-weight:700;color:var(--admin-primary);padding:7px 2px}
+.cert-month-table{width:100%;border-collapse:collapse;font-size:13px;text-align:center}
+.cert-month-table :is(th,td){padding:6px 3px;border-bottom:1px solid #e4eaf2;white-space:nowrap;font-variant-numeric:tabular-nums}
+.cert-month-table thead{background:#eff4fa}
+.cert-work-panel{background:white;border:1px solid var(--admin-border);border-radius:12px;box-shadow:0 3px 12px #153d8010;padding:18px;min-width:0}
+.cert-work-panel h3{font-size:20px;margin:0 0 5px}
+.cert-panel-description{line-height:1.6;margin:0 0 12px}
+.cert-review-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0}
+.admin-main .cert-status-filter{background:#f6f9fd;color:var(--admin-primary);border:1px solid #d4e0ee;white-space:normal!important;min-width:0;padding:9px 5px!important;font-variant-numeric:tabular-nums}
+.cert-admin-dashboard .cert-admin-filters{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:10px}
+#cert-panel-students .cert-admin-filters{grid-template-columns:minmax(0,2fr) minmax(0,1.25fr) minmax(0,1fr)}
+.cert-admin-dashboard .cert-admin-filters label{font-size:14px;min-width:0}
+.cert-list-count{font-size:14px;color:var(--admin-muted);margin:12px 0;font-weight:650}
+.cert-pagination{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:12px;color:var(--admin-muted);font-size:14px}
+.cert-pagination:empty{display:none}
+.cert-admin-dashboard .cert-badge{font-size:12px;white-space:normal;align-items:center}
+.cert-admin-dashboard .cert-badge.is-pending{background:#fff1d8;color:#925b16}
+.cert-admin-dashboard .cert-badge.is-written{background:#e3efff;color:#20599a}
+.cert-admin-dashboard .cert-badge.is-unregistered{background:#edf1f6;color:#52667d}
+.cert-admin-dashboard .cert-review-card{padding:0;display:block;border:1px solid var(--admin-border);border-radius:10px;background:#fff}
+.cert-review-head,.cert-student-head{list-style:none;cursor:pointer;display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:12px;min-width:0;padding:14px 16px}
+.cert-review-head::-webkit-details-marker,.cert-student-head::-webkit-details-marker{display:none}
+.cert-review-head::after,.cert-student-head::after{content:'▾';color:var(--admin-primary);font-size:17px;justify-self:end;align-self:center}
+details[open]>.cert-review-head::after,details[open]>.cert-student-head::after{content:'▴'}
+.cert-review-copy,.cert-student-identity{display:grid;gap:3px;min-width:0;overflow-wrap:anywhere}
+.cert-review-body,.cert-student-detail{border-top:1px solid var(--admin-border);background:#f7f9fc;padding:14px 16px;min-width:0}
+.cert-review-form{display:grid;gap:10px}
+.cert-review-form label{display:grid;gap:6px;font-weight:700;font-size:14px}
+.cert-review-form textarea{min-height:76px;resize:vertical;font:inherit}
+.cert-review-feedback{font-size:14px;color:#9b352e;margin:0;min-height:0}
+.cert-review-feedback:empty{display:none}
+.admin-main .cert-approve{background:#245e9d;color:#fff;border:1px solid #245e9d}
+.cert-student-list{display:grid;gap:8px}
+.cert-student-card{background:#fff;border:1px solid var(--admin-border);border-radius:10px;min-width:0;overflow:hidden}
+.cert-student-head{grid-template-columns:minmax(0,1fr) minmax(0,180px) minmax(0,165px) auto}
+.cert-student-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.cert-student-stats>span{display:grid;gap:1px;min-width:0}
+.cert-student-stats small{color:var(--admin-muted);font-size:12px}
+.cert-student-stats strong{font-size:18px;color:#245e9d;font-variant-numeric:tabular-nums}
+.cert-student-detail{display:grid;gap:10px}
+.cert-student-record{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;border-bottom:1px solid #e1e8f0;padding:0 0 10px;min-width:0;overflow-wrap:anywhere}
+.cert-student-record>div:first-child{display:grid;gap:3px}
+.cert-student-detail>button{justify-self:start}
+@media(max-width:700px){
+ .cert-admin-dashboard{gap:11px}
+ .cert-dashboard-head p{font-size:13px}
+ .cert-admin-dashboard .admin-kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .cert-admin-dashboard .admin-kpi{padding:11px;min-height:100px;gap:4px}
+ .cert-admin-dashboard .admin-kpi-label{font-size:13px;line-height:1.4}
+ .cert-chart-grid{grid-template-columns:1fr;gap:10px}
+ .cert-chart-grid #cert-grade-chart .admin-chart,.cert-chart-grid #cert-holdings-chart .admin-chart{min-height:0}
+ .cert-work-panel{padding:12px}
+ .cert-admin-dashboard .cert-admin-filters,#cert-panel-students .cert-admin-filters{grid-template-columns:1fr}
+ .cert-review-head{grid-template-columns:minmax(0,1fr) auto;padding:12px}
+ .cert-review-head .cert-badges{grid-column:1/-1;grid-row:2}
+ .cert-review-head::after{grid-column:2;grid-row:1}
+ .cert-student-head{grid-template-columns:minmax(0,1fr) auto;padding:12px;gap:8px}
+ .cert-student-stats{grid-column:1/-1;grid-row:2;border-top:1px solid #e7eef7;padding-top:8px}
+ .cert-student-head .cert-badges{grid-column:1/-1;grid-row:3}
+ .cert-student-head::after{grid-column:2;grid-row:1}
+ .cert-student-detail,.cert-review-body{padding:12px}
+ .cert-month-table{font-size:12px}
+}
+@media(max-width:360px){.admin-main .cert-tabs button,.admin-main .cert-status-filter{font-size:13px!important;padding:8px 4px!important}.cert-tab-count{padding:1px 5px}}
