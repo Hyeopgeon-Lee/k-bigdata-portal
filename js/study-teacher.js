@@ -1,5 +1,6 @@
 /* Super-admin study attendance dashboard; RPC enforces professor authorization. */
 import {isStaleSession} from './study-session-state.mjs';
+import {studyShareModel,attachStudyChartShare} from './study-chart-share.mjs?v=20261128-study-share-2';
 const db=window.portalSupabaseClient,$=id=>document.getElementById(id);
 const DAY=86400000,Z=9*3600000;
 const kdate=value=>new Date(new Date(value).getTime()+Z).toISOString().slice(0,10);
@@ -8,7 +9,7 @@ const dateAt=(week,offset)=>new Date(Date.parse(week+'T00:00:00Z')+offset*DAY).t
 const reasonLabels={personal:'개인 일정',home_study:'집에서 학습',career:'면접·자격증',condition:'컨디션',forgot:'시작 기록 누락',other:'기타'};
 const safe=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=s=>{s=Math.max(0,s||0);return Math.floor(s/3600)+'시간 '+String(Math.floor(s%3600/60)).padStart(2,'0')+'분';};
-let report=null;
+let report=null,loadSequence=0;
 function selectedWeek(){
  const week=$('study-admin-week').value;
  return /^\d{4}-\d\d-\d\d$/.test(week)?week:monday();
@@ -20,8 +21,15 @@ function sessionDuration(s){
 }
 function setStatus(m,bad=false){$('study-admin-status').textContent=m;$('study-admin-status').dataset.error=bad?'true':'false';}
 async function load(){
+ const request=++loadSequence;
+ report=null;
+ $('study-days-chart')?.replaceChildren();
  setStatus('자율학습 통계를 불러오는 중입니다.');
- const {data,error}=await db.rpc('study_admin_dashboard',{p_week_start:selectedWeek()});
+ let response;
+ try{response=await db.rpc('study_admin_dashboard',{p_week_start:selectedWeek()});}
+ catch(error){if(request!==loadSequence)return;throw error;}
+ if(request!==loadSequence)return;
+ const {data,error}=response;
  if(error||!data||!Array.isArray(data.students))throw error||Error('관리자 응답이 올바르지 않습니다.');
  report=data;
  $('study-admin-mail').checked=data.email_enabled===true;
@@ -90,11 +98,14 @@ function render(){
    if(!(seconds>0))continue;
    const day=kdate(session.started_at);
    for(let i=0;i<7;i++)if(day===dateAt(week,i)){
-    days[i]+=seconds/3600;
+    days[i]+=seconds;
     dailyStudents[i].add(session.user_id);
    }
   }
-  ui.renderBars(ui.chartMount($('study-admin-summary'),'study-days-chart'),'요일별 공부시간',days.map((v,i)=>[['월','화','수','목','금','토','일'][i]+' · '+dailyStudents[i].size+'명',Math.round(v*10)/10]),{unit:'시간',caption:'실제 공부한 학생 수(중복 제외) · 휴식시간·검토 대상 세션 제외'});
+  const model=studyShareModel(week,grade,days,dailyStudents.map(set=>set.size));
+  const mount=ui.chartMount($('study-admin-summary'),'study-days-chart');
+  ui.renderBars(mount,'요일별 공부시간',model.rows.map(row=>[row.day+' · '+row.count+'명',row.hours]),{unit:'시간',caption:'실제 공부한 학생 수(중복 제외) · 휴식시간·검토 대상 세션 제외'});
+  attachStudyChartShare(mount,model);
  }
  const comparison=$('study-grade-comparison');
  if(comparison&&ui){

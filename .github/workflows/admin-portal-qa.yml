@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - "admin/**"
+      - "js/study-chart-share.mjs"
       - "css/learning-dashboard.css"
       - "my-learning.html"
       - "js/portal-auth.mjs"
@@ -30,6 +31,7 @@ on:
   pull_request:
     paths:
       - "admin/**"
+      - "js/study-chart-share.mjs"
       - "js/teacher-learning.js"
       - "js/study-teacher.js"
       - "js/written-admin.js"
@@ -54,6 +56,7 @@ jobs:
           node tests/learning-tracking.test.mjs
           node tests/admin-isolation.test.mjs
           node tests/admin-mobile-ui.test.mjs
+          node tests/admin-study-share.test.mjs
           node tests/admin-alumni-integration.test.mjs
           node tests/admin-mock-exam.test.mjs
           node tests/portal-auth.test.mjs

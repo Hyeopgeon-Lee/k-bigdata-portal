@@ -35,3 +35,13 @@ body[data-admin-page="learning"] .study-admin-table .study-grade-divider td stro
  body[data-admin-page="learning"] .study-admin-table .study-grade-divider td,body[data-admin-page="learning"] .study-admin-table .study-grade-empty td{display:block!important;width:100%;grid-column:1/-1}
  body[data-admin-page="learning"] .study-admin-table .study-grade-divider td::before,body[data-admin-page="learning"] .study-admin-table .study-grade-empty td::before{display:none}
 }
+
+/* Only the daily study chart has a local image sharing/export toolbar. */
+.study-chart-share{margin:12px 0 16px;min-width:0}
+.study-chart-share-actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,140px),1fr));gap:8px}
+.study-chart-share-actions button{min-width:0;width:100%;white-space:normal!important;word-break:keep-all}
+.admin-main .study-chart-share-actions .study-share-band{grid-column:1/-1;background:#087b45;color:#fff;border-color:#087b45}
+.admin-main .study-chart-share-actions .study-share-band:hover{background:#066c3d;border-color:#066c3d}
+.study-share-status{font-size:14px;line-height:1.5;color:#334e68;margin:8px 0 0}
+.study-share-manual{width:100%;padding:10px;box-sizing:border-box;margin-top:8px;border:1px solid #b6c9df;background:#f7faff;color:#193b63}
+.study-chart-share [hidden]{display:none!important}
