@@ -110,7 +110,17 @@ export async function approvedStudent(context, profileOverride={}, registeredAlu
         return {data:{rows:rows.slice(0,args?.p_size||25),total:rows.length,counts:{all:3,grade1:1,grade2:2,enrolled:3,leave:0,withdrawn:0,graduated:0,early_employment:0,pending:2,requests:0,mail_failed:0}},error:null};
        }
        if(name==="admin_user_detail")return {data:args?.p_tab==="learning"?{summary:[],recent:[],mocks:[]}:{profile:adminStudents.find(x=>x.user_id===args?.p_user_id)||fixtureMember,weekly_opt_in:false},error:null};
-       if(name==="study_admin_dashboard")return {data:{students:adminStudents.map(s=>({id:s.user_id,name:s.full_name,academic_year:s.academic_year})),plans:[],sessions:[],reasons:[],email_enabled:false},error:null};
+       if(name==="study_admin_dashboard"){
+        const start=args.p_week_start+"T09:00:00+09:00",one=adminStudents.find(s=>s.academic_year===1).user_id,two=adminStudents.find(s=>s.academic_year===2).user_id;
+        const sessions=[
+         {user_id:one,started_at:start,status:"completed",duration_seconds:3600},
+         {user_id:one,started_at:start,status:"completed",duration_seconds:1800},
+         {user_id:two,started_at:start,status:"completed",duration_seconds:7200},
+         {user_id:adminStudents.filter(s=>s.academic_year===2)[1].user_id,started_at:start,status:"needs_review",duration_seconds:3600},
+         {user_id:adminStudents.filter(s=>s.academic_year===2)[1].user_id,started_at:start,status:"completed",duration_seconds:0}
+        ];
+        return {data:{students:adminStudents.map(s=>({id:s.user_id,name:s.full_name,academic_year:s.academic_year})),plans:[],sessions,reasons:[],email_enabled:false},error:null};
+       }
        if(name==="study_admin_diagnostics")return {data:{stale:[],reviews:[],errors:[]},error:null};
        if(name==="portal_written_summary")return {data:adminStudents.filter(x=>!args?.p_grade||x.academic_year===args.p_grade).map(x=>({...x,attempts:1,completed:0,passed:0,solved:1,unique_count:1,mocks:0,rounds:[]})),error:null};
        if(name==="portal_admin_health_summary")return {data:{observedAt:new Date().toISOString(),dbConnections:3,dbMaxConnections:20},error:null};
