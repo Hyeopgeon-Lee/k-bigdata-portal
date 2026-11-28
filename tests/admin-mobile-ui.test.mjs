@@ -6,7 +6,7 @@ for(const page of ["index","accounts","learning","certifications","rooms","help"
  const html=read("admin/"+page+".html");
  assert.match(html,/admin-mobile\.css\?v=20261128-ui-1/);
  assert.match(html,/guard\.mjs\?v=20261128-ui-1/);
- assert.match(html,page==="learning"?/data-admin-module-version="20261128-learning-share-1"/:page==="alumni"?/data-admin-module-version="20261128-alumni-overview-1"/:page==="certifications"?/data-admin-module-version="20261128-cert-dashboard-1"/:/data-admin-module-version="20261128-ui-1"/);
+ assert.match(html,page==="learning"?/data-admin-module-version="20261128-learning-share-1"/:page==="alumni"?/data-admin-module-version="20261128-alumni-overview-1"/:page==="certifications"?/data-admin-module-version="20261128-cert-dashboard-1"/:page==="help"?/data-admin-module-version="20261128-help-filter-1"/:/data-admin-module-version="20261128-ui-1"/);
 }
 assert.match(read("admin/js/guard.mjs"),/await import\("\.\/admin-ui\.mjs/);
 assert.ok(read("admin/js/guard.mjs").indexOf("context.isAdmin!==true")<read("admin/js/guard.mjs").indexOf("setupAdminUI"));
