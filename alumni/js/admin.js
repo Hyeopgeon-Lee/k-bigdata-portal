@@ -201,12 +201,17 @@ async function previewMail(){
   if(design&&frame&&typeof mailPreview.html==='string'&&mailPreview.html){
    frame.srcdoc=mailPreview.html;design.hidden=false;design.open=true;
   }else clearMailDesign();
-  U.qs('#admin-confirm-mail').disabled=!mailPreview.available;
+  const quota=mailPreview.quota;
+  if(quota?.daily&&quota?.monthly){
+   U.qs('#admin-mail-preview').insertAdjacentHTML('beforeend',`<section class="mail-quota"><strong>Resend 무료 한도</strong><p>일일 ${quota.daily.used} / ${quota.daily.limit}건 · 월간 ${quota.monthly.used} / ${quota.monthly.limit}건</p><p>발송 가능 ${quota.available}건 · 일일 초기화 ${U.esc(new Date(quota.daily.resets_at).toLocaleString('ko-KR',{timeZone:'Asia/Seoul'}))}</p></section>`);
+  }
+  if(quota?.allowed!==true)U.status(mailMessage(),quota?.message||'발송 한도를 확인할 수 없어 발송을 차단했습니다.','error');
+  U.qs('#admin-confirm-mail').disabled=!mailPreview.available||quota?.allowed!==true;
  }catch(e){if(generation===previewGeneration)U.status(mailMessage(),e.message,'error')}
  finally{U.busy(button,false)}
 }
 async function sendSelectedMail(){
- if(!mailPreview||mailBusy||!mailPreview.available)return;
+ if(!mailPreview||mailBusy||!mailPreview.available||mailPreview.quota?.allowed!==true)return;
  const preview=mailPreview,item={...mailItem};
  if(!confirm(groupLabel(preview.groups[0])+(preview.groups.length>1?' 외 '+(preview.groups.length-1)+'개 그룹':'')+' · 발송 대상 '+preview.available+'명에게 메일을 발송할까요?'))return;
  mailBusy=true;

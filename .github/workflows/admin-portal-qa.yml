@@ -66,6 +66,7 @@ jobs:
           node tests/room-integration.test.mjs
           node tests/alumni-portal.test.mjs
           node tests/alumni-approval-mail-targets.test.mjs
+          node tests/portal-event-quota.test.mjs
       - name: Install isolated Chromium
         run: |
           npm install --no-save --no-package-lock playwright@1.56.1

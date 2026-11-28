@@ -23,7 +23,7 @@ try{
    if(payload.action==="adminNewsPublish")newsFixture.status="APPROVED";
    if(payload.action==="adminMailPreview"||payload.action==="adminNewsSendMail"){
     mailRequests.push(payload);
-    const result=payload.action==="adminMailPreview"?{token:"mock",counts:payload.data.groups.map(group=>({group,total:3,sent:1,sending:0,available:2})),available:payload.data.groups.length*2}:{sent:4,failed:0,done:true,next_cursor:4};
+    const result=payload.action==="adminMailPreview"?{token:"mock",counts:payload.data.groups.map(group=>({group,total:3,sent:1,sending:0,available:2})),available:payload.data.groups.length*2,quota:{allowed:true,available:85,daily:{used:15,limit:100,remaining:85,resets_at:"2027-01-01T00:00:00Z"},monthly:{used:15,limit:3000,remaining:2985,resets_at:"2027-01-01T00:00:00Z"}}}:{sent:4,failed:0,done:true,next_cursor:4};
     return route.fulfill({status:200,contentType:"application/json",headers:{"Access-Control-Allow-Origin":"*"},body:JSON.stringify({success:true,data:result})});
    }
    const rows=payload.action==="adminList"&&payload.data?.view==="alumni"?[{

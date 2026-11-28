@@ -44,6 +44,7 @@ class Query {
 globalThis.__alumniTestDb={
  from:table=>new Query(table),
  rpc:async(name,{p_kind,p_record,p_groups})=>{
+  if(name==="portal_mail_lock"||name==="portal_mail_unlock")return {data:true,error:null};
   assert.equal(name,"alumni_mail_recipients");
   return {data:membership.filter(x=>p_groups.includes(x.group)).sort((a,b)=>a.email.localeCompare(b.email)).map(person=>{
    const row=tables.alumni_network_mail_outbox.find(x=>x.record_id===p_record&&x.record_kind===p_kind&&x.recipient===person.email);
@@ -53,13 +54,16 @@ globalThis.__alumniTestDb={
 };
 globalThis.Deno={env:{get:key=>key==="RESEND_API_KEY"?"mock-key":"test"}};
 const actualFetch=globalThis.fetch;
+let usage=0;
 globalThis.fetch=async (url,options)=>{
+ if(url==="https://api.resend.com/usage"){const resets_at="2027-01-01T00:00:00Z";return Response.json({emails:{daily:{used:usage,limit:100,resets_at},monthly:{used:usage,limit:3000,resets_at}}});}
  assert.equal(url,"https://api.resend.com/emails");const payload=JSON.parse(options.body);
- assert.equal(payload.to.length,1);mailCalls.push(payload.to[0]);mailPayloads.push(payload);
+ assert.equal(payload.to.length,1);mailCalls.push(payload.to[0]);mailPayloads.push(payload);usage++;
  return Response.json({id:"mock-"+mailCalls.length});
 };
 const source=raw.slice(raw.indexOf("\n")+1,raw.indexOf("Deno.serve(")).replace('from "../_shared/portal-mail.mjs"','from '+JSON.stringify(new URL("../supabase/functions/_shared/portal-mail.mjs",import.meta.url).href));
-const mod=await import("data:text/javascript;base64,"+Buffer.from(stripTypeScriptTypes("const createClient=()=>globalThis.__alumniTestDb;\n"+source+"\nexport {handle};")).toString("base64"));
+const adjusted=source.replace('from "./events.ts"','from '+JSON.stringify(new URL("../supabase/functions/alumni-network-api/events.ts",import.meta.url).href)).replace('from "../_shared/mail-quota.mjs"','from '+JSON.stringify(new URL("../supabase/functions/_shared/mail-quota.mjs",import.meta.url).href));
+const mod=await import("data:text/javascript;base64,"+Buffer.from(stripTypeScriptTypes("const createClient=()=>globalThis.__alumniTestDb;\n"+adjusted+"\nexport {handle};")).toString("base64"));
 const {handle}=mod;
 try {
  const submitted=await handle("submitJob",{company:"회사",job_title:"개발자",recruit_type:"신입",employment_type:"정규직",job_url:"https://example.test/job",always_open:true},graduate);
@@ -82,6 +86,9 @@ try {
  membership.push({email:"new@example.test",group:"grade1"});
  await assert.rejects(handle("adminNewsSendMail",{...params,token:preview.token,confirmed:true},administrator),/변경/);
  membership=membership.filter(x=>x.email!=="new@example.test");
+ usage=99;
+ const blocked=(await handle("adminMailPreview",params,administrator)).data;assert.equal(blocked.quota.allowed,false);assert.match(blocked.quota.message,/초과/);
+ await assert.rejects(handle("adminNewsSendMail",{...params,token:blocked.token,confirmed:true},administrator),/초과/);assert.equal(mailCalls.length,0);usage=0;
  const send=(await handle("adminNewsSendMail",{...params,token:preview.token,confirmed:true},administrator)).data;
  assert.equal(send.sent,2);assert.equal(send.failed,0);assert(mailPayloads.every(x=>x.html===preview.html&&x.subject===preview.subject));assert.deepEqual(mailCalls.sort(),["first@example.test","graduate@example.test"]);
  const repeat=(await handle("adminMailPreview",params,administrator)).data;assert.equal(repeat.available,0);

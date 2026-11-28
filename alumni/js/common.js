@@ -35,6 +35,9 @@
       const link = document.createElement('a'); link.href = 'jobs.html'; link.textContent = '채용정보';
       const alumniLink = nav.querySelector('a[href="alumni.html"]'); nav.insertBefore(link, alumniLink || null);
     }
+    if (nav && !nav.querySelector('a[href="events.html"]')) {
+      const link=document.createElement('a');link.href='events.html';link.textContent='행사·특강';nav.insertBefore(link,nav.querySelector('a[href="alumni.html"]')||null);
+    }
     if (nav && !nav.querySelector('a[href="news.html"]')) {
       const link = document.createElement('a'); link.href = 'news.html'; link.textContent = '동문소식';
       const alumniLink = nav.querySelector('a[href="alumni.html"]'); nav.insertBefore(link, alumniLink || null);

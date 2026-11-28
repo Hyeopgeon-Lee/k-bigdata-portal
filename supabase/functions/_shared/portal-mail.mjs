@@ -98,3 +98,16 @@ export function renderAlumniAnnouncement(kind,recordId,item){
   const heading=admitted?admitted[1]+' 졸업생의 대학원 합격을 축하합니다!':title;
   return {subject,html:renderPortalMail({kind:tone,title:heading,category:newsLabels[type]||'동문소식',date:dateLabel(item.event_date||item.approved_at||item.created_at),bodyHtml:hero+mailParagraphs(item.content),actions:[{href,label:'동문소식 자세히 보기'}],footerNote:'수신 설정은 아래 링크에서 언제든 변경할 수 있습니다.',footerLinks:mailSettings})};
 }
+
+export const EVENT_IMAGES = {
+  presentation:'https://ai.k-bigdata.kr/assets/activities/project-presentation-2026.jpg',
+  awards:'https://ai.k-bigdata.kr/assets/activities/project-awards-2026.webp'
+};
+export function renderEventAnnouncement(event, reminder=false, unsubscribe=''){
+ const title=plain(event.title),kind=plain(event.kind),id=encodeURIComponent(event.id);
+ const date=v=>v?new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',dateStyle:'full',timeStyle:'short'}).format(new Date(v)):'';
+ const source=Object.values(EVENT_IMAGES).includes(event.image_url)?event.image_url:'';
+ const photo=source?'<img src="'+mailEscape(source)+'" width="100%" alt="학과 활동 현장 사진" style="display:block;width:100%;height:auto;border-radius:9px;margin:0 0 7px;"><p style="margin:0 0 16px;color:#64748b;font-size:12px;text-align:center;">학과 활동 사진 · 이전 행사</p>':'';
+ const href=PORTAL_URL+'/alumni/events.html?id='+id;
+ return {subject:'['+(reminder?'참여 일정 안내':kind+' 안내')+'] '+title,html:renderPortalMail({kind:'news',title,category:reminder?'행사 참여 안내':kind+' · 학과 행사',bodyHtml:photo+mailParagraphs(event.description)+mailDetails([['일시',date(event.starts_at)],['장소',event.venue],['신청 마감',event.requires_registration?date(event.deadline):''],['모집 인원',event.requires_registration&&event.capacity?event.capacity+'명':'']], 'news'),actions:[{href,label:event.requires_registration?'행사 상세 및 참여 신청':'행사 자세히 보기'}],footerNote:'학과 행사 안내 수신에 동의한 회원에게 발송되었습니다.',footerLinks:[{href:unsubscribe||PORTAL_URL+'/alumni/events.html#preferences',label:'행사 메일 수신 거부'}]})};
+}

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ko" data-admin-access="pending">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>행사·특강 관리 | 포털 관리자</title>
+<style id="learning-lock">body>:not(#portal-auth-layer):not(#learning-notice){display:none!important}#learning-notice{position:fixed;inset:0;display:grid;place-items:center;background:#f7f9fc;color:transparent;font-size:0;z-index:1}#learning-notice::after{content:"";width:32px;height:32px;border:3px solid #dce6f3;border-top-color:#245791;border-radius:50%;animation:admin-spin .8s linear infinite}@keyframes admin-spin{to{transform:rotate(360deg)}}</style>
+<link rel="stylesheet" href="../css/style.css?v=20261112-page-intro-2">
+<link rel="stylesheet" href="../css/portal-ux.css?v=20261112-page-intro-2">
+<link rel="stylesheet" href="css/admin.css?v=20261128-ui-1">
+<link rel="stylesheet" href="../alumni/css/jobs.css?v=20261113-alumni-unified-1">
+<link rel="stylesheet" href="css/alumni.css?v=20261128-event-quota-1">
+<link rel="stylesheet" href="css/admin-mobile.css?v=20261128-ui-1"><link rel="stylesheet" href="css/events.css?v=20261128-events-1"></head>
+<body data-admin-module="events.js" data-admin-module-version="20261128-event-quota-1" data-admin-page="events">
+<p id="learning-notice" role="status">관리자 로그인 및 권한 확인 중입니다.</p>
+<header class="admin-header site-header">
+  <div class="admin-header-inner header-inner">
+    <a class="admin-brand brand" href="index.html" aria-label="학과 관리자 포털 홈"><span class="brand-mark" aria-hidden="true"><span></span></span><span class="admin-brand-copy brand-copy"><strong>빅데이터SW학과</strong><small>관리자 포털</small></span></a>
+    <nav class="admin-header-links" aria-label="관리자 상단 메뉴"><a class="admin-header-link" href="index.html">관리자 홈</a><a class="admin-header-link" href="../index.html">포털 홈</a><a class="admin-header-link" href="../mypage.html">마이페이지</a></nav>
+  </div>
+</header>
+<main id="main-content" class="admin-main">
+<div class="admin-intro admin-intro--subpage"><div class="admin-intro-copy"><p class="admin-kicker">ADMIN PORTAL</p><h1>행사·특강 관리</h1><p>행사 등록, 참여 신청, 메일 발송 및 참석 현황을 관리합니다.</p></div><a class="admin-intro-link" href="index.html"><span aria-hidden="true">←</span> 관리자 홈</a></div>
+<section id="admin-denied" class="admin-message" hidden><p id="admin-gate-status" role="alert"></p><a href="../index.html">포털 홈으로 돌아가기</a></section>
+<div id="admin-secure" hidden>
+<nav class="admin-menu" aria-label="관리자 업무 메뉴"><a class="admin-menu-home" href="index.html">관리자 홈</a><a href="accounts.html?view=approvals">가입 승인 요청</a><a href="accounts.html?view=students">통합 사용자 관리</a><a href="learning.html">학급 학습통계</a><a href="ready.html">취업 준비 관리</a><a href="certifications.html">학생 자격증 관리</a><a href="mock-exam.html">실전 모의고사 생성</a><a href="rooms.html">프로젝트실 관리</a><a href="help.html">학과 요청 관리</a><a href="alumni.html">졸업생 네트워크 관리</a></nav>
+<div class="event-layout">
+<section class="event-panel"><div class="event-heading"><h2>Resend 무료 발송량</h2><button id="quota-refresh" type="button" class="button--secondary">새로고침</button></div><div id="event-quota" class="event-quota" aria-live="polite">사용량 확인 중…</div></section>
+<section class="event-panel"><h2>행사·특강 등록</h2><form id="event-form"><div class="event-fields">
+<label>구분<select name="kind"><option>특강</option><option>축제</option><option>간담회</option><option>홈커밍데이</option><option>기타</option></select></label>
+<label>행사명<input name="title" required maxlength="150"></label><label>행사 일시 (한국 시간)<input type="datetime-local" name="starts_at" required></label><label>행사 장소<input name="venue" required maxlength="200"></label>
+<label class="event-wide">안내 내용<textarea name="description" required maxlength="4000" rows="5"></textarea></label>
+<label>학과 활동 사진<select name="image"><option value="presentation">2026 프로젝트 발표회</option><option value="awards">2026 작품 경진대회 시상식</option><option value="">이미지 없음</option></select></label><img id="event-photo-preview" class="event-photo-select" alt="선택한 학과 활동 사진">
+<div class="event-wide event-groups"><strong>대상</strong><label><input type="checkbox" name="groups" value="alumni" checked>졸업생</label><label><input type="checkbox" name="groups" value="grade1">1학년</label><label><input type="checkbox" name="groups" value="grade2">2학년</label></div>
+<div class="event-wide event-groups"><label><input type="checkbox" name="requires_registration">온라인 참여 신청 받기</label></div><label data-registration hidden>신청 마감 (한국 시간)<input type="datetime-local" name="deadline"></label><label data-registration hidden>모집 인원 (공란은 제한 없음)<input type="number" name="capacity" min="1" max="10000"></label>
+</div><p class="event-muted">등록만으로는 메일이 발송되지 않습니다. 행사 선택 후 발송 인원과 한도를 확인하세요.</p><button type="submit">행사 등록</button></form><p id="event-status" role="status" aria-live="polite"></p></section>
+<section class="event-panel"><div class="event-heading"><h2>등록 행사 및 참여 현황</h2><button id="event-refresh" class="button--secondary">새로고침</button></div><div id="event-list" class="event-list" aria-live="polite"></div></section>
+</div>
+<dialog id="event-mail-dialog" class="event-dialog"><div class="event-heading"><h2 id="event-mail-title">행사 메일 발송</h2><button id="event-mail-close" type="button" class="button--secondary">닫기</button></div><div id="event-mail-groups" class="event-groups"></div><p id="event-mail-message" role="status" aria-live="polite"></p><div id="event-mail-quota" class="event-quota"></div><iframe id="event-mail-frame" sandbox="" referrerpolicy="no-referrer" title="실제 메일 미리보기" hidden></iframe><div class="event-actions"><button id="event-mail-preview" type="button" class="button--secondary">대상 인원·한도 확인</button><button id="event-mail-send" type="button" disabled>확인 후 발송</button></div></dialog>
+<dialog id="event-registration-dialog" class="event-dialog"><div class="event-heading"><h2>참여 신청자 관리</h2><button id="event-registration-close" type="button" class="button--secondary">닫기</button></div><div id="event-registrations"></div></dialog>
+</div></main><script type="module" src="../js/portal-auth.mjs?v=20261128-weekly-menu-1"></script><script type="application/x-learning" data-module="js/guard.mjs?v=20261128-ui-1"></script></body></html>
