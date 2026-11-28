@@ -14,7 +14,7 @@ const activeMembers=()=>read(db.from("profiles").select(cols).eq("approval_statu
 const settings=()=>read(db.from("ready_operations").select("*").eq("singleton",true).single());
 const text=(v:any,max=200)=>String(v??"").trim().slice(0,max);
 const fields=["career_target","github_url","github_pages_url","github_pages_repo","notion_url","portfolio_url","blog_url","resume_status","cover_letter_status"];
-const docStatus:Record<string,string[]>={resume_status:["미작성","작성 중","1차 완성","최종 완성"],cover_letter_status:["미작성","작성 중","기본본 완성","기업 지원 가능"]};
+const docStatus:Record<string,string[]>={resume_status:["미작성","작성중","1차 완성","최종 완성"],cover_letter_status:["미작성","작성중","기본본 완성","기업 지원 가능"]};
 function cleanURL(v:any){if(!v)return "";const u=new URL(text(v,1000));if(!["http:","https:"].includes(u.protocol)||u.username||u.password||u.port)throw Error("URL을 확인하세요.");return u.href}
 async function bundle(m:any,detail=false){
  const id=m.user_id;
@@ -95,11 +95,12 @@ Deno.serve(async req=>{
   const {data:auth,error}=await caller.auth.getUser(token);if(error||!auth.user)return reply({error:"LOGIN_REQUIRED"},401);
   const a=await read(caller.rpc("ready_access"));if(!a?.read&&!a?.admin)return reply({error:"FORBIDDEN"},403);
   const id=auth.user.id;
-  if(action==="admin"||action==="admin_detail"||action==="admin_check"||action==="admin_settings"||action==="admin_snapshot"){
+  if(action==="admin"||action==="admin_detail"||action==="admin_check"||action==="admin_settings"||action==="admin_snapshot"||action==="admin_send_weekly"){
    if(!a.admin)return reply({error:"FORBIDDEN"},403);
    if(action==="admin"){const rows=await roster();return reply({rows,summary:stats(rows),settings:await settings(),logs:await read(db.from("ready_check_runs").select("*").order("started_at",{ascending:false}).limit(50)),snapshots:await read(db.from("ready_weekly_snapshots").select("*").order("snapshot_date",{ascending:false}).limit(15))})}
    if(action==="admin_settings"){const op=await settings();return reply({settings:op})}
    if(action==="admin_snapshot")return reply(await weekly(false));
+   if(action==="admin_send_weekly"){if(!(await settings()).weekly_mail_enabled)return reply({error:"주간 메일 운영이 아직 활성화되지 않았습니다."},409);return reply(await weekly(true));}
    const m=(await activeMembers()).find((x:any)=>x.user_id===b.user_id);if(!m)return reply({error:"NOT_FOUND"},404);
    if(action==="admin_detail")return reply(await bundle(m,true));
    if(m.enrollment_status==="leave")return reply({error:"휴학생 점검 제외"},400);return reply(await runCheck(m.user_id,false));

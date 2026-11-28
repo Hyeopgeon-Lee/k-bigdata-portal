@@ -312,7 +312,7 @@ export const services = [
   }
 ];
 
-export const serviceKind = service => service.id === "tech-blog" ? "EXTERNAL" : service.id==="alumni" ? "SERVICE" : /^https:\/\//.test(service.url) ? "SERVICE" : "GUIDE";
+export const serviceKind = service => service.id === "tech-blog" ? "EXTERNAL" : ["alumni","ready"].includes(service.id) ? "SERVICE" : /^https:\/\//.test(service.url) ? "SERVICE" : "GUIDE";
 export const serviceAudience = service => ["ready","apply","room","help"].includes(service.id) ? "학생 운영" : service.id === "alumni" ? "동문 네트워크" : ["portfolio","tech-blog"].includes(service.id) ? "공개 참고자료" : "포털 학습";
 export const isExternal = url => /^https:\/\//.test(url);
 export const studentJourney = [
