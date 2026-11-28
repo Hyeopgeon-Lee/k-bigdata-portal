@@ -19,6 +19,9 @@ for(const mail of [grade1,grade2]){
  assert.match(mail.html,/최근 4주 학습 추이/);assert.match(mail.html,/과목별 학습 현황/);assert.match(mail.html,/기술면접/);assert.match(mail.html,/1회 연습 · 1문항/);assert.match(mail.html,/동문소식/);assert.match(mail.html,/확정 동문소식 &lt;img&gt;/);assert.match(mail.html,/1시간 15분/);assert.match(mail.html,/학과 일정 &lt;script&gt;/);assert.match(mail.html,/weekly-report\.html\?week=2026-11-23/);assert.match(mail.html,/bgcolor="#(?:2456ad|6b99dc)"/);
  assert.doesNotMatch(mail.html,/<(?:script|img|svg|canvas|iframe)\b/i);assert.doesNotMatch(mail.html,/제외 (?:PENDING|HIDDEN|REJECTED)/);
 }
+assert.equal((grade1.html.match(/bgcolor="#20976c"/g)||[]).length,4);
+assert.equal((grade1.html.match(/bgcolor="#e1e6eb"/g)||[]).length,3);
+assert.match(grade1.html,/valign="bottom"/);
 assert.doesNotMatch(grade1.html,/채용공고|공고 today|alumni\/jobs\.html|alumni\/job-detail/);
 assert.match(grade2.html,/채용공고 4건/);assert.match(grade2.html,/D-DAY/);assert.match(grade2.html,/D-4/);assert.match(grade2.html,/공고 after/);assert.doesNotMatch(grade2.html,/공고 past|공고 pending|공고 hidden|공고 invalid|공고 missing|공고 always/);
 const open=renderStudentMail(student2,report,[],news,[jobs[3]],today).html;
