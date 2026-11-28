@@ -59,6 +59,7 @@ jobs:
           node tests/admin-study-share.test.mjs
           node tests/admin-learning-visualization.test.mjs
           node tests/admin-alumni-integration.test.mjs
+          node tests/admin-alumni-overview.test.mjs
           node tests/admin-mock-exam.test.mjs
           node tests/portal-auth.test.mjs
           node tests/portal-student-certifications.test.mjs

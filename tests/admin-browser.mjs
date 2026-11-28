@@ -10,10 +10,13 @@ try{
   const context=await browser.newContext({viewport:{width:390,height:850}});
   await approvedStudent(context,{signup_type:"student",enrollment_status:"enrolled",academic_year:2},false,admin,admin);
   const newsFixture={news_id:"NTEST",title:"테스트 동문소식",content:"승인 전 관리자 검토용 내용",status:"PENDING",news_type_label:"취업",mail_status:"WAITING",mail_requested:true,created_at:"2026-11-28"};
-  const mailRequests=[];
+  const jobFixture={job_id:"JTEST",company:"테스트 채용 회사",job_title:"개발자 채용",status:"PENDING",recruit_type:"신입",employment_type:"정규직",always_open:true,created_at:"2026-11-28"};
+  const recentNews={...newsFixture,news_id:"NOLDER",title:"최근 공개된 동문소식",status:"APPROVED",created_at:"2026-11-29"};
+  const mailRequests=[],listRequests=[];
   // All legacy alumni requests reuse the logged-in portal session; mock only the Edge response.
   await context.route("https://zjsindkakjfzmjgrkaou.supabase.co/functions/v1/alumni-network-api",route=>{
    const payload=route.request().postDataJSON()||{};
+   if(payload.action==="adminList")listRequests.push(payload.data.view);
    if(payload.action==="adminNewsPublish")newsFixture.status="APPROVED";
    if(payload.action==="adminMailPreview"||payload.action==="adminNewsSendMail"){
     mailRequests.push(payload);
@@ -24,7 +27,7 @@ try{
     alumni_id:"fixture-alumni",name:"졸업생 테스트",email:"alumni@example.test",
     phone:"010-1234-5678",graduation_year:2025,company:"테스트 회사",
     career_mail_enabled:true,alumni_news_mail_enabled:false,status:"APPROVED"
-   }]:payload.action==="adminList"&&payload.data?.view==="news"?[newsFixture]:[];
+   }]:payload.action==="adminList"&&payload.data?.view==="news"?[recentNews,newsFixture]:payload.action==="adminList"&&payload.data?.view==="jobs"?[jobFixture]:[];
    return route.fulfill({status:200,contentType:"application/json",
     headers:{"Access-Control-Allow-Origin":"*"},
     body:JSON.stringify({success:true,data:rows,message:"정상 처리"})});
@@ -229,7 +232,35 @@ try{
       await page.setViewportSize({width:390,height:850});
     }
     if(name==="alumni"){
+      await page.locator('#admin-overview [data-news-id="NTEST"]').first().waitFor({state:"visible"});
+      await page.locator('#admin-overview [data-job-id="JTEST"]').first().waitFor({state:"visible"});
+      assert.equal(await page.locator('[data-view="overview"]').getAttribute('aria-selected'),'true');
+      assert.equal(await page.locator('[data-overview-count="news"]').textContent(),'1건');
+      assert.equal(await page.locator('[data-overview-count="jobs"]').textContent(),'1건');
+      assert.match(await page.locator('[data-overview-kind="news"] .alumni-overview-item').first().textContent(),/테스트 동문소식/,"pending comes before newer, approved content");
+      assert.ok(!listRequests.includes('alumni'),"initial overview never fetches alumni list");
+      const directoryCalls=()=>page.evaluate(()=>window.__qaAlumniDirectoryCalls||[]);
+      assert.equal((await directoryCalls()).length,0,"initial overview never queries the directory RPC");
+      assert.equal(await page.locator('#admin-table').isVisible(),false);
+      assert.equal(await page.locator('#alumni-admin-charts').count(),0);
+      await page.locator('#admin-year').selectOption('2025');
+      await page.locator('#admin-query').fill('테스트');
+      assert.equal((await directoryCalls()).length,0,"editing filters does not query directory");
+      await page.locator('#admin-reset-search').click();
+      await page.locator('#admin-overview [data-news-id="NTEST"][data-action="review"]').click();
+      await page.getByText("승인 전 관리자 검토용 내용",{exact:true}).waitFor();
+      await page.locator("#admin-close-content").click();
+      for(const width of [360,390,430,768,1280]){
+       await page.setViewportSize({width,height:850});
+       const geometry=await page.evaluate(()=>({viewport:innerWidth,body:document.documentElement.scrollWidth}));
+       assert.ok(geometry.body<=geometry.viewport+1,"alumni overview "+width+"px no global overflow");
+       if(width===390||width===1280)await page.screenshot({path:"ui-screenshots/admin/alumni-overview-"+width+".png",fullPage:true});
+      }
+      await page.setViewportSize({width:390,height:850});
+      await page.locator('#admin-refresh').click();
       await page.locator(".admin-table--alumni tbody tr").first().waitFor({state:"visible",timeout:15000});
+      assert.equal((await directoryCalls()).length,1);
+      assert.equal(await page.locator('#admin-overview').isVisible(),false);
       const narrow=await page.evaluate(()=>{
         const wrap=document.querySelector("#admin-table");
         const th=[...document.querySelectorAll(".admin-table--alumni th")];
@@ -258,19 +289,23 @@ try{
       assert.equal(desktop.shell,desktop.parent,"alumni header and content widths match");
       await page.screenshot({path:"ui-screenshots/admin/alumni-admin-desktop.png",fullPage:true});
       await page.locator("#admin-year").selectOption("2025");
+      assert.equal((await directoryCalls()).length,1,"filter changes never auto-query");
+      assert.equal(await page.locator('#admin-table').isVisible(),false);
+      await page.locator("#admin-refresh").click();
       await page.waitForFunction(()=>document.getElementById("admin-summary")?.textContent.includes("1명"));
       assert.equal(await page.locator(".admin-table--alumni tbody tr").count(),1);
       await page.locator("#admin-year").selectOption("");
+      await page.locator("#admin-refresh").click();
       await page.waitForFunction(()=>document.getElementById("admin-summary")?.textContent.includes("2명"));
       await page.setViewportSize({width:390,height:850});
       page.on("dialog",dialog=>dialog.accept());
       await page.locator('[data-view="news"]').click();
-      await page.getByRole("button",{name:"내용 확인",exact:true}).click();
+      await page.locator('[data-news-id="NTEST"][data-action="review"]').click();
       await page.getByText("승인 전 관리자 검토용 내용",{exact:true}).waitFor();
       await page.locator("#admin-close-content").click();
-      assert.equal(await page.locator('[data-action="mail"]').count(),0);
-      await page.getByRole("button",{name:"승인·게시",exact:true}).click();
-      await page.getByRole("button",{name:"메일 발송",exact:true}).click();
+      assert.equal(await page.locator('[data-news-id="NTEST"][data-action="mail"]').count(),0);
+      await page.locator('[data-news-id="NTEST"][data-action="adminNewsPublish"]').click();
+      await page.locator('[data-news-id="NTEST"][data-action="mail"]').click();
       assert.equal(await page.locator("#admin-confirm-mail").isDisabled(),true);
       await page.locator('#admin-mail-groups input[value="alumni"]').check();
       await page.locator('#admin-mail-groups input[value="grade2"]').check();
@@ -290,8 +325,12 @@ try{
       await page.locator("#admin-close-mail").click();
 
       await page.getByRole("button",{name:"채용정보 관리"}).click();
-      await page.getByText("조건에 맞는 데이터가 없습니다.").waitFor({state:"visible",timeout:15000});
+      await page.locator('[data-job-id="JTEST"][data-action="review"]').waitFor({state:"visible",timeout:15000});
+      const countBeforeReturn=(await directoryCalls()).length;
       await page.getByRole("button",{name:"졸업생 현황"}).click();
+      assert.equal(await page.locator('#admin-table').isVisible(),false);
+      assert.equal((await directoryCalls()).length,countBeforeReturn);
+      await page.locator('#admin-refresh').click();
       await page.locator(".admin-table--alumni tbody tr").first().waitFor({state:"visible",timeout:15000});
       await page.setViewportSize({width:390,height:850});
     }

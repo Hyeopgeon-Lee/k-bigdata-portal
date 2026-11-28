@@ -105,6 +105,7 @@ export async function approvedStudent(context, profileOverride={}, registeredAlu
        if(name==="admin_list_students")return {data:adminStudents,error:null};
        if(name==="admin_pending_signup_requests")return {data:pendingStudents,error:null};
        if(name==="admin_alumni_directory"){
+        (window.__qaAlumniDirectoryCalls ||= []).push({...args});
         const rows=adminAlumni.filter(x=>!args?.p_year||String(x.graduation_year)===String(args.p_year));
         return {data:{rows,total:rows.length,employment_values:["취업","구직"],companies:rows.length,mentor_count:0},error:null};
        }

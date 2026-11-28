@@ -140,3 +140,43 @@
 .alumni-admin .admin-content-value{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0 14px}
 .alumni-admin .admin-mail-count{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:10px 0;border-bottom:1px solid var(--admin-border)}
 @media(max-width:700px){.alumni-admin .admin-work-dialog{width:calc(100% - 20px);padding:16px}.alumni-admin .admin-work-dialog .actions button{flex:1 1 100%;min-height:44px}}
+
+/* Prioritize actionable posts. The directory is a separate, explicit search. */
+.alumni-admin .alumni-overview{display:grid;gap:14px;margin:0 0 20px;min-width:0}
+.alumni-admin .alumni-overview-heading{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.alumni-admin .alumni-overview-heading h2,.alumni-admin .alumni-section-title{margin:0 0 4px;font-size:21px;line-height:1.4;font-weight:800;color:var(--admin-ink)}
+.alumni-admin .alumni-overview-heading p,.alumni-admin .alumni-search-hint{margin:0 0 6px;color:var(--admin-muted);font-size:14px;line-height:1.6}
+.alumni-admin .alumni-search-hint{margin-bottom:16px}
+.alumni-admin .alumni-overview-counts,.alumni-admin .alumni-overview-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.alumni-admin .alumni-overview-count{display:grid;gap:5px;background:#f2f7ff;color:#214a7c;padding:16px;border:1px solid #cdddf2;border-radius:12px;min-width:0}
+.alumni-admin .alumni-overview-count--pending{background:#fff4e5;color:#89450b;border-color:#f3d3a7}
+.alumni-admin .alumni-overview-count span{font-size:14px;font-weight:750;line-height:1.45}
+.alumni-admin .alumni-overview-count strong{font-size:28px;font-variant-numeric:tabular-nums;line-height:1.2}
+.alumni-admin .alumni-overview-section{min-width:0;margin:0;padding:16px;border:1px solid var(--admin-border);border-radius:12px;background:#fff;box-shadow:0 3px 12px #153d8010}
+.alumni-admin .alumni-overview-section-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px}
+.alumni-admin .alumni-overview-section-head h3{font-size:19px;color:var(--admin-ink);margin:0;font-weight:800}
+.alumni-admin .alumni-overview-list{display:grid;gap:10px}
+.alumni-admin .alumni-overview-item{border:1px solid var(--admin-border);border-radius:10px;padding:13px;min-width:0;display:grid;gap:7px}
+.alumni-admin .alumni-overview-item--pending{border-left:4px solid #cf8a34;background:#fffcf6}
+.alumni-admin .alumni-overview-item-head{display:flex;align-items:start;flex-wrap:wrap;justify-content:space-between;gap:6px 10px}
+.alumni-admin .alumni-overview-item-head h4{flex:1 1 150px;min-width:0;font-size:17px;line-height:1.4;margin:0;color:var(--admin-ink);overflow-wrap:anywhere}
+.alumni-admin .alumni-overview-item p{font-size:14px;line-height:1.5;color:var(--admin-muted);margin:0;overflow-wrap:anywhere}
+.alumni-admin .alumni-overview-item .admin-actions{gap:6px;align-items:stretch}
+.alumni-admin .alumni-overview-item .admin-actions>*{flex:1 1 auto}
+.alumni-admin .alumni-overview-note{font-size:14px;color:var(--admin-muted);margin:10px 0 0}
+.alumni-admin .alumni-overview-empty{padding:18px 4px;color:var(--admin-muted);text-align:center;margin:0}
+.alumni-admin .alumni-overview-error{color:var(--bad)}
+.alumni-admin .alumni-filter-fields{display:contents}
+.alumni-admin .alumni-search-actions{margin:16px 0 0}
+.alumni-admin .admin-utilities{margin:0 0 18px}
+.alumni-admin #admin-summary{font-size:15px;margin:12px 0}
+.alumni-admin #admin-pagination{justify-content:center}
+@media(max-width:700px){
+ .alumni-admin .alumni-overview-grid{grid-template-columns:1fr;gap:12px}
+ .alumni-admin .alumni-overview-section{padding:12px}
+ .alumni-admin .alumni-overview-count{padding:13px}
+ .alumni-admin .alumni-overview-heading h2,.alumni-admin .alumni-section-title{font-size:19px}
+ .alumni-admin .alumni-search-actions button{flex:1 1 auto}
+ .alumni-admin .alumni-overview-item .admin-actions>*{flex:1 1 calc(50% - 6px)}
+}
+@media(max-width:380px){.alumni-admin .alumni-overview-count span{font-size:13px}.alumni-admin .alumni-overview-item .admin-actions>*{flex:1 1 100%}}

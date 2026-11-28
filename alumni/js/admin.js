@@ -3,33 +3,113 @@ window.AlumniAdminOnReady=callback=>{
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",callback,{once:true});
  else callback();
 };
-(function(){'use strict';const U=AlumniUI;let view='alumni',data=[],page=1,total=0,sequence=0,debounce,directoryStats=null,directoryGroups=null;const st=()=>U.qs('#admin-status'),badge=v=>`<span class="admin-badge admin-badge--${U.esc(String(v||'').toLowerCase())}">${U.esc(stateLabel(v))}</span>`;
+(function(){'use strict';const U=AlumniUI;let view='overview',data=[],page=1,total=0,sequence=0,debounce,directoryStats=null,directoryGroups=null,directoryCriteria=null,overviewResults=null;const st=()=>U.qs('#admin-status'),badge=v=>`<span class="admin-badge admin-badge--${U.esc(String(v||'').toLowerCase())}">${U.esc(stateLabel(v))}</span>`;
 const stateLabel=v=>({PENDING:'승인 대기',APPROVED:'승인·공개',HIDDEN:'숨김',REJECTED:'반려',EXPIRED:'마감',WAITING:'발송 대기',NOT_REQUESTED:'미요청',SENT:'발송 완료',PARTIAL_FAILED:'일부 실패',FAILED:'실패',QUOTA_BLOCKED:'한도 초과'})[v]||v||'-';
 const groupLabel=v=>({alumni:'졸업생',grade1:'1학년',grade2:'2학년'})[v]||v;
 const consent=v=>v===null||v===undefined||String(v).trim()===''?'미설정':/^(true|1|yes|on)$/i.test(String(v))?'동의':'거부';
 const paged=()=>['alumni','requests'].includes(view);
 async function rpc(name,args){const {data,error}=await window.portalSupabaseClient.rpc(name,args);if(error)throw Error(error.message||'관리자 조회 실패');return data;}
+const directoryMode=()=>view==='overview'||view==='alumni';
+const filterSelectors=['#admin-query','#admin-status-filter','#admin-year','#admin-consent','#admin-employment'];
+const clearFilters=()=>filterSelectors.forEach(selector=>U.qs(selector).value='');
+const sortContent=rows=>[...rows].sort((a,b)=>(b.status==='PENDING')-(a.status==='PENDING')||String(b.created_at||'').localeCompare(String(a.created_at||'')));
+function clearResults(){
+ data=[];total=0;page=1;directoryStats=null;directoryGroups=null;
+ U.qs('#admin-table').replaceChildren();U.qs('#admin-table').hidden=true;
+ U.qs('#admin-summary').textContent='';U.qs('#admin-summary').hidden=true;
+ U.qs('#admin-pagination').hidden=true;U.qs('#alumni-admin-charts')?.remove();
+}
+function setStatusOptions(){
+ const el=U.qs('#admin-status-filter'),previous=el.value;
+ const states=directoryMode()?['APPROVED','HIDDEN']:view==='requests'||view==='mail_logs'?['SENT','PARTIAL_FAILED','FAILED','QUOTA_BLOCKED']:['PENDING','APPROVED','REJECTED','HIDDEN',...(view==='jobs'?['EXPIRED']:[])];
+ el.innerHTML='<option value="">전체</option>'+states.map(value=>`<option value="${value}">${stateLabel(value)}</option>`).join('');
+ el.value=states.includes(previous)?previous:'';
+}
+function syncView(){
+ U.qs('#admin-overview').hidden=view!=='overview';
+ if(view!=='overview'){U.qs('#admin-overview-counts').replaceChildren();U.qs('#admin-overview-content').replaceChildren();}
+ U.qs('#admin-alumni-filters').hidden=!directoryMode();
+ U.qs('#admin-search-heading').textContent=directoryMode()?'졸업생 검색':'검색 및 필터';
+ U.qs('#admin-search-hint').hidden=!directoryMode();
+ U.qs('#admin-query').placeholder=directoryMode()?'이름, 회사, 직무':'이름, 회사, 직무, 제목';
+ U.qs('#admin-refresh').textContent=directoryMode()?'졸업생 검색':'새로고침';
+ U.qsa('[data-view]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.view===view)));
+ setStatusOptions();
+}
+function showSearchPrompt(){
+ U.qs('#admin-summary').textContent='검색 조건을 선택하고 졸업생 검색 버튼을 누르세요.';
+ U.qs('#admin-summary').hidden=view!=='alumni';
+}
+function switchView(next,{keepFilters=false}={}){
+ if(view===next&&!keepFilters){if(view!=='alumni')return load();return;}
+ clearTimeout(debounce);sequence++;directoryCriteria=null;overviewResults=null;clearResults();
+ view=next;if(!keepFilters)clearFilters();syncView();
+ if(view==='alumni'){showSearchPrompt();st().hidden=true;return;}
+ return load();
+}
+function searchDirectory(){
+ if(view==='overview')switchView('alumni',{keepFilters:true});
+ clearTimeout(debounce);sequence++;clearResults();
+ const q=U.qs('#admin-query').value.trim(),status=U.qs('#admin-status-filter').value,year=U.qs('#admin-year').value;
+ directoryCriteria={p_search:q,p_year:year,p_visibility:status,p_consent:U.qs('#admin-consent').value,p_employment:U.qs('#admin-employment').value};
+ return load();
+}
+function renderOverview(){
+ const specs=[['news','주요 동문소식','동문소식'],['jobs','신규 채용정보','채용정보']];
+ const resultFor=key=>overviewResults?.[key];
+ U.qs('#admin-overview-counts').innerHTML=specs.map(([key,,label])=>{
+  const result=resultFor(key),count=result?.rows?.filter(x=>x.status==='PENDING').length;
+  return `<div class="alumni-overview-count${count>0?' alumni-overview-count--pending':''}"><span>${label} 승인 대기</span><strong data-overview-count="${key}">${count==null?'—':count+'건'}</strong></div>`;
+ }).join('');
+ U.qs('#admin-overview-content').innerHTML=specs.map(([key,title,label])=>{
+  const result=resultFor(key),rows=result?.rows||[],job=key==='jobs',pending=rows.filter(x=>x.status==='PENDING').length;
+  let content=!result?'<p class="alumni-overview-empty">불러오는 중입니다.</p>':result.error?'<p class="alumni-overview-empty alumni-overview-error" role="alert">조회를 완료하지 못했습니다. 새로고침해 주세요.</p>':rows.length?`<div class="alumni-overview-list">${rows.slice(0,5).map(x=>{
+   const heading=job?[x.company,x.job_title].filter(Boolean).join(' · '):x.title;
+   const info=job?[x.recruit_type,x.employment_type,x.always_open?'상시채용':x.deadline?'마감 '+x.deadline:''].filter(Boolean).join(' · '):[x.news_type_label,x.target_name_admin,x.graduation_year?x.graduation_year+'년 졸업':''].filter(Boolean).join(' · ');
+   const mail=job?(x.last_mailed_at?'최근 메일 '+String(x.last_mailed_at).slice(0,10):'메일 미발송'):'메일 '+(x.mail_status==='NOT_REQUESTED'?'미요청·미발송':x.mail_status?stateLabel(x.mail_status):'상태 미확인');
+   return `<article class="alumni-overview-item${x.status==='PENDING'?' alumni-overview-item--pending':''}"><div class="alumni-overview-item-head"><h4>${U.esc(heading)||'제목 없음'}</h4>${badge(x.status)}</div><p>${U.esc(info)||'-'}</p><p>등록 ${U.esc(String(x.created_at||'').slice(0,10))||'-'} · ${U.esc(mail)}</p>${contentActions(x,key==='jobs'?'jobs':'alumni_news')}</article>`;
+  }).join('')}</div>`:'<p class="alumni-overview-empty">등록된 '+label+'가 없습니다.</p>';
+  if(rows.length>5)content+=`<p class="alumni-overview-note">전체 ${rows.length}건 중 상위 5건 표시 · 승인 대기 ${pending}건</p>`;
+  return `<section class="alumni-overview-section" data-overview-kind="${key}"><div class="alumni-overview-section-head"><h3>${title}</h3><button type="button" data-open-view="${key}" class="button--secondary">전체 보기</button></div>${content}</section>`;
+ }).join('');
+}
+async function loadOverview(current){
+ overviewResults={};renderOverview();
+ await Promise.all(['news','jobs'].map(async kind=>{
+  try{
+   const result=await AlumniAPI.request('adminList',{method:'POST',data:{view:kind}});
+   if(current!==sequence)return;overviewResults[kind]={rows:sortContent(result.data||[])};
+  }catch(error){if(current!==sequence)return;overviewResults[kind]={error:true};}
+ }));
+ if(current===sequence){renderOverview();st().hidden=true;}
+}
 async function load(){
- const current=++sequence;U.status(st(),'관리 데이터를 불러오는 중입니다.');
+ const current=++sequence;
+ U.qs('#admin-app').hidden=false;
+ if(view==='alumni'&&!directoryCriteria){clearResults();showSearchPrompt();st().hidden=true;return;}
+ U.status(st(),'관리 데이터를 불러오는 중입니다.');
+ if(view==='overview'){await loadOverview(current);return;}
  try{
-  const q=U.qs('#admin-query').value.trim(),status=U.qs('#admin-status-filter').value,year=U.qs('#admin-year').value;
+  const q=U.qs('#admin-query').value.trim(),status=U.qs('#admin-status-filter').value;
   if(view==='alumni'){
-   const result=await rpc('admin_alumni_directory',{p_search:q,p_year:year,p_visibility:status,p_consent:U.qs('#admin-consent').value,p_employment:U.qs('#admin-employment').value,p_page:page,p_size:25});
+   const criteria={...directoryCriteria};
+   const result=await rpc('admin_alumni_directory',{...criteria,p_page:page,p_size:25});
    if(current!==sequence)return;data=result.rows||[];total=result.total||0;directoryStats=result;directoryGroups=null;
    const el=U.qs('#admin-employment'),prior=el.value;
-   el.innerHTML='<option value="">전체 취업 상태</option>'+result.employment_values.map(x=>`<option value="${U.esc(x)}">${U.esc(x)}</option>`).join('');el.value=prior;
+   const options=[...new Set([...U.options.employmentStatus,...(result.employment_values||[]),prior].filter(Boolean))];
+   el.innerHTML='<option value="">전체 취업 상태</option>'+options.map(x=>`<option value="${U.esc(x)}">${U.esc(x)}</option>`).join('');el.value=prior;
    U.qs('#admin-summary').textContent='검색 결과 '+total+'명 · 기업 '+result.companies+'곳 · 멘토링 및 연락 가능 '+result.mentor_count+'명';
   }else if(view==='requests'){
    const result=await rpc('admin_alumni_requests',{p_search:q,p_delivery:status,p_page:page});
    if(current!==sequence)return;data=result.rows||[];total=result.total||0;U.qs('#admin-summary').textContent='연락 요청 '+total+'건';
   }else{
    const result=await AlumniAPI.request('adminList',{method:'POST',data:{view}});
-   if(current!==sequence)return;data=result.data||[];if(['jobs','news'].includes(view))data.sort((a,b)=>(b.status==='PENDING')-(a.status==='PENDING')||String(b.created_at||'').localeCompare(String(a.created_at||'')));total=data.length;
+   if(current!==sequence)return;data=['jobs','news'].includes(view)?sortContent(result.data||[]):result.data||[];total=data.length;
   }
-  U.qs('#admin-app').hidden=false;render();st().hidden=true;
+  render();st().hidden=true;
   if(view==='alumni'&&window.portalAdminUI&&total>data.length){
-   // Exact distribution over the filtered directory, not just the first 25 records.
-   const params={p_search:q,p_year:year,p_visibility:status,p_consent:U.qs('#admin-consent').value,p_employment:U.qs('#admin-employment').value,p_size:100};
+   // Only after an explicit directory search, compute the full matched distribution.
+   const params={...directoryCriteria,p_size:100};
    const allRows=[];
    try{
     for(let p=1;p<=Math.ceil(total/100);p++){
@@ -111,13 +191,14 @@ async function sendSelectedMail(){
 function requestsTable(rows){return`<table class="admin-table"><thead><tr><th>일시</th><th>대상 졸업생</th><th>요청자</th><th>분야/제목</th><th>발송 상태</th><th>후속 조치</th></tr></thead><tbody>${rows.map(x=>`<tr><td data-label="일시">${U.esc(x.created_at)}<br><small>발송 ${U.esc(x.sent_at)||'-'}</small></td><td data-label="대상">${U.esc(x.target_name)||'대상 없음'}</td><td data-label="요청자">${U.esc(x.requester_name)} (${U.esc(x.requester_type)})</td><td data-label="분야/제목"><strong>${U.esc(x.category)}</strong><br>${U.esc(x.subject)}</td><td data-label="발송 상태">${badge(x.status)}</td><td data-label="후속 조치"><select aria-label="후속 처리 상태" data-followup-state><option value="open" ${x.followup_state==='open'?'selected':''}>처리 대기</option><option value="reviewing" ${x.followup_state==='reviewing'?'selected':''}>처리 중</option><option value="closed" ${x.followup_state==='closed'?'selected':''}>처리 완료</option></select><input maxlength="500" aria-label="후속 조치 메모" data-followup-note value="${U.esc(x.followup_note)}"><button data-contact-id="${U.esc(x.request_id)}" data-action="followup">저장</button><small>${U.esc(x.followup_at||'')}</small></td></tr>`).join('')}</tbody></table>`}
 function logsTable(rows){return`<table class="admin-table"><thead><tr><th>발송일</th><th>종류</th><th>관련 ID/제목</th><th>대상</th><th>성공</th><th>실패</th><th>상태</th></tr></thead><tbody>${rows.map(x=>`<tr><td data-label="발송일">${U.esc(x.sent_at)}</td><td data-label="종류">${U.esc(x.mail_kind)}</td><td data-label="관련 ID/제목"><small>${U.esc(x.related_id)}</small><br>${U.esc(x.subject)}<br><small>${U.esc(String(x.target_groups||'').split('|').filter(Boolean).map(groupLabel).join(' · ')||'기존 발송')}</small></td><td data-label="대상">${U.esc(x.recipient_count)}</td><td data-label="성공">${U.esc(x.sent_count)}</td><td data-label="실패">${U.esc(x.failed_count)}</td><td data-label="상태">${badge(x.status)}</td></tr>`).join('')}</tbody></table>`}
 function render(){
+ if(view==='overview'||(view==='alumni'&&!directoryCriteria))return;
+ U.qs('#admin-summary').hidden=false;U.qs('#admin-table').hidden=false;
  const q=U.qs('#admin-query').value.toLowerCase(),status=U.qs('#admin-status-filter').value,year=U.qs('#admin-year').value;
  const rows=paged()?data:data.filter(x=>(!q||JSON.stringify(x).toLowerCase().includes(q))&&(!status||x.status===status)&&(!year||String(x.graduation_year)===year));
  const renderers={alumni:alumniTable,jobs:jobsTable,news:newsTable,requests:requestsTable,mail_logs:logsTable};
  U.qs('#admin-table').innerHTML=rows.length?renderers[view](rows):'<p class="empty">조건에 맞는 데이터가 없습니다.</p>';
  U.qs('#admin-pagination').hidden=!paged();U.qs('#admin-page').textContent=page+' / '+Math.max(1,Math.ceil(total/25));U.qs('#admin-prev').disabled=page<=1;U.qs('#admin-next').disabled=page*25>=total;
  if(!paged())U.qs('#admin-summary').textContent='검색 결과 '+rows.length+'건'+(['jobs','news'].includes(view)?' · 전체 승인 대기 '+data.filter(x=>x.status==='PENDING').length+'건':'');
- U.qs('#admin-alumni-filters').hidden=view!=='alumni';
  const ui=window.portalAdminUI;
  if(ui){
   for(const cell of U.qs('#admin-table').querySelectorAll('td')){
@@ -138,10 +219,18 @@ function render(){
  }
 
 }
-function filterChanged(){page=1;if(paged()){clearTimeout(debounce);debounce=setTimeout(load,250);}else render();}
+function filterChanged(){
+ if(view==='overview')return;
+ if(view==='alumni'){sequence++;directoryCriteria=null;clearResults();showSearchPrompt();st().hidden=true;return;}
+ page=1;
+ if(paged()){clearTimeout(debounce);debounce=setTimeout(load,250);}else if(!U.qs('#admin-table').hidden)render();
+}
 async function utility(action,button,question){if(!confirm(question))return;U.busy(button,true,'처리 중…');try{const r=await AlumniAPI.request(action,{method:'POST',data:{}});U.status(st(),r.message,'success');await load()}catch(e){U.status(st(),e.message,'error')}finally{U.busy(button,false)}}
 window.AlumniAdminOnReady(()=>{
   U.yearOptions(U.qs('#admin-year'),true);
+  const employment=U.qs('#admin-employment');
+  employment.innerHTML='<option value="">전체 취업 상태</option>'+U.options.employmentStatus.map(x=>`<option value="${U.esc(x)}">${U.esc(x)}</option>`).join('');
+  syncView();
   U.qs('#admin-close-content').onclick=()=>U.qs('#admin-content-dialog').close();
   U.qs('#admin-close-mail').onclick=()=>mailDialog().close();
   mailDialog().addEventListener('cancel',event=>{if(mailBusy)event.preventDefault()});
@@ -158,13 +247,24 @@ window.AlumniAdminOnReady(()=>{
   Promise.resolve(window.alumniPortalReady).then(()=>load()).catch(err=>{
     U.status(st(),String(err?.message||"포털 관리자 로그인이 필요합니다."),"error");
   });
-  U.qs('#admin-refresh').onclick=load;U.qs('#admin-prev').onclick=()=>{if(page>1){page--;load();}};U.qs('#admin-next').onclick=()=>{if(page*25<total){page++;load();}};['#admin-query','#admin-status-filter','#admin-year','#admin-consent','#admin-employment'].forEach(s=>U.qs(s).addEventListener(s==='#admin-query'?'input':'change',filterChanged));U.qsa('[data-view]').forEach(b=>b.onclick=()=>{view=b.dataset.view;page=1;U.qs('#admin-status-filter').value='';U.qs('#admin-year').value='';U.qsa('[data-view]').forEach(x=>x.setAttribute('aria-selected',String(x===b)));load()});U.qs('#send-consent-invites').onclick=e=>utility('adminSendCareerConsentInvites',e.currentTarget,'채용메일 수신 여부가 미설정인 졸업생에게 안내 메일을 1회 발송할까요?');U.qs('#send-news-consent-invites').onclick=e=>utility('adminSendNewsConsentInvites',e.currentTarget,'동문소식 수신 여부가 미설정인 졸업생에게 안내 메일을 1회 발송할까요?');U.qs('#run-job-digest').onclick=()=>U.qs('[data-view=jobs]').click();U.qs('#admin-table').onclick=async e=>{const b=e.target.closest('button[data-action]');if(!b)return;const action=b.dataset.action,job=!!b.dataset.jobId;
- if(['review','mail'].includes(action)){const item=data.find(x=>job?x.job_id===b.dataset.jobId:x.news_id===b.dataset.newsId);if(item){if(action==='review')showContent(item,job);else openMail(item,job)}return}
- if(!confirm(action.endsWith('Publish')?'등록 정보를 승인·공개할까요? 메일은 자동으로 발송되지 않습니다.':action.endsWith('Reject')?'이 등록을 반려할까요?':'이 상태로 변경하시겠습니까?'))return;U.busy(b,true);try{if(b.dataset.action==='followup'){const row=b.closest('tr');await rpc('admin_alumni_request_followup',{p_request_id:b.dataset.contactId,p_state:row.querySelector('[data-followup-state]').value,p_note:row.querySelector('[data-followup-note]').value});U.status(st(),'후속 조치를 저장했습니다.','success');await load();return;}const payload={};if(b.dataset.jobId)payload.job_id=b.dataset.jobId;else if(b.dataset.newsId)payload.news_id=b.dataset.newsId;else payload.alumni_id=b.dataset.id;const r=await AlumniAPI.request(b.dataset.action,{method:'POST',data:payload});U.status(st(),r.message||'처리되었습니다.','success');await load()}catch(err){U.status(st(),err.message,'error')}finally{U.busy(b,false)}}})})();
+  U.qs('#admin-search-form').onsubmit=e=>{e.preventDefault();if(directoryMode())searchDirectory();else{page=1;load();}};
+  U.qs('#admin-reset-search').onclick=()=>{clearFilters();filterChanged();};
+  U.qs('#admin-overview-refresh').onclick=()=>load();
+  U.qs('#admin-prev').onclick=()=>{if(page>1){page--;load();}};
+  U.qs('#admin-next').onclick=()=>{if(page*25<total){page++;load();}};
+  filterSelectors.forEach(selector=>U.qs(selector).addEventListener(selector==='#admin-query'?'input':'change',filterChanged));
+  U.qsa('[data-view]').forEach(b=>b.onclick=()=>switchView(b.dataset.view));
+  document.addEventListener('alumni-admin-content-created',e=>{if(view==='overview'||view===e.detail)load();else switchView(e.detail);});
+  U.qs('#admin-app').addEventListener('click',e=>{const b=e.target.closest('button[data-open-view]');if(b)switchView(b.dataset.openView);});
+  U.qs('#send-consent-invites').onclick=e=>utility('adminSendCareerConsentInvites',e.currentTarget,'채용메일 수신 여부가 미설정인 졸업생에게 안내 메일을 1회 발송할까요?');U.qs('#send-news-consent-invites').onclick=e=>utility('adminSendNewsConsentInvites',e.currentTarget,'동문소식 수신 여부가 미설정인 졸업생에게 안내 메일을 1회 발송할까요?');U.qs('#run-job-digest').onclick=()=>U.qs('[data-view=jobs]').click();const handleRecordAction=async e=>{const b=e.target.closest('button[data-action]');if(!b)return;const action=b.dataset.action,job=!!b.dataset.jobId;
+ if(['review','mail'].includes(action)){const records=view==='overview'?(overviewResults?.[job?'jobs':'news']?.rows||[]):data;const item=records.find(x=>job?String(x.job_id)===b.dataset.jobId:String(x.news_id)===b.dataset.newsId);if(item){if(action==='review')showContent(item,job);else openMail(item,job)}return}
+ if(!confirm(action.endsWith('Publish')?'등록 정보를 승인·공개할까요? 메일은 자동으로 발송되지 않습니다.':action.endsWith('Reject')?'이 등록을 반려할까요?':'이 상태로 변경하시겠습니까?'))return;U.busy(b,true);try{if(b.dataset.action==='followup'){const row=b.closest('tr');await rpc('admin_alumni_request_followup',{p_request_id:b.dataset.contactId,p_state:row.querySelector('[data-followup-state]').value,p_note:row.querySelector('[data-followup-note]').value});U.status(st(),'후속 조치를 저장했습니다.','success');await load();return;}const payload={};if(b.dataset.jobId)payload.job_id=b.dataset.jobId;else if(b.dataset.newsId)payload.news_id=b.dataset.newsId;else payload.alumni_id=b.dataset.id;const r=await AlumniAPI.request(b.dataset.action,{method:'POST',data:payload});U.status(st(),r.message||'처리되었습니다.','success');await load()}catch(err){U.status(st(),err.message,'error')}finally{U.busy(b,false)}};
+  U.qs('#admin-table').onclick=handleRecordAction;U.qs('#admin-overview-content').onclick=handleRecordAction;
+})})();
 
 (function(){'use strict';const U=AlumniUI,st=()=>U.qs('#admin-status');let alumniLoaded=false;
 function payload(form){const out=Object.fromEntries(new FormData(form).entries());form.querySelectorAll('input[type="checkbox"]').forEach(x=>out[x.name]=x.checked);return out}
 async function loadAlumniOptions(){if(alumniLoaded)return;const rows=(await AlumniAPI.request('adminList',{method:'POST',data:{view:'alumni'}})).data||[];const approved=rows.filter(x=>x.status==='APPROVED').sort((a,b)=>String(a.name).localeCompare(String(b.name),'ko'));const html='<option value="">졸업생 선택</option>'+approved.map(x=>`<option value="${U.esc(x.alumni_id)}">${U.esc(x.name)} · ${U.esc(x.graduation_year)}년 졸업${x.company?' · '+U.esc(x.company):''}</option>`).join('');U.qsa('[data-admin-alumni]').forEach(x=>x.innerHTML=html);alumniLoaded=true}
 async function openPanel(selector){try{await loadAlumniOptions();U.qsa('.admin-create-panel').forEach(x=>x.hidden=true);const panel=U.qs(selector);panel.hidden=false;panel.scrollIntoView({behavior:'smooth',block:'start'})}catch(e){U.status(st(),e.message,'error')}}
-async function submit(form,action,confirmText){if(!confirm(confirmText))return;const button=form.querySelector('button[type="submit"]');U.busy(button,true,'게시 중…');try{const r=await AlumniAPI.request(action,{method:'POST',data:payload(form)});U.status(st(),r.message,'success');form.reset();form.closest('.admin-create-panel').hidden=true;U.qs('#admin-refresh').click()}catch(e){U.status(st(),e.message,'error')}finally{U.busy(button,false)}}
+async function submit(form,action,confirmText){if(!confirm(confirmText))return;const button=form.querySelector('button[type="submit"]');U.busy(button,true,'게시 중…');try{const r=await AlumniAPI.request(action,{method:'POST',data:payload(form)});U.status(st(),r.message,'success');form.reset();form.closest('.admin-create-panel').hidden=true;document.dispatchEvent(new CustomEvent('alumni-admin-content-created',{detail:action==='adminCreateJob'?'jobs':'news'}))}catch(e){U.status(st(),e.message,'error')}finally{U.busy(button,false)}}
 window.AlumniAdminOnReady(()=>{U.qs('#show-admin-job-form').onclick=()=>openPanel('#admin-job-create');U.qs('#show-admin-news-form').onclick=()=>openPanel('#admin-news-create');U.qsa('[data-close-create]').forEach(x=>x.onclick=()=>x.closest('.admin-create-panel').hidden=true);U.qs('#admin-job-form').onsubmit=e=>{e.preventDefault();submit(e.currentTarget,'adminCreateJob','입력한 채용공고를 승인 상태로 바로 게시할까요?')};U.qs('#admin-news-form').onsubmit=e=>{e.preventDefault();submit(e.currentTarget,'adminCreateNews','동문소식을 게시할까요? 메일 발송은 별도로 진행됩니다.')};const type=U.qs('#admin-news-type'),rel=U.qs('#admin-news-relationship'),relField=U.qs('#admin-news-relationship-field');type.onchange=()=>{const obituary=type.value==='OBITUARY';relField.hidden=!obituary;rel.required=obituary;if(!obituary)rel.value=''};const always=U.qs('#admin-job-form').elements.always_open,deadline=U.qs('#admin-job-deadline');always.onchange=()=>{deadline.disabled=always.checked;deadline.required=!always.checked;if(always.checked)deadline.value=''};deadline.required=true})})();

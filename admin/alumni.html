@@ -6,9 +6,9 @@
 <link rel="stylesheet" href="../css/portal-ux.css?v=20261112-page-intro-2">
 <link rel="stylesheet" href="css/admin.css?v=20261128-ui-1">
 <link rel="stylesheet" href="../alumni/css/jobs.css?v=20261113-alumni-unified-1">
-<link rel="stylesheet" href="css/alumni.css?v=20261128-alumni-mail-1">
+<link rel="stylesheet" href="css/alumni.css?v=20261128-alumni-overview-1">
 <link rel="stylesheet" href="css/admin-mobile.css?v=20261128-ui-1"></head>
-<body data-admin-module="alumni.js" data-admin-module-version="20261128-alumni-mail-1" data-admin-page="alumni">
+<body data-admin-module="alumni.js" data-admin-module-version="20261128-alumni-overview-1" data-admin-page="alumni">
 <p id="learning-notice" role="status">관리자 로그인 및 권한 확인 중입니다.</p>
 <header class="admin-header site-header">
   <div class="admin-header-inner header-inner">
@@ -24,7 +24,12 @@
 <section class="alumni-admin" aria-label="졸업생 네트워크 관리 업무">
   <div id="admin-status" class="status" hidden></div>
   <div id="admin-app" hidden><div class="alumni-admin-toolbar"><span>졸업생 · 채용공고 · 동문소식</span><button type="button" id="admin-logout" class="button--secondary">학생 포털 홈</button></div>
-    <div class="tabs admin-tabs"><button data-view="alumni" aria-selected="true">졸업생 현황</button><button data-view="jobs" aria-selected="false">채용정보 관리</button><button data-view="news" aria-selected="false">동문소식 관리</button><button data-view="requests" aria-selected="false">연락 요청</button><button data-view="mail_logs" aria-selected="false">메일 발송 기록</button></div>
+    <div class="tabs admin-tabs" aria-label="졸업생 관리 메뉴"><button type="button" data-view="overview" aria-selected="true">업무 현황</button><button type="button" data-view="news" aria-selected="false">동문소식 관리</button><button type="button" data-view="jobs" aria-selected="false">채용정보 관리</button><button type="button" data-view="alumni" aria-selected="false">졸업생 현황</button><button type="button" data-view="requests" aria-selected="false">연락 요청</button><button type="button" data-view="mail_logs" aria-selected="false">메일 발송 기록</button></div>
+    <section id="admin-overview" class="alumni-overview" aria-label="주요 동문소식 및 채용정보">
+      <div class="alumni-overview-heading"><div><h2>처리할 주요 업무</h2><p>승인 대기 건을 먼저 확인하고 최근 등록 소식을 살펴보세요.</p></div><button id="admin-overview-refresh" type="button" class="button--secondary">새로고침</button></div>
+      <div id="admin-overview-counts" class="alumni-overview-counts" aria-live="polite"></div>
+      <div id="admin-overview-content" class="alumni-overview-grid" aria-live="polite"></div>
+    </section>
     <div class="admin-create-actions" aria-label="관리자 직접 등록"><button id="show-admin-job-form" type="button">채용공고 직접 등록</button><button id="show-admin-news-form" class="button--secondary" type="button">동문소식 직접 등록</button></div>
     <section id="admin-job-create" class="panel admin-create-panel" hidden>
       <div class="admin-create-heading"><div><h2>채용공고 직접 등록</h2></div><button type="button" class="button--ghost" data-close-create>닫기</button></div>
@@ -48,8 +53,23 @@
         <div class="field field--full"><label for="admin-news-url">외부 안내 URL</label><input id="admin-news-url" name="external_url" type="url" inputmode="url" placeholder="https://"></div><div class="field field--full"><label for="admin-news-content">내용 *</label><textarea id="admin-news-content" name="content" maxlength="2000" rows="7" required></textarea></div>
       </div><p class="hint">게시와 메일 발송은 별도입니다. 게시 후 발송 대상을 확인하고 발송하세요.</p><div class="actions"><button type="submit">동문소식 게시</button><button type="button" class="button--ghost" data-close-create>취소</button></div></form>
     </section>
-    <div class="panel"><div class="filter-grid"><div class="field"><label for="admin-query">검색</label><input id="admin-query" placeholder="이름, 회사, 직무, 제목"></div><div class="field"><label for="admin-status-filter">상태</label><select id="admin-status-filter"><option value="">전체</option><option value="PENDING">승인 대기</option><option value="APPROVED">승인·공개</option><option value="REJECTED">반려</option><option value="HIDDEN">숨김</option><option value="EXPIRED">마감</option><option>SENT</option><option>PARTIAL_FAILED</option><option>FAILED</option><option>QUOTA_BLOCKED</option></select></div><div class="field"><label for="admin-year">졸업연도</label><select id="admin-year"></select></div><div class="field"><label>&nbsp;</label><button id="admin-refresh">새로고침</button></div></div><div class="actions admin-utilities"><button id="send-consent-invites" class="button--secondary" type="button">채용메일 수신 설정 안내</button><button id="send-news-consent-invites" class="button--secondary" type="button">동문소식 수신 설정 안내</button><button id="run-job-digest" class="button--secondary" type="button">채용정보 발송 관리</button></div></div>
-    <div class="panel" id="admin-alumni-filters"><div class="filter-grid"><div class="field"><label for="admin-consent">채용메일 동의</label><select id="admin-consent"><option value="">전체</option><option value="yes">동의</option><option value="no">거부</option><option value="unset">미설정</option></select></div><div class="field"><label for="admin-employment">취업상태</label><select id="admin-employment"><option value="">전체 취업 상태</option></select></div></div></div>
+    <section class="panel" id="admin-filter-panel" aria-labelledby="admin-search-heading">
+      <h2 id="admin-search-heading" class="alumni-section-title">졸업생 검색</h2>
+      <p id="admin-search-hint" class="alumni-search-hint">검색 버튼을 누르면 졸업생 목록과 통계가 표시됩니다. 조건을 입력하지 않으면 전체 졸업생을 검색합니다.</p>
+      <form id="admin-search-form">
+        <div class="filter-grid">
+          <div class="field"><label for="admin-query">검색어</label><input id="admin-query" placeholder="이름, 회사, 직무" maxlength="100"></div>
+          <div class="field"><label for="admin-year">졸업연도</label><select id="admin-year"><option value="">전체</option></select></div>
+          <div class="field"><label for="admin-status-filter">상태</label><select id="admin-status-filter"><option value="">전체</option><option value="APPROVED">승인·공개</option><option value="HIDDEN">숨김</option></select></div>
+          <div id="admin-alumni-filters" class="alumni-filter-fields">
+            <div class="field"><label for="admin-employment">취업 상태</label><select id="admin-employment"><option value="">전체 취업 상태</option></select></div>
+            <div class="field"><label for="admin-consent">채용메일 수신</label><select id="admin-consent"><option value="">전체</option><option value="yes">동의</option><option value="no">거부</option><option value="unset">미설정</option></select></div>
+          </div>
+        </div>
+        <div class="actions alumni-search-actions"><button id="admin-refresh" type="submit">졸업생 검색</button><button id="admin-reset-search" class="button--secondary" type="button">조건 초기화</button></div>
+      </form>
+    </section>
+    <div class="actions admin-utilities" aria-label="메일 관리"><button id="send-consent-invites" class="button--secondary" type="button">채용메일 수신 설정 안내</button><button id="send-news-consent-invites" class="button--secondary" type="button">동문소식 수신 설정 안내</button><button id="run-job-digest" class="button--secondary" type="button">채용정보 발송 관리</button></div>
     <dialog id="admin-content-dialog" class="admin-work-dialog" aria-labelledby="admin-content-title">
       <div class="admin-create-heading"><h2 id="admin-content-title">등록 내용 확인</h2><button id="admin-close-content" type="button" class="button--ghost">닫기</button></div>
       <div id="admin-content-detail"></div>
@@ -68,7 +88,7 @@
       <p id="admin-mail-message" class="status" role="status" aria-live="polite" hidden></p>
       <div class="actions"><button id="admin-preview-mail" type="button" class="button--secondary">대상 인원 확인</button><button id="admin-confirm-mail" type="button" disabled>확인 후 메일 발송</button></div>
     </dialog>
-    <p id="admin-summary" role="status"></p><div id="admin-table" class="table-wrap"></div><div class="actions" id="admin-pagination"><button id="admin-prev" type="button">이전</button><span id="admin-page"></span><button id="admin-next" type="button">다음</button></div>
+    <p id="admin-summary" role="status" hidden></p><div id="admin-table" class="table-wrap" hidden></div><div class="actions" id="admin-pagination" hidden><button id="admin-prev" type="button">이전</button><span id="admin-page"></span><button id="admin-next" type="button">다음</button></div>
   </div>
 </section>
 </div>
