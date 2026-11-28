@@ -24,9 +24,12 @@ try{
    const context=await browser.newContext({viewport:{width,height:900}});
    await approvedStudent(context,role==='admin'?{signup_type:'admin'}:role==='alumni'?{signup_type:'alumni',enrollment_status:'graduated'}:role==='leave'?{enrollment_status:'leave'}:{},role==='alumni',role==='admin');
    const certMode=role==='student'&&[320,360].includes(width);
+   const writtenMode=role==='student'&&[768,1280].includes(width);
    const noBasics=width===360;
    const certCandidate=noBasics?{...response.report,payload:{...payload,learning:{...learning,subjects:learning.subjects.map(s=>['coding','ncp'].includes(s.id)?{...s,attempts:0}:s)}}}:response.report;
-   const scoped=certMode?{...response,report:reportForCertificates(certCandidate,[{certificate_code:noBasics?'industrial':'engineer',pass_status:'final',verification_status:'pending'}])}:response;
+   const certs=certMode?[{certificate_code:noBasics?'industrial':'engineer',pass_status:'final',verification_status:'pending'}]
+    :writtenMode?[{certificate_code:width===768?'engineer':'industrial',pass_status:'written',verification_status:'verified'}]:[];
+   const scoped={...response,report:reportForCertificates(certCandidate,certs)};
    const scopedMock=mock.replace(JSON.stringify(response),JSON.stringify(scoped));
    await context.route('**/js/weekly-report.js?v=*',route=>route.fulfill({contentType:'application/javascript',body:scopedMock}));
    const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
@@ -39,6 +42,11 @@ try{
      assert.equal(await page.locator('#wr-subject-card').isVisible(),!noBasics);
      assert.deepEqual(await page.locator('#wr-subjects .wr-subject-head strong').allTextContents(),noBasics?[]:['기초학습']);
      assert.equal(await page.locator('.wr-kpi').count(),4);
+    }else if(writtenMode){
+     assert.equal(await page.locator('#wr-subject-card').isVisible(),true);
+     const labels=await page.locator('#wr-subjects .wr-subject-head strong').allTextContents();
+     assert.deepEqual(labels,['기초학습','NCP','정보처리 실기',width===768?'산업기사 필기':'정보처리기사 필기']);
+     assert.match(await page.locator('#wr-subject-note').textContent(),/실기 학습 포함/);
     }else{
      assert.equal(await page.locator('#wr-subject-card').isVisible(),true);
      assert.equal(await page.locator('#wr-subjects .wr-subject').count(),5);

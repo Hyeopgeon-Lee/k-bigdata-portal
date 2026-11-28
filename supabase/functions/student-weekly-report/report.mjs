@@ -31,12 +31,17 @@ export function summarize(week,attempts,written,sessions,plan){
 // View-time policy: preserve the original weekly snapshot and all aggregate metrics.
 export function reportForCertificates(report,certificates){
  if(!report)return report;
- const acquired=(Array.isArray(certificates)?certificates:[]).some(c=>
-  ['engineer','industrial'].includes(c?.certificate_code)&&c.pass_status==='final'&&c.verification_status!=='rejected');
- if(!acquired)return report;
+ const relevant=(Array.isArray(certificates)?certificates:[]).filter(c=>
+  ['engineer','industrial'].includes(c?.certificate_code)&&c.verification_status!=='rejected');
+ const acquired=relevant.some(c=>c.pass_status==='final');
+ const passedWritten=new Set(relevant.filter(c=>c.pass_status==='written').map(c=>c.certificate_code));
+ if(!acquired&&!passedWritten.size)return report;
  const learning=report.payload.learning;
- return {...report,payload:{...report.payload,learning:{...learning,subject_scope:'fundamentals',
-  subjects:learning.subjects.filter(s=>['coding','ncp'].includes(s.id)&&s.attempts>0)}}};
+ const subjects=acquired
+  ?learning.subjects.filter(s=>['coding','ncp'].includes(s.id)&&s.attempts>0)
+  :learning.subjects.filter(s=>!passedWritten.has(s.id));
+ return {...report,payload:{...report.payload,learning:{...learning,
+  subject_scope:acquired?'fundamentals':'written_pass',subjects}}};
 }
 export function scheduleEvents(events,grade,week){
  const from=shift(week,7),to=shift(week,13);

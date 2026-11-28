@@ -58,7 +58,7 @@ function render(report){
  const restricted=l.subject_scope==='fundamentals';
  const visibleSubjects=restricted?l.subjects.filter(s=>['coding','ncp'].includes(s.id)&&s.attempts>0):l.subjects;
  $('wr-subject-card').hidden=restricted&&visibleSubjects.length===0;
- set('wr-subject-note',restricted?'기초학습 · NCP 실제 풀이 기록 (자격증 최종합격 등록 기준)':'지난주 풀이 횟수 · 정답/오답 기록 기준 (자가평가 포함)');
+ set('wr-subject-note',restricted?'기초학습 · NCP 실제 풀이 기록 (자격증 최종합격 등록 기준)':l.subject_scope==='written_pass'?'합격한 필기 과목 제외 · 실기 학습 포함':'지난주 풀이 횟수 · 정답/오답 기록 기준 (자가평가 포함)');
  const max=Math.max(1,...visibleSubjects.map(x=>x.attempts));
  for(const s of visibleSubjects){const row=node('div',undefined,'wr-subject'),head=node('div',undefined,'wr-subject-head'),track=node('div',undefined,'wr-subject-track'),bar=node('span');bar.style.width=s.attempts/max*100+'%';head.append(node('strong',s.label),node('span',fmt(s.attempts)+'회 · '+(s.accuracy===null?'—':s.accuracy+'%')));track.append(bar);row.append(head,track);subjects.append(row)}
  set('wr-career-note',c.registered?'생성 시점의 최신 점검 · GitHub '+stamp(c.checked_at):'취업 준비 정보가 아직 등록되지 않았습니다.');

@@ -36,7 +36,7 @@ assert.match(account,/마이페이지[\s\S]*나의 주간 리포트[\s\S]*나의
 assert.match(account,/if\(!isAdmin&&activeWrite&&currentProfile\?\.signup_type==="student"&&currentProfile\?\.approval_status==="approved"&&currentProfile\?\.enrollment_status==="enrolled"\)addAction\(accountSettings,\{title:"나의 주간 리포트".*href:"weekly-report.html"/);
 
 // Both relevant final certificates qualify independently. Pending final registrations
-// are included (as in the portal's registered final-pass count); rejected and written-only do not qualify.
+// are included (as in the portal's registered final-pass count); rejected and written-only do not qualify for the final-pass policy.
 const snapshot={week_start:'2026-11-23',payload:{learning:{...l,subjects:[
  {id:'coding',attempts:3},{id:'ncp',attempts:0},{id:'engineer',attempts:5},{id:'industrial',attempts:2},{id:'practical',attempts:4}
  ]},tasks:[]},completed_tasks:['test']};
@@ -51,7 +51,7 @@ for(const certificate_code of ['engineer','industrial']){
  }
 }
 for(const cert of [
- {certificate_code:'engineer',pass_status:'written',verification_status:'verified'},
+ {certificate_code:'engineer',pass_status:'written',verification_status:'rejected'},
  {certificate_code:'industrial',pass_status:'final',verification_status:'rejected'},
  {certificate_code:'sqld',pass_status:'final',verification_status:'verified'}
 ])assert.equal(reportForCertificates(snapshot,[cert]),snapshot);
@@ -63,3 +63,15 @@ assert.equal(JSON.stringify(snapshot),before,'existing weekly snapshot must rema
 assert.match(edge,/reportForCertificates\(report,certificates\)/);
 assert.match(edge,/from\("student_certifications"\)\.select\("certificate_code,pass_status,verification_status"\)\.eq\("user_id",member\.user_id\)/);
 console.log('PASS: independent article/industrial final-pass filter, zero attempts, historical snapshot immutability.');
+
+// Written-only status removes the applicable written exam, never practical.
+const engineerWritten={certificate_code:'engineer',pass_status:'written',verification_status:'verified'};
+const industrialWritten={certificate_code:'industrial',pass_status:'written',verification_status:'pending'};
+const visible=certs=>reportForCertificates(snapshot,certs).payload.learning.subjects.map(s=>s.id);
+assert.deepEqual(visible([engineerWritten]),['coding','ncp','industrial','practical']);
+assert.deepEqual(visible([industrialWritten]),['coding','ncp','engineer','practical']);
+assert.deepEqual(visible([engineerWritten,industrialWritten]),['coding','ncp','practical']);
+assert.equal(reportForCertificates(snapshot,[industrialWritten]).payload.learning.subject_scope,'written_pass');
+assert.deepEqual(visible([engineerWritten,{...industrialWritten,pass_status:'final'}]),['coding']);
+assert.equal(JSON.stringify(snapshot),before,'written pass filtering preserves the stored snapshot');
+console.log('PASS: written-only certificate removes only that written subject; practical stays, final-pass policy takes precedence.');
