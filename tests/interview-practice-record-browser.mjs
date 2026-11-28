@@ -15,7 +15,7 @@ try {
   await page.goto(base+'/interview.html?id=DS-001',{waitUntil:'domcontentloaded'});
   const mark=page.locator('[data-action="toggle-practiced"]');
   await mark.waitFor({state:'visible'});
-  await page.locator('.question-answer summary').click();
+  await page.locator('.question-answer > summary').click();
   assert.equal(await page.evaluate(()=>window.__practiceRequests.length),0,'viewing model answer does not record completed practice');
   await mark.click();
   await page.waitForFunction(()=>document.querySelector('[data-action="toggle-practiced"]')?.getAttribute('aria-pressed')==='true');
