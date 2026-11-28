@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {chromium} from 'playwright';
 import {mkdirSync,readFileSync} from 'node:fs';
 import {approvedStudent} from './fixtures/approved-student.mjs';
-import {summarize,suggestedTasks} from '../supabase/functions/student-weekly-report/report.mjs';
+import {summarize,suggestedTasks,reportForCertificates} from '../supabase/functions/student-weekly-report/report.mjs';
 const base=process.env.PORTAL_BASE_URL||'http://127.0.0.1:8765';
 const browser=await chromium.launch({headless:true,args:['--no-sandbox'],...(process.env.PORTAL_BROWSER_PATH?{executablePath:process.env.PORTAL_BROWSER_PATH}:{})});
 const week='2026-11-23',learning=summarize(week,[
@@ -23,13 +23,26 @@ try{
   for(const role of width===390?['student','admin','alumni','leave']:['student']){
    const context=await browser.newContext({viewport:{width,height:900}});
    await approvedStudent(context,role==='admin'?{signup_type:'admin'}:role==='alumni'?{signup_type:'alumni',enrollment_status:'graduated'}:role==='leave'?{enrollment_status:'leave'}:{},role==='alumni',role==='admin');
-   await context.route('**/js/weekly-report.js?v=*',route=>route.fulfill({contentType:'application/javascript',body:mock}));
+   const certMode=role==='student'&&[320,360].includes(width);
+   const noBasics=width===360;
+   const certCandidate=noBasics?{...response.report,payload:{...payload,learning:{...learning,subjects:learning.subjects.map(s=>['coding','ncp'].includes(s.id)?{...s,attempts:0}:s)}}}:response.report;
+   const scoped=certMode?{...response,report:reportForCertificates(certCandidate,[{certificate_code:noBasics?'industrial':'engineer',pass_status:'final',verification_status:'pending'}])}:response;
+   const scopedMock=mock.replace(JSON.stringify(response),JSON.stringify(scoped));
+   await context.route('**/js/weekly-report.js?v=*',route=>route.fulfill({contentType:'application/javascript',body:scopedMock}));
    const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
    await page.goto(base+'/weekly-report.html',{waitUntil:'domcontentloaded'});
    await page.waitForFunction(()=>!document.getElementById('learning-lock')&&document.documentElement.dataset.portalAccess==='approved');
    if(role==='student'){
     await page.locator('#wr-content').waitFor({state:'visible'});
     assert.equal(await page.locator('.wr-kpi').count(),4);assert.equal(await page.locator('.wr-card').count(),6);assert.equal(await page.locator('.wr-event').count(),2);
+    if(certMode){
+     assert.equal(await page.locator('#wr-subject-card').isVisible(),!noBasics);
+     assert.deepEqual(await page.locator('#wr-subjects .wr-subject-head strong').allTextContents(),noBasics?[]:['기초학습']);
+     assert.equal(await page.locator('.wr-kpi').count(),4);
+    }else{
+     assert.equal(await page.locator('#wr-subject-card').isVisible(),true);
+     assert.equal(await page.locator('#wr-subjects .wr-subject').count(),5);
+    }
     await page.locator('.wr-task input').first().check();
     await page.waitForFunction(()=>document.querySelector('#wr-task-count').textContent.startsWith('1/'));
     assert.ok(await page.locator('.wr-task input').first().isChecked());

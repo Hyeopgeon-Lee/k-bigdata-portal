@@ -20,7 +20,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/style.css?v=20261112-page-intro-2">
 <link rel="stylesheet" href="css/portal-ux.css?v=20261112-page-intro-2">
-<link rel="stylesheet" href="css/weekly-report.css?v=20261128-weekly-1">
+<link rel="stylesheet" href="css/weekly-report.css?v=20261128-weekly-certs-1">
 <!-- portal:assets:start (generated; edit scripts/portal-shell-template.mjs) -->
 <link rel="stylesheet" href="css/portal-navigation.css?v=20261112-page-intro-2">
 <script defer src="js/portal-navigation.js?v=20261128-weekly-menu-1"></script>
@@ -74,7 +74,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
     <div class="wr-grid">
       <section class="wr-card"><div class="wr-heading"><div><span class="wr-number">01 · LEARNING</span><h3>최근 4주 학습 추이</h3></div><a href="my-learning.html">학습 현황 →</a></div><p>주차별 문제풀이 횟수 · 실제 누적 기록</p><div id="wr-trend" class="wr-chart"></div></section>
       <section class="wr-card"><div class="wr-heading"><div><span class="wr-number">02 · STUDY</span><h3>요일별 자율학습</h3></div><a href="study.html">자율학습 →</a></div><p id="wr-study-note"></p><div id="wr-study" class="wr-chart"></div></section>
-      <section class="wr-card"><div class="wr-heading"><div><span class="wr-number">03 · SUBJECTS</span><h3>과목별 학습 현황</h3></div></div><p>지난주 풀이 횟수 · 정답/오답 기록 기준 (자가평가 포함)</p><div id="wr-subjects" class="wr-subjects"></div></section>
+      <section class="wr-card" id="wr-subject-card"><div class="wr-heading"><div><span class="wr-number">03 · SUBJECTS</span><h3>과목별 학습 현황</h3></div></div><p id="wr-subject-note">지난주 풀이 횟수 · 정답/오답 기록 기준 (자가평가 포함)</p><div id="wr-subjects" class="wr-subjects"></div></section>
       <section class="wr-card"><div class="wr-heading"><div><span class="wr-number">04 · CAREER</span><h3>취업 준비 점검</h3></div><a href="ready.html">취업 준비 →</a></div><p id="wr-career-note"></p><div id="wr-career" class="wr-career"></div></section>
       <section class="wr-card"><div class="wr-heading"><div><span class="wr-number">05 · CALENDAR</span><h3>이번 주 학과 일정</h3></div><a href="schedule.html">전체 일정 →</a></div><p id="wr-calendar-note"></p><div id="wr-events" class="wr-events"></div></section>
       <section class="wr-card"><div class="wr-heading"><div><span class="wr-number">06 · NEXT ACTION</span><h3>이번 주 나의 할 일</h3></div><strong id="wr-task-count" class="wr-task-count"></strong></div><p>추천 과제를 완료하면 체크하세요.</p><div class="wr-progress"><span id="wr-task-progress"></span></div><div id="wr-tasks" class="wr-tasks"></div><p id="wr-task-status" class="wr-task-status" role="status" aria-live="polite"></p></section>
@@ -88,6 +88,6 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <div class="container footer-bottom"><p>© <span id="current-year"></span> K-BigData Service Portal</p></div>
 </footer>
 <script type="module" src="js/portal-auth.mjs?v=20261128-weekly-menu-1"></script>
-<script type="application/x-learning" data-module="js/weekly-report.js?v=20261128-weekly-1"></script>
+<script type="application/x-learning" data-module="js/weekly-report.js?v=20261128-weekly-certs-1"></script>
 <script type="application/x-learning" data-module="js/portal-shell-entry.js?v=20261128-ready-1"></script>
 </body></html>

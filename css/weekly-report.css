@@ -19,3 +19,6 @@
 .wr a:focus-visible,.wr select:focus-visible,.wr button:focus-visible,.wr input:focus-visible{outline:3px solid #81b4fe;outline-offset:3px}
 @media(max-width:760px){.wr-grid{grid-template-columns:minmax(0,1fr)}.wr-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.wr-kpi{padding:15px 13px}.wr-hero{padding:22px 18px}.wr-hero-icon{width:64px}.wr-heading h3{font-size:18px}.wr-bar-value{font-size:10px}.wr-card{padding:17px}.wr-week{font-size:12px}}
 @media(max-width:355px){.wr-hero-icon{display:none}.wr-week{gap:4px}.wr-week select{max-width:100%}.wr-kpi-value{font-size:19px}.wr-bar-value{font-size:9px}}
+
+/* Keep the visible cards balanced when a certificate holder has no foundational attempts. */
+#wr-subject-card[hidden] ~ .wr-card:last-child{grid-column:1/-1}

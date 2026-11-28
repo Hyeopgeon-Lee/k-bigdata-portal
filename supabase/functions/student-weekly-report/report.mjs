@@ -28,6 +28,16 @@ export function summarize(week,attempts,written,sessions,plan){
   plan_days:Array.isArray(plan?.weekdays)?plan.weekdays.length:null
  };
 }
+// View-time policy: preserve the original weekly snapshot and all aggregate metrics.
+export function reportForCertificates(report,certificates){
+ if(!report)return report;
+ const acquired=(Array.isArray(certificates)?certificates:[]).some(c=>
+  ['engineer','industrial'].includes(c?.certificate_code)&&c.pass_status==='final'&&c.verification_status!=='rejected');
+ if(!acquired)return report;
+ const learning=report.payload.learning;
+ return {...report,payload:{...report.payload,learning:{...learning,subject_scope:'fundamentals',
+  subjects:learning.subjects.filter(s=>['coding','ncp'].includes(s.id)&&s.attempts>0)}}};
+}
 export function scheduleEvents(events,grade,week){
  const from=shift(week,7),to=shift(week,13);
  return (Array.isArray(events)?events:[]).filter(e=>e?.published===true&&['all',String(grade)].includes(String(e.targetGrade))&&typeof e.title==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(e.startDate)&&/^\d{4}-\d{2}-\d{2}$/.test(e.endDate)&&e.startDate<=to&&e.endDate>=from)

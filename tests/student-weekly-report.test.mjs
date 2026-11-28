@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {lastWeek,validWeek,shift,summarize,scheduleEvents,suggestedTasks} from '../supabase/functions/student-weekly-report/report.mjs';
+import {lastWeek,validWeek,shift,summarize,scheduleEvents,suggestedTasks,reportForCertificates} from '../supabase/functions/student-weekly-report/report.mjs';
 import {readFileSync} from 'node:fs';
 assert.equal(lastWeek(Date.parse('2026-11-29T14:59:59Z')),'2026-11-16');
 assert.equal(lastWeek(Date.parse('2026-11-29T15:00:00Z')),'2026-11-23');
@@ -34,3 +34,32 @@ const auth=readFileSync(new URL('../js/portal-auth.mjs',import.meta.url),'utf8')
 const account=auth.slice(auth.indexOf('const accountSettings=addSection'),auth.indexOf('// Personal learning and device-data migration'));
 assert.match(account,/마이페이지[\s\S]*나의 주간 리포트[\s\S]*나의 자격증/);
 assert.match(account,/if\(!isAdmin&&activeWrite&&currentProfile\?\.signup_type==="student"&&currentProfile\?\.approval_status==="approved"&&currentProfile\?\.enrollment_status==="enrolled"\)addAction\(accountSettings,\{title:"나의 주간 리포트".*href:"weekly-report.html"/);
+
+// Both relevant final certificates qualify independently. Pending final registrations
+// are included (as in the portal's registered final-pass count); rejected and written-only do not qualify.
+const snapshot={week_start:'2026-11-23',payload:{learning:{...l,subjects:[
+ {id:'coding',attempts:3},{id:'ncp',attempts:0},{id:'engineer',attempts:5},{id:'industrial',attempts:2},{id:'practical',attempts:4}
+ ]},tasks:[]},completed_tasks:['test']};
+const before=JSON.stringify(snapshot);
+for(const certificate_code of ['engineer','industrial']){
+ for(const verification_status of ['verified','pending']){
+  const report=reportForCertificates(snapshot,[{certificate_code,pass_status:'final',verification_status}]);
+  assert.deepEqual(report.payload.learning.subjects.map(x=>x.id),['coding']);
+  assert.equal(report.payload.learning.subject_scope,'fundamentals');
+  assert.equal(report.payload.learning.attempts,l.attempts,'overall metrics remain undisturbed');
+  assert.deepEqual(report.completed_tasks,['test']);
+ }
+}
+for(const cert of [
+ {certificate_code:'engineer',pass_status:'written',verification_status:'verified'},
+ {certificate_code:'industrial',pass_status:'final',verification_status:'rejected'},
+ {certificate_code:'sqld',pass_status:'final',verification_status:'verified'}
+])assert.equal(reportForCertificates(snapshot,[cert]),snapshot);
+const noBasics={...snapshot,payload:{...snapshot.payload,learning:{...snapshot.payload.learning,subjects:snapshot.payload.learning.subjects.map(s=>s.id==='coding'?{...s,attempts:0}:s)}}};
+assert.equal(reportForCertificates(noBasics,[{certificate_code:'engineer',pass_status:'final',verification_status:'pending'}]).payload.learning.subjects.length,0);
+const bothBasics={...snapshot,payload:{...snapshot.payload,learning:{...snapshot.payload.learning,subjects:snapshot.payload.learning.subjects.map(s=>s.id==='ncp'?{...s,attempts:2}:s)}}};
+assert.deepEqual(reportForCertificates(bothBasics,[{certificate_code:'industrial',pass_status:'final',verification_status:'verified'}]).payload.learning.subjects.map(s=>s.id),['coding','ncp']);
+assert.equal(JSON.stringify(snapshot),before,'existing weekly snapshot must remain immutable');
+assert.match(edge,/reportForCertificates\(report,certificates\)/);
+assert.match(edge,/from\("student_certifications"\)\.select\("certificate_code,pass_status,verification_status"\)\.eq\("user_id",member\.user_id\)/);
+console.log('PASS: independent article/industrial final-pass filter, zero attempts, historical snapshot immutability.');

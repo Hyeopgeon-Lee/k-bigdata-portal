@@ -1,7 +1,7 @@
 import {createClient} from "npm:@supabase/supabase-js@2.49.10";
 import {evaluateStudentReadiness} from "../ready-api/rules.mjs";
 import {githubIdentity} from "./oidc.ts";
-import {lastWeek,validWeek,dateMs,shift,summarize,scheduleEvents,suggestedTasks} from "./report.mjs";
+import {lastWeek,validWeek,dateMs,shift,summarize,scheduleEvents,suggestedTasks,reportForCertificates} from "./report.mjs";
 const url=Deno.env.get("SUPABASE_URL")!,key=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,anon=Deno.env.get("SUPABASE_ANON_KEY")!;
 const db=createClient(url,key,{auth:{persistSession:false,autoRefreshToken:false}});
 const headers={"Content-Type":"application/json; charset=utf-8","Cache-Control":"no-store","Access-Control-Allow-Origin":"https://portal.k-bigdata.kr","Access-Control-Allow-Headers":"authorization, apikey, x-client-info, content-type","Access-Control-Allow-Methods":"POST, OPTIONS","Vary":"Origin"};
@@ -89,8 +89,14 @@ Deno.serve(async req=>{
   return reply({completed_tasks:completed});
  }
  if(body.action!=="mine")return reply({error:"BAD_ACTION"},400);
- const report=week===latest?await generate(member,week):await getReport(member.user_id,week);
- const history=await read(db.from("student_weekly_reports").select("week_start").eq("user_id",member.user_id).order("week_start",{ascending:false}).limit(104));
- return reply({report,latest,weeks:history.map((w:any)=>w.week_start)});
+ // Apply the current student's certificate policy to this view, including already saved weeks.
+ const [report,history,certificates]=await Promise.all([
+  week===latest?generate(member,week):getReport(member.user_id,week),
+  read(db.from("student_weekly_reports").select("week_start").eq("user_id",member.user_id).order("week_start",{ascending:false}).limit(104)),
+  read(db.from("student_certifications").select("certificate_code,pass_status,verification_status").eq("user_id",member.user_id).in("certificate_code",["engineer","industrial"]))
+ ]);
+ // Ensure the just-generated latest week appears in the selector even if the parallel history query completed first.
+ const weeks=[...new Set([...(report?[report.week_start]:[]),...history.map((w:any)=>w.week_start)])].sort().reverse();
+ return reply({report:reportForCertificates(report,certificates),latest,weeks});
  }catch{console.error("Student weekly report request failed");return reply({error:"REPORT_UNAVAILABLE"},500)}
 });
