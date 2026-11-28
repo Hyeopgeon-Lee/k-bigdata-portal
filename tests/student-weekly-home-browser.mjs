@@ -16,7 +16,7 @@ const cases=[
 try {
  for(const {width,role,time,expected,advance,after} of cases){
   const ctx=await browser.newContext({viewport:{width,height:900},timezoneId:'America/New_York'});
-  await approvedStudent(ctx,role==='admin'?{signup_type:'admin'}:role==='alumni'?{signup_type:'alumni',enrollment_status:'graduated'}:role==='leave'?{enrollment_status:'leave'}:role==='early'?{enrollment_status:'early_employment'}:role==='second'?{academic_year:2}:{},role==='alumni',role==='admin');
+  await approvedStudent(ctx,role==='admin'?{signup_type:'admin'}:role==='alumni'?{signup_type:'alumni',enrollment_status:'graduated'}:role==='leave'?{academic_year:1,enrollment_status:'leave'}:role==='early'?{academic_year:1,enrollment_status:'early_employment'}:role==='second'?{academic_year:2}:{academic_year:1},role==='alumni',role==='admin');
   const page=await ctx.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
   await page.clock.install({time:new Date(time)});
   await page.goto(base+'/index.html',{waitUntil:'domcontentloaded'});
