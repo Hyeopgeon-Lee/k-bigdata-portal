@@ -136,13 +136,45 @@ function contentActions(x,kind){
  return '<div class="admin-actions">'+html+'</div>';
 }
 function jobsTable(rows){return`<table class="admin-table"><thead><tr><th>회사/직무</th><th>등록 졸업생</th><th>구분/마감</th><th>메일</th><th>등록/승인</th><th>상태</th><th>관리</th></tr></thead><tbody>${rows.map(x=>`<tr><td data-label="회사/직무"><strong>${U.esc(x.company)}</strong><br>${U.esc(x.job_title)}</td><td data-label="등록 졸업생">${U.esc(x.alumni_name_admin)}<br>${U.esc(x.graduation_year)}년</td><td data-label="구분/마감">${U.esc(x.recruit_type)} · ${U.esc(x.employment_type)}<br>${x.always_open?'상시채용':U.esc(x.deadline)||'-'}</td><td data-label="메일">${x.last_mailed_at?'최근 '+U.esc(String(x.last_mailed_at).slice(0,10)):'미발송'}</td><td data-label="등록/승인"><small>${U.esc(String(x.created_at||'').slice(0,10))}<br>${U.esc(String(x.approved_at||'').slice(0,10))||'-'}</small></td><td data-label="상태">${badge(x.status)}</td><td data-label="관리">${contentActions(x,'jobs')}</td></tr>`).join('')}</tbody></table>`}
-function newsTable(rows){return`<table class="admin-table"><thead><tr><th>상태/종류</th><th>대상 졸업생</th><th>등록자</th><th>제목/관련일</th><th>메일</th><th>등록일</th><th>관리</th></tr></thead><tbody>${rows.map(x=>`<tr><td data-label="상태/종류">${badge(x.status)}<br>${U.esc(x.news_type_label)}</td><td data-label="대상 졸업생"><strong>${U.esc(x.target_name_admin)}</strong><br>${U.esc(x.graduation_year)}년</td><td data-label="등록자">${U.esc(x.submitter_name_admin)}</td><td data-label="제목/관련일"><strong>${U.esc(x.title)}</strong><br>${U.esc(x.event_date)||'-'}</td><td data-label="메일">요청 ${x.mail_requested?'예':'아니오'}<br>${badge(x.mail_status)}</td><td data-label="등록일"><small>${U.esc(String(x.created_at||'').slice(0,10))}</small></td><td data-label="관리">${contentActions(x,'alumni_news')}</td></tr>`).join('')}</tbody></table>`}
+function newsTable(rows){return`<table class="admin-table"><thead><tr><th>상태/종류</th><th>대상 졸업생</th><th>등록자</th><th>제목/관련일</th><th>메일</th><th>등록일</th><th>관리</th></tr></thead><tbody>${rows.map(x=>`<tr><td data-label="상태/종류">${badge(x.status)}<br>${U.esc(x.news_type_label)}</td><td data-label="대상 졸업생"><strong>${U.esc(x.target_name_admin)}</strong><br>${U.esc(x.graduation_year)}년</td><td data-label="등록자">${U.esc(submitterLabel(x.submitter_name_admin))}</td><td data-label="제목/관련일"><strong>${U.esc(x.title)}</strong><br>${U.esc(x.event_date)||'-'}</td><td data-label="메일">요청 ${x.mail_requested?'예':'아니오'}<br>${badge(x.mail_status)}</td><td data-label="등록일"><small>${U.esc(String(x.created_at||'').slice(0,10))}</small></td><td data-label="관리">${contentActions(x,'alumni_news')}</td></tr>`).join('')}</tbody></table>`}
+// The API returns an internal ID when the submitter is not an alumni profile.
+function submitterLabel(value){
+ const name=String(value??'').trim();
+ return !name||/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(name)?'이름 정보 없음':name;
+}
 function showContent(item,job){
- const d=U.qs('#admin-content-dialog');
- const fields=job?[['회사',item.company],['채용 직무',item.job_title],['지역',item.location],['구분',item.recruit_type+' · '+item.employment_type],['마감',item.always_open?'상시채용':item.deadline],['기술',item.skills],['선배의 한마디',item.alumni_comment],['공식 채용공고 URL',item.job_url],['추천 가능',item.referral_available?'예':'아니오']]:
- [['제목',item.title],['종류',item.news_type_label],['소식 대상',item.target_name_admin],['등록자',item.submitter_name_admin],['내용',item.content],['관련 날짜',item.event_date],['회사/직무',[item.company,item.job_title].filter(Boolean).join(' · ')],['기관/성과',[item.organization,item.position_title].filter(Boolean).join(' · ')],['대학원/학위',[item.school_name,item.degree_or_program].filter(Boolean).join(' · ')],['장소',item.location],['관계',item.relationship],['외부 URL',item.external_url],['메일 요청',item.mail_requested?'예':'아니오']];
- U.qs('#admin-content-detail').innerHTML=fields.map(([label,value])=>`<strong>${U.esc(label)}</strong><p class="admin-content-value">${U.esc(value)||'-'}</p>`).join('');
- d.showModal();
+ const d=U.qs('#admin-content-dialog'),detail=U.qs('#admin-content-detail');
+ const filled=value=>String(value??'').trim()!=='';
+ const join=(...values)=>values.filter(filled).join(' · ');
+ const date=value=>String(value||'').slice(0,10);
+ const pair=([label,value])=>`<div class="review-meta-item"><dt>${U.esc(label)}</dt><dd>${U.esc(value)}</dd></div>`;
+ const meta=fields=>`<dl class="review-meta-grid">${fields.filter(([,value])=>filled(value)).map(pair).join('')}</dl>`;
+ const section=(title,content)=>`<section class="review-section"><h3>${U.esc(title)}</h3>${content}</section>`;
+ const extra=job?
+ [['등록 졸업생',item.alumni_name_admin],['근무 지역',item.location],['주요 기술',item.skills],['추천 가능',item.referral_available?'가능':'불가'],['등록일',date(item.created_at)],['최근 메일 발송일',date(item.last_mailed_at)]]:
+ [['회사 · 직무',join(item.company,item.job_title)],['기관 · 성과',join(item.organization,item.position_title)],['대학원 · 학위',join(item.school_name,item.degree_or_program)],['장소',item.location],['관계',item.relationship],['메일 요청',item.mail_requested?'요청함':'미요청'],['메일 상태',item.mail_status?stateLabel(item.mail_status):''],['등록일',date(item.created_at)]];
+ const title=job?join(item.company,item.job_title):item.title;
+ const kind=job?'채용정보':(item.news_type_label||'동문소식');
+ const primary=job?
+ [['채용 구분',join(item.recruit_type,item.employment_type)],['접수 마감',item.always_open?'상시채용':item.deadline]]:
+ [['소식 대상',item.target_name_admin||'정보 없음'],['등록자',submitterLabel(item.submitter_name_admin)],['관련 날짜',item.event_date]];
+ const body=job?item.alumni_comment:item.content;
+ const url=job?item.job_url:item.external_url;
+ let link='';
+ if(filled(url)){
+  try{const parsed=new URL(url);if(['http:','https:'].includes(parsed.protocol))link=`<a class="review-link" href="${U.esc(parsed.href)}" target="_blank" rel="noopener noreferrer">${U.esc(job?'공식 채용공고 보기 ↗':'외부 안내 페이지 보기 ↗')}<span>${U.esc(url)}</span></a>`;}catch{/* Display malformed legacy URL without making it clickable. */}
+  if(!link)link=`<p class="review-body-text">${U.esc(url)}</p>`;
+ }
+ detail.innerHTML=`<article class="review-card">
+  <header class="review-hero"><div class="review-kinds"><span class="review-kind">${U.esc(kind)}</span>${badge(item.status)}</div>
+  <h3 class="review-title">${U.esc(title)||'제목 없음'}</h3></header>
+  ${meta(primary)}
+  ${section(job?'선배의 한마디':'소식 내용',`<div class="review-body"><p class="review-body-text">${U.esc(body)||(job?'등록된 메시지가 없습니다.':'등록된 내용이 없습니다.')}</p></div>`)}
+  ${extra.some(([,value])=>filled(value))?section('추가 정보',meta(extra)):''}
+  ${link?section(job?'채용공고 링크':'관련 링크',link):''}
+ </article>`;
+ if(!d.open)d.showModal();
+ detail.scrollTop=0;
 }
 let mailItem=null,mailPreview=null,mailBusy=false,previewGeneration=0;
 const mailDialog=()=>U.qs('#admin-mail-dialog'),mailMessage=()=>U.qs('#admin-mail-message');
