@@ -72,4 +72,5 @@ async function handle(event){
 by('study-diagnostics-refresh').addEventListener('click',()=>void refresh().catch(e=>{console.error(e);state('진단 자료 조회에 실패했습니다.',true);}));
 by('study-diagnostics-stale').addEventListener('click',event=>void handle(event));
 by('study-diagnostics-reviews').addEventListener('click',event=>void handle(event));
-refresh().catch(e=>{console.error('Study admin diagnostics',e);state('진단 자료를 불러오지 못했습니다. 교수자 권한을 확인해 주세요.',true);});
+export function activateDiagnostics(){return refresh().catch(e=>{console.error('Study admin diagnostics',e);state('진단 자료를 불러오지 못했습니다. 교수자 권한을 확인해 주세요.',true);});}
+if(document.body.dataset.learningTabs!=='true')void activateDiagnostics();

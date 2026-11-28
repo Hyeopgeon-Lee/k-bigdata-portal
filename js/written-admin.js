@@ -1,7 +1,8 @@
 const db=window.portalSupabaseClient,root=document.getElementById("industrial-teacher-stats");
 const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const sub=s=>({"정보시스템기반기술":"정보시스템 기반 기술","프로그래밍언어활용":"프로그래밍 언어 활용","데이터베이스활용":"데이터베이스 활용"}[s]||s);
-let seq=0;
+const tabbed=document.body.dataset.learningTabs==='true';let seq=0,activate=async()=>{};
+export function activateWritten(options={}){return activate(options);}
 function period(mode,offset){const kst=new Date(Date.now()+9*3600000),y=kst.getUTCFullYear(),m=kst.getUTCMonth(),d=kst.getUTCDate();let a,b;
  if(mode==="month"){a=Date.UTC(y,m+offset,1);b=Date.UTC(y,m+offset+1,1);}
  else{const mon=d-(kst.getUTCDay()+6)%7+offset*7;a=Date.UTC(y,m,mon);b=a+7*86400000;}
@@ -11,10 +12,13 @@ if(root){root.innerHTML='<h2>정보처리 필기 · 학생별 합격 준비</h2>
  const get=id=>document.getElementById(id);
  const ui=window.portalAdminUI;
  if(ui)get("iw-grade").value=ui.getGrade();
+ if(tabbed)get("iw-grade").closest("label").hidden=true;
+ function offsets(){const select=get("iw-offset"),old=Number(select.value),count=get("iw-period").value==="week"?53:25;select.replaceChildren();for(let i=0;i<count;i++)select.add(new Option(i===0?"현재":i+"기간 전",String(-i)));select.value=String(Math.max(1-count,old));}
+ if(tabbed)offsets();
  async function load(){const request=++seq;get("iw-status").textContent="집계 중…";get("iw-results").replaceChildren();document.getElementById("iw-admin-chart")?.replaceChildren();const [start,end,label]=period(get("iw-period").value,Number(get("iw-offset").value));const grade=Number(get("iw-grade").value)||null,exam=get("iw-exam").value,total=exam==="engineer"?100:60;
  try{const {data,error}=await db.rpc("portal_written_summary",{p_exam_type:exam,p_start:start,p_end:end,p_grade:grade});if(error)throw error;if(request!==seq)return;
- const list=Array.isArray(data)?data:[];get("iw-status").textContent=(grade?grade+"학년":"1·2학년 구분")+" · "+label+" · "+list.length+"명 · 학습 참여 "+list.filter(s=>s.attempts>0).length+"명";
- if(ui)ui.renderDonut(ui.chartMount(get("iw-status"),"iw-admin-chart"),"필기 학습 참여",[["기간 내 학습",list.filter(s=>s.attempts>0).length],["학습 기록 없음",list.filter(s=>!(s.attempts>0)).length]],{caption:ui.gradeLabel(get("iw-grade").value)+" · 선택 시험 및 기간"});
+ const list=Array.isArray(data)?data:[];get("iw-status").textContent=(grade?grade+"학년":"1·2학년 구분")+" · "+label+(tabbed?"":" · "+list.length+"명 · 학습 참여 "+list.filter(s=>s.attempts>0).length+"명");
+ if(ui&&!tabbed)ui.renderDonut(ui.chartMount(get("iw-status"),"iw-admin-chart"),"필기 학습 참여",[["기간 내 학습",list.filter(s=>s.attempts>0).length],["학습 기록 없음",list.filter(s=>!(s.attempts>0)).length]],{caption:ui.gradeLabel(get("iw-grade").value)+" · 선택 시험 및 기간"});
  const renderStudent=s=>{const r=s.recent,weak=r?.subjects.filter(x=>x.correct<8).map(x=>sub(x.subject)).join(", ");return '<details class="written-round"><summary><span><strong>'+esc(s.full_name)+' · '+esc(s.academic_year)+'학년</strong><small>완료 '+s.completed+'회 · 기준 충족 '+s.passed+'회 · 이번 기간 '+s.attempts+'회 풀이</small></span><span><strong>'+(r?r.average+"점":"—")+'</strong><span class="written-pill '+(r?(r.passed?"good":"bad"):"neutral")+'">'+(r?(weak?"과락":r.passed?"기준 충족":"평균 미달"):"학습 기록 부족")+'</span></span></summary><p>누적 '+s.solved+'문항 · 기간 고유 풀이 '+s.unique_count+'문항 · 기간 모의고사 '+s.mocks+'회</p>'+(weak?'<p>과락 과목: '+esc(weak)+'</p>':'')+'<div class="written-parts">'+s.rounds.map(x=>'<article><h4>'+x.yr+'년 '+x.rnd+'회</h4><p>'+x.solved+'/'+total+' · '+(x.complete?(x.correct>=total*0.6&&x.min_correct>=8?"기준 충족":x.min_correct<8?"과락":"평균 미달"):"학습 중")+'</p>'+x.subjects.map(p=>'<p>'+esc(sub(p.subject))+' '+p.correct*5+'점 · '+p.solved+'/20</p>').join("")+'</article>').join("")+'</div></details>';};
  const targets=grade?[grade]:[1,2];
  get("iw-results").innerHTML=targets.map(g=>{
@@ -28,13 +32,15 @@ if(root){root.innerHTML='<h2>정보처리 필기 · 학생별 합격 준비</h2>
  if(ui){
   const gradeChart=document.createElement("div");gradeChart.className="learning-grade-chart-grid";
   const rootChart=document.createElement("div");gradeChart.append(rootChart);get("iw-results").prepend(gradeChart);
-  ui.renderBars(rootChart,"학년별 필기 학습 참여율",targets.map(g=>{const students=list.filter(s=>Number(s.academic_year)===g);const active=students.filter(s=>s.attempts>0).length;return [g+"학년 · "+active+"/"+students.length+"명",students.length?Math.round(active/students.length*100):null];}),{unit:"%",max:100,caption:"선택 시험 및 기간 기준"});
-   const achievement=document.createElement("div");gradeChart.append(achievement);const active=list.filter(s=>s.attempts>0);
+  if(!tabbed)ui.renderBars(rootChart,"학년별 필기 학습 참여율",targets.map(g=>{const students=list.filter(s=>Number(s.academic_year)===g);const active=students.filter(s=>s.attempts>0).length;return [g+"학년 · "+active+"/"+students.length+"명",students.length?Math.round(active/students.length*100):null];}),{unit:"%",max:100,caption:"선택 시험 및 기간 기준"});
+   const achievement=tabbed?rootChart:document.createElement("div");if(!tabbed)gradeChart.append(achievement);const active=list.filter(s=>s.attempts>0);
    const passed=active.filter(s=>s.recent?.passed===true).length,notPassed=active.filter(s=>s.recent&&s.recent.passed!==true).length,notCompleted=active.length-passed-notPassed;
-   ui.renderDonut(achievement,"필기 학습 성과 · 참여 "+active.length+"명",[["합격 기준 충족",passed],["기준 미충족",notPassed],["완료 회차 없음",notCompleted]],{caption:"선택 기간 참여 학생의 최근 완료 회차 기준 · 실제 자격시험 결과 아님"});
+   ui.renderDonut(achievement,"필기 학습 성과 · 참여 "+active.length+"명",[["합격 기준 충족",passed],["기준 미충족",notPassed],["완료 회차 없음",notCompleted],...(tabbed?[["기간 내 미참여",list.length-active.length]]:[])],{caption:"선택 기간 참여 학생의 최근 완료 회차 기준 · 실제 자격시험 결과 아님"});
+   if(tabbed){const weak=new Map();for(const student of active){for(const p of student.recent?.subjects||[]){const x=weak.get(p.subject)||{total:0,weak:0};x.total++;if(p.correct<8)x.weak++;weak.set(p.subject,x);}}if(weak.size){const w=document.createElement("div");gradeChart.append(w);ui.renderBars(w,"과목별 과락 학생",Array.from(weak,([name,x])=>[sub(name)+" · "+x.weak+"/"+x.total+"명",Math.round(x.weak/x.total*100)]),{unit:"%",max:100,caption:"기간 참여 학생의 최근 완료 회차 기준 · 과락 학생/판정 학생"});}}
  }
  }catch{if(request===seq)get("iw-status").textContent="통계를 조회하지 못했습니다. 관리자 권한과 네트워크를 확인하세요.";}}
- for(const id of ["iw-exam","iw-period","iw-offset"])get(id).addEventListener("change",load);
+ for(const id of ["iw-exam","iw-period","iw-offset"])get(id).addEventListener("change",()=>{if(tabbed&&id==="iw-period")offsets();void load();});
  get("iw-grade").addEventListener("change",()=>ui?ui.setGrade(get("iw-grade").value):load());
- ui?.onGrade(value=>{get("iw-grade").value=value;void load();});get("iw-refresh").addEventListener("click",load);void load();
+ ui?.onGrade(value=>{get("iw-grade").value=value;if(!tabbed||window.portalLearningTabs?.isActive("written"))void load();});get("iw-refresh").addEventListener("click",load);
+ activate=options=>{if(ui)get("iw-grade").value=ui.getGrade();if(options.exam)get("iw-exam").value=options.exam;if(options.period){get("iw-period").value=options.period;if(tabbed)offsets();}if(options.offset!=null)get("iw-offset").value=String(options.offset);return load();};if(!tabbed)void activate();
 }

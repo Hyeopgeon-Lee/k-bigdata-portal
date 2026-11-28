@@ -1,15 +1,23 @@
 <!doctype html><html lang="ko" data-admin-access="pending"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>학급 학습통계 | 포털 관리자</title><style id="learning-lock">body>:not(#portal-auth-layer):not(#learning-notice){display:none!important}#learning-notice{position:fixed;inset:0;display:grid;place-items:center;background:#f7f9fc;color:transparent;font-size:0;z-index:1}#learning-notice::after{content:"";width:32px;height:32px;border:3px solid #dce6f3;border-top-color:#245791;border-radius:50%;animation:admin-spin .8s linear infinite}@keyframes admin-spin{to{transform:rotate(360deg)}}</style>
-<link rel="stylesheet" href="../css/style.css?v=20261112-page-intro-2"><link rel="stylesheet" href="../css/portal-ux.css?v=20261112-page-intro-2"><link rel="stylesheet" href="../css/learning-dashboard.css?v=20261128-learning-restore-1"><link rel="stylesheet" href="../css/study.css?v=20261116-study-recovery-1"><link rel="stylesheet" href="css/admin.css?v=20261128-ui-1"><link rel="stylesheet" href="../css/written-dashboard.css?v=20261128-performance-1"><link rel="stylesheet" href="css/admin-mobile.css?v=20261128-ui-1"><link rel="stylesheet" href="css/learning-grades.css?v=20261128-study-share-1"><link rel="stylesheet" href="css/learning-visualization.css?v=20261128-learning-vis-1"></head>
-<body data-admin-module="learning.js" data-admin-page="learning" data-admin-module-version="20261128-learning-vis-1"><p id="learning-notice" role="status">관리자 로그인 및 권한 확인 중입니다.</p>
+<link rel="stylesheet" href="../css/style.css?v=20261112-page-intro-2"><link rel="stylesheet" href="../css/portal-ux.css?v=20261112-page-intro-2"><link rel="stylesheet" href="../css/learning-dashboard.css?v=20261128-learning-restore-1"><link rel="stylesheet" href="../css/study.css?v=20261116-study-recovery-1"><link rel="stylesheet" href="css/admin.css?v=20261128-ui-1"><link rel="stylesheet" href="../css/written-dashboard.css?v=20261128-performance-1"><link rel="stylesheet" href="css/admin-mobile.css?v=20261128-ui-1"><link rel="stylesheet" href="css/learning-grades.css?v=20261128-study-share-1"><link rel="stylesheet" href="css/learning-visualization.css?v=20261128-learning-tabs-1"><link rel="stylesheet" href="css/learning-tabs.css?v=20261128-learning-tabs-1"></head>
+<body data-admin-module="learning.js" data-admin-page="learning" data-learning-tabs="true" data-admin-module-version="20261128-learning-tabs-1"><p id="learning-notice" role="status">관리자 로그인 및 권한 확인 중입니다.</p>
 <header class="admin-header site-header">
   <div class="admin-header-inner header-inner">
     <a class="admin-brand brand" href="index.html" aria-label="학과 관리자 포털 홈"><span class="brand-mark" aria-hidden="true"><span></span></span><span class="admin-brand-copy brand-copy"><strong>빅데이터SW학과</strong><small>관리자 포털</small></span></a>
     <nav class="admin-header-links" aria-label="관리자 상단 메뉴"><a class="admin-header-link" href="index.html">관리자 홈</a><a class="admin-header-link" href="../index.html">포털 홈</a><a class="admin-header-link" href="../mypage.html">마이페이지</a></nav>
   </div>
 </header>
-<main id="main-content" class="admin-main learn-main"><div class="admin-intro admin-intro--subpage"><div class="admin-intro-copy"><p class="admin-kicker">ADMIN PORTAL</p><h1>학급 학습통계 · 자율학습 관리</h1><p>학습 통계, 계획·실천 내역, 교수·학생 메일 발송을 관리합니다.</p></div><a class="admin-intro-link" href="index.html"><span aria-hidden="true">←</span> 관리자 홈</a></div>
+<main id="main-content" class="admin-main learn-main"><div class="admin-intro admin-intro--subpage"><div class="admin-intro-copy"><p class="admin-kicker">ADMIN PORTAL</p><h1>학급 학습관리</h1><p>문제 풀이, 자율학습, 필기시험 성과와 운영 설정을 구분하여 관리합니다.</p></div><a class="admin-intro-link" href="index.html"><span aria-hidden="true">←</span> 관리자 홈</a></div>
 <section id="admin-denied" class="admin-message" hidden><p id="admin-gate-status" role="alert"></p><a href="../index.html">포털 홈으로 돌아가기</a></section>
 <div id="admin-secure" hidden><nav class="admin-menu" aria-label="관리자 업무 메뉴"><a class="admin-menu-home" href="index.html">관리자 홈</a><a href="accounts.html?view=approvals">가입 승인 요청</a><a href="accounts.html?view=students">통합 사용자 관리</a><a href="learning.html">학급 학습통계</a><a href="certifications.html">학생 자격증 관리</a><a href="mock-exam.html">실전 모의고사 생성</a><a href="rooms.html">프로젝트실 관리</a><a href="help.html">학과 요청 관리</a><a href="alumni.html">졸업생 네트워크 관리</a></nav><div class="container learn-container">
+<div class="learning-tabs" role="tablist" aria-label="학습관리 메뉴">
+ <button type="button" id="learning-tab-problem" data-learning-tab="problem" role="tab" aria-selected="true" aria-controls="learning-panel-problem">문제 풀이</button>
+ <button type="button" id="learning-tab-study" data-learning-tab="study" role="tab" aria-selected="false" aria-controls="learning-panel-study" tabindex="-1">자율학습</button>
+ <button type="button" id="learning-tab-written" data-learning-tab="written" role="tab" aria-selected="false" aria-controls="learning-panel-written" tabindex="-1">필기시험</button>
+ <button type="button" id="learning-tab-operations" data-learning-tab="operations" role="tab" aria-selected="false" aria-controls="learning-panel-operations" tabindex="-1">운영 관리</button>
+</div>
+<p id="learning-tab-status" class="learn-status" role="status" aria-live="polite" hidden></p>
+<div id="learning-panel-problem" class="learning-tab-panel" data-learning-panel="problem" role="tabpanel" aria-labelledby="learning-tab-problem">
 <div class="learn-tools"><p class="learn-note">학습 통계: 월요일 00:00 ~ 다음 월요일 00:00 · 한국시간</p><button id="teacher-refresh" type="button">통계 새로고침</button></div>
 <p id="teacher-status" class="learn-status" role="status" aria-live="polite">관리자 권한을 확인하고 있습니다.</p>
 <section class="learn-section learning-grade-overview" aria-labelledby="learning-grade-title">
@@ -17,21 +25,23 @@
  <p class="learning-grade-description">전체 및 학년별 문제 풀이 참여 학생 수, 풀이 횟수, 문제별 정답·오답 학생 수를 확인합니다.</p>
  <div id="learning-grade-overview" aria-live="polite">학년별 통계를 불러오는 중…</div>
 </section>
-<section class="learn-section learn-mail-section" aria-labelledby="teacher-mail-heading">
-  <h2 id="teacher-mail-heading">주간 메일 발송</h2>
-  <p id="teacher-mail-status" class="learn-mail-status" role="status" aria-live="polite">설정 확인 중…</p>
-  <div class="learn-mail-switch-list" id="teacher-mail-settings" hidden>
-    <label class="learn-mail-switch-row" for="teacher-mail-faculty">
-      <span class="learn-mail-switch-name">교수 리포트</span>
-      <input id="teacher-mail-faculty" type="checkbox" role="switch" aria-label="교수 리포트 메일 발송" disabled>
-    </label>
-    <label class="learn-mail-switch-row" for="teacher-mail-students">
-      <span class="learn-mail-switch-name">학생 리포트</span>
-      <input id="teacher-mail-students" type="checkbox" role="switch" aria-label="학생 리포트 메일 발송" disabled>
-    </label>
-  </div>
-</section>
-<section class="learn-section study-layout" aria-labelledby="teacher-study-title" id="teacher-study-panel">
+<div id="teacher-content" hidden><h2 id="teacher-grade-heading" class="learning-detail-heading">기초·실기·NCP 보조 통계</h2><p>통합 참여 집계를 불러오지 못한 경우에만 기존 상세 통계를 제공합니다.</p>
+<div class="learn-grid" id="teacher-summary"></div>
+
+<section class="learn-section"><h2>과목별 학습 활동</h2><div id="teacher-subjects" class="learn-table-wrap"></div></section>
+<section class="learn-section"><h2>자가평가와 복습 성과</h2><div id="teacher-rates" class="learn-rate-grid"></div></section>
+<section class="learn-section"><h2>반복 오답 시도</h2><p>기초·실기·NCP의 누적 오답 시도 기록입니다. 학생별 최근 판정 결과는 상단 문제별 학습 결과에서 확인할 수 있습니다.</p><div id="teacher-wrong" class="learn-review-list"></div></section>
+<section class="learn-section"><h2>지난주 대비</h2><div id="teacher-comparison" class="learn-table-wrap"></div></section>
+
+
+</div>
+</div>
+<div id="learning-panel-study" class="learning-tab-panel" data-learning-panel="study" role="tabpanel" aria-labelledby="learning-tab-study" hidden>
+<div class="learning-subtabs" role="group" aria-label="자율학습 조회 단위">
+ <button type="button" data-study-view="week" aria-pressed="true">주간 관리</button>
+ <button type="button" data-study-view="month" aria-pressed="false">월간 통계</button>
+</div>
+<div id="study-week-view"><section class="learn-section study-layout" aria-labelledby="teacher-study-title" id="teacher-study-panel">
   <div class="study-topline"><h2 id="teacher-study-title">자율학습 관리</h2><p id="study-grade-scope" class="learning-scope-label">전체 학년</p>
   <div class="study-admin-controls">
    <label>조회 주간 <select id="study-admin-week" aria-label="자율학습 조회 주간"></select></label>
@@ -44,14 +54,41 @@
   <div class="study-admin-table-wrap">
    <table class="study-admin-table"><thead><tr><th>학생</th><th>학년</th><th>계획일</th><th>실천</th><th>공부시간</th><th>상태</th><th>계획 없음 사유</th><th>미참여 사유</th></tr></thead><tbody id="study-admin-table-body"></tbody></table>
   </div>
-  <div class="learn-mail-switch-list" style="margin-top:18px">
+</section>
+</div>
+<section class="learn-section" id="study-month-view" aria-labelledby="teacher-study-period-title" hidden>
+ <div class="study-topline"><h2 id="teacher-study-period-title">월간 자율학습 통계</h2>
+  <div class="study-admin-controls"><label>조회 월 <select id="study-month-select" aria-label="자율학습 조회 월"></select></label><button id="study-month-refresh" type="button" class="study-outline">새로고침</button></div></div>
+ <p id="study-month-status" class="learn-status" role="status" aria-live="polite"></p>
+ <div class="learn-grid" id="teacher-study-period-summary"></div>
+</section>
+</div>
+<div id="learning-panel-written" class="learning-tab-panel" data-learning-panel="written" role="tabpanel" aria-labelledby="learning-tab-written" hidden>
+<section id="industrial-teacher-stats" class="learn-section written-dashboard"></section>
+</div>
+<div id="learning-panel-operations" class="learning-tab-panel" data-learning-panel="operations" role="tabpanel" aria-labelledby="learning-tab-operations" hidden>
+<section class="learn-section learn-mail-section" aria-labelledby="teacher-mail-heading">
+  <div class="study-topline"><h2 id="teacher-mail-heading">주간 메일 발송</h2><button type="button" class="study-outline" id="learning-settings-refresh">설정 새로고침</button></div>
+  <p id="teacher-mail-status" class="learn-mail-status" role="status" aria-live="polite">설정 확인 중…</p>
+  <div class="learn-mail-switch-list" id="teacher-mail-settings" hidden>
+    <label class="learn-mail-switch-row" for="teacher-mail-faculty">
+      <span class="learn-mail-switch-name">교수 리포트</span>
+      <input id="teacher-mail-faculty" type="checkbox" role="switch" aria-label="교수 리포트 메일 발송" disabled>
+    </label>
+    <label class="learn-mail-switch-row" for="teacher-mail-students">
+      <span class="learn-mail-switch-name">학생 리포트</span>
+      <input id="teacher-mail-students" type="checkbox" role="switch" aria-label="학생 리포트 메일 발송" disabled>
+    </label>
+  </div>
+</section>
+<section class="learn-section" aria-labelledby="study-absence-heading"><h2 id="study-absence-heading">자율학습 미참여 메일</h2>  <div class="learn-mail-switch-list" >
    <label class="learn-mail-switch-row" for="study-admin-mail">
    <span class="learn-mail-switch-name">자율학습 미참여 메일 발송</span>
-   <input id="study-admin-mail" type="checkbox" role="switch" aria-label="자율학습 미참여 이메일 자동 발송">
+   <input id="study-admin-mail" disabled type="checkbox" role="switch" aria-label="자율학습 미참여 이메일 자동 발송">
    </label>
   </div>
   <p class="study-text">설정을 켜면 미참여 학생에게 다음 날 오전 9시 메일을 보냅니다.</p>
-</section>
+<p id="study-mail-status" class="learn-status" aria-live="polite"></p></section>
 <section class="learn-section" id="study-diagnostics-panel" aria-labelledby="study-diagnostics-title">
  <div class="study-topline"><h2 id="study-diagnostics-title">학습 시작·종료 오류 및 미종료 세션 점검</h2><p class="admin-chart-caption">운영 진단은 학년 구분 없이 전체 기록을 점검합니다.</p>
   <button id="study-diagnostics-refresh" class="study-outline" type="button">오류·세션 새로고침</button>
@@ -68,21 +105,8 @@
  <div class="study-admin-table-wrap"><table class="study-admin-table"><thead><tr><th>발생시각</th><th>학생</th><th>동작</th><th>오류 코드</th><th>HTTP</th></tr></thead>
  <tbody id="study-diagnostics-errors"><tr><td colspan="5">조회 중…</td></tr></tbody></table></div>
 </section>
-<section id="industrial-teacher-stats" class="learn-section written-dashboard"></section>
-<div id="teacher-content" hidden><h2 id="teacher-grade-heading" class="learning-detail-heading">기초·실기·NCP 상세 통계</h2>
-<div class="learn-grid" id="teacher-summary"></div>
-<section class="learn-section" aria-labelledby="teacher-study-period-title">
- <h2 id="teacher-study-period-title">선택 기간 자율학습 통계</h2>
- <p>현재 주·월은 실시간, 종료된 기간은 확정된 학년별 학습 기록을 표시합니다.</p>
- <div class="learn-grid" id="teacher-study-period-summary"></div>
-</section>
-<section class="learn-section"><h2>과목별 학습 활동</h2><div id="teacher-subjects" class="learn-table-wrap"></div></section>
-<section class="learn-section"><h2>자가평가와 복습 성과</h2><div id="teacher-rates" class="learn-rate-grid"></div></section>
-<section class="learn-section"><h2>반복 오답 시도</h2><p>기초·실기·NCP의 누적 오답 시도 기록입니다. 학생별 최근 판정 결과는 상단 문제별 학습 결과에서 확인할 수 있습니다.</p><div id="teacher-wrong" class="learn-review-list"></div></section>
-<section class="learn-section"><h2>지난주 대비</h2><div id="teacher-comparison" class="learn-table-wrap"></div></section>
-
-
 </div>
+
 </div>
 </div></main>
 <script type="module" src="../js/portal-auth.mjs?v=20261128-performance-1"></script>

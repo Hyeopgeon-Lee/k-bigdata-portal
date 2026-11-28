@@ -1,8 +1,8 @@
-import {renderLearningVisualization} from './learning-visualization.mjs?v=20261128-learning-vis-1';
+import {renderLearningVisualization} from './learning-visualization.mjs?v=20261128-learning-tabs-1';
 /* Aggregated, super-admin-only data comes from the guarded Edge Function. */
 const db=window.portalSupabaseClient, get=id=>document.getElementById(id);
 const names={JAVA:'Java',C:'C언어',PYTHON:'Python',LINUX:'Ubuntu',NCP:'NCP',PRACTICAL:'정보처리'};
-const adminUI=window.portalAdminUI;
+const adminUI=window.portalAdminUI,tabbed=document.body.dataset.learningTabs==='true';
 let gradeFilter=adminUI?.getGrade()||'', periodMode='week',periodOffset=0,requestSequence=0;
 const node=(tag,text,className)=>{const el=document.createElement(tag);if(text!==undefined&&text!==null)el.textContent=String(text);if(className)el.className=className;return el;};
 function card(label,value,sub){
@@ -121,7 +121,7 @@ function updatePeriodControls(data){
    new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',year:'numeric',month:'long'}).format(new Date(data.periodStart));
  }else periodLabel.textContent=periodOffset===0?(periodMode==='week'?'이번 주':'이번 달'):'기간 조회 중';
 }
-const answers=node('section');
+const answers=node('section',null,'lv-answer-panel');
 answers.setAttribute('aria-live','polite');
 let answerRequest=0;
 const results={correct:'정답',incorrect:'오답',completed:'완료',ungraded:'미판정',timeout:'시간 초과'};
@@ -201,9 +201,10 @@ async function load(){
  }
  const charts=await chartStatsFor(data,gradeFilter);
  if(sequence!==requestSequence)return;
- if(overview)renderLearningVisualization(overview,charts,{grade:gradeFilter,period:periodMode,range:get('teacher-period-label').textContent,basis:charts?.basis,onGrade:value=>adminUI?.setGrade(value)});
- get('teacher-content').hidden=false;
  const a=data.current,b=data.previous;
+ if(overview)renderLearningVisualization(overview,charts,{grade:gradeFilter,period:periodMode,range:get('teacher-period-label').textContent,basis:charts?.basis,onGrade:value=>adminUI?.setGrade(value),...(tabbed?{legacy:a,previousLegacy:b,previousStats:b?.chartStats,partial:data.partial,topWrong:data.topWrong||[],answerPanel:answers,onSubject:key=>{void showAnswers(key,false,data.periodStart);answers.scrollIntoView({block:'nearest',behavior:'smooth'});},onWritten:key=>window.portalLearningTabs.open('written',{exam:key==='ENGINEER'?'engineer':'industrial',period:periodMode,offset:periodOffset})}:{})});
+ if(tabbed&&charts?.subjects){status.textContent=(data.partial?'현재 시각까지 실시간 집계':'저장된 확정 통계 조회')+(data.cohortBasis==='late_backfill'?' · 사후 집계':'')+(!b?.chartStats?' · 이전 기간 차트 통계 없음':'');return;}
+ get('teacher-content').hidden=false;
  const thisPeriod=periodMode==='week'?'해당 주':'해당 월';
  const lastPeriod=periodMode==='week'?'전주':'전월';
  const compared=lastPeriod+(data.partial?' 전체':'');
@@ -247,7 +248,7 @@ async function load(){
  ]));
  if(adminUI)adminUI.renderBars(adminUI.chartMount(get('teacher-comparison'),'teacher-comparison-chart'),'기간별 문제 풀이 비교',[[thisPeriod+' · '+a.activeStudents+'명',a.attempts],[compared+(b?.activeStudents==null?'':' · '+b.activeStudents+'명'),b?.attempts]],{unit:'회',caption:data.partial?'현재 기간은 집계 시각까지, 비교 기간은 전체 확정치':'기간별 확정 통계'});
  const study=get('teacher-study-period-summary');
- if(study&&data.study){
+ if(!tabbed&&study&&data.study){
   const v=data.study,sec=Number(v.studySeconds||0),hours=Math.floor(sec/3600),minutes=Math.floor((sec%3600)/60);
   const rate=v.dueDays?Math.round(Number(v.attendedPlannedDays||0)*100/Number(v.dueDays))+'%':'—';
   study.replaceChildren(
@@ -320,18 +321,19 @@ async function saveMailSetting(type,enabled){
   input.disabled=false;
  }
 }
-for(const [type,input] of Object.entries(mailInputs)){
+if(!tabbed)for(const [type,input] of Object.entries(mailInputs)){
  input?.addEventListener('change',()=>{void saveMailSetting(type,input.checked);});
 }
 get('teacher-refresh').addEventListener('click',()=>{
  const button=get('teacher-refresh');button.disabled=true;button.textContent='새로고침 중...';
- void Promise.allSettled([load(),loadMailSettings()]).finally(()=>{button.disabled=false;button.textContent='통계 새로고침';});
+ void Promise.allSettled([load(),...(!tabbed?[loadMailSettings()]:[])]).finally(()=>{button.disabled=false;button.textContent='통계 새로고침';});
 });
-load().catch(error=>{console.error('Professor learning report',error);get('teacher-status').textContent='학급 통계 조회에 실패했습니다. 슈퍼 관리자 계정으로 로그인해 주세요.';});
-loadMailSettings().catch(error=>{console.error('Weekly mail settings',error);setMailStatus('발송 설정을 불러오지 못했습니다. 다시 시도해 주세요.',true);});
+export function activateLearning(){gradeFilter=adminUI?.getGrade()||'';return load().catch(error=>{console.error('Professor learning report',error);get('teacher-status').textContent='학급 통계 조회에 실패했습니다. 슈퍼 관리자 계정으로 로그인해 주세요.';});}
+if(!tabbed)void activateLearning();
+if(!tabbed)loadMailSettings().catch(error=>{console.error('Weekly mail settings',error);setMailStatus('발송 설정을 불러오지 못했습니다. 다시 시도해 주세요.',true);});
 
 if(adminUI)adminUI.onGrade(value=>{
  if(value===gradeFilter)return;
  gradeFilter=value;
- void load().catch(()=>{get("teacher-status").textContent="학습통계를 조회하지 못했습니다.";});
+ if(!tabbed||window.portalLearningTabs?.isActive('problem'))void load().catch(()=>{get("teacher-status").textContent="학습통계를 조회하지 못했습니다.";});
 });

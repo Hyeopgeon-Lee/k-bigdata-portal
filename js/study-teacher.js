@@ -2,6 +2,7 @@
 import {isStaleSession} from './study-session-state.mjs';
 import {studyShareModel,attachStudyChartShare} from './study-chart-share.mjs?v=20261128-study-share-2';
 const db=window.portalSupabaseClient,$=id=>document.getElementById(id);
+const tabbed=document.body.dataset.learningTabs==='true';let view='week',monthSequence=0;
 const DAY=86400000,Z=9*3600000;
 const kdate=value=>new Date(new Date(value).getTime()+Z).toISOString().slice(0,10);
 const monday=()=>{const d=new Date(Date.now()+Z);return new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate()-(d.getUTCDay()+6)%7)).toISOString().slice(0,10);};
@@ -24,6 +25,7 @@ async function load(){
  const request=++loadSequence;
  report=null;
  $('study-days-chart')?.replaceChildren();
+ if(tabbed){$('study-admin-summary').replaceChildren();$('study-grade-comparison').replaceChildren();$('study-admin-table-body').replaceChildren();}
  setStatus('자율학습 통계를 불러오는 중입니다.');
  let response;
  try{response=await db.rpc('study_admin_dashboard',{p_week_start:selectedWeek()});}
@@ -32,7 +34,7 @@ async function load(){
  const {data,error}=response;
  if(error||!data||!Array.isArray(data.students))throw error||Error('관리자 응답이 올바르지 않습니다.');
  report=data;
- $('study-admin-mail').checked=data.email_enabled===true;
+ if(!tabbed)$('study-admin-mail').checked=data.email_enabled===true;
  render();setStatus('자율학습 기록을 불러왔습니다.');
 }
 function render(){
@@ -88,7 +90,7 @@ function render(){
  }
  const ui=window.portalAdminUI;
  if(ui){
-  ui.renderDonut(ui.chartMount($('study-admin-summary'),'study-plan-chart'),'계획 등록 현황',[
+  if(!tabbed)ui.renderDonut(ui.chartMount($('study-admin-summary'),'study-plan-chart'),'계획 등록 현황',[
    ['계획 등록',plannedStudents],['미등록',students.length-plannedStudents]
   ],{caption:ui.gradeLabel(grade)+' · 선택 주간, 0일 계획 포함'});
   const days=[0,0,0,0,0,0,0],dailyStudents=Array.from({length:7},()=>new Set()),ids=new Set(students.map(s=>s.id));
@@ -137,8 +139,33 @@ for(let i=-4;i<=1;i++){const d=dateAt(base,i*7);select.add(new Option(d+' 주간
 select.value=base;
 select.addEventListener('change',()=>void load().catch(e=>setStatus('관리자 자료 조회 실패',true)));
 $('study-admin-grade').value=window.portalAdminUI?.getGrade()||'';
-window.portalAdminUI?.onGrade(value=>{$('study-admin-grade').value=value;render();});
+window.portalAdminUI?.onGrade(value=>{$('study-admin-grade').value=value;if(!tabbed)render();else if(window.portalLearningTabs?.isActive('study')){if(view==='month')void loadMonth();else render();}});
 $('study-admin-grade').addEventListener('change',render);
 $('study-admin-refresh').addEventListener('click',()=>void load().catch(e=>setStatus('관리자 자료 조회 실패',true)));
-$('study-admin-mail').addEventListener('change',()=>void saveMail());
-load().catch(error=>{console.error('study admin',error);setStatus('자율학습 자료를 조회할 수 없습니다. 교수자 권한을 확인해 주세요.',true);});
+async function loadMonth(){
+ const request=++monthSequence,root=$('teacher-study-period-summary'),status=$('study-month-status'),grade=$('study-admin-grade').value;
+ root.replaceChildren();status.textContent='월간 자율학습 통계를 불러오는 중…';
+ try{
+  const {data,error}=await db.functions.invoke('learning-admin',{body:{action:'summary',period:'month',offset:Number($('study-month-select').value),...(grade?{grade:Number(grade)}:{})}});
+  if(request!==monthSequence)return;
+  if(error||!data?.ok)throw error||Error('월간 조회 실패');
+  if(!data.study){status.textContent='선택 월의 자율학습 통계가 없습니다.';return;}
+  const v=data.study,rate=v.dueDays?Math.round(Number(v.attendedPlannedDays||0)*100/Number(v.dueDays))+'%':'—';
+  for(const [label,value,detail] of [['계획 등록',v.plannedStudents+'명','0일 계획 '+v.zeroPlanStudents+'명'],['계획 실천율',rate,(v.attendedPlannedDays||0)+' / '+(v.dueDays||0)+'일'],['누적 공부시간',fmt(v.studySeconds),'휴식시간·검토 대상 제외'],['참여 일수',v.attendedDays+'일','학생별 참여일 합계']]){
+   const card=document.createElement('article');card.className='learn-stat';for(const [tag,text] of [['small',label],['strong',value],['p',detail]]){const node=document.createElement(tag);node.textContent=text;card.append(node);}root.append(card);
+  }
+  status.textContent=(grade?grade+'학년':'전체 학년')+' · '+(data.partial?'현재 시각까지 집계':'확정 통계');
+ }catch(error){if(request===monthSequence)status.textContent='월간 자율학습 통계를 조회하지 못했습니다. 다시 시도해 주세요.';}
+}
+function loadWeek(){return load().catch(error=>{console.error('study admin',error);setStatus('자율학습 자료를 조회할 수 없습니다. 교수자 권한을 확인해 주세요.',true);});}
+export function activateStudy(){$('study-admin-grade').value=window.portalAdminUI?.getGrade()||'';return view==='month'?loadMonth():loadWeek();}
+if(tabbed){
+ const month=$('study-month-select'),now=new Date(Date.now()+Z);
+ for(let i=0;i>=-24;i--){const d=new Date(Date.UTC(now.getUTCFullYear(),now.getUTCMonth()+i,1));month.add(new Option(d.getUTCFullYear()+'년 '+(d.getUTCMonth()+1)+'월',String(i)));}
+ month.addEventListener('change',()=>void loadMonth());$('study-month-refresh').addEventListener('click',()=>void loadMonth());
+ for(const b of document.querySelectorAll('[data-study-view]'))b.addEventListener('click',()=>{
+  const next=b.dataset.studyView;if(view===next)return;view=next;
+  for(const button of document.querySelectorAll('[data-study-view]'))button.setAttribute('aria-pressed',String(button.dataset.studyView===view));
+  $('study-week-view').hidden=view!=='week';$('study-month-view').hidden=view!=='month';void activateStudy();
+ });
+}else{$('study-admin-mail').addEventListener('change',()=>void saveMail());void loadWeek();}

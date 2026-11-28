@@ -18,6 +18,7 @@ export async function approvedStudent(context, profileOverride={}, registeredAlu
    const pendingStudents=adminStudents.slice(0,2).map((s,i)=>({...s,user_id:"33333333-3333-4333-8333-33333333333"+i,full_name:i?"2학년 가입 대기":"1학년 가입 대기",approval_status:"pending"}));
    const adminAlumni=[{alumni_id:"22222222-2222-4222-8222-222222222222",name:"졸업생 테스트",graduation_year:2025,company:"테스트 회사",employment_status:"취업",approval_status:"approved",career_mail_enabled:true,alumni_news_mail_enabled:false,status:"APPROVED"},{alumni_id:"22222222-2222-4222-8222-222222222223",name:"2026 졸업생",graduation_year:2026,company:"다른 회사",employment_status:"구직",approval_status:"approved",career_mail_enabled:false,alumni_news_mail_enabled:false,status:"APPROVED"}];
    const adminTables={
+    study_settings:[{setting_key:"absence_email",enabled:false}],
     student_certifications:adminStudents.map((s,i)=>({id:"cert-"+i,user_id:s.user_id,certificate_name:i?"정보처리산업기사":"SQLD",pass_status:"final",verification_status:i===2?"pending":"verified",final_pass_date:"2026-11-20",created_at:"2026-11-20"})),
     room_reservations:adminStudents.map((s,i)=>({id:"room-"+i,owner_id:s.user_id,room_code:i?"8319":"8318",starts_at:new Date().toISOString(),ends_at:new Date(Date.now()+3600000).toISOString(),purpose:i?"2학년 예약":"1학년 예약",status:i===2?"CANCELLED":"ACTIVE",created_at:new Date().toISOString()})),
     help_requests:adminStudents.map((s,i)=>({id:"help-"+i,owner_id:s.user_id,category:"기타",location:"온라인 포털",title:i?"2학년 요청":"1학년 요청",status:i===2?"COMPLETED":"RECEIVED",created_at:new Date().toISOString()}))
@@ -88,16 +89,19 @@ export async function approvedStudent(context, profileOverride={}, registeredAlu
     },
     from,
     functions:{async invoke(name,{body}={}){
+      if(adminFixtures&&superAdmin&&name==="learning-admin"){(window.__learningRequests??=[]).push(body?.action+":"+body?.period);if(body?.action==="mail_settings")return {data:{ok:true,settings:[{report_type:"super_admin",enabled:true},{report_type:"student",enabled:false}]},error:null};}
       if(adminFixtures&&superAdmin&&name==="learning-admin"&&body?.action==="summary"){
        const count=body.grade===1?1:body.grade===2?2:3;
        const grades=(body.grade?[body.grade]:[1,2]).map(g=>({grade:g,cohortSize:g,activeStudents:g,attempts:g*3}));
        const chartStats={cohortSize:count,activeStudents:count,attempts:count*3,grades,subjects:{JAVA:{participants:count,attempts:count*3}},gradingMethods:{self:count,automatic:0},questions:[],smallCohortHidden:true,daily:[]};
-       return {data:{ok:true,cohortSize:count,periodStart:"2026-11-23T00:00:00+09:00",periodEnd:"2026-11-30T00:00:00+09:00",partial:true,current:{chartStats,activeStudents:count,participationRate:100,attempts:count*3,unique:count,selfCorrect:count*2,selfTotal:count*3,selfAccuracy:67,autoCorrect:0,autoTotal:0,autoAccuracy:null,subjects:{JAVA:{attempts:count*3,unique:count,wrong:count}}},previous:null,topWrong:[],snapshotStatus:"live"},error:null};
+       return {data:{ok:true,cohortSize:count,periodStart:"2026-11-23T00:00:00+09:00",periodEnd:"2026-11-30T00:00:00+09:00",partial:true,current:{chartStats,activeStudents:count,participationRate:100,attempts:count*3,unique:count,selfCorrect:count*2,selfTotal:count*3,selfAccuracy:67,autoCorrect:0,autoTotal:0,autoAccuracy:null,subjects:{JAVA:{attempts:count*3,unique:count,wrong:count}}},previous:null,study:{plannedStudents:count,zeroPlanStudents:0,attendedPlannedDays:count,dueDays:count,studySeconds:3600*count,attendedDays:count},topWrong:[],snapshotStatus:"live"},error:null};
       }
       return {data:{ok:false,error:"ADMIN_NOT_AUTHORIZED"},error:null};
      }},
     async rpc(name,args){
       if(adminFixtures&&superAdmin){
+       if(["study_admin_dashboard","study_admin_diagnostics","portal_written_summary","admin_learning_answers"].includes(name))(window.__learningRequests??=[]).push(name);
+       if(name==="admin_learning_answers")return {data:[],error:null};
        if(name==="admin_list_students")return {data:adminStudents,error:null};
        if(name==="admin_pending_signup_requests")return {data:pendingStudents,error:null};
        if(name==="admin_alumni_directory"){

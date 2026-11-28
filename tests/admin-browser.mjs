@@ -105,14 +105,24 @@ try{
       await page.locator(".help-ticket").nth(1).waitFor();
     }
     if(name==="learning"){
-      await page.locator("#study-plan-chart .admin-chart").waitFor();
-      await page.locator("#teacher-subject-chart .admin-chart").waitFor();
-      await page.locator("#iw-admin-chart .admin-chart").waitFor();
-      assert.equal(await page.locator("#iw-grade").inputValue(),"2");
+      await page.locator(".lv-kpi").first().waitFor();
+      assert.equal(await page.locator(".lv-kpi").count(),2);
+      assert.equal(await page.locator("#teacher-content").isVisible(),false);
+      assert.equal(await page.locator(".lv-grade-card").count(),0);
+      assert.equal(await page.locator("#learning-panel-study").isVisible(),false);
+      assert.equal(await page.locator("#learning-panel-written").isVisible(),false);
+      assert.equal(await page.locator("#learning-panel-operations").isVisible(),false);
+      assert.deepEqual(await page.evaluate(()=>window.__learningRequests),["summary:week"]);
+      await page.locator(".lv-columns").first().getByRole("button",{name:"제출 답안"}).first().click();
+      await page.getByText("해당하는 제출 기록이 없습니다.").waitFor();
+      await page.locator(".lv-answer-panel").getByRole("button",{name:"닫기"}).click();
+      await page.getByRole("tab",{name:"자율학습"}).click();
+      await page.locator("#study-days-chart .admin-chart").waitFor();
+      assert.equal(await page.locator("#study-plan-chart").count(),0);
       assert.equal(await page.locator("#study-admin-table-body tr").count(),2);
       assert.deepEqual(await page.locator("#study-days-chart .admin-chart-label").first().locator("span,strong").allTextContents(),["월 · 1명","2시간"]);
       await page.locator("[data-admin-grade='1']").click();
-      await page.locator("#teacher-summary").getByText("1명",{exact:true}).waitFor();
+      await page.locator("#study-admin-table-body tr").first().waitFor();
       assert.equal(await page.locator("#study-admin-table-body tr").count(),1);
       assert.deepEqual(await page.locator("#study-days-chart .admin-chart-label").first().locator("span,strong").allTextContents(),["월 · 1명","1.5시간"]);
       // Sharing is local and transfers only the selected week/grade aggregate PNG.
@@ -151,42 +161,55 @@ try{
       await chart.getByRole("button",{name:"밴드 공유하기",exact:true}).waitFor();
       await page.evaluate(()=>{delete navigator.share;delete navigator.canShare;});
 
-      await page.locator("[data-admin-grade='2']").click();
-      await page.locator("#teacher-summary").getByText("2명",{exact:true}).waitFor();
+
+      await page.getByRole("button",{name:"월간 통계",exact:true}).click();
+      await page.locator("#teacher-study-period-summary .learn-stat").first().waitFor();
+      assert.equal(await page.locator("#study-week-view").isVisible(),false);
+      assert.equal(await page.locator("#teacher-study-period-summary .learn-stat").count(),4);
+      await page.getByRole("button",{name:"주간 관리",exact:true}).click();
+      await page.locator("#study-days-chart .admin-chart").waitFor();
       await page.locator("[data-admin-grade='']").click();
-      await page.locator(".lv-grade-card[data-grade='1']").waitFor();
-      await page.locator(".lv-grade-card[data-grade='2']").waitFor();
-      assert.equal(await page.locator(".lv-grade-card").count(),2,"both grades have their own summary");
-      assert.equal(await page.locator(".lv-kpi").count(),4);
-      assert.equal(await page.locator(".lv-subject").count(),8);
-      assert.match(await page.locator(".lv-subject").first().textContent(),/Java.*3명.*9회 풀이/);
-      assert.deepEqual(await page.locator("#study-days-chart .admin-chart-label").first().locator("span,strong").allTextContents(),["월 · 2명","3.5시간"]);
-      assert.deepEqual(await page.locator("#study-days-chart .admin-chart-label").last().locator("span,strong").allTextContents(),["일 · 0명","0시간"]);
-      assert.match(await page.locator(".lv-grade-card[data-grade='1'] .lv-grade-count").textContent(),/참여 1명 \/ 재학생 1명/);
-      assert.match(await page.locator(".lv-grade-card[data-grade='2'] .lv-grade-count").textContent(),/참여 2명 \/ 재학생 2명/);
       assert.equal(await page.locator("#study-admin-table-body .study-grade-divider").count(),2);
-      assert.equal(await page.locator("#study-admin-table-body [data-study-grade='1']").count(),1);
-      assert.equal(await page.locator("#study-admin-table-body [data-study-grade='2']").count(),2);
+      assert.deepEqual(await page.locator("#study-days-chart .admin-chart-label").first().locator("span,strong").allTextContents(),["월 · 2명","3.5시간"]);
+      await page.getByRole("tab",{name:"필기시험"}).click();
       await page.locator("#iw-results [data-grade-group='1'] .written-round").first().waitFor();
       assert.equal(await page.locator("#iw-results [data-grade-group='1'] .written-round").count(),1);
       assert.equal(await page.locator("#iw-results [data-grade-group='2'] .written-round").count(),2);
+      assert.equal(await page.getByText("필기 학습 성과 · 참여 3명",{exact:true}).count(),1);
+      await page.getByRole("tab",{name:"운영 관리"}).click();
+      await page.locator("#teacher-mail-settings").waitFor();
+      await page.getByText("운영 진단 자료를 불러왔습니다.").waitFor();
+      assert.equal(await page.locator(".admin-grade-panel").isVisible(),false);
+      assert.equal(await page.locator("#teacher-mail-faculty").isChecked(),true);
+      await page.waitForFunction(()=>!document.getElementById("study-admin-mail").disabled);
+      assert.equal(await page.locator("#study-admin-mail").isChecked(),false);
+      await page.getByRole("tab",{name:"문제 풀이"}).click();
+      await page.locator(".lv-grade-card[data-grade='1']").waitFor();
+      assert.equal(await page.locator(".lv-grade-card").count(),2);
+      assert.equal(await page.locator(".lv-kpi").count(),2);
+      assert.equal(await page.locator(".lv-columns").first().locator(".lv-subject").count(),8);
+      assert.match(await page.locator(".lv-columns").first().locator(".lv-subject").first().textContent(),/Java.*3명.*9회 풀이/);
+      assert.match(await page.locator(".lv-grade-card[data-grade='1'] .lv-grade-count").textContent(),/참여 1명 \/ 재학생 1명/);
+      assert.match(await page.locator(".lv-grade-card[data-grade='2'] .lv-grade-count").textContent(),/참여 2명 \/ 재학생 2명/);
       await page.screenshot({path:"ui-screenshots/admin/learning-grade-comparison-mobile.png",fullPage:true});
       await page.locator(".lv-grade-card[data-grade='1'] button").click();
-      await page.getByRole("heading",{name:"1학년 기초·실기·NCP 상세 통계",exact:true}).waitFor();
+      await page.waitForFunction(()=>document.querySelector(".lv-kpi-value")?.textContent.includes("1명"));
+      assert.equal(await page.locator(".lv-grade-card").count(),0);
+      await page.locator(".lv-columns").first().getByRole("button",{name:"필기 상세"}).last().click();
       await page.locator("#iw-results [data-grade-group='1'] .written-round").first().waitFor();
+      assert.equal(await page.locator("#iw-exam").inputValue(),"engineer");
       assert.equal(await page.locator("#iw-results [data-grade-group='2']").count(),0);
+      await page.getByRole("tab",{name:"자율학습"}).click();
+      await page.locator("#study-days-chart .admin-chart").waitFor();
       assert.equal(await page.locator("#study-admin-table-body [data-study-grade='2']").count(),0);
       await page.locator("[data-admin-grade='2']").click();
-      await page.locator("#teacher-summary").getByText("2명",{exact:true}).waitFor();
+      assert.equal(await page.locator("#study-admin-table-body tr").count(),2);
       const layout=()=>page.evaluate(()=>{
        const grid=document.querySelector("#study-admin-summary");
-       const toggle=document.querySelector("#study-admin-mail");
        const section=document.querySelector("#teacher-study-panel");
        return {
         grid:getComputedStyle(grid).display,
         columns:getComputedStyle(grid).gridTemplateColumns.split(" ").length,
-        toggle:getComputedStyle(toggle).appearance,
-        toggleWidth:getComputedStyle(toggle).width,
         sectionBackground:getComputedStyle(section).backgroundColor,
         pageWidth:document.documentElement.scrollWidth,
         viewport:document.documentElement.clientWidth
@@ -195,8 +218,6 @@ try{
       const mobile=await layout();
       assert.equal(mobile.grid,"grid","admin learning KPI layout restored");
       assert.equal(mobile.columns,2,"admin mobile learning cards use two columns");
-      assert.equal(mobile.toggle,"none","admin email switch uses custom styling");
-      assert.equal(mobile.toggleWidth,"49px","admin email switch retains accessible size");
       assert.equal(mobile.sectionBackground,"rgb(255, 255, 255)","learning section background restored");
       assert.ok(mobile.pageWidth<=mobile.viewport+1,"admin learning mobile has no global horizontal overflow");
       await page.screenshot({path:"ui-screenshots/admin/learning-admin-mobile.png",fullPage:true});
