@@ -10,7 +10,7 @@ const consent=v=>v===null||v===undefined||String(v).trim()===''?'미설정':/^(t
 const paged=()=>['alumni','requests'].includes(view);
 async function rpc(name,args){const {data,error}=await window.portalSupabaseClient.rpc(name,args);if(error)throw Error(error.message||'관리자 조회 실패');return data;}
 const directoryMode=()=>view==='overview'||view==='alumni';
-const filterSelectors=['#admin-query','#admin-status-filter','#admin-year','#admin-consent','#admin-employment'];
+const filterSelectors=['#admin-query','#admin-status-filter','#admin-year','#admin-consent','#admin-employment','#admin-mail-kind','#admin-mail-from','#admin-mail-to'];
 const clearFilters=()=>filterSelectors.forEach(selector=>U.qs(selector).value='');
 const sortContent=rows=>[...rows].sort((a,b)=>(b.status==='PENDING')-(a.status==='PENDING')||String(b.created_at||'').localeCompare(String(a.created_at||'')));
 function clearResults(){
@@ -29,9 +29,13 @@ function syncView(){
  U.qs('#admin-overview').hidden=view!=='overview';
  if(view!=='overview'){U.qs('#admin-overview-counts').replaceChildren();U.qs('#admin-overview-content').replaceChildren();}
  U.qs('#admin-alumni-filters').hidden=!directoryMode();
- U.qs('#admin-search-heading').textContent=directoryMode()?'졸업생 검색':'검색 및 필터';
+ const mailLogs=view==='mail_logs';
+ U.qs('#admin-year-field').hidden=mailLogs;
+ U.qs('#admin-mail-log-filters').hidden=!mailLogs;
+ U.qs('#admin-table').dataset.mailHistory=String(mailLogs);
+ U.qs('#admin-search-heading').textContent=directoryMode()?'졸업생 검색':mailLogs?'메일 발송 기록 검색':'검색 및 필터';
  U.qs('#admin-search-hint').hidden=!directoryMode();
- U.qs('#admin-query').placeholder=directoryMode()?'이름, 회사, 직무':'이름, 회사, 직무, 제목';
+ U.qs('#admin-query').placeholder=directoryMode()?'이름, 회사, 직무':mailLogs?'제목, 발송 대상, 관련 ID':'이름, 회사, 직무, 제목';
  U.qs('#admin-refresh').textContent=directoryMode()?'졸업생 검색':'새로고침';
  U.qsa('[data-view]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.view===view)));
  setStatusOptions();
@@ -232,13 +236,95 @@ async function sendSelectedMail(){
  finally{mailBusy=false;mailPreview=null;U.qs('#admin-mail-preview').replaceChildren();clearMailDesign();U.busy(button,false);button.disabled=true;U.qs('#admin-preview-mail').disabled=false;U.qs('#admin-mail-groups').disabled=false;U.qs('#admin-close-mail').disabled=false;await load()}
 }
 function requestsTable(rows){return`<table class="admin-table"><thead><tr><th>일시</th><th>대상 졸업생</th><th>요청자</th><th>분야/제목</th><th>발송 상태</th><th>후속 조치</th></tr></thead><tbody>${rows.map(x=>`<tr><td data-label="일시">${U.esc(x.created_at)}<br><small>발송 ${U.esc(x.sent_at)||'-'}</small></td><td data-label="대상">${U.esc(x.target_name)||'대상 없음'}</td><td data-label="요청자">${U.esc(x.requester_name)} (${U.esc(x.requester_type)})</td><td data-label="분야/제목"><strong>${U.esc(x.category)}</strong><br>${U.esc(x.subject)}</td><td data-label="발송 상태">${badge(x.status)}</td><td data-label="후속 조치"><select aria-label="후속 처리 상태" data-followup-state><option value="open" ${x.followup_state==='open'?'selected':''}>처리 대기</option><option value="reviewing" ${x.followup_state==='reviewing'?'selected':''}>처리 중</option><option value="closed" ${x.followup_state==='closed'?'selected':''}>처리 완료</option></select><input maxlength="500" aria-label="후속 조치 메모" data-followup-note value="${U.esc(x.followup_note)}"><button data-contact-id="${U.esc(x.request_id)}" data-action="followup">저장</button><small>${U.esc(x.followup_at||'')}</small></td></tr>`).join('')}</tbody></table>`}
-function logsTable(rows){return`<table class="admin-table"><thead><tr><th>발송일</th><th>종류</th><th>관련 ID/제목</th><th>대상</th><th>성공</th><th>실패</th><th>상태</th></tr></thead><tbody>${rows.map(x=>`<tr><td data-label="발송일">${U.esc(x.sent_at)}</td><td data-label="종류">${U.esc(x.mail_kind)}</td><td data-label="관련 ID/제목"><small>${U.esc(x.related_id)}</small><br>${U.esc(x.subject)}<br><small>${U.esc(String(x.target_groups||'').split('|').filter(Boolean).map(groupLabel).join(' · ')||'기존 발송')}</small></td><td data-label="대상">${U.esc(x.recipient_count)}</td><td data-label="성공">${U.esc(x.sent_count)}</td><td data-label="실패">${U.esc(x.failed_count)}</td><td data-label="상태">${badge(x.status)}</td></tr>`).join('')}</tbody></table>`}
+// Group only stored dispatches, never generate dates with no records.
+const mailDayFormat=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'});
+const mailWeekdayFormat=new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',weekday:'short'});
+const mailTimeFormat=new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',hour:'2-digit',minute:'2-digit',hourCycle:'h23'});
+function mailLogStamp(value){
+ const raw=String(value||'').trim(),iso=raw.replace(' ','T');
+ // Historical timestamps without an explicit timezone represent local Korean time.
+ const normalized=/^\d{4}-\d{2}-\d{2}$/.test(iso)?iso+'T00:00:00+09:00':
+  /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?$/.test(iso)?iso+'+09:00':iso;
+ const ms=normalized?Date.parse(normalized):NaN;
+ if(!Number.isFinite(ms))return {day:'',label:'발송일 확인 불가',time:raw||'시간 미기록',ms:-Infinity};
+ const fields=Object.fromEntries(mailDayFormat.formatToParts(ms).map(x=>[x.type,x.value]));
+ const day=[fields.year,fields.month,fields.day].join('-');
+ return {day,label:day.replaceAll('-','.')+' ('+mailWeekdayFormat.format(ms)+')',time:/^\d{4}-\d{2}-\d{2}$/.test(iso)?'시간 미기록':mailTimeFormat.format(ms),ms};
+}
+function mailCount(value){const n=Number(value);return Number.isFinite(n)&&n>=0?Math.floor(n):0;}
+function mailLogStatus(row){return row.status==='PARTIAL_FAILED'&&!mailCount(row.sent_count)&&mailCount(row.failed_count)>0?'FAILED':row.status;}
+function mailLogGroups(row){return String(row.target_groups||'').split('|').filter(Boolean).map(groupLabel).join(' · ')||'기존 발송';}
+function mailLogTotals(rows){
+ return rows.reduce((sum,row)=>({
+  targets:sum.targets+mailCount(row.recipient_count),
+  sent:sum.sent+mailCount(row.sent_count),
+  failed:sum.failed+mailCount(row.failed_count)
+ }),{targets:0,sent:0,failed:0});
+}
+function mailLogDays(rows){
+ const days=new Map();
+ for(const row of rows){
+  const stamp=mailLogStamp(row.sent_at);
+  if(!days.has(stamp.day))days.set(stamp.day,{day:stamp.day,label:stamp.label,records:[]});
+  days.get(stamp.day).records.push({row,stamp});
+ }
+ return [...days.values()].sort((a,b)=>b.day.localeCompare(a.day)).map(day=>({
+  ...day,records:day.records.sort((a,b)=>b.stamp.ms-a.stamp.ms),...mailLogTotals(day.records.map(x=>x.row))
+ }));
+}
+const mailNumber=n=>n.toLocaleString('ko-KR');
+function mailHistoryCards(days){
+ return `<div class="mail-history" aria-label="일자별 메일 발송 기록">${days.map((day,index)=>`
+  <details class="mail-history-day" data-mail-day="${U.esc(day.day)}"${index===0?' open':''}>
+   <summary class="mail-history-summary">
+    <span class="mail-history-heading"><span class="mail-history-date">${U.esc(day.label)}</span><span class="mail-history-subtitle">발송 기록 ${mailNumber(day.records.length)}건</span></span>
+    <span class="mail-history-totals" aria-label="날짜별 집계">
+     <span>대상 <strong>${mailNumber(day.targets)}</strong>건</span>
+     <span class="mail-history-success">성공 <strong>${mailNumber(day.sent)}</strong>건</span>
+     <span class="${day.failed?'mail-history-failed':''}">실패 <strong>${mailNumber(day.failed)}</strong>건</span>
+    </span><span class="mail-history-chevron" aria-hidden="true"></span>
+   </summary>
+   <div class="mail-history-records">${day.records.map(({row,stamp})=>`
+    <article class="mail-history-record">
+     <div class="mail-history-record-main">
+      <div class="mail-history-record-meta"><span class="mail-history-kind">${U.esc(row.mail_kind||'메일')}</span><time${Number.isFinite(stamp.ms)?' datetime="'+new Date(stamp.ms).toISOString()+'"':''}>${U.esc(stamp.time)}</time></div>
+      <h3>${U.esc(row.subject||'제목 없음')}</h3>
+      <p>발송 대상: ${U.esc(mailLogGroups(row))}</p>
+      ${row.related_id?`<p class="mail-history-id">관련 ID: ${U.esc(row.related_id)}</p>`:''}
+     </div>
+     <div class="mail-history-record-result">${badge(mailLogStatus(row))}<div class="mail-history-record-counts">
+      <span>대상 <strong>${mailNumber(mailCount(row.recipient_count))}</strong>건</span>
+      <span class="mail-history-success">성공 <strong>${mailNumber(mailCount(row.sent_count))}</strong>건</span>
+      <span class="${mailCount(row.failed_count)?'mail-history-failed':''}">실패 <strong>${mailNumber(mailCount(row.failed_count))}</strong>건</span>
+     </div></div>
+    </article>`).join('')}</div>
+  </details>`).join('')}</div>`;
+}
+function renderMailLogs(){
+ const q=U.qs('#admin-query').value.trim().toLowerCase(),status=U.qs('#admin-status-filter').value,
+  kind=U.qs('#admin-mail-kind').value,from=U.qs('#admin-mail-from').value,to=U.qs('#admin-mail-to').value;
+ const summary=U.qs('#admin-summary'),table=U.qs('#admin-table');
+ U.qs('#admin-pagination').hidden=true;U.qs('#alumni-admin-charts')?.remove();
+ if(from&&to&&from>to){
+  summary.textContent='시작일이 종료일보다 늦습니다.';table.innerHTML='<p class="empty">조회 기간을 다시 선택해 주세요.</p>';return;
+ }
+ const rows=data.filter(row=>{
+  if(kind&&row.mail_kind!==kind||status&&mailLogStatus(row)!==status)return false;
+  if(q&&![row.subject,row.related_id,row.mail_kind,mailLogGroups(row)].some(v=>String(v||'').toLowerCase().includes(q)))return false;
+  const day=mailLogStamp(row.sent_at).day;
+  return !(from&&(!day||day<from)||to&&(!day||day>to));
+ });
+ const days=mailLogDays(rows),totals=mailLogTotals(rows),dateCount=days.filter(x=>x.day).length;
+ summary.textContent='조회 결과 · 발송일 '+mailNumber(dateCount)+'일 · 발송 기록 '+mailNumber(rows.length)+'건 · 성공 '+mailNumber(totals.sent)+'건 · 실패 '+mailNumber(totals.failed)+'건'+(days.some(x=>!x.day)?' · 날짜 미확인 기록 포함':'')+' (한국 시간 기준)';
+ table.innerHTML=days.length?mailHistoryCards(days):'<p class="empty">조건에 맞는 메일 발송 기록이 없습니다.</p>';
+}
 function render(){
  if(view==='overview'||(view==='alumni'&&!directoryCriteria))return;
  U.qs('#admin-summary').hidden=false;U.qs('#admin-table').hidden=false;
+ if(view==='mail_logs'){renderMailLogs();return;}
  const q=U.qs('#admin-query').value.toLowerCase(),status=U.qs('#admin-status-filter').value,year=U.qs('#admin-year').value;
  const rows=paged()?data:data.filter(x=>(!q||JSON.stringify(x).toLowerCase().includes(q))&&(!status||x.status===status)&&(!year||String(x.graduation_year)===year));
- const renderers={alumni:alumniTable,jobs:jobsTable,news:newsTable,requests:requestsTable,mail_logs:logsTable};
+ const renderers={alumni:alumniTable,jobs:jobsTable,news:newsTable,requests:requestsTable};
  U.qs('#admin-table').innerHTML=rows.length?renderers[view](rows):'<p class="empty">조건에 맞는 데이터가 없습니다.</p>';
  U.qs('#admin-pagination').hidden=!paged();U.qs('#admin-page').textContent=page+' / '+Math.max(1,Math.ceil(total/25));U.qs('#admin-prev').disabled=page<=1;U.qs('#admin-next').disabled=page*25>=total;
  if(!paged())U.qs('#admin-summary').textContent='검색 결과 '+rows.length+'건'+(['jobs','news'].includes(view)?' · 전체 승인 대기 '+data.filter(x=>x.status==='PENDING').length+'건':'');

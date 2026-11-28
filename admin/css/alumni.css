@@ -263,3 +263,42 @@
 @media(max-width:340px){.alumni-admin #admin-content-dialog .review-meta-grid{grid-template-columns:1fr}}
 .mail-quota{background:#f2f6fc;border:1px solid #d6e4f2;border-radius:12px;padding:14px;margin:12px 0;color:#23466b;overflow-wrap:anywhere}
 .mail-quota p{margin:6px 0}
+
+/* Date-grouped dispatch history; no calendar rows are synthesized. */
+.alumni-admin .table-wrap[data-mail-history="true"]{background:transparent;border:0;box-shadow:none;overflow:visible}
+.alumni-admin .mail-history{display:grid;gap:12px;padding:0;min-width:0}
+.alumni-admin .mail-history-day{min-width:0;border:1px solid #d8e3f1;border-radius:14px;background:#fff;overflow:hidden}
+.alumni-admin .mail-history-summary{display:flex;align-items:center;gap:16px;list-style:none;cursor:pointer;padding:18px 20px;background:#f6f9fe;min-width:0}
+.alumni-admin .mail-history-summary::-webkit-details-marker{display:none}
+.alumni-admin .mail-history-summary:focus-visible{outline:3px solid var(--admin-primary);outline-offset:-4px}
+.alumni-admin .mail-history-heading{display:grid;gap:3px;min-width:0;flex:1}
+.alumni-admin .mail-history-date{font-size:18px;font-weight:800;color:var(--admin-ink);line-height:1.4}
+.alumni-admin .mail-history-subtitle{font-size:12px;color:var(--admin-muted);font-weight:650}
+.alumni-admin .mail-history-totals{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;flex:0 1 390px;min-width:0}
+.alumni-admin .mail-history-totals>span{padding:8px 10px;border:1px solid #dce6f1;border-radius:10px;background:#fff;text-align:center;font-size:13px;white-space:normal}
+.alumni-admin .mail-history-totals strong{font-size:17px;font-weight:800;font-variant-numeric:tabular-nums}
+.alumni-admin .mail-history-success{color:#157347}
+.alumni-admin .mail-history-failed{color:#b42318}
+.alumni-admin .mail-history-chevron{flex:none;width:10px;height:10px;border-right:2px solid #536781;border-bottom:2px solid #536781;transform:rotate(45deg);margin:0 2px 4px 4px;transition:transform .15s}
+.alumni-admin .mail-history-day[open] .mail-history-chevron{transform:rotate(225deg);margin-bottom:-4px}
+.alumni-admin .mail-history-records{border-top:1px solid #dce6f1}
+.alumni-admin .mail-history-record{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 20px;min-width:0}
+.alumni-admin .mail-history-record+.mail-history-record{border-top:1px solid #e6edf5}
+.alumni-admin .mail-history-record-main{min-width:0;flex:1}
+.alumni-admin .mail-history-record-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;color:var(--admin-muted);font-size:13px}
+.alumni-admin .mail-history-kind{display:inline-flex;padding:3px 9px;border-radius:999px;background:#eaf2ff;color:#245791;font-weight:750}
+.alumni-admin .mail-history-record h3{font-size:16px;line-height:1.5;margin:7px 0 3px;color:var(--admin-ink);word-break:keep-all;overflow-wrap:anywhere}
+.alumni-admin .mail-history-record p{margin:0;color:var(--admin-muted);font-size:13px;overflow-wrap:anywhere}
+.alumni-admin .mail-history-record .mail-history-id{font-size:11px;margin-top:3px}
+.alumni-admin .mail-history-record-result{display:grid;justify-items:end;gap:10px;flex:none}
+.alumni-admin .mail-history-record-counts{display:flex;flex-wrap:wrap;gap:10px;font-size:13px;font-variant-numeric:tabular-nums}
+@media(max-width:700px){
+ .alumni-admin .mail-history-summary{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px 12px;padding:14px}
+ .alumni-admin .mail-history-totals{grid-column:1/-1;grid-row:2}
+ .alumni-admin .mail-history-chevron{grid-column:2;grid-row:1}
+ .alumni-admin .mail-history-date{font-size:17px}
+ .alumni-admin .mail-history-totals>span{font-size:12px;padding:7px 4px}
+ .alumni-admin .mail-history-record{display:grid;gap:12px;padding:14px}
+ .alumni-admin .mail-history-record-result{justify-items:start;flex:auto}
+ .alumni-admin .mail-history-record-counts{gap:12px}
+}

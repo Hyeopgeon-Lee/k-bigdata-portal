@@ -6,9 +6,9 @@
 <link rel="stylesheet" href="../css/portal-ux.css?v=20261112-page-intro-2">
 <link rel="stylesheet" href="css/admin.css?v=20261128-ui-1">
 <link rel="stylesheet" href="../alumni/css/jobs.css?v=20261113-alumni-unified-1">
-<link rel="stylesheet" href="css/alumni.css?v=20261128-event-quota-1">
+<link rel="stylesheet" href="css/alumni.css?v=20261128-mail-daily-1">
 <link rel="stylesheet" href="css/admin-mobile.css?v=20261128-ui-1"></head>
-<body data-admin-module="alumni.js" data-admin-module-version="20261128-event-quota-1" data-admin-page="alumni">
+<body data-admin-module="alumni.js" data-admin-module-version="20261128-mail-daily-1" data-admin-page="alumni">
 <p id="learning-notice" role="status">관리자 로그인 및 권한 확인 중입니다.</p>
 <header class="admin-header site-header">
   <div class="admin-header-inner header-inner">
@@ -59,8 +59,13 @@
       <form id="admin-search-form">
         <div class="filter-grid">
           <div class="field"><label for="admin-query">검색어</label><input id="admin-query" placeholder="이름, 회사, 직무" maxlength="100"></div>
-          <div class="field"><label for="admin-year">졸업연도</label><select id="admin-year"><option value="">전체</option></select></div>
+          <div class="field" id="admin-year-field"><label for="admin-year">졸업연도</label><select id="admin-year"><option value="">전체</option></select></div>
           <div class="field"><label for="admin-status-filter">상태</label><select id="admin-status-filter"><option value="">전체</option><option value="APPROVED">승인·공개</option><option value="HIDDEN">숨김</option></select></div>
+          <div id="admin-mail-log-filters" class="alumni-filter-fields" hidden>
+            <div class="field"><label for="admin-mail-kind">메일 종류</label><select id="admin-mail-kind"><option value="">전체</option><option value="동문소식">동문소식</option><option value="채용정보">채용정보</option></select></div>
+            <div class="field"><label for="admin-mail-from">시작일</label><input type="date" id="admin-mail-from"></div>
+            <div class="field"><label for="admin-mail-to">종료일</label><input type="date" id="admin-mail-to"></div>
+          </div>
           <div id="admin-alumni-filters" class="alumni-filter-fields">
             <div class="field"><label for="admin-employment">취업 상태</label><select id="admin-employment"><option value="">전체 취업 상태</option></select></div>
             <div class="field"><label for="admin-consent">채용메일 수신</label><select id="admin-consent"><option value="">전체</option><option value="yes">동의</option><option value="no">거부</option><option value="unset">미설정</option></select></div>

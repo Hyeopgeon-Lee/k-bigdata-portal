@@ -25,11 +25,17 @@ const UI={qs:selector=>selector.startsWith("[data-view=")?tab(selector.slice(11,
 const news=[{news_id:"n-new",title:"최신 공개 소식",status:"APPROVED",created_at:"2026-11-28",mail_status:"NOT_REQUESTED"},{news_id:"n-pending",title:"승인 대기 소식",status:"PENDING",created_at:"2026-11-27",content:"상세 내용",mail_status:"WAITING"}];
 const jobs=[{job_id:"j-pending",company:"회사 <테스트>",job_title:"개발자",status:"PENDING",always_open:true,created_at:"2026-11-28"}];
 const apiCalls=[],rpcCalls=[];
+const mailLogs=[
+ {mail_kind:"동문소식",subject:"이전 안내",related_id:"N1",sent_at:"2026-11-25 11:30:00",recipient_count:"5",sent_count:"5",failed_count:"0",status:"SENT"},
+ {mail_kind:"동문소식",subject:"대학원 합격 <테스트>",related_id:"N2",sent_at:"2026-11-27T16:15:00.000Z",recipient_count:"48",sent_count:"47",failed_count:"1",target_groups:"alumni|grade1",status:"PARTIAL_FAILED"},
+ {mail_kind:"채용정보",subject:"채용 공고",related_id:"J1",sent_at:"2026-11-28T12:00:00.000Z",recipient_count:"38",sent_count:"38",failed_count:"0",target_groups:"grade2",status:"SENT"},
+ {mail_kind:"채용정보",subject:"발송 실패",related_id:"J2",sent_at:"2026-11-28T13:00:00.000Z",recipient_count:"2",sent_count:"0",failed_count:"2",status:"PARTIAL_FAILED"}
+];
 let nextDirectory;
 const rows=Array.from({length:26},(_,i)=>({alumni_id:"alumni-"+i,name:"졸업생 "+i,graduation_year:2025,status:"APPROVED",employment_status:"취업 중"}));
 const api={async request(action,{data}){
  apiCalls.push({action,data:{...data}});
- if(action==="adminList")return {data:data.view==="news"?news:data.view==="jobs"?jobs:[]};
+ if(action==="adminList")return {data:data.view==="news"?news:data.view==="jobs"?jobs:data.view==="mail_logs"?mailLogs:[]};
  if(action==="adminNewsPublish")news.find(n=>n.news_id===data.news_id).status="APPROVED";
  return {message:"완료"};
 }};
@@ -97,3 +103,32 @@ deliver({data:{rows,total:26,employment_values:[],companies:1,mentor_count:0}});
 await flush();assert.equal(node("#admin-table").hidden,true,"outdated directory response is discarded");
 assert.equal(rpcCalls.length,4);
 console.log("PASS: overview content/counts, pending priority, explicit directory search, criteria invalidation, stale response protection, approval and no automatic mail");
+
+// Mail history: only actual logged dates (including failed attempts), grouped by KST.
+tab("mail_logs").onclick();await flush();
+const history=()=>node("#admin-table").innerHTML;
+assert.equal(node("#admin-mail-log-filters").hidden,false);
+assert.equal(node("#admin-year-field").hidden,true);
+assert.deepEqual([...history().matchAll(/data-mail-day="([^"]+)"/g)].map(x=>x[1]),["2026-11-28","2026-11-25"]);
+assert.match(history(),/data-mail-day="2026-11-28" open/);
+assert.doesNotMatch(history(),/data-mail-day="2026-11-25" open/);
+assert.match(history(),/2026\.11\.28 \(토\)/);
+assert.match(history(),/대상 <strong>88<\/strong>건/);
+assert.match(history(),/성공 <strong>85<\/strong>건/);
+assert.match(history(),/실패 <strong>3<\/strong>건/);
+assert.match(history(),/대학원 합격 &lt;테스트&gt;/);
+assert.ok(history().indexOf("발송 실패")<history().indexOf("채용 공고"));
+assert.match(history(),/01:15/,"UTC timestamp is grouped and formatted in KST");
+assert.match(history(),/졸업생 · 1학년/);
+assert.match(node("#admin-summary").textContent,/발송일 2일 · 발송 기록 4건 · 성공 90건 · 실패 3건/);
+assert.equal(nodes.has("#alumni-admin-charts"),false);
+change("#admin-mail-kind","채용정보");assert.equal((history().match(/class="mail-history-record"/g)||[]).length,2);
+change("#admin-status-filter","FAILED");assert.match(history(),/발송 실패/);assert.doesNotMatch(history(),/채용 공고/);
+node("#admin-reset-search").onclick();change("#admin-mail-from","2026-11-26");assert.doesNotMatch(history(),/2026-11-25/);
+change("#admin-mail-to","2026-11-27");assert.match(history(),/조건에 맞는 메일 발송 기록이 없습니다/);
+change("#admin-mail-to","2026-11-24");assert.match(node("#admin-summary").textContent,/시작일이 종료일보다 늦습니다/);
+node("#admin-reset-search").onclick();change("#admin-query","대학원");assert.match(history(),/대학원 합격/);assert.doesNotMatch(history(),/채용 공고/);
+node("#admin-reset-search").onclick();tab("news").onclick();await flush();
+assert.equal(node("#admin-mail-log-filters").hidden,true);assert.equal(node("#admin-year-field").hidden,false);
+assert.equal(apiCalls.filter(x=>x.action==="adminNewsSendMail"||x.action==="adminJobSendMail").length,0);
+console.log("PASS: mail history date groups, missing dates, KST boundary, default expansion, numeric totals, status/kind/date/title filters, reset, and no send side effect");

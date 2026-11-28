@@ -4,9 +4,9 @@ import {groupCounts,matchesGrade,gradeLabel} from "../admin/js/admin-ui.mjs";
 const read=file=>readFileSync(new URL("../"+file,import.meta.url),"utf8");
 for(const page of ["index","accounts","learning","certifications","rooms","help","alumni","mock-exam"]){
  const html=read("admin/"+page+".html");
- assert.match(html,/admin-mobile\.css\?v=20261128-ui-1/);
+ assert.match(html,page==="accounts"?/admin-mobile\.css\?v=20261128-transfer-1/:/admin-mobile\.css\?v=20261128-ui-1/);
  assert.match(html,/guard\.mjs\?v=20261128-ui-1/);
- assert.match(html,page==="learning"?/data-admin-module-version="20261128-learning-share-1"/:page==="alumni"?/data-admin-module-version="20261128-portal-mail-1"/:page==="certifications"?/data-admin-module-version="20261128-cert-dashboard-1"/:page==="help"?/data-admin-module-version="20261128-help-filter-1"/:/data-admin-module-version="20261128-ui-1"/);
+ assert.match(html,page==="accounts"?/data-admin-module-version="20261128-transfer-1"/:page==="learning"?/data-admin-module-version="20261128-learning-share-1"/:page==="alumni"?/data-admin-module-version="20261128-mail-daily-1"/:page==="certifications"?/data-admin-module-version="20261128-cert-dashboard-1"/:page==="help"?/data-admin-module-version="20261128-help-filter-1"/:/data-admin-module-version="20261128-ui-1"/);
 }
 assert.match(read("admin/js/guard.mjs"),/await import\("\.\/admin-ui\.mjs/);
 assert.ok(read("admin/js/guard.mjs").indexOf("context.isAdmin!==true")<read("admin/js/guard.mjs").indexOf("setupAdminUI"));
