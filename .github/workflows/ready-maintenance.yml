@@ -36,7 +36,7 @@ jobs:
           if [[ "$EVENT_NAME" == "push" ]]; then
             payload=$(jq -nc --arg token "$GH_ACCESS_TOKEN" '{action:"scheduled_probe",github_token:$token}')
             result=$(call "$payload")
-            jq '{authorized,registered_count,checking_enabled,weekly_mail_enabled,scheduled_github_ok,manual_github_secret_configured,notion_secret_configured,mail_secret_configured}' <<<"$result"
+            jq '{authorized,registered_count,checking_enabled,weekly_mail_enabled,scheduled_github_ok,github_rate_http,github_repo_http,manual_github_secret_configured,notion_secret_configured,mail_secret_configured}' <<<"$result"
             jq -e '.authorized and .scheduled_github_ok' <<<"$result" >/dev/null
           elif [[ "$CRON" == "0 23 * * 0" ]]; then
             call '{"action":"scheduled_weekly"}' | jq '{mail,disabled}'

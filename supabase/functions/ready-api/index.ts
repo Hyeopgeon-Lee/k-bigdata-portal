@@ -84,11 +84,12 @@ Deno.serve(async req=>{
    const event=await githubIdentity(req);if(!event||event==="push"&&action!=="scheduled_probe")return reply({error:"FORBIDDEN"},403);
    const op=await settings();
    if(action==="scheduled_probe"){
-    const githubToken=text(b.github_token,300);
+    const githubToken=text(b.github_token,1500);
     const gh=await fetch("https://api.github.com/rate_limit",{headers:{Authorization:"Bearer "+githubToken,"User-Agent":"KBigData-Portal-READY"},redirect:"error",signal:AbortSignal.timeout(8000)});
     const rate=gh.ok?await gh.json():null;
+    const repoTest=await fetch("https://api.github.com/repos/Hyeopgeon-Lee/k-bigdata-ready",{headers:{Authorization:"Bearer "+githubToken,"User-Agent":"KBigData-Portal-READY"},redirect:"error",signal:AbortSignal.timeout(8000)});
     const members=await activeMembers(),registered=await read(db.from("ready_profiles").select("user_id"));
-    return reply({authorized:true,checking_enabled:op.checking_enabled,weekly_mail_enabled:op.weekly_mail_enabled,registered_count:members.filter((m:any)=>registered.some((r:any)=>r.user_id===m.user_id)).length,scheduled_github_ok:gh.ok&&Number(rate?.rate?.limit)>60,manual_github_secret_configured:!!(Deno.env.get("READY_GITHUB_TOKEN")||Deno.env.get("GITHUB_TOKEN")),notion_secret_configured:!!(Deno.env.get("READY_NOTION_TOKEN")||Deno.env.get("NOTION_TOKEN")),mail_secret_configured:!!Deno.env.get("RESEND_API_KEY")});
+    return reply({authorized:true,checking_enabled:op.checking_enabled,weekly_mail_enabled:op.weekly_mail_enabled,registered_count:members.filter((m:any)=>registered.some((r:any)=>r.user_id===m.user_id)).length,scheduled_github_ok:repoTest.ok&&gh.ok&&Number(rate?.resources?.core?.limit||rate?.rate?.limit||gh.headers.get("x-ratelimit-limit"))>60,github_rate_http:gh.status,github_repo_http:repoTest.status,manual_github_secret_configured:!!(Deno.env.get("READY_GITHUB_TOKEN")||Deno.env.get("GITHUB_TOKEN")),notion_secret_configured:!!(Deno.env.get("READY_NOTION_TOKEN")||Deno.env.get("NOTION_TOKEN")),mail_secret_configured:!!Deno.env.get("RESEND_API_KEY")});
    }
    if(action==="scheduled_weekly"){if(!op.checking_enabled)return reply({disabled:true});return reply(await weekly(op.weekly_mail_enabled))}
    if(!op.checking_enabled)return reply({disabled:true,ids:[]});
@@ -96,7 +97,7 @@ Deno.serve(async req=>{
    const ids=members.filter((m:any)=>registered.some((r:any)=>r.user_id===m.user_id)).map((m:any)=>m.user_id);
    if(action==="scheduled_list")return reply({ids});
    if(!ids.includes(b.user_id))return reply({error:"NOT_FOUND"},404);
-   return reply(await runCheck(b.user_id,false,text(b.github_token,300)));
+   return reply(await runCheck(b.user_id,false,text(b.github_token,1500)));
   }
   const caller=createClient(url,anon,{global:{headers:{Authorization:"Bearer "+token}},auth:{persistSession:false,autoRefreshToken:false}});
   const {data:auth,error}=await caller.auth.getUser(token);if(error||!auth.user)return reply({error:"LOGIN_REQUIRED"},401);
