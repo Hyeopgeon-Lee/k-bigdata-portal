@@ -11,6 +11,7 @@ assert.equal(interviewSessionStats(session).practiced,0,"viewing a problem is no
 session.opened.add(sample[0].id);
 session.checked.add(sample[0].id);
 session.practiced.add(sample[1].id);
+session.practiceMarks.set(sample[1].id,{id:"11111111-1111-4111-8111-111111111111",owner:"fixture-user"});
 session.glossaryOpened.add(sample[2].id);
 let stats=interviewSessionStats(session);
 assert.equal(stats.total,10);
@@ -34,6 +35,7 @@ assert.equal(restored.session.index,4);
 assert.deepEqual(restored.session.items.map(q=>q.id),sample.map(q=>q.id));
 assert.equal(restored.session.checked.size,1);
 assert.equal(restored.session.practiced.size,1);
+assert.deepEqual(restored.session.practiceMarks.get(sample[1].id),{id:"11111111-1111-4111-8111-111111111111",owner:"fixture-user"});
 assert.equal(restored.session.glossaryOpened.size,1);
 assert.equal(restored.filters.job,"백엔드");
 assert.equal(restored.filters.query,"MSA");

@@ -4,7 +4,7 @@ export const INTERVIEW_MODES = ["HOME", "BROWSE", "PRACTICE_ONE", "PRACTICE_TEN"
 
 export function createInterviewSession(items, mode) {
   return {items:[...items],index:0,mode,opened:new Set(),glossaryOpened:new Set(),
-    checked:new Set(),practiced:new Set()};
+    checked:new Set(),practiced:new Set(),practiceMarks:new Map()};
 }
 
 export function interviewSessionStats(session) {
@@ -27,7 +27,7 @@ export function serializeInterviewState({mode,direct,session,filters,limit,lastR
     session:session?{
       ids:session.items.map(q=>q.id),index:session.index,mode:session.mode,
       opened:[...session.opened],glossaryOpened:[...session.glossaryOpened],
-      checked:[...session.checked],practiced:[...session.practiced]
+      checked:[...session.checked],practiced:[...session.practiced],practiceMarks:[...(session.practiceMarks||new Map())]
     }:null
   };
 }
@@ -49,6 +49,12 @@ export function restoreInterviewState(snapshot, questions) {
     for(const field of ["opened","glossaryOpened","checked","practiced"]){
       if(!Array.isArray(saved[field]))return null;
       session[field]=new Set(saved[field].filter(id=>valid.has(id)));
+    }
+    const marks=Array.isArray(saved.practiceMarks)?saved.practiceMarks:[];
+    for(const entry of marks){
+      if(!Array.isArray(entry)||entry.length!==2)continue;
+      const [qid,mark]=entry;
+      if(valid.has(qid)&&typeof mark?.id==='string'&&/^[a-f0-9-]{36}$/i.test(mark.id)&&typeof mark.owner==='string')session.practiceMarks.set(qid,{id:mark.id,owner:mark.owner});
     }
   }
   if(["PRACTICE_TEN","COMPLETE"].includes(snapshot.mode)&&!session)return null;

@@ -1,7 +1,7 @@
 import {questions, interviewGroups, interviewJobTags, questionSearchText, matchesInterviewCategory, selectRandomQuestions, interviewSources, getInterviewGlossary} from "./interview.js?v=20261009-interview-ux-1";
 import {matches} from "./search-core.js?v=20261005-perf-1";
 import {interviewRoleLinks} from "./interview-links.js?v=20261005-perf-3";
-import {INTERVIEW_HISTORY_KEY,createInterviewSession,interviewSessionStats,serializeInterviewState,restoreInterviewState} from "./interview-session.js?v=20261009-interview-ux-1";
+import {INTERVIEW_HISTORY_KEY,createInterviewSession,interviewSessionStats,serializeInterviewState,restoreInterviewState} from "./interview-session.js?v=20261128-weekly-interview-1";
 import {learningReportUrl} from "./learning-report.js?v=20261009-1";
 const esc=value=>String(value??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
 const external=s=>'<a href="'+esc(s.url)+'" target="_blank" rel="noopener noreferrer">'+esc(s.name)+' ↗<span class="sr-only"> 외부 문서, 새 창</span></a>';
@@ -78,7 +78,7 @@ export function renderInterviewQuestion(q,practice=false,options={}){
    (term.meaning?'<dd class="interview-term-meaning"><strong>알아둘 점</strong> '+esc(term.meaning)+'</dd>':"")+
    '</div>').join('')+'</dl></details>':"";
  const seconds=Number.isFinite(q.answerSeconds)?' · 약 '+q.answerSeconds+'초 답변':"";
- const mark=options.allowMark?'<div class="interview-mark-practice">'+action("toggle-practiced",options.practiced?"연습 완료 표시 취소":"직접 답변 연습했어요",false,'aria-pressed="'+String(!!options.practiced)+'"')+'<p>실제로 소리 내어 연습한 경우에만 표시하세요. 모범답안 확인과 별도로 기록합니다.</p></div>':"";
+ const mark=options.allowMark?'<div class="interview-mark-practice">'+action("toggle-practiced",options.practiced?"연습 완료 표시 취소":"직접 답변 연습했어요",false,'aria-pressed="'+String(!!options.practiced)+'"')+'<p>실제로 소리 내어 연습한 경우에만 표시하세요. 로그인한 재학생의 완료 기록은 주간 리포트에 반영됩니다.</p><p class="interview-sync-status" role="status" aria-live="polite"></p></div>':"";
  return '<article class="question" data-question-id="'+esc(q.id)+'">'+meta(q)+'<h2'+(practice?' tabindex="-1" id="practice-question-heading"':'')+'>'+esc(q.question)+'</h2>'+roles(q)+share+
    '<p class="hint">먼저 직접 답해 보세요. 간단한 질문은 10초만 답해도 충분합니다.</p>'+
    '<details class="question-answer"><summary><span class="answer-toggle">답변 확인</span><span class="sr-only"> · '+esc(q.code)+'</span></summary>'+
@@ -101,13 +101,14 @@ export function initInterview(){
      difficulty:levels.includes(p.get("difficulty"))?p.get("difficulty"):"전체",query:p.get("q")||""
    };
    direct=questions.find(q=>q.id===p.get("id"))||null;
-   session=null;limit=20;lastRandom=direct?.id||null;mode=direct?"PRACTICE_ONE":p.size?"BROWSE":"HOME";
+   session=direct?createInterviewSession([direct],"one"):null;limit=20;lastRandom=direct?.id||null;mode=direct?"PRACTICE_ONE":p.size?"BROWSE":"HOME";
    $("#detail").textContent=p.has("id")&&!direct?"요청한 문제를 찾을 수 없습니다. 목록에서 다른 문제를 선택하세요.":"";
  }
  function restoreState(value){
    const saved=restoreInterviewState(value?.[INTERVIEW_HISTORY_KEY],questions);
    if(!saved)return false;
    ({mode,direct,session,filters,limit,lastRandom}=saved);
+   if(direct&&!session)session=createInterviewSession([direct],"one");
    if(!interviewGroups.includes(filters.category)&&!questions.some(q=>q.category===filters.category))filters.category="전체";
    if(!interviewJobTags.includes(filters.job))filters.job="전체";
    if(!levels.includes(filters.difficulty))filters.difficulty="전체";
@@ -220,6 +221,35 @@ export function initInterview(){
      }
    }
  }
+ async function togglePractice(button){
+   const target=session,q=target?.items[target.index];if(!q||button.disabled)return;
+   const done=!target.practiced.has(q.id),ctx=window.portalVerifiedContext;
+   const owner=ctx?.user?.id;
+   const eligible=owner&&ctx.isAdmin===false&&ctx.profile?.signup_type==="student"&&ctx.profile?.approval_status==="approved"&&ctx.profile?.enrollment_status==="enrolled"&&window.portalLearning?.write===true;
+   let record=target.practiceMarks.get(q.id);
+   const status=button.parentElement.querySelector(".interview-sync-status");
+   const update=()=>{if(done)target.practiced.add(q.id);else target.practiced.delete(q.id);
+     if(session===target){button.setAttribute("aria-pressed",String(done));button.textContent=done?"연습 완료 표시 취소":"직접 답변 연습했어요";updateProgress();saveState()}};
+   // Anonymous, read-only and pre-existing browser-only marks remain local.
+   if(!eligible||(!done&&record?.owner!==owner)){
+     if(!done)target.practiceMarks.delete(q.id);
+     update();if(status)status.textContent=eligible?"기존 기기 기록을 변경했습니다.":"기기 내 연습 표시입니다. 재학생 로그인 후 새 연습을 기록할 수 있습니다.";
+     return;
+   }
+   if(done&&record?.owner!==owner){
+     if(!window.crypto?.randomUUID){if(status)status.textContent="저장할 수 없는 브라우저입니다.";return;}
+     record={id:window.crypto.randomUUID(),owner};target.practiceMarks.set(q.id,record);
+     if(session===target)saveState();
+   }
+   button.disabled=true;if(status)status.textContent="주간 리포트 기록 저장 중…";
+   try{
+     const {data,error}=await window.portalSupabaseClient.rpc("set_my_interview_practice",{p_mark_id:record.id,p_question_id:q.id,p_done:done});
+     if(error||data!==true)throw Error("PRACTICE_SAVE_FAILED");
+     if(!done)target.practiceMarks.delete(q.id);
+     update();if(status)status.textContent=done?"주간 리포트에 연습 기록을 저장했습니다.":"이번 연습 기록을 취소했습니다.";
+   }catch{if(status)status.textContent="기록을 저장하지 못했습니다. 다시 시도해 주세요."}
+   finally{button.disabled=false;}
+ }
  function browse(push=true){
    clearTimeout(interviewSearchTimer);
    direct=null;session=null;mode="BROWSE";saveState(push);render();
@@ -275,7 +305,7 @@ export function initInterview(){
    if(key==="select"){
      direct=questions.find(q=>q.id===b.dataset.id)||null;
      if(!direct)return;
-     lastRandom=direct.id;session=null;mode="PRACTICE_ONE";saveState(true);render(true);
+     lastRandom=direct.id;session=createInterviewSession([direct],"one");mode="PRACTICE_ONE";saveState(true);render(true);
    }
    if(key==="remove-filter"){
      filters[b.dataset.key]=b.dataset.key==="query"?"":"전체";
@@ -284,14 +314,7 @@ export function initInterview(){
    }
    if(key==="share-problem"){const q=direct||session?.items?.[session.index];if(q)void shareInterviewQuestion(q);}
    if(key==="copy-problem-link"){const q=direct||session?.items?.[session.index];if(q)void copyInterviewQuestionLink(q);}
-   if(key==="toggle-practiced"&&session){
-     const q=session.items[session.index];if(!q)return;
-     if(session.practiced.has(q.id))session.practiced.delete(q.id);else session.practiced.add(q.id);
-     const marked=session.practiced.has(q.id);
-     b.setAttribute("aria-pressed",String(marked));
-     b.textContent=marked?"연습 완료 표시 취소":"직접 답변 연습했어요";
-     updateProgress();saveState();
-   }
+   if(key==="toggle-practiced"&&session)void togglePractice(b);
    if(key==="previous"&&session&&session.index>0){session.index--;saveState(true);render(true);}
    if(key==="next"){
      if(mode==="PRACTICE_ONE")start(1);

@@ -58,7 +58,7 @@ const page=document.body.dataset.page;
 async function loadPageModules(){
  const id=new URLSearchParams(location.search).get("id");
  if(page==="interview"){
-  ({initInterview}=await import("./interview-ui.js?v=20261112-shared-intro-2"));
+  ({initInterview}=await import("./interview-ui.js?v=20261128-weekly-interview-1"));
   return;
  }
  if(page==="certifications"){

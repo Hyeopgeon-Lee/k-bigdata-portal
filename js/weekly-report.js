@@ -56,11 +56,11 @@ function render(report){
  bars('wr-study',l.days,{label:x=>'월화수목금토일'[l.days.indexOf(x)],value:x=>x.study_seconds,display:hours,kind:'wr-study-bars'});
  const subjects=$('wr-subjects');subjects.replaceChildren();
  const restricted=l.subject_scope==='fundamentals';
- const visibleSubjects=restricted?l.subjects.filter(s=>['coding','ncp'].includes(s.id)&&s.attempts>0):l.subjects;
+ const visibleSubjects=restricted?l.subjects.filter(s=>['coding','ncp','interview'].includes(s.id)&&s.attempts>0):l.subjects;
  $('wr-subject-card').hidden=restricted&&visibleSubjects.length===0;
- set('wr-subject-note',restricted?'기초학습 · NCP 실제 풀이 기록 (자격증 최종합격 등록 기준)':l.subject_scope==='written_pass'?'합격한 필기 과목 제외 · 실기 학습 포함':'지난주 풀이 횟수 · 정답/오답 기록 기준 (자가평가 포함)');
+ set('wr-subject-note',(restricted?'기초학습 · 미취득 NCP · 기술면접 실제 기록':l.subject_scope==='written_pass'?'합격한 필기 과목 제외 · 실기 학습 포함':'지난주 풀이 횟수 · 정답/오답 기록 기준 (자가평가 포함)')+(l.ncp_acquired?' · NCP 취득 과목 제외':''));
  const max=Math.max(1,...visibleSubjects.map(x=>x.attempts));
- for(const s of visibleSubjects){const row=node('div',undefined,'wr-subject'),head=node('div',undefined,'wr-subject-head'),track=node('div',undefined,'wr-subject-track'),bar=node('span');bar.style.width=s.attempts/max*100+'%';head.append(node('strong',s.label),node('span',fmt(s.attempts)+'회 · '+(s.accuracy===null?'—':s.accuracy+'%')));track.append(bar);row.append(head,track);subjects.append(row)}
+ for(const s of visibleSubjects){const row=node('div',undefined,'wr-subject'),head=node('div',undefined,'wr-subject-head'),track=node('div',undefined,'wr-subject-track'),bar=node('span');bar.style.width=s.attempts/max*100+'%';head.append(node('strong',s.label),node('span',s.id==='interview'?fmt(s.attempts)+'회 연습 · '+fmt(s.questions)+'문항':fmt(s.attempts)+'회 · '+(s.accuracy===null?'—':s.accuracy+'%')));track.append(bar);row.append(head,track);subjects.append(row)}
  set('wr-career-note',c.registered?'생성 시점의 최신 점검 · GitHub '+stamp(c.checked_at):'취업 준비 정보가 아직 등록되지 않았습니다.');
  const career=$('wr-career');career.replaceChildren();
  const statuses=[['GitHub 활동',c.github_days===null?'확인 필요':c.github_days+'일 / 7일'],['Repository',c.repositories+'개 등록'],['README',c.readme],['Notion · 포트폴리오',c.portfolio],['최종 합격 자격증',c.certificates+'개']];

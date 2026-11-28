@@ -27,9 +27,11 @@ try{
    const writtenMode=role==='student'&&[768,1280].includes(width);
    const noBasics=width===360;
    const certCandidate=noBasics?{...response.report,payload:{...payload,learning:{...learning,subjects:learning.subjects.map(s=>['coding','ncp'].includes(s.id)?{...s,attempts:0}:s)}}}:response.report;
+   const interviewMode=role==='student'&&width===390;
+   const candidate=interviewMode?{...certCandidate,payload:{...certCandidate.payload,learning:{...certCandidate.payload.learning,subjects:[...certCandidate.payload.learning.subjects,{id:'interview',label:'기술면접',attempts:2,questions:1,correct:0,graded:0,accuracy:null}]}}}:certCandidate;
    const certs=certMode?[{certificate_code:noBasics?'industrial':'engineer',pass_status:'final',verification_status:'pending'}]
-    :writtenMode?[{certificate_code:width===768?'engineer':'industrial',pass_status:'written',verification_status:'verified'}]:[];
-   const scoped={...response,report:reportForCertificates(certCandidate,certs)};
+    :writtenMode?[{certificate_code:width===768?'engineer':'industrial',pass_status:'written',verification_status:'verified'}]:interviewMode?[{certificate_code:'ncp',pass_status:'final',verification_status:'verified'}]:[];
+   const scoped={...response,report:reportForCertificates(candidate,certs)};
    const scopedMock=mock.replace(JSON.stringify(response),JSON.stringify(scoped));
    await context.route('**/js/weekly-report.js?v=*',route=>route.fulfill({contentType:'application/javascript',body:scopedMock}));
    const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
@@ -47,6 +49,10 @@ try{
      const labels=await page.locator('#wr-subjects .wr-subject-head strong').allTextContents();
      assert.deepEqual(labels,['기초학습','NCP','정보처리 실기',width===768?'산업기사 필기':'정보처리기사 필기']);
      assert.match(await page.locator('#wr-subject-note').textContent(),/실기 학습 포함/);
+    }else if(interviewMode){
+     const labels=await page.locator('#wr-subjects .wr-subject-head strong').allTextContents();
+     assert.ok(!labels.includes('NCP'));assert.ok(labels.includes('기술면접'));
+     assert.match(await page.locator('#wr-subjects .wr-subject').filter({hasText:'기술면접'}).textContent(),/2회 연습 · 1문항/);
     }else{
      assert.equal(await page.locator('#wr-subject-card').isVisible(),true);
      assert.equal(await page.locator('#wr-subjects .wr-subject').count(),5);

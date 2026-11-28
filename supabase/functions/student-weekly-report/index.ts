@@ -23,7 +23,7 @@ async function generate(member:any,week:string,cal?:any){
  const id=member.user_id,existing=await getReport(id,week);
  if(existing)return existing;
  const start=new Date(dateMs(shift(week,-21))).toISOString(),end=new Date(dateMs(shift(week,7))).toISOString();
- const [attempts,written,sessions,plan,profile,repos,checks,repoChecks,certs,calendarData,certEvents]=await Promise.all([
+ const [attempts,written,sessions,plan,profile,repos,checks,repoChecks,certs,calendarData,certEvents,interviewPractices]=await Promise.all([
   rows((a,b)=>db.from("learning_attempts").select("bank,question_id,result,submitted_at").eq("user_id",id).gte("submitted_at",start).lt("submitted_at",end).order("submitted_at").order("id").range(a,b)),
   rows((a,b)=>db.from("written_learning_attempts").select("exam_type,question_id,attempted_at,correct").eq("user_id",id).gte("attempted_at",Date.parse(start)).lt("attempted_at",Date.parse(end)).order("attempted_at").order("exam_type").order("question_id").range(a,b)),
   rows((a,b)=>db.from("study_sessions").select("started_at,duration_seconds,status,review_outcome").eq("user_id",id).gte("started_at",start).lt("started_at",end).order("started_at").order("id").range(a,b)),
@@ -34,9 +34,10 @@ async function generate(member:any,week:string,cal?:any){
   read(db.from("ready_repository_checks").select("repo_id,kind,checked_at,data").eq("user_id",id)),
   read(db.from("student_certifications").select("pass_status,verification_status").eq("user_id",id)),
   cal??calendar(),
-  read(db.from("certification_exam_schedules").select("certificate_code,exam_round,event_type,start_date,end_date").eq("published",true).lte("start_date",shift(week,13)).gte("end_date",shift(week,7)))
+  read(db.from("certification_exam_schedules").select("certificate_code,exam_round,event_type,start_date,end_date").eq("published",true).lte("start_date",shift(week,13)).gte("end_date",shift(week,7))),
+  rows((a,b)=>db.from("interview_practice_events").select("question_id,practiced_at").eq("user_id",id).gte("practiced_at",new Date(dateMs(week)).toISOString()).lt("practiced_at",end).order("practiced_at").order("mark_id").range(a,b))
  ]);
- const learning=summarize(week,attempts,written,sessions,plan);
+ const learning=summarize(week,attempts,written,sessions,plan,interviewPractices);
  const c=Object.fromEntries(checks.map((x:any)=>[x.kind,{...x.data,checked_at:x.checked_at}]));
  const primary=Object.fromEntries(repoChecks.filter((x:any)=>x.repo_id===repos[0]?.repo_id).map((x:any)=>[x.kind,{...x.data,checked_at:x.checked_at}]));
  const evaluation=evaluateStudentReadiness({...profile?.data,grade:String(member.academic_year||"")},{...c,...primary,publicPortfolio:c.portfolio,repositoryCount:repos.length});
@@ -93,7 +94,7 @@ Deno.serve(async req=>{
  const [report,history,certificates]=await Promise.all([
   week===latest?generate(member,week):getReport(member.user_id,week),
   read(db.from("student_weekly_reports").select("week_start").eq("user_id",member.user_id).order("week_start",{ascending:false}).limit(104)),
-  read(db.from("student_certifications").select("certificate_code,pass_status,verification_status").eq("user_id",member.user_id).in("certificate_code",["engineer","industrial"]))
+  read(db.from("student_certifications").select("certificate_code,pass_status,verification_status").eq("user_id",member.user_id).in("certificate_code",["engineer","industrial","ncp"]))
  ]);
  // Ensure the just-generated latest week appears in the selector even if the parallel history query completed first.
  const weeks=[...new Set([...(report?[report.week_start]:[]),...history.map((w:any)=>w.week_start)])].sort().reverse();

@@ -75,3 +75,33 @@ assert.equal(reportForCertificates(snapshot,[industrialWritten]).payload.learnin
 assert.deepEqual(visible([engineerWritten,{...industrialWritten,pass_status:'final'}]),['coding']);
 assert.equal(JSON.stringify(snapshot),before,'written pass filtering preserves the stored snapshot');
 console.log('PASS: written-only certificate removes only that written subject; practical stays, final-pass policy takes precedence.');
+// NCP final registration hides only NCP, independently of information processing certificates.
+const ncpFinal={certificate_code:'ncp',pass_status:'final',verification_status:'pending'};
+assert.deepEqual(visible([ncpFinal]),['coding','engineer','industrial','practical']);
+assert.deepEqual(visible([ncpFinal,engineerWritten]),['coding','industrial','practical']);
+assert.deepEqual(visible([ncpFinal,{...engineerWritten,pass_status:'final'}]),['coding']);
+assert.deepEqual(visible([{...ncpFinal,verification_status:'rejected'}]),['coding','ncp','engineer','industrial','practical']);
+const practiceData=[
+ {question_id:'DS-001',practiced_at:'2026-11-22T15:00:00Z'},
+ {question_id:'DS-001',practiced_at:'2026-11-24T01:00:00Z'},
+ {question_id:'q13',practiced_at:'2026-11-29T14:59:59Z'},
+ {question_id:'q14',practiced_at:'2026-11-29T15:00:00Z'},
+ {question_id:'q15',practiced_at:'2026-11-22T14:59:59Z'}
+];
+const practiceLearning=summarize('2026-11-23',attempts,written,sessions,null,practiceData);
+const practiceSubject=practiceLearning.subjects.find(s=>s.id==='interview');
+assert.deepEqual(practiceSubject,{id:'interview',label:'기술면접',attempts:3,questions:2,correct:0,graded:0,accuracy:null});
+assert.equal(practiceLearning.attempts,l.attempts,'spoken practice must not inflate graded problem totals');
+assert.equal(practiceLearning.accuracy,l.accuracy);
+const practiceReport={...snapshot,payload:{...snapshot.payload,learning:practiceLearning}};
+const scopedPractice=reportForCertificates(practiceReport,[ncpFinal,{...engineerWritten,pass_status:'final'}]);
+assert.deepEqual(scopedPractice.payload.learning.subjects.map(s=>s.id),['coding','interview']);
+assert.equal(scopedPractice.payload.learning.ncp_acquired,true);
+assert.ok(!summarize('2026-11-23',[],[],[],null,[]).subjects.some(s=>s.id==='interview'),'no fabricated old practice rows');
+assert.match(edge,/\.in\("certificate_code",\["engineer","industrial","ncp"\]\)/);
+assert.match(edge,/from\("interview_practice_events"\)\.select\("question_id,practiced_at"\)\.eq\("user_id",id\)/);
+const practiceSql=readFileSync(new URL('../supabase/migrations/20261128193000_interview_practice_events.sql',import.meta.url),'utf8');
+assert.match(practiceSql,/enable row level security/);assert.match(practiceSql,/v_user uuid:=auth\.uid\(\)/);
+assert.match(practiceSql,/delete from public\.interview_practice_events where user_id=v_user and mark_id=p_mark_id and question_id=p_question_id/);
+assert.doesNotMatch(practiceSql,/grant (?:insert|update|delete|all) on public\.interview_practice_events to authenticated/);
+console.log('PASS: NCP pass excludes only NCP, real explicit interview practice counts, KST boundaries and access restrictions.');

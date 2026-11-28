@@ -8,7 +8,7 @@ export function lastWeek(now=Date.now()){
 }
 export const validWeek=(key)=>typeof key==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(key)&&Number.isFinite(dateMs(key))&&dateKey(dateMs(key))===key&&new Date(dateMs(key)+KST).getUTCDay()===1;
 export const BANKS={coding:'기초학습',ncp:'NCP',practical:'정보처리 실기',engineer:'정보처리기사 필기',industrial:'산업기사 필기'};
-export function summarize(week,attempts,written,sessions,plan){
+export function summarize(week,attempts,written,sessions,plan,interviewPractices=[]){
  const start=dateMs(week),end=start+7*DAY;
  const all=[...attempts.map(a=>({bank:a.bank,time:Date.parse(a.submitted_at),result:a.result,question:a.question_id})),...written.map(a=>({bank:a.exam_type,time:Number(a.attempted_at),result:a.correct===true?'correct':a.correct===false?'incorrect':'ungraded',question:a.question_id}))].filter(a=>a.bank in BANKS&&Number.isFinite(a.time));
  const last=all.filter(a=>a.time>=start&&a.time<end);
@@ -19,10 +19,12 @@ export function summarize(week,attempts,written,sessions,plan){
  const studyIn=(a,b)=>sessions.filter(s=>sessionTime(s)>=a&&sessionTime(s)<b);
  const hours=rows=>rows.filter(approved).reduce((n,s)=>n+seconds(s),0);
  const weekly=studyIn(start,end);
+ const practice=interviewPractices.filter(p=>{const time=Date.parse(p.practiced_at);return time>=start&&time<end});
+ const interview=practice.length?[{id:'interview',label:'기술면접',attempts:practice.length,questions:new Set(practice.map(p=>p.question_id)).size,correct:0,graded:0,accuracy:null}]:[];
  return {
   ...metric(last),study_seconds:hours(weekly),review_pending:weekly.filter(s=>s.status==='needs_review'&&!s.review_outcome).length,
   active_days:new Set(last.map(a=>dateKey(a.time))).size,
-  subjects:Object.entries(BANKS).map(([id,label])=>({id,label,...metric(last.filter(a=>a.bank===id))})),
+  subjects:[...Object.entries(BANKS).map(([id,label])=>({id,label,...metric(last.filter(a=>a.bank===id))})),...interview],
   trend:Array.from({length:4},(_,i)=>{const a=start-(3-i)*7*DAY,b=a+7*DAY;return {week:dateKey(a),...metric(all.filter(x=>x.time>=a&&x.time<b)),study_seconds:hours(studyIn(a,b))}}),
   days:Array.from({length:7},(_,i)=>({date:shift(week,i),study_seconds:hours(studyIn(start+i*DAY,start+(i+1)*DAY)),attempts:last.filter(x=>dateKey(x.time)===shift(week,i)).length})),
   plan_days:Array.isArray(plan?.weekdays)?plan.weekdays.length:null
@@ -32,16 +34,17 @@ export function summarize(week,attempts,written,sessions,plan){
 export function reportForCertificates(report,certificates){
  if(!report)return report;
  const relevant=(Array.isArray(certificates)?certificates:[]).filter(c=>
-  ['engineer','industrial'].includes(c?.certificate_code)&&c.verification_status!=='rejected');
- const acquired=relevant.some(c=>c.pass_status==='final');
- const passedWritten=new Set(relevant.filter(c=>c.pass_status==='written').map(c=>c.certificate_code));
- if(!acquired&&!passedWritten.size)return report;
+  ['engineer','industrial','ncp'].includes(c?.certificate_code)&&c.verification_status!=='rejected');
+ const acquired=relevant.some(c=>['engineer','industrial'].includes(c.certificate_code)&&c.pass_status==='final');
+ const ncpAcquired=relevant.some(c=>c.certificate_code==='ncp'&&c.pass_status==='final');
+ const passedWritten=new Set(relevant.filter(c=>['engineer','industrial'].includes(c.certificate_code)&&c.pass_status==='written').map(c=>c.certificate_code));
+ if(!acquired&&!passedWritten.size&&!ncpAcquired)return report;
  const learning=report.payload.learning;
- const subjects=acquired
-  ?learning.subjects.filter(s=>['coding','ncp'].includes(s.id)&&s.attempts>0)
-  :learning.subjects.filter(s=>!passedWritten.has(s.id));
+ const subjects=(acquired
+  ?learning.subjects.filter(s=>['coding','ncp','interview'].includes(s.id)&&s.attempts>0)
+  :learning.subjects.filter(s=>!passedWritten.has(s.id))).filter(s=>!(ncpAcquired&&s.id==='ncp'));
  return {...report,payload:{...report.payload,learning:{...learning,
-  subject_scope:acquired?'fundamentals':'written_pass',subjects}}};
+  subject_scope:acquired?'fundamentals':passedWritten.size?'written_pass':'ncp_pass',ncp_acquired:ncpAcquired,subjects}}};
 }
 export function scheduleEvents(events,grade,week){
  const from=shift(week,7),to=shift(week,13);
