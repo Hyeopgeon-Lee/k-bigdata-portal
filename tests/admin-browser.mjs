@@ -107,6 +107,42 @@ try{
       await page.locator("#teacher-summary").getByText("1명",{exact:true}).waitFor();
       assert.equal(await page.locator("#study-admin-table-body tr").count(),1);
       assert.deepEqual(await page.locator("#study-days-chart .admin-chart-label").first().locator("span,strong").allTextContents(),["월 · 1명","1.5시간"]);
+      // Sharing is local and transfers only the selected week/grade aggregate PNG.
+      const chart=page.locator("#study-days-chart");
+      const week=await page.locator("#study-admin-week").inputValue();
+      assert.match(await chart.locator(".study-share-manual").inputValue(),/1학년 주간 자율학습 현황/);
+      await page.evaluate(()=>{
+       Object.defineProperty(navigator,"canShare",{configurable:true,value:({files})=>files[0]?.type==="image/png"});
+       Object.defineProperty(navigator,"share",{configurable:true,value:async({files,title,text})=>{
+        const file=files[0],bitmap=await createImageBitmap(file);
+        window.__studyShared={name:file.name,width:bitmap.width,height:bitmap.height,title,text,signature:[...new Uint8Array((await file.arrayBuffer()).slice(0,8))]};
+        bitmap.close();
+       }});
+      });
+      await chart.getByRole("button",{name:"밴드 공유하기",exact:true}).click();
+      await page.waitForFunction(()=>window.__studyShared?.width===1080);
+      const shared=await page.evaluate(()=>window.__studyShared);
+      assert.equal(shared.height,1320);
+      assert.equal(shared.title,"1학년 주간 자율학습 현황");
+      assert.ok(shared.name.includes(week));
+      assert.ok(shared.text.includes(week.replaceAll("-",".")));
+      assert.match(shared.text,/월요일 · 1명 · 1.5시간/);
+      assert.deepEqual(shared.signature,[137,80,78,71,13,10,26,10]);
+      const downloadEvent=page.waitForEvent("download");
+      await chart.getByRole("button",{name:"이미지 다운로드",exact:true}).click();
+      const downloaded=await downloadEvent;
+      assert.equal(downloaded.suggestedFilename(),shared.name);
+      await page.locator("#study-admin-week").selectOption({index:3});
+      await chart.getByRole("button",{name:"밴드 공유하기",exact:true}).waitFor();
+      const previousWeek=await page.locator("#study-admin-week").inputValue();
+      assert.notEqual(previousWeek,week);
+      assert.ok((await chart.locator(".study-share-manual").inputValue()).includes(previousWeek.replaceAll("-",".")));
+      await chart.getByRole("button",{name:"밴드 공유하기",exact:true}).click();
+      await page.waitForFunction(w=>window.__studyShared?.name.includes(w),previousWeek);
+      await page.locator("#study-admin-week").selectOption(week);
+      await chart.getByRole("button",{name:"밴드 공유하기",exact:true}).waitFor();
+      await page.evaluate(()=>{delete navigator.share;delete navigator.canShare;});
+
       await page.locator("[data-admin-grade='2']").click();
       await page.locator("#teacher-summary").getByText("2명",{exact:true}).waitFor();
       await page.locator("[data-admin-grade='']").click();
