@@ -6,7 +6,7 @@ const scripts=[
   "../alumni/js/config.js",
   "../alumni/js/api.js",
   "../alumni/js/common.js?v=20261113-copy-cleanup-1",
-  "../alumni/js/admin.js?v=20261128-alumni-overview-1"
+  "../alumni/js/admin.js?v=20261128-review-card-1"
 ];
 for(const path of scripts){
   await new Promise((resolve,reject)=>{
