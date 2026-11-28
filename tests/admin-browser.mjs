@@ -3,6 +3,8 @@ import {mkdirSync} from "node:fs";
 import {chromium} from "playwright";
 import {approvedStudent} from "./fixtures/approved-student.mjs";
 
+await import("./admin-certifications-browser.mjs");
+
 mkdirSync("ui-screenshots/admin",{recursive:true});
 const browser=await chromium.launch({headless:true,args:["--no-sandbox"]});
 try{
