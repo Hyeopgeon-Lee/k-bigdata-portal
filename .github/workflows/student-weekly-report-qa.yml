@@ -2,7 +2,7 @@ name: Student weekly report dashboard QA
 on:
   push:
     branches: [main]
-    paths: ['weekly-report.html','mypage.html','js/weekly-report.js','js/my-page.js','js/portal-auth.mjs','js/portal-navigation.js','css/weekly-report.css','css/my-page.css','supabase/functions/student-weekly-report/**','supabase/functions/ready-api/rules.mjs','supabase/migrations/*student_weekly_reports.sql','tests/student-weekly-report*','tests/interview-practice-record-browser.mjs','tests/interview-session.test.mjs','js/interview-ui.js','js/interview-session.js','js/learning-ui.js','interview.html','supabase/migrations/*interview_practice_events.sql','.github/workflows/student-weekly-report-qa.yml']
+    paths: ['weekly-report.html','mypage.html','js/weekly-report.js','js/my-page.js','js/portal-auth.mjs','js/portal-navigation.js','css/weekly-report.css','css/my-page.css','supabase/functions/student-weekly-report/**','supabase/functions/ready-api/rules.mjs','supabase/migrations/*student_weekly_reports.sql','tests/student-weekly-report*','tests/student-weekly-home*','index.html','js/home-weekly-report.mjs','css/home-weekly-report.css','tests/interview-practice-record-browser.mjs','tests/interview-session.test.mjs','js/interview-ui.js','js/interview-session.js','js/learning-ui.js','interview.html','supabase/migrations/*interview_practice_events.sql','.github/workflows/student-weekly-report-qa.yml']
   workflow_dispatch:
 permissions:
   contents: read
@@ -17,6 +17,7 @@ jobs:
           node-version: '22'
       - run: |
           node tests/student-weekly-report.test.mjs
+          node tests/student-weekly-home.test.mjs
           node tests/portal-shell.test.mjs
           node tests/interview-session.test.mjs
       - run: |
@@ -26,6 +27,7 @@ jobs:
           python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/weekly-http.log 2>&1 &
           node tests/student-weekly-report-browser.mjs
           node tests/interview-practice-record-browser.mjs
+          node tests/student-weekly-home-browser.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:

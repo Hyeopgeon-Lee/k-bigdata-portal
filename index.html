@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="css/home-alerts.css?v=20261112-page-intro-2">
   <link rel="stylesheet" href="css/home-grade.css?v=20261113-admin-grade-exempt-1">
   <link rel="stylesheet" href="css/home-engagement.css?v=20261112-page-intro-2">
+  <link rel="stylesheet" href="css/home-weekly-report.css?v=20261128-weekly-home-1">
 <!-- portal:assets:start (generated; edit scripts/portal-shell-template.mjs) -->
 <link rel="stylesheet" href="css/portal-navigation.css?v=20261112-page-intro-2">
 <script defer src="js/portal-navigation.js?v=20261128-weekly-menu-1"></script>
@@ -64,6 +65,18 @@
           <a id="home-grade-action" class="home-grade-action" href="mypage.html" hidden>마이페이지에서 학년 등록</a>
         </div>
       </div>
+      <section id="home-weekly-report" class="home-weekly-report" aria-labelledby="home-weekly-report-title" hidden>
+        <div class="home-weekly-report-content">
+          <span class="home-weekly-report-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M3 3v18h18"/><path d="M8 16v-4m5 4V8m5 8V5"/><path d="m7 8 5-4 6-1"/></svg></span>
+          <div class="home-weekly-report-copy">
+            <p class="home-weekly-report-kicker">NEW · 이번 주 리포트</p>
+            <h2 id="home-weekly-report-title">나의 주간 리포트</h2>
+            <p id="home-weekly-report-period" class="home-weekly-report-period"></p>
+            <p class="home-weekly-report-description">지난주 학습과 취업 준비 현황을 확인하고 이번 주를 계획하세요.</p>
+          </div>
+        </div>
+        <a id="home-weekly-report-link" class="home-weekly-report-link" href="weekly-report.html">나의 주간 리포트 보기 <span aria-hidden="true">→</span></a>
+      </section>
       <section class="portal-search" aria-labelledby="search-heading">
         <h2 id="search-heading">필요한 서비스를 검색하세요</h2>
         <form id="portal-search-form" role="search">
@@ -188,6 +201,7 @@
   <script type="module" src="js/portal-shell-entry.js?v=20261128-performance-1"></script>
   <script src="data/recruitments.js?v=20261016-2"></script>
   <script type="module" src="js/home-dashboard.js?v=20261128-ready-1"></script>
+  <script type="module" src="js/home-weekly-report.mjs?v=20261128-weekly-home-1"></script>
   <script type="module" src="js/home-alumni.js?v=20261128-performance-1"></script>
   <script type="application/x-learning" data-module="js/home-engagement.js?v=20261128-performance-1"></script>
   <script type="module" src="js/home-schedule.js?v=20261128-performance-1"></script>

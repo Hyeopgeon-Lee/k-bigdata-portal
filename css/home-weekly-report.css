@@ -1,0 +1,28 @@
+/* A compact announcement matching the portal's existing blue/white cards. */
+body[data-portal-home] .home-weekly-report[hidden]{display:none!important}
+body[data-portal-home] .home-weekly-report{
+ display:flex;align-items:center;justify-content:space-between;gap:20px;min-width:0;
+ padding:clamp(17px,2.4vw,25px);border:1px solid #c7d9f5;border-radius:17px;
+ background:linear-gradient(116deg,#eaf2ff,#f8fbff 80%);color:#183961;
+ box-shadow:0 7px 20px rgba(31,66,125,.06);
+}
+.home-weekly-report-content{display:flex;align-items:center;gap:15px;min-width:0}
+.home-weekly-report-icon{display:grid;place-items:center;width:56px;height:56px;flex:0 0 56px;background:#dceaff;border-radius:14px;color:#245cb5}
+.home-weekly-report-icon svg{width:30px;height:30px;display:block}
+.home-weekly-report-copy{min-width:0}
+.home-weekly-report-kicker{display:inline-flex;margin:0 0 5px;padding:4px 8px;border-radius:20px;background:#d9e8ff;color:#24569c;font-size:11px;font-weight:800;letter-spacing:.03em}
+.home-weekly-report-copy h2{margin:0 0 4px;font-size:clamp(20px,2.5vw,24px);line-height:1.35;letter-spacing:-.035em;color:#173d80;overflow-wrap:anywhere}
+.home-weekly-report-period{margin:0;color:#365c91;font-size:13px;font-weight:750;line-height:1.5}
+.home-weekly-report-description{margin:5px 0 0;color:#526982;font-size:13px;line-height:1.6;word-break:keep-all}
+body[data-portal-home] .home-weekly-report-link{display:inline-flex;min-height:48px;align-items:center;justify-content:center;gap:8px;flex-shrink:0;padding:12px 19px;
+ border:1px solid #17488f;border-radius:11px;background:#17488f;color:#fff;font-size:14px;font-weight:750;text-decoration:none;line-height:1.5;text-align:center;}
+body[data-portal-home] .home-weekly-report-link:hover{background:#12366e;color:#fff}
+body[data-portal-home] .home-weekly-report-link:focus-visible{outline:3px solid #81b4fe;outline-offset:3px}
+@media(max-width:767px){
+ body[data-portal-home] .home-weekly-report{align-items:stretch;flex-direction:column;gap:14px;padding:16px}
+ .home-weekly-report-content{align-items:flex-start;gap:12px}
+ .home-weekly-report-icon{width:46px;height:46px;flex-basis:46px;border-radius:12px}
+ .home-weekly-report-icon svg{width:25px;height:25px}
+ .home-weekly-report-description{font-size:12px}
+ body[data-portal-home] .home-weekly-report-link{width:100%;box-sizing:border-box;min-height:46px}
+}
