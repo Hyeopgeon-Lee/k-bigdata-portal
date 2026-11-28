@@ -6,9 +6,9 @@
 <link rel="stylesheet" href="../css/portal-ux.css?v=20261112-page-intro-2">
 <link rel="stylesheet" href="css/admin.css?v=20261128-ui-1">
 <link rel="stylesheet" href="../alumni/css/jobs.css?v=20261113-alumni-unified-1">
-<link rel="stylesheet" href="css/alumni.css?v=20261128-review-card-1">
+<link rel="stylesheet" href="css/alumni.css?v=20261128-portal-mail-1">
 <link rel="stylesheet" href="css/admin-mobile.css?v=20261128-ui-1"></head>
-<body data-admin-module="alumni.js" data-admin-module-version="20261128-review-card-1" data-admin-page="alumni">
+<body data-admin-module="alumni.js" data-admin-module-version="20261128-portal-mail-1" data-admin-page="alumni">
 <p id="learning-notice" role="status">관리자 로그인 및 권한 확인 중입니다.</p>
 <header class="admin-header site-header">
   <div class="admin-header-inner header-inner">
@@ -85,6 +85,11 @@
         <label class="check"><input id="admin-mail-all" type="checkbox"> 전체 선택</label>
       </fieldset>
       <div id="admin-mail-preview" aria-live="polite"></div>
+      <details id="admin-mail-design" class="admin-mail-design" hidden>
+        <summary>메일 디자인 미리보기</summary>
+        <p class="admin-mail-design-hint">실제 발송되는 제목과 본문입니다. 이 화면에서는 메일이 발송되지 않습니다.</p>
+        <iframe id="admin-mail-frame" title="발송될 메일 본문 미리보기" sandbox="" loading="lazy" referrerpolicy="no-referrer"></iframe>
+      </details>
       <p id="admin-mail-message" class="status" role="status" aria-live="polite" hidden></p>
       <div class="actions"><button id="admin-preview-mail" type="button" class="button--secondary">대상 인원 확인</button><button id="admin-confirm-mail" type="button" disabled>확인 후 메일 발송</button></div>
     </dialog>

@@ -33,7 +33,7 @@ test("mailer uses verified recipient and a stable idempotency key",()=>{
  assert.match(edge,/row\.status==="sent"/);
  assert.match(edge,/ticket\.status!=="COMPLETED"/);
  assert.match(edge,/RESEND_API_KEY/);
- assert.match(edge,/escape\(result\)/);
+ assert.match(edge,/mailCallout\(result,"help","관리자 처리 결과"\)/);
  assert.match(edge,/mailStatus:"not_queued"/);
 });
 test("admin completion saves the answer before attempting email, supports retry",()=>{

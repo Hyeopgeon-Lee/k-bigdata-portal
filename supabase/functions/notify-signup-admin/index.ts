@@ -1,4 +1,5 @@
 import {createClient} from "npm:@supabase/supabase-js@2.49.10";
+import { renderPortalMail, mailParagraph, mailDetails } from "../_shared/portal-mail.mjs";
 
 // Mail notification is server-only. A verified applicant may notify only about
 // their own pending account; only the existing super administrator can alter settings.
@@ -29,30 +30,13 @@ type PendingMember={
 function mailContent(member:PendingMember){
   const type=member.signup_type==="alumni"?"졸업생":"재학생";
   const detail=member.signup_type==="alumni"
-    ? "졸업연도 · "+safe(member.graduation_year)+"년"
-    : "학년 · "+safe(member.academic_year)+"학년 / 학번 · "+safe(member.student_no||"-");
+    ? "졸업연도 · "+String(member.graduation_year??"")+"년"
+    : "학년 · "+String(member.academic_year??"")+"학년 / 학번 · "+String(member.student_no||"-");
   const requested=new Date(member.created_at).toLocaleString("ko-KR",{timeZone:"Asia/Seoul"});
   const link="https://portal.k-bigdata.kr/admin/accounts.html?view=approvals&approve="+encodeURIComponent(member.user_id);
-  const html='<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>'+
-    '<body style="margin:0;padding:0;background:#f4f7fc;font-family:Arial,Malgun Gothic,sans-serif;color:#193353">'+
-    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f7fc"><tr><td align="center" style="padding:32px 14px">'+
-    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:580px;background:#fff;border:1px solid #dce5f2;border-radius:15px;overflow:hidden">'+
-    '<tr><td style="padding:24px 28px;background:#16386f;color:white;font-size:18px;font-weight:800">빅데이터소프트웨어공학과 통합 포털</td></tr>'+
-    '<tr><td style="padding:30px 28px"><p style="margin:0;color:#235aa3;font-size:13px;font-weight:700">관리자 가입 승인 요청</p>'+
-    '<h1 style="font-size:23px;line-height:1.45;margin:9px 0 14px">새로운 회원가입 요청이 있습니다.</h1>'+
-    '<p style="line-height:1.7;color:#526680">이메일 인증을 완료한 회원의 가입을 검토해 주세요.</p>'+
-    '<table role="presentation" width="100%" cellpadding="9" cellspacing="0" style="margin:22px 0;border-collapse:collapse;background:#f7faff;font-size:14px;line-height:1.6">'+
-    '<tr><td width="110" style="border-bottom:1px solid #e2eaf5">가입 유형</td><td style="border-bottom:1px solid #e2eaf5">'+type+'</td></tr>'+
-    '<tr><td style="border-bottom:1px solid #e2eaf5">이름</td><td style="border-bottom:1px solid #e2eaf5">'+safe(member.full_name)+'</td></tr>'+
-    '<tr><td style="border-bottom:1px solid #e2eaf5">가입 정보</td><td style="border-bottom:1px solid #e2eaf5">'+detail+'</td></tr>'+
-    '<tr><td style="border-bottom:1px solid #e2eaf5">이메일</td><td style="border-bottom:1px solid #e2eaf5">'+safe(member.email)+'</td></tr>'+
-    '<tr><td style="border-bottom:1px solid #e2eaf5">인증 여부</td><td style="border-bottom:1px solid #e2eaf5">이메일 인증 완료</td></tr>'+
-    '<tr><td>신청일시</td><td>'+safe(requested)+'</td></tr></table>'+
-    '<table role="presentation" cellpadding="0" cellspacing="0"><tr><td bgcolor="#2159b9" style="border-radius:8px">'+
-    '<a href="'+link+'" style="display:inline-block;padding:14px 23px;text-decoration:none;color:#fff;font-size:15px;font-weight:800">가입 승인하기</a>'+
-    '</td></tr></table>'+
-    '<p style="font-size:12px;line-height:1.75;color:#6d7d92;margin:25px 0 0">보안을 위해 관리자 로그인 후 해당 회원의 승인 버튼을 직접 눌러 확정해야 합니다. 메일 링크를 열기만 해서는 승인되지 않습니다.</p>'+
-    '</td></tr></table></td></tr></table></body></html>';
+  const html=renderPortalMail({kind:"approval",title:"새로운 회원가입 요청이 있습니다.",category:"관리자 가입 승인 요청",
+   bodyHtml:mailParagraph("이메일 인증을 완료한 회원의 가입을 검토해 주세요.")+mailDetails([["가입 유형",type],["이름",member.full_name],["가입 정보",detail],["이메일",member.email],["인증 여부","이메일 인증 완료"],["신청일시",requested]],"approval"),
+   actions:[{href:link,label:"가입 승인하기"}],footerNote:"보안을 위해 관리자 로그인 후 해당 회원의 승인 버튼을 직접 눌러 확정해야 합니다. 링크를 열기만 해서는 승인되지 않습니다."});
   const text=type+" "+member.full_name+"님의 가입 요청이 접수되었습니다.\n"+detail.replaceAll(" · "," / ")+
     "\n이메일: "+member.email+"\n이메일 인증 완료\n신청일시: "+requested+
     "\n\n관리자 로그인 후 가입 승인하기: "+link;

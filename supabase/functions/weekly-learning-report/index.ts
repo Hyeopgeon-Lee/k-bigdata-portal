@@ -1,4 +1,5 @@
 import {db,read,generate,getReport,calendar} from "../student-weekly-report/snapshot.ts";
+import { renderPortalMail, mailParagraph } from "../_shared/portal-mail.mjs";
 import {dateKey,lastWeek,shift,dateMs} from "../student-weekly-report/report.mjs";
 import {renderStudentMail,selectNews,excludeRepublishedNews,selectJobs,studentEligible} from "./student-mail.mjs";
 /* GitHub Actions OIDC authorizes this job; no reusable webhook secret. */
@@ -51,10 +52,9 @@ async function allAttempts(start:string,end:string){
  }
  return all;
 }
-const html=(title:string,date:string,body:string)=>'<main style="max-width:650px;margin:20px auto;font:15px/1.7 system-ui,sans-serif;color:#25374f">'+
- '<h2>'+escape(title)+'</h2><p>집계 시작: '+escape(date)+' (한국시간 월요일) · 종료: 다음 월요일 00:00</p>'+body+
- '<p style="color:#687d96;font-size:13px">정답률은 자동 채점 시험 점수가 아닙니다. 자가평가와 브라우저 답안 비교를 구분합니다.</p>'+
- '<p><a href="https://portal.k-bigdata.kr/my-learning.html">나의 학습현황</a></p></main>';
+const html=(title:string,date:string,body:string)=>renderPortalMail({kind:'report',title,category:'관리자 주간 리포트',date,
+ bodyHtml:mailParagraph('집계 시작: '+date+' (한국시간 월요일) · 종료: 다음 월요일 00:00')+body+mailParagraph('정답률은 자동 채점 시험 점수가 아닙니다. 자가평가와 브라우저 답안 비교를 구분합니다.'),
+ actions:[{href:'https://portal.k-bigdata.kr/my-learning.html',label:'나의 학습현황'}],footerNote:'관리자 전용 학습 보고서입니다.'});
 function pct(correct:number,total:number){return total?Math.round(correct/total*100)+"%":"집계 없음";}
 async function reportControls(){
  const {data,error}=await db.from("weekly_report_controls").select("report_type,enabled");

@@ -1,4 +1,5 @@
 import {createClient} from "npm:@supabase/supabase-js@2.49.10";
+import { renderPortalMail, mailParagraph, mailDetails, mailCallout } from "../_shared/portal-mail.mjs";
 
 const origin="https://portal.k-bigdata.kr";
 const cors={
@@ -29,23 +30,9 @@ function formatMail(name:string,title:string,result:string,completedAt:string){
  const finished=new Date(completedAt).toLocaleString("ko-KR",{timeZone:"Asia/Seoul"});
  const href="https://portal.k-bigdata.kr/help.html";
  const heading="학과 요청 처리 결과 안내";
- const html='<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>'+
-  '<body style="margin:0;background:#f3f6fb;font-family:Arial,Malgun Gothic,sans-serif;color:#203755">'+
-  '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f3f6fb"><tr><td align="center" style="padding:24px 12px">'+
-  '<table role="presentation" width="100%" style="max-width:600px;background:#fff;border:1px solid #dce6f1;border-radius:12px" cellpadding="0" cellspacing="0">'+
-  '<tr><td style="padding:22px 26px;background:#193a70;color:white;font-weight:700;font-size:18px">빅데이터소프트웨어공학과 통합 포털</td></tr>'+
-  '<tr><td style="padding:24px 26px"><p style="color:#2461a4;font-size:13px;font-weight:700;margin:0">학과 요청 · 문의</p>'+
-  '<h1 style="font-size:22px;margin:12px 0 18px">'+escape(heading)+'</h1>'+
-  '<p style="font-size:15px;line-height:1.8">'+escape(name)+'님, 등록하신 학과 요청이 완료 처리되었습니다.</p>'+
-  '<table role="presentation" width="100%" cellpadding="10" cellspacing="0" style="background:#f6f9fd;font-size:14px;line-height:1.6;border-collapse:collapse">'+
-  '<tr><th align="left" width="80">요청 제목</th><td>'+escape(title)+'</td></tr>'+
-  '<tr><th align="left">처리 상태</th><td>완료</td></tr>'+
-  '<tr><th align="left">처리 일시</th><td>'+escape(finished)+'</td></tr>'+
-  '</table><h2 style="font-size:16px;margin:22px 0 9px">관리자 처리 결과</h2>'+
-  '<div style="white-space:pre-wrap;word-break:break-word;background:#eef4fc;border-radius:8px;padding:16px;line-height:1.75;font-size:14px">'+escape(result)+'</div>'+
-  '<p style="margin:23px 0"><a href="'+href+'" style="display:inline-block;background:#20519a;color:white;padding:13px 20px;border-radius:8px;text-decoration:none;font-weight:700">내 요청 내역 확인하기</a></p>'+
-  '<p style="font-size:12px;line-height:1.7;color:#65768e">이 메일은 학과 요청의 완료 처리 결과를 안내하는 자동 발송 메일입니다. 추가 문의는 포털의 학과 요청 메뉴에서 등록해 주세요.</p>'+
-  '</td></tr></table></td></tr></table></body></html>';
+ const html=renderPortalMail({kind:"help",title:heading,category:"처리 완료",
+  bodyHtml:mailParagraph(name+"님, 등록하신 학과 요청이 완료 처리되었습니다.")+mailDetails([["요청 제목",title],["처리 상태","완료"],["처리 일시",finished]],"help")+mailCallout(result,"help","관리자 처리 결과"),
+  actions:[{href,label:"내 요청 내역 확인하기"}],footerNote:"이 메일은 학과 요청 완료 결과를 안내합니다. 추가 문의는 포털의 학과 요청 메뉴에서 등록해 주세요."});
  const text=heading+"\n"+name+"님, 등록하신 학과 요청이 완료 처리되었습니다.\n\n"+
   "요청 제목: "+title+"\n처리 상태: 완료\n처리 일시: "+finished+
   "\n\n관리자 처리 결과:\n"+result+"\n\n내 요청 확인: "+href;

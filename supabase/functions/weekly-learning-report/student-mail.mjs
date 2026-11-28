@@ -1,4 +1,5 @@
 // Pure, email-client compatible student report rendering. All personal content is escaped.
+import { portalMailHeader, portalMailFooter, portalMailDocument } from "../_shared/portal-mail.mjs";
 import {dateKey,dateMs,shift,validWeek,reportForCertificates} from "../student-weekly-report/report.mjs";
 const portal='https://portal.k-bigdata.kr/';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -87,7 +88,7 @@ export function renderStudentMail(student,report,certificates=[],newsRows=[],job
  const title='[빅데이터SW학과] '+Number(p.week_start.slice(5,7))+'월 '+Math.ceil(Number(p.week_start.slice(8,10))/7)+'주차 나의 주간 리포트';
  let seq=0;
  const add=(label,body)=>section(String(++seq).padStart(2,'0')+'. '+label,body);
- let content=row('<p style="margin:0 0 6px;color:#c6d9f5;font-size:12px;letter-spacing:.06em;">BIG DATA SOFTWARE · WEEKLY REPORT</p><h1 style="margin:0 0 9px;color:#fff;font-size:26px;line-height:1.35;">나의 주간 성장 리포트</h1><p style="margin:0;color:#e1edff;font-size:15px;">'+esc(range)+' · '+grade+'학년</p>','background:#15396c;padding:23px 18px;border-radius:12px 12px 0 0;');
+ let content=portalMailHeader('report','주간 성장 리포트')+row('<h1 style="margin:0 0 6px;color:#17365d;font-size:24px;line-height:1.4;">나의 주간 성장 리포트</h1><p style="margin:0;color:#52667f;font-size:14px;">'+esc(range)+' · '+grade+'학년</p>','padding:20px 18px 0;');
  content+=row(paragraph('<strong>'+esc(clip(student.full_name||'학생',80))+' 학생님, 안녕하세요!</strong>','font-size:16px;')+paragraph('지난주 성장 기록과 이번 주 학과 소식을 전해드립니다.',muted)+table('<tr>'+tile('문제 풀이',number(l.attempts)+'회',previous==null?'지난주 기록':'전주 대비 '+(delta>0?'+':'')+delta+'회','#edf4ff','#2859ad')+tile('판정 정답률',l.accuracy==null?'집계 없음':number(l.accuracy)+'%','자가평가 포함','#f4f0ff','#7350c4')+'</tr><tr>'+tile('자율학습',duration(l.study_seconds),l.review_pending?'확인 대기 '+number(l.review_pending)+'건':'완료 기록 기준','#eaf7f3','#14816b')+tile('취업 준비',c.status||'미확인',c.github_days==null?'GitHub 확인 필요':'GitHub 활동 '+number(c.github_days)+'일','#fff4e6','#af701e')+'</tr>'),'padding:18px 13px 14px;');
  if(l.trend?.length)content+=add('최근 4주 학습 추이',paragraph('주차별 문제 풀이 횟수',muted)+trendChart(l.trend));
  const subjects=l.subjects||[];
@@ -105,6 +106,6 @@ export function renderStudentMail(student,report,certificates=[],newsRows=[],job
  if(jobs.length)tasks.push('관심 기업 채용공고 확인하기');
  if(tasks.length)content+=add('이번 주 추천 활동',tasks.map(t=>paragraph('&#9633; '+esc(t),'font-size:14px;color:#334155;margin:0 0 8px;')).join(''));
  content+=row(link('weekly-report.html?week='+encodeURIComponent(p.week_start),'나의 주간 리포트 상세 보기',true)+paragraph('로그인 후 본인의 리포트를 확인할 수 있습니다. 정답률은 판정 기록이며 시험 성적이 아닙니다.',muted+'margin:12px 0 0;'),'padding:10px 18px 20px;');
- content+=row(paragraph('한국폴리텍대학 서울강서캠퍼스<br><strong>빅데이터소프트웨어공학과</strong>','color:#546983;font-size:13px;text-align:center;margin:0;'),'padding:18px;background:#f3f6fa;border-radius:0 0 12px 12px;');
- return {subject:title,html:'<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0;background:#edf2f7;color:#25374f;font-family:Arial,\'Malgun Gothic\',sans-serif;line-height:1.6;">'+table(row('<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:620px;margin:0 auto;background:#fff;border:1px solid #dbe5f0;border-radius:12px;">'+content+'</table>','padding:12px 8px;'))+'</body></html>'};
+ content+=portalMailFooter('학과 주간 학습 리포트 · 개인별 학습정보입니다.',[{href:portal+'mypage.html',label:'마이페이지'}]);
+ return {subject:title,html:portalMailDocument(content,title,'지난주 성장 기록과 이번 주 학과 소식')};
 }

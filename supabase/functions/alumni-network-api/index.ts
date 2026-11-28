@@ -1,4 +1,5 @@
 import { createClient } from "npm:@supabase/supabase-js@2.49.10";
+import { renderAlumniAnnouncement, renderPortalMail, mailParagraph, mailCallout, mailDetails } from "../_shared/portal-mail.mjs";
 const url=Deno.env.get("SUPABASE_URL")!;
 const secret=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const publishable=Deno.env.get("SUPABASE_ANON_KEY")!;
@@ -306,7 +307,7 @@ function updatedPayload(base:Record<string,unknown>,data:Record<string,unknown>,
 }
 async function sendToAdmin(subject:string,body:string,kind:string,id0:string){
  return notice("approval",kind,id0,"hglee67@kopo.ac.kr",subject,
-  '<div style="font-family:sans-serif;line-height:1.8;background:#f5f7fb;padding:25px"><div style="max-width:570px;margin:auto;padding:25px;background:#fff;border:1px solid #dde5f2;border-radius:13px"><h2>'+esc(subject)+'</h2><p>'+esc(body)+'</p><p><a href="https://portal.k-bigdata.kr/alumni/admin.html">관리자 승인 화면에서 확인하기</a></p></div></div>');
+  renderPortalMail({kind:"approval",title:subject,category:"관리자 검토",bodyHtml:mailParagraph(body),actions:[{href:site+"/admin/alumni.html",label:"관리자 승인 화면에서 확인하기"}],footerNote:"학과 관리자에게 발송되는 승인 요청 안내입니다."}));
 }
 
 async function senderCompetencyEmail(a:Actor):Promise<string>{
@@ -392,7 +393,7 @@ async function handle(action:string,b:Record<string,unknown>,a:Actor){
   return data;
  };
  const fingerprint=async(rows:Recipient[],groups:string[],record:Rec)=>{
-  const bytes=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(JSON.stringify([groups,record.source_id,record.data.updated_at,rows.map(x=>[x.email,x.group])])));
+  const bytes=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(JSON.stringify(['portal-mail-v1',groups,record.source_id,record.data.updated_at,rows.map(x=>[x.email,x.group])])));
   return Array.from(new Uint8Array(bytes),x=>x.toString(16).padStart(2,"0")).join("");
  };
  const mailCounts=(rows:Recipient[],groups:string[])=>groups.map(group=>{
@@ -584,12 +585,11 @@ async function handle(action:string,b:Record<string,unknown>,a:Actor){
     status:"PENDING",created_at:now(),sent_at:""
    };
    await put("contact_requests",rid,requestData);
-   const body='<div style="font-family:sans-serif;line-height:1.8;max-width:640px;margin:auto">'+
-    '<h2>학과 동문 연락 요청</h2><p>'+esc(a.name)+'님이 연락을 요청했습니다.</p>'+
-    '<p><strong>문의: </strong>'+esc(subject)+'</p>'+rich.html+
-    competency+
-    (yes(b.share_email)?'<p>답장 이메일: '+esc(a.email)+'</p>':'')+
-    (yes(b.share_phone)?'<p>회신용 휴대전화: '+esc(a.mobilePhone)+'</p>':'')+'</div>';
+   const body=renderPortalMail({kind:"contact",title:"학과 동문 연락 요청",category:"연락 요청",
+    bodyHtml:mailParagraph(a.name+"님이 연락을 요청했습니다.")+mailCallout(subject,"contact","문의 제목")+rich.html+competency+
+    mailDetails([["답장 이메일",yes(b.share_email)?a.email:""],["회신용 휴대전화",yes(b.share_phone)?a.mobilePhone:""]],"contact"),
+    actions:[{href:site+"/alumni/index.html",label:"졸업생 네트워크 보기"}],
+    footerNote:"회신 연락처는 요청자가 공유를 허용한 항목만 제공합니다."});
    const sent=await notice("contact","contact_requests",rid,text(recipient.data.email),
     "[빅데이터SW 동문] 새로운 연락 요청",body);
    requestData.status=sent?"SENT":"FAILED";
@@ -679,7 +679,8 @@ async function handle(action:string,b:Record<string,unknown>,a:Actor){
   const groups=selectedGroups(b.groups);
   const recipients=await loadRecipients(kind,record.source_id,groups);
   const token=await fingerprint(recipients,groups,record),counts=mailCounts(recipients,groups);
-  if(action==="adminMailPreview")return okay({token,counts,total:recipients.length,available:recipients.filter(x=>!x.sent&&!x.sending).length});
+  const announcement=renderAlumniAnnouncement(kind,record.source_id,record.data);
+  if(action==="adminMailPreview")return okay({token,counts,total:recipients.length,available:recipients.filter(x=>!x.sent&&!x.sending).length,subject:announcement.subject,html:announcement.html});
   if(b.confirmed!==true||b.token!==token)throw Error("발송 대상 또는 게시 내용이 변경되었습니다. 다시 대상 인원을 확인해 주세요.");
   if(!resend)throw Error("메일 발송 설정이 준비되지 않았습니다.");
   const cursor=Number(b.cursor??0);
@@ -687,11 +688,7 @@ async function handle(action:string,b:Record<string,unknown>,a:Actor){
   // Small bounded batches keep requests within Edge Function limits; no duplicate automatic retries.
   const end=Math.min(cursor+5,recipients.length),batch=recipients.slice(cursor,end);
   const item=record.data,job=kind==="jobs";
-  const subject=job?"[동문 채용정보] "+text(item.company,100)+" · "+text(item.job_title,100):"[동문소식] "+text(item.title,120);
-  const body='<div style="font-family:sans-serif;line-height:1.8"><h2>'+esc(subject)+'</h2>'+
-   (job?'<p>마감: '+esc(yes(item.always_open)?"상시채용":item.deadline)+'</p><p>'+esc(item.alumni_comment)+'</p>':
-     '<p style="white-space:pre-wrap">'+esc(item.content)+'</p>')+
-   '<p><a href="'+site+'/alumni/'+(job?"job":"news")+'-detail.html?id='+encodeURIComponent(record.source_id)+'">포털에서 보기</a></p><p>수신 설정은 포털 내 정보에서 변경할 수 있습니다.</p></div>';
+  const {subject,html:body}=announcement;
   let sent=0,failed=0;
   for(const person of batch){
    if(person.sent||person.sending)continue;
@@ -731,7 +728,7 @@ async function handle(action:string,b:Record<string,unknown>,a:Actor){
    const email=text(person.data.email);
    const message="학과 포털 로그인 후 졸업생 네트워크의 내 정보에서 "+(career?"채용공고":"동문소식")+" 메일 수신 여부를 설정해 주세요.";
    if(await notice("consent_"+key,"alumni",person.source_id,email,"[동문 네트워크] 수신 설정 안내",
-    '<p>'+esc(person.data.name)+'님,</p><p>'+esc(message)+'</p><p><a href="https://portal.k-bigdata.kr/alumni/alumni.html">내 정보 수정</a></p>'))sent++;
+    renderPortalMail({kind:career?"career":"news",title:"메일 수신 설정 안내",bodyHtml:mailParagraph(person.data.name+"님, 안녕하세요.")+mailParagraph(message),actions:[{href:site+"/alumni/alumni.html",label:"내 정보 수정"}],footerNote:"메일 수신 여부는 언제든지 변경할 수 있습니다."})))sent++;
    else failed++;
   }
   return {success:true,message:"안내 메일 "+sent+"건 발송, "+failed+"건 실패"};

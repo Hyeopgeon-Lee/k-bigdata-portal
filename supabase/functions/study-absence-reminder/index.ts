@@ -1,4 +1,5 @@
 import {createClient} from "npm:@supabase/supabase-js@2.49.10";
+import { renderPortalMail, mailParagraph, mailCallout } from "../_shared/portal-mail.mjs";
 const url=Deno.env.get("SUPABASE_URL")!;
 const key=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const mailKey=Deno.env.get("RESEND_API_KEY")||"";
@@ -55,16 +56,9 @@ function previousStudyDay(){
 }
 function mailTemplate(name:string,date:string){
  const link="https://portal.k-bigdata.kr/study-absence.html?reason="+encodeURIComponent(date);
- return '<!doctype html><html lang="ko"><body style="margin:0;padding:28px 12px;background:#f5f7fb;color:#1a2c48;font-family:system-ui,sans-serif">'+
- '<main style="max-width:580px;margin:auto;background:#fff;border:1px solid #dce3ef;border-radius:16px;overflow:hidden">'+
- '<header style="padding:24px 26px;background:#0b1739;color:#fff"><strong style="font-size:18px">빅데이터소프트웨어공학과</strong><p style="font-size:12px;margin:5px 0 0">학과 통합 포털 · 자율학습</p></header>'+
- '<div style="padding:26px"><h2 style="font-size:22px;margin:0 0 20px">자율학습 참여 확인</h2>'+
- '<p>'+escape(name)+' 학생, 안녕하세요.</p>'+
- '<p>'+escape(date)+'에 남아서 공부하기로 계획했으나, 학과 포털에 학습 시작 기록이 없습니다.</p>'+
- '<p>학습 습관 개선에 참고할 수 있도록 아래 버튼에서 간단하게 사유를 입력해 주세요. 자세한 개인 사정은 작성하지 않아도 됩니다.</p>'+
- '<p style="text-align:center;margin:30px 0"><a href="'+link+'" style="display:inline-block;padding:14px 22px;border-radius:9px;background:#142d70;color:white;text-decoration:none;font-weight:700">미참여 사유 입력</a></p>'+
- '<p style="color:#59647a;font-size:13px">버튼을 누르면 포털 로그인 후 해당 날짜의 입력 화면으로 연결됩니다. 이미 입력했다면 별도의 회신은 필요하지 않습니다.</p></div>'+
- '<footer style="padding:16px 26px;background:#f7f9fd;font-size:12px;color:#697891">한국폴리텍대학 서울강서캠퍼스 빅데이터소프트웨어공학과</footer></main></body></html>';
+ return renderPortalMail({kind:"study",title:"자율학습 참여 확인",category:"참여 확인",date,
+  bodyHtml:mailParagraph(name+" 학생, 안녕하세요.")+mailCallout(date+"에 남아서 공부하기로 계획했으나, 학과 포털에 학습 시작 기록이 없습니다.","study","학습 참여 기록")+mailParagraph("학습 습관 개선에 참고할 수 있도록 아래 버튼에서 간단하게 사유를 입력해 주세요. 자세한 개인 사정은 작성하지 않아도 됩니다."),
+  actions:[{href:link,label:"미참여 사유 입력"}],footerNote:"포털 로그인 후 해당 날짜의 입력 화면으로 연결됩니다. 이미 입력했다면 별도의 회신은 필요하지 않습니다."});
 }
 async function deliver(user:any,day:string){
  const kind="absence";

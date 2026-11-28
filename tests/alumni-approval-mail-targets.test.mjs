@@ -21,7 +21,7 @@ const tables={
  alumni_profiles:[{user_id:user,is_visible:true,member:{approval_status:"approved",full_name:"Test",email:"graduate@example.test",signup_type:"alumni"}}],
  alumni_jobs:[],alumni_news:[],alumni_audit_logs:[],alumni_network_mail_outbox:[],alumni_dispatch_logs:[]
 };
-let next=1,mailCalls=[],membership=[{email:"graduate@example.test",group:"alumni"},{email:"first@example.test",group:"grade1"},{email:"second@example.test",group:"grade2"}];
+let next=1,mailCalls=[],mailPayloads=[],membership=[{email:"graduate@example.test",group:"alumni"},{email:"first@example.test",group:"grade1"},{email:"second@example.test",group:"grade2"}];
 class Query {
  constructor(table){this.table=table;this.list=tables[table];this.pred=[];this.mode="select";}
  select(){return this;} eq(k,v){this.pred.push(x=>x[k]===v);return this;}
@@ -55,10 +55,10 @@ globalThis.Deno={env:{get:key=>key==="RESEND_API_KEY"?"mock-key":"test"}};
 const actualFetch=globalThis.fetch;
 globalThis.fetch=async (url,options)=>{
  assert.equal(url,"https://api.resend.com/emails");const payload=JSON.parse(options.body);
- assert.equal(payload.to.length,1);mailCalls.push(payload.to[0]);
+ assert.equal(payload.to.length,1);mailCalls.push(payload.to[0]);mailPayloads.push(payload);
  return Response.json({id:"mock-"+mailCalls.length});
 };
-const source=raw.slice(raw.indexOf("\n")+1,raw.indexOf("Deno.serve("));
+const source=raw.slice(raw.indexOf("\n")+1,raw.indexOf("Deno.serve(")).replace('from "../_shared/portal-mail.mjs"','from '+JSON.stringify(new URL("../supabase/functions/_shared/portal-mail.mjs",import.meta.url).href));
 const mod=await import("data:text/javascript;base64,"+Buffer.from(stripTypeScriptTypes("const createClient=()=>globalThis.__alumniTestDb;\n"+source+"\nexport {handle};")).toString("base64"));
 const {handle}=mod;
 try {
@@ -77,13 +77,13 @@ try {
  const params={kind:"alumni_news",record_id:news,groups:["alumni","grade1"]};
  await assert.rejects(handle("adminMailPreview",params,graduate),/권한/);
  const preview=(await handle("adminMailPreview",params,administrator)).data;
- assert.equal(preview.available,2);assert(!JSON.stringify(preview).includes("@example.test"));
+ assert.equal(preview.available,2);assert(!JSON.stringify(preview).includes("@example.test"));assert.match(preview.html,/빅데이터소프트웨어공학과/);assert.match(preview.html,/동문소식 자세히 보기/);assert.match(preview.subject,/수상/);
  await assert.rejects(handle("adminNewsSendMail",{...params,token:preview.token},administrator),/변경/);
  membership.push({email:"new@example.test",group:"grade1"});
  await assert.rejects(handle("adminNewsSendMail",{...params,token:preview.token,confirmed:true},administrator),/변경/);
  membership=membership.filter(x=>x.email!=="new@example.test");
  const send=(await handle("adminNewsSendMail",{...params,token:preview.token,confirmed:true},administrator)).data;
- assert.equal(send.sent,2);assert.equal(send.failed,0);assert.deepEqual(mailCalls.sort(),["first@example.test","graduate@example.test"]);
+ assert.equal(send.sent,2);assert.equal(send.failed,0);assert(mailPayloads.every(x=>x.html===preview.html&&x.subject===preview.subject));assert.deepEqual(mailCalls.sort(),["first@example.test","graduate@example.test"]);
  const repeat=(await handle("adminMailPreview",params,administrator)).data;assert.equal(repeat.available,0);
  await handle("adminNewsSendMail",{...params,token:repeat.token,confirmed:true},administrator);
  assert.equal(mailCalls.length,2);
@@ -97,7 +97,7 @@ try {
  const jobParams={kind:"jobs",record_id:job,groups:["grade2"]};
  const jobPreview=(await handle("adminMailPreview",jobParams,administrator)).data;
  await handle("adminJobSendMail",{...jobParams,token:jobPreview.token,confirmed:true},administrator);
- assert.equal(mailCalls.length,4);assert.equal(mailCalls.at(-1),"second@example.test");
+ assert.equal(mailCalls.length,4);assert.equal(mailCalls.at(-1),"second@example.test");assert.equal(mailPayloads.at(-1).html,jobPreview.html);assert.match(jobPreview.html,/채용정보 자세히 보기/);
  assert(tables.alumni_dispatch_logs.every(x=>x.target_groups&&x.actor_user_id===administrator.id));
  const rejected=(await handle("submitNews",{news_type:"OTHER",title:"Test",content:"Test"},graduate)).news_id;
  await handle("adminNewsReject",{news_id:rejected},administrator);

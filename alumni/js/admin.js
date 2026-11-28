@@ -180,7 +180,8 @@ let mailItem=null,mailPreview=null,mailBusy=false,previewGeneration=0;
 const mailDialog=()=>U.qs('#admin-mail-dialog'),mailMessage=()=>U.qs('#admin-mail-message');
 const groupInputs=()=>U.qsa('#admin-mail-groups input[value]');
 const chosenGroups=()=>groupInputs().filter(x=>x.checked).map(x=>x.value);
-function invalidatePreview(){previewGeneration++;mailPreview=null;U.qs('#admin-mail-preview').replaceChildren();U.qs('#admin-confirm-mail').disabled=true;mailMessage().hidden=true;}
+function clearMailDesign(){const design=U.qs('#admin-mail-design'),frame=U.qs('#admin-mail-frame');if(design)design.hidden=true;if(frame)frame.removeAttribute('srcdoc');}
+function invalidatePreview(){previewGeneration++;mailPreview=null;U.qs('#admin-mail-preview').replaceChildren();clearMailDesign();U.qs('#admin-confirm-mail').disabled=true;mailMessage().hidden=true;}
 function openMail(item,job){
  mailItem={record_id:job?item.job_id:item.news_id,kind:job?'jobs':'alumni_news'};
  U.qs('#admin-mail-subject').textContent=job?item.company+' · '+item.job_title:item.title;
@@ -195,6 +196,11 @@ async function previewMail(){
   if(generation!==previewGeneration||!mailDialog().open)return;
   mailPreview={...res.data,groups};
   U.qs('#admin-mail-preview').innerHTML=mailPreview.counts.map(x=>`<div class="admin-mail-count"><strong>${U.esc(groupLabel(x.group))}</strong><span>${x.total}명 중 발송 가능 ${x.available}명 · 발송 완료 ${x.sent}명${x.sending?' · 처리 중 '+x.sending+'명':''}</span></div>`).join('')+`<p><strong>발송 예정: ${mailPreview.available}명</strong></p>`;
+  const design=U.qs('#admin-mail-design'),frame=U.qs('#admin-mail-frame');
+  if(typeof mailPreview.subject==='string')U.qs('#admin-mail-subject').textContent=mailPreview.subject;
+  if(design&&frame&&typeof mailPreview.html==='string'&&mailPreview.html){
+   frame.srcdoc=mailPreview.html;design.hidden=false;design.open=true;
+  }else clearMailDesign();
   U.qs('#admin-confirm-mail').disabled=!mailPreview.available;
  }catch(e){if(generation===previewGeneration)U.status(mailMessage(),e.message,'error')}
  finally{U.busy(button,false)}
@@ -202,7 +208,7 @@ async function previewMail(){
 async function sendSelectedMail(){
  if(!mailPreview||mailBusy||!mailPreview.available)return;
  const preview=mailPreview,item={...mailItem};
- if(!confirm(groupLabel(preview.groups[0])+(preview.groups.length>1?' 외 '+(preview.groups.length-1)+'개 그룹':'')+' · 수신 동의자 '+preview.available+'명에게 메일을 발송할까요?'))return;
+ if(!confirm(groupLabel(preview.groups[0])+(preview.groups.length>1?' 외 '+(preview.groups.length-1)+'개 그룹':'')+' · 발송 대상 '+preview.available+'명에게 메일을 발송할까요?'))return;
  mailBusy=true;
  const button=U.qs('#admin-confirm-mail');U.busy(button,true,'발송 중…');
  U.qs('#admin-preview-mail').disabled=true;U.qs('#admin-mail-groups').disabled=true;U.qs('#admin-close-mail').disabled=true;
@@ -218,7 +224,7 @@ async function sendSelectedMail(){
   }while(true);
   U.status(mailMessage(),'발송 완료: 성공 '+sent+'건 · 실패 '+failed+'건. 이미 발송된 회원은 재발송하지 않습니다.',failed?'error':'success');
  }catch(e){U.status(mailMessage(),'발송 중단: 성공 '+sent+'건 · 실패 '+failed+'건. '+e.message+' 대상 인원을 다시 확인해 주세요.','error')}
- finally{mailBusy=false;mailPreview=null;U.qs('#admin-mail-preview').replaceChildren();U.busy(button,false);button.disabled=true;U.qs('#admin-preview-mail').disabled=false;U.qs('#admin-mail-groups').disabled=false;U.qs('#admin-close-mail').disabled=false;await load()}
+ finally{mailBusy=false;mailPreview=null;U.qs('#admin-mail-preview').replaceChildren();clearMailDesign();U.busy(button,false);button.disabled=true;U.qs('#admin-preview-mail').disabled=false;U.qs('#admin-mail-groups').disabled=false;U.qs('#admin-close-mail').disabled=false;await load()}
 }
 function requestsTable(rows){return`<table class="admin-table"><thead><tr><th>일시</th><th>대상 졸업생</th><th>요청자</th><th>분야/제목</th><th>발송 상태</th><th>후속 조치</th></tr></thead><tbody>${rows.map(x=>`<tr><td data-label="일시">${U.esc(x.created_at)}<br><small>발송 ${U.esc(x.sent_at)||'-'}</small></td><td data-label="대상">${U.esc(x.target_name)||'대상 없음'}</td><td data-label="요청자">${U.esc(x.requester_name)} (${U.esc(x.requester_type)})</td><td data-label="분야/제목"><strong>${U.esc(x.category)}</strong><br>${U.esc(x.subject)}</td><td data-label="발송 상태">${badge(x.status)}</td><td data-label="후속 조치"><select aria-label="후속 처리 상태" data-followup-state><option value="open" ${x.followup_state==='open'?'selected':''}>처리 대기</option><option value="reviewing" ${x.followup_state==='reviewing'?'selected':''}>처리 중</option><option value="closed" ${x.followup_state==='closed'?'selected':''}>처리 완료</option></select><input maxlength="500" aria-label="후속 조치 메모" data-followup-note value="${U.esc(x.followup_note)}"><button data-contact-id="${U.esc(x.request_id)}" data-action="followup">저장</button><small>${U.esc(x.followup_at||'')}</small></td></tr>`).join('')}</tbody></table>`}
 function logsTable(rows){return`<table class="admin-table"><thead><tr><th>발송일</th><th>종류</th><th>관련 ID/제목</th><th>대상</th><th>성공</th><th>실패</th><th>상태</th></tr></thead><tbody>${rows.map(x=>`<tr><td data-label="발송일">${U.esc(x.sent_at)}</td><td data-label="종류">${U.esc(x.mail_kind)}</td><td data-label="관련 ID/제목"><small>${U.esc(x.related_id)}</small><br>${U.esc(x.subject)}<br><small>${U.esc(String(x.target_groups||'').split('|').filter(Boolean).map(groupLabel).join(' · ')||'기존 발송')}</small></td><td data-label="대상">${U.esc(x.recipient_count)}</td><td data-label="성공">${U.esc(x.sent_count)}</td><td data-label="실패">${U.esc(x.failed_count)}</td><td data-label="상태">${badge(x.status)}</td></tr>`).join('')}</tbody></table>`}

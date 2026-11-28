@@ -1,4 +1,5 @@
 import {createClient} from "npm:@supabase/supabase-js@2.49.10";
+import { renderPortalMail, mailParagraph, mailCallout } from "../_shared/portal-mail.mjs";
 import {eligibleProfile,shouldNotify} from "./eligibility.mjs";
 const repo="Hyeopgeon-Lee/k-bigdata-portal";
 const workflow=repo+"/.github/workflows/certification-registration-reminder.yml@refs/heads/main";
@@ -57,19 +58,10 @@ function emailBody(s:Student, exam:Schedule){
  const official=new URL(exam.official_url);
  if(official.protocol!=='https:')throw Error('INSECURE_OFFICIAL_URL');
  const title=name+' '+exam.exam_year+'년 '+exam.exam_round+'회 '+kind;
- const html='<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>'+
- '<body style="margin:0;background:#f1f5fa;font-family:Arial,Malgun Gothic,sans-serif;color:#20314b">'+
- '<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:25px 12px">'+
- '<table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#fff;border:1px solid #e0e8f2;border-radius:16px;overflow:hidden">'+
- '<tr><td style="padding:28px;background:#16386f;color:white"><div style="font-size:12px;color:#d1e1fb;font-weight:bold">K-BIGDATA · EXAM REMINDER</div>'+
- '<div style="font-size:20px;font-weight:bold;margin-top:8px">자격증 원서접수 안내</div><div style="font-size:13px;margin-top:8px">한국폴리텍대학 서울강서캠퍼스 · 빅데이터소프트웨어공학과</div></td></tr>'+
- '<tr><td style="padding:29px"><p style="font-size:15px;line-height:1.8">'+escape(s.full_name)+' 학생, 오늘 <strong>'+escape(kind)+'</strong> 일정이 시작되는 날입니다.</p>'+
- '<h1 style="font-size:21px;line-height:1.5;color:#183d75">'+escape(title)+'</h1>'+
- '<div style="padding:17px;background:#f4f7fc;border-radius:10px;font-size:15px;line-height:1.8"><strong>접수 기간</strong><br>'+escape(duration)+'</div>'+
- '<p style="font-size:14px;line-height:1.8;color:#53647c">시험 응시를 계획하고 있다면 공식 접수 가능 시각을 확인한 뒤 원서를 제출해 주세요. 포털에서 대신 접수하지는 않습니다.</p>'+
- '<a style="display:block;padding:15px;background:#1c4ea3;color:#fff;text-decoration:none;text-align:center;border-radius:10px;font-weight:bold" href="'+escape(official.href)+'">공식 사이트에서 원서접수하기</a>'+
- '<p style="font-size:13px;line-height:1.8;color:#67768e;margin-top:22px">이미 해당 자격증의 필기 또는 최종 합격 내역이 있다면 <a href="https://portal.k-bigdata.kr/my-certifications.html">포털 나의 자격증</a>에서 상태를 확인해 주세요.</p>'+
- '</td></tr><tr><td style="border-top:1px solid #e4ebf5;padding:19px 28px;background:#f9fbff;color:#78889e;font-size:12px;line-height:1.8">대상: 승인된 재학생 중 해당 시험 단계의 접수가 필요한 학생<br>본 메일은 공식 일정에 따라 자동 발송됩니다.</td></tr></table></td></tr></table></body></html>';
+ const html=renderPortalMail({kind:"exam",title,category:"자격증 원서접수 안내",date:exam.start_date,
+  bodyHtml:mailParagraph(s.full_name+" 학생, 오늘 "+kind+" 일정이 시작되는 날입니다.")+mailCallout(duration,"exam","접수 기간")+mailParagraph("시험 응시를 계획하고 있다면 공식 접수 가능 시각을 확인한 뒤 원서를 제출해 주세요. 포털에서 대신 접수하지는 않습니다."),
+  actions:[{href:official.href,label:"공식 사이트에서 원서접수하기"},{href:"https://portal.k-bigdata.kr/my-certifications.html",label:"나의 자격증 확인"}],
+  footerNote:"승인된 재학생 중 해당 시험 단계의 접수가 필요한 학생에게 공식 일정에 따라 자동 발송됩니다. 이미 필기 또는 최종 합격했다면 포털에서 상태를 확인해 주세요."});
  return {subject:'[학과 포털] '+title+' 시작 안내',html,text:s.full_name+' 학생, '+title+' 접수가 시작되었습니다.\n접수기간: '+duration+'\n공식 사이트: '+official.href+'\n포털 나의 자격증: https://portal.k-bigdata.kr/my-certifications.html'};
 }
 async function sendReminder(student:Student,exam:Schedule){

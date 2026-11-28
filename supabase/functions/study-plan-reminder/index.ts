@@ -1,4 +1,5 @@
 import {createClient} from "npm:@supabase/supabase-js@2.49.10";
+import { renderPortalMail, mailParagraph, mailCallout, portalMailHeader, portalMailFooter, portalMailDocument } from "../_shared/portal-mail.mjs";
 const url=Deno.env.get("SUPABASE_URL")!;
 const key=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const mailKey=Deno.env.get("RESEND_API_KEY")||"";
@@ -54,28 +55,9 @@ function currentKoreanWeek(now=Date.now()){
 }
 function mailTemplate(name:string,week:string,slot:string){
  const dateLabel=week.slice(0,4)+"년 "+Number(week.slice(5,7))+"월 "+Number(week.slice(8,10))+"일";
- return '<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>'+
- '<body style="margin:0;padding:0;background:#f1f5fa;color:#20314b;font-family:Arial,Apple SD Gothic Neo,Malgun Gothic,sans-serif">'+
- '<table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background:#f1f5fa"><tr><td align="center" style="padding:32px 14px">'+
- '<table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="max-width:560px;background:#ffffff;border-radius:18px;overflow:hidden;border:1px solid #e0e8f2">'+
- '<tr><td style="background:#16386f;padding:29px 30px;color:#ffffff">'+
- '<div style="font-size:12px;letter-spacing:1.3px;font-weight:bold;color:#c6dbfa">K-BIGDATA STUDENT PORTAL</div>'+
- '<div style="margin-top:9px;font-size:19px;line-height:1.5;font-weight:bold">빅데이터소프트웨어공학과</div>'+
- '<div style="margin-top:5px;font-size:12px;color:#c6dbfa">한국폴리텍대학 서울강서캠퍼스</div></td></tr>'+
- '<tr><td style="padding:32px 30px 27px">'+
- '<span style="display:inline-block;padding:7px 12px;background:#eaf2ff;border-radius:30px;color:#2256a2;font-size:12px;font-weight:bold">자율학습 계획 · '+escape(slot==="mon12"?"1차 안내":slot==="mon17"?"2차 안내":"3차 안내")+'</span>'+
- '<h1 style="margin:20px 0 12px;color:#142747;font-size:25px;line-height:1.43;letter-spacing:-.5px">이번 주 자율학습 계획을<br>등록해 주세요.</h1>'+
- '<p style="margin:0 0 13px;font-size:15px;line-height:1.9;color:#435771"><strong style="color:#173b70">'+escape(name)+'</strong> 학생, 안녕하세요.<br>'+
- dateLabel+'부터 시작하는 주간 자율학습 계획이 아직 등록되지 않았습니다.</p>'+
- '<p style="margin:0;color:#435771;font-size:15px;line-height:1.85">학교에 남아 공부할 요일을 선택해 저장해 주세요. 이번 주 남아서 공부할 날이 없다면, <strong>0일 계획을 선택하고 사유를 작성</strong>하여 제출할 수 있습니다.</p>'+
- '<table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin:28px 0"><tr><td align="center" bgcolor="#1c4ea3" style="border-radius:11px">'+
- '<a href="'+portalLink+'" style="display:block;text-decoration:none;padding:16px 14px;color:#ffffff;font-size:16px;font-weight:bold;border-radius:11px">이번 주 학습계획 등록하기 →</a>'+
- '</td></tr></table>'+
- '<p style="margin:0;color:#67768e;font-size:13px;line-height:1.8">버튼을 누르면 학과 포털 로그인 후 자율학습 계획 등록 화면으로 이동합니다. 이미 계획을 등록했다면 이 메일은 무시해 주세요.</p>'+
- '</td></tr><tr><td style="border-top:1px solid #e3eaf5;background:#f9fbff;padding:21px 30px;color:#738198;font-size:12px;line-height:1.8">'+
- '한국폴리텍대학 서울강서캠퍼스 · 빅데이터소프트웨어공학과<br>'+
- '<a href="'+portalLink+'" style="color:#3563a8;text-decoration:none">'+portalLink+'</a><br>'+
- '본 메일은 주간 학습계획 미등록자를 대상으로 자동 발송되었습니다.</td></tr></table></td></tr></table></body></html>';
+ return renderPortalMail({kind:"study",title:"이번 주 자율학습 계획을 등록해 주세요.",category:slot==="mon12"?"1차 안내":slot==="mon17"?"2차 안내":"3차 안내",
+  bodyHtml:mailParagraph(name+" 학생, 안녕하세요.")+mailCallout(dateLabel+"부터 시작하는 주간 자율학습 계획이 아직 등록되지 않았습니다.","study","이번 주 학습계획")+mailParagraph("학교에 남아 공부할 요일을 선택해 저장해 주세요. 이번 주 남아서 공부할 날이 없다면, 0일 계획을 선택하고 사유를 작성하여 제출할 수 있습니다."),
+  actions:[{href:portalLink,label:"이번 주 학습계획 등록하기"}],footerNote:"포털 로그인 후 자율학습 계획 등록 화면으로 이동합니다. 이미 계획을 등록했다면 이 메일은 무시해 주세요."});
 }
 async function hasPlan(userId:string,week:string):Promise<boolean>{
  const {data,error}=await db.from("study_weekly_plans").select("user_id")
@@ -187,14 +169,8 @@ function adminTemplate(week:string,report:ReturnType<typeof aggregate>){
   '학년</td><td style="padding:9px;border-bottom:1px solid #e7edf5;text-align:center">'+g.total+
   '</td><td style="padding:9px;border-bottom:1px solid #e7edf5;text-align:center">'+g.zero+
   '</td><td style="padding:9px;border-bottom:1px solid #e7edf5;text-align:center">'+g.unregistered+'</td></tr>').join("");
- return '<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>'+
-  '<body style="margin:0;background:#f2f5fa;font-family:Arial,Apple SD Gothic Neo,Malgun Gothic,sans-serif;color:#243650">'+
-  '<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:30px 12px">'+
-  '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:630px;background:#fff;border:1px solid #e1e7f0;border-radius:16px;overflow:hidden">'+
-  '<tr><td style="background:#173b72;color:#fff;padding:28px 28px 23px"><div style="color:#c6d8f6;font-size:12px;font-weight:bold;letter-spacing:1px">K-BIGDATA · WEEKLY STUDY STATUS</div>'+
-  '<h1 style="font-size:23px;line-height:1.4;margin:10px 0">자율학습 계획 등록 현황</h1>'+
-  '<div style="color:#dbe8ff;font-size:14px">'+escapedDate+' 시작 주간 · 수요일 오전 8시 기준</div></td></tr>'+
-  '<tr><td style="padding:25px 22px 26px">'+
+ return portalMailDocument(portalMailHeader("study","관리자 자율학습 종합 현황")+
+  '<tr><td style="padding:24px 17px 20px"><h1 style="font-size:24px;line-height:1.4;color:#17365d;margin:0 0 8px">자율학습 계획 등록 현황</h1><p style="color:#52667f;font-size:14px;margin:0 0 15px">'+escapedDate+' 시작 주간 · 수요일 오전 8시 기준</p>'+
   '<p style="margin:0 4px 14px;font-size:14px;line-height:1.75;color:#52627b">승인된 재학생의 주간 자율학습 계획을 종합한 보고서입니다. 0일 계획은 등록 완료로 구분하고, 미등록 학생만 별도로 집계했습니다.</p>'+
   '<table role="presentation" cellpadding="0" cellspacing="0" width="100%"><tr>'+
   stat(report.eligible,"대상 재학생","승인 · 재학")+
@@ -212,9 +188,7 @@ function adminTemplate(week:string,report:ReturnType<typeof aggregate>){
   report.unregistered.length+'명</p>'+
   '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:16px 0"><tr><td align="center" style="background:#2459a4;border-radius:10px">'+
   '<a href="https://portal.k-bigdata.kr/teacher-learning.html" style="display:block;padding:15px;color:#fff;font-size:15px;font-weight:bold;text-decoration:none">자율학습 관리자 화면 확인 →</a></td></tr></table>'+
-  '<div style="font-size:12px;color:#7a899f;line-height:1.7;border-top:1px solid #e7edf5;padding-top:17px">한국폴리텍대학 서울강서캠퍼스 빅데이터소프트웨어공학과<br>'+
-  '수신 전용 관리자 종합 보고서 · 학생의 개인정보 및 사유는 지도 목적에만 활용해 주세요.</div>'+
-  '</td></tr></table></td></tr></table></body></html>';
+  '</td></tr>'+portalMailFooter("수신 전용 관리자 종합 보고서 · 학생의 개인정보 및 사유는 지도 목적에만 활용해 주세요."),"자율학습 계획 등록 현황",week+" 시작 주간");
 }
 async function sendAdminReport(week:string,report:ReturnType<typeof aggregate>){
  const q=db.from("study_plan_admin_reports"),type="weekly_status";
