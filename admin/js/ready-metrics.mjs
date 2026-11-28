@@ -25,23 +25,25 @@ export function notionCategory(row){
 export function notionLabel(row){return NOTION_LABELS[notionCategory(row)]}
 const count=(rows,fn)=>rows.filter(fn).length;
 export const percentage=(num,den)=>den?Math.round(1000*num/den)/10:null;
+export const eligibleStudent=row=>row.member?.enrollment_status==='enrolled';
 export function cohort(rows,grade=''){
- return rows.filter(row=>!grade||String(row.member?.academic_year)===String(grade));
+ return rows.filter(row=>eligibleStudent(row)&&(!grade||String(row.member?.academic_year)===String(grade)));
 }
 export function filterStudents(rows,state='all',search=''){
  const needle=search.trim().toLocaleLowerCase('ko-KR');
- return rows.filter(row=>(state==='all'||effectiveStatus(row)===state)&&[row.member?.full_name,row.member?.student_no,row.student?.career_target,row.student?.github_username].map(v=>String(v||'')).join(' ').toLocaleLowerCase('ko-KR').includes(needle));
+ return cohort(rows).filter(row=>(state==='all'||effectiveStatus(row)===state)&&[row.member?.full_name,row.member?.student_no,row.student?.career_target,row.student?.github_username].map(v=>String(v||'')).join(' ').toLocaleLowerCase('ko-KR').includes(needle));
 }
 export function summarize(rows){
+ rows=cohort(rows);
  const status=READY_STATES.map(label=>[label,count(rows,r=>effectiveStatus(r)===label)]);
  const github=['주 3일 이상 활동','주 3일 미만 활동','14일 이상 미활동','부분 점검','점검 필요','저장소 미등록'].map(label=>[label,count(rows,r=>githubCategory(r)===label),label==='14일 이상 미활동'?'warning':undefined]);
  const notion=['CONNECTED','AUTH_REQUIRED','RECONNECT_REQUIRED','INVALID_URL','NOT_CONFIGURED','UNKNOWN','UNREGISTERED'].map(key=>[NOTION_LABELS[key],count(rows,r=>notionCategory(r)===key),['RECONNECT_REQUIRED','INVALID_URL','NOT_CONFIGURED','UNKNOWN'].includes(key)?'warning':undefined]);
- return {total:rows.length,registered:count(rows,r=>r.registered),attention:count(rows,r=>effectiveStatus(r)==='관심 필요'),weekly:count(rows,r=>githubCategory(r)==='주 3일 이상 활동'),inactive:count(rows,r=>githubCategory(r)==='14일 이상 미활동'),linked:count(rows,r=>!!r.student?.notion_url),connected:count(rows,r=>notionCategory(r)==='CONNECTED'),certificateHolders:count(rows,r=>Number(r.certificate_count)>0),leave:count(rows,r=>r.member?.enrollment_status==='leave'),status,github,notion};
+ return {total:rows.length,registered:count(rows,r=>r.registered),attention:count(rows,r=>effectiveStatus(r)==='관심 필요'),weekly:count(rows,r=>githubCategory(r)==='주 3일 이상 활동'),inactive:count(rows,r=>githubCategory(r)==='14일 이상 미활동'),linked:count(rows,r=>!!r.student?.notion_url),connected:count(rows,r=>notionCategory(r)==='CONNECTED'),certificateHolders:count(rows,r=>Number(r.certificate_count)>0),status,github,notion};
 }
-export const checkTargets=rows=>rows.filter(r=>r.registered&&r.member?.enrollment_status!=='leave');
+export const checkTargets=rows=>cohort(rows).filter(r=>r.registered);
 export function gradeComparison(rows){
  const groups=[['1학년',cohort(rows,'1')],['2학년',cohort(rows,'2')]];
- const other=rows.filter(r=>!['1','2'].includes(String(r.member?.academic_year)));
+ const other=cohort(rows).filter(r=>!['1','2'].includes(String(r.member?.academic_year)));
  if(other.length)groups.push(['학년 미설정',other]);
  return groups.map(([label,group])=>{const registered=count(group,r=>r.registered);return [label+' · '+registered+'/'+group.length+'명',percentage(registered,group.length)]});
 }
@@ -50,6 +52,6 @@ export function documentCounts(rows){
  return {total:second.length,rows:[['이력서 최종 완성',count(second,r=>r.registered&&r.student?.resume_status==='최종 완성')],['자기소개서 기본본 이상',count(second,r=>r.registered&&['기본본 완성','기업 지원 가능'].includes(r.student?.cover_letter_status))]]};
 }
 export function snapshotRows(snapshots){
- return [...snapshots].sort((a,b)=>String(a.snapshot_date).localeCompare(String(b.snapshot_date))).slice(-8).map(x=>[String(x.snapshot_date||''),knownNumber(x.data?.registered)?Number(x.data.registered):null]);
+ return snapshots.filter(x=>x.data?.cohort==='enrolled_only').sort((a,b)=>String(a.snapshot_date).localeCompare(String(b.snapshot_date))).slice(-8).map(x=>[String(x.snapshot_date||''),knownNumber(x.data?.registered)?Number(x.data.registered):null]);
 }
 export const labelCheck=(value)=>CHECK_LABELS[value]||(/[가-힣]/.test(String(value||''))?String(value):'미점검');

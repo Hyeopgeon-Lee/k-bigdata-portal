@@ -1,5 +1,5 @@
 import {api,esc,fmt,url,table,panel,status,details,history,readyErrorMessage} from '../../js/ready-common.mjs?v=20261128-ready-ui-2';
-import {READY_STATES,effectiveStatus,githubCategory,notionLabel,percentage,cohort,filterStudents,summarize,checkTargets,gradeComparison,documentCounts,snapshotRows,labelCheck} from './ready-metrics.mjs?v=20261128-ready-admin-1';
+import {READY_STATES,effectiveStatus,githubCategory,notionLabel,percentage,cohort,filterStudents,summarize,checkTargets,gradeComparison,documentCounts,snapshotRows,labelCheck} from './ready-metrics.mjs?v=20261128-ready-enrolled-1';
 const root=document.querySelector('#ready-root'),$=s=>root.querySelector(s),ui=window.portalAdminUI;
 const pageSize=10;
 let d=null,grade=ui.getGrade(),search='',state='all',page=1,busy=false,view='list',refreshNeeded=false;
@@ -28,13 +28,13 @@ function readyHeader(title,description,extra=''){
  return '<div class="ready-admin-section-head"><div><h2>'+esc(title)+'</h2><p>'+esc(description)+'</p></div>'+extra+'</div>';
 }
 function setUnavailable(button,value){button.dataset.unavailable=String(value);button.disabled=busy||value}
-async function fetchOverview(){const result=await api('admin');if(!Array.isArray(result.rows))throw Error('학생 현황을 조회하지 못했습니다.');d=result;refreshNeeded=false;}
+async function fetchOverview(){const result=await api('admin');if(!Array.isArray(result.rows))throw Error('학생 현황을 조회하지 못했습니다.');d={...result,rows:cohort(result.rows)};refreshNeeded=false;}
 function renderOverview(){
  view='list';
  root.innerHTML='<section class="admin-grade-panel ready-grade-panel" aria-label="공통 학년 필터"><div class="admin-grade-heading"><strong>학년별 조회</strong><span>다른 관리자 화면에서도 선택 유지</span></div><div class="admin-grade-group" role="group" aria-label="학년 선택">'+[['','전체'],['1','1학년'],['2','2학년']].map(([g,l])=>'<button type="button" class="admin-grade-choice" data-admin-grade="'+g+'" data-ready-action aria-pressed="'+(grade===g)+'">'+l+'</button>').join('')+'</div></section>'+
  '<div class="ready-admin-jump"><a href="#ready-students">학생 목록 ↓</a><a href="#ready-operations">정기 운영 ↓</a>'+action('refresh','새로고침',{secondary:true})+'</div>'+
  '<section class="ready-admin-overview" aria-labelledby="ready-overview-title"><div class="ready-admin-section-head"><div><h2 id="ready-overview-title">취업 준비 현황</h2><p id="ready-scope"></p></div><span class="ready-admin-scope" id="ready-scope-label"></span></div><div id="ready-kpis"></div><div class="admin-chart-grid ready-admin-charts"><div id="ready-state-chart"></div><div id="ready-github-chart"></div><div id="ready-notion-chart"></div><div id="ready-compare-chart"></div></div></section>'+
- '<section class="ready-admin-panel" id="ready-students">'+readyHeader('학생별 준비 현황','선택 학년 내에서 상태 또는 이름·학번·직무로 찾아보세요.')+'<div class="ready-admin-filters"><label>준비 상태<select id="state" data-ready-action><option value="all">전체 상태</option>'+READY_STATES.map(s=>'<option value="'+esc(s)+'">'+esc(s)+'</option>').join('')+'</select></label><label>학생 검색<input id="search" type="search" data-ready-action maxlength="80" placeholder="이름 · 학번 · 희망 직무"></label>'+action('clear-filter','검색 초기화',{secondary:true})+'</div><div class="ready-admin-list-toolbar"><p id="list-count" aria-live="polite"></p>'+action('batch','일괄 점검')+'</div><p class="ready-admin-note">일괄 점검은 현재 학년·검색·상태 조건에 맞는 전체 등록 학생(휴학 제외)을 대상으로 합니다.</p><div id="students" class="ready-student-grid"></div><div id="ready-pager" class="ready-admin-pagination" aria-label="학생 목록 페이지"></div></section>'+
+ '<section class="ready-admin-panel" id="ready-students">'+readyHeader('학생별 준비 현황','선택 학년 내에서 상태 또는 이름·학번·직무로 찾아보세요.')+'<div class="ready-admin-filters"><label>준비 상태<select id="state" data-ready-action><option value="all">전체 상태</option>'+READY_STATES.map(s=>'<option value="'+esc(s)+'">'+esc(s)+'</option>').join('')+'</select></label><label>학생 검색<input id="search" type="search" data-ready-action maxlength="80" placeholder="이름 · 학번 · 희망 직무"></label>'+action('clear-filter','검색 초기화',{secondary:true})+'</div><div class="ready-admin-list-toolbar"><p id="list-count" aria-live="polite"></p>'+action('batch','일괄 점검')+'</div><p class="ready-admin-note">일괄 점검은 현재 학년·검색·상태 조건에 맞는 READY 등록 재학생(조기취업·휴학 제외)을 대상으로 합니다.</p><div id="students" class="ready-student-grid"></div><div id="ready-pager" class="ready-admin-pagination" aria-label="학생 목록 페이지"></div></section>'+
  '<section id="ready-operations" class="ready-admin-panel">'+operationsMarkup()+'</section>';
  $('#state').value=state;$('#search').value=search;
  root.querySelectorAll('[data-admin-grade]').forEach(el=>el.onclick=()=>{if(!busy)ui.setGrade(el.dataset.adminGrade)});
@@ -48,25 +48,25 @@ function renderOverview(){
  renderDashboard();
  renderList();
  const snapshotChart=snapshotRows(d.snapshots||[]);
- ui.renderBars($('#ready-snapshot-chart'),'주간 READY 등록 학생 추이',snapshotChart,{unit:'명',caption:'전체 학년 · 저장된 최근 8회 기록 (학년별 과거 기록은 제공되지 않음)'});
+ ui.renderBars($('#ready-snapshot-chart'),'주간 READY 등록 학생 추이',snapshotChart,{unit:'명',caption:'전체 학년 · 재학생 기준 최근 8회 집계 (기존 기준 기록은 아래 세부 기록에서 확인)'});
  syncControls();
 }
 function renderDashboard(){
  const rows=gradeRows(),s=summarize(rows),rate=percentage(s.registered,s.total);
  $('#ready-scope-label').textContent=gradeName();
- $('#ready-scope').textContent='전체 '+s.total+'명 · READY 등록 '+s.registered+'명 ('+(rate===null?'—':rate+'%')+') · 휴학 '+s.leave+'명 포함';
- ui.renderKPIs($('#ready-kpis'),[['전체 학생',s.total,'명'],['READY 등록',s.registered,'명'],['관심 필요 (등록)',s.attention,'명'],['GitHub 주 3일 이상',s.weekly,'명'],['Notion 연결 완료',s.connected,'명'],['자격증 최종합격',s.certificateHolders,'명']]);
+ $('#ready-scope').textContent='재학생 '+s.total+'명 · READY 등록 '+s.registered+'명 ('+(rate===null?'—':rate+'%')+') · 조기취업·휴학 제외';
+ ui.renderKPIs($('#ready-kpis'),[['재학생',s.total,'명'],['READY 등록',s.registered,'명'],['관심 필요 (등록)',s.attention,'명'],['GitHub 주 3일 이상',s.weekly,'명'],['Notion 연결 완료',s.connected,'명'],['자격증 최종합격',s.certificateHolders,'명']]);
  const prepare=s.status.filter(([l,n])=>l!=='상태 미확인'||n>0);
- ui.renderDonut($('#ready-state-chart'),'취업 준비 상태',prepare,{unit:'명',caption:'미등록을 별도 분류 · 선택 학년 전체 '+s.total+'명'});
- ui.renderBars($('#ready-github-chart'),'GitHub 활동 및 점검 상태',s.github,{unit:'명',max:Math.max(1,s.total),caption:'최근 36시간 내 점검 기준 · 휴학 포함, 실패·오래된 점검은 점검 필요로 표시'});
+ ui.renderDonut($('#ready-state-chart'),'취업 준비 상태',prepare,{unit:'명',caption:'미등록을 별도 분류 · 선택 학년 재학생 '+s.total+'명'});
+ ui.renderBars($('#ready-github-chart'),'GitHub 활동 및 점검 상태',s.github,{unit:'명',max:Math.max(1,s.total),caption:'최근 36시간 내 점검 기준 · 재학생만 집계 · 실패·오래된 점검은 점검 필요로 표시'});
  ui.renderBars($('#ready-notion-chart'),'Notion 포트폴리오 연동',s.notion.filter(([label,count])=>count>0||['연결 완료','학생 동의 대기','미등록'].includes(label)),{unit:'명',max:Math.max(1,s.total),caption:'주소 등록 '+s.linked+'명 / OAuth 연결 '+s.connected+'명 · 연결은 실제 페이지 점검 성공과 별개'});
  const compare=$('#ready-compare-chart');
  if(!grade){
   compare.hidden=false;
-  ui.renderBars(compare,'학년별 READY 등록률',gradeComparison(d.rows),{unit:'%',caption:'1·2학년 전체 비교 · 등록 인원/전체 인원',max:100});
+  ui.renderBars(compare,'학년별 READY 등록률',gradeComparison(d.rows),{unit:'%',caption:'1·2학년 재학생 비교 · 등록 재학생/재학생',max:100});
  }else if(grade==='2'){
   compare.hidden=false;const docs=documentCounts(rows);
-  ui.renderBars(compare,'2학년 취업 서류 준비',docs.rows,{unit:'명',caption:'2학년 전체 '+docs.total+'명 기준 · 이력서 최종 완성 / 자기소개서 기본본 이상',max:Math.max(1,docs.total)});
+  ui.renderBars(compare,'2학년 취업 서류 준비',docs.rows,{unit:'명',caption:'2학년 재학생 '+docs.total+'명 기준 · 이력서 최종 완성 / 자기소개서 기본본 이상',max:Math.max(1,docs.total)});
  }else{compare.hidden=true;compare.replaceChildren()}
 }
 function studentCard(r){
@@ -89,7 +89,7 @@ function renderList(){
 async function batchCheck(){
  if(busy)return;
  const targets=checkTargets(filtered());
- if(!targets.length||!confirm(gradeName()+' · 선택 조건의 등록 학생 '+targets.length+'명을 점검할까요? 휴학생은 제외됩니다.'))return;
+ if(!targets.length||!confirm(gradeName()+' · 선택 조건의 등록 학생 '+targets.length+'명을 점검할까요? 조기취업자와 휴학생은 제외됩니다.'))return;
  await guarded(async()=>{
   const results={SUCCESS:0,PARTIAL:0,FAILED:0,SKIPPED:0};
   for(let i=0;i<targets.length;i++){
@@ -103,13 +103,13 @@ async function batchCheck(){
 function operationsMarkup(){
  const settings=d.settings||{},logs=d.logs||[],snapshots=d.snapshots||[];
  const logsMarkup=table(['시작','종료','대상','정상','실패','GitHub','Notion','오류'],logs.map(x=>[esc(fmt(x.started_at)),esc(fmt(x.finished_at)),esc(x.data?.target_count??'—'),esc(x.data?.success_count??'—'),esc(x.data?.failed_count??'—'),esc(labelCheck(x.data?.status)),esc(labelCheck(x.data?.notion_status)),esc(x.data?.error_message||'—')]));
- const snapshotMarkup=table(['기준일','전체','등록','준비 우수','준비 양호','준비 중','관심 필요','GitHub 주 3일'],snapshots.map(x=>[esc(x.snapshot_date),esc(x.data?.total_students??'—'),esc(x.data?.registered??'—'),esc(x.data?.excellent??'—'),esc(x.data?.good??'—'),esc(x.data?.preparing??'—'),esc(x.data?.attention_count??'—'),esc(x.data?.github_active_7d??'—')]));
- return readyHeader('정기 운영 · 주간 리포트','학년·목록 필터와 별개인 전체 학과 운영 현황입니다.')+
- '<div class="ready-admin-operations-status"><div><span>정기 자동점검</span>'+selection(settings.checking_enabled?'활성화':'중지',settings.checking_enabled?'good':'warning')+'</div><div><span>교수용 주간 메일</span>'+selection(settings.weekly_mail_enabled?'활성화':'중지',settings.weekly_mail_enabled?'good':'warning')+'</div></div><div class="ready-admin-actions">'+action('snapshot','이번 주 집계 생성',{secondary:true})+action('send-weekly','주간 리포트 메일 발송',{disabled:!settings.weekly_mail_enabled})+'</div><p class="ready-admin-note">집계 생성은 메일을 발송하지 않습니다. 주간 메일은 같은 주에 중복 발송하지 않습니다.</p><div id="ready-snapshot-chart" class="ready-chart-history"></div><details class="ready-admin-disclosure"><summary>주간 스냅샷 세부 기록 ('+snapshots.length+'건)</summary><p class="ready-admin-note">기존 스냅샷의 저장 당시 기준을 그대로 표시합니다. 현재 대시보드의 미등록 별도 분류와 다를 수 있습니다.</p>'+snapshotMarkup+'</details><details class="ready-admin-disclosure"><summary>최근 자동·수동 점검 기록 ('+logs.length+'건)</summary>'+logsMarkup+'</details>';
+ const snapshotMarkup=table(['기준일','집계 기준','전체','등록','준비 우수','준비 양호','준비 중','관심 필요','GitHub 주 3일'],snapshots.map(x=>[esc(x.snapshot_date),esc(x.data?.cohort==='enrolled_only'?'재학생':'기존 집계'),esc(x.data?.total_students??'—'),esc(x.data?.registered??'—'),esc(x.data?.excellent??'—'),esc(x.data?.good??'—'),esc(x.data?.preparing??'—'),esc(x.data?.attention_count??'—'),esc(x.data?.github_active_7d??'—')]));
+ return readyHeader('정기 운영 · 주간 리포트','학년·목록 필터와 별개로 학과 재학생만 점검·집계합니다.')+
+ '<div class="ready-admin-operations-status"><div><span>정기 자동점검</span>'+selection(settings.checking_enabled?'활성화':'중지',settings.checking_enabled?'good':'warning')+'</div><div><span>교수용 주간 메일</span>'+selection(settings.weekly_mail_enabled?'활성화':'중지',settings.weekly_mail_enabled?'good':'warning')+'</div></div><div class="ready-admin-actions">'+action('snapshot','이번 주 집계 생성',{secondary:true})+action('send-weekly','주간 리포트 메일 발송',{disabled:!settings.weekly_mail_enabled})+'</div><p class="ready-admin-note">집계 생성은 메일을 발송하지 않습니다. 주간 메일은 같은 주에 중복 발송하지 않습니다.</p><div id="ready-snapshot-chart" class="ready-chart-history"></div><details class="ready-admin-disclosure"><summary>주간 스냅샷 세부 기록 ('+snapshots.length+'건)</summary><p class="ready-admin-note">기존 집계는 저장 당시 기준을 보존하고, 재학생만 집계한 기록과 구분합니다. 추이 차트는 재학생 기준만 표시합니다.</p>'+snapshotMarkup+'</details><details class="ready-admin-disclosure"><summary>최근 자동·수동 점검 기록 ('+logs.length+'건)</summary>'+logsMarkup+'</details>';
 }
 function renderDetail(b){
  view='detail';
- const id=b.member.user_id,s=effectiveStatus(b),notion=notionLabel(b),canCheck=b.registered&&b.member.enrollment_status!=='leave';
+ const id=b.member.user_id,s=effectiveStatus(b),notion=notionLabel(b),canCheck=b.registered&&b.member.enrollment_status==='enrolled';
  const linkRows=[['GitHub',b.student.github_url],['Notion',b.student.notion_url],['포트폴리오',b.student.portfolio_url],['기술 블로그',b.student.blog_url]];
  root.innerHTML='<section class="ready-admin-panel ready-detail-head"><div class="ready-admin-section-head"><div><h2>'+esc(b.member.full_name)+' · '+esc(academic(b))+'</h2><p>'+esc(b.member.student_no)+' · '+esc(b.student.career_target||'희망 직무 미등록')+(enrollment(b)?' · '+esc(enrollment(b)):'')+'</p></div>'+badge(s)+'</div><div class="ready-admin-actions">'+action('back','← 학생 목록',{secondary:true})+action('single','지금 점검하기',{disabled:!canCheck})+'<a class="ready-admin-secondary ready-admin-button-link" href="accounts.html?view=students&amp;user='+encodeURIComponent(id)+'">상담 · 취업지도 및 교수 메모</a></div><div class="ready-detail-notion"><span>Notion 연동 상태</span>'+badge(notion)+'<span>마지막 점검 '+esc(fmt(b.notion_connection?.checked_at||b.checks?.notion?.checked_at))+'</span></div><dl class="ready-detail-links">'+linkRows.map(([label,value])=>'<div><dt>'+label+'</dt><dd>'+url(value)+'</dd></div>').join('')+'</dl></section>'+details(b)+panel('변경 이력',history(b));
  $('#back').onclick=()=>guarded(async()=>{if(refreshNeeded){try{await fetchOverview()}catch(e){renderOverview();setStatus('목록을 갱신하지 못했습니다. 새로고침해 주세요.',true);return}}renderOverview();$('#ready-students')?.scrollIntoView({block:'start'});setStatus('학생 목록을 표시했습니다.')});

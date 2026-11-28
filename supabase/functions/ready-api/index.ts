@@ -11,7 +11,7 @@ const reply=(data:any,status=200)=>new Response(JSON.stringify(data),{status,hea
 const read=async(q:any)=>{const {data,error}=await q;if(error)throw Error("DATABASE_ERROR");return data};
 const write=read;
 const cols="user_id,full_name,student_no,academic_year,enrollment_status";
-const activeMembers=()=>read(db.from("profiles").select(cols).eq("approval_status","approved").eq("signup_type","student").in("enrollment_status",["enrolled","leave","early_employment"]).order("academic_year").order("full_name"));
+const activeMembers=()=>read(db.from("profiles").select(cols).eq("approval_status","approved").eq("signup_type","student").eq("enrollment_status","enrolled").order("academic_year").order("full_name"));
 const settings=()=>read(db.from("ready_operations").select("*").eq("singleton",true).single());
 const text=(v:any,max=200)=>String(v??"").trim().slice(0,max);
 const fields=["career_target","github_url","github_pages_url","github_pages_repo","notion_url","portfolio_url","blog_url","resume_status","cover_letter_status"];
@@ -79,7 +79,7 @@ async function saveProfile(id:string,body:any,old:any){
  return {saved:true};
 }
 async function runCheck(id:string,self:boolean,token?:string){
- const claimed=await read(db.rpc("ready_claim_check",{p_user:id,p_self:self}));if(!claimed)return {status:"SKIPPED",message:"점검 중이거나 10분 뒤 다시 시도해 주세요."};
+ const claimed=await read(db.rpc("ready_claim_check",{p_user:id,p_self:self}));if(!claimed)return {status:"SKIPPED",message:"재학생 점검 대상이 아니거나 이미 점검 중입니다. 잠시 후 다시 시도해 주세요."};
  try{return await checkStudent(db,id,token||Deno.env.get("READY_GITHUB_TOKEN")||Deno.env.get("GITHUB_TOKEN")||"")}
  finally{await write(db.from("ready_profiles").update({check_lease_until:null}).eq("user_id",id))}
 }
@@ -87,13 +87,14 @@ const esc=(v:any)=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",
 async function weekly(send:boolean){
  const rows=await roster(),cur=stats(rows),today=date(),week=new Date(today+"T00:00:00Z");week.setUTCDate(week.getUTCDate()-(week.getUTCDay()+6)%7);const monday=week.toISOString().slice(0,10);
  const previous=await read(db.from("ready_weekly_snapshots").select("data").lt("snapshot_date",today).order("snapshot_date",{ascending:false}).limit(1).maybeSingle());
- await write(db.from("ready_weekly_snapshots").upsert({snapshot_date:today,data:cur,source:"portal"}));
- if(!send)return {current:cur,previous:previous?.data,mail:"disabled"};
+ const comparable=previous?.data?.cohort==="enrolled_only"?previous.data:null;
+ await write(db.from("ready_weekly_snapshots").upsert({snapshot_date:today,data:{...cur,cohort:"enrolled_only"},source:"portal"}));
+ if(!send)return {current:cur,previous:comparable,mail:"disabled"};
  const existing=await read(db.from("ready_report_deliveries").select("status").eq("week_start",monday).maybeSingle());if(existing)return {mail:existing.status};
  const mailKey=Deno.env.get("RESEND_API_KEY");if(!mailKey)throw Error("메일 연동 설정 필요");
  const {error}=await db.from("ready_report_deliveries").insert({week_start:monday,status:"pending"});if(error)return {mail:"already_requested"};
- const names:Record<string,string>={total_students:"전체 학생",registered:"등록",excellent:"준비 우수",good:"준비 양호",preparing:"준비 중",attention_count:"관심 필요",github_active_7d:"GitHub 7일 활동 충족",github_inactive_14d:"14일 이상 미활동",readme_missing:"README 미작성",readme_needs_work:"README 보완",portfolio_missing:"포트폴리오 미등록",grade2_resume_incomplete:"2학년 이력서 미완성",grade2_cover_incomplete:"2학년 자기소개서 미완성",certificate_holders:"자격증 취득"};
- const html='<main style="font:15px/1.6 system-ui;color:#243950"><h1>취업 준비 주간 리포트</h1><table><tr><th>항목</th><th>이번 주</th><th>전주 대비</th></tr>'+Object.entries(cur).map(([k,v])=>'<tr><td>'+esc(names[k]||k)+'</td><td>'+v+'</td><td>'+(previous?.data?.[k]!=null?v-Number(previous.data[k]):"-")+'</td></tr>').join("")+'</table><h2>우선 확인 학생</h2><ul>'+rows.filter(b=>b.evaluation.priorityIssues.length).sort((a,b)=>["관심 필요","준비 중","준비 양호","준비 우수"].indexOf(a.evaluation.status)-["관심 필요","준비 중","준비 양호","준비 우수"].indexOf(b.evaluation.status)).slice(0,20).map(b=>'<li>'+esc(b.member.full_name)+' · '+esc(b.student.grade)+'학년 · '+esc(b.evaluation.priorityIssues.map((x:any)=>x.label).join(" / "))+'</li>').join("")+'</ul><a href="'+origin+'/admin/ready.html">포털 취업지도</a></main>';
+ const names:Record<string,string>={total_students:"재학생",registered:"등록",excellent:"준비 우수",good:"준비 양호",preparing:"준비 중",attention_count:"관심 필요",github_active_7d:"GitHub 7일 활동 충족",github_inactive_14d:"14일 이상 미활동",readme_missing:"README 미작성",readme_needs_work:"README 보완",portfolio_missing:"포트폴리오 미등록",grade2_resume_incomplete:"2학년 이력서 미완성",grade2_cover_incomplete:"2학년 자기소개서 미완성",certificate_holders:"자격증 취득"};
+ const html='<main style="font:15px/1.6 system-ui;color:#243950"><h1>취업 준비 주간 리포트</h1><p>재학생 기준 (조기취업·휴학 제외). 이전 집계 기준이 다르면 전주 대비를 표시하지 않습니다.</p><table><tr><th>항목</th><th>이번 주</th><th>전주 대비</th></tr>'+Object.entries(cur).map(([k,v])=>'<tr><td>'+esc(names[k]||k)+'</td><td>'+v+'</td><td>'+(comparable?.[k]!=null?v-Number(comparable[k]):"-")+'</td></tr>').join("")+'</table><h2>우선 확인 학생</h2><ul>'+rows.filter(b=>b.evaluation.priorityIssues.length).sort((a,b)=>["관심 필요","준비 중","준비 양호","준비 우수"].indexOf(a.evaluation.status)-["관심 필요","준비 중","준비 양호","준비 우수"].indexOf(b.evaluation.status)).slice(0,20).map(b=>'<li>'+esc(b.member.full_name)+' · '+esc(b.student.grade)+'학년 · '+esc(b.evaluation.priorityIssues.map((x:any)=>x.label).join(" / "))+'</li>').join("")+'</ul><a href="'+origin+'/admin/ready.html">포털 취업지도</a></main>';
  try{const res=await fetch("https://api.resend.com/emails",{method:"POST",headers:{Authorization:"Bearer "+mailKey,"Content-Type":"application/json","Idempotency-Key":"ready-week-"+monday},body:JSON.stringify({from:Deno.env.get("REPORT_FROM_EMAIL")||"noreply@noreply.k-bigdata.kr",to:["hglee67@kopo.ac.kr"],subject:"[READY] "+monday+" 학생 취업 준비 주간 점검",html}),signal:AbortSignal.timeout(10000)});if(!res.ok)throw Error("메일 발송 실패");const body=await res.json();await write(db.from("ready_report_deliveries").update({status:"sent",sent_at:stamp(),provider_id:body.id}).eq("week_start",monday));return {mail:"sent"}}
  catch(e){await write(db.from("ready_report_deliveries").update({status:"failed",updated_at:stamp()}).eq("week_start",monday));throw e}
 }
@@ -117,7 +118,7 @@ Deno.serve(async req=>{
    }
    if(action==="scheduled_weekly"){if(!op.checking_enabled)return reply({disabled:true});return reply(await weekly(op.weekly_mail_enabled))}
    if(!op.checking_enabled)return reply({disabled:true,ids:[]});
-   const members=(await activeMembers()).filter((m:any)=>m.enrollment_status!=="leave"),registered=await read(db.from("ready_profiles").select("user_id"));
+   const members=await activeMembers(),registered=await read(db.from("ready_profiles").select("user_id"));
    const ids=members.filter((m:any)=>registered.some((r:any)=>r.user_id===m.user_id)).map((m:any)=>m.user_id);
    if(action==="scheduled_list")return reply({ids});
    if(!ids.includes(b.user_id))return reply({error:"NOT_FOUND"},404);
@@ -135,17 +136,17 @@ Deno.serve(async req=>{
    if(action==="admin_send_weekly"){if(!(await settings()).weekly_mail_enabled)return reply({error:"주간 메일 운영이 아직 활성화되지 않았습니다."},409);return reply(await weekly(true));}
    const m=(await activeMembers()).find((x:any)=>x.user_id===b.user_id);if(!m)return reply({error:"NOT_FOUND"},404);
    if(action==="admin_detail")return reply(await bundle(m,true));
-   if(m.enrollment_status==="leave")return reply({error:"휴학생 점검 제외"},400);return reply(await runCheck(m.user_id,false));
+   if(m.enrollment_status!=="enrolled")return reply({error:"재학생만 점검할 수 있습니다."},403);return reply(await runCheck(m.user_id,false));
   }
   if(!a.read)return reply({error:"STUDENT_REQUIRED"},403);
   const member=await read(db.from("profiles").select(cols).eq("user_id",id).single());
-  if(action==="mine")return reply({...await bundle(member,true),write:a.write,guide:readinessGuide()});
+  if(action==="mine")return reply({...await bundle(member,true),write:a.write&&member.enrollment_status==="enrolled",guide:readinessGuide()});
   if(action==="class"){
    const rows=(await roster()).filter(x=>x.member.academic_year===member.academic_year);
    return reply({summary:stats(rows),peers:rows.filter(x=>x.consent&&x.registered).map(x=>({name:x.member.full_name,status:x.evaluation.status,days:x.evaluation.github_fresh?x.evaluation.github.active_days_7d:null,readme:x.evaluation.readme.status,portfolio:x.evaluation.portfolio.status}))});
   }
   if(action==="notion_disconnect")return reply(await disconnectNotion(db,id));
-  if(!a.write)return reply({error:"READ_ONLY"},403);
+  if(!a.write||member.enrollment_status!=="enrolled")return reply({error:"READ_ONLY"},403);
   const old=await read(db.from("ready_profiles").select("*").eq("user_id",id).maybeSingle());
   if(action==="save_profile")return reply(await saveProfile(id,b.profile||{},old));
   if(!old)return reply({error:"READY_PROFILE_REQUIRED"},400);

@@ -15,7 +15,7 @@ assert.match(api,/caller\.auth\.getUser\(token\)/);
 assert.match(api,/caller\.rpc\("ready_access"\)/);
 assert.match(api,/if\(!a\.admin\)return reply/);
 assert.match(api,/rows\.filter\(x=>x\.consent&&x\.registered\)/);
-assert.match(api,/if\(!a\.write\)return reply/);
+assert.match(api,/if\(!a\.write\|\|member\.enrollment_status!=="enrolled"\)return reply/);
 assert.match(read('supabase/migrations/20261128114500_ready_portal_integration.sql'),/revoke all on public\.%I from public, anon, authenticated/);
 assert.throws(()=>publicURL('http://127.0.0.1'));
 assert.throws(()=>publicURL('https://github.io.evil.test/'));

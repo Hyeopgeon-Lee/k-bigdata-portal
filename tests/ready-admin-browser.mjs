@@ -7,14 +7,14 @@ import {summarize,cohort,filterStudents,checkTargets} from '../admin/js/ready-me
 const base=process.env.PORTAL_BASE_URL||'http://127.0.0.1:8765';
 const browser=await chromium.launch({headless:true,args:['--no-sandbox'],...(process.env.PORTAL_BROWSER_PATH?{executablePath:process.env.PORTAL_BROWSER_PATH}:{})});
 const source=readFileSync(new URL('../admin/js/ready.js',import.meta.url),'utf8'),now=new Date().toISOString();
-const rows=Array.from({length:13},(_,i)=>{
+const rows=Array.from({length:15},(_,i)=>{
  const academic_year=i<7?1:2,registered=i!==0&&i!==8,notion_url=i%2?'https://notion.so/12345678123456789876abcdef012345':'',student={grade:String(academic_year),notion_url,career_target:i===2?'백엔드 개발':i===5?'데이터 분석':'개발',github_url:'https://github.com/fixture'+i,portfolio_url:'https://example.test/'+('long-link-segment-'.repeat(14)),resume_status:i===10?'최종 완성':'작성중',cover_letter_status:i===10?'기본본 완성':'작성중'};
  const github={check_status:i===4?'PARTIAL':'SUCCESS',checked_at:now,active_days_7d:i%4,active_days_14d:4,inactive_days:i===2?16:2};
  const evaluation=evaluateStudentReadiness(student,{github,repositoryCount:registered?1:0});
- return {member:{user_id:'fixture-'+i,full_name:i===5?'길이가 긴 테스트 학생 이름'.repeat(3):'테스트 학생 '+i,student_no:'202600'+i,academic_year,enrollment_status:i===3?'leave':'enrolled'},student,registered,certificate_count:i%3===0?1:0,evaluation,notion_connection:{status:!notion_url?'UNREGISTERED':i===1?'CONNECTED':i===5?'RECONNECT_REQUIRED':'AUTH_REQUIRED',checked_at:now},updated_at:now};
+ return {member:{user_id:'fixture-'+i,full_name:i===5?'길이가 긴 테스트 학생 이름'.repeat(3):'테스트 학생 '+i,student_no:'202600'+i,academic_year,enrollment_status:i===13?'leave':i===14?'early_employment':'enrolled'},student,registered,certificate_count:i%3===0?1:0,evaluation,notion_connection:{status:!notion_url?'UNREGISTERED':i===1?'CONNECTED':i===5?'RECONNECT_REQUIRED':'AUTH_REQUIRED',checked_at:now},updated_at:now};
 });
 const bundles=Object.fromEntries(rows.map(r=>[r.member.user_id,{...r,write:true,consent:false,checks:{notion:{activity_status:'Notion 연동 필요',checked_at:now}},primary:{},repositories:r.registered?[{repo_id:'repo-1',repo_url:'https://github.com/fixture/'+('long-name-'.repeat(16)),is_primary:true,display_order:1}]:[],repoChecks:[],certificates:[],plans:[],history:[{changed_at:now,category:'프로필',field_name:'portfolio_url',old_value:'https://example.test/'+('old-'.repeat(40)),new_value:'https://example.test/'+('new-'.repeat(40)),changed_by:'STUDENT'}],guide:readinessGuide()}]));
-const response={rows,settings:{checking_enabled:true,weekly_mail_enabled:true},logs:[{started_at:now,finished_at:now,data:{target_count:1,success_count:1,failed_count:0,status:'SUCCESS',notion_status:'AUTH_REQUIRED',error_message:'길이가 긴 오류 '+('error-'.repeat(50))}}],snapshots:[{snapshot_date:'2026-11-23',data:{registered:8,total_students:13,attention_count:4}},{snapshot_date:'2026-11-16',data:{registered:6,total_students:12}}]};
+const response={rows,settings:{checking_enabled:true,weekly_mail_enabled:true},logs:[{started_at:now,finished_at:now,data:{target_count:1,success_count:1,failed_count:0,status:'SUCCESS',notion_status:'AUTH_REQUIRED',error_message:'길이가 긴 오류 '+('error-'.repeat(50))}}],snapshots:[{snapshot_date:'2026-11-23',data:{cohort:'enrolled_only',registered:8,total_students:13,attention_count:4}},{snapshot_date:'2026-11-16',data:{registered:6,total_students:12}}]};
 const output='ui-screenshots/ready-admin';mkdirSync(output,{recursive:true});
 async function fixture(width,role='admin',fail=false){
  const context=await browser.newContext({viewport:{width,height:900},deviceScaleFactor:1});
@@ -39,12 +39,12 @@ const requestCount=(page,action)=>page.evaluate(a=>window.__readyAdminRequests.f
 try{
  for(const width of [320,360,390,430,768,1280]){
   const {page,context,errors}=await fixture(width);
-  await geometry(page,width,'overview');assert.equal(await chartTotal(page),rows.length);
+  await geometry(page,width,'overview');assert.equal(await chartTotal(page),13);
   assert.equal(await page.locator('#ready-state-chart .admin-donut-center').textContent(),'13명');
   assert.equal(await page.locator('#students .ready-student-card').count(),10);
   assert.match(await page.locator('#list-count').textContent(),/13명/);
   await page.screenshot({path:output+'/overview-'+width+'.png'});
-  await page.locator('#next-page').click();assert.equal(await page.locator('#students .ready-student-card').count(),3);
+  await page.locator('#next-page').click();assert.equal(await page.locator('#students .ready-student-card').count(),3);assert.equal(await page.locator('[data-detail="fixture-13"],[data-detail="fixture-14"]').count(),0);
   await page.locator('[data-admin-grade="1"]').click();assert.equal(await chartTotal(page),7);
   assert.equal(await page.locator('#students .ready-student-card').count(),7);
   await page.locator('#state').selectOption('미등록');assert.equal(await page.locator('#students .ready-student-card').count(),1);assert.equal(await page.locator('#batch').isDisabled(),true);assert.equal(await chartTotal(page),7,'chart scope does not change with list filter');

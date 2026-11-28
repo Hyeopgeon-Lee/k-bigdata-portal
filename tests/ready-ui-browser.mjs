@@ -12,10 +12,10 @@ const source=readFileSync(new URL('../js/ready.js',import.meta.url),'utf8');
 const output='ui-screenshots/ready';mkdirSync(output,{recursive:true});
 async function fixture(width,role='student',fail=false){
  const context=await browser.newContext({viewport:{width,height:900},deviceScaleFactor:1});
- const admin=role==='admin',alumni=role==='alumni';
- await approvedStudent(context,admin?{signup_type:'admin',full_name:'교수 계정'}:alumni?{signup_type:'alumni',enrollment_status:'graduated'}:{},alumni,admin);
+ const admin=role==='admin',alumni=role==='alumni',inactive=['early_employment','leave'].includes(role);
+ await approvedStudent(context,admin?{signup_type:'admin',full_name:'교수 계정'}:alumni?{signup_type:'alumni',enrollment_status:'graduated'}:inactive?{enrollment_status:role}:{},alumni,admin);
  await context.route('**/js/ready.js?v=*',route=>route.fulfill({contentType:'application/javascript',body:
-   'window.__readyRequests=[];window.portalSupabaseClient.functions.invoke=async(name,{body}={})=>{window.__readyRequests.push(body.action);if('+JSON.stringify(fail)+'&&window.__readyRequests.length===1)return {data:{error:"DATABASE_ERROR"},error:null};if(body.action==="mine")return {data:'+JSON.stringify(bundle)+',error:null};if(body.action==="class")return {data:{summary:{total_students:16,registered:8,github_active_7d:4,portfolio_missing:3,excellent:3,good:5,preparing:5,attention_count:3},peers:[]},error:null};return {data:{error:"FORBIDDEN"},error:null};};\n'+source
+   'window.__readyRequests=[];window.portalSupabaseClient.functions.invoke=async(name,{body}={})=>{window.__readyRequests.push(body.action);if('+JSON.stringify(fail)+'&&window.__readyRequests.length===1)return {data:{error:"DATABASE_ERROR"},error:null};if(body.action==="mine")return {data:'+JSON.stringify({...bundle,write:!inactive})+',error:null};if(body.action==="class")return {data:{summary:{total_students:16,registered:8,github_active_7d:4,portfolio_missing:3,excellent:3,good:5,preparing:5,attention_count:3},peers:[]},error:null};return {data:{error:"FORBIDDEN"},error:null};};\n'+source
  }));
  const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.goto(base+'/ready.html',{waitUntil:'domcontentloaded'});await page.waitForFunction(()=>document.querySelector('#ready-root')?.getAttribute('aria-busy')==='false'&&document.documentElement.dataset.portalAccess==='approved'&&!document.getElementById('learning-lock'));
@@ -33,7 +33,7 @@ async function geometry(page,width,role){
 }
 try{
  for(const width of [320,360,390,430,768,1280]){
-  for(const role of ['student','admin','alumni']){
+  for(const role of ['student','admin','alumni','early_employment','leave']){
    const {page,context,errors}=await fixture(width,role);
    await geometry(page,width,role);
    if(role==='student'){
@@ -51,6 +51,14 @@ try{
     await page.locator('[data-tab="guide"]').click();
     await page.locator('#readme-example').waitFor();
     await geometry(page,width,role+' guide');
+   }else if(['early_employment','leave'].includes(role)){
+    assert.equal(await page.locator('#notion-start').isDisabled(),true);
+    assert.equal(await page.locator('#check-now').isDisabled(),true);
+    assert.match(await page.locator('#ready-status').textContent(),/현재 취업 준비 점검 대상이 아닙니다/);
+    assert.deepEqual(await page.evaluate(()=>window.__readyRequests),['mine']);
+    await page.locator('[data-tab="profile"]').click();
+    assert.equal(await page.locator('input[name="notion_url"]').isDisabled(),true);
+    await geometry(page,width,role+' profile');
    }else{
     assert.deepEqual(await page.evaluate(()=>window.__readyRequests),[],role+' never calls student-only API');
     assert.equal(await page.locator('#ready-status').isVisible(),false);
