@@ -180,3 +180,77 @@
  .alumni-admin .alumni-overview-item .admin-actions>*{flex:1 1 calc(50% - 6px)}
 }
 @media(max-width:380px){.alumni-admin .alumni-overview-count span{font-size:13px}.alumni-admin .alumni-overview-item .admin-actions>*{flex:1 1 100%}}
+
+/* Content review only: a fixed header and independently scrolling article. */
+.alumni-admin #admin-content-dialog{
+ width:min(680px,calc(100% - 28px));max-width:calc(100% - 28px);max-height:88vh;max-height:min(88dvh,820px);
+ padding:0;overflow:hidden;margin:auto;border:1px solid #d5e0ee;border-radius:18px;
+ background:#fff;color:var(--admin-ink);box-shadow:0 20px 70px #0e244b55;
+}
+.alumni-admin #admin-content-dialog[open]{display:flex;flex-direction:column}
+.alumni-admin #admin-content-dialog::backdrop{background:rgba(13,29,51,.56)}
+.alumni-admin #admin-content-dialog .review-dialog-head{
+ display:flex;flex:0 0 auto;align-items:center;justify-content:space-between;gap:12px;
+ padding:16px 22px;border-bottom:1px solid #e1e8f1;background:#fff;
+}
+.alumni-admin #admin-content-dialog .review-dialog-heading{display:grid;gap:2px;min-width:0}
+.alumni-admin #admin-content-dialog .review-dialog-heading span{font-size:11px;font-weight:800;letter-spacing:.07em;color:var(--admin-primary);line-height:1.3}
+.alumni-admin #admin-content-dialog .review-dialog-heading h2{font-size:20px;font-weight:800;line-height:1.35;margin:0;letter-spacing:-.035em}
+.alumni-admin #admin-content-dialog #admin-close-content{
+ flex:0 0 auto;display:inline-flex;gap:6px;min-height:44px!important;padding:9px 12px!important;
+ border-radius:10px!important;background:#f4f7fb;color:#254d76;border:1px solid #d6e1ee;
+}
+.alumni-admin #admin-content-dialog #admin-close-content svg{width:16px;height:16px;flex:none}
+.alumni-admin #admin-content-detail{flex:1 1 auto;min-height:0;min-width:0;overflow-y:auto;overscroll-behavior:contain;padding:20px 22px 24px;scrollbar-width:thin}
+.alumni-admin #admin-content-dialog .review-card{display:grid;gap:16px;min-width:0;margin:0}
+.alumni-admin #admin-content-dialog .review-hero{
+ display:grid;gap:10px;min-width:0;padding:19px 20px;
+ background:linear-gradient(135deg,#eff6ff 0%,#f9fbff 100%);
+ border:1px solid #d8e6f7;border-left:4px solid var(--admin-primary);border-radius:12px;
+}
+.alumni-admin #admin-content-dialog .review-kinds{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.alumni-admin #admin-content-dialog .review-kind{
+ display:inline-flex;align-items:center;border-radius:999px;padding:5px 10px;font-size:12px;
+ font-weight:800;line-height:1.3;color:#245791;background:#e1ecfc;
+}
+.alumni-admin #admin-content-dialog .admin-badge{padding:5px 10px;font-size:12px;line-height:1.3}
+.alumni-admin #admin-content-dialog .review-title{
+ margin:0;color:#142c49;font-size:clamp(19px,3.2vw,24px);font-weight:800;line-height:1.42;
+ letter-spacing:-.035em;word-break:keep-all;overflow-wrap:anywhere;
+}
+.alumni-admin #admin-content-dialog .review-meta-grid{
+ margin:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;
+ border:1px solid #dfe7f1;border-radius:12px;overflow:hidden;background:#dfe7f1;
+}
+.alumni-admin #admin-content-dialog .review-meta-item{min-width:0;display:grid;align-content:start;gap:4px;padding:12px 14px;background:#f8fafd}
+.alumni-admin #admin-content-dialog .review-meta-item:only-child,.alumni-admin #admin-content-dialog .review-meta-item:last-child:nth-child(odd){grid-column:1/-1}
+.alumni-admin #admin-content-dialog .review-meta-item dt{margin:0;font-size:12px;color:#52667d;font-weight:700;line-height:1.4}
+.alumni-admin #admin-content-dialog .review-meta-item dd{margin:0;font-size:15px;font-weight:650;color:#172f4c;line-height:1.5;overflow-wrap:anywhere;word-break:keep-all}
+.alumni-admin #admin-content-dialog .review-section{display:grid;gap:9px;min-width:0}
+.alumni-admin #admin-content-dialog .review-section>h3{
+ display:flex;align-items:center;gap:8px;margin:0;color:var(--admin-ink);font-size:16px;
+ line-height:1.4;font-weight:800;letter-spacing:-.02em;
+}
+.alumni-admin #admin-content-dialog .review-section>h3::before{content:"";display:block;flex:0 0 3px;height:15px;border-radius:2px;background:var(--admin-primary)}
+.alumni-admin #admin-content-dialog .review-body{padding:16px;border:1px solid #e1e7ef;border-radius:12px;background:#fff}
+.alumni-admin #admin-content-dialog .review-body-text{
+ margin:0;white-space:pre-wrap;font-size:16px;line-height:1.72;color:#243c57;
+ word-break:keep-all;overflow-wrap:anywhere;
+}
+.alumni-admin #admin-content-dialog .review-link{
+ display:grid;gap:5px;padding:12px 14px;border:1px solid #d6e5f6;border-radius:10px;background:#f5f9ff;
+ font-weight:750;font-size:15px;line-height:1.4;overflow-wrap:anywhere;
+}
+.alumni-admin #admin-content-dialog .review-link span{font-size:12px;font-weight:400;color:#52667d;overflow-wrap:anywhere}
+@media(max-width:700px){
+ .alumni-admin #admin-content-dialog{width:calc(100% - 20px);max-width:calc(100% - 20px);max-height:88vh;max-height:88dvh;border-radius:16px}
+ .alumni-admin #admin-content-dialog .review-dialog-head{padding:12px 15px}
+ .alumni-admin #admin-content-dialog .review-dialog-heading h2{font-size:18px}
+ .alumni-admin #admin-content-detail{padding:15px 14px 20px}
+ .alumni-admin #admin-content-dialog .review-card{gap:14px}
+ .alumni-admin #admin-content-dialog .review-hero{padding:15px 13px}
+ .alumni-admin #admin-content-dialog .review-title{font-size:20px}
+ .alumni-admin #admin-content-dialog .review-meta-item{padding:10px 11px}
+ .alumni-admin #admin-content-dialog .review-body{padding:13px}
+}
+@media(max-width:340px){.alumni-admin #admin-content-dialog .review-meta-grid{grid-template-columns:1fr}}
