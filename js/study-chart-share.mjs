@@ -42,17 +42,17 @@ export function drawStudyShareCanvas(canvas,model){
  text(DEPARTMENT,left,58,32,"#cfebfa",600);
  text(model.title,left,118,54,"#ffffff",800);
  text(model.period,left,183,36,"#ffffff",600);
- text("요일별 공부시간 · 참여 학생 수",left,280,35,"#173a63",750);
+ text("요일별 공부시간 · 참여 학생 수",left,280,35,"#173a63",700);
  const max=Math.max(1,...model.rows.map(row=>row.hours));
  model.rows.forEach((row,i)=>{
   const y=326+i*109;
-  text(row.day+"요일 · "+number.format(row.count)+"명",left,y+25,36,"#173a63",650,"left",width*.62);
+  text(row.day+"요일 · "+number.format(row.count)+"명",left,y+25,36,"#173a63",600,"left",width*.62);
   text(hourText(row.hours),right,y+25,37,"#14365c",800,"right",width*.36);
   rect(left,y+54,width,24,12,"#e4edf5");
   rect(left,y+54,width*row.hours/max,24,12,COLORS[i]);
  });
  rect(left,1112,width,94,20,"#eaf2fa");
- text("주간 누적 공부시간",left+26,1159,34,"#173a63",650,"left",width*.55);
+ text("주간 누적 공부시간",left+26,1159,34,"#173a63",600,"left",width*.55);
  text(hourText(model.total),right-26,1159,44,"#245e9d",800,"right",width*.4);
  text(NOTE,540,1243,26,"#52657d",500,"center",936);
  text(SCHOOL,540,1285,30,"#173a63",700,"center",936);

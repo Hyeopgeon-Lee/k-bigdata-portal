@@ -1,6 +1,6 @@
 /* Super-admin study attendance dashboard; RPC enforces professor authorization. */
 import {isStaleSession} from './study-session-state.mjs';
-import {studyShareModel,attachStudyChartShare} from './study-chart-share.mjs?v=20261128-study-share-1';
+import {studyShareModel,attachStudyChartShare} from './study-chart-share.mjs?v=20261128-study-share-2';
 const db=window.portalSupabaseClient,$=id=>document.getElementById(id);
 const DAY=86400000,Z=9*3600000;
 const kdate=value=>new Date(new Date(value).getTime()+Z).toISOString().slice(0,10);
