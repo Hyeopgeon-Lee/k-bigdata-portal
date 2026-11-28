@@ -1,0 +1,44 @@
+name: Student weekly dashboard snapshots
+on:
+  schedule:
+    - cron: "0 23 * * 0"
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/student-weekly-report.yml"
+      - "supabase/functions/student-weekly-report/**"
+permissions:
+  contents: read
+  id-token: write
+concurrency:
+  group: student-weekly-dashboard
+  cancel-in-progress: false
+jobs:
+  generate-snapshots:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Generate private snapshots (push only verifies authorization)
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          FUNCTION_URL: https://zjsindkakjfzmjgrkaou.supabase.co/functions/v1/student-weekly-report
+        shell: bash
+        run: |
+          set -euo pipefail
+          offset=0
+          for i in $(seq 1 100); do
+            response=$(curl --fail --silent --show-error --retry 3 --max-time 12 \
+              -H "Authorization: Bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" \
+              "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=kbigdata-student-weekly-report")
+            token=$(printf '%s' "$response" | python3 -c 'import json,sys; print(json.load(sys.stdin)["value"])')
+            dry=false
+            if [[ "$EVENT_NAME" == "push" ]]; then dry=true; fi
+            result=$(curl --fail-with-body --silent --show-error --retry 2 --max-time 80 \
+              -X POST "$FUNCTION_URL" -H "Authorization: Bearer $token" -H "Content-Type: application/json" \
+              --data "{\"action\":\"scheduled\",\"offset\":$offset,\"dry_run\":$dry}")
+            printf '%s\n' "$result"
+            offset=$(printf '%s' "$result" | python3 -c 'import json,sys; x=json.load(sys.stdin); assert x["ok"]; print(x.get("next") if x.get("next") is not None else "end")')
+            if [[ "$offset" == "end" ]]; then exit 0; fi
+          done
+          exit 1

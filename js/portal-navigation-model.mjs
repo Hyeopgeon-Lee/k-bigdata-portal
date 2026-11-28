@@ -10,6 +10,7 @@ export const portalPages = {
   'study-absence': {title:'자율학습 미참여 사유', group:null, locked:true},
   mypage: {title:'마이페이지', group:null, locked:true},
   'my-certifications': {title:'나의 자격증', group:null, navGroup:'learning', locked:true},
+  'weekly-report': {title:'나의 주간 리포트', group:null, navGroup:'learning', eyebrow:'STUDENT DASHBOARD · WEEKLY REPORT', description:'지난주 학습과 취업 준비를 돌아보고 이번 주를 계획하세요.', locked:true},
   'my-learning': {title:'나의 학습현황', group:null, navGroup:'learning', eyebrow:'STUDENT LEARNING · MY PROGRESS', description:'문제풀이와 오답 복습 현황을 확인하세요.', locked:true},
   'teacher-learning': {title:'학급 학습통계', group:null, navGroup:'learning', eyebrow:'SUPER ADMIN · WEEKLY LEARNING', description:'학생 학습 현황과 주간 메일 발송을 관리하세요.', locked:true},
   'engineer-written': {title:'정보처리기사 필기 기출문제',group:'learning',eyebrow:'WRITTEN EXAM',description:'2022·2023·2024·2025년 1·2·3회와 2026년 1·2회 총 1,400문항을 학습하세요.',headingId:'engineer-written-title',quiz:true},

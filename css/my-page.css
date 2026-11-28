@@ -87,3 +87,5 @@
 .my-page-transfer-form .my-page-message{margin:0}
 .my-page-transfer-prior{grid-column:1/-1;justify-self:start;min-height:44px;padding:8px 12px;border:1px solid #b7c8dc;border-radius:9px;color:#173f8f;background:#f7faff;font:inherit;font-size:14px;font-weight:700;cursor:pointer}
 @media(max-width:480px){.my-page-transfer-form .my-page-status-fieldset,.my-page-transfer-names{grid-template-columns:minmax(0,1fr)}.my-page-transfer-prior{width:100%}}
+
+.my-page-weekly-shortcut{border-color:#c6d8f4;background:linear-gradient(130deg,#edf4ff,#fff 75%)}.my-page-weekly-shortcut .my-page-kicker{color:#245cb3}.my-page-weekly-tag{flex-shrink:0;font-size:12px;font-weight:750;padding:6px 10px;border-radius:20px;background:#dceaff;color:#184b99}.my-page-weekly-shortcut .my-page-panel-head{gap:8px;flex-wrap:wrap}
