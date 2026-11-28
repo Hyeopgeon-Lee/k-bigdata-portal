@@ -45,7 +45,19 @@ try{
     assert.equal(await page.evaluate(()=>window.__requests.length),0);
    }
    await page.goto(base+'/mypage.html',{waitUntil:'domcontentloaded'});await page.waitForFunction(()=>!document.getElementById('learning-lock')&&document.documentElement.dataset.portalAccess==='approved');
-   assert.equal(await page.locator('#my-page-weekly-shortcut').isVisible(),role==='student',role+' mypage visibility');
+   assert.equal(await page.locator('#my-page-weekly-shortcut').count(),0,'duplicate My Page shortcut removed');
+   await page.locator('#portal-account-button').click();
+   const settings=page.locator('.portal-account-section').filter({has:page.getByRole('heading',{name:'계정 설정',exact:true})});
+   const titles=await settings.locator('.portal-account-action-title').allTextContents();
+   assert.deepEqual(titles,role==='student'?['마이페이지','나의 주간 리포트','나의 자격증']:role==='admin'?['마이페이지']:['마이페이지','나의 자격증'],role+' account menu order');
+   const reportLink=settings.getByRole('link',{name:/나의 주간 리포트/});
+   assert.equal(await reportLink.count(),role==='student'?1:0,role+' account menu visibility');
+   if(role==='student'){
+    assert.match(await reportLink.getAttribute('href'),/weekly-report\.html$/);
+    await reportLink.click();
+    await page.waitForURL('**/weekly-report.html');
+    await page.locator('#wr-content').waitFor({state:'visible'});
+   }
    assert.deepEqual(errors,[]);
    await context.close();console.log('PASS',width,role);
   }

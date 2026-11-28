@@ -2,7 +2,7 @@ name: Student weekly report dashboard QA
 on:
   push:
     branches: [main]
-    paths: ['weekly-report.html','mypage.html','js/weekly-report.js','js/my-page.js','css/weekly-report.css','css/my-page.css','supabase/functions/student-weekly-report/**','supabase/functions/ready-api/rules.mjs','supabase/migrations/*student_weekly_reports.sql','tests/student-weekly-report*','.github/workflows/student-weekly-report-qa.yml']
+    paths: ['weekly-report.html','mypage.html','js/weekly-report.js','js/my-page.js','js/portal-auth.mjs','js/portal-navigation.js','css/weekly-report.css','css/my-page.css','supabase/functions/student-weekly-report/**','supabase/functions/ready-api/rules.mjs','supabase/migrations/*student_weekly_reports.sql','tests/student-weekly-report*','.github/workflows/student-weekly-report-qa.yml']
   workflow_dispatch:
 permissions:
   contents: read

@@ -369,6 +369,7 @@ function renderAccount(){
 
   const accountSettings=addSection("계정 설정");
   addAction(accountSettings,{title:"마이페이지",detail:"내 정보 · 비밀번호 · 학적 상태",href:"mypage.html"});
+  if(!isAdmin&&activeWrite&&currentProfile?.signup_type==="student"&&currentProfile?.approval_status==="approved"&&currentProfile?.enrollment_status==="enrolled")addAction(accountSettings,{title:"나의 주간 리포트",detail:"지난주 학습 · 취업 준비 · 이번 주 일정",href:"weekly-report.html"});
   if(!isAdmin&&["student","alumni"].includes(currentProfile?.signup_type))addAction(accountSettings,{title:"나의 자격증",detail:"필기합격 · 최종합격 등록과 확인",href:"my-certifications.html"});
 
   // Personal learning and device-data migration belong to student/alumni accounts only.

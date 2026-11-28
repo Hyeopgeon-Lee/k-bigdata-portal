@@ -85,7 +85,6 @@ async function start(){
  // Default-hidden shortcut is exposed only after both checks pass.
  const adminAllowed=context.isAdmin;
  initUniversityTransfer(profile,adminAllowed);
- byId("my-page-weekly-shortcut").hidden=adminAllowed!==false||profile.signup_type!=="student"||profile.approval_status!=="approved"||profile.enrollment_status!=="enrolled";
  byId("my-page-cert-shortcut").hidden=adminAllowed!==false||!["student","alumni"].includes(profile.signup_type);
  if(["student","alumni"].includes(profile.signup_type)){
   byId("my-page-mobile-summary").hidden=false;

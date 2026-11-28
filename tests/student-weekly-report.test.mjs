@@ -29,3 +29,8 @@ const edge=readFileSync(new URL('../supabase/functions/student-weekly-report/ind
 assert.match(edge,/caller\.auth\.getUser\(token\)/);assert.match(edge,/caller\.rpc\("ready_access"\)/);assert.match(edge,/eligible\(\)\.eq\("user_id",auth\.user\.id\)/);assert.doesNotMatch(edge,/body\.user_id/);
 const sql=readFileSync(new URL('../supabase/migrations/20261128180000_student_weekly_reports.sql',import.meta.url),'utf8');assert.match(sql,/enable row level security/);assert.match(sql,/revoke all on public\.student_weekly_reports from public, anon, authenticated/);
 console.log('PASS: KST boundaries, activity counts, ungraded and review exclusions, calendar grade restrictions, tasks and access rules.');
+
+const auth=readFileSync(new URL('../js/portal-auth.mjs',import.meta.url),'utf8');
+const account=auth.slice(auth.indexOf('const accountSettings=addSection'),auth.indexOf('// Personal learning and device-data migration'));
+assert.match(account,/마이페이지[\s\S]*나의 주간 리포트[\s\S]*나의 자격증/);
+assert.match(account,/if\(!isAdmin&&activeWrite&&currentProfile\?\.signup_type==="student"&&currentProfile\?\.approval_status==="approved"&&currentProfile\?\.enrollment_status==="enrolled"\)addAction\(accountSettings,\{title:"나의 주간 리포트".*href:"weekly-report.html"/);

@@ -24,7 +24,7 @@ test('single auth module and database-owned permissions',()=>{
  assert.match(sql,/public\.portal_super_admin_allowed\(\)/);
  assert.match(sql,/revoke all on function public\.portal_bootstrap\(\) from public,anon/);
  assert.match(read('admin/js/guard.mjs'),/context\.isAdmin!==true/);
- assert.match(read('js/portal-navigation.js'),/portal-auth\.mjs\?v=20261128-performance-1/);
+ assert.match(read('js/portal-navigation.js'),/portal-auth\.mjs\?v=20261128-weekly-menu-1/);
 });
 test('shared written read model and personal overview stay scoped',()=>{
  const sql=read('supabase/migrations/20261127215042_portal_perf_shared_written_read_model.sql');

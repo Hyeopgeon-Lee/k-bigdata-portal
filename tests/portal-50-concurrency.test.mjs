@@ -17,9 +17,9 @@ test('auth checks are throttled without weakening server authorization',()=>{
  for(const p of ['js/portal-personal.js','js/home-engagement.js','js/learning-activity.mjs'])
   assert.match(read(p),/portalVerifiedUserId/,p);
  const nav=read('js/portal-navigation.js');
- assert.match(nav,/portal-auth\.mjs\?v=20261128-performance-1/);
+ assert.match(nav,/portal-auth\.mjs\?v=20261128-weekly-menu-1/);
  for(const p of ['study.html','help.html','admin/index.html'])
-  assert.match(read(p),/portal-auth\.mjs\?v=20261128-performance-1/);
+  assert.match(read(p),/portal-auth\.mjs\?v=20261128-weekly-menu-1/);
 });
 test('home, directory and shared shell reuse one personal-state singleton',()=>{
  const files=['js/portal-shell.js','js/home-dashboard.js','js/directory.js'];
