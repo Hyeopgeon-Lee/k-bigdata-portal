@@ -83,11 +83,18 @@ function render(){
   ui.renderDonut(ui.chartMount($('study-admin-summary'),'study-plan-chart'),'계획 등록 현황',[
    ['계획 등록',plannedStudents],['미등록',students.length-plannedStudents]
   ],{caption:ui.gradeLabel(grade)+' · 선택 주간, 0일 계획 포함'});
-  const days=[0,0,0,0,0,0,0],ids=new Set(students.map(s=>s.id));
-  for(const session of report.sessions){if(!ids.has(session.user_id))continue;
-   const day=kdate(session.started_at);for(let i=0;i<7;i++)if(day===dateAt(week,i))days[i]+=sessionDuration(session)/3600;
+  const days=[0,0,0,0,0,0,0],dailyStudents=Array.from({length:7},()=>new Set()),ids=new Set(students.map(s=>s.id));
+  for(const session of report.sessions){
+   if(!ids.has(session.user_id))continue;
+   const seconds=sessionDuration(session);
+   if(!(seconds>0))continue;
+   const day=kdate(session.started_at);
+   for(let i=0;i<7;i++)if(day===dateAt(week,i)){
+    days[i]+=seconds/3600;
+    dailyStudents[i].add(session.user_id);
+   }
   }
-  ui.renderBars(ui.chartMount($('study-admin-summary'),'study-days-chart'),'요일별 공부시간',days.map((v,i)=>[['월','화','수','목','금','토','일'][i],Math.round(v*10)/10]),{unit:'시간',caption:'휴식시간·검토 대상 세션 제외'});
+  ui.renderBars(ui.chartMount($('study-admin-summary'),'study-days-chart'),'요일별 공부시간',days.map((v,i)=>[['월','화','수','목','금','토','일'][i]+' · '+dailyStudents[i].size+'명',Math.round(v*10)/10]),{unit:'시간',caption:'실제 공부한 학생 수(중복 제외) · 휴식시간·검토 대상 세션 제외'});
  }
  const comparison=$('study-grade-comparison');
  if(comparison&&ui){
