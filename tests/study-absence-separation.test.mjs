@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
 import {execFileSync} from "node:child_process";
+import {renderPortalMail} from "../supabase/functions/_shared/portal-mail.mjs";
 const read=p=>readFileSync(new URL("../"+p,import.meta.url),"utf8");
 const plan=read("study.html");
 const planScript=read("js/study.js");
@@ -32,7 +33,10 @@ assert.match(reasonScript,/onConflict:"user_id,study_date"/,"save preserves curr
 assert.match(reasonScript,/if\(!kinds\.has\(reason\)\)/,"reason allowlist");
 assert.match(reasonScript,/description\.length>500/,"input length limited");
 assert.match(worker,/study-absence\.html\?reason=/,"email now opens new page");
-assert.match(worker,/>미참여 사유 입력</,"button still present");
+assert.match(worker,/actions:\[\{href:link,label:"미참여 사유 입력"\}\]/,"button still present");
+const link="https://portal.k-bigdata.kr/study-absence.html?reason=2026-11-28";
+const html=renderPortalMail({kind:"study",title:"미참여 사유 안내",actions:[{href:link,label:"미참여 사유 입력"}]});
+assert.ok(html.includes('href="'+link+'"')&&html.includes("미참여 사유 입력"),"rendered email keeps the date-specific form CTA");
 assert.match(stylesheet,/@media\(max-width:640px\)/,"mobile layout covered");
 for(const p of ["js/study.js","js/study-absence.js","js/portal-navigation-model.mjs"])
  execFileSync("node",["--check",new URL("../"+p,import.meta.url).pathname],{stdio:"pipe"});
