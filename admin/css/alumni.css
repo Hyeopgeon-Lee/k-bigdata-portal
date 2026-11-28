@@ -261,3 +261,5 @@
  .alumni-admin #admin-content-dialog .review-body{padding:13px}
 }
 @media(max-width:340px){.alumni-admin #admin-content-dialog .review-meta-grid{grid-template-columns:1fr}}
+.mail-quota{background:#f2f6fc;border:1px solid #d6e4f2;border-radius:12px;padding:14px;margin:12px 0;color:#23466b;overflow-wrap:anywhere}
+.mail-quota p{margin:6px 0}

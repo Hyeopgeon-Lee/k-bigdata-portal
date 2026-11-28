@@ -1,5 +1,8 @@
 import { createClient } from "npm:@supabase/supabase-js@2.49.10";
 import { renderAlumniAnnouncement, renderPortalMail, mailParagraph, mailCallout, mailDetails } from "../_shared/portal-mail.mjs";
+import { handleEvent, unsubscribeEvent } from "./events.ts";
+import { quotaPreview, withMailQuota, MailQuotaError } from "../_shared/mail-quota.mjs";
+const usageKey=()=>Deno.env.get("RESEND_USAGE_API_KEY")||Deno.env.get("RESEND_API_KEY")||"";
 const url=Deno.env.get("SUPABASE_URL")!;
 const secret=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const publishable=Deno.env.get("SUPABASE_ANON_KEY")!;
@@ -211,6 +214,7 @@ async function mail(to:string,subject:string,html:string,key:string){
  });
  const responseData=await response.json().catch(()=>({}));
  if(!response.ok||!responseData.id){
+  if(responseData.name==="daily_quota_exceeded"||responseData.name==="monthly_quota_exceeded")throw new MailQuotaError("Resend 무료 발송 한도를 초과해 발송을 중단했습니다.");
   const message="메일 발송 오류 ("+response.status+")";
   if(response.status>=400&&response.status<500&&response.status!==408&&response.status!==409)throw new MailRejectedError(message);
   throw Error(message);
@@ -245,8 +249,9 @@ async function notice(event:string,kind:string,recordId:string,to:string,subject
   return true;
  }catch(e){
   await admin.from("alumni_network_mail_outbox").update({
-   status:(event==="job_item"||event==="news_digest")&&!(e instanceof MailRejectedError)?"sending":"failed",error_message:text((e as Error)?.message,250)
+   status:(event==="job_item"||event==="news_digest"||event.startsWith("event_"))&&!(e instanceof MailRejectedError)&&!(e instanceof MailQuotaError)?"sending":"failed",error_message:text((e as Error)?.message,250)
   }).eq("id",row!.id);
+  if(e instanceof MailQuotaError)throw e;
   return false;
  }
 }
@@ -361,6 +366,7 @@ function safeContactMessage(delta:unknown,legacy:unknown):{plain:string;html:str
 }
 
 async function handle(action:string,b:Record<string,unknown>,a:Actor){
+ if(action.startsWith("event")||action.startsWith("adminEvent"))return handleEvent(action,b,a,admin,notice);
  let alumniPromise:Promise<Rec[]>|null=null;
  const allAlumni=()=>alumniPromise??=(rows("alumni"));
  const approved=async()=> (await allAlumni()).filter(r=>r.data.status==="APPROVED");
@@ -680,9 +686,11 @@ async function handle(action:string,b:Record<string,unknown>,a:Actor){
   const recipients=await loadRecipients(kind,record.source_id,groups);
   const token=await fingerprint(recipients,groups,record),counts=mailCounts(recipients,groups);
   const announcement=renderAlumniAnnouncement(kind,record.source_id,record.data);
-  if(action==="adminMailPreview")return okay({token,counts,total:recipients.length,available:recipients.filter(x=>!x.sent&&!x.sending).length,subject:announcement.subject,html:announcement.html});
+  const available=recipients.filter(x=>!x.sent&&!x.sending).length;
+  if(action==="adminMailPreview")return okay({token,counts,total:recipients.length,available,subject:announcement.subject,html:announcement.html,quota:await quotaPreview(usageKey(),available)});
   if(b.confirmed!==true||b.token!==token)throw Error("발송 대상 또는 게시 내용이 변경되었습니다. 다시 대상 인원을 확인해 주세요.");
   if(!resend)throw Error("메일 발송 설정이 준비되지 않았습니다.");
+  return await withMailQuota(admin,usageKey(),available,async()=>{
   const cursor=Number(b.cursor??0);
   if(!Number.isInteger(cursor)||cursor<0||cursor>recipients.length)throw Error("잘못된 발송 위치입니다.");
   // Small bounded batches keep requests within Edge Function limits; no duplicate automatic retries.
@@ -712,6 +720,7 @@ async function handle(action:string,b:Record<string,unknown>,a:Actor){
    if(error)throw Error("발송 기록 상태 저장에 실패했습니다. 재시도 전에 발송 이력을 확인해 주세요.");
   }
   return okay({sent,failed,next_cursor:end,done:end>=recipients.length});
+  });
  }
  case "adminRunJobDigest":{
   await adminOnly(a);
@@ -722,9 +731,10 @@ async function handle(action:string,b:Record<string,unknown>,a:Actor){
   await adminOnly(a);
   const career=action==="adminSendCareerConsentInvites";
   const key=career?"career_mail_enabled":"alumni_news_mail_enabled";
+  const candidates=(await approved()).filter(person=>!text(person.data[key]));
+  return await withMailQuota(admin,usageKey(),candidates.length,async()=>{
   let sent=0,failed=0;
-  for(const person of await approved()){
-   if(text(person.data[key]))continue;
+  for(const person of candidates){
    const email=text(person.data.email);
    const message="학과 포털 로그인 후 졸업생 네트워크의 내 정보에서 "+(career?"채용공고":"동문소식")+" 메일 수신 여부를 설정해 주세요.";
    if(await notice("consent_"+key,"alumni",person.source_id,email,"[동문 네트워크] 수신 설정 안내",
@@ -732,6 +742,7 @@ async function handle(action:string,b:Record<string,unknown>,a:Actor){
    else failed++;
   }
   return {success:true,message:"안내 메일 "+sent+"건 발송, "+failed+"건 실패"};
+  });
  }
  default:throw Error("지원하지 않는 기능입니다: "+text(action,60));
  }
@@ -763,6 +774,7 @@ Deno.serve(async(request:Request)=>{
  const action=text(body.action,80);
  if(!action)return err("요청 기능이 지정되지 않았습니다.");
  try{
+  if(action==="eventUnsubscribe")return result(await unsubscribeEvent(admin,(body.data as Record<string,unknown>)?.token));
   const a=await actor(request);
   const run=()=>handle(action,(body.data&&typeof body.data==="object"&&!Array.isArray(body.data)?
    body.data:{} ) as Record<string,unknown>,a);
