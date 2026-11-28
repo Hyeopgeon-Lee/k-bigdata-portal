@@ -190,3 +190,10 @@ body[data-admin-page]{
  .admin-main .admin-card-grid{min-width:0}
 }
 
+
+/* Transfer report uses the same mobile table and charts as unified users. */
+.users-transfer-report[hidden]{display:none!important}
+.users-transfer-report{min-width:0;border:1px solid var(--admin-border);border-radius:14px;padding:clamp(12px,2vw,20px);background:#f8fafd}
+.users-transfer-report>h3{margin-top:0}
+.users-transfer-report .users-filters{margin:12px 0}
+.users-transfer-report .users-table-scroll{margin:12px 0}

@@ -20,7 +20,7 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/style.css?v=20261112-page-intro-2">
 <link rel="stylesheet" href="css/portal-ux.css?v=20261112-page-intro-2">
-<link rel="stylesheet" href="css/my-page.css?v=20261128-alumni-mail-1">
+<link rel="stylesheet" href="css/my-page.css?v=20261128-transfer-1">
 <!-- portal:assets:start (generated; edit scripts/portal-shell-template.mjs) -->
 <link rel="stylesheet" href="css/portal-navigation.css?v=20261112-page-intro-2">
 <script defer src="js/portal-navigation.js?v=20261128-performance-1"></script>
@@ -83,6 +83,27 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
       <p class="my-page-description">자격증 합격 이력을 관리하세요.</p>
       <a class="my-page-cert-link" href="my-certifications.html">자격증 등록 · 관리 →</a>
     </section>
+    <section class="my-page-panel my-page-summary my-page-transfer" id="my-page-transfer-panel" aria-labelledby="my-page-transfer-heading" hidden>
+      <div class="my-page-panel-head"><div><p class="my-page-kicker">UNIVERSITY TRANSFER</p><h2 id="my-page-transfer-heading">대학교 편입 정보</h2></div><span class="my-page-state" id="my-page-transfer-state">확인 중</span></div>
+      <p class="my-page-description">편입 현황을 등록하거나 변경하세요. 등록 정보는 본인과 학과 관리자만 확인할 수 있습니다.</p>
+      <form id="my-page-transfer-form" class="my-page-transfer-form">
+        <fieldset id="my-page-transfer-options" class="my-page-status-fieldset" disabled>
+          <legend>편입 상태</legend>
+          <label class="my-page-option"><input type="radio" name="transfer_status" value="none" required><span><strong>편입 계획 없음</strong></span></label>
+          <label class="my-page-option"><input type="radio" name="transfer_status" value="preparing"><span><strong>편입 준비 중</strong></span></label>
+          <label class="my-page-option"><input type="radio" name="transfer_status" value="accepted"><span><strong>편입 합격</strong></span></label>
+          <label class="my-page-option"><input type="radio" name="transfer_status" value="completed"><span><strong>편입 완료</strong></span></label>
+        </fieldset>
+        <div id="my-page-transfer-names" class="my-page-transfer-names" hidden>
+          <label for="my-page-transfer-university">대학교명 (필수)<input name="university" id="my-page-transfer-university" type="text" maxlength="120" placeholder="예: 숭실대학교" autocomplete="off" disabled></label>
+          <label for="my-page-transfer-department">학과명 (필수)<input name="department" id="my-page-transfer-department" type="text" maxlength="120" placeholder="예: 컴퓨터학부" autocomplete="off" disabled></label>
+          <button id="my-page-transfer-use-prior" class="my-page-transfer-prior" type="button" hidden>기존 동문 학력 정보 불러오기</button>
+        </div>
+        <button class="my-page-primary" type="submit" disabled>편입 정보 저장</button>
+        <p id="my-page-transfer-message" class="my-page-message" role="status" aria-live="polite"></p>
+        <button id="my-page-transfer-retry" class="my-page-transfer-prior" type="button" hidden>다시 조회</button>
+      </form>
+    </section>
     <section class="my-page-panel" id="my-page-alumni-mail-panel" aria-labelledby="my-page-alumni-mail-heading" hidden>
       <div class="my-page-panel-head"><div><p class="my-page-kicker">EMAIL</p><h2 id="my-page-alumni-mail-heading">채용정보 · 동문소식 메일 수신</h2></div></div>
       <p>원하는 안내만 선택하세요. 언제든 수신 동의를 변경할 수 있습니다. 학습 리포트 이메일 설정과 별개입니다.</p>
@@ -138,6 +159,6 @@ body > :not(#portal-auth-layer):not(#learning-notice){display:none!important}
 <div class="container footer-bottom"><p>© <span id="current-year"></span> K-BigData Service Portal</p></div>
 </footer>
 <script type="module" src="js/portal-auth.mjs?v=20261128-performance-1"></script>
-<script type="application/x-learning" data-module="js/my-page.js?v=20261128-alumni-mail-1"></script>
+<script type="application/x-learning" data-module="js/my-page.js?v=20261128-transfer-1"></script>
 <script type="application/x-learning" data-module="js/portal-shell-entry.js?v=20261128-ready-1"></script>
 </body></html>

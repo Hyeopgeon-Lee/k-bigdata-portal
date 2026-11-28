@@ -72,3 +72,18 @@
 
 #my-page-alumni-mail-form label{display:flex;align-items:center;gap:10px;border:1px solid #cbd8e8;border-radius:10px;padding:10px 12px;margin:0;min-height:46px;word-break:keep-all}
 #my-page-alumni-mail-form input[type="checkbox"]{width:20px;height:20px;min-height:20px;flex:0 0 20px;padding:0;accent-color:#173f8f}
+
+/* University transfer: only this card is styled; other account panels are unchanged. */
+.my-page-transfer-form{display:grid;gap:12px;max-width:720px}
+.my-page-transfer-form [hidden]{display:none!important}
+.my-page-transfer-form .my-page-status-fieldset{grid-template-columns:repeat(2,minmax(0,1fr))}
+.my-page-transfer-form legend{padding:0 0 9px;color:#293e60;font-weight:800;font-size:14px}
+.my-page-transfer-form .my-page-option{min-height:54px}
+.my-page-transfer-names{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.my-page-transfer-names label{display:grid;gap:7px;color:#293e60;font-size:14px;font-weight:750;min-width:0}
+.my-page-transfer-names input{width:100%;min-width:0;min-height:46px;padding:10px 12px;border:1px solid #bfcde0;border-radius:9px;background:#fff;color:#172b4d;font:inherit;font-size:16px}
+.my-page-transfer-names input:focus-visible,.my-page-transfer-prior:focus-visible{outline:3px solid #8bb5f9;outline-offset:1px}
+.my-page-transfer-form .my-page-primary{margin-top:0}
+.my-page-transfer-form .my-page-message{margin:0}
+.my-page-transfer-prior{grid-column:1/-1;justify-self:start;min-height:44px;padding:8px 12px;border:1px solid #b7c8dc;border-radius:9px;color:#173f8f;background:#f7faff;font:inherit;font-size:14px;font-weight:700;cursor:pointer}
+@media(max-width:480px){.my-page-transfer-form .my-page-status-fieldset,.my-page-transfer-names{grid-template-columns:minmax(0,1fr)}.my-page-transfer-prior{width:100%}}

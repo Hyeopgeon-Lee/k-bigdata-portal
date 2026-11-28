@@ -8,6 +8,68 @@ const mobileDigits=value=>String(value??"").replace(/[ -]/g,"");
 const validMobile=value=>/^[0-9 -]+$/.test(String(value??"").trim())&&/^01[016789][0-9]{7,8}$/.test(mobileDigits(value));
 const displayMobile=value=>String(value??"").replace(/^(01\d)(\d{3,4})(\d{4})$/,"$1-$2-$3");
 function statusLabel(profile){return profile.enrollment_status==="early_employment"?"조기취업":profile.enrollment_status==="graduated"?"졸업":profile.enrollment_status==="leave"?"휴학":[1,2].includes(Number(profile.academic_year))?profile.academic_year+"학년":"학년 미설정";}
+const transferLabels={none:"편입 계획 없음",preparing:"편입 준비 중",accepted:"편입 합격",completed:"편입 완료"};
+function canRegisterTransfer(profile,isAdmin){
+ return isAdmin===false&&profile.approval_status==="approved"&&(
+  (profile.signup_type==="student"&&((profile.enrollment_status==="enrolled"&&Number(profile.academic_year)===2)||["early_employment","graduated"].includes(profile.enrollment_status)))||
+  (profile.signup_type==="alumni"&&profile.enrollment_status==="graduated"));
+}
+function initUniversityTransfer(profile,isAdmin){
+ if(!canRegisterTransfer(profile,isAdmin))return;
+ const panel=byId("my-page-transfer-panel"),form=byId("my-page-transfer-form");
+ if(!panel||!form)return;
+ const fields=byId("my-page-transfer-options"),names=byId("my-page-transfer-names"),retry=byId("my-page-transfer-retry"),priorButton=byId("my-page-transfer-use-prior");
+ const message="my-page-transfer-message",status=byId("my-page-transfer-state");
+ const uni=form.elements.university,dept=form.elements.department,save=form.querySelector('button[type="submit"]');
+ let prior=null,loading=false,ready=false;
+ panel.hidden=false;
+ function refresh(){
+  const hasNames=["accepted","completed"].includes(form.elements.transfer_status.value);
+  names.hidden=!hasNames;uni.disabled=dept.disabled=loading||!ready||!hasNames;uni.required=dept.required=hasNames;
+  fields.disabled=loading||!ready;
+  priorButton.hidden=!hasNames||!prior;priorButton.disabled=loading||!ready;
+  save.disabled=loading||!ready||!Object.hasOwn(transferLabels,form.elements.transfer_status.value);
+  save.setAttribute("aria-busy",String(loading));
+  selectedCards(form);
+ }
+ function showRecord(record){
+  form.elements.transfer_status.value=record?.transfer_status||"";
+  if(!record?.transfer_status)for(const el of fields.querySelectorAll("input"))el.checked=false;
+  uni.value=record?.university||"";dept.value=record?.department||"";
+  status.textContent=transferLabels[record?.transfer_status]||"미등록";
+ }
+ async function load(){
+  loading=true;ready=false;retry.hidden=true;refresh();notify(message,"편입 정보를 불러오고 있습니다.");
+  try{
+   const {data,error}=await api.rpc("my_university_transfer");
+   if(error||!data)throw error||Error("EMPTY_TRANSFER");
+   prior=data.prior_education?.university&&data.prior_education?.department?data.prior_education:null;
+   showRecord(data.record);
+   ready=true;notify(message,data.record?"등록된 편입 정보를 수정할 수 있습니다.":"편입 상태를 선택하고 저장해 주세요.");
+  }catch{status.textContent="조회 실패";retry.hidden=false;notify(message,"편입 정보를 불러오지 못했습니다. 다시 조회해 주세요.","error");}
+  finally{loading=false;refresh();}
+ }
+ retry.addEventListener("click",()=>void load());
+ priorButton.addEventListener("click",()=>{if(prior&&!loading){uni.value=prior.university;dept.value=prior.department;uni.focus();}});
+ form.addEventListener("change",refresh);
+ form.addEventListener("submit",async event=>{
+  event.preventDefault();if(loading||!ready)return;
+  const chosen=form.elements.transfer_status.value,hasNames=["accepted","completed"].includes(chosen);
+  if(!Object.hasOwn(transferLabels,chosen)){notify(message,"편입 상태를 선택해 주세요.","error");return;}
+  const university=hasNames?uni.value.trim():null,department=hasNames?dept.value.trim():null;
+  if(hasNames&&(!university||!department||university.length>120||department.length>120)){
+   notify(message,"대학교명과 학과명을 각각 정확히 입력해 주세요.","error");(!university?uni:dept).focus();return;
+  }
+  loading=true;refresh();notify(message,"편입 정보를 저장하고 있습니다.");
+  try{
+   const {data,error}=await api.rpc("set_my_university_transfer",{p_status:chosen,p_university:university,p_department:department});
+   if(error||!data)throw error||Error("EMPTY_TRANSFER");
+   prior=null;showRecord(data);notify(message,"편입 정보를 저장했습니다.","success");
+  }catch{notify(message,"편입 정보를 저장하지 못했습니다. 잠시 후 다시 시도해 주세요.","error");}
+  finally{loading=false;refresh();}
+ });
+ void load();
+}
 async function start(){
  if(!api||!globalThis.portalLearning?.read){notify("my-page-password-message","로그인 상태를 확인할 수 없습니다. 다시 로그인해 주세요.","error");return;}
  const context=window.portalVerifiedContext,user=context?.user;
@@ -22,6 +84,7 @@ async function start(){
  // Personal qualifications are for members, not portal administrators.
  // Default-hidden shortcut is exposed only after both checks pass.
  const adminAllowed=context.isAdmin;
+ initUniversityTransfer(profile,adminAllowed);
  byId("my-page-cert-shortcut").hidden=adminAllowed!==false||!["student","alumni"].includes(profile.signup_type);
  if(["student","alumni"].includes(profile.signup_type)){
   byId("my-page-mobile-summary").hidden=false;

@@ -11,11 +11,13 @@ const statusList=[["all","전체 학적"],["enrolled","재학"],["leave","휴학
 const approvalList=[["all","전체 가입 상태"],["approved","승인"],["pending","대기"],["rejected","반려"],["suspended","정지"]];
 const attentionList=[["all","전체"],["academic","학적 변경 요청"],["mail_failed","승인메일 실패"],["no_plan","이번 주 자율학습 계획 미등록"],["inactive","최근 7일 기록된 학습 없음"],["mock_failed","모의고사 불합격 기록"],["no_cert","확인된 최종합격 자격증 없음"],["no_application","2학년 입사지원 기록 미등록"],["followup","상담 후속 조치 기한 도래"]];
 const careerList=[["","미입력"],["preparing","준비 중"],["applied","지원 중"],["interview","면접"],["offer","합격"],["employed","취업"]];
-const tabs=[["profile","기본·계정 정보"],["learning","학습현황"],["study","자율학습"],["certifications","자격증"],["guidance","상담·취업지도"],["services","서비스 이용"],["alumni","졸업생"],["history","변경 이력"]];
+const tabs=[["profile","기본·계정 정보"],["transfer","대학교 편입"],["learning","학습현황"],["study","자율학습"],["certifications","자격증"],["guidance","상담·취업지도"],["services","서비스 이용"],["alumni","졸업생"],["history","변경 이력"]];
 const table=(heads,rows)=>rows.length?'<div class="users-table-scroll"><table class="users-table"><thead><tr>'+heads.map(x=>'<th scope="col">'+esc(x)+'</th>').join("")+'</tr></thead><tbody>'+rows.map(row=>'<tr>'+row.map((v,i)=>'<td data-label="'+esc(heads[i])+'"><div class="admin-cell-value">'+v+'</div></td>').join("")+'</tr>').join("")+'</tbody></table></div>':'<p class="users-empty">등록된 기록이 없습니다.</p>';
 const field=(name,title,value,type="text",extra="")=>'<label>'+esc(title)+'<input name="'+esc(name)+'" type="'+esc(type)+'" value="'+esc(value??"")+'" '+extra+'></label>';
 const select=(name,title,items,value,extra="")=>'<label>'+esc(title)+'<select name="'+esc(name)+'" '+extra+'>'+options(items,value)+'</select></label>';
 const consent=v=>v==null||String(v).trim()===""?"미설정":/^(true|1|yes|on)$/i.test(String(v))?"동의":"거부";
+const transferStatuses=[["unregistered","미등록"],["none","편입 계획 없음"],["preparing","편입 준비 중"],["accepted","편입 합격"],["completed","편입 완료"]];
+const transferLabel=v=>transferStatuses.find(([code])=>code===v)?.[1]||"미등록";
 const roleText=p=>p.enrollment_status==="enrolled"&&p.academic_year?esc(p.academic_year)+"학년":label(p.enrollment_status);
 const ui=window.portalAdminUI;
 let stopGrade;
@@ -35,8 +37,8 @@ export async function renderUnifiedUsers(ctx){
   const ticket=++generation;selected=null;
   card("통합 사용자 관리",'<div class="users-layout"><p class="portal-auth-lead">학생과 졸업생의 계정·학적·학습·자격증·지도 현황을 관리합니다.</p>'+
     '<div id="users-filter-kpis"></div><div id="users-grade-chart"></div><details class="admin-filter-detail"><summary>전체 학적 구성 및 빠른 분류</summary><div id="users-kpis" class="users-kpis" aria-label="전체 학적별 인원"><p>인원 확인 중…</p></div></details>'+
-    '<div class="users-actions"><a class="users-link" href="accounts.html?view=approvals">가입 승인 요청</a><a class="users-link" href="alumni.html">졸업생 네트워크 관리</a><button type="button" id="users-stats">운영 통계 보기</button></div>'+
-    '<section id="users-stats-panel" hidden></section>'+
+    '<div class="users-actions"><a class="users-link" href="accounts.html?view=approvals">가입 승인 요청</a><a class="users-link" href="alumni.html">졸업생 네트워크 관리</a><button type="button" id="users-stats">운영 통계 보기</button><button type="button" id="users-transfers" aria-expanded="false" aria-controls="users-transfer-panel">대학교 편입 현황</button></div>'+
+    '<section id="users-stats-panel" hidden></section><section id="users-transfer-panel" class="users-transfer-report" hidden aria-label="대학교 편입 현황"></section>'+
     '<div class="admin-main-filter">'+field("search","사용자 검색",state.search,"search",'id="users-search" placeholder="이름 · 학번 · 이메일 · 연락처" autocomplete="off"')+
     select("status","학적 상태",statusList,state.status,'id="users-status"')+'</div><details class="admin-filter-detail"'+(state.approval!=="all"||state.attention!=="all"||state.type!=="all"?' open':'')+'><summary>상세 검색 조건</summary><div class="users-filters">'+
     select("grade","학년",[["","전체 학년"],["1","1학년"],["2","2학년"]],state.grade,'id="users-grade"')+
@@ -54,6 +56,11 @@ export async function renderUnifiedUsers(ctx){
   $("#users-next").onclick=()=>{if(state.page*25<(listResult?.total||0)){state.page++;reload();}};
   $("#users-kpis").onclick=e=>{const b=e.target.closest("button[data-filter]");if(!b)return;const f=b.dataset.filter;state.status=f.startsWith("grade")?"enrolled":["academic","mail_failed","pending"].includes(f)?"all":f;state.grade=f.startsWith("grade")?f.slice(-1):ui.getGrade();state.attention=["academic","mail_failed"].includes(f)?f:"all";state.approval=f==="pending"?"pending":"all";state.type="all";state.page=1;if(state.grade!==ui.getGrade())ui.setGrade(state.grade);else list();};
   $("#users-table").onclick=e=>{const b=e.target.closest("button[data-user]");if(b){selected=b.dataset.user;detailTab="profile";detail(selected);}};
+  $("#users-transfers").onclick=()=>{
+   const panel=$("#users-transfer-panel"),toggle=$("#users-transfers");
+   panel.hidden=!panel.hidden;toggle.setAttribute("aria-expanded",String(!panel.hidden));
+   if(!panel.hidden)renderTransferReport(panel);
+  };
   $("#users-stats").onclick=async()=>{
    const panel=$("#users-stats-panel");if(!panel.hidden){panel.hidden=true;return;}
    panel.hidden=false;panel.textContent="운영 통계 조회 중…";
@@ -99,6 +106,53 @@ export async function renderUnifiedUsers(ctx){
   }
   await reload();
  }
+ function renderTransferReport(panel){
+  const cohortOptions=[["all","전체 등록 대상"],["second","2학년 재학생"],["early","조기취업자"],["graduated","졸업생"]];
+  panel.innerHTML='<h3>대학교 편입 현황</h3><p class="users-note">2학년 이상 등록 대상 회원의 본인 입력 기준입니다. 미등록과 편입 계획 없음은 별도로 집계합니다. 아래 검색 조건은 사용자 목록과 별개입니다.</p>'+
+   '<form id="transfer-report-filter" class="users-filters">'+
+   select("cohort","대상",cohortOptions,state.grade==="2"?"second":"all")+
+   select("year","졸업년도",[["","전체 졸업년도"]],"")+
+   select("status","편입 상태",[["all","전체 상태"],...transferStatuses],"all")+
+   field("search","검색","","search",'maxlength="120" placeholder="이름 · 학번 · 대학교 · 학과" autocomplete="off"')+
+   '<button type="submit">조회</button></form>'+
+   '<p id="transfer-report-meta" class="users-list-meta" role="status" aria-live="polite">조회 중…</p>'+
+   '<div id="transfer-report-status-chart"></div><div class="admin-chart-grid"><div id="transfer-report-schools"></div><div id="transfer-report-majors"></div></div>'+
+   '<div id="transfer-report-table"></div><div class="users-pagination"><button type="button" id="transfer-report-prev" disabled>이전</button><span id="transfer-report-page">1 / 1</span><button type="button" id="transfer-report-next" disabled>다음</button></div>';
+  const find=s=>panel.querySelector(s),form=find("#transfer-report-filter"),meta=find("#transfer-report-meta"),prev=find("#transfer-report-prev"),next=find("#transfer-report-next");
+  let page=1,sequence=0,pages=1;
+  async function loadTransfers(){
+   const run=++sequence;prev.disabled=next.disabled=true;meta.textContent="편입 현황 조회 중…";
+   const f=form.elements;
+   try{
+    const result=await rpc("admin_university_transfers",{p_cohort:f.cohort.value,p_status:f.status.value,p_graduation_year:f.year.value?Number(f.year.value):null,p_search:f.search.value.trim(),p_page:page});
+    if(run!==sequence||!root.contains(panel)||panel.hidden)return;
+    const year=f.year.value;
+    f.year.innerHTML=options([["","전체 졸업년도"],...(result.years||[]).map(y=>[String(y),y+"년"])],year);
+    const total=Number(result.total||0);pages=Math.max(1,Math.ceil(total/25));
+    if(page>pages){page=pages;return loadTransfers();}
+    meta.textContent="검색 결과 "+int(total)+"명 · 상태별 차트는 선택한 대상·졸업년도·검색어 전체 기준";
+    const counts=result.counts||{};
+    ui.renderDonut(find("#transfer-report-status-chart"),"편입 상태별 인원",transferStatuses.map(([v,t])=>[t,counts[v]??0]),{caption:"본인이 저장한 편입 상태"});
+    ui.renderBars(find("#transfer-report-schools"),"대학교별 편입 인원",(result.schools||[]).map(r=>[r.university,r.n]),{unit:"명",caption:"편입 합격 및 완료"});
+    ui.renderBars(find("#transfer-report-majors"),"학과별 편입 인원",(result.majors||[]).map(r=>[r.department,r.n]),{unit:"명",caption:"편입 합격 및 완료"});
+    find("#transfer-report-table").innerHTML=table(["이름","학번 / 졸업년도","학적","편입 상태","대학교","학과","수정일","상세"],(result.rows||[]).map(p=>[
+     val(p.full_name),val(p.student_no||(p.graduation_year?p.graduation_year+"년":"-")),roleText(p),
+     val(transferLabel(p.transfer_status)),val(p.university),val(p.department),date(p.updated_at),
+     '<button type="button" class="users-detail-btn" data-transfer-user="'+esc(p.user_id)+'">상세보기</button>'
+    ]));
+    find("#transfer-report-page").textContent=page+" / "+pages;prev.disabled=page<=1;next.disabled=page>=pages;
+   }catch{
+    if(run!==sequence||!root.contains(panel)||panel.hidden)return;
+    meta.textContent="편입 현황을 조회하지 못했습니다. 조회 버튼을 다시 눌러 주세요.";
+    for(const id of ["status-chart","schools","majors","table"])find("#transfer-report-"+id).replaceChildren();
+   }
+  }
+  form.onsubmit=e=>{e.preventDefault();page=1;void loadTransfers();};
+  prev.onclick=()=>{if(page>1){page--;void loadTransfers();}};
+  next.onclick=()=>{if(page<pages){page++;void loadTransfers();}};
+  find("#transfer-report-table").onclick=e=>{const b=e.target.closest("button[data-transfer-user]");if(b){detailTab="transfer";void detail(b.dataset.transferUser);}};
+  void loadTransfers();
+ }
  async function detail(id){
   const ticket=++generation;selected=id;query.set("view","students");query.set("user",id);history.replaceState(null,"",location.pathname+"?"+query.toString());
   card("사용자 상세 관리",'<div class="users-layout"><div class="users-actions"><button id="users-back">← 사용자 목록</button><a class="users-link" href="accounts.html?view=approvals">가입 승인 요청</a></div><div id="user-heading" class="users-detail-header">사용자 조회 중…</div><nav class="users-tabs" aria-label="사용자 관리 탭">'+tabs.map(([v,t])=>'<button type="button" data-tab="'+v+'" aria-pressed="'+(v===detailTab)+'">'+t+'</button>').join("")+'</nav><div id="user-detail-panel" aria-live="polite"></div></div>');
@@ -115,10 +169,15 @@ export async function renderUnifiedUsers(ctx){
    const run=++tabSequence,tab=detailTab,panel=$("#user-detail-panel");if(!panel)return;
    panel.textContent="정보 조회 중…";
    try{
-    const x=tab==="profile"?profileData:await rpc("admin_user_detail",{p_user_id:id,p_tab:tab,p_days:days});
+    const x=tab==="profile"?profileData:tab==="transfer"?await rpc("admin_university_transfers",{p_user_id:id}):await rpc("admin_user_detail",{p_user_id:id,p_tab:tab,p_days:days});
     if(ticket!==generation||run!==tabSequence)return;
     const p=profileData.profile;
     if(tab==="profile")renderProfile(panel,p,x);
+    else if(tab==="transfer"){
+     const t=x.rows?.[0];
+     panel.innerHTML='<h3>대학교 편입 정보</h3><p class="users-note">회원 본인이 마이페이지에서 등록한 정보입니다.</p>'+
+      (t?'<div class="users-data-grid">'+[["편입 상태",transferLabel(t.transfer_status)],["대학교명",t.university],["학과명",t.department],["최종 수정",datetime(t.updated_at)]].map(([n,v])=>'<div><small>'+esc(n)+'</small><strong>'+val(v)+'</strong></div>').join("")+'</div>':'<p class="users-empty">현재 편입 정보 등록 대상이 아닙니다.</p>');
+    }
     else if(tab==="learning")renderLearning(panel,x);
     else if(tab==="study")renderStudy(panel,x);
     else if(tab==="certifications")panel.innerHTML='<h3>등록 자격증</h3>'+table(["자격증","취득 상태","확인 상태","필기일","최종일"],x.items.map(c=>[val(c.certificate_name),label(c.pass_status),label(c.verification_status),date(c.written_pass_date),date(c.final_pass_date)]))+'<a class="users-link" href="certifications.html">전체 자격증 확인·승인 관리 ↗</a>';
