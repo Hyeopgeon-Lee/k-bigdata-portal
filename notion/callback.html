@@ -1,0 +1,6 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow,noarchive"><meta name="referrer" content="no-referrer"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'"><title>Notion 연동 · 학과 포털</title></head><body style="font:16px system-ui,sans-serif;color:#263c57;background:#f3f6fb;padding:24px"><h1>Notion 인증 처리 중</h1><p id="message" role="status">학과 포털로 돌아갑니다.</p><a href="/ready.html">포털로 돌아가기</a><script>
+(()=>{const q=new URLSearchParams(location.search),code=q.get('code'),state=q.get('state'),denied=q.has('error');history.replaceState(null,'',location.pathname);
+try{if(denied)sessionStorage.setItem('ready-notion-oauth',JSON.stringify({error:'denied'}));else if(code&&code.length<=3000&&state&&/^[0-9a-f]{64}$/.test(state))sessionStorage.setItem('ready-notion-oauth',JSON.stringify({code,state}));else throw Error('invalid');location.replace('/ready.html');}
+catch{document.getElementById('message').textContent='인증 요청을 확인할 수 없습니다. 포털에서 다시 연결하세요.';}})();
+</script></body></html>

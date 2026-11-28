@@ -2,6 +2,7 @@ import {createClient} from "npm:@supabase/supabase-js@2.49.10";
 import {evaluateStudentReadiness,readinessGuide} from "./rules.mjs";
 import {checkStudent,repoParts} from "./checks.mjs";
 import {githubIdentity} from "./oidc.ts";
+import {notionConfigured,notionPageId,notionStatus,startNotion,finishNotion,disconnectNotion} from "./notion.mjs";
 const url=Deno.env.get("SUPABASE_URL")!, key=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, anon=Deno.env.get("SUPABASE_ANON_KEY")!;
 const db=createClient(url,key,{auth:{persistSession:false,autoRefreshToken:false}});
 const origin="https://portal.k-bigdata.kr", stamp=()=>new Date().toISOString(), date=()=>new Date().toLocaleDateString('sv-SE',{timeZone:'Asia/Seoul'});
@@ -32,7 +33,11 @@ async function bundle(m:any,detail=false){
  const primary=Object.fromEntries(r.map((x:any)=>[x.kind,{...x.data,checked_at:x.checked_at}]));
  const evaluation=evaluateStudentReadiness(s,{...c,...primary,publicPortfolio:c.portfolio,repositoryCount:repos.length});
  const result:any={member:m,student:s,registered:!!profile,consent:!!profile?.peer_share_consent_at,updated_at:profile?.last_manual_update_at,evaluation,checks:c,primary,certificates:certs,plans,repositories:repos,repoChecks};
- if(detail)result.history=await read(db.from("ready_change_history").select("changed_at,category,field_name,old_value,new_value,changed_by").eq("user_id",id).order("changed_at",{ascending:false}).limit(300));
+ if(detail){
+  result.history=await read(db.from("ready_change_history").select("changed_at,category,field_name,old_value,new_value,changed_by").eq("user_id",id).order("changed_at",{ascending:false}).limit(300));
+  result.notion_connection=await notionStatus(db,id,s.notion_url||"");
+  if(result.notion_connection.status==="CONNECTED"&&c.notion?.check_status==="AUTH_REQUIRED")result.notion_connection.status="RECONNECT_REQUIRED";
+ }
  return result;
 }
 const compact=(b:any)=>({member:b.member,registered:b.registered,evaluation:b.evaluation,certificate_count:b.certificates.filter((c:any)=>c.pass_status==="final").length,updated_at:b.updated_at,consent:b.consent,student:b.student});
@@ -47,8 +52,10 @@ async function saveProfile(id:string,body:any,old:any){
  }
  if(next.github_url){const p=repoParts(next.github_url);next.github_username=p.owner;}else next.github_username="";
  if(next.github_pages_repo)repoParts(next.github_pages_repo,true);
+ if(next.notion_url&&!notionPageId(next.notion_url)&&String(next.notion_url)!==String(old?.data?.notion_url||""))throw Error("Notion 페이지 ID가 포함된 공유 링크(https://notion.so 또는 notion.site)를 입력하세요.");
  const consent=body.peer_share_consent===true?(old?.peer_share_consent_at||stamp()):body.peer_share_consent===false?null:old?.peer_share_consent_at||null;
  await write(db.from("ready_profiles").upsert({user_id:id,data:next,peer_share_consent_at:consent,updated_at:stamp(),last_manual_update_at:stamp()}));
+ if(notionPageId(old?.data?.notion_url)!==notionPageId(next.notion_url))await disconnectNotion(db,id);
  const history=fields.filter(f=>String(old?.data?.[f]||"")!==String(next[f]||"")).map(f=>({user_id:id,category:"프로필",field_name:f,old_value:String(old?.data?.[f]||""),new_value:String(next[f]||""),changed_by:"STUDENT"}));
  if(!!consent!==!!old?.peer_share_consent_at)history.push({user_id:id,category:"프로필",field_name:"peer_share_consent",old_value:old?.peer_share_consent_at?"동의":"미동의",new_value:consent?"동의":"미동의",changed_by:"STUDENT"});
  if(history.length)await write(db.from("ready_change_history").insert(history));
@@ -89,7 +96,7 @@ Deno.serve(async req=>{
     const rate=gh.ok?await gh.json():null;
     const repoTest=await fetch("https://api.github.com/repos/Hyeopgeon-Lee/k-bigdata-ready",{headers:{Authorization:"Bearer "+githubToken,"User-Agent":"KBigData-Portal-READY"},redirect:"error",signal:AbortSignal.timeout(8000)});
     const members=await activeMembers(),registered=await read(db.from("ready_profiles").select("user_id"));
-    return reply({authorized:true,checking_enabled:op.checking_enabled,weekly_mail_enabled:op.weekly_mail_enabled,registered_count:members.filter((m:any)=>registered.some((r:any)=>r.user_id===m.user_id)).length,scheduled_github_ok:repoTest.ok&&gh.ok&&Number(rate?.resources?.core?.limit||rate?.rate?.limit||gh.headers.get("x-ratelimit-limit"))>60,github_rate_http:gh.status,github_repo_http:repoTest.status,manual_github_secret_configured:!!(Deno.env.get("READY_GITHUB_TOKEN")||Deno.env.get("GITHUB_TOKEN")),notion_secret_configured:!!(Deno.env.get("READY_NOTION_TOKEN")||Deno.env.get("NOTION_TOKEN")),mail_secret_configured:!!Deno.env.get("RESEND_API_KEY")});
+    return reply({authorized:true,checking_enabled:op.checking_enabled,weekly_mail_enabled:op.weekly_mail_enabled,registered_count:members.filter((m:any)=>registered.some((r:any)=>r.user_id===m.user_id)).length,scheduled_github_ok:repoTest.ok&&gh.ok&&Number(rate?.resources?.core?.limit||rate?.rate?.limit||gh.headers.get("x-ratelimit-limit"))>60,github_rate_http:gh.status,github_repo_http:repoTest.status,manual_github_secret_configured:!!(Deno.env.get("READY_GITHUB_TOKEN")||Deno.env.get("GITHUB_TOKEN")),notion_secret_configured:notionConfigured(),mail_secret_configured:!!Deno.env.get("RESEND_API_KEY")});
    }
    if(action==="scheduled_weekly"){if(!op.checking_enabled)return reply({disabled:true});return reply(await weekly(op.weekly_mail_enabled))}
    if(!op.checking_enabled)return reply({disabled:true,ids:[]});
@@ -120,10 +127,13 @@ Deno.serve(async req=>{
    const rows=(await roster()).filter(x=>x.member.academic_year===member.academic_year);
    return reply({summary:stats(rows),peers:rows.filter(x=>x.consent&&x.registered).map(x=>({name:x.member.full_name,status:x.evaluation.status,days:x.evaluation.github_fresh?x.evaluation.github.active_days_7d:null,readme:x.evaluation.readme.status,portfolio:x.evaluation.portfolio.status}))});
   }
+  if(action==="notion_disconnect")return reply(await disconnectNotion(db,id));
   if(!a.write)return reply({error:"READ_ONLY"},403);
   const old=await read(db.from("ready_profiles").select("*").eq("user_id",id).maybeSingle());
   if(action==="save_profile")return reply(await saveProfile(id,b.profile||{},old));
   if(!old)return reply({error:"READY_PROFILE_REQUIRED"},400);
+  if(action==="notion_start")return reply(await startNotion(db,id,old.data?.notion_url||""));
+  if(action==="notion_complete")return reply(await finishNotion(db,id,b,old.data?.notion_url||""));
   if(action==="repo_add"||action==="repo_update"||action==="repo_remove"){
    const mode=action.slice(5),p=mode==="add"?repoParts(b.repo_url,true):null;
    return reply(await write(db.rpc("ready_repository_mutate",{p_user:id,p_action:mode,p_repo_id:text(b.repo_id,100),p_data:p?{repo_owner:p.owner,repo_name:p.repo,repo_url:"https://github.com/"+p.owner+"/"+p.repo,is_primary:b.is_primary===true}:{is_primary:b.is_primary===true,display_order:Math.max(1,Math.min(99,Number(b.display_order)||1))}})));

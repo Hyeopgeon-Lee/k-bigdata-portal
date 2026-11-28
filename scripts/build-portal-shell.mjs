@@ -9,7 +9,7 @@ const navigationScriptVersion='20261128-performance-1';
 const shellEntryScriptVersion='20261128-performance-1';
 const appScriptVersion='20261128-service-copy-1';
 function discover(dir){return readdirSync(dir,{withFileTypes:true}).flatMap(item=>item.name.startsWith('.')||['node_modules','ui-screenshots','test-results','alumni','admin','supabase'].includes(item.name)?[]:item.isDirectory()?discover(path.join(dir,item.name)):item.name.endsWith('.html')?[path.relative(root,path.join(dir,item.name)).replaceAll('\\','/')]:[]);}
-export const htmlPages=discover(root).sort();
+export const htmlPages=discover(root).filter(file=>file!=='notion/callback.html').sort();
 const region=(name,content)=>`<!-- portal:${name}:start (generated; edit scripts/portal-shell-template.mjs) -->\n${content}\n<!-- portal:${name}:end -->`;
 const removeRegion=(html,name)=>html.replace(new RegExp(`<!-- portal:${name}:start[^>]*-->[\\s\\S]*?<!-- portal:${name}:end -->`),'');
 function replaceRegion(html,name,content,fallback){const pattern=new RegExp(`<!-- portal:${name}:start[^>]*-->[\\s\\S]*?<!-- portal:${name}:end -->`);if(pattern.test(html))return html.replace(pattern,region(name,content));if(fallback&&fallback.test(html))return html.replace(fallback,region(name,content));throw new Error('Missing '+name+' region');}

@@ -1,4 +1,5 @@
 import {analyzeReadme} from './rules.mjs';
+import {checkNotion} from './notion.mjs';
 const stamp=()=>new Date().toISOString(), daysAgo=n=>new Date(Date.now()-n*86400000).toISOString(), day=d=>new Date(d).toLocaleDateString('sv-SE',{timeZone:'Asia/Seoul'}), lapse=d=>d?Math.max(0,Math.floor((Date.now()-Date.parse(d))/86400000)):'', recent=n=>new Set(Array.from({length:n},(_,i)=>day(daysAgo(i)))), err=e=>String(e.message||e).slice(0,150);
 const safeHosts=['github.io','github.com','notion.so','notion.site','tistory.com','velog.io','blog.naver.com','medium.com','netlify.app','vercel.app','pages.dev'];
 export function publicURL(value){const u=new URL(value);if(u.protocol!=='https:'||u.username||u.password||u.port||!safeHosts.some(h=>u.hostname===h||u.hostname.endsWith('.'+h)))throw Error('자동점검 지원 공개 호스트가 아닙니다.');return u;}
@@ -44,10 +45,7 @@ export async function checkStudent(db,id,token=''){
  await sc('portfolio',{url:urls[0]?.[1]||'',site_available:available,check_status:urls.length&&!available?'FAILED':'SUCCESS',error_message:checks.filter(x=>!x.available).map(x=>x.type+': '+x.error).join(' | '),url_results:JSON.stringify(checks)});
  let blog={site_available:checks.find(x=>x.type==='GitHub Pages')?.available||false,platform_type:s.github_pages_url?'URL':'미등록',last_repo_commit_at:'',check_status:'SUCCESS'};
  try{if(s.github_pages_repo){const {owner,repo}=repoParts(s.github_pages_repo,true),base='/repos/'+encodeURIComponent(owner)+'/'+encodeURIComponent(repo),meta=await gh(base);blog.last_repo_commit_at=meta.pushed_at;for(const [path,type] of [['_posts','Jekyll'],['content','Hugo'],['posts','Posts'],['blog','Blog']]){if(await gh(base+'/contents/'+path,true)){blog.platform_type=type;break}}}}catch(e){blog={...blog,check_status:'FAILED',error_message:err(e)}}await sc('blog',blog);
- const notionToken=Deno.env.get('NOTION_TOKEN')||Deno.env.get('READY_NOTION_TOKEN'),pid=String(s.notion_url||'').match(/([0-9a-fA-F]{32})(?:[?#]|$)/)?.[1];
- let notion={activity_status:'미등록',check_status:'SUCCESS'};
- if(s.notion_url){if(!notionToken)notion={activity_status:'설정 필요',check_status:'NOT_CONFIGURED',error_message:'Notion 연동 설정 필요'};else if(!pid)notion={activity_status:'확인 필요',check_status:'FAILED'};else try{const r=await fetch('https://api.notion.com/v1/pages/'+pid,{headers:{Authorization:'Bearer '+notionToken,'Notion-Version':'2022-06-28'},signal:AbortSignal.timeout(8000),redirect:'error'});if(!r.ok)throw Error('Notion HTTP '+r.status);const last=(await r.json()).last_edited_time,age=lapse(last);notion={last_edited_at:last,inactive_days:age,activity_status:age===''?'확인 필요':age<30?'최근 업데이트':age<60?'업데이트 필요':'장기 미업데이트',check_status:'SUCCESS'}}catch(e){notion={activity_status:'확인 필요',check_status:'FAILED',error_message:err(e)}}}
- await sc('notion',notion);
+ const notion=await checkNotion(db,id,s.notion_url||'');
  await put('ready_check_runs',{log_id:crypto.randomUUID(),started_at:started,finished_at:stamp(),data:{target_count:1,success_count:fails.length?0:1,failed_count:fails.length?1:0,status:g.check_status,error_message:fails.join(' | '),notion_status:notion.check_status}});
  return g;
 }
