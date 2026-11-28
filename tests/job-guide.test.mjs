@@ -49,7 +49,8 @@ for (const page of ['index.html','jobs.html','certifications.html','docs.html','
     assert.ok(existsSync(new URL('../' + value.split(/[?#]/)[0], import.meta.url)), `${page}: ${value}`);
   }
 }
-for (const id of ['ready','apply','alumni','room','help','portfolio']) assert.equal(services.find(s => s.id === id).url, `https://${id}.k-bigdata.kr/`);
+assert.equal(services.find(s => s.id === 'ready').url, 'ready.html');
+for (const id of ['apply','alumni','room','help','portfolio']) assert.equal(services.find(s => s.id === id).url, `https://${id}.k-bigdata.kr/`);
 const source = readFileSync(new URL('../js/jobs.js', import.meta.url), 'utf8');
 assert.equal(/졸업점수|졸업실적|졸업인정 자격증|졸업 조건 충족/.test(source), false);
 console.log(`PASS: ${jobs.length} roles, ${terms.length} search keywords, certificate/interview links, stable service URLs and noindex.`);

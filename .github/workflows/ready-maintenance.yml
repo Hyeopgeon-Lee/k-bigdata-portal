@@ -1,0 +1,42 @@
+name: READY portal daily checks and weekly summary
+on:
+  schedule:
+    - cron: "0 21 * * *"
+    - cron: "0 22 * * *"
+    - cron: "0 23 * * 0"
+  workflow_dispatch:
+permissions:
+  contents: read
+  id-token: write
+concurrency:
+  group: ready-maintenance
+  cancel-in-progress: false
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    env:
+      FUNCTION_URL: https://zjsindkakjfzmjgrkaou.supabase.co/functions/v1/ready-api
+      GH_ACCESS_TOKEN: ${{ github.token }}
+      CRON: ${{ github.event.schedule }}
+    steps:
+      - name: Run authorized READY maintenance
+        shell: bash
+        run: |
+          set -euo pipefail
+          call() {
+            local oidc
+            oidc=$(curl --fail --silent --show-error --max-time 12 -H "Authorization: Bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=kbigdata-ready-maintenance" | jq -r .value)
+            curl --fail-with-body --silent --show-error --max-time 140 -X POST "$FUNCTION_URL" -H "Authorization: Bearer $oidc" -H "Content-Type: application/json" --data "$1"
+          }
+          if [[ "$CRON" == "0 23 * * 0" ]]; then
+            call '{"action":"scheduled_weekly"}' | jq '{mail,disabled}'
+          else
+            list=$(call '{"action":"scheduled_list"}')
+            count=$(jq '.ids | length' <<<"$list")
+            echo "Targets: $count"
+            while read -r id; do
+              payload=$(jq -nc --arg id "$id" --arg token "$GH_ACCESS_TOKEN" '{action:"scheduled_check",user_id:$id,github_token:$token}')
+              call "$payload" | jq '{check_status,status}' || echo "Check request failed."
+            done < <(jq -r '.ids[]?' <<<"$list")
+          fi

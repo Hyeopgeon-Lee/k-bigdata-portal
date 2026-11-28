@@ -5,7 +5,7 @@ import {bindReview,reviewControls,gradeLabels} from "./study-review.js?v=2026112
 import {learningLocal as localStorage, learningSession as sessionStorage} from "./learning-storage.mjs";
 const drafts=new Map();
 import {ncpQuestions} from "../data/ncp-questions.js?v=20261026-quizfocus-2";
-import {initPortalShell} from "./portal-shell.js?v=20261128-performance-1";
+import {initPortalShell} from "./portal-shell.js?v=20261128-ready-1";
 import {learningReportUrl} from "./learning-report.js?v=20261027-ncp-report-1";
 
 const byId=id=>document.getElementById(id);

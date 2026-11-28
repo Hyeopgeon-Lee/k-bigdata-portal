@@ -1,4 +1,4 @@
-import {services} from "./services.js?v=20261128-practical-name-2";
+import {services} from "./services.js?v=20261128-ready-1";
 const LEGACY_KEY="kbigdata-portal-ui-v1";
 const validIds=new Set(services.map(service=>service.id));
 const state={favorites:[],recent:[]};

@@ -216,7 +216,7 @@
     "youtube"
   ],
   "services": {
-    "ready": "https://ready.k-bigdata.kr/",
+    "ready": "ready.html",
     "apply": "https://apply.k-bigdata.kr/",
     "alumni": "alumni/index.html",
     "room": "room.html",

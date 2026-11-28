@@ -73,7 +73,7 @@ export const services = [
     "category": "career",
     "description": "GitHub, 이력서, 자기소개서, 프로젝트, 자격증 등 취업 준비 현황을 등록하고 점검하는 서비스",
     "shortDescription": "이력서·자기소개서·포트폴리오 준비 현황 관리",
-    "url": "https://ready.k-bigdata.kr/",
+    "url": "ready.html",
     "icon": "clipboard",
     "accent": "blue",
     "tags": [

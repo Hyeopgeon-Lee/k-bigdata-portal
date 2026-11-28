@@ -1,6 +1,6 @@
-import {initPortalShell} from "./portal-shell.js?v=20261128-performance-1";
+import {initPortalShell} from "./portal-shell.js?v=20261128-ready-1";
 import {matches,jobSearchText,docSearchText,certificationSearchText} from "./search-core.js?v=20261005-perf-1";
-import {services} from "./services.js?v=20261128-practical-name-2";
+import {services} from "./services.js?v=20261128-ready-1";
 
 let certifications=[],certificationPaths=[],renderCertificateCard=null,renderCertificateDetail=null;
 let jobs=[],jobComparisons=[],jobGuidance={},jobGroups=[],jobLearningDocs=null;
@@ -50,7 +50,7 @@ function renderJobDetail(job) {
     section("관련 IT 자격증",'<p class="hint">직무 기초지식을 보완할 자격증을 확인하세요.</p><ul>'+certs.map(c=>'<li><a href="certifications.html?id='+esc(c.id)+'">'+esc(c.name)+'</a></li>').join("")+'</ul>')+
     section("비슷한 직무와 차이",'<ul class="job-related">'+related+'</ul>')+
     section("Career Path",'<ol>'+job.careerPath.map(step=>'<li>'+esc(step)+'</li>').join("")+'</ol>')+
-    '<div class="detail-actions"><a class="button button-primary" href="https://portfolio.k-bigdata.kr/">학과 프로젝트 보기 ↗</a><a class="button button-secondary" href="https://ready.k-bigdata.kr/">취업 준비 점검 ↗</a><a class="button button-secondary" href="project-guide.html">프로젝트 제작 가이드</a><a class="button button-secondary" href="interview.html">기술면접 학습</a></div>';
+    '<div class="detail-actions"><a class="button button-primary" href="https://portfolio.k-bigdata.kr/">학과 프로젝트 보기 ↗</a><a class="button button-secondary" href="ready.html">취업 준비 점검 ↗</a><a class="button button-secondary" href="project-guide.html">프로젝트 제작 가이드</a><a class="button button-secondary" href="interview.html">기술면접 학습</a></div>';
 }
 
 const page=document.body.dataset.page;

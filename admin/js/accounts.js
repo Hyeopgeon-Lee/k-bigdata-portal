@@ -258,7 +258,7 @@ async function renderApprovalRequests(){
 
 // The unified directory keeps the existing approval and explicit permanent-deletion flows.
 async function renderAdmin(){
-  await import("./unified-users.mjs?v=20261128-ui-1").then(mod=>mod.renderUnifiedUsers({
+  await import("./unified-users.mjs?v=20261128-ready-1").then(mod=>mod.renderUnifiedUsers({
     client,root,card,status,renderAccount,approvePortalMember,retryApprovalEmail,renderWithdrawnDeletion
   }));
 }
