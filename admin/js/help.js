@@ -151,6 +151,13 @@ function adminEditor(request,badge){
     mailHint.textContent='기존 완료 건의 수정은 새 결과 메일을 자동 발송하지 않습니다.';
     if(request.owner_id)await completionMail(request,mailHint,mailButton,'status');
    }
+   if(oldStatus!==newStatus){
+    say('상태와 처리 결과를 저장했습니다.'+(mailHint.textContent?' '+mailHint.textContent:''));
+    await loadRequests(true).catch(error=>{
+     console.error('Help list refresh failed',error);
+     say('상태와 처리 결과를 저장했습니다. 목록 갱신에 실패했습니다. 새로고침해 주세요.');
+    });
+   }
   }catch(error){
    console.error('Help status save failed',error);
    message.textContent='저장 실패: 로그인 권한 또는 네트워크 상태를 확인해 주세요.';
@@ -206,41 +213,101 @@ async function openDetail(request,target,button){
  }
 }
 const ui=window.portalAdminUI;
-let helpPage=0,helpRequestId=0,helpStudents=null;
 const HELP_PAGE_SIZE=50;
-async function loadRequests(all){
+const validStatus=value=>Object.hasOwn(statusText,value)?value:'';
+let helpPage=0,helpRequestId=0,helpStudents=null,chartGrade=null;
+let helpStatus=validStatus(new URLSearchParams(location.search).get('status'));
+function statusUrl(status,scroll=false){
+ const url=new URL(location.href);
+ if(status)url.searchParams.set('status',status);else url.searchParams.delete('status');
+ if(scroll)url.hash='help-admin-list-heading';
+ return url;
+}
+function updateChartSelection(){
+ for(const link of document.querySelectorAll('#help-status-chart [data-help-status]')){
+  const status=link.dataset.helpStatus;
+  const selected=helpStatus===status;
+  if(selected)link.setAttribute('aria-current','true');else link.removeAttribute('aria-current');
+  link.href=statusUrl(selected?'':status,true).href;
+  const count=link.querySelector('.admin-chart-label strong')?.textContent||'';
+  link.setAttribute('aria-label',statusText[status]+' '+count+(selected?' 필터 해제':' 요청글 보기'));
+ }
+ el('help-status-reset').hidden=!helpStatus;
+}
+function selectHelpStatus(status){
+ helpStatus=validStatus(status);
+ helpPage=0;
+ history.replaceState(history.state,'',statusUrl(helpStatus).href);
+ updateChartSelection();
+ void loadRequests(true,true);
+}
+function renderStatusChart(chart,counts){
+ const keys=Object.keys(statusText);
+ ui.renderBars(chart,'요청 처리 현황',keys.map(key=>[
+  statusText[key],counts[key],key==='RECEIVED'?'warning':undefined,statusUrl(helpStatus===key?'':key,true).href
+ ]),{unit:'건',caption:'상태를 클릭하면 해당 요청글을 조회합니다. 선택 학년의 전체 집계입니다.'});
+ chart.querySelectorAll('.admin-chart-drilldown').forEach((link,i)=>{
+  const status=keys[i];
+  link.dataset.helpStatus=status;
+  link.addEventListener('click',event=>{
+   if(event.button!==0||event.ctrlKey||event.metaKey||event.altKey||event.shiftKey)return;
+   event.preventDefault();
+   selectHelpStatus(helpStatus===status?'':status);
+  });
+ });
+ updateChartSelection();
+}
+async function loadRequests(all,scrollToList=false){
  const current=++helpRequestId;
  const root=el(all?'help-admin-list':'help-my-list');
  root.replaceChildren(node('p','요청을 불러오는 중...','help-meta'));
  const cols='id,owner_id,legacy_request_id,category,location,title,status,created_at';
  const grade=all?ui.getGrade():"";
- if(all){el('help-admin-counts').textContent='조회 중…';el('help-status-chart')?.replaceChildren();}
+ const status=all?helpStatus:'';
+ if(all){
+  if(chartGrade!==grade){el('help-admin-counts').textContent='조회 중…';el('help-status-chart')?.replaceChildren();}
+  el('help-admin-list-heading').textContent=(status?statusText[status]:'전체')+' 요청글';
+  el('help-status-reset').hidden=!status;
+ }
+ root.setAttribute('aria-busy','true');
  if(all&&grade&&!helpStudents){
   const profiles=await api.rpc("admin_list_students");
   if(current!==helpRequestId)return;
-  if(profiles.error){root.textContent="학생 정보를 불러오지 못했습니다.";return;}
+  if(profiles.error){root.textContent="학생 정보를 불러오지 못했습니다.";root.setAttribute('aria-busy','false');return;}
   helpStudents=profiles.data||[];
  }
  const ids=(helpStudents||[]).filter(x=>ui.matchesGrade(x,grade)).map(x=>x.user_id);
  const scope=q=>grade?q.in("owner_id",ids):q;
- let query=scope(api.from('help_requests').select(cols,{count:"exact"})).order('created_at',{ascending:false}).order("id").range(helpPage*HELP_PAGE_SIZE,(helpPage+1)*HELP_PAGE_SIZE-1);
+ let query=scope(api.from('help_requests').select(cols,{count:"exact"}));
+ if(status)query=query.eq('status',status);
  if(!all)query=query.eq('owner_id',user.id);
- const chart=all?ui.chartMount(el("help-admin-counts"),"help-status-chart"):null;chart?.replaceChildren();
+ query=query.order('created_at',{ascending:false}).order("id").range(helpPage*HELP_PAGE_SIZE,(helpPage+1)*HELP_PAGE_SIZE-1);
+ const chart=all?ui.chartMount(el("help-admin-counts"),"help-status-chart"):null;
  const empty={data:[],count:0,error:null};
  const [{data,error,count},...statusCounts]=grade&&!ids.length?[empty,...Object.keys(statusText).map(()=>empty)]:await Promise.all([query,...(all?Object.keys(statusText).map(status=>scope(api.from("help_requests").select("id",{count:"exact",head:true})).eq("status",status)):[])]);
  if(current!==helpRequestId)return;
+ root.setAttribute('aria-busy','false');
  if(error){root.textContent='요청을 불러오지 못했습니다. 로그인 상태를 확인하세요.';return;}
+ const pages=Math.max(1,Math.ceil(count/HELP_PAGE_SIZE));if(helpPage>=pages){helpPage=pages-1;return loadRequests(all,scrollToList);}
  cached=data||[];
  root.replaceChildren();
- if(!cached.length)root.append(node("p",all?"요청이 없습니다.":"아직 등록한 요청이 없습니다.","help-meta"));
+ if(!cached.length)root.append(node("p",all?(status?statusText[status]+' 상태의 요청글이 없습니다.':"요청이 없습니다."):"아직 등록한 요청이 없습니다.","help-meta"));
  if(all){
   const counts=Object.fromEntries(Object.keys(statusText).map((key,i)=>[key,statusCounts[i].error?null:statusCounts[i].count??null]));
-  el('help-admin-counts').textContent=ui.gradeLabel(grade)+' · 총 '+count+'건'+(grade?' · 계정 연결 요청 기준':'');
-  ui.renderBars(chart,'요청 처리 현황',Object.keys(statusText).map(key=>[statusText[key],counts[key],key==='RECEIVED'?'warning':undefined]),{unit:'건',caption:'선택 학년의 전체 조회 결과'});
+  const values=Object.values(counts);
+  const total=status?(values.some(v=>v===null)?'—':values.reduce((sum,v)=>sum+v,0)):count;
+  el('help-admin-counts').textContent=ui.gradeLabel(grade)+' · 총 '+total+'건'+(grade?' · 계정 연결 요청 기준':'');
+  el('help-admin-list-heading').textContent=(status?statusText[status]:'전체')+' 요청글'+(status?' · '+count+'건':'');
+  chartGrade=grade;
+  renderStatusChart(chart,counts);
  }
  for(const request of cached)root.append(card(request));
- const pages=Math.max(1,Math.ceil(count/HELP_PAGE_SIZE));if(helpPage>=pages){helpPage=pages-1;return loadRequests(all);}
  const nav=node("div",null,"help-actions"),prev=node("button","이전","help-secondary"),next=node("button","다음","help-secondary");prev.type=next.type="button";prev.disabled=helpPage===0;next.disabled=helpPage+1>=pages;prev.onclick=()=>{helpPage--;void loadRequests(all);};next.onclick=()=>{helpPage++;void loadRequests(all);};nav.append(prev,node("span",(helpPage+1)+" / "+pages),next);root.append(nav);
+ if(all&&scrollToList){
+  const heading=el('help-admin-list-heading');
+  heading.focus({preventScroll:true});
+  heading.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});
+ }
 }
 
 // Super-admin role was checked by admin/js/guard.mjs before this module loaded.
@@ -248,6 +315,8 @@ if(window.portalAdminAllowed!==true)throw Error("ADMIN_SESSION_REQUIRED");
 const {data:{user:active},error:authError}=await api.auth.getUser();
 if(authError||!active)throw Error("ADMIN_LOGIN_REQUIRED");
 user=active;
+el('help-status-reset').addEventListener('click',()=>selectHelpStatus(''));
+updateChartSelection();
 ui.onGrade(()=>{helpPage=0;void loadRequests(true);});
 document.getElementById("admin-help-refresh").addEventListener("click",()=>{helpStudents=null;helpPage=0;void loadRequests(true);});
 await loadRequests(true);
