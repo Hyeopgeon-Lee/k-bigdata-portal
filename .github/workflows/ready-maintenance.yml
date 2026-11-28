@@ -5,6 +5,12 @@ on:
     - cron: "0 22 * * *"
     - cron: "0 23 * * 0"
   workflow_dispatch:
+    inputs:
+      probe_only:
+        description: "Verify server configuration without updating student records"
+        type: boolean
+        default: false
+        required: false
   push:
     branches: [main]
     paths: [".github/workflows/ready-maintenance.yml"]
@@ -23,6 +29,7 @@ jobs:
       GH_ACCESS_TOKEN: ${{ github.token }}
       EVENT_NAME: ${{ github.event_name }}
       CRON: ${{ github.event.schedule }}
+      PROBE_ONLY: ${{ inputs.probe_only }}
     steps:
       - name: Run authorized READY maintenance
         shell: bash
@@ -33,7 +40,7 @@ jobs:
             oidc=$(curl --fail --silent --show-error --max-time 12 -H "Authorization: Bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=kbigdata-ready-maintenance" | jq -r .value)
             curl --fail-with-body --silent --show-error --max-time 140 -X POST "$FUNCTION_URL" -H "Authorization: Bearer $oidc" -H "Content-Type: application/json" --data "$1"
           }
-          if [[ "$EVENT_NAME" == "push" ]]; then
+          if [[ "$EVENT_NAME" == "push" || ( "$EVENT_NAME" == "workflow_dispatch" && "$PROBE_ONLY" == "true" ) ]]; then
             payload=$(jq -nc --arg token "$GH_ACCESS_TOKEN" '{action:"scheduled_probe",github_token:$token}')
             result=$(call "$payload")
             jq '{authorized,registered_count,checking_enabled,weekly_mail_enabled,scheduled_github_ok,github_rate_http,github_repo_http,manual_github_secret_configured,notion_secret_configured,mail_secret_configured}' <<<"$result"
