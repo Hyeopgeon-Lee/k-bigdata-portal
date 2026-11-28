@@ -1,3 +1,4 @@
+import {learningShareModel,attachLearningChartShare} from "./learning-chart-share.mjs?v=20261128-learning-share-1";
 /* Admin-only charts. All counts come from the authorized aggregate, never from sample data. */
 const names={JAVA:"Java",C:"C언어",PYTHON:"Python",LINUX:"Ubuntu",NCP:"NCP",PRACTICAL:"정보처리 실기",INDUSTRIAL:"산업기사 필기",ENGINEER:"기사 필기"};
 const fmt=n=>Number(n).toLocaleString("ko-KR");
@@ -56,7 +57,7 @@ function renderQuestions(root,stats,topWrong=[]){
  const shown=new Set(list.map(q=>String(q.question)));const unmatched=topWrong.filter(q=>!shown.has(String(q.question).split(":").slice(1).join(":")||String(q.question)));
  if(unmatched.length){const more=el("details","lv-more-wrong");more.append(el("summary","","추가 반복 오답 기록 ("+unmatched.length+"문제)"),el("p","lv-caption","오답 학생 수 상위 집계에 포함되지 않은 기록 · 참여 학생 수 미집계"));for(const q of unmatched)more.append(el("p","lv-caption",q.question+" · 오답 "+fmt(n(q.count))+"회"));s.append(more);}
 }
-export function renderLearningVisualization(root,stats,{grade="",period="week",range="",basis="",onGrade,onSubject,onWritten,answerPanel,previousStats,legacy,previousLegacy,partial,topWrong=[]}={}){
+export function renderLearningVisualization(root,stats,{grade="",period="week",range="",periodStart,periodEnd,basis="",onGrade,onSubject,onWritten,answerPanel,previousStats,legacy,previousLegacy,partial,topWrong=[]}={}){
  root.replaceChildren();
  if(!stats||!stats.subjects){root.append(el("p","lv-empty","참여 학생 수 통계를 조회할 수 없습니다. 기존 상세 통계는 아래에서 확인할 수 있습니다."));return;}
  const wrap=el("div","learning-viz");
@@ -113,6 +114,7 @@ export function renderLearningVisualization(root,stats,{grade="",period="week",r
   dailyPanel.append(chart);
  }
  columns.append(dailyPanel);wrap.append(columns);
+ attachLearningChartShare(wrap,learningShareModel(stats,{grade,period,range,periodStart,periodEnd,basis,partial,subjectNames:names}));
  if(answerPanel)wrap.append(answerPanel);
  renderQuestions(wrap,stats,topWrong);
  const extra=el("div","lv-columns lv-extra-charts");

@@ -116,6 +116,38 @@ try{
       assert.equal(await page.locator("#learning-panel-written").isVisible(),false);
       assert.equal(await page.locator("#learning-panel-operations").isVisible(),false);
       assert.deepEqual(await page.evaluate(()=>window.__learningRequests),["summary:week"]);
+      const combined=page.locator(".lv-share");
+      assert.equal(await combined.count(),1);
+      assert.match(await combined.locator(".study-share-manual").inputValue(),/2학년 주간 문제 풀이 학습현황/);
+      await page.evaluate(()=>{
+       Object.defineProperty(navigator,"canShare",{configurable:true,value:({files})=>files.length===1&&files[0]?.type==="image/png"});
+       Object.defineProperty(navigator,"share",{configurable:true,value:async({files,title,text})=>{
+        const file=files[0],bitmap=await createImageBitmap(file);
+        window.__learningShared={name:file.name,width:bitmap.width,height:bitmap.height,title,text,signature:[...new Uint8Array((await file.arrayBuffer()).slice(0,8))]};
+        bitmap.close();
+       }});
+      });
+      await combined.getByRole("button",{name:"밴드 공유하기",exact:true}).click();
+      await page.waitForFunction(()=>window.__learningShared?.width===1080);
+      const learningShared=await page.evaluate(()=>window.__learningShared);
+      assert.ok(learningShared.height>1500);
+      assert.equal(learningShared.title,"2학년 주간 문제 풀이 학습현황");
+      assert.match(learningShared.name,/2학년_2026-11-23_2026-11-29\.png$/);
+      assert.match(learningShared.text,/11\/23\(월\) · 2학년 2명/);
+      assert.match(learningShared.text,/과목별 학습 참여 학생[\s\S]*Java · 2명/);
+      assert.doesNotMatch(learningShared.text,/1학년/);
+      assert.deepEqual(learningShared.signature,[137,80,78,71,13,10,26,10]);
+      const learningDownload=page.waitForEvent("download");
+      await combined.getByRole("button",{name:"이미지 다운로드",exact:true}).click();
+      const learningImage=await learningDownload;
+      assert.equal(learningImage.suggestedFilename(),learningShared.name);
+      await learningImage.saveAs("ui-screenshots/admin/learning-combined-share.png");
+      await page.evaluate(()=>Object.defineProperty(navigator,"canShare",{configurable:true,value:()=>false}));
+      const fallbackDownload=page.waitForEvent("download");
+      await combined.getByRole("button",{name:"밴드 공유하기",exact:true}).click();
+      assert.equal((await fallbackDownload).suggestedFilename(),learningShared.name);
+      assert.match(await combined.locator(".study-share-status").textContent(),/지원하지 않습니다/);
+      await page.evaluate(()=>{delete navigator.share;delete navigator.canShare;});
       await page.locator(".lv-columns").first().getByRole("button",{name:"제출 답안"}).first().click();
       await page.getByText("해당하는 제출 기록이 없습니다.").waitFor();
       await page.locator(".lv-answer-panel").getByRole("button",{name:"닫기"}).click();
@@ -189,6 +221,7 @@ try{
       await page.getByRole("tab",{name:"문제 풀이"}).click();
       await page.locator(".lv-grade-card[data-grade='1']").waitFor();
       assert.equal(await page.locator(".lv-grade-card").count(),2);
+      assert.match(await combined.locator(".study-share-manual").inputValue(),/전체 학년 주간 문제 풀이 학습현황[\s\S]*1학년 1명 \/ 2학년 2명/);
       assert.equal(await page.locator(".lv-kpi").count(),2);
       assert.equal(await page.locator(".lv-columns").first().locator(".lv-subject").count(),8);
       assert.match(await page.locator(".lv-columns").first().locator(".lv-subject").first().textContent(),/Java.*3명.*9회 풀이/);

@@ -93,7 +93,7 @@ export async function approvedStudent(context, profileOverride={}, registeredAlu
       if(adminFixtures&&superAdmin&&name==="learning-admin"&&body?.action==="summary"){
        const count=body.grade===1?1:body.grade===2?2:3;
        const grades=(body.grade?[body.grade]:[1,2]).map(g=>({grade:g,cohortSize:g,activeStudents:g,attempts:g*3}));
-       const chartStats={cohortSize:count,activeStudents:count,attempts:count*3,grades,subjects:{JAVA:{participants:count,attempts:count*3}},gradingMethods:{self:count,automatic:0},questions:[],smallCohortHidden:true,daily:[]};
+       const chartStats={cohortSize:count,activeStudents:count,attempts:count*3,grades,subjects:{JAVA:{participants:count,attempts:count*3}},gradingMethods:{self:count,automatic:0},questions:[],smallCohortHidden:true,daily:[{date:"2026-11-23",grade1:body.grade===2?0:1,grade2:body.grade===1?0:2}]};
        return {data:{ok:true,cohortSize:count,periodStart:"2026-11-23T00:00:00+09:00",periodEnd:"2026-11-30T00:00:00+09:00",partial:true,current:{chartStats,activeStudents:count,participationRate:100,attempts:count*3,unique:count,selfCorrect:count*2,selfTotal:count*3,selfAccuracy:67,autoCorrect:0,autoTotal:0,autoAccuracy:null,subjects:{JAVA:{attempts:count*3,unique:count,wrong:count}}},previous:null,study:{plannedStudents:count,zeroPlanStudents:0,attendedPlannedDays:count,dueDays:count,studySeconds:3600*count,attendedDays:count},topWrong:[],snapshotStatus:"live"},error:null};
       }
       return {data:{ok:false,error:"ADMIN_NOT_AUTHORIZED"},error:null};

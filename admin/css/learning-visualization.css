@@ -62,3 +62,13 @@
 .lv-empty{font-size:15px;font-weight:600;color:#52667d;padding:12px;background:#f6f9fd;border-radius:9px;word-break:keep-all}
 @media(max-width:900px){.learning-viz .lv-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.learning-viz .lv-columns{grid-template-columns:1fr}}
 @media(max-width:600px){.learning-viz{gap:10px}.learning-viz .lv-summary,.learning-viz .lv-panel{padding:13px;border-radius:12px}.learning-viz .lv-kpi{padding:10px;gap:3px}.learning-viz .lv-kpi-label{font-size:14px}.learning-viz .lv-kpi-value{font-size:25px}.learning-viz .lv-kpi-detail{font-size:12px}.learning-viz .lv-title{font-size:19px}.learning-viz .lv-grade-grid,.learning-viz .lv-question-grid{grid-template-columns:1fr}.learning-viz .lv-subject-head{align-items:baseline}.learning-viz .lv-subject-head>strong{font-size:15px}.learning-viz .lv-subject-count{gap:4px}.learning-viz .lv-daily-row{grid-template-columns:62px minmax(0,1fr)}.learning-viz .lv-question{padding:11px}.learning-viz .lv-badge{font-size:13px;padding:5px 7px}}
+
+/* One shared export toolbar after the two participation charts. */
+.learning-viz .lv-share{margin:0;min-width:0}
+.learning-viz .lv-share .study-chart-share-actions{grid-template-columns:repeat(2,minmax(0,1fr))}
+.learning-viz .lv-share .study-chart-share-actions button{min-height:48px;font:inherit;font-size:15px;font-weight:750;border-radius:9px;border:1px solid #b8cce5;padding:10px 12px}
+.learning-viz .lv-share .study-share-band{grid-column:1/-1;background:#087b45;color:#fff;border-color:#087b45}
+.learning-viz .lv-share .study-share-band:hover{background:#066c3d}
+.learning-viz .lv-share .study-outline{background:#fff;color:#215a9f}
+.learning-viz .lv-share .study-outline:hover{background:#eaf2ff}
+@media(min-width:701px){.learning-viz .lv-share .study-chart-share-actions{grid-template-columns:2fr 1fr 1fr}.learning-viz .lv-share .study-share-band{grid-column:auto}}

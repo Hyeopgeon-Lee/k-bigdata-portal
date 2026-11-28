@@ -1,4 +1,4 @@
-import {renderLearningVisualization} from './learning-visualization.mjs?v=20261128-learning-tabs-1';
+import {renderLearningVisualization} from './learning-visualization.mjs?v=20261128-learning-share-1';
 /* Aggregated, super-admin-only data comes from the guarded Edge Function. */
 const db=window.portalSupabaseClient, get=id=>document.getElementById(id);
 const names={JAVA:'Java',C:'C언어',PYTHON:'Python',LINUX:'Ubuntu',NCP:'NCP',PRACTICAL:'정보처리'};
@@ -202,7 +202,7 @@ async function load(){
  const charts=await chartStatsFor(data,gradeFilter);
  if(sequence!==requestSequence)return;
  const a=data.current,b=data.previous;
- if(overview)renderLearningVisualization(overview,charts,{grade:gradeFilter,period:periodMode,range:get('teacher-period-label').textContent,basis:charts?.basis,onGrade:value=>adminUI?.setGrade(value),...(tabbed?{legacy:a,previousLegacy:b,previousStats:b?.chartStats,partial:data.partial,topWrong:data.topWrong||[],answerPanel:answers,onSubject:key=>{void showAnswers(key,false,data.periodStart);answers.scrollIntoView({block:'nearest',behavior:'smooth'});},onWritten:key=>window.portalLearningTabs.open('written',{exam:key==='ENGINEER'?'engineer':'industrial',period:periodMode,offset:periodOffset})}:{})});
+ if(overview)renderLearningVisualization(overview,charts,{grade:gradeFilter,period:periodMode,range:get('teacher-period-label').textContent,periodStart:data.periodStart,periodEnd:data.periodEnd,basis:charts?.basis,onGrade:value=>adminUI?.setGrade(value),...(tabbed?{legacy:a,previousLegacy:b,previousStats:b?.chartStats,partial:data.partial,topWrong:data.topWrong||[],answerPanel:answers,onSubject:key=>{void showAnswers(key,false,data.periodStart);answers.scrollIntoView({block:'nearest',behavior:'smooth'});},onWritten:key=>window.portalLearningTabs.open('written',{exam:key==='ENGINEER'?'engineer':'industrial',period:periodMode,offset:periodOffset})}:{})});
  if(tabbed&&charts?.subjects){status.textContent=(data.partial?'현재 시각까지 실시간 집계':'저장된 확정 통계 조회')+(data.cohortBasis==='late_backfill'?' · 사후 집계':'')+(!b?.chartStats?' · 이전 기간 차트 통계 없음':'');return;}
  get('teacher-content').hidden=false;
  const thisPeriod=periodMode==='week'?'해당 주':'해당 월';

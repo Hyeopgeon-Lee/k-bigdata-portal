@@ -5,7 +5,7 @@ const keys=buttons.map(b=>b.dataset.learningTab);
 let active="",generation=0;
 const modules=new Map();
 const loaders={
- problem:()=>import("../../js/teacher-learning.js?v=20261128-learning-tabs-1").then(m=>m.activateLearning),
+ problem:()=>import("../../js/teacher-learning.js?v=20261128-learning-share-1").then(m=>m.activateLearning),
  study:()=>import("../../js/study-teacher.js?v=20261128-learning-tabs-1").then(m=>m.activateStudy),
  written:()=>import("../../js/written-admin.js?v=20261128-learning-tabs-1").then(m=>m.activateWritten),
  operations:()=>Promise.all([import("../../js/learning-admin-settings.mjs?v=20261128-learning-tabs-1"),import("../../js/study-diagnostics.js?v=20261128-learning-tabs-1")]).then(([m,d])=>()=>Promise.allSettled([m.activateSettings(),d.activateDiagnostics()]))
