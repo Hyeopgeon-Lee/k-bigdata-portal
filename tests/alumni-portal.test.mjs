@@ -37,9 +37,10 @@ assert.match(backend,/portal_super_admin_allowed/,"admin rights checked on serve
 assert.match(backend,/PORTAL_TABLES/,"operational records use normalized Supabase tables");
 assert.match(backend,/alumni_network_mail_outbox/,"mail deduplication persisted");
 assert.match(backend,/case "contact"/,"contact relay still supported");
-assert.match(backend,/case "adminRunJobDigest"/,"career digest still supported");
+assert.match(backend,/case "adminRunJobDigest"/,"legacy career digest no longer bypasses selection");
 assert.match(backend,/payload.user_id=recordId/,"alumni profiles use portal UUID directly");
-assert.match(backend,/await deliverNews\(d\)/,"admin-created news honors mail request");
+assert.match(backend,/case "adminMailPreview":case "adminJobSendMail":case "adminNewsSendMail"/,"all content mail requires recipient selection");
+assert.doesNotMatch(backend,/await deliverNews\(d\)/,"admin-created news must not auto-send");
 assert.match(backend,/alumni_news_mail_logs/,"new news mails preserve delivery history");
 assert.match(backend,/portal_super_admin_allowed/,"admin permissions cannot be set by browser token");
 assert.match(backend,/function isGraduateMember/,"graduates use portal account to register");

@@ -23,6 +23,7 @@ const strList=(v:unknown)=>Array.isArray(v)?v.map(x=>text(x,100)).filter(Boolean
 const esc=(v:unknown)=>text(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]!));
 const now=()=>new Date().toISOString();
 const dateOnly=(v:unknown)=>text(v,40).slice(0,10);
+const today=()=>new Date().toLocaleDateString("sv-SE",{timeZone:"Asia/Seoul"});
 const validUrl=(v:unknown)=>{try{const u=new URL(String(v));return ["https:","http:"].includes(u.protocol);}catch{return false;}};
 const id=(prefix:string)=>prefix+crypto.randomUUID().replaceAll("-","").slice(0,18).toUpperCase();
 const NEWS_LABELS:Record<string,string>={
@@ -53,8 +54,8 @@ const PORTAL_FIELDS:Record<string,string[]>={
  alumni:["graduation_year","employment_status","company","job","company_url","employment_year","job_description","skills","bachelor_status","bachelor_school","bachelor_major","bachelor_year","graduate_status","graduate_school_type","graduate_school","graduate_major","graduate_degree","graduate_entry_year","graduate_graduation_year","research_fields","mentoring_topics","introduction","message_to_juniors","contact_allowed","career_mail_enabled","career_mail_consent_at","career_mail_updated_at","alumni_news_mail_enabled","alumni_news_mail_consent_at","alumni_news_mail_updated_at"],
  jobs:["company","job_title","recruit_type","employment_type","location","job_url","deadline","always_open","skills","alumni_comment","referral_available","contact_allowed","status","approved_at","approved_by","created_at","updated_at","last_mailed_at"],
  alumni_news:["news_type","title","content","company","job_title","organization","position_title","school_name","degree_or_program","event_date","location","relationship","external_url","mail_requested","mail_status","status","approved_at","approved_by","created_at","updated_at"],
- job_mail_logs:["job_ids","recipient_count","sent_count","failed_count","sent_at","status"],
- alumni_news_mail_logs:["news_id","news_type","subject","recipient_count","sent_count","failed_count","sent_at","status"],
+ job_mail_logs:["job_ids","subject","recipient_count","sent_count","failed_count","sent_at","status","target_groups","actor_user_id"],
+ alumni_news_mail_logs:["news_id","news_type","subject","recipient_count","sent_count","failed_count","sent_at","status","target_groups","actor_user_id"],
  contact_requests:["requester_name","requester_type","requester_student_id_or_year","requester_email","requester_phone","share_email","share_phone","share_competencies","category","subject","message","message_html","status","created_at","sent_at"]
 };
 async function rows(kind:string,scope?:{published?:boolean;member?:string}):Promise<Rec[]>{
@@ -196,10 +197,11 @@ function cleanNews(n:Record<string,unknown>,a:Record<string,unknown>={}){
  ret.event_date=dateOnly(n.event_date);return ret;
 }
 function visibleJob(j:Record<string,unknown>){
- return j.status==="APPROVED"&&(yes(j.always_open)||!dateOnly(j.deadline)||dateOnly(j.deadline)>=now().slice(0,10));
+ return j.status==="APPROVED"&&(yes(j.always_open)||!dateOnly(j.deadline)||dateOnly(j.deadline)>=today());
 }
+class MailRejectedError extends Error{}
 async function mail(to:string,subject:string,html:string,key:string){
- if(!resend)throw Error("메일 발송 설정이 준비되지 않았습니다.");
+ if(!resend)throw new MailRejectedError("메일 발송 설정이 준비되지 않았습니다.");
  const response=await fetch("https://api.resend.com/emails",{
   method:"POST",headers:{"Authorization":"Bearer "+resend,"Content-Type":"application/json",
    "Idempotency-Key":key.slice(0,250)},
@@ -207,7 +209,11 @@ async function mail(to:string,subject:string,html:string,key:string){
    to:[to],subject,html}),signal:AbortSignal.timeout(13000)
  });
  const responseData=await response.json().catch(()=>({}));
- if(!response.ok||!responseData.id)throw Error("메일 발송 오류 ("+response.status+")");
+ if(!response.ok||!responseData.id){
+  const message="메일 발송 오류 ("+response.status+")";
+  if(response.status>=400&&response.status<500&&response.status!==408&&response.status!==409)throw new MailRejectedError(message);
+  throw Error(message);
+ }
  return String(responseData.id);
 }
 async function notice(event:string,kind:string,recordId:string,to:string,subject:string,body:string){
@@ -221,23 +227,24 @@ async function notice(event:string,kind:string,recordId:string,to:string,subject
   const {data, error}=await admin.from("alumni_network_mail_outbox")
    .insert({event_type:event,record_kind:kind,record_id:recordId,recipient:to,
     subject,html:body,status:"pending"}).select("id,status").single();
-  if(error?.code==="23505")return true;
+  if(error?.code==="23505")return false;
   if(error)throw Error("MAIL_LOG_CREATE_FAILED");
   row=data;
  }
  const {data:claimed,error:claimError}=await admin.from("alumni_network_mail_outbox")
  .update({status:"sending"}).eq("id",row!.id).in("status",["pending","failed"]).select("id").maybeSingle();
  if(claimError)throw Error("MAIL_LOG_CLAIM_FAILED");
- if(!claimed)return true;
+ if(!claimed)return false;
  try{
   const provider=await mail(to,subject,body,"alumni-"+event+"-"+kind+"-"+recordId+"-"+to);
-  await admin.from("alumni_network_mail_outbox").update({
+  const {error:saveError}=await admin.from("alumni_network_mail_outbox").update({
    status:"sent",provider_id:provider,error_message:null,sent_at:now()
   }).eq("id",row!.id);
+  if(saveError)return false;
   return true;
  }catch(e){
   await admin.from("alumni_network_mail_outbox").update({
-   status:"failed",error_message:text((e as Error)?.message,250)
+   status:(event==="job_item"||event==="news_digest")&&!(e instanceof MailRejectedError)?"sending":"failed",error_message:text((e as Error)?.message,250)
   }).eq("id",row!.id);
   return false;
  }
@@ -373,22 +380,25 @@ async function handle(action:string,b:Record<string,unknown>,a:Actor){
    .sort((x,y)=>text(y.data.event_date||y.data.created_at).localeCompare(text(x.data.event_date||x.data.created_at)))
    .map(r=>cleanNews(r.data,am.get(text(r.data.alumni_id))||{}));
  };
- const deliverNews=async(item:Record<string,unknown>)=>{
-  const recipients=(await approved()).filter(x=>yes(x.data.alumni_news_mail_enabled));
-  const subject="[동문소식] "+text(item.title,120);
-  const body='<div style="font-family:sans-serif;line-height:1.8"><h2>'+esc(item.title)+'</h2><p style="white-space:pre-wrap">'+esc(item.content)+'</p><p><a href="https://portal.k-bigdata.kr/alumni/news-detail.html?id='+encodeURIComponent(text(item.news_id))+'">포털에서 보기</a></p></div>';
-  let sent=0;
-  for(const receiver of recipients)if(await notice("news_digest","alumni_news",text(item.news_id),
-    text(receiver.data.email),subject,body))sent++;
-  const stamp=now(),status=sent===recipients.length?"SENT":"PARTIAL_FAILED";
-  item.mail_status=status;
-  await put("alumni_news",text(item.news_id),item);
-  await put("alumni_news_mail_logs","NM-"+text(item.news_id),{
-    mail_id:"NM-"+text(item.news_id),news_id:item.news_id,news_type:item.news_type,subject,
-    recipient_count:String(recipients.length),sent_count:String(sent),
-    failed_count:String(recipients.length-sent),sent_at:stamp,status});
-  return {sent,total:recipients.length,status};
+ // Recipient data stays server-side; the browser receives group counts and a preview fingerprint.
+ type Recipient={email:string;group:string;sent:boolean;sending:boolean};
+ const selectedGroups=(v:unknown)=>{
+  if(!Array.isArray(v)||!v.length||v.some(x=>!["alumni","grade1","grade2"].includes(String(x))))throw Error("발송 대상을 선택해 주세요.");
+  return [...new Set(v.map(String))].sort();
  };
+ const loadRecipients=async(kind:string,recordId:string,groups:string[]):Promise<Recipient[]>=>{
+  const {data,error}=await admin.rpc("alumni_mail_recipients",{p_kind:kind,p_record:recordId,p_groups:groups});
+  if(error||!Array.isArray(data))throw Error("수신 대상 조회에 실패했습니다.");
+  return data;
+ };
+ const fingerprint=async(rows:Recipient[],groups:string[],record:Rec)=>{
+  const bytes=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(JSON.stringify([groups,record.source_id,record.data.updated_at,rows.map(x=>[x.email,x.group])])));
+  return Array.from(new Uint8Array(bytes),x=>x.toString(16).padStart(2,"0")).join("");
+ };
+ const mailCounts=(rows:Recipient[],groups:string[])=>groups.map(group=>{
+  const members=rows.filter(x=>x.group===group);
+  return {group,total:members.length,sent:members.filter(x=>x.sent).length,sending:members.filter(x=>!x.sent&&x.sending).length,available:members.filter(x=>!x.sent&&!x.sending).length};
+ });
  const getProfile=async(k:string)=>{
   const row=await one("alumni",k);
   if(!row||row.data.status!=="APPROVED")throw Error("졸업생 정보를 찾을 수 없습니다.");
@@ -503,14 +513,15 @@ async function handle(action:string,b:Record<string,unknown>,a:Actor){
   for(const required of ["company","job_title","recruit_type","employment_type","job_url"])
    if(!text(b[required]))throw Error("필수 채용정보를 입력해 주세요.");
   if(!validUrl(b.job_url))throw Error("정확한 채용공고 URL을 입력해 주세요.");
-  if(!yes(b.always_open)&&(!dateOnly(b.deadline)||dateOnly(b.deadline)<now().slice(0,10)))
+  if(!yes(b.always_open)&&(!dateOnly(b.deadline)||dateOnly(b.deadline)<today()))
    throw Error("유효한 채용 마감일을 입력해 주세요.");
   const jid=id("J"),d=updatedPayload({},b,JOB_EDIT);
-  Object.assign(d,{job_id:jid,alumni_id:owner.source_id,status:"APPROVED",
-   created_at:now(),updated_at:now(),approved_at:now(),
-   approved_by:a.id,last_mailed_at:action==="adminCreateJob"&&!yes(b.queue_mail)?now():""});
+  const direct=action==="adminCreateJob";
+  Object.assign(d,{job_id:jid,alumni_id:owner.source_id,status:direct?"APPROVED":"PENDING",
+   created_at:now(),updated_at:now(),approved_at:direct?now():"",
+   approved_by:direct?a.id:"",last_mailed_at:""});
   await put("jobs",jid,d);
-  return {success:true,message:"채용공고가 바로 게시되었습니다.",job_id:jid};
+  return {success:true,message:direct?"채용공고를 게시했습니다. 메일 발송은 대상을 선택해 별도로 진행하세요.":"채용공고를 등록했습니다. 관리자 승인 후 공개됩니다.",job_id:jid};
  }
  case "submitNews":case "adminCreateNews":{
   if(action==="adminCreateNews")await adminOnly(a);
@@ -529,17 +540,13 @@ async function handle(action:string,b:Record<string,unknown>,a:Actor){
   const profile=await getProfile(target);
   const nid=id("N"),d=updatedPayload({},b,NEWS_EDIT);
   Object.assign(d,{news_id:nid,alumni_id:profile.source_id,
-   submitted_by_alumni_id:a.id,status:"APPROVED",
-   mail_requested:String(yes(b.mail_requested||b.send_mail)).toUpperCase(),
-   mail_status:yes(b.mail_requested||b.send_mail)?"WAITING":"NOT_REQUESTED",
-   approved_at:now(),approved_by:a.id,
+   submitted_by_alumni_id:a.id,status:action==="adminCreateNews"?"APPROVED":"PENDING",
+   mail_requested:String(yes(b.mail_requested)).toUpperCase(),
+   mail_status:yes(b.mail_requested)?"WAITING":"NOT_REQUESTED",
+   approved_at:action==="adminCreateNews"?now():"",approved_by:action==="adminCreateNews"?a.id:"",
    created_at:now(),updated_at:now()});
   await put("alumni_news",nid,d);
-  if(action==="adminCreateNews"&&yes(b.send_mail)){
-   const mail=await deliverNews(d);
-   return {success:true,message:"동문소식 게시 · 메일 "+mail.sent+"/"+mail.total+"건",news_id:nid};
-  }
-  return {success:true,message:"동문소식이 바로 게시되었습니다. 이메일 공지는 별도로 관리됩니다.",news_id:nid};
+  return {success:true,message:action==="adminCreateNews"?"동문소식을 게시했습니다. 메일은 대상을 선택해 별도로 발송하세요.":"동문소식을 등록했습니다. 관리자 승인 후 공개됩니다.",news_id:nid};
  }
  case "contact":{
    const rich=safeContactMessage(b.message_delta,b.message);
@@ -604,7 +611,7 @@ async function handle(action:string,b:Record<string,unknown>,a:Actor){
    const am=new Map((await allAlumni()).map(r=>[r.source_id,r.data]));
    return okay((await allJobs()).map(r=>{
     const d=cleanJob(r.data,am.get(text(r.data.alumni_id))||{});
-    return {...d,status:r.data.status,approved_at:r.data.approved_at,
+    return {...d,status:r.data.status,approved_at:r.data.approved_at,last_mailed_at:r.data.last_mailed_at,
      alumni_name_admin:am.get(text(r.data.alumni_id))?.name||""};
    }));
   }
@@ -626,16 +633,16 @@ async function handle(action:string,b:Record<string,unknown>,a:Actor){
   if(view==="mail_logs"){
    const [jobs,news]=await Promise.all([rows("job_mail_logs"),rows("alumni_news_mail_logs")]);
    return okay([...jobs.map(r=>({mail_kind:"채용정보",related_id:r.data.job_ids,
-      subject:"채용정보 Digest",...r.data})),
+      ...r.data,subject:r.data.subject||"채용정보 Digest"})),
     ...news.map(r=>({mail_kind:"동문소식",related_id:r.data.news_id,...r.data}))]
     .sort((x,y)=>text(y.sent_at).localeCompare(text(x.sent_at))));
   }
   throw Error("관리 목록이 올바르지 않습니다.");
  }
  case "adminHide":case "adminShow":
- case "adminJobHide":case "adminJobPublish":
- case "adminNewsHide":
- case "adminNewsPublish":case "adminNewsSendMail":{
+ case "adminJobHide":case "adminJobPublish":case "adminJobReject":
+ case "adminNewsHide":case "adminNewsReject":
+ case "adminNewsPublish":{
   await adminOnly(a);
   const isAlumni=action.startsWith("admin")&&!action.includes("Job")&&!action.includes("News");
   const kind=isAlumni?"alumni":action.includes("Job")?"jobs":"alumni_news";
@@ -643,41 +650,76 @@ async function handle(action:string,b:Record<string,unknown>,a:Actor){
   const record=await one(kind,text(b[key]));
   if(!record)throw Error("대상 등록 정보를 찾을 수 없습니다.");
   const previousStatus=text(record.data.status);
-  if(action==="adminNewsSendMail"&&previousStatus!=="APPROVED")throw Error("공개 상태인 동문소식만 메일을 발송할 수 있습니다.");
-  const after=action.includes("Hide")?"HIDDEN":"APPROVED";
-  if(after==="APPROVED"&&record.data.status==="REJECTED"&&!action.includes("Publish"))
+  const after=action.includes("Reject")?"REJECTED":action.includes("Hide")?"HIDDEN":"APPROVED";
+  if(after==="REJECTED"&&previousStatus!=="PENDING")throw Error("승인 대기 중인 등록만 반려할 수 있습니다.");
+  if(after==="HIDDEN"&&!isAlumni&&previousStatus!=="APPROVED")throw Error("공개된 등록만 숨길 수 있습니다.");
+  if(kind==="jobs"&&after==="APPROVED"&&!yes(record.data.always_open)&&dateOnly(record.data.deadline)&&dateOnly(record.data.deadline)<today())
+   throw Error("마감된 채용공고는 승인할 수 없습니다.");
+  if(after==="APPROVED"&&record.data.status==="REJECTED")
    throw Error("반려된 등록은 다시 신청해야 합니다.");
-  record.data.status=after;record.data.updated_at=now();
-  if(after==="APPROVED"){record.data.approved_at=now();record.data.approved_by=a.email;}
-  if(action==="adminNewsSendMail")record.data.mail_status="WAITING";
-  await put(kind,record.source_id,record.data);
+  if(isAlumni){record.data.status=after;await put(kind,record.source_id,record.data);}
+  else{
+   const changes={status:after,updated_at:now(),...(after==="APPROVED"?{approved_at:now(),approved_by:a.id}:{})};
+   const {data:changed,error}=await admin.from(PORTAL_TABLES[kind]).update(changes).eq("id",record.source_id).eq("status",previousStatus).select("id").maybeSingle();
+   if(error||!changed)throw Error("다른 관리자에 의해 상태가 변경되었거나 저장에 실패했습니다. 새로고침해 주세요.");
+  }
   const {error:auditError}=await admin.from("alumni_audit_logs").insert({
    actor_user_id:a.id,action,target_kind:kind,target_id:record.source_id,
    previous_status:previousStatus,new_status:after
   });
   if(auditError)throw Error("ADMIN_AUDIT_WRITE_FAILED");
-  if(action==="adminNewsSendMail")await deliverNews(record.data);
   return {success:true,message:"상태 변경이 완료되었습니다."};
+ }
+ case "adminMailPreview":case "adminJobSendMail":case "adminNewsSendMail":{
+  await adminOnly(a);
+  const kind=action==="adminMailPreview"?text(b.kind):action==="adminJobSendMail"?"jobs":"alumni_news";
+  if(!["jobs","alumni_news"].includes(kind))throw Error("발송 종류가 올바르지 않습니다.");
+  const record=await one(kind,text(b.record_id));
+  if(!record||record.data.status!=="APPROVED"||(kind==="jobs"&&!visibleJob(record.data)))throw Error("승인되어 공개 중인 정보만 발송할 수 있습니다.");
+  const groups=selectedGroups(b.groups);
+  const recipients=await loadRecipients(kind,record.source_id,groups);
+  const token=await fingerprint(recipients,groups,record),counts=mailCounts(recipients,groups);
+  if(action==="adminMailPreview")return okay({token,counts,total:recipients.length,available:recipients.filter(x=>!x.sent&&!x.sending).length});
+  if(b.confirmed!==true||b.token!==token)throw Error("발송 대상 또는 게시 내용이 변경되었습니다. 다시 대상 인원을 확인해 주세요.");
+  if(!resend)throw Error("메일 발송 설정이 준비되지 않았습니다.");
+  const cursor=Number(b.cursor??0);
+  if(!Number.isInteger(cursor)||cursor<0||cursor>recipients.length)throw Error("잘못된 발송 위치입니다.");
+  // Small bounded batches keep requests within Edge Function limits; no duplicate automatic retries.
+  const end=Math.min(cursor+5,recipients.length),batch=recipients.slice(cursor,end);
+  const item=record.data,job=kind==="jobs";
+  const subject=job?"[동문 채용정보] "+text(item.company,100)+" · "+text(item.job_title,100):"[동문소식] "+text(item.title,120);
+  const body='<div style="font-family:sans-serif;line-height:1.8"><h2>'+esc(subject)+'</h2>'+
+   (job?'<p>마감: '+esc(yes(item.always_open)?"상시채용":item.deadline)+'</p><p>'+esc(item.alumni_comment)+'</p>':
+     '<p style="white-space:pre-wrap">'+esc(item.content)+'</p>')+
+   '<p><a href="'+site+'/alumni/'+(job?"job":"news")+'-detail.html?id='+encodeURIComponent(record.source_id)+'">포털에서 보기</a></p><p>수신 설정은 포털 내 정보에서 변경할 수 있습니다.</p></div>';
+  let sent=0,failed=0;
+  for(const person of batch){
+   if(person.sent||person.sending)continue;
+   // Recheck current visibility and consent just before sending; never mail an opted-out member.
+   const latest=await one(kind,record.source_id);
+   if(!latest||latest.data.status!=="APPROVED"||latest.data.updated_at!==record.data.updated_at||(job&&!visibleJob(latest.data)))throw Error("게시 상태가 변경되어 발송을 중단했습니다.");
+   const eligible=(await loadRecipients(kind,record.source_id,groups)).find(x=>x.email===person.email&&!x.sent&&!x.sending);
+   if(!eligible)continue;
+   if(await notice(job?"job_item":"news_digest",kind,record.source_id,person.email,subject,body))sent++;else failed++;
+  }
+  const stamp=now(),status=failed?"PARTIAL_FAILED":"SENT";
+  if(sent+failed){
+   await put(job?"job_mail_logs":"alumni_news_mail_logs",id("M"),{
+    ...(job?{job_ids:record.source_id}:{news_id:record.source_id,news_type:item.news_type}),subject,
+    recipient_count:String(sent+failed),sent_count:String(sent),failed_count:String(failed),sent_at:stamp,status,
+    target_groups:groups.join("|"),actor_user_id:a.id});
+   // Separate column update: never overwrite a concurrent moderation decision.
+   const latestRecipients=await loadRecipients(kind,record.source_id,groups);
+   const overall=latestRecipients.every(x=>x.sent)?"SENT":latestRecipients.some(x=>x.sent)?"PARTIAL_FAILED":status==="PARTIAL_FAILED"?"FAILED":"WAITING";
+   const {error}=job&&!sent?{error:null}:await admin.from(PORTAL_TABLES[kind]).update(job?{last_mailed_at:stamp}:{mail_status:overall}).eq("id",record.source_id);
+   if(error)throw Error("발송 기록 상태 저장에 실패했습니다. 재시도 전에 발송 이력을 확인해 주세요.");
+  }
+  return okay({sent,failed,next_cursor:end,done:end>=recipients.length});
  }
  case "adminRunJobDigest":{
   await adminOnly(a);
-  const jobs=(await allJobs()).filter(r=>visibleJob(r.data)&&!text(r.data.last_mailed_at));
-  const recipients=(await approved()).filter(x=>yes(x.data.career_mail_enabled));
-  if(!jobs.length||!recipients.length)return {success:true,message:"발송할 채용공고 또는 수신 동의자가 없습니다."};
-  const subj="[동문 채용정보] 새로운 채용공고 "+jobs.length+"건";
-  const body='<h2>빅데이터SW 동문 채용정보</h2>'+jobs.map(r=>
-   '<p><strong>'+esc(r.data.company)+' · '+esc(r.data.job_title)+'</strong><br><a href="'+esc(r.data.job_url)+'">채용공고 보기</a></p>').join("");
-  let sent=0;
-  for(const person of recipients)if(await notice("job_digest","job_mail_logs",jobs.map(x=>x.source_id).join("_"),
-   text(person.data.email),subj,body))sent++;
-  if(sent===recipients.length)for(const job of jobs){
-   job.data.last_mailed_at=now();await put("jobs",job.source_id,job.data);
-  }
-  const mailId=id("M");
-  await put("job_mail_logs",mailId,{mail_id:mailId,job_ids:jobs.map(x=>x.source_id).join("|"),
-   recipient_count:String(recipients.length),sent_count:String(sent),
-   failed_count:String(recipients.length-sent),sent_at:now(),status:sent===recipients.length?"SENT":"PARTIAL_FAILED"});
-  return {success:true,message:"채용 메일 발송 "+sent+"건 / 전체 "+recipients.length+"건"};
+  // Legacy bulk action cannot bypass the new recipient preview and confirmation.
+  return {success:true,message:"채용정보 관리에서 게시물별 발송 대상을 확인하고 발송해 주세요."};
  }
  case "adminSendCareerConsentInvites":case "adminSendNewsConsentInvites":{
   await adminOnly(a);

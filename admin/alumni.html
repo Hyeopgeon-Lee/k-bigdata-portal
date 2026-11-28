@@ -6,9 +6,9 @@
 <link rel="stylesheet" href="../css/portal-ux.css?v=20261112-page-intro-2">
 <link rel="stylesheet" href="css/admin.css?v=20261128-ui-1">
 <link rel="stylesheet" href="../alumni/css/jobs.css?v=20261113-alumni-unified-1">
-<link rel="stylesheet" href="css/alumni.css?v=20261113-alumni-unified-1">
+<link rel="stylesheet" href="css/alumni.css?v=20261128-alumni-mail-1">
 <link rel="stylesheet" href="css/admin-mobile.css?v=20261128-ui-1"></head>
-<body data-admin-module="alumni.js" data-admin-module-version="20261128-ui-1" data-admin-page="alumni">
+<body data-admin-module="alumni.js" data-admin-module-version="20261128-alumni-mail-1" data-admin-page="alumni">
 <p id="learning-notice" role="status">관리자 로그인 및 권한 확인 중입니다.</p>
 <header class="admin-header site-header">
   <div class="admin-header-inner header-inner">
@@ -35,7 +35,7 @@
         <div class="field"><label for="admin-job-location">근무지역</label><input id="admin-job-location" name="location" maxlength="100"></div><div class="field"><label for="admin-job-deadline">마감일</label><input id="admin-job-deadline" name="deadline" type="date"></div>
         <div class="field field--full"><label for="admin-job-url">공식 채용공고 URL *</label><input id="admin-job-url" name="job_url" type="url" inputmode="url" placeholder="https://" required></div><div class="field field--full"><label for="admin-job-skills">주요 기술</label><input id="admin-job-skills" name="skills" maxlength="300" placeholder="Java, Spring Boot, SQL"></div>
         <div class="field field--full"><label for="admin-job-comment">선배의 한마디</label><textarea id="admin-job-comment" name="alumni_comment" maxlength="800" rows="4"></textarea></div>
-      </div><div class="admin-check-grid"><label class="check"><input name="always_open" type="checkbox"> 상시채용</label><label class="check"><input name="referral_available" type="checkbox"> 사내추천 가능</label><label class="check"><input name="contact_allowed" type="checkbox"> 공고 문의 가능</label><label class="check"><input name="queue_mail" type="checkbox" checked> 다음 채용메일에 포함</label></div><div class="actions"><button type="submit">채용공고 게시</button><button type="button" class="button--ghost" data-close-create>취소</button></div></form>
+      </div><div class="admin-check-grid"><label class="check"><input name="always_open" type="checkbox"> 상시채용</label><label class="check"><input name="referral_available" type="checkbox"> 사내추천 가능</label><label class="check"><input name="contact_allowed" type="checkbox"> 공고 문의 가능</label></div><div class="actions"><button type="submit">채용공고 게시</button><button type="button" class="button--ghost" data-close-create>취소</button></div></form>
     </section>
     <section id="admin-news-create" class="panel admin-create-panel" hidden>
       <div class="admin-create-heading"><div><h2>동문소식 직접 등록</h2></div><button type="button" class="button--ghost" data-close-create>닫기</button></div>
@@ -46,10 +46,28 @@
         <div class="field"><label for="admin-news-company">회사·서비스명</label><input id="admin-news-company" name="company" maxlength="100"></div><div class="field"><label for="admin-news-job">직무</label><input id="admin-news-job" name="job_title" maxlength="100"></div><div class="field"><label for="admin-news-organization">관련 기관</label><input id="admin-news-organization" name="organization" maxlength="100"></div><div class="field"><label for="admin-news-position">직책·성과명</label><input id="admin-news-position" name="position_title" maxlength="100"></div><div class="field"><label for="admin-news-school">대학원명</label><input id="admin-news-school" name="school_name" maxlength="100"></div><div class="field"><label for="admin-news-degree">학위·과정</label><input id="admin-news-degree" name="degree_or_program" maxlength="100"></div>
         <div class="field"><label for="admin-news-location">장소·빈소</label><input id="admin-news-location" name="location" maxlength="200"></div><div class="field" id="admin-news-relationship-field" hidden><label for="admin-news-relationship">고인과의 관계 *</label><select id="admin-news-relationship" name="relationship"><option value="">선택</option><option>본인</option><option>부친</option><option>모친</option><option>배우자</option><option>자녀</option><option>조부</option><option>조모</option><option>장인</option><option>장모</option><option>기타</option></select></div>
         <div class="field field--full"><label for="admin-news-url">외부 안내 URL</label><input id="admin-news-url" name="external_url" type="url" inputmode="url" placeholder="https://"></div><div class="field field--full"><label for="admin-news-content">내용 *</label><textarea id="admin-news-content" name="content" maxlength="2000" rows="7" required></textarea></div>
-      </div><label class="check"><input name="send_mail" type="checkbox"> 게시 후 동문소식 수신 동의자에게 이메일 발송</label><div class="actions"><button type="submit">동문소식 게시</button><button type="button" class="button--ghost" data-close-create>취소</button></div></form>
+      </div><p class="hint">게시와 메일 발송은 별도입니다. 게시 후 발송 대상을 확인하고 발송하세요.</p><div class="actions"><button type="submit">동문소식 게시</button><button type="button" class="button--ghost" data-close-create>취소</button></div></form>
     </section>
-    <div class="panel"><div class="filter-grid"><div class="field"><label for="admin-query">검색</label><input id="admin-query" placeholder="이름, 회사, 직무, 제목"></div><div class="field"><label for="admin-status-filter">상태</label><select id="admin-status-filter"><option value="">전체</option><option>APPROVED</option><option>HIDDEN</option><option>EXPIRED</option><option>PENDING</option><option>SENT</option><option>PARTIAL_FAILED</option><option>FAILED</option><option>QUOTA_BLOCKED</option></select></div><div class="field"><label for="admin-year">졸업연도</label><select id="admin-year"></select></div><div class="field"><label>&nbsp;</label><button id="admin-refresh">새로고침</button></div></div><div class="actions admin-utilities"><button id="send-consent-invites" class="button--secondary" type="button">채용메일 수신 설정 안내</button><button id="send-news-consent-invites" class="button--secondary" type="button">동문소식 수신 설정 안내</button><button id="run-job-digest" class="button--secondary" type="button">채용메일 지금 점검·발송</button></div></div>
+    <div class="panel"><div class="filter-grid"><div class="field"><label for="admin-query">검색</label><input id="admin-query" placeholder="이름, 회사, 직무, 제목"></div><div class="field"><label for="admin-status-filter">상태</label><select id="admin-status-filter"><option value="">전체</option><option value="PENDING">승인 대기</option><option value="APPROVED">승인·공개</option><option value="REJECTED">반려</option><option value="HIDDEN">숨김</option><option value="EXPIRED">마감</option><option>SENT</option><option>PARTIAL_FAILED</option><option>FAILED</option><option>QUOTA_BLOCKED</option></select></div><div class="field"><label for="admin-year">졸업연도</label><select id="admin-year"></select></div><div class="field"><label>&nbsp;</label><button id="admin-refresh">새로고침</button></div></div><div class="actions admin-utilities"><button id="send-consent-invites" class="button--secondary" type="button">채용메일 수신 설정 안내</button><button id="send-news-consent-invites" class="button--secondary" type="button">동문소식 수신 설정 안내</button><button id="run-job-digest" class="button--secondary" type="button">채용정보 발송 관리</button></div></div>
     <div class="panel" id="admin-alumni-filters"><div class="filter-grid"><div class="field"><label for="admin-consent">채용메일 동의</label><select id="admin-consent"><option value="">전체</option><option value="yes">동의</option><option value="no">거부</option><option value="unset">미설정</option></select></div><div class="field"><label for="admin-employment">취업상태</label><select id="admin-employment"><option value="">전체 취업 상태</option></select></div></div></div>
+    <dialog id="admin-content-dialog" class="admin-work-dialog" aria-labelledby="admin-content-title">
+      <div class="admin-create-heading"><h2 id="admin-content-title">등록 내용 확인</h2><button id="admin-close-content" type="button" class="button--ghost">닫기</button></div>
+      <div id="admin-content-detail"></div>
+    </dialog>
+    <dialog id="admin-mail-dialog" class="admin-work-dialog" aria-labelledby="admin-mail-title">
+      <div class="admin-create-heading"><h2 id="admin-mail-title">메일 발송 대상 선택</h2><button id="admin-close-mail" type="button" class="button--ghost">닫기</button></div>
+      <p id="admin-mail-subject"></p>
+      <p>수신 동의 및 이메일 인증이 완료된 승인 회원에게만 발송합니다. 이미 발송한 회원은 제외됩니다.</p>
+      <fieldset id="admin-mail-groups" class="admin-check-grid"><legend>발송 대상 (복수 선택)</legend>
+        <label class="check"><input type="checkbox" value="alumni"> 졸업생</label>
+        <label class="check"><input type="checkbox" value="grade1"> 재학생 1학년</label>
+        <label class="check"><input type="checkbox" value="grade2"> 재학생 2학년</label>
+        <label class="check"><input id="admin-mail-all" type="checkbox"> 전체 선택</label>
+      </fieldset>
+      <div id="admin-mail-preview" aria-live="polite"></div>
+      <p id="admin-mail-message" class="status" role="status" aria-live="polite" hidden></p>
+      <div class="actions"><button id="admin-preview-mail" type="button" class="button--secondary">대상 인원 확인</button><button id="admin-confirm-mail" type="button" disabled>확인 후 메일 발송</button></div>
+    </dialog>
     <p id="admin-summary" role="status"></p><div id="admin-table" class="table-wrap"></div><div class="actions" id="admin-pagination"><button id="admin-prev" type="button">이전</button><span id="admin-page"></span><button id="admin-next" type="button">다음</button></div>
   </div>
 </section>

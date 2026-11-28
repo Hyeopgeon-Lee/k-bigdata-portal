@@ -18,11 +18,11 @@
    if(!form.reportValidity())return;
    const data=Object.fromEntries(new FormData(form));
    Object.assign(data,{always_open:always.checked,referral_available:data.referral_available==="true",contact_allowed:data.contact_allowed==="true"});
-   U.busy(submit,true,"게시 중…");
+   U.busy(submit,true,"등록 중…");
    try{
     const r=await AlumniAPI.request("submitJob",{method:"POST",data});
     form.hidden=true;
-    U.status(st,r.message||"채용정보가 게시되었습니다.","success");
+    U.status(st,r.message||"채용정보를 등록했습니다. 관리자 승인 후 공개됩니다.","success");
    }catch(err){U.status(st,err.message,"error")}
    finally{U.busy(submit,false)}
   });

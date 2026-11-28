@@ -55,6 +55,24 @@ async function start(){
    }finally{busy(contactForm,false);}
   });
  }
+ if(profile.signup_type==="student"&&profile.approval_status==="approved"&&profile.enrollment_status==="enrolled"){
+  const panel=byId("my-page-alumni-mail-panel"),form=byId("my-page-alumni-mail-form"),message="my-page-alumni-mail-message";
+  panel.hidden=false;
+  // Load independently of the other profile settings; unavailable preferences fail closed.
+  api.rpc("my_student_alumni_mail_preferences").then(({data,error})=>{
+   if(error||!data){notify(message,"메일 수신 설정을 불러오지 못했습니다. 다시 시도해 주세요.","error");return;}
+   form.elements.career.checked=data.career_enabled===true;
+   form.elements.news.checked=data.news_enabled===true;
+   form.querySelector('button[type="submit"]').disabled=false;
+   form.addEventListener("submit",async event=>{
+    event.preventDefault();busy(form,true);
+    try{const {error}=await api.rpc("set_my_student_alumni_mail_preferences",{p_career:form.elements.career.checked,p_news:form.elements.news.checked});
+     if(error)throw error;notify(message,"메일 수신 설정을 저장했습니다.","success");
+    }catch{notify(message,"메일 수신 설정을 저장하지 못했습니다.","error");}
+    finally{busy(form,false);}
+   });
+  }).catch(()=>notify(message,"메일 수신 설정을 불러오지 못했습니다.","error"));
+ }
  const lockNotice=byId("my-page-academic-lock-note");
  if(profile.signup_type==="alumni")lockNotice.hidden=false;
  if(profile.signup_type==="student"&&profile.approval_status==="approved"&&["enrolled","leave","graduated","early_employment"].includes(profile.enrollment_status)){
