@@ -99,4 +99,4 @@ assert.match(consolidated,/portal_academic_requests_one_pending/,"one pending ac
 assert.match(consolidated,/perform public.request_my_academic_status/,"cached self-service clients cannot directly edit student status");
 assert.match(consolidated,/portal_student_deletion_jobs/,"resumable deletion ledger");
 assert.match(read("supabase/functions/approve-portal-signup/index.ts"),/\["enrolled","leave","graduated","early_employment"\]\.includes\(enrollment\)/,"early employment can be approved");
-assert.match(read("supabase/functions/alumni-network-api/index.ts"),/action==="adminNewsSendMail"&&previousStatus!=="APPROVED"/,"hidden news cannot be published by send mail");
+assert.match(read("supabase/functions/alumni-network-api/index.ts"),/record\.data\.status!=="APPROVED"\|\|\(kind==="jobs"&&!visibleJob\(record\.data\)\)/,"hidden news cannot be published by send mail");

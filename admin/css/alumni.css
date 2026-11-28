@@ -130,3 +130,13 @@
  .alumni-admin .admin-create-heading h2{font-size:18px}
  .alumni-admin .alumni-admin-toolbar{align-items:flex-start}
 }
+
+/* Approval review and recipient verification, usable on mobile without horizontal scrolling. */
+.alumni-admin .admin-work-dialog{width:min(96vw,640px);max-height:90vh;overflow:auto;padding:22px;border:1px solid var(--admin-border);border-radius:15px;color:var(--admin-ink);background:#fff}
+.alumni-admin .admin-work-dialog::backdrop{background:rgba(13,29,51,.58)}
+.alumni-admin .admin-work-dialog fieldset{border:0;padding:0;margin:16px 0}
+.alumni-admin .admin-work-dialog legend{font-weight:800;margin-bottom:8px}
+.alumni-admin .admin-work-dialog p{overflow-wrap:anywhere}
+.alumni-admin .admin-content-value{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0 14px}
+.alumni-admin .admin-mail-count{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:10px 0;border-bottom:1px solid var(--admin-border)}
+@media(max-width:700px){.alumni-admin .admin-work-dialog{width:calc(100% - 20px);padding:16px}.alumni-admin .admin-work-dialog .actions button{flex:1 1 100%;min-height:44px}}

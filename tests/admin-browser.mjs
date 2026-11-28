@@ -9,14 +9,22 @@ try{
  for(const admin of [false,true]){
   const context=await browser.newContext({viewport:{width:390,height:850}});
   await approvedStudent(context,{signup_type:"student",enrollment_status:"enrolled",academic_year:2},false,admin,admin);
+  const newsFixture={news_id:"NTEST",title:"테스트 동문소식",content:"승인 전 관리자 검토용 내용",status:"PENDING",news_type_label:"취업",mail_status:"WAITING",mail_requested:true,created_at:"2026-11-28"};
+  const mailRequests=[];
   // All legacy alumni requests reuse the logged-in portal session; mock only the Edge response.
   await context.route("https://zjsindkakjfzmjgrkaou.supabase.co/functions/v1/alumni-network-api",route=>{
    const payload=route.request().postDataJSON()||{};
+   if(payload.action==="adminNewsPublish")newsFixture.status="APPROVED";
+   if(payload.action==="adminMailPreview"||payload.action==="adminNewsSendMail"){
+    mailRequests.push(payload);
+    const result=payload.action==="adminMailPreview"?{token:"mock",counts:payload.data.groups.map(group=>({group,total:3,sent:1,sending:0,available:2})),available:payload.data.groups.length*2}:{sent:4,failed:0,done:true,next_cursor:4};
+    return route.fulfill({status:200,contentType:"application/json",headers:{"Access-Control-Allow-Origin":"*"},body:JSON.stringify({success:true,data:result})});
+   }
    const rows=payload.action==="adminList"&&payload.data?.view==="alumni"?[{
     alumni_id:"fixture-alumni",name:"졸업생 테스트",email:"alumni@example.test",
     phone:"010-1234-5678",graduation_year:2025,company:"테스트 회사",
     career_mail_enabled:true,alumni_news_mail_enabled:false,status:"APPROVED"
-   }]:[];
+   }]:payload.action==="adminList"&&payload.data?.view==="news"?[newsFixture]:[];
    return route.fulfill({status:200,contentType:"application/json",
     headers:{"Access-Control-Allow-Origin":"*"},
     body:JSON.stringify({success:true,data:rows,message:"정상 처리"})});
@@ -230,6 +238,33 @@ try{
       assert.equal(await page.locator(".admin-table--alumni tbody tr").count(),1);
       await page.locator("#admin-year").selectOption("");
       await page.waitForFunction(()=>document.getElementById("admin-summary")?.textContent.includes("2명"));
+      await page.setViewportSize({width:390,height:850});
+      page.on("dialog",dialog=>dialog.accept());
+      await page.locator('[data-view="news"]').click();
+      await page.getByRole("button",{name:"내용 확인",exact:true}).click();
+      await page.getByText("승인 전 관리자 검토용 내용",{exact:true}).waitFor();
+      await page.locator("#admin-close-content").click();
+      assert.equal(await page.locator('[data-action="mail"]').count(),0);
+      await page.getByRole("button",{name:"승인·게시",exact:true}).click();
+      await page.getByRole("button",{name:"메일 발송",exact:true}).click();
+      assert.equal(await page.locator("#admin-confirm-mail").isDisabled(),true);
+      await page.locator('#admin-mail-groups input[value="alumni"]').check();
+      await page.locator('#admin-mail-groups input[value="grade2"]').check();
+      await page.locator("#admin-preview-mail").click();
+      await page.getByText("발송 예정: 4명",{exact:true}).waitFor();
+      assert.ok(await page.locator("#admin-mail-dialog").evaluate(el=>el.scrollWidth<=el.clientWidth+1));
+      await page.screenshot({path:"ui-screenshots/admin/alumni-mail-targets-mobile.png"});
+      await page.locator('#admin-mail-groups input[value="grade1"]').check();
+      assert.equal(await page.locator("#admin-confirm-mail").isDisabled(),true);
+      await page.locator('#admin-mail-groups input[value="grade1"]').uncheck();
+      await page.locator("#admin-preview-mail").click();
+      await page.getByText("발송 예정: 4명",{exact:true}).waitFor();
+      await page.locator("#admin-confirm-mail").click();
+      await page.getByText("발송 완료: 성공 4건",{exact:false}).waitFor();
+      assert.deepEqual(mailRequests.at(-1).data.groups,["alumni","grade2"]);
+      assert.equal(mailRequests.at(-1).data.confirmed,true);
+      await page.locator("#admin-close-mail").click();
+
       await page.getByRole("button",{name:"채용정보 관리"}).click();
       await page.getByText("조건에 맞는 데이터가 없습니다.").waitFor({state:"visible",timeout:15000});
       await page.getByRole("button",{name:"졸업생 현황"}).click();
